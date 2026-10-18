@@ -1,0 +1,9 @@
+2026-10-11 02:06:26,803 [INFO] carry_bot başladı | mod=demo | 5+5 bacak | 15 dilim | her dilim 120sa'te bir (tur: 8sa) | gross 1.0x | akış 20% | risk: kaldiracsiz (vol hedefi 0%)
+2026-10-11 02:06:27,690 [ERROR] ticker listesi alınamadı: APIError(code=0): Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.
+2026-10-11 02:06:27,690 [ERROR] evren boş - tur atlanıyor
+2026-10-11 02:08:32,709 [INFO] carry_bot başladı | mod=demo | 5+5 bacak | 15 dilim | her dilim 120sa'te bir (tur: 8sa) | gross 1.0x | akış 20% | risk: kaldiracsiz (vol hedefi 0%)
+2026-10-11 02:08:33,792 [ERROR] ticker listesi alınamadı: APIError(code=0): Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.
+2026-10-11 02:08:33,793 [ERROR] evren boş - tur atlanıyor
+2026-10-11 15:43:11,096 [INFO] carry_bot başladı | mod=demo | 5+5 bacak | 15 dilim | her dilim 120sa'te bir (tur: 8sa) | gross 1.0x | akış 20% | risk: kaldiracsiz (vol hedefi 0%)
+2026-10-11 15:43:11,984 [ERROR] ticker listesi alınamadı: APIError(code=0): Service unavailable from a restricted location according to 'b. Eligibility' in https://www.binance.com/en/terms. Please contact customer service if you believe you received this message in error.
+2026-10-11 15:43:11,984 [ERROR] evren boş - tur atlanıyor

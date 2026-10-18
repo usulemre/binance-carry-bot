@@ -1,0 +1,16 @@
+# veri dizinleri (buyuk, ayri arsivlenir)
+data_genis/
+data_funding_genis/
+data_taker_genis/
+data_akis/
+*.pkl
+.cache_panel.pkl
+# calisma ciktilari
+__pycache__/
+*.pyc
+carry_equity.csv
+carry_tp.csv
+carry_tp_kurulum.csv
+carry_prim.csv
+carry_dilimler.json
+bot.log
