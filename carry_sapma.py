@@ -76,7 +76,55 @@ def gunluk_getiri(d: pd.DataFrame) -> pd.Series:
     return (ham / olcek).dropna()
 
 
-def referans_oku(dosya: str = None) -> pd.Series:
+KITAP_REFERANS = {
+    # MADDE 330: referans serisi KITABA baglidir. `referans_getiri.csv`
+    # 15x5 TAM evren serisidir (tam donem dusus -%14,54 = KITAP_DUSUS
+    # ["15x5"] ile BIREBIR). 2.000 $'da bot 15x4/D8 kosar ve o kitabin
+    # dususu -%19,07'dir: SAGLIKLI bir kitabi 15x5 dagilimiyla kiyaslamak
+    # kuyrukta yanlis alarm uretir (olculdu: INCELE %6,4-7,2 yerine %5,
+    # DURDUR %1,7-2,2 yerine %1 - yani DURDUR yanlis alarmi ~IKI KAT).
+    # Dogru referansla oranlar birebir %5,0 / %1,0 cikiyor.
+    "15x5": "referans_getiri.csv",
+    "15x4": "referans_getiri_15x4.csv",
+}
+VARSAYILAN_KITAP = "15x5"
+
+
+def referans_dosyasi(bakiye: float = None) -> tuple:
+    """(yol, kitap, uyari). Kosan kitabin referans serisini secer.
+
+    MADDE 330: bakiye verilmezse ya da o kitabin serisi uretilmemisse
+    15x5 serisine DUSULUR ve UYARI dondurulur - sessizce yanlis
+    dagilimla kiyaslamak, madde 329'un devre kesicide bulunan
+    arizasinin aynisidir.
+    """
+    kitap = VARSAYILAN_KITAP
+    if bakiye is not None:
+        try:
+            import carry_rapor as _cr
+            kitap = _cr.kitap_anahtari(bakiye=float(bakiye))
+        except Exception:
+            kitap = VARSAYILAN_KITAP
+    ad = KITAP_REFERANS.get(kitap)
+    if ad is None:
+        return (os.path.join(R, KITAP_REFERANS[VARSAYILAN_KITAP]),
+                VARSAYILAN_KITAP,
+                "UYARI: '%s' kitabinin referans serisi URETILMEDI - "
+                "kiyas %s serisiyle yapiliyor, kuyruk alarmlari YANLIS "
+                "oranla tetikler (madde 330)" % (kitap, VARSAYILAN_KITAP))
+    yol = os.path.join(R, ad)
+    if not os.path.exists(yol):
+        return (os.path.join(R, KITAP_REFERANS[VARSAYILAN_KITAP]),
+                VARSAYILAN_KITAP,
+                "UYARI: %s dosyasi YOK - %s serisine dusuldu (madde 330)"
+                % (ad, VARSAYILAN_KITAP))
+    return yol, kitap, ""
+
+
+def referans_oku(dosya: str = None, bakiye: float = None) -> pd.Series:
+    """MADDE 330: `bakiye` verilirse KOSAN kitabin serisi okunur."""
+    if dosya is None and bakiye is not None:
+        dosya = referans_dosyasi(bakiye)[0]
     yol = dosya or REFERANS
     d = pd.read_csv(yol, parse_dates=["tarih"]).set_index("tarih")["getiri"]
     return d.dropna()
@@ -218,6 +266,9 @@ def main():
     ap = argparse.ArgumentParser()
     ap.add_argument("--dosya", default=None, help="bakiye geçmişi (carry_equity.csv)")
     ap.add_argument("--referans", default=None, help="referans günlük getiriler")
+    ap.add_argument("--bakiye", type=float, default=None,
+                    help="MADDE 330: verilirse KOŞAN kitabın referans "
+                         "serisi seçilir (2.000 $ -> 15x4)")
     a = ap.parse_args()
     d = bakiye_oku(a.dosya)
     if d.empty:
@@ -225,7 +276,15 @@ def main():
               "(carry_equity.csv her turda yazılır).")
         return
     g = gunluk_getiri(d)
-    ref = referans_oku(a.referans)
+    _bak = a.bakiye
+    if _bak is None and not d.empty:        # madde 330: ilk bakiye
+        _bak = float(d.bakiye.iloc[0])
+    _yol, _kitap, _uyari = referans_dosyasi(_bak)
+    if a.referans is None:
+        print("referans serisi: %s  (kitap %s)" % (os.path.basename(_yol), _kitap))
+        if _uyari:
+            print("  [!] " + _uyari)
+    ref = referans_oku(a.referans, None if a.referans else _bak)
     print(rapor(degerlendir(g, ref)))
     print("\nBU TESTİN GÜCÜ (edge tamamen ölseydi yakalama olasılığı):")
     for gun in (30, 90, 180, 365):

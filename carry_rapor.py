@@ -127,17 +127,51 @@ KITAP_DUSUS = {
     "8x5": 14.89, "4x5": 15.32, "3x5": 16.96, "3x3": 22.10,
     "2x5": 19.10, "2x4": 22.60, "1x5": 28.08,
 }
+KITAP_DUSUS_KOSULAN = {
+    # MADDE 329: KITAP_DUSUS madde 295'in tablosudur ve YAPILANDIRMAYA
+    # gore, TAM EVRENDE olculmustur. Asagidaki ise GERCEKTEN KOSULAN
+    # kitabin dususu: bakiye bacagi, bacak evreni belirledigi icin bu
+    # sayi SERMAYEYE BAGLIDIR ve o yuzden AYRI tutulur.
+    #   anahtar: (bakiye, evren, tam donem dusus)
+    # MADDE 330: bu dusus TEK BIR BASLANGIC HIZASININ (FAZ_KAY) degeri.
+    # Uc ofset olculdu: 20,07 / 21,70 / 20,10 (yayilim 1,63 puan) ve
+    # madde 320'nin 19,91'i en sig olcumden 0,16 puan daha sig. Pay EN
+    # KOTU ofsetle 23,00 - 21,70 = +1,30 puan (tek ofsetle +3,09) -
+    # hala pozitif, cift ayakta, ama pay sanildigindan INCE.
+    "15x4": (2000.0, "D8", 19.91),
+}
+KITAP_DUSUS_OFSET = {
+    # MADDE 330: anahtar -> (en sig, en derin, olculen ofset sayisi)
+    "15x4": (20.07, 21.70, 3),
+}
 TEMEL_KITAP = "15x5"
 """Esiklerin turetildigi kitap. Olcek bunun dususune gore."""
 
 
-def kitap_anahtari(n_dilim: int = None, n_legs: int = None) -> str:
-    """Kosulan yapilandirmanin anahtari (or. '13x3')."""
+def kitap_anahtari(n_dilim: int = None, n_legs: int = None,
+                   bakiye: float = None) -> str:
+    """Kosulan yapilandirmanin anahtari (or. '13x3').
+
+    *** MADDE 329: `N_LEGS` YAPILANDIRILAN, KOSULAN DEGILDIR. ***
+    `carry_bot.uygun_bacak_sayisi(bakiye)` kucuk bakiyede bacak sayisini
+    OTOMATIK dusurur (2.000 $'da 5 -> 4). Eski hali `cb.N_LEGS`'i
+    okudugu icin anahtar "15x5" donuyordu; o anahtarin esik cifti
+    (-%18/-%23) ise dususu %14,54 olan bir kitap icin turetilmisti.
+    GERCEKTEN kosulan kitabin (15x4, D8, 2.000 $) tam donem dususu
+    **%19,91** - yani INCELE esigi kitabin kendi tarihsel dususunun
+    ALTINDA kaliyordu (pay -1,91 puan) ve `esik_kademesi()` buna
+    "olculmus" diyordu. Bakiye verilirse artik KOSULAN bacak sayisi
+    kullanilir.
+    """
     if n_dilim is None or n_legs is None:
         try:
             import carry_bot as _cb
             n_dilim = _cb.N_DILIM if n_dilim is None else n_dilim
-            n_legs = _cb.N_LEGS if n_legs is None else n_legs
+            if n_legs is None:
+                if bakiye is not None:
+                    n_legs = _cb.uygun_bacak_sayisi(float(bakiye))
+                else:
+                    n_legs = _cb.N_LEGS
         except Exception:
             return TEMEL_KITAP
     return f"{int(n_dilim)}x{int(n_legs)}"
@@ -182,11 +216,13 @@ KITAP_ESIK = {
     # (INCELE, DURDUR) - madde 231'in yontemiyle OLCULDU (madde 303)
     "15x5": (-0.18, -0.23),
     "13x3": (-0.23, -0.29),
+    "15x4": (-0.23, -0.30),     # madde 329: KOSULAN kitap (2.000 $ / D8)
 }
 KITAP_REJIM_OLCUMU = {
     # kitap: (en kotu rejim, 1y dusus p5, 1y dusus p1)
     "15x5": ("dusuk prim", -17.93, -22.31),
     "13x3": ("dusuk prim", -22.66, -28.98),
+    "15x4": ("dusuk prim", -22.83, -29.23),     # madde 329, 2.000 $ / D8
 }
 
 
@@ -246,6 +282,8 @@ def backtest_maksimumu(anahtar: str = None) -> float:
     15x5'in sayisi. 13x3 kosan biri icin yanlis bir referanstir.
     """
     anahtar = anahtar or kitap_anahtari()
+    if anahtar in KITAP_DUSUS_KOSULAN:      # madde 329: sermayeye bagli
+        return KITAP_DUSUS_KOSULAN[anahtar][2]
     return KITAP_DUSUS.get(anahtar, KITAP_DUSUS[TEMEL_KITAP])
 
 
@@ -468,13 +506,16 @@ def karar(b: dict, sap: dict, sag: dict, fnd: dict) -> tuple:
 
     d = b.get("dusus", 0.0)
     # MADDE 302: esikler KOSULAN kitaba olceklenir (15x5'te birebir ayni)
-    _ki, _kd = dusus_incele(), dusus_durdur()
-    _kmax = backtest_maksimumu()
+    # MADDE 329: anahtar BAKIYEDEN turetilir - `uygun_bacak_sayisi` kucuk
+    # bakiyede bacagi otomatik dusurur ve kitap "15x5" DEGIL "15x4"tur.
+    _ank = kitap_anahtari(bakiye=b.get("ilk_bakiye") or None)
+    _ki, _kd = dusus_incele(_ank), dusus_durdur(_ank)
+    _kmax = backtest_maksimumu(_ank)
     if d <= _kd:
         yukselt("DURDUR", f"düşüş %{d*100:.1f} - 1x'te 100 yılda 1 olay "
-                          f"(sınır %{_kd*100:.0f}, {kitap_anahtari()})")
+                          f"(sınır %{_kd*100:.0f}, {_ank})")
     elif d <= _ki:
-        yukselt("İNCELE", f"düşüş %{d*100:.1f} - {kitap_anahtari()} "
+        yukselt("İNCELE", f"düşüş %{d*100:.1f} - {_ank} "
                           f"kitabının backtest maksimumunu (%-{_kmax:.2f}) "
                           f"aştı, sebebi bulunmalı")
 
@@ -549,10 +590,11 @@ def yaz(gun: int = 7, api: bool = False, dosya: str = None) -> str:
                  f"yüksek %{BEKLENEN_FUNDING_YUKSEK*100:.4f})")
         s.append(f"  → REJİM          : {_rj}  "
                  f"geçerli beklenti ~+%{_bek:.0f}/yıl (madde 231)")
+    _pank = kitap_anahtari(bakiye=b.get("ilk_bakiye") or None)   # madde 329
     s.append(f"  maksimum düşüş   : %{b['dusus']*100:.1f} "
-             f"(incele %{dusus_incele()*100:.0f} / "
-             f"durdur %{dusus_durdur()*100:.0f}; {kitap_anahtari()}, "
-             f"{esik_kademesi()})")
+             f"(incele %{dusus_incele(_pank)*100:.0f} / "
+             f"durdur %{dusus_durdur(_pank)*100:.0f}; {_pank}, "
+             f"{esik_kademesi(_pank)})")
     s.append("")
     if sap.get("durum") != "YETERSİZ":
         s.append(f"  sapma durumu     : {sap['durum']} "

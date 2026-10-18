@@ -162,13 +162,24 @@ def zarf(gun: int):
 
 def canli_gecer_mi(gun: int, funding_gunluk: float = None,
                    tp_long_oran: float = None, tp_short_oran: float = None,
-                   dusus: float = None, toplam_getiri: float = None) -> dict:
+                   dusus: float = None, toplam_getiri: float = None,
+                   bakiye: float = None) -> dict:
     """ON KAYITLI CANLI KARAR. Doner: {'hukum', 'sartlar', 'bilgi'}.
 
     funding_gunluk : gunluk funding / sermaye (ORAN, ornek 0.00052)
     tp_*_oran      : gerceklesen TP orani (ORAN, ornek 0.071)
     dusus          : gerceklesen maks dusus, POZITIF PUAN (ornek 4.1)
     toplam_getiri  : yillik karsiligi, PUAN - YALNIZCA BILGI
+    bakiye         : MADDE 329. Verilirse L4'un seviyeleri KOSULAN
+        kitaptan turetilir (`carry_rapor.dusus_incele/durdur`), cunku
+        `DUSUS_INCELE/DUSUS_DURDUR` madde 231'in **15x5** cifti ve
+        2.000 $'da gercekten kosulan kitap **15x4** (kanonik cift
+        -%23/-%30). Verilmezse eski davranis birebir korunur - on
+        kayitli bir kuralin sabitleri sessizce degistirilmez.
+        DIKKAT: `DUSUS_ZARFI` olasiliklari madde 260'ta **-18/-23**
+        seviyelerinde olculdu; seviye kayarsa olasilik basilmaz,
+        "OLCULMEDI" yazilir (madde 329'un kendi dersi: arkasinda
+        uretim olmayan sayi basilmaz).
     """
     s = {}
     bilgi = []
@@ -219,18 +230,40 @@ def canli_gecer_mi(gun: int, funding_gunluk: float = None,
         s["L4 dusus zarfi"] = (DEVAM, "olcum YOK")
     else:
         p18, p23, ortalama, p95 = zarf(gun)
-        if dusus >= DUSUS_DURDUR:
+        _si, _sd, _kitap = DUSUS_INCELE, DUSUS_DURDUR, None
+        if bakiye is not None:          # madde 329
+            try:
+                import carry_rapor as _cr
+                _kitap = _cr.kitap_anahtari(bakiye=float(bakiye))
+                _si = abs(_cr.dusus_incele(_kitap)) * 100.0
+                _sd = abs(_cr.dusus_durdur(_kitap)) * 100.0
+            except Exception as _e:
+                bilgi.append("L4 seviyesi kosulan kitaptan TURETILEMEDI "
+                             "(%s) - madde 231'in 15x5 cifti kullanildi" % _e)
+        _ek = ("" if _kitap is None else " [%s]" % _kitap)
+        _ol18 = ("%%%.2f olasilik" % p18 if abs(_si - 18.0) < 1e-9
+                 else "zarf olasiligi bu seviyede OLCULMEDI (madde 260 "
+                      "-18/-23'te olculdu)")
+        _ol23 = ("%%%.2f olasilik" % p23 if abs(_sd - 23.0) < 1e-9
+                 else "zarf olasiligi bu seviyede OLCULMEDI (madde 260 "
+                      "-18/-23'te olculdu)")
+        if dusus >= _sd:
             s["L4 dusus zarfi"] = (
-                DURDUR, "-%.1f puan >= -%.0f (bu ufukta saglikli kitapta "
-                        "%%%.2f olasilik)" % (dusus, DUSUS_DURDUR, p23))
-        elif dusus >= DUSUS_INCELE:
+                DURDUR, "-%.1f puan >= -%.0f%s (bu ufukta saglikli kitapta "
+                        "%s)" % (dusus, _sd, _ek, _ol23))
+        elif dusus >= _si:
             s["L4 dusus zarfi"] = (
-                INCELE, "-%.1f puan >= -%.0f (olasilik %%%.2f)"
-                        % (dusus, DUSUS_INCELE, p18))
+                INCELE, "-%.1f puan >= -%.0f%s (%s)"
+                        % (dusus, _si, _ek, _ol18))
         elif dusus > p95:
             s["L4 dusus zarfi"] = (
                 INCELE, "-%.1f puan, bu ufkun p95'ini (-%.1f) asiyor - ERKEN "
-                        "UYARI rayi (%%5 yanlis tetikleme kabul)" % (dusus, p95))
+                        "UYARI rayi (%%5 yanlis tetikleme kabul)%s"
+                        % (dusus, p95,
+                           "" if _kitap in (None, "15x5") else
+                           "; DIKKAT: p95 zarfi madde 260'ta 15x5 icin "
+                           "olculdu, %s daha genis dusuyor - bu ray "
+                           "%%5'ten SIK tetikler" % _kitap))
         else:
             s["L4 dusus zarfi"] = (
                 DEVAM, "-%.1f puan, zarf icinde (ort -%.1f / p95 -%.1f)"
@@ -288,6 +321,9 @@ def main():
     ap.add_argument("--tp-short", type=float, default=None)
     ap.add_argument("--dusus", type=float, default=None, help="POZITIF puan")
     ap.add_argument("--getiri", type=float, default=None, help="yillik, puan")
+    ap.add_argument("--bakiye", type=float, default=None,
+                    help="MADDE 329: verilirse L4 seviyeleri KOSULAN "
+                         "kitaptan turetilir (2.000 $ -> 15x4, -23/-30)")
     a = ap.parse_args()
 
     if a.ornek:
@@ -316,7 +352,8 @@ def main():
             print()
         return 0
 
-    h = canli_gecer_mi(a.gun, a.funding, a.tp_long, a.tp_short, a.dusus, a.getiri)
+    h = canli_gecer_mi(a.gun, a.funding, a.tp_long, a.tp_short, a.dusus,
+                       a.getiri, a.bakiye)
     yaz(h)
     return cikis_kodu(h)
 

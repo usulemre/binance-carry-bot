@@ -1,18 +1,17 @@
-"""TradFi perp sembolleri (madde 335 YER TUTUCU).
+"""TradFi perp sembolleri — `carry_bot._TRADFI_YEDEK`'ten TÜRETİLİR.
 
-*** DİKKAT: BU DOSYA ORİJİNAL DEĞİL. *** Orijinal `tradfi_liste.py`
-2026-10-19'daki konteyner kaybında gitti ve proje arşivinde yoktu.
-README (madde ~300 civarı) listeyi tarif ediyor ama sembolleri tek tek
-saymıyor: "Binance Aralık 2025'ten itibaren yüzlerce TradFi perp
-listeledi (XAU, CL, TSLA, NVDA, SPY, QQQ, SKHYNIX, SAMSUNG, HK/KR
-hisseleri...). Panelde 150 tane."
+MADDE 335: orijinal `tradfi_liste.py` 2026-10-19'daki konteyner
+kaybında gitti ve proje arşivinde yoktu. Ama liste aslında **iki yerde**
+duruyordu: canlı bot kendi içinde `_TRADFI_YEDEK` olarak taşıyor
+(exchange_info alınamadığında kullanılan yedek). Bu dosya artık o tek
+kaynaktan okur — kopya tutmaz, yani ikisi bir daha AYRIŞAMAZ.
 
-NEDEN BOŞ BIRAKILDI: kurtarılan `data_genis/` 122 sembol içeriyor ve
-ÖLÇÜLDÜ - hiçbiri 2025-12'den sonra listelenmemiş, yani bu evrende
-TradFi sembolü YOK. Dolayısıyla boş küme, bu veri için orijinaliyle
-AYNI sonucu verir. Geniş evren (847 sembol) geri getirilirse bu liste
-YENİDEN ÜRETİLMELİDİR; aksi halde TradFi'ler sessizce evrene girer ve
-madde ~300'ün ölçtüğü zarar (+%30,3 -> +%34,1 farkı) geri gelir.
+Not: canlıda asıl tespit `tradfi_mi()` ile exchange_info'nun
+`underlyingType` alanından yapılır; bu liste onun yedeği ve geri testin
+tek bilgi kaynağı (geri testte exchange_info yoktur).
 """
-TRADFI: set[str] = set()
-TRADFI_YER_TUTUCU = True
+from carry_bot import _TRADFI_YEDEK as _Y
+
+TRADFI: set[str] = set(_Y)
+TRADFI_YER_TUTUCU = False
+KAYNAK = "carry_bot._TRADFI_YEDEK (tek kaynak, kopya YOK)"

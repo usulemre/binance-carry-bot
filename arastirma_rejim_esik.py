@@ -127,10 +127,19 @@ REJIM_15X5 = {
     "dusuk":  (24.2, -17.93, -22.31),
     "yuksek": (71.6, -15.11, -17.99),
 }
+
+REJIM_15X4 = {
+    # MADDE 329: KOSULAN kitap (15 faz x 4 bacak, D8, 2.000 $).
+    # rejim -> (1y getiri p5, 1y dusus p5, 1y dusus p1)
+    "tum":    (36.7, -20.71, -25.84),
+    "dusuk":  (18.5, -22.83, -29.23),   # EN KOTU -> esik buradan
+    "yuksek": (72.8, -16.48, -19.69),
+}
 EN_KOTU_REJIM = "dusuk"
 YUVARLAMA_KURALI = ("madde 233: buyuklugu bir sonraki tam sayiya cikar "
                     "(17,93 -> 18; 22,31 -> 23)")
-ESIK_KANONIK = {"15x5": (-0.18, -0.23), "13x3": (-0.23, -0.29)}
+ESIK_KANONIK = {"15x5": (-0.18, -0.23), "13x3": (-0.23, -0.29),
+                "15x4": (-0.23, -0.30)}   # madde 329: KOSULAN kitap
 
 # --- 3. uc turetmenin karsilastirmasi ---
 YANLIS_TETIK = {
