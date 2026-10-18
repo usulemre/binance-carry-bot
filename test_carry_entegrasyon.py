@@ -45,9 +45,22 @@ cb.DOLUM_BEKLEME_SN = 0.0
 basarisiz = []
 
 
-def kontrol(ad, kosul, detay=""):
+def kontrol(ad, kosul, detay="", her_zaman=False):
+    """MADDE 333: `her_zaman=True` ise detay GECSE DE basilir.
+
+    Neden: 2026-10-18'de 11e blogu tam pakette BIR KEZ dustu, ayni kodla
+    sonraki kosuda gecti. Dusen kosunun sayilari elde YOKTU, cunku bu
+    fonksiyon detayi yalnizca HATA'da basiyordu - yani kararsiz bir
+    kontrol, teshis icin gereken tek veriyi gizliyordu. Izole olcum
+    sonradan blogu DETERMINISTIK gosterdi (20/20 tekrar ve 8 saatlik
+    izgaranin 16/16 noktasi birebir ayni: uc 55,6 · dig 22,2 · oran
+    2,500 · 24 emir), yani sebep blokta ya da saatte DEGIL, paketin
+    ortasindaki durumda - ve o durumu ancak sayilar her kosuda basilirsa
+    yakalayabiliriz. YASA: kararsiz bir kontrolun olcumu HER KOSUDA
+    kayda gecer; yalnizca duserken basilan sayi, dustugunde zaten yok.
+    """
     if kosul:
-        print(f"  [OK]   {ad}")
+        print(f"  [OK]   {ad}" + (f"  {detay}" if her_zaman and detay else ""))
     else:
         print(f"  [HATA] {ad}  {detay}")
         basarisiz.append(ad)
@@ -798,9 +811,19 @@ for s_, yon, _, m in c2.client.gonderilen:
 _uc_ort = (_buyukluk.get("C0USDT", 0) + _buyukluk.get("C1USDT", 0)) / 2
 _dig = [v for k, v in _buyukluk.items() if k not in ("C0USDT", "C1USDT")
         and k in {e[0] for e in c2.client.gonderilen if e[1] == "BUY"}]
+_dig_ort = sum(_dig) / max(1, len(_dig))
+# MADDE 333: bu uc sayi HER KOSUDA basilir (bkz. kontrol() docstring).
+print("       [tani] uc=%.1f dig=%.1f n_dig=%d n_emir=%d oran=%.3f"
+      % (_uc_ort, _dig_ort, len(_dig), len(c2.client.gonderilen),
+         _uc_ort / max(1e-9, _dig_ort)))
 kontrol("uç funding'li coine DAHA BÜYÜK pozisyon açıldı",
-        _uc_ort > 1.5 * (sum(_dig) / max(1, len(_dig))),
-        f"({_uc_ort:.1f} vs {sum(_dig)/max(1,len(_dig)):.1f})")
+        _uc_ort > 1.5 * _dig_ort,
+        f"(oran {_uc_ort/max(1e-9,_dig_ort):.3f}; uc {_uc_ort:.1f} vs "
+        f"dig {_dig_ort:.1f}; n_dig {len(_dig)}; "
+        f"n_emir {len(c2.client.gonderilen)}) "
+        f"[madde 333: izole olcumde oran HER ZAMAN 2,500 - sapma "
+        f"paketin ORTASINDAKI duruma isaret eder]",
+        her_zaman=True)
 kontrol("uç yokken toplam pozisyon rezerv kadar KÜÇÜK (sermaye bekliyor)",
         _hac_normal < sum(_buyukluk.values()) * 0.95,
         f"({_hac_normal:.0f} vs {sum(_buyukluk.values()):.0f})")
