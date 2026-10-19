@@ -53,7 +53,7 @@ def kontrol_ayarlar() -> None:
         "KAR_AL_ORAN": (cb.KAR_AL_ORAN, 0.40, "madde 178"),
         "KAR_AL_SHORT": (cb.KAR_AL_SHORT, 0.20, "madde 189"),
         "UC_HAREKET_ELE": (cb.UC_HAREKET_ELE, 0.40, "madde 196"),
-        "KALABALIK_HAVUZ": (cb.KALABALIK_HAVUZ, 3.0, "madde 179"),
+        "KALABALIK_HAVUZ": (cb.KALABALIK_HAVUZ, 4.0, "madde 352"),
         "REZERV_PAY": (cb.REZERV_PAY, 0.20, "madde 156"),
     }
     sapan = [f"{k}={v[0]} (olmalı {v[1]}, {v[2]})"

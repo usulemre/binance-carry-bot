@@ -176,8 +176,8 @@ kontrol("kalabalık verisi yoksa hedef_portfoy eskisiyle aynı",
         sorted(k for k, v in _h.items() if v > 0) == sorted(f"S{i}" for i in range(8)))
 kontrol("hedef_portfoy kalabalık verisiyle havuzdan seçiyor (S8-S15 long)",
         sorted(k for k, v in _hk.items() if v > 0) == sorted(f"S{i}" for i in range(8, 16)))
-kontrol("kalabalık seçimi varsayılan AÇIK (madde 179: havuz 3)",
-        cb.KALABALIK_HAVUZ == 3.0, f"({cb.KALABALIK_HAVUZ})")
+kontrol("kalabalık seçimi varsayılan AÇIK (madde 352: havuz 4)",
+        cb.KALABALIK_HAVUZ == 4.0, f"({cb.KALABALIK_HAVUZ})")
 
 print("\n5h) SERMAYE = ÖZSERMAYE (madde 162)")
 
@@ -1139,7 +1139,10 @@ n10k = cb.uygun_bacak_sayisi(10000.0, 1.0)
 n2k  = cb.uygun_bacak_sayisi(2000.0, 1.0)
 n500 = cb.uygun_bacak_sayisi(500.0, 1.0)
 n100 = cb.uygun_bacak_sayisi(100.0, 1.0)
-kontrol("büyük bakiyede tam bacak kullanılıyor", n10k == cb.N_LEGS, f"({n10k})")
+# MADDE 352 duzeltmesi: madde 341 bacak tavani koydu (BACAK_TAVAN=4);
+# test hala N_LEGS (5) bekliyordu ve 341'den beri sessizce kirikti.
+kontrol("büyük bakiyede tavana kadar tam bacak kullanılıyor (madde 341)",
+        n10k == min(cb.N_LEGS, cb.BACAK_TAVAN), f"({n10k})")
 kontrol("bakiye küçüldükçe bacak azalıyor", n10k >= n2k >= n500 >= n100,
         f"({n10k}, {n2k}, {n500}, {n100})")
 kontrol("N_LEGS asla AŞILMIYOR", cb.uygun_bacak_sayisi(1e9, 3.0) <= cb.N_LEGS)

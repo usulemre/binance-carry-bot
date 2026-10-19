@@ -1157,7 +1157,7 @@ oranda derinleşiyor** (−14,21 → −15,34); eşit-risk %5'in üzerinde
 alıyor — madde 225/229'un yasası (yoğunlaşma = doz) bir kez daha. %3
 ise açıkça kötü: eşit riskte −3,9 puan."""
 
-KALABALIK_HAVUZ = float(os.getenv("CARRY_KALABALIK_HAVUZ", "3.0"))
+KALABALIK_HAVUZ = float(os.getenv("CARRY_KALABALIK_HAVUZ", "4.0"))
 """Madde 148: her tarafta skora göre HAVUZ x n aday alınır, içlerinden
 KALABALIK olanlar seçilir - long tarafta en çok SHORT hesabı olanlar,
 short tarafta en çok LONG hesabı olanlar (Binance globalLongShortAccountRatio).
@@ -1196,7 +1196,7 @@ UCELE 0,40), iki faz ortalaması:
   kapalı  +74.8%   2.148   −22.0    2.441    1.930    +47.2%      6.3 puan
    1.5    +98.7%   2.751   −18.3    2.640    2.944    +75.5%      1.2 puan
    2.0   +105.4%   2.959   −18.5    2.796    3.199    +80.8%      0.9 puan
-   3.0  *+112.6%* *3.128*  −14.6   *2.984*  *3.342*  +112.6%    **0.1 puan**
+   3.0   +112.6%   3.128   −14.6    2.984    3.342   +112.6%    0.1 puan  (madde 224'te seçilen)
    4.0   +111.6%   3.115   −14.2    2.985    3.309   +115.8%      3.2 puan
    5.0   +108.5%   3.059   −16.0    2.912    3.276   +111.4%      2.1 puan
 
@@ -1228,7 +1228,34 @@ yeniden bakıldı:
 Sıra değişmiyor, fark da değişmiyor: **adlandırdığım etkileşim yok.**
 Tahmin de yanlıştı, gerekçesi de. (Yan gözlem: UCELE getiriyi 3,6 puan
 DÜŞÜRÜP Sharpe'ı 0,11 yükseltiyor - madde 196 bir getiri değil risk
-takasıydı; bu maddede yeniden açılmadı.)"""
+takasıydı; bu maddede yeniden açılmadı.)
+
+DEĞİŞTİ: 3.0 -> 4.0 (MADDE 350/352). Madde 224'ün taraması 5+5 bacakta
+yapılmıştı; madde 341'den beri bot 2.000-20.000 $ aralığında 15x4 koşuyor
+ve havuz = HAVUZ x bacak olduğu için 4 bacakta 3,0 yalnız 12 aday demek
+(5 bacakta 15'ti). 15x4'te, iki hizalamada, kontrole göre FARK
+(yıllık puan / Sharpe / düşüş puanı / eşit-risk; P = eşli bootstrap):
+
+  havuz  bakiye  hz   yıllık    22-24   25-26   düşüş   eşit-risk  P
+   3.0    (kontrol)
+   4.0  *2.000*   0   *+7,4*  +0,17   +0,02   −2,3    +33,5   *%92,6*
+          2.000   1    +8,8   +0,22   +0,02   −4,3    +65,0    %94,3
+          3.500   0    +5,7   +0,11   +0,04   −2,2    +34,4    %83,3
+          3.500   1    +1,3   +0,05   −0,05   −2,3    +29,6    %58,7
+   5.0    2.000   0/1  +3,0/+5,2  P %79,9/%89,2 (h0 şart 1: 25-26 −0,03)
+          3.500   0/1  +5,5/+3,9  P %78,9/%75,2
+   6.0    2.000   0/1  +0,7/+4,4  P %62,9/%82,1
+          3.500   0/1  +2,0/+1,1  P %47,6/%53,3
+
+Ön kayıtlı kural (arastirma_m352_havuz_plato.py): 2.000 $'da iki hizada
+da geçen değerlerin bandı ve seçilen değerin 3.500 $'da en az bir hizada
+geçip hiçbir hizada eşit riskte negatif olmaması. Band yalnız {4} (5,0
+h0'da %79,9 ile kıl payı dışarıda) -> öneri kuralın kendi etiketiyle
+ZAYIF. Kaldıraç başlığı DEĞİL: 4,0 kaldıraçsız hâliyle hem daha çok
+kazanıyor hem daha sığ düşüyor. Yüzey 4-5'te plato, 6'da sönüyor.
+Madde 224'te 4,0 beraberlikti (5 bacak, havuz 20); burada ayrışıyor —
+madde 222'nin yasası: kitap değişince taranmış optimum kayar.
+Geri almak için: CARRY_KALABALIK_HAVUZ=3."""
 
 AKIS_AGIRLIK = float(os.getenv("CARRY_AKIS_AGIRLIK", "0.20"))
 """Sıralamanın ne kadarı EMİR AKIŞI sinyalinden gelsin (0 = sadece funding).

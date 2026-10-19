@@ -2983,3 +2983,50 @@ CARRY_PRIM_E=0.10`.
 Kombinasyon kuralın kanıt barına tabi tutulmadı. **Ayar DEĞİŞMEDİ; 2.000
 $'da bu yapılandırmayı açmak ölçülmüş ama kanıtlanmamış bir kullanıcı
 kararıdır.** Bakiye 3.000 $'ı geçince 15×4'e dönülmeli.
+
+---
+
+## MADDE 351 — REZERV EŞİĞİ, KAP, FUNDING PENCERESİ (15×4): ALTISI DA RED
+
+Araç `arastirma_m351_15x4_tarama2.py` (madde 350'nin kuralı). Kontrole
+göre farklar, P = eşli bootstrap:
+
+    REZ 0,010 / 0,020    ±2-3 puan, P %15-70          RED
+    KAP 0,03             −7 puan, P %3-7              RED (keskin kenar)
+    KAP 0,08             +6,2..+7,1 puan, kaldıraç 1,00, P %73-78,
+                         şart 1 her hücrede (22-24 −0,02)   RED
+    PEN 36 sa / 60 sa    karışık, P %11-76            RED
+
+REZ_ESIK 0,015, KAP 0,05 ve 48 saatlik pencere bu kitapta da yerinde.
+**Bilgi:** KAP 0,08 dört hücrenin dördünde aynı yönde ve aynı büyüklükte
+— gürültüye benzemiyor ama 22-24'te Sharpe'ı tutarlı biçimde 0,02
+düşürüyor (getiri ↑, Sharpe ≈); bir doz değişikliği gibi davranıyor.
+Kural RED; ayrıca ölçülmeye değer tek komşu.
+
+## MADDE 352 — HAVUZ PLATOSU: 4,0 KABUL (ZAYIF), VARSAYILAN 3,0 → 4,0
+
+Araç `arastirma_m352_havuz_plato.py`, kural koşudan önce yazıldı.
+
+    havuz  2.000 $ (h0 / h1)          3.500 $ (h0 / h1)
+     4.0   YYYY %92,6 / YYYY %94,3    YYYY %83,3 / XYYY %58,7
+     5.0   XYYY %79,9 / YYYY %89,2    YYYY %78,9 / YYYY %75,2
+     6.0   XYYY %62,9 / YYYY %82,1    XYXY %47,6 / XYYY %53,3
+
+Kural: (a) 2.000 $'da iki hizada geçen band = {4} (5,0 h0'da %79,9 —
+kıl payı) → tek elemanlı band, öneri ZAYIF; (b) 4,0 3.500 $'da h0'da
+geçiyor ve iki hizada da eşit riskte pozitif (+34,4 / +29,6) → şart
+sağlandı. **KARAR: `KALABALIK_HAVUZ` varsayılanı 3,0 → 4,0.**
+
+Etki (kaldıraçsız, 2.000 $): yıllık **+7,4 / +8,8 puan**, düşüş **2,3 /
+4,3 puan sığ**, 22-24 Sharpe +0,17/+0,22, 25-26 +0,02. 3.500 $'da
++5,7 / +1,3 puan, düşüş 2,2/2,3 puan sığ.
+
+**Neden madde 224'te beraberlikti, şimdi değil:** havuz = HAVUZ × bacak.
+224 5 bacakta ölçüldü (3,0 → 15 aday, 4,0 → 20); bugünkü kitap 4 bacak
+(3,0 → 12 aday). Bacak azalınca seçim genişliği daraldı ve 4,0 onu geri
+açıyor. Madde 222'nin yasasının beşinci uygulaması — ve 224'ün
+"değer kayar, argmax kaymaz" yasasının ilk istisnası: bu kez argmax
+kaydı, çünkü yapı (bacak sayısı) değişti.
+
+Geri almak için: `CARRY_KALABALIK_HAVUZ=3`. Ön uçuş ve testler 4,0'a
+bağlandı.
