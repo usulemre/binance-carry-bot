@@ -2801,3 +2801,43 @@ kurulur.
 **Bugünkü kitapta kalan tek ölçülmüş kâr kaldıracı:** 3.000 $ ve
 üstünde `CARRY_PRIM_E=0.10` (madde 346, +5..+7 puan, ince kanıt).
 Parametre ve yapı ekseni bu zeminde yeniden doğrulandı: açık aday yok.
+
+---
+
+## MADDE 349 — BUGÜNÜN KİTABININ (15×4) SERMAYE MERDİVENİ, YENİ ZEMİNDE
+
+Madde 304/339'un merdiveni 13×3'e ve eski zemine aitti. Bot bugün
+1.000-20.000 $ aralığının tamamında 4 bacak açıyor; bacak = bakiye/150.
+Basamaklar madde 295'in borsa tablosundan:
+
+    bakiye            bacak        evren   hz  yillik  Sh22  Sh25  dusus  esitR*  fark
+    < 1.636 $         < 10,91 $    D9      0  +116,4  2,48  2,92  -19,4  +116,4   +0,3
+                                           1  +122,9  2,66  2,97  -20,8  +126,4   +4,5
+    1.636-3.000 $     10,91-20 $   D8      0  +116,1  2,51  2,87  -19,4  (taban)
+                                           1  +121,9  2,63  2,97  -21,2  (taban)
+    3.000-12.541 $    20-83,61 $   D2/D1   0  +120,2  2,62  2,98  -17,4  +141,6  +25,5
+                                           1  +125,9  2,77  3,07  -17,7  +165,3  +43,4
+    >= 12.541 $       >= 83,61 $   TAM     0  +122,4  2,68  3,03  -16,0  +162,2  +46,0
+                                           1  +121,1  2,69  3,05  -16,4  +180,1  +58,2
+
+    * esitR = D8 kitabının düşüşüne kaldıraçlanınca yıllık getiri.
+
+**Okuma:**
+- **Tek gerçek basamak 3.000 $:** ETH/BCH/LTC/ETC/LINK/AAVE grubu
+  (20 $ asgari) geri geliyor. Kaldıraçsız etkisi küçük getiri (+4 puan)
+  ama belirgin risk: düşüş 2-3,5 puan sığlaşıyor, Sharpe +0,1.
+- **D9 = D8:** AVAX'ın evrende olması fark etmiyor; 1.636 $ bir basamak
+  değil.
+- **D2 = D1:** QNT'nin katkısı sıfır (madde 295 üçüncü kez).
+- **Tam evren (12.541 $, BTC geri):** D1'e göre kaldıraçsız fark ~0
+  getiri, ~1,5 puan daha sığ düşüş.
+- "eşit riskte +25..+58" sütunu **kaldıraç başlığıdır** (madde 339):
+  sığ düşüşü kaldıraçla geri doldurmanın getirisi. Kaldıraçsız gerçek
+  kazanç: 3.000 $'da ~+4 puan getiri + daha sığ düşüş.
+
+**Pratik sonuç:** 2.000 $'dan 3.000 $'a çıkmak bu kitabın tek ölçülmüş
+yapısal iyileşmesi; 3.000 $'dan sonra 12.541 $'a kadar evren değişmiyor.
+Ve 3.000 $ aynı zamanda madde 346'nın prim çarpanının kuraldan geçtiği
+seviye.
+
+**AYAR DEĞİŞMEDİ** (sermaye bir ayar değil).
