@@ -2841,3 +2841,35 @@ Ve 3.000 $ aynı zamanda madde 346'nın prim çarpanının kuraldan geçtiği
 seviye.
 
 **AYAR DEĞİŞMEDİ** (sermaye bir ayar değil).
+
+---
+
+## MADDE 350 — 15×4 KİTABINDA BEŞ AYARIN KOMŞU TARAMASI: DOKUZ KOL RED, HAVUZ 4 CİDDİ
+
+Araç `arastirma_m350_15x4_tarama.py`, kural koşudan önce yazıldı.
+Kontrole göre FARKLAR (yıllık puan, Sharpe, düşüş puanı, eşit-risk):
+
+    kol     bak  hz  yillik  Sh22   Sh25  dusus   esitR  kald 4sart   P%
+    HAVUZ4 2000   0   +7,4  +0,17  +0,02  -2,3   +33,5  1,15  YYYY  92,6
+    HAVUZ4 2000   1   +8,8  +0,22  +0,02  -4,3   +65,0  1,28  YYYY  94,3
+    HAVUZ4 3500   0   +5,7  +0,11  +0,04  -2,2   +34,4  1,16  YYYY  83,3
+    HAVUZ4 3500   1   +1,3  +0,05  -0,05  -2,3   +29,6  1,15  XYYY  58,7
+    HAVUZ2  (dört hücrede de RED, P %18-37)
+    REB4 / REB6     RED (REB4 ham +3..+11 ama Sharpe düşüyor; REB6 -12..-16)
+    TPL30           RED (-20 puan, P %0,4-1,0 — keskin kenar)
+    TPL50           RED (+6..+7 ham, şart 1'den düşüyor, P %59-77)
+    TPS15 / TPS25   RED
+    UC30 / UC50     RED
+
+**HÜKÜM:** HAVUZ 4 — 2.000 $'da GEÇTİ (iki hiza), 3.500 $'da 1/2 hiza →
+ön kayıtlı kurala göre **KARAR DEĞİL**. Diğer dokuz kol RED; REB 5 gün,
+TPL 0,40, TPS 0,20 ve UCELE 0,40 bu kitapta da yerinde.
+
+**Okuma:** HAVUZ 4 bir kaldıraç başlığı DEĞİL — kaldıraçsız hâliyle hem
+daha çok kazanıyor hem daha sığ düşüyor (şart 4 bu yüzden geçiyor,
+madde 227'nin "kozmetik kaldıraç" istisnası). Yön monoton (2 < 3 < 4).
+Mekanizma tahmini (doğrulanmadı): havuz = HAVUZ × bacak; 4 bacakta
+havuz 12, 5 bacaklık kitapta 15 idi — bacak azalınca seçim genişliği
+daraldı, HAVUZ 4 onu geri açıyor (16).
+
+Plato testi: madde 352 (HAVUZ 5, 6).
