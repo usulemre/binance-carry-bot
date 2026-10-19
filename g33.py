@@ -651,7 +651,13 @@ if __name__=='__main__':
                     return (1-_w)*p1+_w*p2
                 calis2(ad,n,_bl)
         elif ad=='ls':
-            L=np.log(M['count_long_short_ratio']).values
+            # MADDE 362: LS_GECIKME bar (4 sa) kadar BAYAT oran - canli botun
+            # oran API'si cevap vermezse "son bilinen oranlari" kullanmasinin
+            # maliyeti. 0 (varsayilan) -> eski davranis birebir.
+            _lg=int(os.environ.get('LS_GECIKME','0'))
+            _Lr=M['count_long_short_ratio']
+            if _lg>0: _Lr=_Lr.shift(_lg)
+            L=np.log(_Lr).values
             calis2(ad,n,lambda i,a,t: -t*L[i][a])     # long tarafta dusuk oran, short tarafta yuksek
         elif ad in ('tp_ters','ls_tpele','ls_tpkat','ls_tpele_p','ls_tpkat_p'):
             # MADDE 255: madde 254'un ondalik tablosu TARAF ASIMETRIK cikti -
