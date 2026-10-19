@@ -3030,3 +3030,16 @@ kaydı, çünkü yapı (bacak sayısı) değişti.
 
 Geri almak için: `CARRY_KALABALIK_HAVUZ=3`. Ön uçuş ve testler 4,0'a
 bağlandı.
+
+### Madde 352 notu — entegrasyon testinin 5 hatası bu değişiklikten ÖNCE de var
+
+`test_carry_entegrasyon.py` HAVUZ 3,0'lı eski kodla (commit 2063eeb)
+koşturuldu: **aynı 5 kontrol düşüyor**. Yani HAVUZ 4'ün sonucu değil.
+Beşi de bacak sayısını `cb.N_LEGS` (5) ile karşılaştırıyor, ama bir
+turda taraf başına **8 farklı sembol** emir alıyor — ne 5 (N_LEGS) ne 4
+(BACAK_TAVAN). Testi beklenen sayıyı değiştirerek "düzeltmek" bu
+farkı örtbas eder; 8'in nereden geldiği (dilim × bacak etkileşimi mi,
+gerçek bir kusur mu) **açık eksen**, ölçülmedi.
+(Yan not: `CARRY_KALABALIK_HAVUZ=3` ortam değişkeniyle koşuda 6. bir
+kontrol — "uç funding'e büyük pozisyon" — düştü; madde 333 bu kontrolün
+paket ortasındaki duruma duyarlı olduğunu kayda geçirmişti.)
