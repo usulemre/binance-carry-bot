@@ -3385,6 +3385,57 @@ kontrol("329: dosya TRANSKRIPTTEN yeniden yazildigini SOYLUYOR",
         A329.YENIDEN_YAZILDI is True
         and "ORIJINAL DEGIL" in A329.YENIDEN_YAZMA_NOTU)
 
+print("\n6az) MADDE 341 - BACAK TAVANI VE EVRENE GORE DEVRE KESICI")
+import carry_bot as _cb341
+
+kontrol("madde 341: BACAK_TAVAN varsayilan 4",
+        _cb341.BACAK_TAVAN == 4)
+kontrol("madde 341: 2.000 $'da DAVRANIS DEGISMEDI (4 bacak, D8)",
+        _cb341.uygun_bacak_sayisi(2000.0) == 4
+        and cr.kosulan_evren(2000.0) == "D8")
+kontrol("madde 341: buyuk bakiyede bacak 5'e CIKMIYOR",
+        _cb341.uygun_bacak_sayisi(3250.0) == 4
+        and _cb341.uygun_bacak_sayisi(8361.0) == 4
+        and _cb341.uygun_bacak_sayisi(50000.0) == 4)
+kontrol("madde 341: olculen EVREN BASAMAKLARI tutuyor",
+        cr.kosulan_evren(2576.0) == "D7"
+        and cr.kosulan_evren(3000.0) == "D2"
+        and cr.kosulan_evren(3564.0) == "D1")
+kontrol("madde 341: CARRY_BACAK_TAVAN=5 eski davranisa DONDURUYOR",
+        min(_cb341.N_LEGS, 5, max(_cb341.MIN_LEGS,
+            int((3250.0 / _cb341.N_DILIM) * _cb341.GROSS_EXPOSURE
+                * _cb341.taban_pay() / _cb341.MIN_BACAK_USD))) == 5)
+kontrol("madde 341: genis evren DAHA SIKI esik aliyor (alarm ERKEN calar)",
+        cr.dusus_incele("15x4", 3000.0) == -0.21
+        and cr.dusus_durdur("15x4", 3000.0) == -0.27
+        and cr.dusus_incele("15x4", 2000.0) == -0.23)
+kontrol("madde 341: BAKIYE VERILMEZSE madde 329 davranisi BIREBIR",
+        cr.dusus_incele("15x4") == -0.23
+        and cr.dusus_durdur("15x4") == -0.30
+        and abs(cr.backtest_maksimumu("15x4") - 19.91) < 1e-9)
+kontrol("madde 341: ayni dusus (-%21) 2.000 $'da DEVAM, 20.000 $'da INCELE",
+        cr.karar({"gun": 40, "dusus": -0.21, "ilk_bakiye": 2000.0},
+                 {"durum": "YETERSİZ"}, {}, {})[0] == "DEVAM"
+        and cr.karar({"gun": 40, "dusus": -0.21, "ilk_bakiye": 20000.0},
+                     {"durum": "YETERSİZ"}, {}, {})[0] == "İNCELE")
+kontrol("madde 341: esikler KANONIK yontemle turetildi ve olcumu YAZILI",
+        cr.KITAP_ESIK_EVREN_OLCUM["D2"][0] == (-20.97, -26.78)
+        and cr.KITAP_ESIK_EVREN_OLCUM["D2"][1] == (-19.71, -24.99)
+        and "yil_bootstrap" in open(
+            os.path.join(R, "carry_rapor.py"), encoding="utf-8").read())
+kontrol("madde 341: OLCULMEYEN evrenler komsusuna BAGLANDI diye yazili",
+        cr.KITAP_ESIK_EVREN["D7"] == cr.KITAP_ESIK_EVREN["D8"]
+        and cr.KITAP_ESIK_EVREN["D1"] == cr.KITAP_ESIK_EVREN["D2"]
+        and "olculmemis bir sayiyi" in open(
+            os.path.join(R, "carry_rapor.py"), encoding="utf-8").read().lower()
+        .replace("\u00f6", "o").replace("\u00e7", "c").replace("\u00fc", "u")
+        .replace("\u015f", "s").replace("\u011f", "g").replace("\u0131", "i"))
+_cb341_kaynak = open(os.path.join(R, "carry_bot.py"), encoding="utf-8").read()
+kontrol("madde 341: kanal A/B olcumu BELGEDE (dort sart ve 1,36x)",
+        "DÖRT ŞART DA GEÇTİ" in _cb341_kaynak
+        and "1,36x" in _cb341_kaynak
+        and "+21,3" in _cb341_kaynak and "+38,1" in _cb341_kaynak)
+
 print("\n7) PREFLIGHT ÖZETİ DOĞRU KARAR VERİYOR")
 pf._sayac.update({pf.TAMAM: 3, pf.UYARI: 0, pf.HATA: 0}); pf._satirlar.clear()
 kontrol("hata yoksa çıkış kodu 0", pf.yaz_ozet() == 0)

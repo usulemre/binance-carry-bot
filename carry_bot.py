@@ -863,6 +863,39 @@ Binance minimumu 5 USDT ama 15 seçildi çünkü:
     daha yüksektir (BTC ~100$, SOL ~150$)
   - minimuma çok yakın bacaklar yuvarlama sonrası altına düşebilir"""
 
+BACAK_TAVAN = int(os.getenv("CARRY_BACAK_TAVAN", "4"))
+"""MADDE 341 — bacak sayısının ÜST tavanı; bakiye büyüse de aşılmaz.
+
+NEDEN VAR: `uygun_bacak_sayisi()` bakiyeyle bacak sayısını büyütüyordu.
+Bu İKİ kanalı birden oynatır (madde 326'nın yasası): bacak sayısı artar
+VE bacak büyüklüğü küçülür, yani ELENEN EVREN büyür. Kanallar ayrı
+ölçüldü (doğrulanmış zemin, iki hizalama sınıfı, ön kayıtlı kural):
+
+  kanal A — bacak 4 SABİT, evren D8 -> D2 (bacak 20,00 $)
+      hiza 0: şart1 +0,100/+0,090 · şart2 −1,70 · eşit risk **+21,3**
+      hiza 1: şart1 +0,100/+0,140 · şart2 −2,90 · eşit risk **+38,1**
+      DÖRT ŞART DA GEÇTİ, kaldıraç gerekmiyor (aday kaldıraçsız üstün)
+  kanal B — evren D8 SABİT, bacak 4 -> 5
+      şart 1 DÜŞTÜ (25-26 Sharpe −0,050), eşit risk için **1,36x** ister
+
+Ve 5 bacak her evren basamağını ~%25 daha fazla sermayeye iter:
+      evren   4 bacak tavanı   5 bacak (eski kural)
+      D7         2.576 $          3.219 $
+      D2         3.000 $          3.750 $   <- kazancın ~%95'i bu basamakta
+      D1         3.564 $          4.455 $
+2.812 $'da eski kural 5'e çıkıyor, bacak 15,00 $'a düşüyor ve evren
+D8'de KALIYOR — yani D2 basamağı hiç gelmiyor.
+
+ÖLÇÜLEN BASAMAKLAR (4 bacak, hiza 0 / eşit-risk puanı):
+      D7 @2.576 $  +2,7   · D2 @3.000 $  +21,3 · D1 @3.564 $  +0,0
+AAVE'nin katkısı +0,9 puan, QNT'nin katkısı SIFIR (madde 296 da öyle
+yazmış); kazanç beş majorün (ETH·LINK·LTC·BCH·ETC) 20,00 $ eşiğinde
+dönmesinden geliyor.
+
+2.000 $'da DAVRANIŞ DEĞİŞMEZ (zaten 4 bacak). Tavan sermaye gelince
+işler. Eski davranışa dönmek için: CARRY_BACAK_TAVAN=5.
+"""
+
 MIN_LEGS = int(os.getenv("CARRY_MIN_LEGS", "4"))
 """Bacak sayısı bu değerin altına düşerse tur atlanır.
 
@@ -2308,8 +2341,22 @@ def uygun_bacak_sayisi(bakiye: float, olcek: float = 1.0) -> int:
     # bot bacakları %25 büyük sanar ve minimum emir sınırına takılan
     # bacaklar SESSİZCE açılmaz (her eksik bacak yıllık ~3 puan, madde 160).
     n = int(dilim * GROSS_EXPOSURE * taban_pay() / max(MIN_BACAK_USD, 1e-9))
-    # Sıra önemli: N_LEGS üst sınırdır, MIN_LEGS ondan büyük olsa bile aşılmaz
-    return min(N_LEGS, max(MIN_LEGS, n))
+    # MADDE 341: BACAK TAVANI. Bacak sayısını bakiyeyle büyütmek İKİ şeyi
+    # birden yapar (madde 326'nın iki-kanal yasası): bacak sayısı artar VE
+    # bacak büyüklüğü küçülür, yani EVREN daralır. İki kanal ayrı ölçüldü:
+    #   kanal A (bacak 4 sabit, evren D8->D2): DÖRT ŞART DA GEÇTİ,
+    #           eşit risk +21,3 (hiza 0) / +38,1 (hiza 1) puan, kaldıraç YOK
+    #   kanal B (evren D8 sabit, bacak 4->5): şart 1 DÜŞTÜ (25-26 -0,050)
+    #           ve eşit risk için 1,36x kaldıraç ister
+    # Üstüne 5 bacak her evren basamağını ~%25 daha fazla sermayeye iter:
+    #   evren   4 bacak tavanı   5 bacak (eski)
+    #   D7         2.576 $          3.219 $
+    #   D2         3.000 $          3.750 $     <- kazancın %95'i burada
+    #   D1         3.564 $          4.455 $
+    # 2.812 $'da eski kural 5'e çıkıyor ve bacak 15,00 $'a düşüp evren
+    # D8'de KALIYOR - yani D2 hiç gelmiyor. Tavan bunu engeller.
+    # 2.000 $'da davranış DEĞİŞMEZ (zaten 4); tavan sermaye gelince işler.
+    return min(N_LEGS, BACAK_TAVAN, max(MIN_LEGS, n))
 
 
 ASGARI_BACAK_CARPANI = float(os.getenv("CARRY_ASGARI_CARPAN", "2.0"))

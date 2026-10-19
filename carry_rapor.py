@@ -140,6 +140,81 @@ KITAP_DUSUS_KOSULAN = {
     # hala pozitif, cift ayakta, ama pay sanildigindan INCE.
     "15x4": (2000.0, "D8", 19.91),
 }
+
+# MADDE 341: EVREN BOYUTU. Madde 341'in bacak tavanı (BACAK_TAVAN=4)
+# bakiye büyüdükçe bacak sayısını sabit tutuyor, yani ARTIK AYNI KITAP
+# ANAHTARI birden çok evreni kapsıyor: 2.000 $'da D8, 3.000 $'da D2,
+# 3.564 $ ve üstünde D1. Tavandan ÖNCE 20.000 $ "15x5"e düşüyordu ve
+# devre kesici onun tablosunu kullanıyordu; tavandan SONRA aynı anahtara
+# düşüyor ve D8'in 19,91'ini kullanmaya kalkıyordu. **Bu yanlıştır ve
+# yanlış yönde yanlıştır:** geniş evrenli kitap DAHA AZ riskli (düşüş
+# 18,8 vs 21,70), dolayısıyla aynı −%21 orada DAHA alarm vericidir.
+# Preflight bunu yakaladı (329: "ayni dusus 20.000 $'da INCELE").
+#
+# Madde 329'un kendi yasası zaten bunu söylüyordu: *koşulan düşüş
+# tablosu (bakiye, EVREN) bağımlılığı taşır.* Evren boyutu eklendi.
+#
+# Sayılar 2026-10-19'da doğrulanmış zeminde ölçüldü, İKİ hizalama
+# sınıfında, ve her evren için EN KÖTÜ hizalama alındı (ihtiyatlı yön,
+# madde 231'in yöntemi). D7 yalnız bir hizalamada ölçüldü ve o yüzden
+# komşusunun en kötüsüne YUVARLANDI - ölçülmemiş bir sayıyı ölçülmüş
+# gibi yazmamak için.
+#   evren -> (asgari bacak USD, en kotu hizalamada tam donem dusus)
+KITAP_DUSUS_EVREN = {
+    "D8": (0.00, 21.70),     # bacak < 17,17 $  (2.000 $)
+    "D7": (17.17, 21.70),    # AAVE doner       (2.576 $) - D8'e yuvarlandi
+    "D2": (20.00, 18.80),    # ETH LINK LTC BCH ETC doner (3.000 $)
+    "D1": (23.76, 18.80),    # QNT doner        (3.564 $) - katkisi SIFIR
+}
+KITAP_DUSUS_EVREN_OLCUM = {  # (hiza 0, hiza 1) ham olcumler
+    "D8": (20.25, 21.70), "D7": (20.10, None),
+    "D2": (18.50, 18.80), "D1": (18.50, 18.80),
+}
+
+# MADDE 341: EVRENE GORE ALARM ESIKLERI. Geniş evrenli kitap DAHA AZ
+# riskli, dolayısıyla alarmı DAHA ERKEN çalmalıdır; D8'in eşiğini D1
+# koşan bir kitapta kullanmak devre kesiciyi SUSTURUR.
+#
+# Yöntem madde 231/303'ün KANONİĞİ, aynen: rejim ayrımı 2025-01-01,
+# `arastirma_rejim.yil_bootstrap(n=4000, blok=21, tohum=11)`, EN KÖTÜ
+# rejimin ("dusuk prim") p5/p1'i, büyüklük bir sonraki tam sayıya
+# yukarı. Hizalamalar arasından EN KÖTÜ (en GENİŞ) eşik alındı — madde
+# 231'in seçimi bu ve yanlış alarm üretmemeyi tercih eder.
+#
+# Ölçülenler (en kötü rejim p5 / p1):
+#   D8 hiza0 -23,17 / -29,73   -> (-24, -30)   [kayıt: (-23, -30), fark
+#                                 0,34 puan, bütün zemin farklarıyla
+#                                 aynı yönde; KAYIT korunuyor]
+#   D2 hiza0 -20,97 / -26,78   -> (-21, -27)   <- SECILEN (en genis)
+#   D2 hiza1 -19,71 / -24,99   -> (-20, -25)
+# D7 ve D1 kendi serilerinde AYRI olculmedi: D7 komsusu D8'e, D1 ise
+# katkisi SIFIR olan QNT'den oturu D2'ye baglandi. Olculmemis bir sayiyi
+# olculmus gibi yazmamak icin boyle; ayri olculurse buraya girer.
+KITAP_ESIK_EVREN = {
+    "D8": (-0.23, -0.30),    # madde 329'un KAYITLI cifti korunuyor
+    "D7": (-0.23, -0.30),    # D8'e baglandi (ayri olculmedi)
+    "D2": (-0.21, -0.27),    # madde 341: olculdu
+    "D1": (-0.21, -0.27),    # D2'ye baglandi (QNT katkisi SIFIR)
+}
+KITAP_ESIK_EVREN_OLCUM = {
+    "D8": ((-23.17, -29.73), None),
+    "D2": ((-20.97, -26.78), (-19.71, -24.99)),
+}
+
+
+def kosulan_evren(bakiye: float = None) -> str:
+    """MADDE 341: bakiyenin verdiği bacak büyüklüğünün evren etiketi."""
+    import carry_bot as _cb
+    if bakiye is None:
+        return KITAP_DUSUS_KOSULAN.get("15x4", (None, "D8", None))[1]
+    n = _cb.uygun_bacak_sayisi(float(bakiye))
+    bacak = (float(bakiye) / _cb.N_DILIM) * _cb.GROSS_EXPOSURE * _cb.taban_pay() / n
+    en_iyi = "D8"
+    for ad, (asgari, _) in sorted(KITAP_DUSUS_EVREN.items(),
+                                  key=lambda kv: kv[1][0]):
+        if bacak >= asgari:
+            en_iyi = ad
+    return en_iyi
 KITAP_DUSUS_OFSET = {
     # MADDE 330: anahtar -> (en sig, en derin, olculen ofset sayisi)
     "15x4": (20.07, 21.70, 3),
@@ -255,33 +330,52 @@ def dusus_olcegi(anahtar: str = None) -> tuple[float, str]:
                f"{TEMEL_KITAP} %{temel:.2f} -> olcek {o:.3f}")
 
 
-def dusus_incele(anahtar: str = None) -> float:
+def dusus_incele(anahtar: str = None, bakiye: float = None) -> float:
     """Kosulan kitabin INCELE esigi (negatif oran).
 
     MADDE 303: olculmus cift varsa AYNEN kullanilir; yoksa madde 302'nin
     dusus-orani olceklemesine dusulur.
     """
     anahtar = anahtar or kitap_anahtari()
+    # MADDE 341: bacak tavani ayni anahtari birden cok evrene yaydi.
+    if bakiye is not None and anahtar in KITAP_ESIK:
+        ev = kosulan_evren(bakiye)
+        if ev in KITAP_ESIK_EVREN:
+            return KITAP_ESIK_EVREN[ev][0]
     if anahtar in KITAP_ESIK:
         return KITAP_ESIK[anahtar][0]
     return DUSUS_INCELE * dusus_olcegi(anahtar)[0]
 
 
-def dusus_durdur(anahtar: str = None) -> float:
+def dusus_durdur(anahtar: str = None, bakiye: float = None) -> float:
     """Kosulan kitabin DURDUR esigi (negatif oran). Madde 303: bkz. yukari."""
     anahtar = anahtar or kitap_anahtari()
+    # MADDE 341: bkz. dusus_incele - bakiye verilirse EVREN'e gore.
+    if bakiye is not None and anahtar in KITAP_ESIK:
+        ev = kosulan_evren(bakiye)
+        if ev in KITAP_ESIK_EVREN:
+            return KITAP_ESIK_EVREN[ev][1]
     if anahtar in KITAP_ESIK:
         return KITAP_ESIK[anahtar][1]
     return DUSUS_DURDUR * dusus_olcegi(anahtar)[0]
 
 
-def backtest_maksimumu(anahtar: str = None) -> float:
+def backtest_maksimumu(anahtar: str = None, bakiye: float = None) -> float:
     """Kosulan kitabin geri testteki maksimum dususu (POZITIF yuzde).
 
     MADDE 302: INCELE mesaji eskiden SABIT KODLU '-14.7' yaziyordu - o
     15x5'in sayisi. 13x3 kosan biri icin yanlis bir referanstir.
+
+    MADDE 341: `bakiye` verilirse EVREN'e gore okunur. Bacak tavani
+    ayni anahtari birden cok evrene yaydi; D8'in sayisini D1 kosan bir
+    kitapta kullanmak dususu FAZLA tahmin eder ve devre kesiciyi
+    SUSTURUR. Bakiye verilmezse davranis BIREBIR eskisi gibidir.
     """
     anahtar = anahtar or kitap_anahtari()
+    if bakiye is not None and anahtar in KITAP_DUSUS_KOSULAN:
+        ev = kosulan_evren(bakiye)
+        if ev in KITAP_DUSUS_EVREN:
+            return KITAP_DUSUS_EVREN[ev][1]
     if anahtar in KITAP_DUSUS_KOSULAN:      # madde 329: sermayeye bagli
         return KITAP_DUSUS_KOSULAN[anahtar][2]
     return KITAP_DUSUS.get(anahtar, KITAP_DUSUS[TEMEL_KITAP])
@@ -509,8 +603,12 @@ def karar(b: dict, sap: dict, sag: dict, fnd: dict) -> tuple:
     # MADDE 329: anahtar BAKIYEDEN turetilir - `uygun_bacak_sayisi` kucuk
     # bakiyede bacagi otomatik dusurur ve kitap "15x5" DEGIL "15x4"tur.
     _ank = kitap_anahtari(bakiye=b.get("ilk_bakiye") or None)
-    _ki, _kd = dusus_incele(_ank), dusus_durdur(_ank)
-    _kmax = backtest_maksimumu(_ank)
+    # MADDE 341: bacak tavani ayni anahtari birden cok evrene yaydigi
+    # icin esikler ve backtest maksimumu BAKIYEDEN de okunur. Bakiye
+    # yoksa davranis BIREBIR madde 329'daki gibi kalir.
+    _bk = b.get("ilk_bakiye") or None
+    _ki, _kd = dusus_incele(_ank, _bk), dusus_durdur(_ank, _bk)
+    _kmax = backtest_maksimumu(_ank, _bk)
     if d <= _kd:
         yukselt("DURDUR", f"düşüş %{d*100:.1f} - 1x'te 100 yılda 1 olay "
                           f"(sınır %{_kd*100:.0f}, {_ank})")
