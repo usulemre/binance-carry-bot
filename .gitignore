@@ -16,3 +16,11 @@ carry_dilimler.json
 bot.log
 data_metrik/
 data_premium_genis/
+
+# gizli anahtarlar - ASLA islenmez (config.py yalniz ortam degiskeni okur)
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets*
