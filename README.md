@@ -22703,3 +22703,50 @@ Tüm strateji ve risk parametreleri `config.py` içinde. Önemli olanlar:
   `logger.info` çağrılarının yanına webhook gönderimi ekleyebilirsiniz.
 - Trailing stop, kısmi kâr alma gibi gelişmiş çıkış mantıkları
   `exchange_client.py` üzerine inşa edilebilir.
+
+---
+
+## MADDE 335/336 — KONTEYNER KAYBI, ZEMİNİN YENİDEN KURULMASI, SAYILARIN YENİDEN TÜRETİLMESİ
+
+**2026-10-19.** Çalışma konteyneri (proje klasörü + geçici dizin)
+silindi. Git deposu ve indirilebilir yedek yoktu. Yedek riskini daha
+önce gündeme getirmeliydim; getirmedim.
+
+**Para kaybı YOK:** bot hiç canlı çalışmadı, ortamda hiç API anahtarı
+olmadı, "+%120" bir backtest yıllık getirisidir.
+
+- **Kurtarıldı:** madde 305'in `binance_bot_proje.zip` arşivi.
+- **KAYIP:** madde **306–328** — yalnızca konuşma özetlerinde iz var,
+  kodu/ölçümü/ön kaydı yok. Yeniden ölçülmeden kitaba alınamaz.
+- **YENİDEN YAZILDI (orijinal DEĞİL):** madde **329–333**; beş araştırma
+  modülü `YENIDEN_YAZILDI = True` bayrağı taşır.
+- **Madde 334'ün açık ekseni:** CPU yükü altında kararsız test
+  tekrarlanabilirliği ölçülemedi (konteyner yeniden başladı).
+
+**Zemin doğrulandı (madde 335).** `yeniden_kur.py` +
+`indir_metrik_surdurulebilir.py` + `parite_zinciri.sh`:
+
+| ölçü | hedef | yeni zemin |
+|---|---|---|
+| tam getiri | +%112,27 | **+%111,83** |
+| Sharpe | ~3,10 | **3,095** |
+| maks düşüş | −%14,54 | **−%14,51** |
+
+Evren **847 sembol**, pencere **2022-01-01 → 2026-08-31** — kayıtla
+birebir. Panel hücre sayıları artık kayıtlı (bir sonraki yeniden
+kurulumda bit düzeyinde karşılaştırma için):
+C 3.483.379 · ODE 8.659.728 · sk 3.265.634 · AK 3.068.786 ·
+H 3.483.379 · L 3.483.379.
+
+**Yayınlanan sayılar yeniden türetildi (madde 336).** Ayrıntı ve fark
+tablosu: `NEREDE_NE_VAR.md` §20 ve `KAR_HARITASI.md` madde 336.
+Özet: yıllık +%112,5 → **+%111,7**, Sharpe 2,942 → **2,892**, maks
+düşüş −%14,5 → **−%14,3**, pozitif ay oranı %86 → **%82**. Eski kayıt
+`YAYINLANAN_KAYIP_ZEMIN` / `HAFTALIK_KAYIP_ZEMIN`'de **silinmedi**.
+Farkın sebebi **izole edilmedi** ve öyle yazıldı.
+
+**Kalan veri eksiği:** `data_premium_genis/` ve `carry_prim.csv` kayıp;
+`indir_premium_surdurulebilir.py` geri kuruyor. Prim bulguları duruyor.
+
+**Yedek disiplini:** proje artık bir git deposu; her madde kendi
+işlemesiyle kayda geçiyor ve her maddede indirilebilir arşiv veriliyor.
