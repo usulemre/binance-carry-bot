@@ -2485,8 +2485,11 @@ karşılaştırma YAPILABİLSİN —
 C 3.483.379 · ODE 8.659.728 · sk 3.265.634 · AK 3.068.786 ·
 H 3.483.379 · L 3.483.379 (10.224 bar × 847 sembol).
 
-**Prim ekseni veri olarak KAYIP.** `data_premium_genis/` boş,
-`carry_prim.csv` yok. Madde 332'nin bekleyen `CARRY_PRIM_E = 0,10`
-kararı ve kasımdaki tohum yenilemesi bu veriyi ister;
-`indir_premium_surdurulebilir.py` geri kuruyor. **Bulgular duruyor,
-ham girdi yeniden indiriliyor** — yani karar hâlâ masada, ölçülebilir.
+**DÜZELTME: "prim ekseni veri olarak KAYIP" DEMEM YANLIŞTI.** Önce
+yazdım, sonra okudum — sıra tersiydi. `carry_prim.csv` canlı koşarken
+biriken bir dosya (`carry_bot.py:529`) ve bot hiç canlı koşmadı, yani
+yokluğu normal; eksikse çarpan 1,0'a döner, zararsız yön.
+`data_premium_genis/`'i ise **hiçbir modül okumuyor** — prim çarpanı
+funding serisinin kesitsel dağılımından geliyor (`g33.py:226`).
+İndirdiğim 853 sembol **gereksiz işti** ve bir kâr engelini kaldırmadı.
+**Prim ekseni veri beklemiyor, KARAR bekliyor.**

@@ -22745,8 +22745,10 @@ düşüş −%14,5 → **−%14,3**, pozitif ay oranı %86 → **%82**. Eski kay
 `YAYINLANAN_KAYIP_ZEMIN` / `HAFTALIK_KAYIP_ZEMIN`'de **silinmedi**.
 Farkın sebebi **izole edilmedi** ve öyle yazıldı.
 
-**Kalan veri eksiği:** `data_premium_genis/` ve `carry_prim.csv` kayıp;
-`indir_premium_surdurulebilir.py` geri kuruyor. Prim bulguları duruyor.
+**Veri eksiği YOK (düzeltme).** `data_premium_genis/` ve
+`carry_prim.csv` için "kayıp" dedim; yanlıştı. İlki hiçbir modül
+tarafından okunmuyor, ikincisi canlı koşarken birikiyor ve bot hiç
+canlı koşmadı. Ayrıntı: `NEREDE_NE_VAR.md` §20 düzeltme bloğu.
 
 **Yedek disiplini:** proje artık bir git deposu; her madde kendi
 işlemesiyle kayda geçiyor ve her maddede indirilebilir arşiv veriliyor.

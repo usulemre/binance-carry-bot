@@ -475,12 +475,29 @@ gerçekleşen düşüş hafifçe iyi — yeni zemin kitabı **kayırmıyor**.
 Pozitif ay oranındaki 4 puan yapısal değil örneklemdir (50 ay, bir ay
 = 2 puan); yapısal değişmezler ayakta (üst üste 6 negatif hafta).
 
-### Hâlâ eksik olan ham veri
-`data_premium_genis/` boş ve `carry_prim.csv` yok çıktı — prim
-ekseninin (madde 332'nin `CARRY_PRIM_E` kararı, kasımdaki tohum
-yenilemesi) **bulguları duruyor, ham girdisi kayıp**.
-`indir_premium_surdurulebilir.py` bunu geri kurar (curl tabanlı,
-kaldığı yerden devam eder — madde 335'in iki kez ödenmiş dersi).
+### DÜZELTME — "prim ekseninin ham girdisi kayıp" DEMEM YANLIŞTI
+İlk yazdığım hal şöyleydi: *"`data_premium_genis/` boş ve
+`carry_prim.csv` yok — prim ekseninin bulguları duruyor, ham girdisi
+kayıp."* **İkisi de yanlıştı ve ölçerek buldum:**
+
+- **`carry_prim.csv` kayıp değil, henüz var olmaması NORMAL.** Botun
+  kendi belgesi (`carry_bot.py:529`): *"Kesitsel prim geçmişi
+  (zaman,değer). Her turda bir satır — EK API İSTEĞİ YOK, ölçü zaten
+  toplanan funding serisinden çıkıyor. Dosya silinirse çarpan 1,0'a
+  döner (zararsız yön)."* Bot hiç canlı koşmadı, dolayısıyla dosya hiç
+  yazılmadı.
+- **`data_premium_genis/`'i HİÇBİR modül okumuyor.** Yalnızca
+  `indir_funding_genis.py` yazıyor. Prim çarpanı premium arşivinden
+  değil, funding serisinin kesitsel dağılımından geliyor
+  (`g33.py:226`: `(p90−p10)` → 30 günlük ortalama → 150 günlük KAYAN
+  medyana oran → `**BRUT_PRIM`).
+- Dolayısıyla `indir_premium_surdurulebilir.py` ile indirdiğim 853
+  sembol **gereksiz işti**. Dosya projede kalıyor (çalışıyor ve bir gün
+  gerekirse hazır) ama bir kâr engelini kaldırmadı. Bunu bir engel diye
+  rapor etmiştim; etmemeliydim — okumadan önce söyledim.
+
+**Gerçek durum:** prim ekseni veri beklemiyor, **karar bekliyor**
+(madde 332/337).
 
 ### Yedek disiplini
 Proje artık bir **git deposu**. Her madde kendi işlemesiyle kayda
