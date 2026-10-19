@@ -70,7 +70,7 @@ def tek(ad, panel, haric, h):
     pkl = f"{CIKTI}/{ad}.pkl"
     if os.path.exists(pkl):
         return ad, "var"
-    env = dict(os.environ, **M.TABAN, REZERV="0", SK_DOSYA=f"{CIKTI}/{panel}.pkl",
+    env = dict(os.environ, **dict(M.TABAN, REZERV="0", SK_DOSYA=f"{CIKTI}/{panel}.pkl"),
                FAZ_KAY=str(h), SEMBOL_HARIC=",".join(haric), E_CIKTI=pkl)
     with open(f"{CIKTI}/{ad}.txt", "w") as f:
         r = subprocess.run([sys.executable, "g33.py", "ls", str(M.BACAK)], cwd=KOK,
