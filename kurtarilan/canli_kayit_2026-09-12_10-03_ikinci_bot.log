@@ -1,0 +1,599 @@
+2026-09-12 16:16:48,625 [INFO] SÜRE DOLDU AAAUSDT: 0.6 gündür açık (limit 1 gün) - kapatılıyor
+2026-09-12 16:17:20,600 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 16:18:59,108 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 17:55:52,032 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 18:57:29,808 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 20:08:34,851 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 20:13:29,664 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 20:22:50,591 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 20:49:09,396 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 21:13:21,282 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 21:52:03,072 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-12 22:22:13,667 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:03:59,706 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:10:22,731 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:17:10,580 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:22:11,282 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:28:06,617 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:33:14,631 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:38:23,910 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:40:30,583 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:45:30,634 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:50:46,758 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 01:59:18,799 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 02:06:42,929 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 02:12:51,952 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 08:27:35,218 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 08:30:11,430 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 08:30:11,430 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 08:30:11,430 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 08:30:11,430 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 08:30:11,430 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 08:30:11,430 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 08:30:11,430 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 08:30:11,430 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 08:30:11,430 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 08:30:11,430 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 08:30:11,431 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 08:33:01,987 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 08:33:01,987 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 08:33:01,988 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 08:33:01,988 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 08:33:01,988 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 08:33:01,988 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 08:33:01,988 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 08:33:01,988 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 08:33:01,988 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 08:33:01,988 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 08:33:01,988 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 08:33:04,447 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 11:26:12,245 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 11:26:12,245 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 11:26:12,245 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 11:26:12,245 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 11:26:12,245 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 11:26:12,245 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 11:26:12,245 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 11:26:12,245 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 11:26:12,245 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 11:26:12,245 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 11:26:12,246 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 11:26:14,690 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 13:43:33,013 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 13:43:33,014 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 13:43:33,014 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 13:43:33,014 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 13:43:33,014 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 13:43:33,014 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 13:43:33,014 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 13:43:33,014 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 13:43:33,014 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 13:43:33,014 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 13:43:33,015 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 13:43:36,420 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 14:06:52,723 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:06:52,723 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 14:06:52,723 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:06:52,723 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:06:52,723 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 14:06:52,723 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:06:52,723 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:06:52,723 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 14:06:52,723 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:06:52,723 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 14:06:52,724 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 14:06:55,609 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 14:12:38,334 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:12:38,334 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 14:12:38,334 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:12:38,335 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:12:38,335 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 14:12:38,335 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:12:38,335 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:12:38,335 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 14:12:38,335 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:12:38,335 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 14:12:38,335 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 14:12:41,174 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 14:18:56,094 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:18:56,094 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 14:18:56,095 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:18:56,095 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:18:56,095 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 14:18:56,095 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:18:56,095 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:18:56,095 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 14:18:56,095 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:18:56,095 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 14:18:56,095 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 14:18:59,126 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 14:38:09,272 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:38:09,272 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 14:38:09,273 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:38:09,273 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:38:09,273 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 14:38:09,273 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:38:09,273 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:38:09,273 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 14:38:09,273 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:38:09,273 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 14:38:09,274 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 14:38:12,826 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 14:51:16,067 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:51:16,067 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 14:51:16,067 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:51:16,067 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:51:16,067 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 14:51:16,067 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:51:16,067 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:51:16,067 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 14:51:16,067 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:51:16,067 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 14:51:16,068 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 14:51:19,387 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 14:57:59,079 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:57:59,080 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 14:57:59,080 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:57:59,080 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:57:59,080 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 14:57:59,080 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:57:59,080 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 14:57:59,080 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 14:57:59,080 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 14:57:59,080 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 14:57:59,081 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 14:58:02,555 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 18:33:46,735 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:33:46,735 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 18:33:46,735 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:33:46,735 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 18:33:46,735 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 18:33:46,735 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:33:46,735 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 18:33:46,735 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 18:33:46,735 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:33:46,735 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 18:33:46,735 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 18:33:50,249 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 18:40:38,819 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:40:38,819 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 18:40:38,819 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:40:38,819 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 18:40:38,819 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 18:40:38,819 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:40:38,819 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 18:40:38,819 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 18:40:38,819 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:40:38,819 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 18:40:38,820 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 18:40:42,220 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 18:54:50,331 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:54:50,331 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 18:54:50,331 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:54:50,331 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 18:54:50,331 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 18:54:50,331 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:54:50,331 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 18:54:50,331 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 18:54:50,331 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:54:50,331 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 18:54:50,331 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 18:54:53,642 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 18:57:32,873 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:57:32,873 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 18:57:32,874 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:57:32,874 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 18:57:32,874 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 18:57:32,874 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:57:32,874 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 18:57:32,874 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 18:57:32,874 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 18:57:32,874 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 18:57:32,874 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 18:57:36,310 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 19:23:28,095 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 19:23:28,096 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 19:23:28,096 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 19:23:28,096 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 19:23:28,096 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 19:23:28,096 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 19:23:28,096 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 19:23:28,096 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 19:23:28,096 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 19:23:28,096 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 19:23:28,096 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 19:23:31,472 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-13 23:47:14,628 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 23:47:14,628 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-13 23:47:14,628 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 23:47:14,628 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 23:47:14,628 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-13 23:47:14,628 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 23:47:14,628 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-13 23:47:14,629 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-13 23:47:14,629 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-13 23:47:14,629 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-13 23:47:14,629 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-13 23:47:18,008 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 00:09:21,612 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 00:09:21,612 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 00:09:21,613 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 00:09:21,613 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 00:09:21,613 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 00:09:21,613 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 00:09:21,613 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 00:09:21,613 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 00:09:21,613 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 00:09:21,613 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 00:09:21,613 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 00:09:24,970 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 10:45:18,029 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 10:45:18,030 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 10:45:18,030 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 10:45:18,030 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 10:45:18,030 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 10:45:18,030 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 10:45:18,030 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 10:45:18,030 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 10:45:18,030 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 10:45:18,030 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 10:45:18,030 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 10:45:21,182 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 10:47:54,210 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 10:47:54,210 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 10:47:54,211 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 10:47:54,211 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 10:47:54,211 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 10:47:54,211 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 10:47:54,211 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 10:47:54,211 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 10:47:54,211 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 10:47:54,211 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 10:47:54,211 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 10:47:57,566 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 11:11:39,786 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 11:11:39,787 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 11:11:39,787 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 11:11:39,787 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 11:11:39,787 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 11:11:39,787 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 11:11:39,787 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 11:11:39,787 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 11:11:39,787 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 11:11:39,787 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 11:11:39,788 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 11:11:43,289 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 12:10:04,569 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:10:04,569 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 12:10:04,569 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:10:04,569 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 12:10:04,569 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 12:10:04,569 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:10:04,569 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 12:10:04,569 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 12:10:04,569 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:10:04,569 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 12:10:04,569 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 12:10:07,439 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 12:34:05,038 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:34:05,038 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 12:34:05,038 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:34:05,038 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 12:34:05,038 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 12:34:05,038 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:34:05,038 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 12:34:05,038 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 12:34:05,038 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:34:05,038 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 12:34:05,039 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 12:34:08,375 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 12:49:14,971 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:49:14,971 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 12:49:14,972 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:49:14,972 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 12:49:14,972 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 12:49:14,972 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:49:14,972 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 12:49:14,972 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 12:49:14,972 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:49:14,972 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 12:49:14,972 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 12:49:18,151 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 12:56:28,639 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:56:28,640 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 12:56:28,640 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:56:28,640 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 12:56:28,640 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 12:56:28,640 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:56:28,640 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 12:56:28,640 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 12:56:28,640 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 12:56:28,640 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 12:56:28,640 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 12:56:31,778 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 13:02:00,829 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:02:00,829 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 13:02:00,829 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:02:00,829 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 13:02:00,829 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 13:02:00,829 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:02:00,829 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 13:02:00,829 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 13:02:00,829 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:02:00,829 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 13:02:00,830 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 13:02:03,903 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 13:22:27,624 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:22:27,624 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 13:22:27,624 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:22:27,624 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 13:22:27,624 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 13:22:27,624 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:22:27,624 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 13:22:27,624 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 13:22:27,624 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:22:27,624 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 13:22:27,625 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 13:22:30,925 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 13:45:37,691 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:45:37,691 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 13:45:37,692 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:45:37,692 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 13:45:37,692 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 13:45:37,692 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:45:37,692 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 13:45:37,692 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 13:45:37,692 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 13:45:37,692 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 13:45:37,692 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 13:45:40,975 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 14:22:19,436 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 14:22:19,436 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 14:22:19,436 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 14:22:19,436 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 14:22:19,436 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 14:22:19,436 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 14:22:19,436 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 14:22:19,436 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 14:22:19,436 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 14:22:19,436 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 14:22:19,437 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 14:22:25,941 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-14 18:05:37,185 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 18:05:37,185 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 18:05:37,185 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 18:05:37,185 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 18:05:37,185 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 18:05:37,185 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 18:05:37,185 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 18:05:37,185 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 18:05:37,185 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 18:05:37,185 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 18:05:37,186 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-14 20:58:21,926 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 20:58:21,926 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-14 20:58:21,927 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 20:58:21,927 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 20:58:21,927 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-14 20:58:21,927 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 20:58:21,927 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-14 20:58:21,927 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-14 20:58:21,927 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-14 20:58:21,927 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-14 20:58:21,927 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-18 17:53:27,223 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-18 17:53:27,223 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-18 17:53:27,223 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-18 17:53:27,223 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-18 17:53:27,223 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-18 17:53:27,223 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-18 17:53:27,223 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-18 17:53:27,223 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-18 17:53:27,223 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-18 17:53:27,223 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-18 17:53:27,224 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-18 17:53:30,682 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-28 05:15:30,465 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 05:15:30,465 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-28 05:15:30,465 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 05:15:30,465 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 05:15:30,465 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-28 05:15:30,465 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 05:15:30,465 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 05:15:30,465 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-28 05:15:30,465 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 05:15:30,465 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-28 05:15:30,466 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-28 05:15:35,135 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-28 08:38:31,735 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 08:38:31,735 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-28 08:38:31,736 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 08:38:31,736 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 08:38:31,736 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-28 08:38:31,736 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 08:38:31,736 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 08:38:31,736 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-28 08:38:31,736 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 08:38:31,736 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-28 08:38:31,736 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-28 08:38:37,111 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-28 09:33:04,581 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 09:33:04,581 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-28 09:33:04,581 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 09:33:04,581 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 09:33:04,581 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-28 09:33:04,581 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 09:33:04,582 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 09:33:04,582 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-28 09:33:04,582 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 09:33:04,582 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-28 09:33:04,582 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-28 09:33:09,984 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-28 10:14:59,727 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 10:14:59,727 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-28 10:14:59,727 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 10:14:59,727 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 10:14:59,727 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-28 10:14:59,727 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 10:14:59,728 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 10:14:59,728 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-28 10:14:59,728 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 10:14:59,728 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-28 10:14:59,728 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-28 10:15:05,600 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-28 11:20:52,223 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 11:20:52,223 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-28 11:20:52,223 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 11:20:52,223 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 11:20:52,223 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-28 11:20:52,223 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 11:20:52,224 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 11:20:52,224 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-28 11:20:52,224 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 11:20:52,224 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-28 11:20:52,224 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-28 11:20:57,873 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-28 15:51:45,835 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 15:51:45,835 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-28 15:51:45,835 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 15:51:45,835 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 15:51:45,835 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-28 15:51:45,835 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 15:51:45,836 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-28 15:51:45,836 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-28 15:51:45,836 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-28 15:51:45,836 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-28 15:51:45,836 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-28 15:51:51,377 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-09-29 22:46:47,776 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-29 22:46:47,776 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-09-29 22:46:47,777 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-29 22:46:47,777 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-29 22:46:47,777 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-09-29 22:46:47,777 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-29 22:46:47,777 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-09-29 22:46:47,778 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-09-29 22:46:47,778 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-09-29 22:46:47,778 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-09-29 22:46:47,778 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-09-29 22:46:52,628 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-02 22:25:15,297 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 22:25:15,297 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-02 22:25:15,298 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 22:25:15,298 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-02 22:25:15,298 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-02 22:25:15,298 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 22:25:15,298 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-02 22:25:15,298 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-02 22:25:15,298 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 22:25:15,299 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-02 22:25:15,299 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-02 22:25:21,384 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-02 22:59:06,125 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 22:59:06,125 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-02 22:59:06,126 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 22:59:06,126 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-02 22:59:06,127 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-02 22:59:06,127 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 22:59:06,127 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-02 22:59:06,127 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-02 22:59:06,127 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 22:59:06,127 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-02 22:59:06,128 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-02 22:59:12,700 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-02 23:33:51,569 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 23:33:51,569 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-02 23:33:51,571 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 23:33:51,571 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-02 23:33:51,571 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-02 23:33:51,571 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 23:33:51,571 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-02 23:33:51,571 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-02 23:33:51,571 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-02 23:33:51,571 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-02 23:33:51,576 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-02 23:33:57,608 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-03 00:34:08,644 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 00:34:08,644 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-03 00:34:08,645 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 00:34:08,645 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 00:34:08,645 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-03 00:34:08,645 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 00:34:08,645 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 00:34:08,645 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-03 00:34:08,645 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 00:34:08,645 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-03 00:34:08,649 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-03 00:34:15,448 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-03 00:43:08,001 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 00:43:08,001 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-03 00:43:08,002 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 00:43:08,002 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 00:43:08,002 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-03 00:43:08,002 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 00:43:08,002 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 00:43:08,002 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-03 00:43:08,002 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 00:43:08,002 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-03 00:43:08,003 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-03 00:43:14,123 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-03 01:20:18,240 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 01:20:18,241 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-03 01:20:18,241 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 01:20:18,241 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 01:20:18,241 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-03 01:20:18,242 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 01:20:18,242 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 01:20:18,242 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-03 01:20:18,242 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 01:20:18,242 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-03 01:20:18,242 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-03 01:20:24,063 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-03 01:22:57,603 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 01:22:57,603 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-03 01:22:57,604 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 01:22:57,604 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 01:22:57,604 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-03 01:22:57,604 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 01:22:57,604 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 01:22:57,604 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-03 01:22:57,604 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 01:22:57,605 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-03 01:22:57,605 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-03 01:23:03,664 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-03 02:03:34,541 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 02:03:34,541 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-03 02:03:34,542 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 02:03:34,542 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 02:03:34,542 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-03 02:03:34,542 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 02:03:34,542 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 02:03:34,542 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-03 02:03:34,543 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 02:03:34,543 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-03 02:03:34,543 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-03 02:03:40,938 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-03 02:11:36,912 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 02:11:36,912 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-03 02:11:36,913 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 02:11:36,913 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 02:11:36,913 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-03 02:11:36,913 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 02:11:36,913 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 02:11:36,913 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-03 02:11:36,913 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 02:11:36,914 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-03 02:11:36,914 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-03 02:11:42,666 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
+2026-10-03 03:39:16,638 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 03:39:16,638 [INFO] BTCUSDT: SL=95.000000 TP=110.000000 ayarlandı.
+2026-10-03 03:39:16,639 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 03:39:16,639 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 03:39:16,639 [WARNING] BTCUSDT: korumasız pozisyon kapatıldı.
+2026-10-03 03:39:16,639 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 03:39:16,639 [ERROR] BTCUSDT: STOP-LOSS KURULAMADI (SL emri reddedildi) - pozisyon korumasız kalmasın diye KAPATILIYOR.
+2026-10-03 03:39:16,639 [ERROR] BTCUSDT: POZİSYON KAPATILAMADI (kapatma basarisiz)! AÇIK VE KORUMASIZ POZİSYON VAR - DERHAL MANUEL MÜDAHALE EDİN. Yön=LONG miktar=1.0
+2026-10-03 03:39:16,639 [INFO] POZİSYON AÇILDI (doğrulandı): BTCUSDT LONG miktar=1.0 giriş~100.0 skor=4.0
+2026-10-03 03:39:16,639 [WARNING] BTCUSDT: take-profit kurulamadı (TP emri reddedildi). SL mevcut, risk sınırlı - pozisyon açık bırakılıyor.
+2026-10-03 03:39:16,640 [ERROR] BTCUSDT: emir DOLMADI (durum: NEW), SL/TP kurulmayacak, pozisyon takibe alınmayacak. Manuel kontrol edin.
+2026-10-03 03:39:21,864 [INFO] SÜRE DOLDU AAAUSDT: 10.0 gündür açık (limit 10 gün) - kapatılıyor
