@@ -3156,3 +3156,76 @@ eşit riskte yenilmiyor.
 `PYTHONHASHSEED=5` (eskiden rezerv senaryosunda uç coinleri HİÇ seçmeyen
 tohum) ve `=11`: **142 [OK], 0 [HATA]**, ikisinde de. Madde 356/360'ın
 test düzeltmeleri kapandı; paket artık hash tohumundan bağımsız.
+
+---
+
+## MADDE 358 — KALABALIK ÖLÇÜTÜ (HAVUZ 4): DÖRT ALTERNATİF RED; ASIL BULGU `ls` BİLGİSİNİN DEĞERİ
+
+```
+kol        bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%  P_pla   (kontrol: ls, HAVUZ 4; farklar)
+top       2000  0   -69.4 -1.28 -1.05   +7.0   -87.7  0.69  XXXY   0.4   11.1
+top       2000  1   -74.3 -1.46 -0.99   +6.2   -92.2  0.71  XXXY   0.0   33.7
+top       3500  0   -79.8 -1.60 -1.20   +8.2   -97.9  0.62  XXXY   0.0   23.9
+top       3500  1   -79.6 -1.72 -1.06   +8.7   -98.8  0.62  XXXY   0.0    8.3
+HUKUM top: RED
+
+ls_fark   2000  0    +3.7 +0.11 +0.21   +3.7   -27.7  0.81  YXXY  37.3   93.7
+ls_fark   2000  1   -10.3 -0.09 -0.02   +4.8   -46.1  0.77  XXXY  14.7   98.5
+ls_fark   3500  0    -3.6 +0.00 +0.10   +7.9   -58.1  0.64  YXXY  28.6   98.1
+ls_fark   3500  1   -10.9 -0.21 +0.10   +8.5   -63.9  0.62  XXXY  12.8   92.0
+HUKUM ls_fark: RED
+
+ls_lsdeg  2000  0   -44.1 +0.12 -0.57   -3.0   -20.9  1.22  XYXX  20.4   91.8
+ls_lsdeg  2000  1   -43.7 +0.04 -0.34   -1.3   -33.9  1.09  XYXX  24.6   98.9
+ls_lsdeg  3500  0   -48.5 +0.08 -0.66   -1.2   -39.9  1.09  XYXX  14.8   95.7
+ls_lsdeg  3500  1   -47.4 +0.04 -0.53   -0.4   -44.3  1.03  XYXX  15.5   92.7
+HUKUM ls_lsdeg: RED
+
+oi_ters   2000  0   -81.3 -0.75 -1.57   +2.9   -88.6  0.84  XYXY   0.3   12.7
+oi_ters   2000  1   -86.0 -0.90 -1.51   +2.2   -92.1  0.88  XYXY   0.3   58.3
+oi_ters   3500  0   -85.4 -0.90 -1.65   +4.1   -95.2  0.77  XXXY   0.0   32.6
+oi_ters   3500  1   -83.0 -0.89 -1.52   +4.1   -93.8  0.78  XXXY   0.3   31.3
+HUKUM oi_ters: RED
+
+rast1     2000  0   -76.8 -0.35 -0.93   -2.6   -66.3  1.19  XYXX   4.7    nan
+rast1     2000  1   -91.0 -0.87 -1.25   -2.3   -83.4  1.17  XYXX   0.3    nan
+rast1     3500  0   -88.1 -0.28 -1.59   +0.2   -88.8  0.98  XYXY   1.1    nan
+rast1     3500  1   -82.4 -0.67 -0.68   +0.8   -85.2  0.95  XYXY   1.8    nan
+(rast1 plasebodur; satirlari kalabalik bilgisinin DEGERINI gosterir)
+
+```
+
+- **Plasebo (havuzda rastgele seçim) kontrolün −77..−91 puan ALTINDA.**
+  HAVUZ 4'te her taraf 16 aday arasından 4 seçiyor; seçimi bugünkü `ls`
+  (genel hesap oranı) yapmazsa kitap çöküyor. Bu, projede ölçülmüş en
+  büyük tek etkilerden biri ve madde 352'nin neden işlediğini açıklıyor:
+  havuzu genişletmek ancak seçici güçlüyse kazandırır.
+- `top` (üst trader POZİSYON oranı) ve `oi_ters` plasebo kadar kötü —
+  bilgi taşımıyor. `ls_fark` ve `ls_lsdeg` plaseboyu güvenle geçiyor
+  (P_pla %92-99) ama `ls`'nin kendisini geçemiyor: başka ölçüt eklemek
+  `ls`'yi sulandırıyor (madde 237'nin yasası, kalabalık ekseninde).
+- **Operasyonel risk (yeni):** canlı bot, oran API'si adayların yarısından
+  azına cevap verirse kalabalık seçimini kapatıp en uç n'e düşüyor. Bu
+  yedek davranış HAVUZ 4 kitabında ÖLÇÜLMEDİ → madde 361.
+
+## MADDE 359 — TPL 0,50 VE REB 4 GÜN (HAVUZ 4): RED
+
+```
+kol     bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%    med   (kontrol: 15x4 HAVUZ 4; farklar)
+TPL50  2000  0    +7.4 -0.01 +0.01   +0.3    +4.5  0.98  XYYY  70.6   +7.1
+TPL50  2000  1    +7.3 -0.05 +0.03   +0.4    +2.1  0.97  XYYY  56.3   +1.4
+TPL50  3500  0    +7.1 -0.01 -0.02   -0.1    +8.9  1.01  XYYY  70.6   +7.0
+TPL50  3500  1    +7.4 -0.03 +0.01   +0.1    +5.9  0.99  XYYY  62.1   +2.7
+HUKUM TPL50: RED
+
+REB4   2000  0   +13.3 +0.05 +0.04   +1.7    -5.1  0.90  YYXY  58.6   +3.3
+REB4   2000  1    +6.1 -0.12 -0.05   +1.9   -14.2  0.89  XYXY  22.5  -10.2
+REB4   3500  0    +7.0 -0.02 -0.06   +2.0   -15.3  0.87  XYXY  34.8   -6.1
+REB4   3500  1    +5.4 -0.12 -0.08   +1.7   -13.6  0.89  XYXY  31.3   -8.8
+HUKUM REB4: RED
+
+```
+
+TPL 0,50 dört hücrede +7 ham, şart 1, P %56-71. REB 4 ham +5..+13 ama
+düşüş +1,7..+2,0 derin, kaldıraç 0,87-0,90, eşit riskte negatif.
+TPL 0,40 ve REB 5 gün HAVUZ 4 kitabında da yerinde. AYAR DEĞİŞMEDİ.
