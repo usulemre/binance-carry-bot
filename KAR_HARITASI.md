@@ -2954,3 +2954,32 @@ ELEKTEN GECEN: YOK
   piyasa düzeyindeki hâli.
 
 Ayar DEĞİŞMEDİ.
+
+---
+
+## MADDE 355 — KULLANICININ ESKİ TABLOSU YENİDEN ÜRETİLDİ: +%154'LÜK SATIR = 13×3 + PRİM ÇARPANI
+
+Kullanıcı kayıp dönemden (306-328) bir tablo gönderdi. Son satırı
+(+%154,12 / Sh 2,877 / −%18,82 / net +196,21) depoda hiçbir yerde
+geçmiyordu. 13×3 D2'ye `BRUT_PRIM=0.10 REF=150` eklenerek ölçüldü
+(motor CAGR, iki hizalama):
+
+    satır  yapılandırma                    eski CAGR   bugün h0 / h1
+      1    15×5 tam evren (kontrol)         +112,27    +111,4 (parite)
+      2    15×4 D8, 2.000 $ (varsayılan)    +119,71    +116,2 / +122,0
+      3    15×4 D8 + prim                   +126,47    +123,0 / +128,8
+      4    13×3 D2, 2.000 $                 +146,30    +138,9 / +148,1
+      5    13×3 D2 + prim                   +154,12    +146,6 / +155,7
+
+Beş satırın beşi 0-3 puan içinde tekrarlıyor (fark: madde 345'in zemin
+kayması + hizalama). **Eski botun "+155"i bu yapılandırmadır** ve bugün
+de üretiliyor; motor düşüşü −%21,0/−%21,3, varsayılan kitapla (−%20,4/
+−%21,9) aynı. Canlı kurulumu: `CARRY_N_DILIM=13 CARRY_N_LEGS=3
+CARRY_PRIM_E=0.10`.
+
+**Varsayılan DEĞİL, çünkü iki bileşen de kuralı ayrı ayrı geçmedi:**
+13×3 (madde 348: dört şart iki hizada geçer, P %64/%77 < %80) ve prim
+(madde 346: 2.000 $'da şart 1, −0,01). 3.500 $+ 13×3 kaybediyor (348).
+Kombinasyon kuralın kanıt barına tabi tutulmadı. **Ayar DEĞİŞMEDİ; 2.000
+$'da bu yapılandırmayı açmak ölçülmüş ama kanıtlanmamış bir kullanıcı
+kararıdır.** Bakiye 3.000 $'ı geçince 15×4'e dönülmeli.
