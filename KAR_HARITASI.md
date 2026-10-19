@@ -3043,3 +3043,17 @@ gerçek bir kusur mu) **açık eksen**, ölçülmedi.
 (Yan not: `CARRY_KALABALIK_HAVUZ=3` ortam değişkeniyle koşuda 6. bir
 kontrol — "uç funding'e büyük pozisyon" — düştü; madde 333 bu kontrolün
 paket ortasındaki duruma duyarlı olduğunu kayda geçirmişti.)
+
+## MADDE 356 — "TARAF BAŞINA 8 COİN" TESTİN AYARIYDI; CANLIDA 4, TAVAN ÇALIŞIYOR
+
+Gerçek varsayılanlarla (N_LEGS 5, MIN_LEGS 4, BACAK_TAVAN 4) sahte
+borsada tam tur: 2.000 $ / 10.000 $ / 50.000 $'da **taraf başına 4 bacak**.
+8'in kaynağı `test_carry_entegrasyon.py`'nin başındaki `MIN_LEGS=8`
+(madde 177'den kalma 12 bacaklık senaryolar): tur kodu bacağı
+`min(N_LEGS, max(MIN_LEGS, n))` ile sıkıştırıyor, tavanın 4'ü 8'e çıkıyor.
+
+**Kırılganlık:** `CARRY_MIN_LEGS` > `CARRY_BACAK_TAVAN` olursa tavan
+SESSİZCE iptal olur. Varsayılanlarda değil (4 = 4). Testlere eklendi:
+(a) beş bayat kontrol artık tur kodunun kendi kuralıyla beklenen bacağı
+ölçüyor, (b) gerçek varsayılanla tam turun taraf başına tavan kadar bacak
+açtığı, (c) `MIN_LEGS <= BACAK_TAVAN`.

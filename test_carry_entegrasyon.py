@@ -45,6 +45,16 @@ cb.DOLUM_BEKLEME_SN = 0.0
 basarisiz = []
 
 
+def beklenen_bacak(bakiye=10000.0):
+    """MADDE 356: tur kodunun KENDİ kuralıyla bu bakiyede açılacak bacak
+    sayısı. Testler eskiden cb.N_LEGS bekliyordu; madde 341'in tavanından
+    (BACAK_TAVAN=4) beri bu yanlıştı ve 5 kontrol sessizce kırıktı.
+    Test 12/8 bacak varsaydığı için burada 8 çıkar - canlıda 4 (aşağıda
+    "0b" bölümünde gerçek varsayılanlarla ayrıca ölçülüyor)."""
+    return min(cb.N_LEGS, max(cb.MIN_LEGS, cb.uygun_bacak_sayisi(bakiye)))
+
+
+
 def kontrol(ad, kosul, detay="", her_zaman=False):
     """MADDE 333: `her_zaman=True` ise detay GECSE DE basilir.
 
@@ -392,6 +402,25 @@ kontrol("dolum kovalama en az 2 deneme yapıyor", cb.DOLUM_DENEME >= 2,
 kontrol("küçük bakiyede bacak sayısı kendiliğinden düşüyor",
         _kucuk < _GERCEK_N_LEGS, f"({_kucuk})")
 
+print("0b) GERÇEK VARSAYILANLA TAM TUR: taraf başına bacak = tavan (madde 341/356)")
+_n12 = (cb.N_LEGS, cb.MIN_LEGS)
+cb.N_LEGS, cb.MIN_LEGS = _GERCEK_N_LEGS, _GERCEK_MIN_LEGS
+for _bk in (2000.0, 50000.0):
+    temiz_ortam()
+    _c = SahteClient(bakiye=_bk); _c.client.gonderilen = []
+    cb.bir_tur(_c, dry_run=False)
+    _la = {e[0] for e in _c.client.gonderilen if e[1] == "BUY"}
+    _ls = {e[0] for e in _c.client.gonderilen if e[1] == "SELL"}
+    kontrol(f"{_bk:,.0f} $: taraf başına {cb.BACAK_TAVAN} bacak (tavan) açılıyor",
+            len(_la) == len(_ls) == min(cb.N_LEGS, cb.BACAK_TAVAN),
+            f"(long {len(_la)}, short {len(_ls)})")
+# Tur kodu bacağı min(N_LEGS, max(MIN_LEGS, n)) ile sıkıştırır: MIN_LEGS
+# tavanı aşarsa tavan SESSİZCE yok sayılır (test ortamında 8 bacak böyle
+# çıkıyordu). Varsayılanlar bu tuzağa düşmemeli.
+kontrol("MIN_LEGS bacak tavanını AŞMIYOR (aşarsa tavan sessizce iptal olur)",
+        cb.MIN_LEGS <= cb.BACAK_TAVAN, f"(MIN {cb.MIN_LEGS} > TAVAN {cb.BACAK_TAVAN})")
+cb.N_LEGS, cb.MIN_LEGS = _n12
+
 print("1) KURU ÇALIŞMA (--dry-run) hiç emir göndermemeli")
 temiz_ortam()
 c = SahteClient()
@@ -498,8 +527,8 @@ except Exception as e:
 temiz_ortam()
 c2 = SahteClient(n_sembol=20)        # 10+10 bacak -> MIN_LEGS'in üstünde
 r2 = cb.bir_tur(c2, dry_run=False)
-kontrol("20 sembolde 10+10 bacakla çalışıyor (küçülterek devam)",
-        len(c2.client.gonderilen) == 20, f"({len(c2.client.gonderilen)} emir)")
+kontrol("20 sembolde küçülterek devam ediyor (taraf başına beklenen bacak)",
+        len(c2.client.gonderilen) == 2 * beklenen_bacak(), f"({len(c2.client.gonderilen)} emir)")
 kontrol("küçültülmüş portföy de dengeli",
         abs(sum(r2.get("hedef", {}).values())) < 1.0,
         f"(net {sum(r2.get('hedef', {}).values()):.2f})")
@@ -713,7 +742,7 @@ cb.bir_tur(c, dry_run=False)
 kontrol("tam turda delist sembolüne AÇILIŞ emri gitmedi",
         not ({e[0] for e in c.client.gonderilen} & _dl) and len(c.client.gonderilen) > 0)
 kontrol("delist sembolleri yerine başka coin seçildi (bacak boş kalmadı)",
-        len({e[0] for e in c.client.gonderilen}) == 2 * cb.N_LEGS,
+        len({e[0] for e in c.client.gonderilen}) == 2 * beklenen_bacak(),
         f"({len({e[0] for e in c.client.gonderilen})})")
 
 print("\n11c) KALABALIK SEÇİMİ (madde 148)")
@@ -736,10 +765,10 @@ kontrol("oran sadece ADAYLAR için çekildi (tüm evren değil)",
         0 < c.client.ls_cagri <= _azami,
         f"({c.client.ls_cagri} çağrı, azami {_azami}, evren {c.client.n})")
 kontrol("LONG bacakların hepsi short-kalabalık (oran 0.5)",
-        len(_al) == cb.N_LEGS and all(c.client.ls_oran[x] == 0.5 for x in _al),
+        len(_al) == beklenen_bacak() and all(c.client.ls_oran[x] == 0.5 for x in _al),
         f"({sorted(_al)})")
 kontrol("SHORT bacakların hepsi long-kalabalık (oran 3.0)",
-        len(_sat) == cb.N_LEGS and all(c.client.ls_oran[x] == 3.0 for x in _sat),
+        len(_sat) == beklenen_bacak() and all(c.client.ls_oran[x] == 3.0 for x in _sat),
         f"({sorted(_sat)})")
 kontrol("en uç funding'li ama kalabalık OLMAYAN C0-C9 long'lanmadı",
         not (_al & {f"C{i}USDT" for i in range(10)}))
@@ -756,7 +785,7 @@ cb.bir_tur(c3, dry_run=False)
 cb.KALABALIK_HAVUZ = _eski_kh
 _al3 = {e[0] for e in c3.client.gonderilen if e[1] == "BUY"}
 kontrol("oran API'si patlarsa bot DURMUYOR, eski seçime (en uç n) düşüyor",
-        len(_al2) == cb.N_LEGS and _al2 == _al3, f"({len(_al2)} long)")
+        len(_al2) == beklenen_bacak() and _al2 == _al3, f"({len(_al2)} long)")
 kontrol("CARRY_KALABALIK_HAVUZ=1 ile kapatılabiliyor (oran hiç çekilmiyor)",
         c3.client.ls_cagri == 0)
 
