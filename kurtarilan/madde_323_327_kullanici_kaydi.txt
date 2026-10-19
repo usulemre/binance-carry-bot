@@ -1,0 +1,133 @@
+Ön kayıtlı tahmin
+
+Madde 323 kumarı funding hizasına bağlamıştı. Buradan sınanabilir bir tahmin çıktı: funding 00/08/16'da ödenir, aralık = k×8 sa ve k mod 3 ≠ 0 ise faz kümesi üç slotu dolaşır. Madde 323'ün 24 saatlik kolu tam olarak “aynı slot”taydı. Tahmin: hizalı + dolaşan az-fazlı bir yapı, yayılımı 12 fazın seviyesine (~2-3 puan) indirir. Tutma süresi ızgarayı değiştirdiği için iki aday kurulabildi.
+
+Tahmin yanlış çıktı
+faz	yayılım
+12 faz × 8 sa	2,5 puan
+6 faz × 16 sa (hizalı, dolaşan)	51,5 puan
+6 faz × 20 sa (hizasız)	98,1 puan
+3 faz × 40 sa (hizalı, dolaşan)	107,1 puan
+
+Hiza gerçekten yardım etti — 98,1'i yarıya indirdi — ama 2-3 puana yaklaşmadı. Yayılım esas olarak faz sayısına bağlı, kabaca 1/faz ile. Yani madde 184'ün kazancını “funding hizası” diye okumam kısmen yanlıştı: birinci derece etken kaç bağımsız giriş zamanının ortalandığı, hiza ikinci derece.
+
+Yan doğrulama: kontrol kolunun yayılımı 2,5 puan — madde 184'ün sayısının birebir tekrarı. Yani sonuç ölçüm makinesinin kusuru değil.
+
+Ve hepsi dürüst medyanda kaybediyor
+kol	ort. seri	tek-medyan	bugüne (medyan)
+6 faz × 16sa, D1	+177,00 (+8,16)	+160,67	−8,16
+3 faz × 40sa, D1	+177,62 (+8,79)	+144,59	−24,25
+kontrol 12 faz, 4g	+163,24	+161,89	−6,95
+
+Manşetteki +8 puanlar dört hizalamayı ortalamanın ürünü — canlı botun sahip olmadığı bir çeşitlendirme (madde 323'ün yasası). Üstüne A şart 4'ten, B hem şart 1 hem şart 4'ten düşüyor.
+
+Hüküm: büyük-bacak ekseni kapandı
+
+Izgaranın sekiz noktası ölçüldü. 2.000 $’da daha büyük bacak veren hiçbir yapılandırma, tek-hizalama medyanında bugünün kitabını geçmiyor — geniş evrenin kazandırdığı, giriş-zamanı dağılımına kaybettiğinden az.
+
+⇒ Bugünün kitabı bir uzlaşma değil, bu sermayede ızgaranın en iyi noktası: 5 gün, 15 faz × 8 saat, 4 bacak, bacak 13,33 $, D8 = +168,83; CARRY_PRIM_E=0.10 ile +177,07.
+
+Daha fazlasının yolu artık net ve yapılandırmada değil: sermaye. 8.361 $’da bacak 44,59 $ ve yalnız BTC eleniyor — madde 304/316'nın merdiveni. Üç turdur yapılandırma eksenini kazıyorum ve her seferinde aynı duvara çıkıyor; bunu bir sonuç olarak kaydettim.
+
+Hayır — ve bu haklı bir yakalama. Madde 323'te o ekseni kapatmadım, yerine daha kolay bir soru koydum (ızgaradaki diğer faz sayıları) ve madde 324'te “eksen kapandı” dedim. 13 dilimin kendisi hâlâ ölçülmemişti. Şimdi ölçüyorum.
+
+Hayır, bakmamıştım. Madde 323'te o eksene dokunmadım — yerine daha kolay bir soru koydum (ızgaranın diğer faz sayıları), sonra madde 324'te “eksen kapandı” dedim. Sormasan kayıtta öyle kalacaktı. Şimdi ölçtüm. 1471 kontrol, hepsi geçti.
+
+Saat çözünürlüğü gerekmiyordu
+
+Engel panelin 4 saatlik olması değildi — faz ofsetlerinin range(0,REB,adim) ile üretilmesiydi. Gerçek bot da ayrık zamanlarda hareket ediyor; gereken tek şey ofsetlerin liste olması. g33.py’ye FAZ_LISTE ekledim:
+
+13 faz, 30 bara eşit aralıklı, bara yuvarlanmış:
+[0,2,5,7,9,12,14,16,18,21,23,25,28]  →  ortalama 2,31 bar = 9,23 sa
+
+Parite birebir: FAZ_LISTE boşken eski sonucu verdi (185,504471, fark 3e-07). Pahalı çözümü seçmeden önce ucuzunu aramam gerekirdi.
+
+Sonuç
+kol	net	bugüne	P(Sh)	4 şart
+BUGÜN 15 faz × 4, D8	+168,83	—	—	—
+13 faz × 3 bacak, D2, 20,51$	+176,37	+7,54	%68,9	YYYY
+13 faz × 5 bacak, D8	+168,46	−0,37	—	RYYR
+
+Dört şartı geçiyor, kaldıraç 1,037x (“kaldıraçsız zaten üstün”) — kaldıraç kararı yok, sermaye kararı yok.
+
+Ve faz yapısının bedeli ilk kez ölçüldü. Aynı evrende: 15 faz +185,50 → 13 faz +176,37 = −9,14 puan. Madde 320 bu bedeli sıfır varsaymıştı:
+
+evren kazancı (D8 → D2)	+16,67
+faz bedeli (15 → 13)	−9,14
+net (ortalama seri)	+7,54
+net (dürüst tek-hizalama medyanı)	+1,96
+İki düzeltme kendime
+
+1) Yayılım yalnız 16,5 puan (+165,4 / +181,9 / +170,8) — 12 fazın 2,5'ine yakın. Yani 13 dilim hiçbir zaman hizalama kumarının içinde değildi; madde 322/324'te onu 6-fazlı kumarla aynı kefeye koymam yanlıştı. Doğru itiraz “kumar” değil, “ölçülmemiş”ti.
+
+2) Madde 322'nin geri alması yine de doğruydu, ama gerekçesi artık keskin: “ölçülemez” değil, dürüst etkisi ~+2 puan ve P(Sh) %68,9 ile %80 kanıt barının altında. Dört şartı geçmek kanıt barını geçmek demek değil.
+
+Hüküm: sicile ölçülmüş aday olarak girdi, ayar değişikliği olarak girmedi. Bugünün kitabı 288 ile +177,07 — adayın ortalama-seri netinden (+176,37) zaten daha yüksek.
+
+Devam
+
+Yapılandırma ekseni kapandı ama bir parametre hâlâ madde 224'ün “yeniden açılacaklar” listesinde duruyor: REZERV_PAY (madde 156). Ve onun kimsenin fiyatlamadığı ikinci bir etkisi var — bacak büyüklüğü.
+
+Madde 326 kapandı. 1487 kontrol, hepsi geçti. Madde 224'ün bekleyen listesinden bir madde kapattım: REZERV_PAY.
+
+Kimsenin fiyatlamadığı ikinci kanal
+
+taban_pay() = 0,5 − REZERV/2 ve bacak bundan türüyor — yani REZERV yalnız fırsat rezervi değil, bacak büyüklüğü, dolayısıyla EVREN parametresi:
+
+REZERV	n=3	n=4	n=5
+0,00	22,22$ D2	16,67$ D8	13,33$ D8
+0,20	17,78$ D7	13,33$ D8 ← bugün	10,67$ D9
+0,30	15,56$ D8	11,67$ D8	9,33$ yasak
+İki kanal ayrı ayrı ölçüldü
+
+B) Evren sabit (D8), yalnız rezerv kaldırıldı: −14,06 puan, P(Sh) %7,8, şart 1-2-3'ün üçü de düşüyor. İlginç olan: CAGR yükseliyor (+119,71 → +137,24) ama düşüş 19,91 → 24,30 patlıyor, doz 1,282 → 1,094x çöküyor. ⇒ Rezerv bir getiri aracı değil, risk aracı — madde 156 tam bunu amaçlamış, ve artık fiyatı var.
+
+A) İki kanal birlikte (REZERV=0, 3 bacak, bacak 22,22$ → D2): +171,82, bugüne +2,98 — ama şart 1'den düşüyor (25-26 Sharpe −0,027) ve P(Sh) %62,6 ile kanıt barının altında.
+
+rezervi kaldırmak (evren sabit)	−14,06
+bacağın büyümesi → evren (D8→D2)	+17,05
+net	+2,98 (RED)
+
+İki kanal neredeyse birbirini götürüyor. Net’e bakıp “kazanç” demek burada iki ayrı kararı gizlerdi.
+
+Bir yan doğrulama: evren kanalının değeri bu sermayede üçüncü kez bağımsız olarak ~+17 puan çıktı (madde 320 +16,67 · madde 325 +16,67 · bugün +17,05). Tutarlı — ve onu bedelsiz elde etmenin yolu hâlâ bulunamadı.
+
+Bir de kendi hatam: REZERV=0,10 / 3 bacak hücresini yanlışlıkla D2 elemesiyle koşmuşum. Bacağı tam 20,00 $’a oturuyor, kayan noktada 19,9999… çıkıyor ve evreni belirsiz — madde 318'in yasası gereği karara girmedi, kullanmadım.
+
+Hüküm: REZERV_PAY = 0,20 yerinde kalıyor. Yeniden açıldı, yeniden ölçüldü, değişmedi, ve ilk kez fiyatlandı. Bugün koşan kitap: +168,83; 288 ile +177,07.
+
+Madde 224'ün listesinde kalan tek madde: HACIM_ESIK (madde 133).
+
+Devam
+
+Madde 224'ün listesindeki son madde: HACIM_ESIK (madde 133). Yeniden açıyorum.
+
+Madde 327 kapandı. 1503 kontrol, hepsi geçti. Ve madde 224'ün bekleyen listesi boşaldı.
+
+Ters-U, tepesi plato
+
+HACIM_ESIK bacağı değiştirmiyor ama havuzu belirliyor (panelden, medyan): 30M → 72 · 50M → 52 · 100M → 30 · 200M → 16 · 500M → 6.
+
+eşik	havuz	net	bugüne	P(Sh)	4 şart
+30M	72	+159,33	−9,51	%52,2	RYYY
+50M	52	+169,56	+0,73	%62,4	RYYY
+100M ← bugün	30	+168,83	—	—	—
+200M	16	+114,34	−54,49	%5,9	RRRY
+500M	6	+53,92	−114,91	%1,5	RYRR
+
+Yükseltmek felaket, ama sebebi “kötü seçim” değil kurulamama: motor turda en az 2×MIN_LEGS = 8 sembol istiyor, 500M’de medyan havuz 6.
+
+En yakın rakip 50M yalnız +0,73 puan — ve şart 1'den düşüyor (25-26 Sharpe −0,069), P(Sh) %62,4 ile kanıt barının altında. Platonun içindeki bir değeri değiştirmek iyileştirme değil.
+
+Backtest’in körlüğü — ve neden sonucu güçlendiriyor
+
+Komisyon sabit 2bp; madde 265'in ölçtüğü 2,570bp yalnız 18 likit sembolde. Eşiği düşürmek ince defterli isimler katar, maliyetini backtest görmez ⇒ 30M/50M sayıları üst sınır. Körlük yalnız reddedilen yöne bakıyor; yükseltmenin maliyeti backtest’te tam görünüyor. Yani “100M’de kal” sonucu zayıflamıyor, güçleniyor.
+
+Liste boşaldı
+parametre	madde	sonuç
+REZERV_PAY (156)	326	değişmedi, fiyatı +14,06
+HACIM_ESIK (133)	327	değişmedi, iki yanı ölçüldü
+
+Madde 222'nin yeniden-açma yasasıyla işaretlenmiş beş bayat tarama yeniden açıldı (222 bacak · 223 tutma · 224 havuz · 326 rezerv · 327 hacim) ve yalnız biri değişti — 222.
+
+Parametre uzayı artık gösterilebilir biçimde tükenmiş. Sekiz turdur yapılandırma eksenini kazıyorum: faz sayısı, bacak sayısı, tutma, rezerv, hacim, evren, üç kitap, manşonlar — hepsi ölçüldü, hiçbiri geçmedi. Kalan iki kaldıraç ikisi de biliniyor ve fiyatlı: sermaye (merdiven: 8.361 $’da yalnız BTC eleniyor) ve 288 (CARRY_PRIM_E=0.10, bugünün kitabında +8,24 → +177,07).

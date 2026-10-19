@@ -502,3 +502,79 @@ kayıp."* **İkisi de yanlıştı ve ölçerek buldum:**
 ### Yedek disiplini
 Proje artık bir **git deposu**. Her madde kendi işlemesiyle kayda
 geçer. İndirilebilir arşiv her maddede yenilenir.
+
+---
+
+## 21. MADDE 323–327 KISMEN KURTARILDI (kullanıcının kendi kaydından)
+
+§20'de "madde 306–328 geri getirilemedi" yazmıştım. **Beş maddesi geri
+geldi:** kullanıcı 2026-10-19'da madde 323–327'nin metnini kendi
+kaydından gönderdi. Kaynak: `kurtarilan/madde_323_327_kullanici_kaydi.txt`.
+
+**NE KURTARILDI, NE KURTARILMADI.** Ölçümler, tablolar ve hükümler
+kurtarıldı. **Kodu ve ön kayıtları kurtarılmadı** — bu maddeler
+dökümden yeniden yazılan 329–333 ile aynı statüde: sayıları var,
+üretimi yok. Yeniden ölçülmeden ayar değişikliğine dönüştürülemezler.
+
+### EN ÖNEMLİ DÜZELTME: ÇALIŞAN KİTABI YANLIŞ BİLİYORDUM
+Kurtarılan kaydın kendi cümlesi: *"Bugünün kitabı bir uzlaşma değil, bu
+sermayede ızgaranın en iyi noktası: **5 gün, 15 faz × 8 saat, 4 bacak,
+bacak 13,33 $, D8 = +168,83**; `CARRY_PRIM_E=0.10` ile **+177,07**."*
+
+Ben prim kollarını **15x5** üzerinde koşmaya başlamıştım. Yanlış kitap.
+2.000 $'da `uygun_bacak_sayisi(2000)=4` ve `OTOMATIK_BACAK=True`, yani
+canlı bot **15 faz × 4 bacak, D8** koşar. Kollar durdurulup doğru
+kitapta yeniden koşuldu. (Bu, madde 305'in yasasının üçüncü kez
+tekrarı: *ölçülmüş bir sabiti başka bir yapılandırmaya taşımak onu
+ölçülmemiş bir tahmine çevirir* — bu kez taşıyan bendim.)
+
+### MADDE 324 — BÜYÜK-BACAK EKSENİ KAPANDI
+Faz yayılımı esas olarak **faz sayısına** bağlı (~1/faz), funding hizası
+ikinci derece: 12 faz 2,5 puan · 6 faz×16sa (hizalı) 51,5 · 6 faz×20sa
+(hizasız) 98,1 · 3 faz×40sa 107,1. Madde 184'ün kazancını "funding
+hizası" diye okumak **kısmen yanlıştı**. 2.000 $'da daha büyük bacak
+veren hiçbir yapılandırma tek-hizalama medyanında bugünün kitabını
+geçmiyor.
+
+### MADDE 325 — 13 FAZ ÖLÇÜLDÜ (ve bir yasa daha)
+`g33.py`'ye **`FAZ_LISTE`** eklendi (parite birebir: boşken eski sonuç,
+fark 3e-07). 13 faz × 3 bacak, D2, 20,51 $ → **+176,37 net (+7,54)**,
+P(Sh) **%68,9**, dört şart **YYYY**, kaldıraç 1,037x.
+**Ama %80 kanıt barının ALTINDA** ve dürüst tek-hizalama medyanında
+yalnız **+1,96**. İlk kez faz yapısının bedeli ölçüldü:
+evren kazancı (D8→D2) +16,67 · faz bedeli (15→13) **−9,14** · net +7,54.
+**Hüküm: sicile ölçülmüş aday olarak girdi, ayar değişikliği olarak
+GİRMEDİ.** Yasa: *dört şartı geçmek kanıt barını geçmek demek değil.*
+
+### MADDE 326 — REZERV_PAY 0,20 KALDI, İLK KEZ FİYATLANDI
+`taban_pay() = 0,5 − REZERV/2` olduğu için REZERV aynı zamanda bir
+**EVREN** parametresi. İki kanal ayrı ölçüldü:
+rezervi kaldırmak (evren sabit) **−14,06** (P %7,8; CAGR +119,71 →
++137,24 ama düşüş 19,91 → 24,30, doz 1,282 → 1,094x) ·
+bacağın büyümesi (D8→D2) **+17,05** · net +2,98 → **RED** (şart 1: 25-26
+Sharpe −0,027; P %62,6). **Rezerv bir getiri aracı değil, risk aracı.**
+Evren kanalının değeri bu sermayede **üçüncü kez bağımsız ~+17 puan**
+(madde 320 +16,67 · 325 +16,67 · 326 +17,05).
+
+### MADDE 327 — HACIM_ESIK 100M KALDI
+Ters-U, tepesi plato: 30M/72 havuz +159,33 · 50M/52 +169,56 (+0,73) ·
+**100M/30 bugün** · 200M/16 +114,34 · 500M/6 +53,92. Yükseltmek
+felaket ama sebebi kötü seçim değil **kurulamama** (motor turda en az
+2×MIN_LEGS=8 sembol ister). Backtest körlüğü yalnız REDDEDİLEN yöne
+bakıyor, dolayısıyla "100M'de kal" sonucu **güçleniyor**.
+
+### MADDE 224'ÜN LİSTESİ BOŞALDI
+Beş bayat tarama yeniden açıldı (222 bacak · 223 tutma · 224 havuz ·
+326 rezerv · 327 hacim) ve **yalnız biri değişti: 222**.
+**Parametre uzayı gösterilebilir biçimde tükenmiş** — sekiz tur:
+faz sayısı, bacak sayısı, tutma, rezerv, hacim, evren, üç kitap,
+manşonlar. Kalan iki kaldıraç ikisi de biliniyor ve fiyatlı:
+**sermaye** (8.361 $'da yalnız BTC eleniyor) ve **madde 288**
+(`CARRY_PRIM_E=0.10`, bugünün kitabında **+8,24 → +177,07**).
+
+### YÖNTEM YASASI (kurtarılan metinden, kendi itirafım)
+*"Madde 323'te o ekseni kapatmadım, yerine daha kolay bir soru koydum
+ve madde 324'te 'eksen kapandı' dedim. Sormasan kayıtta öyle
+kalacaktı."* — **Bir ekseni kapatan cümle, o eksenin en zor sorusunu
+ölçmüş olmak zorundadır.** Ve: *"Pahalı çözümü seçmeden önce ucuzunu
+aramam gerekirdi"* (saat çözünürlüğü değil `FAZ_LISTE` yetiyordu).
