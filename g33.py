@@ -541,7 +541,24 @@ def bt2(bas,n,olcut=None,tp=None):
     return pd.Series(eq,index=C.index[bas:])
 
 def calis2(ad,n,olcut):
-    adim=max(1,REB//FAZ); gs=[bt2(1200+_fz+f,n,olcut,tp=TP).pct_change() for f in range(0,REB,adim)]
+    # MADDE 338: FAZ_LISTE geri yazildi (madde 325'te eklenmisti, konteyner
+    # kaybinda gitti - madde 335). Faz ofsetleri ARTIK LISTE olabilir, yani
+    # REB'i tam bolmeyen faz sayilari da kurulabilir (13 faz gibi). Engel
+    # hic panelin 4 saatlik olmasi degildi, ofsetlerin range() ile
+    # uretilmesiydi. Bos ise eski davranis BIREBIR korunur (parite).
+    _fl=os.environ.get('FAZ_LISTE','').strip()
+    if _fl:
+        ofs=[int(x) for x in _fl.replace(' ','').split(',') if x!='']
+        print(f'# FAZ_LISTE: {len(ofs)} faz {ofs}',flush=True)
+    else:
+        adim=max(1,REB//FAZ); ofs=list(range(0,REB,adim))
+    # MADDE 338: FAZ SAYISI ARTIK SABIT DEGIL. Eskiden butun teshis ve
+    # kar-kaynagi ciktilari SABIT 5'e boluyordu, oysa FAZ=15/REB=30'da
+    # motor 15 faz kosuyor: o tablolarin hepsi 3 KAT SISKINDI. Mansetler
+    # (CAGR/Sharpe/dusus) etkilenmemisti cunku onlar E'den gelir; sisen
+    # yalniz atif tablolariydi. Artik fiili faz sayisina bolunuyor.
+    NF=len(ofs)
+    gs=[bt2(1200+_fz+f,n,olcut,tp=TP).pct_change() for f in ofs]
     g=pd.concat(gs,axis=1).mean(axis=1).dropna(); E=(1+g).cumprod()
     out=[]
     for p,m in [('tam',E.index>='2022-01-01'),('22-24',E.index<'2025-01-01'),('25-26',E.index>='2025-01-01')]:
@@ -567,31 +584,31 @@ def calis2(ad,n,olcut):
         print(f'BOSLUK: fiili/hedef brut = {bos[0]/bos[1]*100:.2f}%  '
               f'(bos sermaye {100-bos[0]/bos[1]*100:.2f}%, {bos[2]} bar)',flush=True)
     yil=(len(C)-1200)/(6*365.25)
-    print('takip cikis/yil',round(say_t[0]/5/yil),'sabit TP/yil',round(say_t[1]/5/yil),
-          '| YAS cikisi/yil L',round(say_y[0]/5/yil),'S',round(say_y[1]/5/yil))
+    print('takip cikis/yil',round(say_t[0]/NF/yil),'sabit TP/yil',round(say_t[1]/NF/yil),
+          '| YAS cikisi/yil L',round(say_y[0]/NF/yil),'S',round(say_y[1]/NF/yil))
     yl=(len(C)-1200)/(6*365.25)
     t=sum(abs(v) for k,v in AY.items() if k!='kom')
-    print('  YIL YIL LONG vs SHORT TARAF (yillik puan, 5 fazin ortalamasi):')
+    print(f'  YIL YIL LONG vs SHORT TARAF (yillik puan, {NF} fazin ortalamasi):')
     print(f'    {"yil":<6}{"LONG fnd":>10}{"LONG fiy":>10}{"LONG tp":>9}{"LONG NET":>10}   {"SHORT fnd":>10}{"SHORT fiy":>10}{"SHORT tp":>9}{"SHORT NET":>11}')
     for _y in sorted(YIL):
         v=[x/5*100 for x in YIL[_y]]
         print(f'    {_y:<6}{v[0]:>+10.1f}{v[1]:>+10.1f}{v[2]:>+9.1f}{v[0]+v[1]+v[2]:>+10.1f}   '
               f'{v[3]:>+10.1f}{v[4]:>+10.1f}{v[5]:>+9.1f}{v[3]+v[4]+v[5]:>+11.1f}')
-    print('  TUTMA GUNUNE GORE (yillik puan, 5 fazin ortalamasi):')
+    print(f'  TUTMA GUNUNE GORE (yillik puan, {NF} fazin ortalamasi):')
     print(f'    {"":<6}{"LONG fnd":>10}{"LONG fiyat":>12}{"LONG tp":>10}{"SHORT fnd":>11}{"SHORT fiyat":>12}{"SHORT tp":>10}')
     _y=(len(C)-1200)/(6*365.25)
     for _g in range(6):
         _l=GUN.get(('L',_g),[0,0,0,0]); _s=GUN.get(('S',_g),[0,0,0,0])
         _ad=f'{_g+1}.gun' if _g<5 else '6+'
-        print(f'    {_ad:<6}{_l[0]/5/_y*100:>+10.1f}{_l[1]/5/_y*100:>+12.1f}{_l[2]/5/_y*100:>+10.1f}'
-              f'{_s[0]/5/_y*100:>+11.1f}{_s[1]/5/_y*100:>+12.1f}{_s[2]/5/_y*100:>+10.1f}')
-    print('  KAR KAYNAKLARI (5 fazin toplami, yillik puan olarak):')
+        print(f'    {_ad:<6}{_l[0]/NF/_y*100:>+10.1f}{_l[1]/NF/_y*100:>+12.1f}{_l[2]/NF/_y*100:>+10.1f}'
+              f'{_s[0]/NF/_y*100:>+11.1f}{_s[1]/NF/_y*100:>+12.1f}{_s[2]/NF/_y*100:>+10.1f}')
+    print(f'  KAR KAYNAKLARI (5 fazin toplami, yillik puan olarak):')
     for k,ad in [('Sf','SHORT bacak funding'),('Lf','LONG bacak funding'),
                  ('Sp','SHORT bacak fiyat'),('Lp','LONG bacak fiyat'),
                  ('Stp','SHORT kar-al fiyat'),('Ltp','LONG kar-al fiyat')]:
-        print(f'    {ad:<22} {AY[k]/5/yl*100:>+8.1f} puan/yil   (payi %{abs(AY[k])/t*100:>4.1f})')
-    print(f'    {"TOPLAM":<22} {sum(AY[k] for k in ("Sf","Lf","Sp","Lp","Stp","Ltp"))/5/yl*100:>+8.1f} puan/yil')
-    print(f'REB{REB//6}g FAZ{_fz} TOL{TOL} REZ{REZERV}/{REZ_ESIK} YARIM{YARIM} AYNI{AYNI} rez_kullanim/yil {say_r[0]/5/((len(C)-1200)/(6*365.25)):.0f} | {ad:<4} tp{TP} kom{KOM} doldur{DOLDUR} dolan{say_d[0]//5} {n}+{n} | '+' | '.join(out),flush=True)
+        print(f'    {ad:<22} {AY[k]/NF/yl*100:>+8.1f} puan/yil   (payi %{abs(AY[k])/t*100:>4.1f})')
+    print(f'    {"TOPLAM":<22} {sum(AY[k] for k in ("Sf","Lf","Sp","Lp","Stp","Ltp"))/NF/yl*100:>+8.1f} puan/yil')
+    print(f'REB{REB//6}g FAZ{_fz} TOL{TOL} REZ{REZERV}/{REZ_ESIK} YARIM{YARIM} AYNI{AYNI} rez_kullanim/yil {say_r[0]/NF/((len(C)-1200)/(6*365.25)):.0f} | {ad:<4} tp{TP} kom{KOM} doldur{DOLDUR} dolan{say_d[0]//NF} {n}+{n} | '+' | '.join(out),flush=True)
 
 if __name__=='__main__':
     ad=sys.argv[1]; n=int(sys.argv[2])
