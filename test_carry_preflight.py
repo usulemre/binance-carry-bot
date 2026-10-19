@@ -3436,6 +3436,34 @@ kontrol("madde 341: kanal A/B olcumu BELGEDE (dort sart ve 1,36x)",
         and "1,36x" in _cb341_kaynak
         and "+21,3" in _cb341_kaynak and "+38,1" in _cb341_kaynak)
 
+print("\n6ba) MADDE 342 - YENIDEN KURULABILIRLIK")
+kontrol("madde 342: tek komutluk yeniden kurulum zinciri VAR",
+        os.path.exists(os.path.join(R, "yeniden_kurulum.sh")))
+_z342 = open(os.path.join(R, "yeniden_kurulum.sh"), encoding="utf-8").read()
+kontrol("madde 342: zincir PARITE KAPISIYLA bitiyor",
+        "parite_zinciri.sh" in _z342 and "PARITE KAPISI" in _z342)
+kontrol("madde 342: zincirin cagirdigi her betik DEPODA",
+        all(os.path.exists(os.path.join(R, f)) for f in (
+            "indir_sembol_listesi.py", "indir_zemin_surdurulebilir.py",
+            "yeniden_kur.py", "metrik_kur.py",
+            "indir_metrik_surdurulebilir.py", "parite_zinciri.sh")))
+_i342 = open(os.path.join(R, "indir_zemin_surdurulebilir.py"),
+             encoding="utf-8").read()
+kontrol("madde 342: cekme katmani CURL (urlopen DEGIL)",
+        '"curl"' in _i342 and "--max-time" in _i342
+        and "urlopen" not in _i342.split('"""')[2])
+kontrol("madde 342: fiyat+taker TEK gecisten yaziliyor",
+        "data_genis" in _i342 and "data_taker_genis" in _i342
+        and _i342.count("def klines") == 1)
+kontrol("madde 342: funding'in interval_h kolonu KORUNUYOR",
+        "interval_h" in _i342 and "[0, 2, 1]" in _i342)
+kontrol("madde 342: BAYT BAYT parite dogrulamasi kodda",
+        "filecmp" in _i342 and "def dogrula" in _i342)
+kontrol("madde 342: urlopen takilmasinin SEBEBI yazili (madde 335 dersi)",
+        "SOKET BASINA" in _i342.upper().replace("Ş", "S").replace("İ", "I")
+        .replace("Ğ", "G").replace("Ü", "U").replace("Ö", "O")
+        .replace("Ç", "C"))
+
 print("\n7) PREFLIGHT ÖZETİ DOĞRU KARAR VERİYOR")
 pf._sayac.update({pf.TAMAM: 3, pf.UYARI: 0, pf.HATA: 0}); pf._satirlar.clear()
 kontrol("hata yoksa çıkış kodu 0", pf.yaz_ozet() == 0)
