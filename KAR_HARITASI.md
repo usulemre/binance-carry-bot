@@ -3057,3 +3057,21 @@ SESSİZCE iptal olur. Varsayılanlarda değil (4 = 4). Testlere eklendi:
 (a) beş bayat kontrol artık tur kodunun kendi kuralıyla beklenen bacağı
 ölçüyor, (b) gerçek varsayılanla tam turun taraf başına tavan kadar bacak
 açtığı, (c) `MIN_LEGS <= BACAK_TAVAN`.
+
+### Madde 356 sonucu — paket 141/142; kalan tek hata ARALIKLI (açık eksen)
+
+Blok paketin sonuna taşınınca: **141 [OK], 1 [HATA]**. Düzeltilen beş
+kontrol ve üç yeni kontrol geçiyor (gerçek varsayılanla 2.000 $ ve
+50.000 $'da taraf başına 4 bacak; MIN_LEGS ≤ tavan).
+
+Kalan: "uç funding'li coine DAHA BÜYÜK pozisyon" — tanı satırı oran
+**1,000** (uç 33,3 = diğer 33,3): fırsat rezervi o koşuda HİÇ devreye
+girmemiş. Madde 333'ün kaydı: izole ölçümde oran her zaman 2,500.
+Bu turda aynı kodla dört koşu: iki geçti (eski kod H3, blok çıkarılmış
+H4), iki düştü (H3 ortam değişkeni, blok sonda H4). Yani HAVUZ'dan ve
+madde 356'dan BAĞIMSIZ, süreçten sürece değişiyor — madde 301'in
+`PYTHONHASHSEED` sınıfı ilk şüpheli (orada set sırası emir sırasını
+rastgele yapıyordu). **Madde 301'in yasası gereği "tekrar koş, yeşil
+olsun" ile geçilmedi.** Açık eksen: aynı paketi birkaç sabit hash
+tohumuyla koşturup hatayı tohuma bağlamak; rezervin canlıda da
+tohuma bağlı olarak tetiklenmemesi GERÇEK bir kâr kaybı olur.
