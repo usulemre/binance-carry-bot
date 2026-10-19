@@ -131,9 +131,28 @@ KANONIK_TEKRAR = 20000
 KANONIK_TOHUM = 11
 UFUK_GUN = 365
 
-# Belgelerde yayınlanan "bugünkü beklenti" sayıları. dogrula() bunları
-# referans_getiri.csv'den yeniden üretip karşılaştırır.
-YAYINLANAN = {
+# MADDE 336 — ZEMİN YENİDEN KURULDU, YAYINLANAN SAYILAR YENİDEN TÜRETİLDİ
+#
+# 2026-10-19'da konteyner (proje klasörü + geçici dizin) silindi;
+# veri/motor zemini sıfırdan kuruldu (madde 335). Yeni zemin kanonik
+# parite kolunu ÖN KAYITLI toleransın içinde yeniden üretti:
+#     ölçülen +%111,83  Sharpe 3,095  dd −%14,51
+#     hedef   +%112,27  Sharpe ~3,10  dd −%14,54      (|Δ| < 0,6 ✓)
+# Evren (847 sembol) ve pencere (2022-01-01 → 2026-08-31) kayıtla BİREBİR.
+#
+# Ama "birebir" DEĞİL. Bu maddenin kendi yasası "yayınlanan başlıklar
+# depodaki seriden yeniden üretilebilmeli" olduğu için sayıları SERİDEN
+# yeniden türettim. Eski kayıt SİLİNMEDİ — YAYINLANAN_KAYIP_ZEMIN'de
+# duruyor; bir ölçümün kaydını, ölçüldüğü zemin kaybolduğu için silmek
+# kayıt tutmanın tersidir.
+#
+# FARKIN SEBEBİ İZOLE EDİLMEDİ. Belgelerde panellerin hücre sayısı
+# kayıtlı olmadığı için fiyat/funding panellerinin bit düzeyinde aynı
+# olduğunu KANITLAYAMIYORUM; aday sebepler (arşiv vintajı, yeniden
+# kurulan sinyal dosyası) ölçülmedi. Ölçmediğim bir sebebi yazmıyorum.
+# Farkın YÖNÜ not edilmeye değer: getiri ve kuyruklar hafifçe KÖTÜ,
+# gerçekleşen düşüş hafifçe İYİ — yani yeni zemin kitabı kayırmıyor.
+YAYINLANAN_KAYIP_ZEMIN = {
     "yillik_getiri": 112.5,   # CAGR, %
     "sharpe_gunluk": 2.942,
     "maks_dusus": -14.5,      # %
@@ -141,6 +160,49 @@ YAYINLANAN = {
     "yil_dusus_p5": -16.8,    # %
     "yil_dusus_p1": -20.7,    # %
 }
+
+# Belgelerde yayınlanan "bugünkü beklenti" sayıları. dogrula() bunları
+# referans_getiri.csv'den yeniden üretip karşılaştırır.
+# MADDE 336: güncel zeminde yeniden türetildi (tohum 11, B=20.000, blok 21).
+YAYINLANAN = {
+    "yillik_getiri": 111.7,   # CAGR, %   (kayıp zemin: 112,5)
+    "sharpe_gunluk": 2.892,   #           (kayıp zemin: 2,942)
+    "maks_dusus": -14.3,      # %         (kayıp zemin: −14,5)
+    "yil_getiri_p5": 40.4,    # %         (kayıp zemin: +41,4)
+    "yil_dusus_p5": -17.0,    # %         (kayıp zemin: −16,8)
+    "yil_dusus_p1": -20.9,    # %         (kayıp zemin: −20,7)
+}
+
+# MADDE 336: iki zemin arasındaki ölçülen fark (yeni − kayıp), puan.
+ZEMIN_YENIDEN_KURULDU = True
+ZEMIN_FARK = {
+    "yillik_getiri": -0.78,
+    "sharpe_gunluk": -0.050,
+    "maks_dusus": +0.23,
+    "yil_getiri_p5": -0.97,
+    "yil_dusus_p5": -0.15,
+    "yil_dusus_p1": -0.20,
+}
+# MADDE 336 — İKİ AYRI ÖLÇÜ, KARIŞTIRILMAMALI. Bu ayrımı önce ben
+# karıştırdım: ZEMIN_FARK'ı (SERİ ölçüsü) parite kolunun motor
+# toleransıyla kıyaslayan bir kontrol yazdım ve kontrol haklı olarak
+# KIRMIZI verdi (−0,78 > 0,60). İki ölçü farklıdır:
+#   (1) MOTOR ölçüsü — parite kolunun kendi çıktısı. ÖN KAYITLI geçit
+#       budur ve GEÇTİ.
+#   (2) SERİ ölçüsü — referans_getiri.csv'ye günlüğe indirgenmiş
+#       seriden hesaplanan başlıklar. Bu geçidin KAPSAMINDA DEĞİL;
+#       farkı burada ölçülen haliyle yazıyorum, toleransa sığdırmak
+#       için esnetmiyorum.
+ZEMIN_PARITE_MOTOR_TOLERANS = 0.6      # ön kayıtlı geçit
+ZEMIN_PARITE_MOTOR_FARK = {            # ölçülen (yeni − hedef)
+    "tam_getiri": -0.44,               # +111,83 vs +112,27
+    "sharpe": -0.005,                  # 3,095 vs ~3,10
+    "maks_dusus": +0.03,               # −14,51 vs −14,54
+}
+# Seri ölçüsündeki farkların ölçülen üst sınırı (p5'te 0,97 puan).
+# Bu bir geçit DEĞİL, ölçülmüş bir olgudur.
+ZEMIN_SERI_FARK_EN_BUYUK = 0.97
+ZEMIN_FARK_SEBEBI_IZOLE = False
 
 # Ölçülen blok duyarlılığı (tohum 11, B=20.000):
 # blok -> (getiri p5, düşüş p5, düşüş p1)

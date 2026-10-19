@@ -94,10 +94,29 @@ TUTMA = {
 }
 
 # (3) haftalık nakit akışı
-HAFTALIK = {
+# MADDE 336: zemin yeniden kurulduktan sonra (madde 335) tablo seriden
+# yeniden türetildi. Eski kayıt HAFTALIK_KAYIP_ZEMIN'de duruyor.
+# Yapısal değişmezler AYAKTA: üst üste en uzun 6 negatif hafta, 50 ay.
+# Tek dikkat çeken kayma POZİTİF AY ORANI: %86,0 -> %82,0, yani 50 ayın
+# 43'ü değil 41'i artı. Bu 4 puan yapısal bir bozulma DEĞİL; küçük bir
+# getiri kayması sınıra yakın iki ayı öbür tarafa atıyor (ay örneklemi
+# 50, bir ay = 2 puan). Yine de "ayların %86'sı artı" diye yayınlanan
+# başlık artık %82'dir ve belgelerde öyle yazılmalıdır.
+HAFTALIK_KAYIP_ZEMIN = {
     "pozitif_oran": 60.6, "medyan": 1.06, "ortalama": 1.51,
     "en_kotu": -8.54, "p5": -3.01, "en_iyi": 14.77, "p95": 7.90,
     "en_uzun_negatif_hafta": 6, "pozitif_ay_oran": 86.0, "ay": 50,
+}
+HAFTALIK = {
+    "pozitif_oran": 60.2, "medyan": 1.01, "ortalama": 1.50,
+    "en_kotu": -8.24, "p5": -3.03, "en_iyi": 14.98, "p95": 8.19,
+    "en_uzun_negatif_hafta": 6, "pozitif_ay_oran": 82.0, "ay": 50,
+}
+# MADDE 336: ölçülen fark (yeni − kayıp), puan.
+ZEMIN_FARK_HAFTALIK = {
+    "pozitif_oran": -0.42, "medyan": -0.05, "ortalama": -0.01,
+    "en_kotu": +0.30, "p5": -0.02, "en_iyi": +0.21, "p95": +0.29,
+    "en_uzun_negatif_hafta": 0, "pozitif_ay_oran": -4.0, "ay": 0,
 }
 
 

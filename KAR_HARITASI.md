@@ -2436,3 +2436,57 @@ kötüleşiyor — o maruziyet **gelirin** parçası (madde 191'in ikinci
   ölçmüştü (3.750 $'da +5,52). İkinci kitap aynı sermaye artışıyla
   **+12,69** getiriyor: aynı doları nereye koyduğun, ne kadar koyduğundan
   daha çok fark ediyor.
+
+---
+
+## MADDE 336 — YAYINLANAN SAYILAR BİR ZEMİN KAYBINDAN SAĞ ÇIKTI, AMA 0,8 PUAN KAYBETTİ
+
+**Kârla ilgisi:** kullanıcının sermaye hedefleri (2.111 $ / 3.250 $ /
+3.600 $ / 8.361 $) ve doz kararları bu başlık sayılarının üstünde
+duruyor. Zemin yeniden kurulunca sayılar **aşağı** gitti; hedefleri
+eski sayıya göre hesaplamak artık yanlıştır.
+
+| başlık | önce | **şimdi** |
+|---|---|---|
+| yıllık (CAGR) | +%112,5 | **+%111,7** |
+| günlük Sharpe | 2,942 | **2,892** |
+| maks düşüş | −%14,5 | **−%14,3** |
+| yıl getiri p5 (kötü senaryo) | +%41,4 | **+%40,4** |
+| yıl düşüş p5 | −%16,8 | **−%17,0** |
+| yıl düşüş p1 | −%20,7 | **−%20,9** |
+| pozitif AY oranı | %86 | **%82** |
+
+**YASA: BİR ÖLÇÜMÜN GEÇİDİ, O ÖLÇÜNÜN KENDİSİNDE OLMAK ZORUNDADIR.**
+Parite geçidi **motor** çıktısında ön kayıtlıydı ve geçti (|Δ| 0,44 <
+0,60). Ben bu geçidi **seri** ölçüsündeki farka (−0,78) uygulayan bir
+kontrol yazdım; kontrol kırmızı verdi ve **beni düzeltti**. İki ölçü
+aynı adı taşıyor (yıllık getiri) ama aynı şey değil: biri motorun
+kendi çıktısı, öteki günlüğe indirgenmiş seriden hesaplanıyor. Geçidi
+genişleterek "geçirmek" en kolay yoldu; yapmadım. Ön kayıtlı geçit
+motor ölçüsünde kaldı, seri farkı **ölçülen haliyle** yazıldı.
+
+**YASA: KAYBOLAN ZEMİNİN ÖLÇÜMÜ SİLİNMEZ.** Eski başlıklar
+`YAYINLANAN_KAYIP_ZEMIN` / `HAFTALIK_KAYIP_ZEMIN` içinde duruyor. Bir
+ölçümün kaydını, ölçüldüğü zemin kaybolduğu için silmek kayıt tutmanın
+tersidir.
+
+**Farkın yönü kârın lehine değil — ve bu iyi haber.** Getiri ve
+kuyrukların ikisi de kötüleşti, yalnızca gerçekleşen düşüş 0,23 puan
+iyileşti. Yeniden kurulmuş bir zemin kitabı **kayırmıyor**; kayırsaydı
+şüphelenmek gerekirdi.
+
+**Sebep izole EDİLMEDİ.** Belgelerde panel hücre sayıları kayıtlı
+olmadığı için fiyat/funding panellerinin bit düzeyinde aynı olduğunu
+kanıtlayamıyorum. Evren (847) ve pencere (2022-01-01 → 2026-08-31)
+birebir aynı. Ölçmediğim bir sebebi yazmıyorum.
+**Bundan sonrası için kural:** panellerin hücre sayıları artık
+belgeye yazılıyor, ki bir sonraki yeniden kurulumda bit düzeyinde
+karşılaştırma YAPILABİLSİN —
+C 3.483.379 · ODE 8.659.728 · sk 3.265.634 · AK 3.068.786 ·
+H 3.483.379 · L 3.483.379 (10.224 bar × 847 sembol).
+
+**Prim ekseni veri olarak KAYIP.** `data_premium_genis/` boş,
+`carry_prim.csv` yok. Madde 332'nin bekleyen `CARRY_PRIM_E = 0,10`
+kararı ve kasımdaki tohum yenilemesi bu veriyi ister;
+`indir_premium_surdurulebilir.py` geri kuruyor. **Bulgular duruyor,
+ham girdi yeniden indiriliyor** — yani karar hâlâ masada, ölçülebilir.

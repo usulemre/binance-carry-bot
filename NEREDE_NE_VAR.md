@@ -408,3 +408,80 @@ kayma, limit emir doluluk oranı, funding'in fiilen tahsil edilip
 edilmediği. Ardından `carry_sapma.py` ile toplam getiriyi backtest
 bandıyla karşılaştırmak (ama madde 151.2: bu testin gücü aylar
 gerektirir; bileşen ölçümü daha hızlı cevap verir).
+
+---
+
+## 20. MADDE 335/336 — KONTEYNER KAYBI VE ZEMİNİN YENİDEN KURULMASI
+
+**2026-10-19'da çalışma konteyneri (proje klasörü + `/tmp`) silindi.**
+O ana kadar ne git deposu ne indirilebilir yedek vardı. Yedek riskini
+daha önce gündeme getirmeliydim; getirmedim.
+
+**Para kaybı YOK.** Bot hiç canlı çalışmadı, ortamda hiç API anahtarı
+olmadı. Konuşulan "+%120" bir **backtest yıllık getirisi**, gerçekleşmiş
+kâr değil.
+
+### Ne kurtarıldı
+Madde 305'te üretilmiş `binance_bot_proje.zip` arşivi. İçinde kodun ve
+bulguların tamamı, 847 sembollük funding/fiyat/taker verisi vardı.
+
+### Ne KAYIP (geri getirilemedi)
+**Madde 306–328.** Bunlar arşivden sonra yapılmış işlerdi ve yalnızca
+sıkıştırılmış konuşma özetlerinde iz bıraktılar; kodu, ölçümü ve
+ön kaydı yok. Bu maddeler **yeniden ölçülmeden** kitaba geri
+alınamaz. Belgelerde en yüksek kayıtlı madde 303'tür.
+
+### Ne YENİDEN YAZILDI (orijinal DEĞİL)
+**Madde 329–333.** Konuşma dökümünden yeniden kuruldu. Beş araştırma
+modülünün her biri `YENIDEN_YAZILDI = True` ve "ORIJINAL DEGIL"
+bayrağını taşır. Sayıları dökümden alınmıştır; kodu yeniden yazılmıştır.
+
+### Zemin nasıl doğrulandı (madde 335)
+`yeniden_kur.py` → `/tmp/zemin.pkl`, `panel.pkl`, `hlo.pkl`, `g.py`,
+`sk_bar48.pkl`; `indir_metrik_surdurulebilir.py` → `data_metrik/`
+(587 sembol); `parite_zinciri.sh` → kanonik parite kolu.
+
+| ölçü | hedef (kayıp zemin) | yeni zemin | durum |
+|---|---|---|---|
+| tam getiri | +%112,27 | **+%111,83** | |Δ| 0,44 < 0,60 ✓ |
+| Sharpe | ~3,10 | **3,095** | ✓ |
+| maks düşüş | −%14,54 | **−%14,51** | ✓ |
+
+Evren **847 sembol** ve pencere **2022-01-01 → 2026-08-31** kayıtla
+birebir. Parite zinciri, tutmazsa `referans_getiri.csv` yazmayı
+REDDEDER — doğrulanmamış zemin üzerine ölçüm yapılmaz.
+
+### Yayınlanan sayılar yeniden türetildi (madde 336)
+Madde 262'nin yasası "yayınlanan başlıklar depodaki seriden yeniden
+üretilebilmeli". Yeni zemin toleransın içinde ama **birebir değil**,
+bu yüzden başlıklar seriden yeniden türetildi. Eski kayıt silinmedi:
+`YAYINLANAN_KAYIP_ZEMIN` ve `HAFTALIK_KAYIP_ZEMIN`'de duruyor.
+
+| başlık | kayıp zemin | yeni zemin | fark |
+|---|---|---|---|
+| yıllık (CAGR) | +%112,5 | +%111,7 | −0,78 |
+| günlük Sharpe | 2,942 | 2,892 | −0,050 |
+| maks düşüş | −%14,5 | −%14,3 | +0,23 (iyi) |
+| yıl getiri p5 | +%41,4 | +%40,4 | −0,97 |
+| yıl düşüş p5 | −%16,8 | −%17,0 | −0,15 |
+| yıl düşüş p1 | −%20,7 | −%20,9 | −0,20 |
+| pozitif AY oranı | %86,0 | **%82,0** | −4,0 |
+
+Farkın **sebebi izole edilmedi** (`ZEMIN_FARK_SEBEBI_IZOLE = False`):
+belgelerde panel hücre sayıları kayıtlı olmadığı için panellerin bit
+düzeyinde aynı olduğu kanıtlanamıyor. Ölçülmeyen bir sebep yazılmadı.
+Farkın **yönü** kayda değer: getiri ve kuyruklar hafifçe kötü,
+gerçekleşen düşüş hafifçe iyi — yeni zemin kitabı **kayırmıyor**.
+Pozitif ay oranındaki 4 puan yapısal değil örneklemdir (50 ay, bir ay
+= 2 puan); yapısal değişmezler ayakta (üst üste 6 negatif hafta).
+
+### Hâlâ eksik olan ham veri
+`data_premium_genis/` boş ve `carry_prim.csv` yok çıktı — prim
+ekseninin (madde 332'nin `CARRY_PRIM_E` kararı, kasımdaki tohum
+yenilemesi) **bulguları duruyor, ham girdisi kayıp**.
+`indir_premium_surdurulebilir.py` bunu geri kurar (curl tabanlı,
+kaldığı yerden devam eder — madde 335'in iki kez ödenmiş dersi).
+
+### Yedek disiplini
+Proje artık bir **git deposu**. Her madde kendi işlemesiyle kayda
+geçer. İndirilebilir arşiv her maddede yenilenir.

@@ -1092,13 +1092,42 @@ kontrol("madde 262: kaynak referans_getiri.csv, /tmp DEĞİL",
             os.path.join(R, "arastirma_yayinlanan_sayilar.py"),
             encoding="utf-8").read().split('"""')[2])
 kontrol("madde 262: serinin kendi ölçüleri yayınlananla birebir",
-        abs(_ys.ozet()["yillik_getiri"] - 112.46) < 0.05
-        and abs(_ys.ozet()["sharpe_gunluk"] - 2.941) < 0.005
-        and abs(_ys.ozet()["maks_dusus"] + 14.54) < 0.05)
+        abs(_ys.ozet()["yillik_getiri"] - 111.73) < 0.05
+        and abs(_ys.ozet()["sharpe_gunluk"] - 2.892) < 0.005
+        and abs(_ys.ozet()["maks_dusus"] + 14.27) < 0.05)
+kontrol("madde 336: KAYIP ZEMİN kaydı silinmedi (112,46 ölçümü duruyor)",
+        _ys.YAYINLANAN_KAYIP_ZEMIN["yillik_getiri"] == 112.5
+        and _ys.YAYINLANAN_KAYIP_ZEMIN["sharpe_gunluk"] == 2.942
+        and _ys.YAYINLANAN_KAYIP_ZEMIN["maks_dusus"] == -14.5
+        and _ys.ZEMIN_YENIDEN_KURULDU is True)
+kontrol("madde 336: ÖN KAYITLI geçit MOTOR ölçüsünde ve geçti",
+        all(abs(v) < _ys.ZEMIN_PARITE_MOTOR_TOLERANS
+            for v in _ys.ZEMIN_PARITE_MOTOR_FARK.values()))
+kontrol("madde 336: SERİ ölçüsü geçidin KAPSAMINDA DEĞİL diye yazılı",
+        _ys.ZEMIN_SERI_FARK_EN_BUYUK == 0.97
+        and max(abs(v) for v in _ys.ZEMIN_FARK.values()) > _ys.ZEMIN_PARITE_MOTOR_TOLERANS
+        and "KAPSAMINDA DEĞİL" in open(
+            os.path.join(R, "arastirma_yayinlanan_sayilar.py"),
+            encoding="utf-8").read())
+kontrol("madde 336: iki ölçüyü karıştırma hatası KAYITLI",
+        "önce ben" in open(
+            os.path.join(R, "arastirma_yayinlanan_sayilar.py"),
+            encoding="utf-8").read())
+kontrol("madde 336: farkın sebebi İZOLE EDİLMEDİ diye kayıtlı",
+        _ys.ZEMIN_FARK_SEBEBI_IZOLE is False
+        and "İZOLE EDİLMEDİ" in open(
+            os.path.join(R, "arastirma_yayinlanan_sayilar.py"),
+            encoding="utf-8").read())
+kontrol("madde 336: fark getiride KÖTÜ, düşüşte İYİ (zemin kitabı kayırmıyor)",
+        _ys.ZEMIN_FARK["yillik_getiri"] < 0
+        and _ys.ZEMIN_FARK["sharpe_gunluk"] < 0
+        and _ys.ZEMIN_FARK["yil_getiri_p5"] < 0
+        and _ys.ZEMIN_FARK["maks_dusus"] > 0)
 kontrol("madde 262: kanonik yöntem ÖN KAYITLI (blok 21, B=20.000, tohum 11)",
         (_ys.KANONIK_BLOK, _ys.KANONIK_TEKRAR, _ys.KANONIK_TOHUM) == (21, 20000, 11))
-kontrol("madde 262: getiri p5 tek değere bağlandı (+%41,4)",
-        _ys.YAYINLANAN["yil_getiri_p5"] == 41.4)
+kontrol("madde 262: getiri p5 tek değere bağlandı (madde 336: +%40,4)",
+        _ys.YAYINLANAN["yil_getiri_p5"] == 40.4
+        and _ys.YAYINLANAN_KAYIP_ZEMIN["yil_getiri_p5"] == 41.4)
 kontrol("madde 262: iki kuyruk blok uzunluğuyla TERS yöne gidiyor",
         _ys.blok_ters_yonlu_mu() is True)
 kontrol("madde 262: iki eksende birden ihtiyatlı TEK blok YOK",
@@ -1158,6 +1187,20 @@ import arastirma_zamanlama as _zm
 
 kontrol("madde 264: haftalık tablo referans serisinden yeniden üretiliyor",
         _zm.dogrula() is True)
+kontrol("madde 336: haftalık KAYIP ZEMİN kaydı silinmedi",
+        _zm.HAFTALIK_KAYIP_ZEMIN["pozitif_ay_oran"] == 86.0
+        and _zm.HAFTALIK_KAYIP_ZEMIN["pozitif_oran"] == 60.6)
+kontrol("madde 336: haftalık YAPISAL değişmezler ayakta (6 hafta, 50 ay)",
+        _zm.HAFTALIK["en_uzun_negatif_hafta"] == 6
+        and _zm.HAFTALIK["ay"] == 50
+        and _zm.ZEMIN_FARK_HAFTALIK["en_uzun_negatif_hafta"] == 0
+        and _zm.ZEMIN_FARK_HAFTALIK["ay"] == 0)
+kontrol("madde 336: pozitif AY oranı %86 -> %82 düştüğü ve SEBEBİ yazılı",
+        _zm.HAFTALIK["pozitif_ay_oran"] == 82.0
+        and _zm.ZEMIN_FARK_HAFTALIK["pozitif_ay_oran"] == -4.0
+        and "bir ay = 2 puan" in open(
+            os.path.join(R, "arastirma_zamanlama.py"),
+            encoding="utf-8").read())
 kontrol("madde 264: giriş saati ekseninde yalnız 2 hizalama var",
         _zm.HIZALAMA_SAYISI == 2 and _zm.DILIM_ARALIK_SAAT == 8
         and len(_zm.FAZ_OLCUM) == 2)
@@ -3268,6 +3311,79 @@ kontrol("README madde 305'i tasiyor",
         "## 305." in _readme297 and "+12,69" in _readme297)
 kontrol("NEREDE_NE_VAR madde 305'in satirini tasiyor",
         "| **305** |" in _nerede297)
+
+# ───────────── MADDE 329: KOSULAN KITABIN DEVRE KESICISI
+# (madde 335'te transkriptten geri kuruldu)
+import arastirma_devre_kesici_kosulan as A329
+
+kontrol("329: anahtar YANLIS kitabi gosteriyordu (15x5 vs 15x4)",
+        A329.anahtar_yanlis_kitabi_mi_gosteriyordu()
+        and A329.ESKI["anahtar"] == "15x5"
+        and A329.KOSULAN["anahtar"] == "15x4")
+kontrol("329: 2.000 $'da KOSULAN bacak sayisi 4 (yapilandirilan 5)",
+        cb.uygun_bacak_sayisi(2000.0) == 4 and cb.N_LEGS == 5)
+kontrol("329: kitap_anahtari(bakiye=2000) KOSULANI verir",
+        cr.kitap_anahtari(bakiye=2000.0) == "15x4"
+        and cr.kitap_anahtari() == "15x5")
+kontrol("329: pay NEGATIFTI (-1,91 puan): esik < kitabin dususu",
+        A329.pay_negatif_miydi() and abs(A329.PAY_ESKI + 1.91) < 1e-9)
+kontrol("329: kademe 'olculmus' diyordu, yani UYARI basmiyordu",
+        A329.kademe_yanlis_guven_veriyor_muydu())
+kontrol("329: DURDUR (-23), kosulan kitabin INCELE seviyesindeydi",
+        A329.durdur_incele_seviyesinde_miydi())
+kontrol("329: kanonik yontem madde 231/303 ile BIREBIR",
+        A329.kanonik_yontem_birebir_mi())
+kontrol("329: en kotu rejim 'dusuk' (p5 -22,83)",
+        A329.en_kotu_rejim_dusuk_mu()
+        and abs(A329.REJIM_15X4["dusuk"][1] + 22.83) < 1e-9)
+kontrol("329: KITAP_ESIK['15x4'] = (-0,23, -0,30) YAZILDI",
+        cr.KITAP_ESIK["15x4"] == (-0.23, -0.30)
+        and _re303.ESIK_KANONIK["15x4"] == (-0.23, -0.30))
+kontrol("329: rejim olcumu de kaydedildi",
+        cr.KITAP_REJIM_OLCUMU["15x4"][0] == "dusuk prim"
+        and abs(cr.KITAP_REJIM_OLCUMU["15x4"][1] + 22.83) < 1e-9)
+kontrol("329: kosulan kitapla kademe HALA 'olculmus'",
+        cr.esik_kademesi("15x4") == "olculmus")
+kontrol("329: pay DUZELDI (+3,09 puan)",
+        A329.pay_duzeldi_mi() and abs(A329.PAY_YENI - 3.09) < 1e-9)
+kontrol("329: KITAP_DUSUS'e KARISTIRILMADI (madde 295 tablosu bozulmaz)",
+        A329.karistirilmadi_mi() and "15x4" not in cr.KITAP_DUSUS
+        and "15x4" in cr.KITAP_DUSUS_KOSULAN)
+kontrol("329: kosulan dusus tablosu bagimliligi (bakiye, evren) tasir",
+        cr.KITAP_DUSUS_KOSULAN["15x4"][0] == 2000.0
+        and cr.KITAP_DUSUS_KOSULAN["15x4"][1] == "D8")
+kontrol("329: backtest_maksimumu KOSULAN tablodan okur (19,91)",
+        abs(cr.backtest_maksimumu("15x4") - 19.91) < 1e-9
+        and abs(cr.backtest_maksimumu("15x5") - 14.54) < 1e-9)
+kontrol("329: ayni dusus (-%21) 2.000 $'da DEVAM, 20.000 $'da INCELE",
+        cr.karar({"gun": 40, "dusus": -0.21, "ilk_bakiye": 2000.0},
+                 {"durum": "YETERSİZ"}, {}, {})[0] == "DEVAM"
+        and cr.karar({"gun": 40, "dusus": -0.21, "ilk_bakiye": 20000.0},
+                     {"durum": "YETERSİZ"}, {}, {})[0] == "İNCELE")
+kontrol("329: canli_gecer_mi(bakiye) L4'u KOSULAN kitaptan turetir",
+        _ckr.canli_gecer_mi(30, dusus=24.0, bakiye=2000.0)["sartlar"]
+        ["L4 dusus zarfi"][0] == _ckr.INCELE
+        and _ckr.canli_gecer_mi(30, dusus=31.0, bakiye=2000.0)["sartlar"]
+        ["L4 dusus zarfi"][0] == _ckr.DURDUR)
+kontrol("329: bakiye VERILMEZSE madde 231'in cifti BIREBIR korunur",
+        _ckr.canli_gecer_mi(30, dusus=24.0)["sartlar"]
+        ["L4 dusus zarfi"][0] == _ckr.DURDUR
+        and _ckr.DUSUS_INCELE == 18.0 and _ckr.DUSUS_DURDUR == 23.0)
+kontrol("329: kayan seviyede ZARF OLASILIGI basilmaz (OLCULMEDI yazar)",
+        "OLCULMEDI" in _ckr.canli_gecer_mi(30, dusus=31.0, bakiye=2000.0)
+        ["sartlar"]["L4 dusus zarfi"][1])
+kontrol("329: --bakiye bayragi CLI'da var",
+        "--bakiye" in open(os.path.join(R, "canli_karar.py"),
+                           encoding="utf-8").read())
+kontrol("329: ACIK EKSEN yazili (evren sermayeye bagli)",
+        "SERMAYEYE" in A329.ACIK_EKSEN.upper()
+        and "YAPILMADI" in A329.ACIK_EKSEN)
+kontrol("329: AYAR DEGISTI ama getiri iyilestirmesi DEGIL",
+        A329.hukum()["ayar_degisti_mi"] is True
+        and "yanlis alarm" in A329.hukum()["degisikligin_turu"])
+kontrol("329: dosya TRANSKRIPTTEN yeniden yazildigini SOYLUYOR",
+        A329.YENIDEN_YAZILDI is True
+        and "ORIJINAL DEGIL" in A329.YENIDEN_YAZMA_NOTU)
 
 print("\n7) PREFLIGHT ÖZETİ DOĞRU KARAR VERİYOR")
 pf._sayac.update({pf.TAMAM: 3, pf.UYARI: 0, pf.HATA: 0}); pf._satirlar.clear()
