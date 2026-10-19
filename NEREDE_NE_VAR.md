@@ -578,3 +578,54 @@ ve madde 324'te 'eksen kapandı' dedim. Sormasan kayıtta öyle
 kalacaktı."* — **Bir ekseni kapatan cümle, o eksenin en zor sorusunu
 ölçmüş olmak zorundadır.** Ve: *"Pahalı çözümü seçmeden önce ucuzunu
 aramam gerekirdi"* (saat çözünürlüğü değil `FAZ_LISTE` yetiyordu).
+
+---
+
+## 22. MADDE 342 — YENİDEN KURULABİLİRLİK: TEK KOMUT, CURL, PARİTE KAPISI
+
+**Depoda ne var, ne yok (ve neden doğru olan bu):**
+
+| | depoda | boyut | nasıl geri gelir |
+|---|---|---|---|
+| kod + bulgular + referans serileri | **VAR** | 7 MB | — |
+| ham veri (fiyat/funding/taker/metrik) | yok | **708 MB** | `yeniden_kurulum.sh` |
+| /tmp motor zemini (pkl'ler) | yok | **1,3 GB** | `yeniden_kur.py` + `metrik_kur.py` |
+
+Ham veri ve zemin `.gitignore`'da — doğru olan bu, ikisi de türetilmiş.
+**Eksik olan şey onları kuracak GÜVENİLİR bir zincirdi.**
+
+### `yeniden_kurulum.sh` — başlat, bırak, dön
+```
+bash yeniden_kurulum.sh          # hepsi
+bash yeniden_kurulum.sh zemin    # yalniz veri indirmesi
+bash yeniden_kurulum.sh panel    # yalniz panel + parite
+```
+Her adım **kaldığı yerden devam eder** (sembol başına dosya, var olanı
+atlar) ve zincir **PARİTE KAPISIYLA** biter: tutmazsa
+`referans_getiri.csv` **yazılmaz**.
+
+### Onarılan gerçek tuzak: üç indirici hâlâ `urlopen` kullanıyordu
+`indir_genis.py` (fiyat, 236 MB), `indir_taker_genis.py` (taker,
+210 MB) ve `indir_funding_genis.py` (funding, 79 MB) madde 335'in
+dersini **almamıştı**: `urlopen(timeout=)` SOKET BAŞINA zaman aşımıdır,
+damlayan bir yanıtta `.read()` sonsuza bloke olur. Bu desen bu ortamda
+iki ayrı indiricide sessizce tıkandı. Yani bir sonraki yeniden kurulum
+**tam oradan asılacaktı** ve saatler sonra fark edilecekti.
+
+`indir_zemin_surdurulebilir.py` o dersi fiyat/taker/funding'e taşır:
+- çekme katmanı **curl** (`--max-time` süreç DIŞINDA uygulanır)
+- **fiyat ve taker TEK geçişten** yazılır (ikisi aynı aylık klines
+  zip'inden çıkıyor; eski iki betik aynı 236 MB'ı İKİ KEZ indiriyordu)
+- `dogrula` modu mevcut dosyalarla **BAYT BAYT** karşılaştırır
+
+**Parite ölçüldü: 4 sembol × 3 dosya = 12 karşılaştırmanın 12'si
+BİREBİR** (BTC, ETH, LINK, AVAX).
+
+### Ve bir veri kaybı daha önlendi: `interval_h`
+Doğrulama sırasında çıktı: bu konteynerdeki funding dosyalarında
+**üçüncü bir kolon** var — `interval_h`, ödeme aralığı. Deponun kendi
+indiricisi onu yazmıyor, yani oradan yeniden kurulsa **kaybolacaktı**.
+Madde 340 evrenin **%24,1'inin** ödeme aralığını değiştirdiğini ölçtü
+(482 sembol 4 sa, 355 sembol 8 sa); bu kolon o eksenin ham verisidir ve
+timestamp farkından çıkarmaktan daha doğrudur. Arşivin zip'i onu zaten
+taşıyor (kolon 1), eklendi — ve parite ondan sonra birebir tuttu.
