@@ -2696,3 +2696,54 @@ aç/kapa, gürültü bandındaki bir ayrımı koda gömmek olur; (c) madde
 **3.000 $ ve üstü bir bakiyede açmak, ön kayıtlı kuralın desteklediği
 bir kullanıcı kararıdır:** `CARRY_PRIM_E=0.10`, beklenen etki +5..+7
 puan, yalnız 22-24 türü rejimlerde.
+
+---
+
+## MADDE 347 — MADDE 305'İN TREND SLEEVE'İ BUGÜNÜN KİTABINDA (15×4) TUTMUYOR: RED
+
+Madde 305 "projenin en güçlü adayı" demişti (13×3'e karşı, 3.250 $'da
++12,69, şart 1 iki fazda temiz, yalnız şart 4'ten düşüyor). Madde
+341'den beri bot 15×4 koşuyor ve sleeve bu kitaba karşı hiç
+ölçülmemişti. Araç: `arastirma_m347_sleeve.py`, kural koşudan önce yazıldı.
+
+**Kurulabilirlik:** w=0,3'te sleeve bacağı bakiye/400. **2.000 $ (5 $) ve
+3.500 $ (8,75 $) KURULAMAZ**; ilk kurulabilen seviye 4.000 $ (sleeve D9,
+carry D8). Madde 305'in 3.250 $ eşiği 13×3'e aitti.
+
+**İşaret koşuyla doğrulandı:** kazananı long (tam evren) Sharpe 2,50 /
+kaybedeni long 1,60 (madde 305 kaydı 2,655, 13×3).
+
+    bakiye hz kol        yillik  Sh22  Sh25  dusus   esitR  kald 4sart   P%
+     4000  0 K          +116,1   2,51  2,87  -19,4
+     4000  0 mom w0.3   +113,2   2,50  3,11  -16,2  +147,9  1,21  XYYX  75,2
+     4000  0 pla w0.3   + 99,4   2,42  2,77  -16,6  +123,8  1,18  XYYX  35,8
+     4000  1 K          +121,9   2,63  2,97  -21,2
+     4000  1 mom w0.3   +113,4   2,56  3,11  -18,4  +140,5  1,17  XYYX  66,2
+     4000  1 pla w0.3   +107,1   2,57  2,98  -18,6  +130,4  1,16  XYYX  58,0
+     8361  0 K          +120,1   2,62  2,98  -17,4
+     8361  0 mom w0.3   +116,7   2,63  3,20  -14,6  +150,9  1,20  YYYX  73,7
+     8361  0 pla w0.3   + 99,3   2,50  2,82  -15,7  +114,1  1,11  XYXX  25,1
+     8361  1 K          +125,8   2,76  3,07  -17,7
+     8361  1 mom w0.3   +117,4   2,73  3,20  -15,4  +144,5  1,16  XYYX  66,3
+     8361  1 pla w0.3   +109,8   2,74  3,09  -15,0  +140,1  1,19  XYYX  70,9
+
+**HÜKÜM: 4.000 $ RED · 8.361 $ RED** (dört kolun hiçbiri kanıt barını
+geçmiyor; "yalnız şart 4" sınıfına da girmiyor).
+
+Neden 305'in sonucu tekrarlamadı:
+- **Şart 1 bu kitapta temiz DEĞİL:** 4 kolun 3'ünde 22-24 Sharpe
+  düşüyor. 13×3'te +0,07..+0,08'di.
+- **Kanıt barı geçilmiyor:** P %66-75 (bar %80). En iyi bilgi kolu
+  (w=0,1, hiza 0) %84-85 ama hiza 1'de %75-76'ya iniyor.
+- **Plasebo kazancın büyük kısmını alıyor:** 8.361 $ hiza 1'de plasebo
+  harmanı mom harmanından İYİ (P %70,9 vs %66,3). Eşit-risk üstünlüğü
+  (+20..+31 puan) kaldıraçla (1,16-1,21x) toplanıyor ve çoğu HERHANGİ bir
+  ikinci kitaba ait — madde 298'in yasası, bu kez açıkça.
+- **Hizalamaya duyarlı:** sleeve tek başına hiza 0 +103 / hiza 1 +92.
+
+**Yasa (madde 305'in kendi yasasının üçüncü uygulaması): bir
+çeşitlendiricinin değeri ana kitabın dozuna aittir** — 13×3'te
+"projenin en güçlü adayı" olan sleeve, 15×4'te plaseboyu güvenle
+geçemiyor. Kontrol değişince aday yeniden ölçülmeden taşınmaz.
+
+**AYAR DEĞİŞMEDİ.** Trend sleeve bu kitapta bir kâr kaldıracı değil.
