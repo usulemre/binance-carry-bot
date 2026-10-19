@@ -2645,3 +2645,54 @@ revizyonu, madde 336'daki gibi **izole edilmedi**.
 **Kapı gevşetilmedi, `referans_getiri.csv` yeniden yazılmadı.** Bu
 zeminde yalnız EŞLİ kararlar (aynı zeminde kontrol vs aday) verilir;
 mutlak getiri sayıları yayınlanmış sayı olarak yazılmaz.
+
+---
+
+## MADDE 346 — MADDE 288 (PRİM-ÖLÇEKLİ BRÜT) YENİ ZEMİNDE: HER SEVİYEDE +5..+7 PUAN, KURAL 2.000 $'DA RED, 3.500 $ VE ÜSTÜNDE KABUL — AMA AYRIM GÜRÜLTÜ BANDINDA
+
+`CARRY_PRIM_E=0.10` (REF 150, ALT 0,5, UST 1,5), bugünün kitabı (15 faz ×
+4 bacak), üç sermaye seviyesi × iki hizalama, günlük seriler, eşli
+durağan blok bootstrap (2.000 örnek, blok 20 gün). Araç:
+`arastirma_m346_prim.py`. Kural koşudan ÖNCE yazıldı.
+
+    bakiye hz kol  yillik   Sh22  Sh25  dusus   esitR  4sart   P%   med
+     2000  0 K    +116,1   2,51  2,87  -19,4
+     2000  0 P    +122,8   2,60  2,87  -19,4  +122,2  XYYY  84,1  +5,7
+     2000  0 PK   +117,2   2,51  2,86  -19,6  +115,1  XYXY  43,2  -0,3
+     2000  1 K    +121,9   2,63  2,97  -21,2
+     2000  1 P    +128,7   2,72  2,96  -21,1  +129,0  XYYY  82,3  +5,8
+     2000  1 PK   +122,9   2,62  3,00  -21,4  +121,0  XYXY  48,9  -0,0
+     3500  0 K    +120,2   2,62  2,98  -17,4
+     3500  0 P    +126,5   2,71  2,99  -17,5  +124,7  YYYY  82,7  +5,4
+     3500  0 PK   +121,4   2,62  2,96  -17,6  +118,9  XYXY  48,9  -0,1
+     3500  1 K    +125,9   2,77  3,07  -17,7
+     3500  1 P    +132,8   2,85  3,09  -17,5  +135,3  YYYY  85,4  +7,0
+     3500  1 PK   +127,2   2,77  3,10  -17,6  +128,6  YYYY  72,5  +1,0
+     8361  ...  (3.500 $ ile birebir yakın: D1 ve D2 yalnız QNT'de
+                 ayrışıyor, madde 295: QNT'nin katkısı sıfır)
+
+(PK = zamanda karıştırılmış plasebo, PT = zamanda ters; PT her yerde
+kontrol civarında, tam tablo aracın çıktısında.)
+
+**HÜKÜM (ön kayıtlı kurala göre):** 2.000 $ **RED** (iki hizada da şart
+1: 25-26 Sharpe −0,00 / −0,01) · 3.500 $ **KABUL** · 8.361 $ **KABUL**.
+
+**OKUMA — kuralın verdiğinden daha az kesin:**
+- Etki her seviyede AYNI: 22-24'te +0,09 Sharpe, 25-26'da sıfır;
+  getiri +5..+7 puan, kaldıraç ~1,00x (doz değil zamanlama), plasebo
+  sıfırda. Madde 288'in eski bulgusunun (+8,24, 22-24 güçlü / 25-26
+  yazı-tura) yeni zeminde tekrarı.
+- 2.000 $'ı 3.500 $'dan ayıran tek şey 25-26 Sharpe farkının işareti:
+  −0,005 vs +0,01. Bu, madde 284'ün "şart 1 bir rejim bahsi dedektörü"
+  dediği gürültü bandının içinde. **Sermaye etkiyi değiştirmiyor; kural
+  eşiğin iki yanına düşen gürültüyü ayırıyor.**
+- Kanıt barı ince geçiliyor (P %82-85, bar %80) ve 3.500/8.361 iki
+  BAĞIMSIZ kanıt değil (aynı evren, yalnız QNT farkı).
+
+**AYAR DEĞİŞMEDİ** — `CARRY_PRIM_E` varsayılanı 0 kalıyor. Sebep: (a)
+kullanıcının seviyesi 2.000 $ ise kural RED; (b) bakiyeye bağlı bir
+aç/kapa, gürültü bandındaki bir ayrımı koda gömmek olur; (c) madde
+288'in isınma (75 gün) ve hiç-canlı-çalışmadı notları geçerli.
+**3.000 $ ve üstü bir bakiyede açmak, ön kayıtlı kuralın desteklediği
+bir kullanıcı kararıdır:** `CARRY_PRIM_E=0.10`, beklenen etki +5..+7
+puan, yalnız 22-24 türü rejimlerde.
