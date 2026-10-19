@@ -2493,3 +2493,99 @@ yokluğu normal; eksikse çarpan 1,0'a döner, zararsız yön.
 funding serisinin kesitsel dağılımından geliyor (`g33.py:226`).
 İndirdiğim 853 sembol **gereksiz işti** ve bir kâr engelini kaldırmadı.
 **Prim ekseni veri beklemiyor, KARAR bekliyor.**
+
+---
+
+## MADDE 338 — ÖLÇÜM HATTINDA GERÇEK BİR HATA: KÂR KAYNAĞI TABLOLARI 3 KAT ŞİŞKİNDİ
+
+**Motor `FAZ=15`/`REB=30`'da 15 FAZ koşuyor** (`adim = REB//FAZ = 2`,
+`range(0,30,2)` → 15 ofset) **ama bütün teşhis ve kâr-kaynağı çıktıları
+SABİT 5'e bölüyordu.** Yani bu belgedeki ve README'deki
+"KÂR KAYNAKLARI … TOPLAM +239,1 puan/yıl", yıl-yıl long/short atıf
+tablosu, tutma-günü tablosu, çıkış sayıları — hepsi **3 kat şişkin**.
+
+**Manşetler ETKİLENMEDİ** (CAGR/Sharpe/düşüş `E`'den gelir), yani
+alınmış hiçbir karar bu hatadan beslenmemiş. Şişen yalnız "kâr nereden
+geliyor" anlatısıydı — ama bu belgenin işi tam olarak o anlatı.
+
+Düzeltildi (`NF = len(ofs)`). Parite birebir: `+%111,8 · Sh 3,10 ·
+dd −14,5 · 22-24 Sh 2,98 · 25-26 Sh 3,27` — düzenleme öncesiyle aynı.
+
+**YASA: BİR BÖLENİ SABİT YAZMAK, PARAMETREYİ İKİ YERDE TUTMAKTIR.**
+Faz sayısı `FAZ`/`REB`'den türüyordu ama raporlama onu 5 diye
+biliyordu. Parametre bir yerden türetilmeli, ikinci bir yerde
+tekrarlanmamalı.
+
+---
+
+## MADDE 339 — SERMAYENİN FAYDASI EVREN KANALINDA; BACAK ARTIŞI ONU YİYOR
+
+Madde 326'nın yasası (iki kanalı AYIR) sermaye merdivenine uygulandı.
+Bugünün kitabı: 4 bacak, D8, +%117,0 · Sh 2,86 · 22-24 2,75 ·
+25-26 3,03 · dd −20,2.
+
+| kanal | ne değişti | sonuç | kural |
+|---|---|---|---|
+| **A** | bacak 4 SABİT, evren D8→D1 | **+%119,8 · Sh 2,95 · dd −18,5** | **DÖRT ŞART DA GEÇTİ**, eşit risk **+21,3 puan**, kaldıraç gerekmiyor |
+| B | evren D8 SABİT, bacak 4→5 | +%106,6 · Sh 2,92 · dd −15,3 | şart 1 DÜŞTÜ (25-26 −0,050), eşit risk için **1,36x** ister |
+
+Birleşik merdiven (8.361 $, botun yapacağı 5 bacak + D1): +%107,3 —
+yani **kanal B, kanal A'nın kazancını siliyor ve üstüne 10 puan
+götürüyor.**
+
+**KARAR — VE BU BİR AYAR KARARI, KALDIRAÇ YA DA SERMAYE KARARI DEĞİL:**
+`uygun_bacak_sayisi()` bakiye 3.250 $'ı geçince bacağı 5'e çıkarıyor.
+Ölçüm o çıkışın ön kayıtlı kuraldan DÜŞTÜĞÜNÜ söylüyor. Bacağı **4'te
+tutmak** aynı sermayede daha geniş evren verir:
+2.576 $ → D7 · 3.000 $ → D2 · 3.564 $ → D1.
+
+### Ve bacak kesmek işe YARAMIYOR (madde 326'nın ölçmediği hücre)
+3 bacak, REZERV 0,20, D7 (2.000 $'da bacak 17,78 $):
+**+%141,5 ham (bugüne +24,5 puan)** — ama **eşit riskte +%113,6, yani
+−3,4 PUAN** (kaldıraç 0,85x). Hiza 1'de şart 1 de düşüyor.
+2 bacak D2: +%187,2 ham, eşit riskte **−6,2 puan**, şart 1-2-3 düştü.
+
+**"BÜYÜK GETİRİ BAŞLIĞI, KALDIRAÇ BAŞLIĞIDIR" — bugün ÜÇÜNCÜ kez**
+(prim, 3 bacak, 2 bacak). Bir getiri sıçraması gördüğünüzde ilk
+bakacağınız yer düşüştür.
+
+---
+
+## MADDE 340 — FUNDING ARALIĞI: MEKANİZMA GERÇEK, BÜYÜKLÜK YOK
+
+İlk kez ölçüldü: evren ödeme aralığına göre yarılıyor — **482 sembol
+4 saatte bir, 355 sembol 8 saatte bir**, 4 sembol saatlik. Ve **826
+sembolün 199'u (%24,1) örnek içinde aralığını DEĞİŞTİRMİŞ.**
+
+Sinyal aralığı son ~52 ödemenin **medyanından** alıyor, dolayısıyla bir
+sembol 8 sa → 4 sa geçtiğinde medyan yarı yol boyunca hâlâ 8 der ve
+günlük birikim **YARI** hesaplanır — hem de Binance aralığı tam olarak
+funding oynaklığı arttığında kısalttığı için hata **carry'nin en
+yüksek olduğu yerde** oluşur. Aday: medyan yerine **son gözlenen
+aralık** (ikisi de nedensel).
+
+**Varyant kurucu BİREBİR doğrulandı:** medyan yöntemiyle kanonik
+`sk_bar48` paneli 3.267.389 hücrenin tamamında **tam olarak** yeniden
+üretildi (maks fark 0,000e+00, kor 1,000000).
+
+**Ama eksen küçük:** son-gözlem ile medyan yalnız **hücrelerin
+%0,072'sinde** farklı (ortalama fark 4,0e-06). Mekanizmanın gerçek
+olması, büyüklüğünün olduğu anlamına gelmiyor.
+
+### MADDE 340 HÜKMÜ: RED (iki hizalamada da)
+
+    kol               yillik   22-24 Sh   25-26 Sh   dusus
+    kontrol h0       +117,0      2,75       3,03     -20,2
+    son-aralik h0    +116,5      2,72 X     3,05     -20,3
+    kontrol h1       +121,4      2,87       3,08     -21,7
+    son-aralik h1    +120,8      2,84 X     3,09     -21,7
+
+Her iki hizalamada şart 1'den düşüyor ve her ikisinde de 22-24 tarafı
+bozuluyor. Plaseboya gerek kalmadı: eksenin tavanı zaten %0,072 hücre.
+
+**YASA: BİR TAHMİNCİYİ HIZLANDIRMAK, ONU GÜRÜLTÜLENDİRMEKTİR.**
+Medyanın gecikmesi gerçek bir maliyettir, ama 52 gözlemlik medyanı
+TEK gözleme indirmenin gürültü maliyeti daha büyük. Doğru olan aralık
+bilgisini kullanmaktı — ve sinyal onu zaten kullanıyor (`24/ar`);
+yanlış olan tahminciyi kısaltmaktı.
+
