@@ -563,7 +563,9 @@ def calis2(ad,n,olcut):
     out=[]
     for p,m in [('tam',E.index>='2022-01-01'),('22-24',E.index<'2025-01-01'),('25-26',E.index>='2025-01-01')]:
         e=E[m]/E[m].iloc[0]; o=D.ozet(e); out.append(f"{p} {o['yillik']:+.1f}% Sh {o['sharpe']:.2f} dd {o['maxdd']:.1f}")
-    pickle.dump(E,open(f'/tmp/g19E_{_fz}.pkl','wb'))
+    # MADDE 346: E_CIKTI verilirse oraya yaz (paralel kosular birbirinin
+    # /tmp/g19E_{_fz}.pkl'ini ezmesin). Bos -> eski davranis, parite ayni.
+    pickle.dump(E,open(os.environ.get('E_CIKTI') or f'/tmp/g19E_{_fz}.pkl','wb'))
     if KATKI and katki_defter:
         import pickle as _pk4
         _pk4.dump(pd.DataFrame(katki_defter), open(f'/tmp/katki_{_fz}.pkl','wb'))

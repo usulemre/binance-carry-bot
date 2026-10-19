@@ -2628,3 +2628,20 @@ Yeniden kurulan sinyal: **3.268.616 hücre** (kayıt 3.267.389; sembol
 listesi bugün 850, kayıtta 847). Parite sonucu ayrı işlenecek.
 
 **Yasa: bir kapı dosyanın VARLIĞINA bakıyorsa, boş dosyayı geçirir.**
+
+### Madde 345 sonucu — yeniden kurulan zeminin paritesi
+
+Dolu sinyalle parite: **+%111,39 / Sharpe 3,087 / düşüş −%14,39**
+(22-24 +%95,5 Sh 2,98 · 25-26 +%138,1 Sh 3,25). Kapı **TUTMADI**:
+hedefi kayıp öncesi +%112,27, fark 0,88 puan, tolerans 0,6. Madde 335'in
+doğruladığı zemine (+%111,83 / 3,095 / −%14,51) göre fark 0,44 puan.
+2.000 $ kitabı (4 bacak, D8) +%116,2 / 2,75 / 3,00 / −20,4; madde 340'ın
+kontrolü +117,0 / 2,75 / 3,03 / −20,2.
+
+Fark 3 fazla sembolden gelmiyor (850 vs 847; fazlalar Ağustos 2026
+listelemeleri, 90 gün yaş filtresi onları işleme sokmuyor) — arşiv
+revizyonu, madde 336'daki gibi **izole edilmedi**.
+
+**Kapı gevşetilmedi, `referans_getiri.csv` yeniden yazılmadı.** Bu
+zeminde yalnız EŞLİ kararlar (aynı zeminde kontrol vs aday) verilir;
+mutlak getiri sayıları yayınlanmış sayı olarak yazılmaz.
