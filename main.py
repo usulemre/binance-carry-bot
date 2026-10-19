@@ -35,14 +35,22 @@ ACTIVE_SIGNAL_FN = STRATEGY_VARIANTS[config.ACTIVE_STRATEGY]
 
 SIGNALS_FILE = "last_signals.json"
 
-logging.basicConfig(
-    level=logging.INFO,
-    format="%(asctime)s [%(levelname)s] %(message)s",
-    handlers=[
-        logging.FileHandler(config.LOG_FILE),
-        logging.StreamHandler(sys.stdout),
-    ],
-)
+# MADDE 344: log dosyası yalnız bot GERÇEKTEN çalıştırıldığında açılır.
+# Eskiden import anında açılıyordu; test_signal_bot_scaling.py ve
+# test_flags_effective.py main'i import ettiği için her test koşusu
+# sahte emir olaylarını (BTCUSDT giriş 100, AAAUSDT) GERÇEK bot.log'a
+# yazıyordu - ve madde 343 o kirli dosyayı "canlı kayıt" sandı.
+def _log_kur() -> None:
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s [%(levelname)s] %(message)s",
+        handlers=[
+            logging.FileHandler(config.LOG_FILE),
+            logging.StreamHandler(sys.stdout),
+        ],
+    )
+
+
 logger = logging.getLogger("bot")
 
 
@@ -400,4 +408,5 @@ def main():
 
 
 if __name__ == "__main__":
+    _log_kur()
     main()

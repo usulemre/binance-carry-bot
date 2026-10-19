@@ -1,3 +1,44 @@
+# ⚠ MADDE 344 DÜZELTMESİ — BU DOSYA CANLI KAYIT DEĞİL
+
+**Madde 343'ün öncülü yanlıştı.** `canli_kayit_2026-09-12_10-03_ikinci_bot.log`
+gerçek bir canlı koşu değil; **test koşularının `bot.log`'a sızan
+çıktısı.** Dosya, aşağıdaki 12 satırlık bloğun **48 kez** tekrarından
+ibaret (+ 23 satır `AAAUSDT` süre doldu):
+
+| kanıt | değer |
+|---|---|
+| semboller | yalnız `BTCUSDT` ve `AAAUSDT` (ikincisi gerçek sembol değil) |
+| BTC giriş fiyatı | **192/192 satırda 100,0** · SL 95 · TP 110 · miktar 1,0 |
+| zaman damgası | bir bloktaki 12 olay **aynı milisaniyede** |
+| yeniden üretim | `test_position_protection.py` + `test_signal_bot_scaling.py` boş bir klasörde koşturuldu → **aynı 12 satır, aynı metinler** |
+
+48 ERROR "emir DOLMADI" ve 48 "TP emri reddedildi" bir borsa olgusu
+değil; `FakeExchange`'in bilerek reddettiği emirleri test eden
+senaryolar. **Yani carry botunun maker dolum riski hakkında bu dosya
+HİÇBİR ŞEY söylemiyor** — madde 343'ün "DER" bölümü de geçersiz.
+"Uygulanabilirlik güveni MEDIUM, canlıda ölçülmedi" cümlesi olduğu gibi
+duruyor: eldeki canlı icra verisi **sıfır**.
+
+## Kök neden ve onarım
+
+`main.py` (elenen sinyal botu) `logging.FileHandler(config.LOG_FILE)`'ı
+**import anında** kuruyordu. Onu import eden iki test her koşuda gerçek
+`bot.log`'a sahte emir olayları yazıyordu. Onarım: log kurulumu
+`_log_kur()`'a taşındı ve yalnız `__main__`'de çağrılıyor.
+Regresyon testi `test_log_kirliligi.py` — eski kodda **düşüyor**
+(`FileHandler kuruldu: True`), yenide geçiyor.
+
+`carry_bot.py` bu hatayı TAŞIMIYOR: log dosyasını yalnız `main()`
+içinde açıyor.
+
+**Yasa: bir kaydın "canlı" olduğunu, içeriğine bakmadan adından ve
+konumundan çıkarma.** 343, dosyayı arşivlerken sayıları saydı ama tek
+bir fiyata bakmadı; BTC'nin 100 $ olduğu ilk satırda görünüyordu.
+
+Dosya denetim izi olarak silinmedi.
+
+---
+
 # MADDE 343 — ELDEKİ TEK GERÇEK CANLI KAYIT (ve neden arşivlendi)
 
 `canli_kayit_2026-09-12_10-03_ikinci_bot.log` — 71 KB, **21 günlük

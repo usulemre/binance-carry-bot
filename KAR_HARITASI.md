@@ -2589,3 +2589,19 @@ TEK gözleme indirmenin gürültü maliyeti daha büyük. Doğru olan aralık
 bilgisini kullanmaktı — ve sinyal onu zaten kullanıyor (`24/ar`);
 yanlış olan tahminciyi kısaltmaktı.
 
+
+---
+
+## MADDE 344 — "ELDEKİ TEK CANLI KAYIT" TEST ÇIKTISIYDI
+
+Madde 343'ün arşivlediği 21 günlük "canlı" log, `main.py`'nin import
+anında `bot.log` açması yüzünden testlerin oraya sızan çıktısı:
+12 satırlık bir blok × 48 koşu, BTC girişi her satırda 100,0 $,
+`AAAUSDT` diye sahte bir sembol. İki test boş klasörde koşunca aynı
+blok birebir çıktı. Onarıldı (`_log_kur()` yalnız `__main__`'de) ve
+`test_log_kirliligi.py` ile kilitlendi.
+
+**Kâra etkisi:** doğrudan yok, ama bir karar girdisini temizliyor —
+"carry'nin maker dolum riski canlıda görüldü" diye bir bulgu YOK.
+Canlı icra verisi hâlâ **sıfır**; uygulanabilirlik güveni MEDIUM kalıyor.
+Ayrıntı: `kurtarilan/OKUBENI_canli_kayit.md`.
