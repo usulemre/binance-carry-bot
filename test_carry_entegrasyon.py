@@ -25,6 +25,7 @@ import numpy as np
 import tempfile
 
 sys.path.insert(0, '.')
+import zlib
 import carry_bot as cb
 
 # MADDE 177: bu dosyadaki senaryolar 12+12 varsayımıyla yazıldı (hangi
@@ -238,7 +239,11 @@ class SahteIcClient:
 
     def futures_klines(self, symbol, interval, limit):
         # taker payı sembole göre değişsin ki akış sinyali sabit olmasın
-        pay = 0.45 + (hash(symbol) % 100) / 1000.0
+        # MADDE 360: eskiden hash(symbol) idi. Python metin hash'ini HER
+        # SÜREÇTE rastgele tohumlar (PYTHONHASHSEED): akış verisi, dolayısıyla
+        # seçilen bacaklar koşudan koşuya değişiyor ve rezerv testi ARALIKLI
+        # düşüyordu (madde 333/356). crc32 süreçten bağımsızdır.
+        pay = 0.45 + (zlib.crc32(symbol.encode()) % 100) / 1000.0
         hacim = 1_000_000.0
         # madde 183: kapanış HER BARDA DEĞİŞMELİ. Sabit fiyat verilirse
         # donuk seri filtresi (haklı olarak) tüm evreni eler; gerçek

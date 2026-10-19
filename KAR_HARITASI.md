@@ -3075,3 +3075,27 @@ rastgele yapıyordu). **Madde 301'in yasası gereği "tekrar koş, yeşil
 olsun" ile geçilmedi.** Açık eksen: aynı paketi birkaç sabit hash
 tohumuyla koşturup hatayı tohuma bağlamak; rezervin canlıda da
 tohuma bağlı olarak tetiklenmemesi GERÇEK bir kâr kaybı olur.
+
+## MADDE 360 — ARALIKLI REZERV TESTİNİN KÖKÜ: SAHTE BORSADA `hash(symbol)`
+
+Madde 356'nın açık ekseni kapatıldı. Rezerv senaryosu tek başına, sabit
+hash tohumlarıyla koşuldu: tohum 0/1/6 oran **1,0**, 2/3/4/7 **2,0**,
+5 **0,0** (uç coinler hiç seçilmedi). Turun ara adımları iki tohumda
+yazdırıldı: ayrışma **emir akışı skorunda** (C0: 0,15 vs 0,0475).
+Kaynak `test_carry_entegrasyon.py` satır 241, sahte borsanın taker payı:
+`0.45 + (hash(symbol) % 100)/1000` — Python metin hash'i süreç başına
+rastgele, akış %20 ağırlıkla seçime giriyor, seçilen bacaklar koşudan
+koşuya değişiyordu.
+
+**Canlı bot ETKİLENMİYOR:** `carry_bot.py`, `exchange_client.py`,
+`carry_saglik.py`, `config.py`'de `hash()` yok; canlıda akış gerçek
+klines'tan geliyor. Madde 301'in kusuru (emir sırası) üründeydi; bu
+fikstürde.
+
+Onarım: `zlib.crc32` (süreçten bağımsız). Doğrulama: beş tohumda
+(0, 1, 2, 5, 9) oran **2,000**, tek ve aynı sonuç.
+
+**Yasa: bir test fikstürü rastgelelik kullanıyorsa tohumu süreçten
+bağımsız olmalı — `hash()` rastgele bir tohumdur.** Madde 333'ün "izole
+ölçümde oran HER ZAMAN 2,500" notu bu fikstürle tek bir süreçte
+ölçülmüştü; "her zaman" bir süreçlik gözlemdi.
