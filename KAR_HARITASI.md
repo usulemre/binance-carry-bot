@@ -2873,3 +2873,44 @@ havuz 12, 5 bacaklık kitapta 15 idi — bacak azalınca seçim genişliği
 daraldı, HAVUZ 4 onu geri açıyor (16).
 
 Plato testi: madde 352 (HAVUZ 5, 6).
+
+---
+
+## MADDE 353 — HİÇ DENENMEMİŞ ÜÇ STRATEJİ AİLESİ: ÜÇÜ DE ÖN ELEMEDE RED
+
+Araç `arastirma_m353_yeni_strateji.py`, elek koşudan önce yazıldı (Sh22,Sh25 >= 1,0 · Sh >= 1,5 · plasebo + 0,5 · rho <= 0,30). Maliyet %0,05 taker + gerçek funding.
+
+```
+A D0=1 H=7                +10.2   0.45   0.27   0.66   -78.2  -0.00 |  -0.16 | XXYY
+A D0=1 H=7 +BTC           +16.8   0.57   0.71   0.48   -76.8  -0.01 |   0.11 | XXXY
+A D0=1 H=14                +9.3   0.48   0.23   0.76   -85.0  -0.00 |   0.57 | XXXY
+A D0=1 H=14 +BTC          +24.4   0.66   0.69   0.71   -83.3  -0.02 |   0.08 | XXYY
+A D0=1 H=30                +0.2   0.39   0.15   0.71   -76.2  -0.00 |  -0.22 | XXYY
+A D0=1 H=30 +BTC          +31.3   0.74   0.85   0.65   -79.9  -0.02 |   0.49 | XXXY
+A D0=3 H=7                 +9.4   0.43   0.13   0.74   -63.6  -0.00 |   0.23 | XXXY
+A D0=3 H=7 +BTC           +14.3   0.53   0.53   0.61   -59.3  -0.02 |  -0.37 | XXYY
+A D0=3 H=14                +2.2   0.36   0.15   0.59   -74.9  +0.01 |   0.00 | XXXY
+A D0=3 H=14 +BTC          +14.0   0.52   0.60   0.53   -79.2  -0.01 |  -0.09 | XXYY
+A D0=3 H=30                +2.2   0.41   0.13   0.77   -77.0  +0.01 |   0.22 | XXXY
+A D0=3 H=30 +BTC          +34.5   0.78   0.84   0.76   -75.4  -0.02 |   0.61 | XXXY
+B tut=1bar                -94.8  -2.50  -3.41  -2.34  -100.0  +0.06 |  -3.92 | XXYY
+B tut=6bar                -73.9  -1.02  -0.95  -1.25   -99.8  -0.02 |  -0.75 | XXXY
+C hafta x saat           +168.8   1.56   2.10   0.57   -67.1  +0.02 |  -0.84 | XYYY
+
+ELEKTEN GECEN: YOK
+```
+
+- **A. Yeni listeleme short'u:** carry ile korelasyon ~0 (−0,02..+0,01)
+  — yani tam aranan BAĞIMSIZ yapı — ama tek başına Sharpe 0,36-0,78 ve
+  düşüş **−%59..−%85**: yeni coinlerdeki short sıkıştırmaları kitabı
+  eritiyor. En iyi kol (D0=3, H=30, +BTC) plaseboyu yalnız 0,17 Sharpe
+  geçiyor. Madde 289'un barı (2,5) çok uzakta.
+- **B. BTC öncü-takipçi:** 4 saatlik çözünürlükte maliyet sinyali
+  yutuyor (Sharpe −2,5 / −1,0; plasebo −3,9 / −0,75 — sinyal VAR ama
+  maliyetin çok altında). Bu etki dakika ölçeğinde yaşar; panel 4 saat.
+- **C. Haftalık mevsimsellik:** 2022-24 Sharpe 2,10 örnek içi uydurma;
+  2025-26'da **0,57**, düşüş −%67. Takvim etkisi yok.
+
+**Yasa (madde 289'un gerçek veriyle üçüncü doğrulaması): korelasyonsuz
+olmak bedava değildir — bu projede ρ≈0 bulunan tek yapı (yeni listeleme
+short'u) tek başına Sharpe 0,8'i geçemiyor.** Ayar DEĞİŞMEDİ.
