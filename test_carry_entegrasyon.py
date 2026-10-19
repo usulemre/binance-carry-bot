@@ -402,25 +402,6 @@ kontrol("dolum kovalama en az 2 deneme yapıyor", cb.DOLUM_DENEME >= 2,
 kontrol("küçük bakiyede bacak sayısı kendiliğinden düşüyor",
         _kucuk < _GERCEK_N_LEGS, f"({_kucuk})")
 
-print("0b) GERÇEK VARSAYILANLA TAM TUR: taraf başına bacak = tavan (madde 341/356)")
-_n12 = (cb.N_LEGS, cb.MIN_LEGS)
-cb.N_LEGS, cb.MIN_LEGS = _GERCEK_N_LEGS, _GERCEK_MIN_LEGS
-for _bk in (2000.0, 50000.0):
-    temiz_ortam()
-    _c = SahteClient(bakiye=_bk); _c.client.gonderilen = []
-    cb.bir_tur(_c, dry_run=False)
-    _la = {e[0] for e in _c.client.gonderilen if e[1] == "BUY"}
-    _ls = {e[0] for e in _c.client.gonderilen if e[1] == "SELL"}
-    kontrol(f"{_bk:,.0f} $: taraf başına {cb.BACAK_TAVAN} bacak (tavan) açılıyor",
-            len(_la) == len(_ls) == min(cb.N_LEGS, cb.BACAK_TAVAN),
-            f"(long {len(_la)}, short {len(_ls)})")
-# Tur kodu bacağı min(N_LEGS, max(MIN_LEGS, n)) ile sıkıştırır: MIN_LEGS
-# tavanı aşarsa tavan SESSİZCE yok sayılır (test ortamında 8 bacak böyle
-# çıkıyordu). Varsayılanlar bu tuzağa düşmemeli.
-kontrol("MIN_LEGS bacak tavanını AŞMIYOR (aşarsa tavan sessizce iptal olur)",
-        cb.MIN_LEGS <= cb.BACAK_TAVAN, f"(MIN {cb.MIN_LEGS} > TAVAN {cb.BACAK_TAVAN})")
-cb.N_LEGS, cb.MIN_LEGS = _n12
-
 print("1) KURU ÇALIŞMA (--dry-run) hiç emir göndermemeli")
 temiz_ortam()
 c = SahteClient()
@@ -1185,6 +1166,29 @@ kontrol("CARRY_IZOLE_KAPAT=0 ile izole tespiti devreden çıkıyor",
 cb.IZOLE_KAPAT = _eski_ik
 
 print("\n" + "=" * 64)
+# MADDE 356: bu blok EN SONDA durmalı. Paketin başında (0b) koşunca
+# ortak bir durumu kirletip 11f'nin üç piyasa-yedeği kontrolünü düşürdü
+# (blok çıkarılınca paket 139/139 geçti). Sonda kirletecek test kalmıyor.
+print("\n99) GERÇEK VARSAYILANLA TAM TUR: taraf başına bacak = tavan (madde 341/356)")
+_n12 = (cb.N_LEGS, cb.MIN_LEGS)
+cb.N_LEGS, cb.MIN_LEGS = _GERCEK_N_LEGS, _GERCEK_MIN_LEGS
+for _bk in (2000.0, 50000.0):
+    temiz_ortam()
+    _c = SahteClient(bakiye=_bk); _c.client.gonderilen = []
+    cb.bir_tur(_c, dry_run=False)
+    _la = {e[0] for e in _c.client.gonderilen if e[1] == "BUY"}
+    _ls = {e[0] for e in _c.client.gonderilen if e[1] == "SELL"}
+    kontrol(f"{_bk:,.0f} $: taraf başına {cb.BACAK_TAVAN} bacak (tavan) açılıyor",
+            len(_la) == len(_ls) == min(cb.N_LEGS, cb.BACAK_TAVAN),
+            f"(long {len(_la)}, short {len(_ls)})")
+# Tur kodu bacağı min(N_LEGS, max(MIN_LEGS, n)) ile sıkıştırır: MIN_LEGS
+# tavanı aşarsa tavan SESSİZCE yok sayılır (test ortamında 8 bacak böyle
+# çıkıyordu). Varsayılanlar bu tuzağa düşmemeli.
+kontrol("MIN_LEGS bacak tavanını AŞMIYOR (aşarsa tavan sessizce iptal olur)",
+        cb.MIN_LEGS <= cb.BACAK_TAVAN, f"(MIN {cb.MIN_LEGS} > TAVAN {cb.BACAK_TAVAN})")
+cb.N_LEGS, cb.MIN_LEGS = _n12
+
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:
