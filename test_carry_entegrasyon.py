@@ -25,7 +25,9 @@ import numpy as np
 import tempfile
 
 sys.path.insert(0, '.')
+import json
 import zlib
+import pandas as pd
 import carry_bot as cb
 
 # MADDE 177: bu dosyadaki senaryolar 12+12 varsayımıyla yazıldı (hangi
@@ -374,6 +376,7 @@ def temiz_ortam():
     cb.TP_DEFTER_DOSYA = os.path.join(d, "tp.csv")
     cb.TP_KURULUM_DOSYA = os.path.join(d, "tp_kurulum.csv")
     cb.PRIM_DOSYA = os.path.join(d, "prim.csv")
+    cb.KALABALIK_ONBELLEK_DOSYA = os.path.join(d, "kalabalik.json")   # madde 363
     return d
 
 
@@ -774,6 +777,49 @@ kontrol("oran API'si patlarsa bot DURMUYOR, eski seçime (en uç n) düşüyor",
         len(_al2) == beklenen_bacak() and _al2 == _al3, f"({len(_al2)} long)")
 kontrol("CARRY_KALABALIK_HAVUZ=1 ile kapatılabiliyor (oran hiç çekilmiyor)",
         c3.client.ls_cagri == 0)
+
+print("\n11c2) ORAN API'Sİ SUSARSA SON BİLİNEN ORAN (madde 363)")
+# Aynı kalabalık senaryosu (C10-C40 short-kalabalık, C40-C70 long-kalabalık):
+# önce taze oranla bir tur (önbellek dolar), sonra API patlar.
+def _kalabalik_istemci():
+    c_ = SahteClient()
+    for i in range(80):
+        c_.client.ls_oran[f"C{i}USDT"] = 0.5 if 10 <= i < 40 else (3.0 if 40 <= i < 70 else 1.0)
+    c_.client.gonderilen = []
+    return c_
+temiz_ortam()
+_ca = _kalabalik_istemci(); cb.bir_tur(_ca, dry_run=False)
+_al_taze = {e[0] for e in _ca.client.gonderilen if e[1] == "BUY"}
+kontrol("taze turda önbellek dosyası yazıldı",
+        os.path.exists(cb.KALABALIK_ONBELLEK_DOSYA))
+_ob_dosya = cb.KALABALIK_ONBELLEK_DOSYA
+# (a) API patlıyor, önbellek TAZE -> kalabalık seçimi korunur
+cb.DILIM_DURUM_DOSYA = os.path.join(tempfile.mkdtemp(), "dilim.json")
+_cb2 = _kalabalik_istemci(); _cb2.client.ls_patlat = True
+cb.bir_tur(_cb2, dry_run=False)
+_al_ob = {e[0] for e in _cb2.client.gonderilen if e[1] == "BUY"}
+kontrol("API susunca 24 sa içindeki önbellekle kalabalık seçimi KORUNUYOR",
+        _al_ob == _al_taze and all(_cb2.client.ls_oran[x] == 0.5 for x in _al_ob),
+        f"({sorted(_al_ob)} vs {sorted(_al_taze)})")
+# (b) önbellek BAYAT (25 sa) -> eski yedek (en uç n)
+with open(_ob_dosya, encoding="utf-8") as _fh:
+    _ob = json.load(_fh)
+_ob = {k: [v[0], v[1] - 25 * 3600] for k, v in _ob.items()}
+with open(_ob_dosya, "w", encoding="utf-8") as _fh:
+    json.dump(_ob, _fh)
+cb.DILIM_DURUM_DOSYA = os.path.join(tempfile.mkdtemp(), "dilim.json")
+_cc = _kalabalik_istemci(); _cc.client.ls_patlat = True
+cb.bir_tur(_cc, dry_run=False)
+_al_bayat = {e[0] for e in _cc.client.gonderilen if e[1] == "BUY"}
+kontrol("24 saatten eski önbellek KULLANILMIYOR (en uç n yedeğine düşüyor)",
+        _al_bayat != _al_taze and not all(_cc.client.ls_oran[x] == 0.5 for x in _al_bayat),
+        f"({sorted(_al_bayat)})")
+# (c) CARRY_KALABALIK_BAYAT_SAAT=0 -> önbellek okunmaz
+_eski_bs = cb.KALABALIK_BAYAT_SAAT; cb.KALABALIK_BAYAT_SAAT = 0
+_s0, _n0 = cb.kalabalik_onbellekle_tamamla(pd.Series(dtype=float), ["C10USDT"],
+                                            dosya=_ob_dosya)
+cb.KALABALIK_BAYAT_SAAT = _eski_bs
+kontrol("CARRY_KALABALIK_BAYAT_SAAT=0 ile önbellek kapalı", _n0 == 0 and len(_s0) == 0)
 
 print("\n11d) ÇAPRAZ TEMİNAT VE BORSA KALDIRACI (madde 149)")
 temiz_ortam(); cb._KALDIRAC_AYARLI.clear()

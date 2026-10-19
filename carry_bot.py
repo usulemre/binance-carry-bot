@@ -2102,6 +2102,80 @@ def kalabalik_topla(client: ExchangeClient, semboller: list[str]) -> pd.Series:
     return pd.Series(out, dtype=float)
 
 
+KALABALIK_ONBELLEK_DOSYA = os.getenv(
+    "CARRY_KALABALIK_ONBELLEK",
+    os.path.join(os.path.dirname(os.path.abspath(__file__)), "carry_kalabalik.json"))
+"""Son alınan long/short oranları, zaman damgasıyla (madde 363)."""
+
+KALABALIK_BAYAT_SAAT = float(os.getenv("CARRY_KALABALIK_BAYAT_SAAT", "24"))
+"""Oran API'si cevap vermezse son bilinen oran en fazla kaç saat eski olabilir.
+
+MADDE 361/362/363. Kalabalık seçimi kitabın yük taşıyan parçası: havuzdan
+rastgele seçim `ls`'nin yılda 77-91 puan ALTINDA (madde 358). Oran API'si
+adayların yarısından azına cevap verirse bot eskiden doğrudan "en uç n"e
+düşüyordu; HAVUZ 4 kitabında bu yedeğin fiyatı ölçüldü ve bayat oranla
+karşılaştırıldı (2.000 $ / 3.500 $, iki hiza, kontrole göre yıllık puan):
+
+  yedek                yıllık          düşüş      eşit-risk
+  en uç n (eski)      −38 .. −47     +5,6 .. +9,0   −72 .. −82
+  24 sa bayat oran     −5 .. −10     +0,6 .. +0,9   −11 .. −19   <- seçilen
+  48 sa bayat oran    −15 .. −23     +3,2 .. +4,0   −39 .. −49
+  144 sa bayat oran   −34 .. −43     +6,7 .. +9,2   −71 .. −80  (= en uç n)
+
+Oranın bilgisi hızla eriyor; 6 günde sıfırlanıyor. 24 saat dört hücrede
+de en uç n'den açık ara iyi. 0 verilirse önbellek kullanılmaz (eski
+davranış). Bu bir kâr kaldıracı değil, bir ARIZA MODUNUN maliyetini
+~%80 küçülten sigorta."""
+
+
+def _kalabalik_onbellek_oku(dosya: str = None) -> dict:
+    dosya = dosya or KALABALIK_ONBELLEK_DOSYA
+    try:
+        with open(dosya, encoding="utf-8") as fh:
+            d = json.load(fh)
+        return {k: (float(v[0]), float(v[1])) for k, v in d.items()
+                if isinstance(v, (list, tuple)) and len(v) == 2}
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+def _kalabalik_onbellek_yaz(taze: pd.Series, simdi: float, dosya: str = None) -> None:
+    dosya = dosya or KALABALIK_ONBELLEK_DOSYA
+    d = _kalabalik_onbellek_oku(dosya)
+    for s, v in taze.items():
+        d[s] = (float(v), float(simdi))
+    tmp = dosya + ".tmp"
+    try:
+        with open(tmp, "w", encoding="utf-8") as fh:
+            json.dump({k: list(v) for k, v in sorted(d.items())}, fh)
+        os.replace(tmp, dosya)          # atomik (madde 72)
+    except OSError as e:
+        logger.warning("kalabalık önbelleği yazılamadı: %s", e)
+
+
+def kalabalik_onbellekle_tamamla(taze: pd.Series, adaylar: list, simdi: float = None,
+                                 dosya: str = None) -> tuple[pd.Series, int]:
+    """Taze oranı olmayan adayları, KALABALIK_BAYAT_SAAT içindeki son
+    bilinen oranla doldurur. Taze oranları önbelleğe yazar.
+    Döner: (birleşik seri, önbellekten gelen aday sayısı)."""
+    simdi = time.time() if simdi is None else simdi
+    if len(taze):
+        _kalabalik_onbellek_yaz(taze, simdi, dosya)
+    if KALABALIK_BAYAT_SAAT <= 0:
+        return taze, 0
+    ob = _kalabalik_onbellek_oku(dosya)
+    ek = {}
+    for s in adaylar:
+        if s in taze.index or s not in ob:
+            continue
+        v, t = ob[s]
+        if v > 0 and np.isfinite(v) and 0 <= simdi - t <= KALABALIK_BAYAT_SAAT * 3600:
+            ek[s] = v
+    if not ek:
+        return taze, 0
+    return pd.concat([taze, pd.Series(ek, dtype=float)]), len(ek)
+
+
 def kalabalik_adaylar(skor: pd.Series, n: int, havuz: float = None) -> tuple[list, list]:
     """Her taraf için aday havuzu (skor sırasına göre, en uç önce)."""
     havuz = KALABALIK_HAVUZ if havuz is None else havuz
@@ -3661,6 +3735,11 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
         _la, _sa = kalabalik_adaylar(skor, _n)
         kalabalik = kalabalik_topla(client, _la + _sa)
         logger.info("kalabalık oranı alınan aday: %d / %d", len(kalabalik), len(_la) + len(_sa))
+        # MADDE 363: API eksik cevap verirse son bilinen oranla tamamla
+        kalabalik, _ob_n = kalabalik_onbellekle_tamamla(kalabalik, _la + _sa)
+        if _ob_n:
+            logger.warning("%d adayın oranı önbellekten (en fazla %.0f sa eski) alındı",
+                           _ob_n, KALABALIK_BAYAT_SAAT)
         if len(kalabalik) < 0.5 * max(1, len(_la) + len(_sa)):
             logger.warning("long/short oranı adayların yarısından azında var - "
                            "bu tur kalabalık seçimi KAPALI (en uç n)")

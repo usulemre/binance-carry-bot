@@ -3229,3 +3229,40 @@ HUKUM REB4: RED
 TPL 0,50 dört hücrede +7 ham, şart 1, P %56-71. REB 4 ham +5..+13 ama
 düşüş +1,7..+2,0 derin, kaldıraç 0,87-0,90, eşit riskte negatif.
 TPL 0,40 ve REB 5 gün HAVUZ 4 kitabında da yerinde. AYAR DEĞİŞMEDİ.
+
+---
+
+## MADDE 361 — KALABALIK VERİSİ GELMEZSE: YILDA −38..−47 PUAN
+
+Canlı bot oran API'si adayların yarısından azına cevap verirse kalabalık
+seçimini kapatıp en uç n'e düşüyor. Motor kolu `uc` (aynı sıra), HAVUZ 4,
+kontrole göre: yıllık **−38,2..−46,9**, düşüş **+5,6..+9,0**, eşit risk
+**−71..−82**. Plaseboyu (havuzda rastgele) bile ancak yarı yarıya geçiyor.
+API'nin sustuğu her dönem bu oranda kâr kaybı demek.
+
+## MADDE 362 — BAYAT ORAN: 24 SAATE KADAR GÜÇLÜ, 6 GÜNDE SIFIR
+
+g33'e `LS_GECIKME` (parite 0'da birebir, maks fark 0,0). Kontrole göre:
+
+    yedek          yillik          dusus        esitR
+    en uç n       −38 .. −47     +5,6 .. +9,0   −72 .. −82
+    24 sa bayat    −5 .. −10     +0,6 .. +0,9   −11 .. −19
+    48 sa bayat   −15 .. −23     +3,2 .. +4,0   −39 .. −49
+    144 sa bayat  −34 .. −43     +6,7 .. +9,2   −71 .. −80
+
+Ön kayıtlı kural: 24 ve 48 sa dört hücrede de en uç n'den iyi; 144 sa
+değil. Oranın bilgisi bir günde ~%15, iki günde ~%45 eriyor.
+
+## MADDE 363 — BOTA 24 SAATLİK ORAN ÖNBELLEĞİ (SİGORTA)
+
+`carry_bot.py`: her turda alınan oranlar zaman damgasıyla
+`carry_kalabalik.json`'a yazılıyor (atomik). API eksik cevap verirse
+eksik adaylar `KALABALIK_BAYAT_SAAT` (24) içindeki son oranla
+tamamlanıyor; yarıdan azı kalırsa ancak o zaman en uç n'e düşülüyor.
+`CARRY_KALABALIK_BAYAT_SAAT=0` eski davranış. Arıza modunun maliyeti
+yılda ~−43 puandan ~−8 puana iniyor (24 sa içinde kalındığı sürece).
+
+Testler: fikstür önbelleği geçici dizine yönlendiriyor (madde 303'ün
+yasası); üç senaryo — taze önbellekle kalabalık seçimi korunuyor, 25
+saatlik önbellek kullanılmıyor, 0 ile kapalı. Bu bir backtest kârı
+değil: kâr ancak canlıda API sustuğunda korunur.

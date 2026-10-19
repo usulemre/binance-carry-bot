@@ -24,3 +24,5 @@ data_premium_genis/
 *.key
 *.pem
 secrets*
+carry_kalabalik.json
+carry_kalabalik.json.tmp
