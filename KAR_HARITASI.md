@@ -2747,3 +2747,57 @@ Neden 305'in sonucu tekrarlamadı:
 geçemiyor. Kontrol değişince aday yeniden ölçülmeden taşınmaz.
 
 **AYAR DEĞİŞMEDİ.** Trend sleeve bu kitapta bir kâr kaldıracı değil.
+
+---
+
+## MADDE 348 — MADDE 325'İN 13×3 ADAYI YENİ ZEMİNDE: ÜÇ SEVİYEDE DE RED
+
+Araç `arastirma_m348_13x3.py`, kural koşudan önce yazıldı. Kontrol:
+bugünün 15×4 kitabı (madde 346'nın K kolları).
+
+    bakiye hz kol    yillik  Sh22  Sh25  dusus   esitR  kald 4sart   P%   med
+     2000  0 15x4   +116,1   2,51  2,87  -19,4
+     2000  0 13x3   +138,8   2,56  2,96  -20,2  +129,6  0,95  YYYY  64,0  +7,4
+     2000  1 15x4   +121,9   2,63  2,97  -21,2
+     2000  1 13x3   +148,0   2,71  2,99  -20,1  +160,1  1,06  YYYY  77,0 +13,4
+     3500  0 13x3   +138,3   2,55  2,96  -20,2  +110,0  0,85  XYXY  32,2  -7,0
+     3500  1 13x3   +147,6   2,70  2,99  -20,1  +121,4  0,87  XYXY  30,4  -7,6
+     8361  0 13x3   +139,6   2,54  3,05  -19,7  +115,9  0,87  XYXY  39,2  -4,2
+     8361  1 13x3   +153,7   2,82  3,04  -18,4  +145,2  0,96  XYYY  50,3  +0,1
+
+**HÜKÜM: 2.000 $ RED · 3.500 $ RED · 8.361 $ RED.**
+
+- **2.000 $'da madde 325 birebir tekrarlandı:** dört şart iki hizada da
+  geçiyor, medyan kazanç +7,4/+13,4 (325: +7,54), ama kanıt barı
+  geçilmiyor (P %64 / %77; 325: %68,9). Hüküm aynı: ölçülmüş aday,
+  ayar değil.
+- **3.500 $ ve üstünde 13×3 KAYBEDİYOR:** 15×4 zaten D2/D1 evrenine
+  ulaşmış oluyor, 13×3'ün evren kazancı kalmıyor, geriye yalnız faz
+  bedeli (15→13) ve daha derin düşüş kalıyor. Eşit riskte −4..−8 puan.
+- Ham getiri her yerde +18..+28 puan YÜKSEK görünüyor — **"büyük getiri
+  başlığı kaldıraç başlığıdır"** (madde 339) dördüncü kez: kaldıraç
+  0,85-0,96x, yani 13×3 daha riskli ve kıyas düşüşü eşitleyince kazanç
+  buharlaşıyor.
+
+**AYAR DEĞİŞMEDİ.**
+
+---
+
+## BU TURUN ÖZETİ (madde 344-348)
+
+| madde | ne | sonuç |
+|---|---|---|
+| 344 | "tek canlı kayıt" | **test çıktısıydı**; `main.py` import'ta log açıyordu, onarıldı |
+| 345 | yeniden kurulum | boş sinyali geçiriyordu (eski yol); onarıldı, parite +%111,39 |
+| 346 | prim-ölçekli brüt (288) | +5..+7 puan; 2.000 $ RED, 3.500/8.361 $ KABUL (gürültü bandı); ayar kapalı kaldı |
+| 347 | trend sleeve (305) | 15×4'te RED; 2.000/3.500 $'da kurulamaz |
+| 348 | 13×3 (325) | üç seviyede RED |
+
+**306-322 yeniden ölçülemedi:** kod, ön kayıt ve tanım yok; geçmiş
+sohbet araması o döneme ulaşmıyor. Uydurulmuş bir tanımla ölçmek
+sicile sahte bir madde yazmak olurdu. Kullanıcıda bir kayıt varsa
+kurulur.
+
+**Bugünkü kitapta kalan tek ölçülmüş kâr kaldıracı:** 3.000 $ ve
+üstünde `CARRY_PRIM_E=0.10` (madde 346, +5..+7 puan, ince kanıt).
+Parametre ve yapı ekseni bu zeminde yeniden doğrulandı: açık aday yok.
