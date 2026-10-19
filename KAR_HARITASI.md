@@ -3266,3 +3266,11 @@ Testler: fikstür önbelleği geçici dizine yönlendiriyor (madde 303'ün
 yasası); üç senaryo — taze önbellekle kalabalık seçimi korunuyor, 25
 saatlik önbellek kullanılmıyor, 0 ile kapalı. Bu bir backtest kârı
 değil: kâr ancak canlıda API sustuğunda korunur.
+
+### Madde 363 doğrulaması — entegrasyon paketi 146/146
+
+Dört yeni kontrolün dördü geçti (önbellek yazılıyor; API susunca 24 sa
+içindeki önbellekle kalabalık seçimi korunuyor; 25 saatlik önbellek
+reddediliyor; 0 ile kapalı). Paket **146 [OK], 0 [HATA]**;
+`test_carry_bot.py` ve ön uçuş da temiz. Önbellek dosyası depoya
+sızmadı.
