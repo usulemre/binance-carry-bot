@@ -28,6 +28,17 @@ say() { echo "[$(date +%H:%M:%S)] $*" | tee -a $L; }
 : > $L
 say "=== YENIDEN KURULUM BASLADI (adim: $ADIM)"
 
+# MADDE 345: 69 betik proje kökünü eski sabit yoldan okuyor
+# (/home/claude/binance_bot/binance_bot). Konteyner kaybından sonra o yol
+# yoktu ve sinyal kurucu SESSİZCE boş sinyal üretti -> parite +%0,00.
+# Betikleri tek tek değiştirmek yerine eski yolu bu depoya bağla: geçmiş
+# ölçümlerin kodu birebir aynı kalır.
+ESKI=/home/claude/binance_bot/binance_bot
+if [ "$(readlink -f $ESKI 2>/dev/null)" != "$(pwd -P)" ]; then
+  mkdir -p "$(dirname $ESKI)" && ln -sfn "$(pwd -P)" $ESKI \
+    && say "    eski proje yolu baglandi: $ESKI -> $(pwd -P)"
+fi
+
 if [ "$ADIM" = "hepsi" ] || [ "$ADIM" = "zemin" ]; then
   say "--- 1/5 sembol listesi"
   python3 indir_sembol_listesi.py >> $L 2>&1
@@ -60,7 +71,12 @@ fi
 if [ "$ADIM" = "hepsi" ] || [ "$ADIM" = "panel" ]; then
   say "--- 4/5 motor zemini (/tmp/zemin.pkl, panel, hlo, g.py, sk_bar48)"
   python3 yeniden_kur.py >> $L 2>&1
-  say "    cikis $?"
+  RC=$?
+  say "    cikis $RC"
+  if [ $RC -ne 0 ]; then
+    say "    DURDURULDU: motor zemini/sinyal kurulamadi (madde 345) - metrik indirmeye gecilmez"
+    exit 1
+  fi
   if [ ! -s /tmp/zemin.pkl ]; then
     say "    DURDURULDU: /tmp/zemin.pkl yok - sonraki adimlar anlamsiz"
     exit 1

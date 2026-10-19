@@ -142,6 +142,10 @@ def kur():
         print("  " + k.stdout.strip().splitlines()[-1])
     if k.returncode != 0:
         print("  [!] stderr: " + (k.stderr.strip().splitlines() or ["(yok)"])[-1])
+        # MADDE 345: eskiden burada kontrol()'e düşülüyordu; o yalnız dosyanın
+        # VAR olduğuna bakıyor ve çökmüş kurucunun bıraktığı BOŞ sinyali
+        # geçiriyordu. Sinyal kurulamadıysa zemin kurulmamıştır.
+        return False
     return kontrol()
 
 

@@ -6,7 +6,10 @@ Canli bot pencereyi TUR ANINDA hesaplar. Burada da bar aninda hesaplanir,
 boylece panelle tek fark ARALIK TAHMINCISI kalir.
 """
 import pandas as pd, numpy as np, pickle, os, sys
-R = '/home/claude/binance_bot/binance_bot'
+# MADDE 345: eskiden sabit '/home/claude/binance_bot/binance_bot' idi;
+# konteyner kaybından sonra o yol yoktu, hiçbir funding dosyası
+# bulunamadı ve sinyal SESSİZCE tamamen boş yazıldı.
+R = os.path.dirname(os.path.abspath(__file__))
 P = pickle.load(open('/tmp/panel.pkl','rb')); C = P['C']; kol = list(C.columns)
 PEN = float(os.environ.get('PEN', '72'))
 TABAN = float(os.environ.get('TABAN', '4'))
@@ -45,8 +48,14 @@ for j, s in enumerate(kol):
         ar = max(np.sort(d)[d.size // 2], TABAN)
         out[i, j] = ort * (24.0 / ar)
 SIN = pd.DataFrame(out, index=C.index, columns=kol).where(C.notna())
+_hucre = int(SIN.notna().sum().sum())
+if _hucre == 0:
+    # MADDE 345: boş bir sinyali diske yazmak, motorun HİÇ işlem açmayıp
+    # "+%0,00" demesine yol açar; dosya var göründüğü için zincir geçer.
+    sys.exit(f"HATA: sinyal BOŞ (0 hücre) - funding dosyaları {R}/data_funding_genis altında bulunamadı")
 pickle.dump(SIN, open(f'/tmp/sk_{AD}.pkl', 'wb'))
-sk = P['sk']
+# panel sk'si zemin.pkl'de durur (panel.pkl'de değil - madde 345)
+sk = pickle.load(open('/tmp/zemin.pkl', 'rb'))['sk']
 kors = []
 for i in range(0, len(C), 50):
     a, b = SIN.values[i], sk.values[i]

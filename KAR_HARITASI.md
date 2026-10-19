@@ -2605,3 +2605,26 @@ blok birebir çıktı. Onarıldı (`_log_kur()` yalnız `__main__`'de) ve
 "carry'nin maker dolum riski canlıda görüldü" diye bir bulgu YOK.
 Canlı icra verisi hâlâ **sıfır**; uygulanabilirlik güveni MEDIUM kalıyor.
 Ayrıntı: `kurtarilan/OKUBENI_canli_kayit.md`.
+
+---
+
+## MADDE 345 — YENİDEN KURULUM BOŞ SİNYALLE "BAŞARILI" BİTİYORDU
+
+İlk tam yeniden kurulumda parite **tam +%0,00** verdi: motor hiç işlem
+açmadı. Sebep: 69 betik proje kökünü eski sabit yoldan
+(`/home/claude/binance_bot/binance_bot`) okuyor; konteyner kaybından
+sonra o yol yoktu. `canli_sinyal_kur.py` hiçbir funding dosyası
+bulamadı, sinyali **tamamen boş** yazdı, sonra `panel.pkl`'de olmayan
+`sk` anahtarında çöktü. `yeniden_kur.py` çıkış kodunu yutup yalnız
+dosya VAR mı diye baktığı için zincir geçti ve metrik indirmesi
+~1,5 saat boş sinyalin üstünde koştu.
+
+Onarım: eski yol depoya sembolik bağlanıyor (69 betik birebir kalır);
+sinyal kurucu kendi klasörünü kullanıyor, boş sinyalde hata verip
+duruyor ve `sk`'yi `zemin.pkl`'den alıyor; `yeniden_kur.py` ve
+`yeniden_kurulum.sh` kurucu çökünce zinciri DURDURUYOR.
+
+Yeniden kurulan sinyal: **3.268.616 hücre** (kayıt 3.267.389; sembol
+listesi bugün 850, kayıtta 847). Parite sonucu ayrı işlenecek.
+
+**Yasa: bir kapı dosyanın VARLIĞINA bakıyorsa, boş dosyayı geçirir.**
