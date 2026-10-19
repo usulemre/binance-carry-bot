@@ -3150,3 +3150,9 @@ HUKUM KAP08: RED
 
 **AYAR DEĞİŞMEDİ.** HAVUZ 4'lük 15×4 kitabı bu dört adayın hiçbirine
 eşit riskte yenilmiyor.
+
+### Madde 360 doğrulaması — entegrasyon paketi iki tohumda 142/142
+
+`PYTHONHASHSEED=5` (eskiden rezerv senaryosunda uç coinleri HİÇ seçmeyen
+tohum) ve `=11`: **142 [OK], 0 [HATA]**, ikisinde de. Madde 356/360'ın
+test düzeltmeleri kapandı; paket artık hash tohumundan bağımsız.
