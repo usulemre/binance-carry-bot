@@ -2914,3 +2914,43 @@ ELEKTEN GECEN: YOK
 **Yasa (madde 289'un gerçek veriyle üçüncü doğrulaması): korelasyonsuz
 olmak bedava değildir — bu projede ρ≈0 bulunan tek yapı (yeni listeleme
 short'u) tek başına Sharpe 0,8'i geçemiyor.** Ayar DEĞİŞMEDİ.
+
+---
+
+## MADDE 354 — PİYASA ÇAPINDA ÇÖKÜŞ SONRASI DİP ALIMI VE AYNASI: RED
+
+Araç `arastirma_m354_kaskad.py`, elek madde 353 ile aynı.
+
+```
+aday                        olay   yillik     Sh   Sh22   Sh25   dusus    rho | PLA Sh | elek
+dip al 4% H=1g               201    +36.2   0.97   1.11   0.67   -45.2  +0.20 |   0.72 | XXXY
+dip al 4% H=2g               201    +36.9   0.89   0.90   0.90   -52.9  +0.19 |   0.24 | XXYY
+dip al 4% H=3g               201    +68.6   1.24   1.19   1.35   -47.4  +0.18 |   1.27 | YXXY
+dip al 6% H=1g                60    +12.3   0.57   0.46   1.10   -50.1  +0.29 |   0.23 | XXXY
+dip al 6% H=2g                60     +3.1   0.26   0.12   0.77   -65.9  +0.28 |   1.05 | XXXY
+dip al 6% H=3g                60     +5.1   0.32   0.04   1.10   -64.8  +0.26 |   1.13 | XXXY
+dip al 8% H=1g                22    +14.4   0.64   0.63   0.75   -26.9  +0.32 |  -0.88 | XXYX
+dip al 8% H=2g                22    +16.5   0.66   0.54   1.01   -39.4  +0.31 |   1.20 | XXXX
+dip al 8% H=3g                22    +10.5   0.48   0.30   1.00   -44.9  +0.32 |   0.25 | XXXX
+tepe sat 4% H=1g             190    -45.0  -1.71  -1.81  -1.53   -95.6  -0.12 |  -0.49 | XXXY
+tepe sat 4% H=2g             190    -57.9  -1.85  -1.75  -2.02   -98.9  -0.07 |  -0.95 | XXXY
+tepe sat 4% H=3g             190    -65.2  -1.97  -1.97  -1.98   -99.5  -0.03 |  -1.16 | XXXY
+tepe sat 6% H=1g              51    -15.4  -0.63  -1.08   0.20   -69.1  -0.18 |  -1.05 | XXXY
+tepe sat 6% H=2g              51    -21.4  -0.66  -0.62  -0.76   -80.7  -0.13 |  -0.14 | XXXY
+tepe sat 6% H=3g              51    -27.3  -0.80  -1.05  -0.33   -86.7  -0.10 |  -0.90 | XXXY
+tepe sat 8% H=1g              12     -3.1  -0.19  -0.77   0.70   -30.1  -0.03 |  -0.05 | XXXY
+tepe sat 8% H=2g              12     -5.9  -0.35  -0.86   0.41   -37.4  -0.02 |   0.41 | XXXY
+tepe sat 8% H=3g              12    -10.3  -0.59  -1.13   0.28   -46.2  -0.01 |  -1.12 | XXYY
+
+ELEKTEN GECEN: YOK
+```
+
+- **Dip alımı edge değil, beta:** en iyi kol (%4, 3 gün) Sharpe 1,24 —
+  plasebosu (aynı sayıda RASTGELE barda long) **1,27**. Kaskaddan sonra
+  almanın piyasada long olmaktan farkı yok. Eşik büyüdükçe olay sayısı
+  düşüyor (201 → 60 → 22) ve sonuç kötüleşiyor.
+- **Tepe satışı negatif** (Sharpe −0,2..−2,0): piyasa çapında sert yükselişi
+  geri dönüş değil DEVAM izliyor — madde 237'nin momentum bulgusunun
+  piyasa düzeyindeki hâli.
+
+Ayar DEĞİŞMEDİ.
