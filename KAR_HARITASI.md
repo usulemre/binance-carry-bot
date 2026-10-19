@@ -3099,3 +3099,54 @@ Onarım: `zlib.crc32` (süreçten bağımsız). Doğrulama: beş tohumda
 bağımsız olmalı — `hash()` rastgele bir tohumdur.** Madde 333'ün "izole
 ölçümde oran HER ZAMAN 2,500" notu bu fikstürle tek bir süreçte
 ölçülmüştü; "her zaman" bir süreçlik gözlemdi.
+
+---
+
+## MADDE 357 — BEKLEYEN ADAYLAR YENİ KONTROLE (15×4, HAVUZ 4) KARŞI: DÖRDÜ DE RED
+
+```
+kol     bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%    med   (kontrol: 15x4 HAVUZ 4; farklar)
+P      2000  0    +6.3 +0.08 -0.02   -0.0    +6.4  1.00  XYYY  76.3   +5.8
+P      2000  1    +6.4 +0.08 -0.02   -0.1    +7.5  1.01  XYYY  75.1   +5.7
+P      3500  0    +6.0 +0.08 +0.00   +0.1    +5.3  1.00  YYYY  79.3   +5.8
+P      3500  1    +6.3 +0.08 +0.01   -0.3    +9.9  1.02  YYYY  82.2   +7.0
+HUKUM P: RED
+
+T13    2000  0   +16.4 -0.15 +0.12   +2.8   -12.3  0.85  XYXY  32.1   -9.4
+T13    2000  1   +16.4 -0.13 -0.05   +3.0   -16.1  0.84  XXXY  23.0  -15.9
+T13    3500  0   +13.5 -0.21 -0.00   +4.7   -32.2  0.75  XXXY  13.2  -19.0
+T13    3500  1   +19.2 -0.11 -0.09   +4.4   -26.5  0.76  XXXY  23.6  -15.3
+HUKUM T13: RED
+
+T13P   2000  0   +24.8 -0.05 +0.13   +2.9    -6.5  0.84  XYXY  44.7   -2.8
+T13P   2000  1   +23.9 -0.06 -0.04   +3.1   -11.6  0.83  XXXY  31.2  -10.4
+T13P   3500  0   +21.9 -0.11 +0.01   +4.8   -27.5  0.74  XXXY  23.8  -13.4
+T13P   3500  1   +26.7 -0.04 -0.07   +4.6   -22.7  0.76  XXXY  33.7   -9.4
+HUKUM T13P: RED
+
+KAP08  2000  0    +6.3 -0.02 +0.03   +0.0    +5.8  1.00  XYYY  72.7   +1.9
+KAP08  2000  1    +6.4 -0.03 +0.03   -0.0    +6.5  1.00  XYYY  65.9   +1.5
+KAP08  3500  0    +6.7 -0.02 +0.03   +0.1    +6.0  1.00  XYYY  67.2   +1.5
+KAP08  3500  1    +6.7 -0.02 +0.02   +0.5    +1.0  0.97  XYYY  67.4   +1.4
+HUKUM KAP08: RED
+
+```
+
+- **Prim çarpanı (P):** 16 hücrenin her birinde aynı resim — ham +6,0..+6,4
+  puan, 22-24 Sharpe +0,08, 25-26 ~0, kaldıraç 1,00, düşüş değişmiyor.
+  P %75-82: 3.500 $ h1 %82,2 geçiyor, h0 **%79,3 — barın 0,7 altında**.
+  HAVUZ 3 kontrolüne karşı 3.500 $'da KABUL'dü (madde 346); yeni
+  kontrolde kural RED. **Projedeki en TUTARLI aday** (işaret ve büyüklük
+  her hücrede aynı), ama kanıt barı her seferinde kıl payı — etki yalnız
+  22-24 rejiminde (madde 258: prim brütü bir rejim aracı).
+- **13×3 (T13) ve 13×3+prim (T13P):** HAVUZ 4'le ham getiri +13..+27 puan
+  ÜSTTE ama düşüş 2,8-4,8 puan DERİN, kaldıraç 0,74-0,85 → eşit riskte
+  −6..−32 puan. "Büyük getiri başlığı kaldıraç başlığıdır" (madde 339)
+  altıncı kez. Kullanıcının "+%155" yapılandırması (T13P) bugün ham
+  ~+148..+155 veriyor; 15×4 HAVUZ 4'ten daha çok kazanıp daha çok riske
+  giriyor, aynı riskte daha az kazanıyor.
+- **KAP 0,08:** dört hücrede +6,3..+6,7 ham, şart 1 her hücrede (22-24
+  −0,02..−0,03), P %66-73 → RED.
+
+**AYAR DEĞİŞMEDİ.** HAVUZ 4'lük 15×4 kitabı bu dört adayın hiçbirine
+eşit riskte yenilmiyor.
