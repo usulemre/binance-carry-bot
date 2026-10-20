@@ -3767,3 +3767,22 @@ o protokolde yanlış kabul olasılığını ~%0,2 veriyor; kabul GERİ ALINMADI
 (protokol ileriye dönük yazıldı), ama bu not kayıtta.
 
 **AYAR DEĞİŞMEDİ.**
+
+## MADDE 378 — TAM TEST TARAMASI: 42 PAKETİN 7'Sİ ÖNCEDEN KIRIKTI
+
+Denetimin A aşaması (tohum 0): 42 paketin 35'i geçti, 7'si düştü. Yedisi
+oturum başındaki kodda (43709c8) AYNI şekilde düşüyor → bu oturumun
+değişikliklerinden değil.
+- **Carry botu (1):** `test_carry_rapor` karar() eşiklerini ham
+  `DUSUS_INCELE/DURDUR`'dan (15x5: −%18/−%23) bekliyordu; karar() madde
+  329/341'den beri KOŞULAN kitabın eşiklerini kullanıyor (2.000-10.000 $:
+  15x4, −%23/−%30 ya da −%21/−%27). **Canlı alarm doğru**, test bayattı.
+  Test karar()'ın kendi kuralından türetilecek şekilde düzeltildi; temiz.
+- **Elenmiş botlar (6):** test_accounting, test_compound_mode,
+  test_core_modules, test_doc_accuracy, test_parameter_effect,
+  test_flags_effective — sinyal/kesitsel bota ait, eski 14 coinlik
+  veriye dayanıyor ("temiz evren: 0 coin"); veri konteyner kaybında
+  gitti. Botlar elendiği (NEREDE_NE_VAR §2) için düzeltilmedi.
+
+Zemin paritesi yeniden koşuldu: +%111,39 / 3,087 / −%14,39 — dünküyle
+birebir (deterministik).

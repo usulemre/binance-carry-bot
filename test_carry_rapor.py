@@ -52,18 +52,24 @@ kontrol("−%16 düşüş DEVAM (normal yılın p5'i −%16,8 - madde 222)",
 # diye sabit yaziyordu; o, madde 175'in curutulmus esiklerinden
 # (-%20/-%25) geliyordu ve madde 233 esikleri -%18/-%23'e cektiginde
 # kirildi. Sabit yazilan esik, esigin bayatligini GIZLER.
-_ara = (cr.DUSUS_INCELE + cr.DUSUS_DURDUR) / 2       # iki esigin arasi
+# MADDE 378: karar() esikleri ham DUSUS_INCELE/DURDUR'dan degil, KOSULAN
+# kitaptan (ilk_bakiye -> kitap_anahtari -> dusus_incele/durdur) okur
+# (madde 329/341). Test ham sabitleri kullandigi icin o maddelerden beri
+# kirikti. Artik karar()'in kendi kuralindan turetiliyor.
+_ANK = cr.kitap_anahtari(bakiye=10000.0)
+_KI, _KD = cr.dusus_incele(_ANK, 10000.0), cr.dusus_durdur(_ANK, 10000.0)
+_ara = (_KI + _KD) / 2       # iki esigin arasi
 d, s = cr.karar(b(dusus=_ara), NORMAL, ACIK, YOK)
 kontrol(f"iki eşik ARASI (%{_ara*100:.1f}) İNCELE", d == "İNCELE", f"({d})")
-_asagi = cr.DUSUS_DURDUR - 0.04
+_asagi = _KD - 0.04
 d, s = cr.karar(b(dusus=_asagi), NORMAL, ACIK, YOK)
 kontrol(f"DURDUR eşiğinin ALTI (%{_asagi*100:.1f}) DURDUR", d == "DURDUR", f"({d})")
 kontrol("DURDUR gerekçesinde gerçekleşen düşüş yazılı",
         any(f"{_asagi*100:.1f}" in x for x in s), f"({s})")
 # esigin HEMEN ustu/alti: sinir davranisi
-d, _ = cr.karar(b(dusus=cr.DUSUS_INCELE + 0.001), NORMAL, ACIK, YOK)
+d, _ = cr.karar(b(dusus=_KI + 0.001), NORMAL, ACIK, YOK)
 kontrol("İNCELE eşiğinin hemen ÜSTÜ DEVAM", d == "DEVAM", f"({d})")
-d, _ = cr.karar(b(dusus=cr.DUSUS_DURDUR - 0.001), NORMAL, ACIK, YOK)
+d, _ = cr.karar(b(dusus=_KD - 0.001), NORMAL, ACIK, YOK)
 kontrol("DURDUR eşiğinin hemen ALTI DURDUR", d == "DURDUR", f"({d})")
 
 print("\n2) SAPMA DURUMU")
