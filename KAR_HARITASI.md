@@ -3844,3 +3844,78 @@ göremediği SEÇİMLERDEN (hangi pump'ları atladığı, ne zaman çıktığı)
 geliyorsa, onu ancak kapanmış işlem geçmişi gösterir. **AYAR DEĞİŞMEDİ.**
 Sınır: portföy düşüşü işlem kapanışında yazılıyor (gün içi değerleme
 yok) — ama işlem başı sonuçlar bundan etkilenmez ve zaten negatif.
+
+---
+
+## MADDE 380 — KULLANICININ KURALI + SIKIŞMA FİLTRELERİ: ELEK YOK, AMA TEK TARAFTA GERÇEK BİR İŞARET
+
+```
+kol                         islem   ort%    o22    o25   med%  kaz%     p1%  yillik    Sh  Sh22  Sh25  dusus |   PLA | elek
+SHORT 30% yok H1             1513  -0.20  +0.36  -0.41  +3.26  56.7   -28.8   -69.8 -0.90  0.07 -1.70  -99.9 | -0.96 | XXXYX
+SHORT 30% yok H3             1484  -0.53  +0.18  -0.80  +1.85  52.2   -31.2   -94.9 -2.53 -0.28 -4.63 -100.0 | -0.84 | XXXYX
+SHORT 30% LS H1               145  +0.17  -0.83  +0.25  +5.33  60.0   -26.9    -2.8  0.05 -0.16  0.12  -43.2 | -0.74 | XXYYX
+SHORT 30% LS H3               144  +1.76  -2.48  +2.08  +4.38  59.0   -26.9    +2.3  0.23 -0.53  0.46  -42.5 |  0.53 | XXXYX
+SHORT 30% FON H1              844  +0.14  -0.13  +0.23  +3.24  56.2   -25.5   -35.6 -0.32 -0.22 -0.46  -94.7 | -0.13 | XXXYX
+SHORT 30% FON H3              835  -0.00  -0.11  +0.04  +1.09  51.5   -26.2   -66.6 -1.01 -0.20 -1.74  -99.8 | -0.60 | XXXYX
+SHORT 30% LS+FON H1            90  +0.43  +2.89  +0.26  +5.51  60.0   -25.6    -0.6  0.09  0.72  0.09  -37.9 | -0.28 | XXXYY
+SHORT 30% LS+FON H3            90  +1.36  -0.94  +1.52  +4.05  54.4   -25.6    +2.4  0.22 -0.40  0.39  -38.1 | -0.25 | XXXYX
+SHORT 40% yok H1              826  +0.11  +1.42  -0.27  +3.36  55.0   -29.4   -27.9 -0.07  0.59 -0.42  -95.8 | -0.19 | XXXYX
+SHORT 40% yok H3              820  -0.19  +0.81  -0.48  +0.75  50.5   -33.8   -70.0 -1.03  0.26 -2.05  -99.9 | -0.66 | XXXYX
+SHORT 40% LS H1                65  +0.55  -6.61  +1.02  +4.61  55.4   -26.6    -0.2  0.09 -0.45  0.28  -30.2 | -0.11 | XXXYX
+SHORT 40% LS H3                65  +3.60  -5.15  +4.17 +11.84  60.0   -26.6   +10.4  0.53 -0.47  0.97  -26.0 | -0.03 | XXYYX
+SHORT 40% FON H1              444  +0.47  +0.68  +0.42  +3.34  54.7   -25.5    -8.3  0.12  0.19  0.12  -79.7 | -0.86 | XXYYY
+SHORT 40% FON H3              442  +0.48  +0.32  +0.53  -0.85  49.5   -25.7   -27.9 -0.17  0.03 -0.33  -90.9 | -0.55 | XXXYY
+SHORT 40% LS+FON H1            38  +2.97  +2.60  +2.99  +9.65  60.5   -25.4    +4.9  0.38  0.26  0.61  -25.4 | -0.69 | XXYYY
+SHORT 40% LS+FON H3            38  +5.57  +1.27  +5.81  +8.24  60.5   -25.4   +10.2  0.61  0.76  1.01  -24.7 | -0.56 | XXYYY
+LONG 30% yok H1               545  +4.44 +14.84  +1.79  +2.49  56.7   -25.5    +5.1  0.37  0.59  0.33  -68.6 |  0.35 | XXXYY
+LONG 30% yok H3               539  +5.74 +15.62  +3.18  +5.36  59.9   -26.2   -21.9  0.04  0.35 -0.07  -90.3 |  0.42 | XXXYY
+LONG 30% LS H1                196  +4.85 +13.91  +2.15  +2.38  57.1   -25.2   +25.4  0.72  0.74  0.76  -46.5 | -0.01 | XXYYY
+LONG 30% LS H3                193  +5.58 +14.74  +2.80  +3.43  58.5   -25.3    +8.4  0.37  0.63  0.30  -62.9 |  0.38 | XXXYY
+LONG 30% FON H1               303  +6.03 +16.64  +1.89  +2.60  57.8   -25.6   +19.2  0.55  0.71  0.52  -65.0 |  0.51 | XXXYY
+LONG 30% FON H3               301  +7.57 +16.65  +3.99  +5.56  61.1   -25.6    +4.0  0.32  0.42  0.36  -63.7 |  0.56 | XXXYY
+LONG 30% LS+FON H1            110  +7.51 +15.39  +3.83  +2.38  56.4   -25.1   +29.9  0.85  0.80  0.96  -37.7 | -0.13 | XXYYY
+LONG 30% LS+FON H3            108  +6.44 +15.35  +2.17  +3.64  60.2   -25.1   +11.7  0.49  0.69  0.28  -38.3 |  0.33 | XXXYY
+LONG 40% yok H1               188  +4.60 +16.62  +1.45  -1.33  46.8   -25.7    +7.6  0.36  0.59  0.37  -56.2 | -0.32 | XXYYY
+LONG 40% yok H3               187  +4.18 +16.72  +0.87  -7.34  42.8   -26.2   -14.7  0.06  0.23  0.02  -79.3 | -0.04 | XXXYY
+LONG 40% LS H1                 55  +8.14 +15.17  +6.18  +1.71  58.2   -25.2   +20.0  0.73  0.62  0.92  -31.7 |  0.62 | XXXYY
+LONG 40% LS H3                 54  +8.24 +13.47  +6.74  -3.64  50.0   -25.1   +14.0  0.45  0.46  0.58  -45.8 | -0.00 | XXXYY
+LONG 40% FON H1               104  +6.74 +16.87  +2.43  -0.87  47.1   -26.4   +10.4  0.41  0.59  0.39  -47.5 |  0.31 | XXXYY
+LONG 40% FON H3               103  +5.89 +14.58  +2.14  -4.94  45.6   -26.4    -0.3  0.21  0.23  0.26  -53.4 |  0.77 | XXXYY
+LONG 40% LS+FON H1             29 +15.35 +15.36 +15.34  +7.90  55.2   -25.2   +22.5  0.83  0.62  1.12  -15.8 |  0.00 | XXYYY
+LONG 40% LS+FON H3             28  +8.62 +11.12  +7.23  +2.18  60.7   -25.1   +10.9  0.53  0.45  0.64  -24.4 |  0.35 | XXXYY
+
+ELEKTEN GECEN: YOK
+```
+
+İşlem başı ortalamanın bootstrap'ı (5.000), seçilmiş kollar:
+
+    kol                    n    yılda  ort      %95 GA            P(>0)  2023+ ort / P
+    SHORT 40% LS+FON H3    38    ~8   +5,57   [−2,63, +13,64]    %91,5   aynı (metrik 2023+)
+    SHORT 30% LS+FON H3    90   ~19   +1,36   [−3,46,  +6,19]    %70,6
+    LONG 30% yok H1       545  ~117   +4,44   [+2,35,  +6,73]   %100,0   +1,76 / %93,2
+    LONG 30% FON H1       303   ~65   +6,03   [+3,05,  +9,21]   %100,0   +2,08 / %87,4
+    LONG 30% LS+FON H1    110   ~24   +7,51   [+2,51, +13,13]    %99,9   +4,00 / %92,2
+    LONG 40% LS+FON H1     29    ~6  +15,35   [+1,32, +31,79]    %98,4  +13,03 / %93,6
+
+Liste dışı kalma yanlılığı kontrol edildi: çıkış fiyatı olmadığı için
+atlanan işlem SIFIR.
+
+- **Short tarafı:** filtreler sıkışmayı gerçekten kesiyor (filtresiz
+  ort −%0,2..−%0,5 → LS+FON +%1,4..+%5,6, p1 −%25 stopta), ama işlem
+  çok seyrek (yılda 8-19) ve ortalama sıfırdan ayırt edilemiyor (P
+  %71-92). Kullanıcının short'larının tarihsel karşılığı bu: pozitif
+  olabilir ama 4,7 yılda kanıtlanacak kadar sık değil.
+- **Long tarafı (24 saatte −%30 düşeni 1 gün tutmak):** işlem başı
+  ortalama POZİTİF ve anlamlı (P %98-100), 2023 sonrası da pozitif
+  (P %87-94). Ama (a) 2022'nin çöküş sıçramaları ortalamayı ~3 kat
+  şişiriyor (o22 +%14-17, o25 +%1-7); (b) portföy olarak Sharpe 0,4-0,9,
+  düşüş −%38..−%69: %25'lik pozisyonla nadir ve sert; (c) 32 kol içinden
+  seçildi (çoklu bakış). Madde 201'in "çakılan çakılmaya devam ediyor"
+  bulgusu farklı bir giriş zamanıyla ölçülmüştü; bu kural 00 UTC +1 bar
+  girişte tersini gösteriyor — ön kayıtlı elekle doğrulanmadı.
+- Madde 289'un barı (harmana değer katmak için tek başına Sharpe ~2,5):
+  hiçbir kol yaklaşmıyor.
+
+**AYAR DEĞİŞMEDİ.** Long tarafı ("büyük düşüşten sonra 1 gün long")
+sicile ölçülmüş işaret olarak girdi; ön kayıtlı bağımsız bir sınama
+(madde 375 protokolü) olmadan bota bağlanmaz.
