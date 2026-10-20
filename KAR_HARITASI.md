@@ -3631,3 +3631,40 @@ Kullanıcı, çoklu bakış riskine rağmen aramaya devam edilmesini seçti.
 Bu zeminde ~80 aday ölçüldü. Bundan sonraki adaylar için, ilk koşudan
 ÖNCE yazıldı: kanıt barı **%95** (eskiden %80); iki seviye ve iki hiza
 zorunlu; doz-yanıt monoton olmalı. Bar sonradan düşürülmez.
+
+## MADDE 375 SONUCU — KALABALIK EĞİMİ: RED (ham getiri büyük, risk-ayarlı küçük)
+
+```
+kol     bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%    med   (kontrol: 15x4 HAVUZ 4; farklar)
+KE3    2000  0   +17.7 -0.01 +0.16   +0.1   +16.5  0.99  XYYY  74.4   +6.4
+KE3    2000  1   +18.2 -0.03 +0.16   +1.0    +6.0  0.94  XYYY  61.0   +2.3
+KE3    3500  0   +17.2 -0.02 +0.12   +0.6    +9.0  0.96  XYYY  60.7   +2.7
+KE3    3500  1   +17.3 -0.02 +0.11   +1.0    +4.9  0.94  XYYY  54.6   +1.0
+HUKUM KE3: RED
+
+KE6    2000  0   +36.3 -0.05 +0.26   +0.6   +28.6  0.97  XYYY  67.6   +7.3
+KE6    2000  1   +37.3 -0.08 +0.26   +2.0   +10.8  0.89  XYYY  52.3   +1.1
+KE6    3500  0   +35.4 -0.06 +0.19   +2.3    +5.5  0.87  XYYY  50.9   +0.5
+KE6    3500  1   +35.5 -0.06 +0.17   +2.2    +5.2  0.87  XYYY  47.8   -0.8
+HUKUM KE6: RED
+
+KE9    2000  0   +55.9 -0.09 +0.32   +2.1   +26.8  0.89  XYYY  60.2   +5.9
+KE9    2000  1   +57.5 -0.14 +0.32   +3.0   +13.8  0.84  XXYY  45.8   -2.0
+KE9    3500  0   +54.5 -0.11 +0.22   +3.9    +2.6  0.79  XXYY  43.4   -2.8
+KE9    3500  1   +54.7 -0.11 +0.20   +3.8    +2.7  0.79  XXYY  38.4   -4.8
+HUKUM KE9: RED
+
+```
+
+- Ham getiri eğimle MONOTON ve BÜYÜK: e 0,3 → +17..+18, 0,6 → +35..+37,
+  0,9 → +55..+58 puan. 25-26 Sharpe +0,11..+0,32.
+- Ama 22-24 Sharpe her hücrede düşüyor (−0,01..−0,14) ve düşüş derinleşiyor;
+  eşit-risk farkı e ile AZALIYOR (3.500 $: +9,0 → +5,5 → +2,6). Yani eğim
+  ağırlığı az sayıda coine yığıp OYNAKLIĞI artırıyor — ham getirinin çoğu
+  kaldıraç benzeri bir doz (madde 339'un "büyük getiri başlığı kaldıraç
+  başlığıdır" yasası, yedinci kez). P %38-74, %95'in çok altında.
+- e 0,3 en temiz kol (düşüş +0,1..+1,0, ham +17..+18, eşit risk +5..+17)
+  ama şart 1 (22-24 −0,01..−0,03) ve P ile RED.
+
+**Protokol işledi:** %80 barında bile geçmeyecekti; ham getiriye
+bakılsaydı "+%17 bulundu" denirdi. AYAR DEĞİŞMEDİ.
