@@ -659,7 +659,11 @@ if __name__=='__main__':
             # oran API'si cevap vermezse "son bilinen oranlari" kullanmasinin
             # maliyeti. 0 (varsayilan) -> eski davranis birebir.
             _lg=int(os.environ.get('LS_GECIKME','0'))
-            _Lr=M['count_long_short_ratio']
+            # MADDE 365: LS_KOL ile oran sutunu secilebilir; '+' ile birden fazla
+            # sutunun LOG ortalamasi (geometrik). Bos -> count_long_short_ratio (parite).
+            _kol=os.environ.get('LS_KOL','').strip() or 'count_long_short_ratio'
+            _kl=[k for k in _kol.split('+') if k]
+            _Lr=np.exp(sum(np.log(M[k]) for k in _kl)/len(_kl)) if len(_kl)>1 else M[_kl[0]]
             if _lg>0: _Lr=_Lr.shift(_lg)
             # MADDE 364: LS_ORT bar boyunca log oranin kayan ortalamasi (0 -> anlik).
             _lo=int(os.environ.get('LS_ORT','0'))
