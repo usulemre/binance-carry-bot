@@ -3919,3 +3919,96 @@ atlanan işlem SIFIR.
 **AYAR DEĞİŞMEDİ.** Long tarafı ("büyük düşüşten sonra 1 gün long")
 sicile ölçülmüş işaret olarak girdi; ön kayıtlı bağımsız bir sınama
 (madde 375 protokolü) olmadan bota bağlanmaz.
+
+---
+
+## MADDE 381 — ÇOK UFUKLU PERFORMANS: YÜKSELENİ SHORT HER UFUKTA KAYBETTİRİYOR, MOMENTUM ÖRNEK DIŞINDA GEÇİYOR
+
+```
+kol                     IS Sh  OOS Sh  yillik   dusus
+HEPSI MOM H1             0.84    1.27   +64.3   -70.2
+R1 MOM H7                0.67    1.07   +31.4   -48.2
+KISA MOM H1              0.50    1.36   +51.9   -69.2
+R30 MOM H7               0.39    2.14   +62.7   -34.7
+HEPSI TERS H7            0.34   -2.76   -76.8   -99.9
+R7 MOM H7                0.34    1.98   +53.7   -38.3
+R7 MOM H1                0.31    1.12   +27.4   -47.0
+R30 MOM H1               0.28    0.30    +0.8   -52.9
+KISA MOM H7              0.22    2.25   +83.1   -49.5
+UZUN TERS H7             0.22   -2.44   -70.0   -99.9
+HEPSI_POZ MOM H7         0.19    2.36   +76.1   -39.9
+R90 MOM H7               0.11    2.22   +55.0   -50.6
+R90 MOM H1              -0.02    0.42    -2.2   -66.1
+R3 MOM H7               -0.12    1.86   +38.2   -45.3
+UZUN TERS H1            -0.12   -0.69   -53.2   -97.8
+R3 TERS H7              -0.19   -2.01   -46.7   -95.1
+R90 TERS H7             -0.26   -2.30   -49.1   -97.4
+HEPSI_POZ MOM H1        -0.28    0.53    -9.5   -74.4
+HEPSI_POZ TERS H7       -0.33   -2.46   -61.5   -98.8
+UZUN MOM H7             -0.38    2.36   +73.4   -74.4
+UZUN MOM H1             -0.38    0.42   -30.6   -86.7
+KISA TERS H7            -0.42   -2.36   -68.5   -99.6
+HEPSI MOM H7            -0.45    2.70  +105.9   -75.3
+R3 MOM H1               -0.47    1.00    +4.2   -64.2
+HEPSI_POZ TERS H1       -0.53   -1.05   -50.9   -97.5
+R90 TERS H1             -0.57   -0.72   -35.5   -93.5
+R30 TERS H7             -0.58   -2.24   -53.2   -97.4
+R7 TERS H7              -0.62   -2.12   -52.1   -97.0
+R1 MOM H1               -0.66    0.12   -21.5   -74.6
+R3 TERS H1              -0.73   -1.53   -52.6   -97.5
+R30 TERS H1             -0.89   -0.65   -38.1   -91.4
+R1 TERS H7              -0.98   -1.22   -43.1   -95.0
+R7 TERS H1              -1.20   -1.54   -57.0   -98.2
+R1 TERS H1              -1.32   -0.91   -49.0   -96.3
+HEPSI TERS H1           -1.36   -1.55   -85.7  -100.0
+KISA TERS H1            -1.48   -1.84   -81.8  -100.0
+
+IS'TE SECILEN: HEPSI MOM H1 (IS Sh 0.84) -> OOS Sh 1.27
+OOS plasebo Sh 0.48 | carry rho +0.07 | HUKUM: SONRAKI TURA (harman, %95)
+```
+
+- **Kullanıcının yönü (TERS: yükseleni short, düşeni long) 18 kolun
+  18'inde negatif**, IS'te de OOS'ta da (−%35..−%86/yıl). "Beş ufkun
+  hepsinde pozitif olanı short'la" (HEPSI_POZ TERS) de negatif. Kriptoda
+  kesitsel olarak yükselen coin yükselmeye devam ediyor — madde 187/237
+  ile tutarlı, bu kez 1 gün..3 ay her ufukta.
+- **MOMENTUM (yükseleni long, düşeni short):** IS'te seçilen kol HEPSI
+  MOM H1 (IS 0,84) → OOS **1,27**, OOS plasebo 0,48, carry ile rho +0,07
+  → ön kayıtlı kapıdan geçti (madde 382'ye). Tek başına düşüş −%70.
+
+## MADDE 382 — MOMENTUM HARMANI CARRY'YE (%95): RED
+
+```
+    w   bak hz  yillik   Sh22   Sh25  dusus   esitR  kald 4sart    P%
+ 0.05  2000  0    +2.3  +0.06  +0.15   -1.2   +17.3  1.08  YYYY  72.2
+ 0.05  2000  1    +2.0  +0.06  +0.14   -1.2   +18.2  1.08  YYYY  76.4
+ 0.05  3500  0    +2.2  +0.06  +0.14   -0.6   +10.3  1.05  YYYY  68.7
+ 0.05  3500  1    +2.1  +0.06  +0.14   -0.7   +11.5  1.05  YYYY  73.8
+HUKUM w=0.05: RED (0/4)
+
+ 0.10  2000  0    +4.0  +0.10  +0.15   -0.6   +11.5  1.04  YYYY  59.0
+ 0.10  2000  1    +3.3  +0.10  +0.13   -2.5   +40.2  1.18  YYYY  62.7
+ 0.10  3500  0    +3.7  +0.10  +0.13   +2.0   -18.0  0.87  YYXY  54.4
+ 0.10  3500  1    +3.6  +0.10  +0.12   +0.1    +2.0  0.99  YYYY  58.5
+HUKUM w=0.1: RED (0/4)
+
+ 0.20  2000  0    +5.5  +0.10  -0.15   +4.6   -32.0  0.77  XXXY  28.7
+ 0.20  2000  1    +4.1  +0.08  -0.19   +3.0   -24.9  0.84  XXXY  28.3
+ 0.20  3500  0    +5.0  +0.09  -0.20   +7.2   -50.6  0.66  XXXY  23.9
+ 0.20  3500  1    +4.7  +0.07  -0.21   +5.6   -42.4  0.72  XXXY  24.9
+HUKUM w=0.2: RED (0/4)
+
+```
+
+- w = 0,05: DÖRT hücrede dört şart geçiyor (ham +2,0..+2,3, Sharpe
+  22-24 +0,06 / 25-26 +0,14..+0,15, düşüş −0,6..−1,2) — tutarlı ama küçük;
+  eşli bootstrap P %69-76 → %95 barında (ve %80'de de) RED.
+- w >= 0,10: 3.500 $'da ve w=0,20'de bozuluyor; tek başına −%70 düşüş
+  harmana taşınıyor.
+- **Uygulanabilirlik (ayrıca):** desil portföyü taraf başına 15-30 coin
+  ister; 2.000 $'ın %5'i (100 $) bacak başına ~2-3 $ eder, borsa asgarisi
+  5 $ → bu sermayede KURULAMAZ.
+
+**AYAR DEĞİŞMEDİ.** Kullanıcının sorusunun cevabı: yükseleni short'lamak
+hiçbir ufuk kombinasyonunda çalışmıyor; tersi (momentum) çalışıyor ama
+carry'ye kanıtlanabilir değer katmıyor ve küçük sermayede kurulamıyor.
