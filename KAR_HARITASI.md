@@ -3456,3 +3456,32 @@ Kullanıcının beyan ettiği tolerans: 1 yılda −%30.
 
 Canlıda: `CARRY_GROSS` (sabit kaldıraç, madde 149). **Ayar DEĞİŞMEDİ** —
 kaldıraç bir parametre kararı değil kullanıcı kararıdır (madde 225).
+
+## MADDE 369 — KALDIRACIN EVREN KANALI: 2.000 $ @ 1,5x = D2 KİTABI
+
+Madde 368'in ölçülmemiş kanalı. Bacak = bakiye × k × 0,4 / 60; 2.000 $'da
+k = 1,5 → **20,00 $** → ETH/BCH/LTC/ETC/LINK/AAVE geri gelir (madde 295
+basamağı) → kitap 3.500 $'ın D2 kitabıdır. Yeni koşu gerekmedi:
+T350_HAVUZ4_3500 ve M357_P_3500 serileri × k.
+
+    kitap (D2)        hz   k     yıllık   tam düşüş  1y p5  1y p1  gün içi p1~
+    15x4 H4            0  1,50  +228,1    −22,0     −26,8  −32,3   −47,0
+    15x4 H4            1  1,50  +231,5    −22,8     −26,6  −31,2   −45,5
+    15x4 H4 + prim     0  1,50  +240,9    −22,1     −26,9  −31,5   −45,9
+    15x4 H4 + prim     1  1,50  +245,0    −22,4     −27,0  −31,8   −46,4
+    (1,60x: +253..+272, p1 −33,4..−34,8)
+
+Madde 368'in D8 yoluyla kıyas: aynı +%220 civarı için D8 1,42-1,49x
+(p1 −30,6..−33,2) gerekiyordu; D2 1,5x **+228..+245** veriyor, p1 benzer.
+Kaldıracın evren kanalı ~+15..+25 puan değerinde.
+
+**DİKKAT — eşik üstünde çalışmalı:** 1,5x'te bacak TAM 20,00 $ = ETH
+grubunun asgari emri. Fiyat/bakiye dalgalanınca bacak 20 $'ın altına
+düşer ve grup her turda girip çıkar. Güvenli kurulum **≥1,55x** (bacak
+≥20,7 $) ya da bakiye ≥2.070 $. Bu kenar canlıda ölçülmedi.
+
+Kullanıcı toleransı (−%30/yıl): 1y p5 −27 içinde, p1 −31..−32 SINIRIN
+HEMEN DIŞINDA (kapanış bazında), gün içi tahmin −45..−47. Motor
+likidasyonu modellemiyor; 1,5x'te izole teminatta likidasyon mesafesi
+madde 140'ın tablosuna göre kontrol edilmeli (çapraz teminat varsayılan).
+**Ayar DEĞİŞMEDİ** (kaldıraç kullanıcı kararı).
