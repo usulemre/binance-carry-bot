@@ -3688,3 +3688,82 @@ Sınır: gürültü günler arası bağımsız; gerçek izleme hatası otokorela
 olduğundan gerçek oran biraz yüksek olabilir (bootstrap bloklar bunu
 kısmen yakalar). Madde 375'in %95 barı bu modelde yanlış pozitifi
 sıfırlıyor — gerçek bir etkiyi kaçırma (güç) bedeliyle.
+
+---
+
+## MADDE 376 SONUCU — BİLEŞEN ABLASYONU: HİÇBİRİNİN ÇIKARILMASI ÖNERİLMİYOR
+
+```
+kol     bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%    med   (kontrol: 15x4 HAVUZ 4; farklar)
+TPOFF  2000  0   -18.6 -0.43 -0.77   +4.6   -47.4  0.77  XXXY   3.9  -50.3
+TPOFF  2000  1   -22.7 -0.42 -0.94   +5.2   -55.4  0.75  XXXY   2.2  -59.4
+TPOFF  3500  0   -19.4 -0.44 -0.81   +6.4   -59.1  0.69  XXXY   3.9  -52.2
+TPOFF  3500  1   -21.5 -0.41 -0.93   +5.7   -57.6  0.71  XXXY   3.3  -54.9
+HUKUM TPOFF: RED
+
+UCOFF  2000  0    +8.7 -0.01 -0.01   -2.1   +37.3  1.15  XYYY  59.1   +3.9
+UCOFF  2000  1    +4.1 -0.08 -0.05   -1.2   +19.6  1.08  XYYY  38.0   -6.2
+UCOFF  3500  0    +4.0 -0.01 -0.15   -0.5    +9.8  1.03  XYYY  40.8   -3.8
+UCOFF  3500  1    +2.5 -0.07 -0.11   -0.9   +14.7  1.07  XYYY  32.2  -10.4
+HUKUM UCOFF: RED
+
+REZOFF 2000  0   +19.7 -0.03 -0.13   +4.0   -18.4  0.80  XXXY   6.2  -11.5
+REZOFF 2000  1   +21.4 -0.05 -0.10   +3.9   -19.3  0.80  XXXY   7.3  -11.0
+REZOFF 3500  0   +21.5 -0.03 -0.11   +3.6   -18.0  0.80  XXXY   8.5   -9.9
+REZOFF 3500  1   +21.3 -0.04 -0.10   +2.6    -9.8  0.84  XYXY   8.6   -9.8
+HUKUM REZOFF: RED
+
+AKISOFF 2000  0    +4.0 +0.09 +0.08   -2.2   +32.7  1.15  YYYY  82.3  +11.9
+AKISOFF 2000  1    +2.5 +0.08 +0.02   -2.0   +29.7  1.14  YYYY  76.9   +7.7
+AKISOFF 3500  0    -2.2 +0.00 -0.05   -0.3    +1.6  1.02  XYYX  42.3   -1.7
+AKISOFF 3500  1    +3.7 +0.11 +0.03   -0.3    +7.5  1.02  YYYY  82.9  +10.3
+HUKUM AKISOFF: RED
+
+YASOFF 2000  0   -20.7 -0.24 -1.08  +29.4   -96.5  0.32  XXXY   9.9  -78.3
+YASOFF 2000  1   -29.1 -0.45 -1.09  +29.1  -104.1  0.32  XXXY   6.7  -86.1
+YASOFF 3500  0   -25.8 -0.33 -1.20  +31.3  -102.8  0.28  XXXY   6.9  -83.3
+YASOFF 3500  1   -25.0 -0.38 -1.09  +27.0  -100.2  0.32  XXXY   7.3  -81.2
+HUKUM YASOFF: RED
+
+DONOFF 2000  0    -2.7 -0.03 -0.08   +0.7    -9.3  0.96  XYXY  15.3   -9.0
+DONOFF 2000  1    -3.2 +0.01 -0.11   -0.6    +4.1  1.04  XYYX  21.1   -6.7
+DONOFF 3500  0    -0.1 +0.01 -0.04   +0.7    -8.3  0.95  XYXY  28.6   -4.8
+DONOFF 3500  1    -3.7 -0.03 -0.08   +0.0    -3.7  1.00  XYXY   9.4   -7.7
+HUKUM DONOFF: RED
+
+```
+
+(Farklar "bileşen KAPALI − kontrol"; P = kapalı kolun kontrolden iyi olma
+olasılığı. TPOFF'un kapandığı çıktıdan doğrulandı: "kar-al fiyat +0,0".)
+
+    bileşen              kapatınca (eşit risk)     P(kontrol iyi)   sınıf
+    kâr al hasadı        −47 .. −59                 %96-98           TAŞIYOR
+    yaş filtresi (90 g)  −97 .. −104, düşüş +27..+31 %90-93          büyük (bar altı*)
+    fırsat rezervi       −10 .. −19 (ham +20!)       %91-94           büyük (bar altı*)
+    donuk seri filtresi  −9 .. +4                    %71-91           nötr-pozitif
+    uç hareket elemesi   +10 .. +37 (kapatınca İYİ)  %41-68           nötr
+    emir akışı (%20)     +2 .. +33 (kapatınca İYİ)   %17-58           nötr, kapatma lehine
+
+* Madde 375'in %95 tanımına harfiyen uyulursa "taşıyor" yalnız kâr al
+  hasadı; yaş filtresi ve rezerv %90-94 ile bar altında kalıyor ama etki
+  büyüklükleri (−100 ve −15 puan) şüphe bırakmıyor. %95 barının güç
+  bedeli (madde 377) burada görünüyor.
+
+- **Rezerv bir RİSK aracı:** kapatınca ham getiri +20 puan ARTIYOR ama
+  düşüş +2,6..+4,0 derinleşiyor ve eşit riskte −10..−19. Madde 326'nın
+  hükmü bu kitapta da ayakta.
+- **Emir akışı en güçlü ÇIKARMA adayı:** dört hücrenin üçünde dört şart
+  geçiyor (P %77-83), düşüş 2 puan sığlaşıyor, 22-24 Sharpe +0,08..+0,11.
+  Ama 3.500 $ hiza 0'da şart 1 ve 4 düşüyor (P %42). Madde 228 "%20'de
+  optimumda ama yük taşımıyor" demişti; bu kitapta kapatmak hafif lehte.
+  %95 barında RED; %80 barında da iki seviye şartını karşılamıyor.
+- **Uç hareket elemesi** bu kitapta nötr (madde 196'da 5 bacaklık
+  kitapta Sharpe için kabul edilmişti).
+
+**HAVUZ 4'ün yeni bar karşısındaki durumu:** madde 352'de 2.000 $'da
+P %92,6/%94,3, 3.500 $'da %83,3/%58,7 ile — o günün %80 protokolüyle —
+kabul edildi. %95 barında kabul edilmezdi. Madde 377'nin kalibrasyonu
+o protokolde yanlış kabul olasılığını ~%0,2 veriyor; kabul GERİ ALINMADI
+(protokol ileriye dönük yazıldı), ama bu not kayıtta.
+
+**AYAR DEĞİŞMEDİ.**
