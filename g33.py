@@ -200,6 +200,7 @@ KATKI=int(os.environ.get("KATKI","0"))
 # TOPLAM BRUT korunur (her taraf kendi icinde normalize edilir).
 # AGIRLIK=esit (varsayilan) -> eski davranis, PARITE.
 AGIRLIK=os.environ.get("AGIRLIK","esit")
+KAL_EGIM=float(os.environ.get("KAL_EGIM","0"))   # madde 375
 AG_TABAN=float(os.environ.get("AG_TABAN","0"))   # 1/(vol+AG_TABAN): 0 = saf 1/vol
 AG_KIRP=float(os.environ.get("AG_KIRP","0"))
 # MADDE 282: AGIRLIK="buyukluk" icin |S|^SK_GAMMA. 0 = esit agirlik
@@ -377,6 +378,18 @@ def bt2(bas,n,olcut=None,tp=None):
                             iy=np.minimum(iy,AG_KIRP*iy.mean())
                         return iy/iy.sum()
                     y[lo]=taban*_ag(lo); y[sh]=-taban*_ag(sh)
+                elif AGIRLIK=="kalabalik":
+                    # MADDE 375: secilen bacaklar EN KALABALIKTAN baslayarak
+                    # sirali gelir (sec(): p azalan). Agirlik sira konumuyla
+                    # egilir: w_j ~ 1 + KAL_EGIM*(n-1-2j)/(n-1), taraf basina
+                    # normalize -> brut ve dolar notrlugu korunur.
+                    # KAL_EGIM=0 -> esit agirlik (parite).
+                    def _agk(idx):
+                        m=len(idx)
+                        if m<2: return np.full(m,1.0/max(m,1))
+                        j=np.arange(m); iy=1.0+KAL_EGIM*(m-1-2*j)/(m-1)
+                        return iy/iy.sum()
+                    y[lo]=taban*_agk(lo); y[sh]=-taban*_agk(sh)
                 else:
                     y[lo]=taban/len(lo); y[sh]=-taban/len(sh)
                 if REZERV>0:

@@ -3622,3 +3622,12 @@ kapısı (önce 1x canlı çeyrek) süreçtir, kodda değil; kod yalnız kaldır
 SESSİZCE açılmamasını garanti ediyor. Ayrıca ön uçuşun "5+5 bacak"
 satırı tavanı (4) göstermiyordu, düzeltildi. Ön uçuş ve birim testleri
 temiz.
+
+---
+
+## MADDE 375 — ARAMA PROTOKOLÜ SIKILAŞTIRILDI (kullanıcı kararıyla devam)
+
+Kullanıcı, çoklu bakış riskine rağmen aramaya devam edilmesini seçti.
+Bu zeminde ~80 aday ölçüldü. Bundan sonraki adaylar için, ilk koşudan
+ÖNCE yazıldı: kanıt barı **%95** (eskiden %80); iki seviye ve iki hiza
+zorunlu; doz-yanıt monoton olmalı. Bar sonradan düşürülmez.
