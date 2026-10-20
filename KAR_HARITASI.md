@@ -3415,3 +3415,44 @@ merdiveni: 12 kolun 12'si RED. Bugünkü kitabın (15×4, HAVUZ 4, `ls`,
 TPL 0,40 / TPS 0,20, REB 5 gün, 48 sa pencere) çevresinde ölçülmüş
 açık aday kalmadı. İki "rejim aracı" kayıtta: prim çarpanı (22-24'te
 çalışıyor) ve üst trader hesap oranı (25-26'da çalışıyor).
+
+---
+
+## MADDE 368 — +%180 VE +%220'YE GİDEN ÖLÇÜLMÜŞ TEK YOL: KALDIRAÇ, VE FİYATI
+
+Kullanıcı 2.000 $'da +180..+220 istedi. Kaldıraçsız ölçülmüş en iyi:
+15×4 HAVUZ 4 +124/+131, prim ile +130/+137, 13×3+prim +148/+155.
+60+ aday kaldıraçsız +180'e yaklaşmadı. Gerçek günlük seriler gerçek
+kaldıraçla (`esit_risk_gercek` mantığı) ölçeklendi; 1 yıllık düşüş
+dağılımı eşli durağan blok bootstrap (3.000 yol, blok 20 gün).
+"gün içi p1~" = p1 × 1,458 (madde 291'in gün içi çarpanı).
+
+    kitap               hz hedef  kald  tam düşüş  1y p5  1y p1  gün içi p1~
+    15x4 HAVUZ4          0  +180  1,30    −21,7   −25,4  −30,1    −43,9
+                         1  +180  1,25    −20,7   −22,8  −27,5    −40,1
+                         0  +220  1,49    −24,5   −27,7  −33,2    −48,5
+                         1  +220  1,42    −23,3   −26,0  −30,6    −44,6
+    15x4 H4 + prim       0  +180  1,26    −21,0   −24,2  −29,8    −43,5
+                         1  +180  1,21    −20,0   −22,7  −26,7    −38,9
+                         0  +220  1,43    −23,7   −26,9  −31,6    −46,1
+                         1  +220  1,38    −22,5   −25,0  −29,6    −43,2
+    13x3 H4 + prim       0  +180  1,14    −22,5   −25,7  −30,5    −44,5
+                         1  +180  1,11    −22,0   −24,4  −29,5    −42,9
+                         0  +220  1,30    −25,3   −28,9  −34,5    −50,4
+                         1  +220  1,27    −24,7   −27,6  −32,5    −47,4
+
+Kullanıcının beyan ettiği tolerans: 1 yılda −%30.
+- **+%180: ~1,21-1,30x.** Kapanış bazında 1y p5 −23..−25 (tolerans
+  içinde), p1 −27..−30 (sınırda). En sığ yol **15×4 H4 + prim, ~1,25x**.
+- **+%220: ~1,38-1,49x.** 1y p1 −30..−33: kötü %1 yılda kapanış bazında
+  bile toleransı aşıyor; gün içi tahmini −43..−48.
+- **Gün içi uyarısı:** 1x'te bile gün içi p1 tahmini −32..−35. Ekranda
+  görülecek en kötü düşüş kapanış serisinden derin.
+- Motor likidasyonu modellemiyor; bot hiç canlı çalışmadı; zemin
+  paritesi 0,9 puan kaymış; hizalama şansı ±3..7 puan.
+- **Yan etki (ölçülmedi):** kaldıraç bacak büyüklüğünü de büyütür. 2.000 $
+  ve 1,5x'te bacak 20 $ olur → D8'den D2'ye geçiş (madde 349'un tek
+  basamağı). Bu kanal yukarıdaki tabloda YOK.
+
+Canlıda: `CARRY_GROSS` (sabit kaldıraç, madde 149). **Ayar DEĞİŞMEDİ** —
+kaldıraç bir parametre kararı değil kullanıcı kararıdır (madde 225).
