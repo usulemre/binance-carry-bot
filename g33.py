@@ -5,6 +5,7 @@ from g import *
 OV=pickle.load(open('/tmp/hlo.pkl','rb'))['O'].values
 import os
 HAVUZ=float(os.environ.get("HAVUZ","2"))
+_HL=float(os.environ.get("HAVUZ_L","0")); _HS=float(os.environ.get("HAVUZ_S","0"))   # madde 364
 _fz=int(os.environ.get('FAZ_KAY','0'))
 REB=int(os.environ.get('REB_GUN','5'))*6   # tutma suresi (gun -> 4s bar)
 # SINYAL PENCERESI: funding orani kac GUN geriye ortalanarak siralansin.
@@ -305,6 +306,9 @@ def bt2(bas,n,olcut=None,tp=None):
             # taraf icin yeterli olmali
             nn=min(n,len(ix)//2); _nl=min(_nl,len(ix)//2); _ns=min(_ns,len(ix)//2)
             mm=min(int(HAVUZ*max(_nl,_ns)),len(ix)//2)
+            # MADDE 364: taraf basina ayri havuz (HAVUZ_L/HAVUZ_S). Bos -> HAVUZ (parite).
+            _mml=min(int(_HL*_nl),len(ix)//2) if _HL>0 else mm
+            _mms=min(int(_HS*_ns),len(ix)//2) if _HS>0 else mm
             if nn>=min(8,n):
                 sc=rk(S[i][ix]); a=pd.Series(A[i][ix])
                 if AKW>0 and a.notna().sum()>=0.5*len(ix): sc=(1-AKW)*sc+AKW*(-a).rank(pct=True).fillna(0.5).values
@@ -312,7 +316,7 @@ def bt2(bas,n,olcut=None,tp=None):
                 if olcut is None:
                     lo=ix[o[:_nl]]; sh=ix[o[-_ns:]]; lo_s=ix[o[:mm]]; sh_s=ix[o[::-1][:mm]]
                 else:
-                    la=ix[o[:mm]]; sa=ix[o[-mm:]]
+                    la=ix[o[:_mml]]; sa=ix[o[-_mms:]]
                     def sec(ad,taraf,sira_skor):
                         p=np.asarray(olcut(i,ad,taraf),float)
                         # olcut yoksa: skor sirasi (en uc) ile doldur
@@ -320,7 +324,7 @@ def bt2(bas,n,olcut=None,tp=None):
                         yedek=sira_skor
                         p=np.where(np.isfinite(p),p,yedek)
                         return ad[np.argsort(-p)]
-                    uc_l=np.linspace(1,0,mm); uc_s=np.linspace(0,1,mm)
+                    uc_l=np.linspace(1,0,_mml); uc_s=np.linspace(0,1,_mms)
                     lo_s=sec(la,+1,uc_l); sh_s=sec(sa,-1,uc_s); lo=lo_s[:_nl]; sh=sh_s[:_ns]
                 taban=0.5-REZERV/2
                 # MADDE 190: SHORT tarafi funding yerine baska olcute gore sec
@@ -657,7 +661,11 @@ if __name__=='__main__':
             _lg=int(os.environ.get('LS_GECIKME','0'))
             _Lr=M['count_long_short_ratio']
             if _lg>0: _Lr=_Lr.shift(_lg)
-            L=np.log(_Lr).values
+            # MADDE 364: LS_ORT bar boyunca log oranin kayan ortalamasi (0 -> anlik).
+            _lo=int(os.environ.get('LS_ORT','0'))
+            _Ll=np.log(_Lr)
+            if _lo>1: _Ll=_Ll.rolling(_lo,min_periods=1).mean()
+            L=_Ll.values
             calis2(ad,n,lambda i,a,t: -t*L[i][a])     # long tarafta dusuk oran, short tarafta yuksek
         elif ad in ('tp_ters','ls_tpele','ls_tpkat','ls_tpele_p','ls_tpkat_p'):
             # MADDE 255: madde 254'un ondalik tablosu TARAF ASIMETRIK cikti -
