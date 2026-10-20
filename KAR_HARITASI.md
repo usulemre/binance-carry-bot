@@ -3807,3 +3807,40 @@ TAMAMI üç tohumda da temiz. Tohuma bağlı kararsızlık yok.
 - **Ayar değişikliği yok.** Bu turun iki kalıcı değişikliği (HAVUZ 4, oran
   önbelleği) denetimden geçti; HAVUZ 4 %95 barında kabul edilmezdi, ~%0,2
   yanlış kabul olasılığıyla duruyor.
+
+---
+
+## MADDE 379 — HAFTALIK PUMP + TEPE TEYİDİ SHORT: 54 KOLUN HİÇBİRİ GEÇMİYOR
+
+İlk koşu GEÇERSİZ (short getirisi `g/çıkış−1` ile hesaplanmıştı; %90 düşüşü +%900 gösteriyordu). Düzeltilmiş (`1−çıkış/g`) sonuç, seçilmiş satırlar:
+
+```
+kol                     islem   ort%   med%  kaz%     p1%  yillik    Sh  Sh22  Sh25  dusus   rho |   PLA | elek
+A0.5 B0.0 H1 S0         12198  -0.37  +2.21  59.5   -72.8   -80.1 -0.95 -0.75 -1.29 -100.0 -0.07 |  0.09 | XXXY
+A0.5 B0.0 H3 S0          6843  -1.16  +4.01  59.5  -111.3    +nan -0.47 -0.58 -0.53 -100.2 +0.04 | -0.10 | XXXY
+A0.5 B0.0 H7 S0          4509  -0.93  +7.09  62.4  -155.6    +nan -0.75 -0.75 -0.91 -100.5 -0.02 |  0.10 | XXXY
+A1.0 B0.0 H7 S0          1284  -1.32  +7.51  61.6  -221.6    +nan -0.18  0.55 -0.45 -152.2 -0.04 | -0.45 | XXXY
+A1.0 B0.0 H7 S25         2212  -2.14 -23.83  42.8   -38.9   -72.7 -1.66 -0.03 -3.08  -99.9 -0.04 | -2.72 | XXYY
+A2.0 B0.0 H7 S0           412  -6.64  +6.38  60.7  -274.3   -12.9 -0.41  0.09 -0.70 -147.5 -0.01 | -0.31 | XXXY
+A2.0 B0.2 H1 S0           571  -0.53  -0.00  49.7   -85.0    +6.0  0.38  0.69  0.48  -60.7 -0.03 | -1.21 | XXYY
+```
+
+**Desen (madde 203'ün haftalık ölçekte tekrarı):** her kolda MEDYAN işlem
+pozitif (+%2..+%7,5) ve kazanma oranı %55-62 — yani short'ların çoğu
+kazanıyor, kullanıcının ekran görüntüsündeki tablo bu kuralın NORMAL
+görüntüsü. Ama ORTALAMA her kolda negatif (−%0,4..−%6,6) çünkü en kötü
+%1 işlem −%72..−%299: pump eden coinin ikinci bir sıçraması birkaç
+kazancı birden siliyor. %25 stop kuyruğu kesiyor (p1 −%28..−%44) ama
+kazananları da erken kesip medyanı negatife çeviriyor; ortalama yine
+negatif. Plasebo (aynı coinler, rastgele zaman) çoğu kolda kuraldan
+iyi ya da eşit.
+
+Tek pozitif hücreler (A2.0 B0.2 H1 S0 +%6/yıl, Sh 0,38) elekten çok uzak.
+
+**Sonuç:** "bir haftada çok yükselmiş coini tepeden sonra short'la"
+mekanik olarak çalışmıyor — kuralın çoğu işlemi kazandırır ama
+beklentisi negatiftir. Kullanıcının elle başarısı, mekanik kuralın
+göremediği SEÇİMLERDEN (hangi pump'ları atladığı, ne zaman çıktığı)
+geliyorsa, onu ancak kapanmış işlem geçmişi gösterir. **AYAR DEĞİŞMEDİ.**
+Sınır: portföy düşüşü işlem kapanışında yazılıyor (gün içi değerleme
+yok) — ama işlem başı sonuçlar bundan etkilenmez ve zaten negatif.
