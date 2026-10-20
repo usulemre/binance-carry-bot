@@ -109,6 +109,11 @@ AKW=float(os.environ.get("AKIS","0.2")); TPX=float(os.environ.get("TP","0.7"))
 SLL=float(os.environ.get("SLL","0"))   # LONG bacak stop (0=kapali)
 SLS=float(os.environ.get("SLS","0"))   # SHORT bacak stop
 UCELE=float(os.environ.get("UCELE","0"))   # 0=kapali. >=UCELE pump long adayi OLAMAZ
+MOM_Q=float(os.environ.get('MOM_Q','0'))   # madde 383: 0 = kapali
+_MOMV=None
+if MOM_Q>0:
+    import pickle as _pk5
+    _MOMV=_pk5.load(open(os.environ.get('MOM_DOSYA','/tmp/mom5_panel.pkl'),'rb')).reindex(index=C.index,columns=C.columns).values
 _uc6=int(os.environ.get("UCGERI","6"))
 _UART=np.full_like(cv,np.nan); _UART[_uc6:]=cv[_uc6:]/np.where(cv[:-_uc6]>0,cv[:-_uc6],np.nan)-1
 SSEC=os.environ.get("SSEC","funding")  # funding|rast|voldus|volyuk|btc
@@ -301,6 +306,16 @@ def bt2(bas,n,olcut=None,tp=None):
                 _med=np.nanmedian(_sr) if np.isfinite(_sr).any() else 0.0
                 # long adayi = medyandan DUSUK funding; short adayi = YUKSEK
                 g=g&~(_pump&(_sr<_med))&~(_dump&(_sr>_med))
+            if _MOMV is not None:
+                # MADDE 383: COK UFUKLU MOMENTUM VETOSU (madde 381: kriptoda
+                # kesitsel olarak yukselen yukselmeye devam ediyor, OOS).
+                # Momentumun ust MOM_Q diliminde olan coin SHORT adayi,
+                # alt diliminde olan LONG adayi olmasin. Eleme siralamadan once.
+                _m=_MOMV[i]
+                _yuk=np.isfinite(_m)&(_m>=1-MOM_Q); _dus=np.isfinite(_m)&(_m<=MOM_Q)
+                _sr2=np.where(g,S[i],np.nan)
+                _md2=np.nanmedian(_sr2) if np.isfinite(_sr2).any() else 0.0
+                g=g&~(_yuk&(_sr2>_md2))&~(_dus&(_sr2<_md2))
             ix=np.flatnonzero(g)
             _nl=N_L if N_L>0 else n; _ns=N_S if N_S>0 else n
             # her iki taraf da ayni havuzdan beslenir; havuz en buyuk
