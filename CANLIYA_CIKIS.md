@@ -460,6 +460,53 @@ beklenen aralık 0,99-1,05; daha büyüğü ya prim verisinde bir kırılma ya
 iki ayrı sızıntı tam olarak buydu — ikincisi botun bunu **sessizce**
 yapmasıydı (dilim hedefleri mutlak USD saklandığı için).
 
+### MADDE 372 — 2.000 $ İÇİN GÜNCELLEME (madde 344-371'in canlıya etkisi)
+
+Yukarıdaki tablolar 5+5 bacaklı, HAVUZ 3'lü eski kitaba ait. Bot bugün
+2.000-20.000 $ aralığında **15 dilim × 4 bacak, HAVUZ 4** koşuyor ve iki
+yeni koruma taşıyor. Kapı DEĞİŞMEDİ: önce 1x canlı çeyrek, sonra doz.
+
+**Değişen üç şey:**
+
+1. **HAVUZ 3 → 4 (madde 352).** 2.000 $'da kaldıraçsız yaklaşık +7..+9
+   puan, düşüş 2..4 puan sığ. Ayar gerekmiyor (varsayılan).
+2. **Oran önbelleği (madde 361-363).** Kalabalık seçimi kitabın yük
+   taşıyan parçası; oran API'si susarsa bot eskiden yılda ~−43 puanlık
+   yedeğe düşüyordu. Artık 24 saate kadar son bilinen oranı kullanıyor
+   (~−8 puan). Ayar gerekmiyor.
+3. **2.000 $'da doz kararının evren kanalı (madde 368-369).** Kaldıraç
+   bacağı da büyütür: bacak = bakiye × brüt × 0,4 / 60. 2.000 $'da:
+
+| ayar | bacak | evren | yıllık | 1y p5 düşüş | 1y p1 düşüş | gün içi p1~ |
+|---|---|---|---|---|---|---|
+| 1,0x | 13,3 $ | 8 major hariç | +%124..+131 | −%19..−20 | −%22..−24 | −%32..−36 |
+| 1,25x | 16,7 $ | 8 major hariç | ~+%180 | −%23..−25 | −%27..−30 | −%40..−44 |
+| **1,55x** | **20,7 $** | **yalnız BTC/QNT hariç** | **+%228..+245** | **−%27** | **−%31..−%33** | **−%45..−%47** |
+
+(1y = blok bootstrap, kapanış bazında; gün içi = p1 × 1,458, madde 291.)
+1,5x'te bacak TAM 20,00 $ = ETH grubunun asgari emri; bakiye ya da
+düşüş ölçeği biraz inince grup her turda girip çıkar. Bu yüzden 1,5 değil
+**en az 1,55**. Kullanıcı toleransı −%30: 1,25x içinde; 1,55x'te p5
+içinde, p1 sınırın hemen dışında.
+
+**Doz açma sırası (değişmedi, yalnız seçenek eklendi):** 1x canlı çeyrek →
+yukarıdaki üç şart → `CARRY_GROSS=1.25` *veya*, düşüş tahammülü kötü %1
+yılda −%33'ü kaldırıyorsa, `CARRY_GROSS=1.55`. Prim çarpanı
+(`CARRY_PRIM_E=0.10`) iki dozda da ~+6 puan ekler ama kanıt eşiğinin
+0,7 puan altında (madde 357).
+
+**Canlıda izlenecek iki yeni log satırı:**
+- `"... adayın oranı önbellekten ... alındı"` — oran API'si eksik cevap
+  veriyor. Ara sıra normal; her turda görülüyorsa API sorunu var.
+- `"... bu tur kalabalık seçimi KAPALI (en uç n)"` — önbellek de yetmedi.
+  Her görüldüğü tur, yıllık ~−43 puan hızında kayıp demek; birkaç tur üst
+  üste görülürse botu durdurup API erişimini düzeltin.
+
+**Yoğunlaşma (madde 371):** en çok tutulan coin özsermayenin ~%10'u (1x),
+1,55x'te ~%15-23. Bot STOP-LOSS kullanmıyor. Tarihte en büyük yoğunlaşma
+(TRB 2023) botun lehine işledi; yine de tek coinde ters yönde +%100
+hareket 1,55x'te özsermayenin ~%15-23'ü demektir.
+
 ## 8. Üç ay sonra ne öğrenmiş olacaksın
 
 - **Funding gerçekten tahsil ediliyor mu.** Dikkat: madde 214 gelirin

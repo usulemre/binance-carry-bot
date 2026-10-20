@@ -3568,3 +3568,11 @@ K3 H12     brut     +230.6   3.55   (maliyetsiz — sinyalin varlığı)
 **Yasa: bir sinyalin değeri, ödenen komisyon başına brüt getiridir; daha
 sık işlem sinyali güçlendirse bile bu oranı düşürebilir.** Ayar DEĞİŞMEDİ.
 Veri (data_5m/, ~1,2 GB) gitignore'da duruyor.
+
+## MADDE 372 — BULGULAR CANLIYA ÇIKIŞ BELGESİNE İŞLENDİ
+
+`CANLIYA_CIKIS.md` §7'ye: HAVUZ 4, oran önbelleği, 2.000 $'da üç doz
+seçeneği (1,0 / 1,25 / 1,55x) ve kaldıracın evren kanalı, 1,55x'in
+eşik gerekçesi, iki yeni log satırının anlamı, yoğunlaşma notu. Madde
+276'nın kapısı (önce 1x canlı çeyrek + üç şart) DEĞİŞMEDİ. Ön uçuş
+testi temiz.
