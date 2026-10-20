@@ -3610,3 +3610,15 @@ HUKUM F9_D2: RED
   değerli" yasası bu kitapta da ayakta.
 
 **AYAR DEĞİŞMEDİ.**
+
+## MADDE 374 — ÖN UÇUŞTA ÖLÇÜLMÜŞ DOZA AÇIK ONAY YOLU
+
+`carry_preflight.py` her `CARRY_GROSS ≠ 1` için "beklenti bu ayarla
+ölçülmedi" diye duruyordu. Madde 368/369 1,25x ve 1,55-1,60x'i ölçtü.
+Yeni kural: ölçülmüş doz + `CARRY_DOZ_ONAY` aynı değer → geçer; onaysız
+→ HATA ("bilerek açın"); 1,50-1,54 → HATA (ETH eşiği, madde 369);
+ölçülmemiş doz (ör. 2,0) → eski HATA. Altı durum sınandı. Madde 276'nın
+kapısı (önce 1x canlı çeyrek) süreçtir, kodda değil; kod yalnız kaldıracın
+SESSİZCE açılmamasını garanti ediyor. Ayrıca ön uçuşun "5+5 bacak"
+satırı tavanı (4) göstermiyordu, düzeltildi. Ön uçuş ve birim testleri
+temiz.

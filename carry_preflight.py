@@ -56,6 +56,29 @@ def kontrol_ayarlar() -> None:
         "KALABALIK_HAVUZ": (cb.KALABALIK_HAVUZ, 4.0, "madde 352"),
         "REZERV_PAY": (cb.REZERV_PAY, 0.20, "madde 156"),
     }
+    # MADDE 374: ÖLÇÜLMÜŞ DOZ, AÇIK ONAYLA. Madde 368/369 2.000 $ için
+    # 1,25x ve 1,55-1,60x'i gerçek serilerle ölçtü. Kapı (madde 276: önce
+    # 1x canlı çeyrek) KOD değil SÜREÇ; kod yalnız şunu garanti eder:
+    # kaldıraç sessizce değil, bilerek ve ölçülmüş bir değerde açılır.
+    # CARRY_DOZ_ONAY, CARRY_GROSS ile AYNI değeri taşımalı.
+    _doz = float(cb.GROSS_EXPOSURE)
+    _onay = os.getenv("CARRY_DOZ_ONAY", "").strip()
+    _olculmus = abs(_doz - 1.25) < 1e-9 or (1.55 - 1e-9 <= _doz <= 1.60 + 1e-9)
+    if abs(_doz - 1.0) > 1e-9:
+        if 1.5 - 1e-9 <= _doz < 1.55 - 1e-9:
+            kontrol("doz", HATA,
+                    f"CARRY_GROSS={_doz}: 2.000 $'da bacak ~20 $ = ETH grubunun asgari "
+                    "emri; grup her turda girip çıkar (madde 369). En az 1,55 kullanın.")
+        elif _olculmus and _onay and abs(float(_onay) - _doz) < 1e-9:
+            bekle.pop("GROSS_EXPOSURE")
+            kontrol("doz", TAMAM,
+                    f"CARRY_GROSS={_doz} ölçülmüş doz, onaylı (madde 368/369; "
+                    "beklenti CANLIYA_CIKIS.md §7 madde 372 tablosunda)")
+        elif _olculmus:
+            kontrol("doz", HATA,
+                    f"CARRY_GROSS={_doz} ölçülmüş bir doz ama ONAY yok: bilerek "
+                    f"açtığınızı CARRY_DOZ_ONAY={_doz} ile belirtin (madde 374)")
+            bekle.pop("GROSS_EXPOSURE")
     sapan = [f"{k}={v[0]} (olmalı {v[1]}, {v[2]})"
              for k, v in bekle.items() if abs(float(v[0]) - float(v[1])) > 1e-9]
     if sapan:
@@ -63,7 +86,8 @@ def kontrol_ayarlar() -> None:
                 "SAPMA: " + "; ".join(sapan) + " — beklenti bu ayarla ölçülmedi")
     else:
         kontrol("ölçülen ayarlar", TAMAM,
-                f"{cb.N_LEGS}+{cb.N_LEGS} bacak, {cb.N_DILIM} dilim, "
+                f"{min(cb.N_LEGS, cb.BACAK_TAVAN)}+{min(cb.N_LEGS, cb.BACAK_TAVAN)} bacak "
+                f"(tavan, madde 341), {cb.N_DILIM} dilim, "
                 f"pencere {cb.FUNDING_WINDOW_HOURS:.0f}sa")
     # ACMA listesi
     acik = []

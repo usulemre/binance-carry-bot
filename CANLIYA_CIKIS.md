@@ -495,6 +495,11 @@ yılda −%33'ü kaldırıyorsa, `CARRY_GROSS=1.55`. Prim çarpanı
 (`CARRY_PRIM_E=0.10`) iki dozda da ~+6 puan ekler ama kanıt eşiğinin
 0,7 puan altında (madde 357).
 
+**Ön uçuş (madde 374):** kaldıraç sessizce açılamaz. Ölçülmüş bir dozu
+açmak için iki satır birlikte gerekir, ikisi AYNI değer:
+`CARRY_GROSS=1.55` ve `CARRY_DOZ_ONAY=1.55` (ya da 1.25). Onaysız, 1,50-1,54
+aralığında ya da ölçülmemiş bir dozda `carry_preflight.py` HATA verir.
+
 **Canlıda izlenecek iki yeni log satırı:**
 - `"... adayın oranı önbellekten ... alındı"` — oran API'si eksik cevap
   veriyor. Ara sıra normal; her turda görülüyorsa API sorunu var.
