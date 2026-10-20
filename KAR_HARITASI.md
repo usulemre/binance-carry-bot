@@ -3367,3 +3367,51 @@ HUKUM ORT: RED
   kalıyor; kalabalık ekseni bu zeminde kapandı (358, 364, 365).
 
 **AYAR DEĞİŞMEDİ.**
+
+---
+
+## MADDE 366 — KÂR ALMA MERDİVENİ (HAVUZ 4): RED, RİSK ARACI OLARAK DURUYOR
+
+```
+kol     bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%    med   (kontrol: 15x4 HAVUZ 4; farklar)
+M20_50 2000  0    -6.2 +0.04 +0.18   -1.0    +4.2  1.06  YYYX  55.2   +1.9
+M20_50 2000  1    -8.7 +0.07 +0.17   -0.4    -4.3  1.03  YYXX  52.3   +1.0
+M20_50 3500  0    -6.1 +0.05 +0.17   -0.7    +1.9  1.05  YYYX  58.7   +2.2
+M20_50 3500  1    -8.1 +0.08 +0.15   -1.2    +6.3  1.09  YYYX  56.5   +3.3
+HUKUM M20_50: RED
+
+M20_33 2000  0    -4.1 +0.03 +0.12   -0.6    +2.8  1.04  YYYX  57.9   +1.7
+M20_33 2000  1    -5.8 +0.05 +0.12   -0.3    -2.8  1.02  YYXX  55.3   +1.9
+M20_33 3500  0    -4.1 +0.04 +0.12   -0.6    +3.2  1.04  YYYX  61.2   +2.1
+M20_33 3500  1    -5.4 +0.06 +0.10   -1.0    +7.6  1.08  YYYX  59.6   +3.7
+HUKUM M20_33: RED
+
+M10_33 2000  0   -17.7 +0.03 +0.08   -3.4   +22.7  1.26  YYYX  54.9   +1.5
+M10_33 2000  1   -17.5 +0.08 +0.09   -3.6   +31.3  1.29  YYYX  66.2   +7.7
+M10_33 3500  0   -17.8 +0.04 +0.07   -2.0    +5.7  1.16  YYYX  56.4   +2.2
+M10_33 3500  1   -17.1 +0.09 +0.06   -2.3   +11.1  1.18  YYYX  66.7   +7.0
+HUKUM M10_33: RED
+
+```
+
+Madde 235'in deseni bu kitapta da aynı: merdiven **iki dönemde de Sharpe'ı
+yükseltiyor** (şart 1 on iki hücrenin onunda geçiyor; 25-26 +0,06..+0,18)
+ve düşüşü sığlaştırıyor, ama **getiriyi düşürüyor** (−4..−18 puan) ve
+eşit riske dönmek için 1,02-1,29x kaldıraç istiyor → şart 4. Eşli
+bootstrap P %52-67 — kaldıraç kabul edilse bile kanıt barının altında.
+%10'luk merdiven en çok düşüş kesiyor (−2,0..−3,6 puan) ama 17-18 puan
+getiriye mal oluyor.
+
+Sınıf: **getiri değil risk aracı.** Düşüş tahammülü −%30'dan düşükse
+`MERD_ESIK=0,20 MERD_PAY=0,33` en ucuz düşüş azaltma (−4..−6 puan
+getiri, −0,3..−1,0 puan düşüş); bu bir kullanıcı kararı, motor ayarı
+olarak duruyor, bota bağlanmadı.
+
+**AYAR DEĞİŞMEDİ.**
+
+### Bu turun özeti (madde 364-366)
+Taraf başına havuz, oran yumuşatma, üç kalabalık sütunu, kâr alma
+merdiveni: 12 kolun 12'si RED. Bugünkü kitabın (15×4, HAVUZ 4, `ls`,
+TPL 0,40 / TPS 0,20, REB 5 gün, 48 sa pencere) çevresinde ölçülmüş
+açık aday kalmadı. İki "rejim aracı" kayıtta: prim çarpanı (22-24'te
+çalışıyor) ve üst trader hesap oranı (25-26'da çalışıyor).
