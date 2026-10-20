@@ -3485,3 +3485,24 @@ HEMEN DIŞINDA (kapanış bazında), gün içi tahmin −45..−47. Motor
 likidasyonu modellemiyor; 1,5x'te izole teminatta likidasyon mesafesi
 madde 140'ın tablosuna göre kontrol edilmeli (çapraz teminat varsayılan).
 **Ayar DEĞİŞMEDİ** (kaldıraç kullanıcı kararı).
+
+## MADDE 370 — 1,5x'TE LİKİDASYON: ÇAPRAZ TEMİNATTA UZAK, ASIL RİSK TEK COİN SIKIŞMASI
+
+Kod okundu (`kaldirac_hazirla`, `gerekli_kaldirac`): bot her sembolü
+ÇAPRAZ teminata alıyor, borsa kaldıracını `ceil(GROSS × ölçek_max × 1,5)`
+yapıyor (1,55x ve prim açıkken: ceil(1,55 × 1,5 × 1,5) = 4). Çapraz
+teminatta likidasyon HESAP düzeyindedir: özsermaye, toplam pozisyonun
+bakım teminatına inince olur. 1,55x brütte toplam pozisyon özsermayenin
+1,55 katı; Binance'in küçük pozisyonlardaki bakım oranı tipik olarak
+%0,5-2,5 (sembole ve kademeye göre değişir, burada ÖLÇÜLMEDİ) → eşik
+kabaca **özsermayenin %95-99'unun kaybı**. Backtest'in en kötü düşüşü
+−%22 (kapanış) / ~−%45 (gün içi tahmini); uzak.
+
+**Asıl kuyruk riski tek coin sıkışması:** bot STOP-LOSS kullanmıyor (madde
+143: kâr al var, stop yok). Bir short coin birkaç dilimde aynı anda
+tutulabilir; 1,55x'te bacak ~20,7 $ = özsermayenin ~%1'i, 15 dilimin
+hepsinde aynı coin olursa ~%15. O coinde +%200'lük bir sıkışma ≈
+özsermayenin −%30'u (madde 64'ün XLM −%184 olayının sınıfı). Bu olaylar
+backtest serisinde VAR (düşüş sayıları onları içeriyor), ama bir
+sembolün dilimler arası azami yoğunlaşması ölçülmedi — açık eksen.
+**Ayar DEĞİŞMEDİ.**
