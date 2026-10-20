@@ -94,7 +94,10 @@ def islemler(kos, C, O, H, F, Hgun, S, plasebo=False, uy=None):
             if not np.isfinite(cik_f):
                 continue
             fon = np.nansum(fv[i + 1:cik_i + 1, j])          # short alır
-            r = (g / cik_f - 1) + fon - 2 * KOM
+            # DÜZELTME (madde 379, ilk koşu GEÇERSİZ): short getirisi 1 - çıkış/giriş.
+            # İlk sürüm g/çıkış - 1 kullanıyordu: fiyat %90 düşünce +%900 gösterir
+            # (gerçek azami +%100). Sonuçlar bu yüzden absürt şişmişti.
+            r = (1 - cik_f / g) + fon - 2 * KOM
             out.append((i + 1, cik_i, j, r))
             serbest = cik_i
     return out
