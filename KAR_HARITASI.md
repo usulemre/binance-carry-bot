@@ -3506,3 +3506,20 @@ hepsinde aynı coin olursa ~%15. O coinde +%200'lük bir sıkışma ≈
 backtest serisinde VAR (düşüş sayıları onları içeriyor), ama bir
 sembolün dilimler arası azami yoğunlaşması ölçülmedi — açık eksen.
 **Ayar DEĞİŞMEDİ.**
+
+## MADDE 371 — TEK COİN YOĞUNLAŞMASI ÖLÇÜLDÜ (madde 370'in açık ekseni)
+
+Bacak defteri (KATKI=1, 2.000 $ @1,5x'in D2 kitabı, hiza 0, 35.977 bacak),
+her 4 sa barda bir sembolün 15 dilimdeki toplam özsermaye payı (1x):
+**medyan %9,6 · p99 %13,7 · maks %15,0** (TRBUSDT, 2023-09-13). Aynı uç
+funding'li coin dilimlerin çoğunda aynı anda seçiliyor. 1,55x'te
+%15-23; o coinde ters yönde +%100 hareket ≈ özsermayenin −%15..−23'ü.
+
+**Ama yön, sıkışmalarda botun lehine:** TRB'nin Eylül-Kasım 2023
+sıkışmasında bot 217 bacakla LONG, 2 bacakla short; net +4,73 (fiyat
++3,02, funding +1,71). Sıkışmada short taraf kalabalıklaşıyor, funding
+negatife dönüyor ve bot funding'i ALAN tarafa, long'a geçiyor. Bütün
+dönemde tek coinin toplam katkısı en kötü −9,7 puan (WIF), sonra DOGE
+−9,0, KAITO −5,7 (1x). Yoğunlaşma gerçek ama tarihsel en kötü tek-coin
+kaybı backtest düşüşünün içinde; ayrı bir kuyruk riski olarak AYRIŞMIYOR.
+**Ayar DEĞİŞMEDİ.**
