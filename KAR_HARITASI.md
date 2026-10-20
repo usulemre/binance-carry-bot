@@ -3523,3 +3523,48 @@ dönemde tek coinin toplam katkısı en kötü −9,7 puan (WIF), sonra DOGE
 −9,0, KAITO −5,7 (1x). Yoğunlaşma gerçek ama tarihsel en kötü tek-coin
 kaybı backtest düşüşünün içinde; ayrı bir kuyruk riski olarak AYRIŞMIYOR.
 **Ayar DEĞİŞMEDİ.**
+
+---
+
+## MADDE 367 — BTC ÖNCÜ-TAKİPÇİ 5 DAKİKADA: SİNYAL GÜÇLÜ, KOMİSYON ÜÇ KAT FAZLA → RED
+
+```
+panel: 100 sembol, 280512 bar (2024-01-01 00:00:00 .. 2026-08-31 23:55:00)
+kol        senaryo   yillik     Sh   Sh24   Sh25   dusus devir/gun    rho | PLA Sh | elek
+K1 H1      brut   +62437308539.6  27.47   (maliyetsiz — sinyalin varlığı)
+           maker    -100.0 -21.62 -44.64 -15.38  -100.0     485.2  +0.04 | -222.59 | XXYY
+           taker    -100.0 -109.52 -168.15 -99.43  -100.0     485.2  +0.04 | -508.11 | XXYY
+K1 H3      brut   +314596.7  20.65   (maliyetsiz — sinyalin varlığı)
+           maker     -97.1  -8.97 -16.96  -5.38  -100.0     158.6  +0.02 | -70.18 | XXYY
+           taker    -100.0 -55.45 -71.02 -50.23  -100.0     158.6  +0.02 | -176.49 | XXYY
+K1 H12     brut     +454.3   5.85   (maliyetsiz — sinyalin varlığı)
+           maker     -69.2  -3.79  -7.84  -1.27   -95.7      39.6  +0.03 | -19.02 | XXYY
+           taker     -99.6 -18.43 -21.95 -16.62  -100.0      39.6  +0.03 | -47.84 | XXYY
+K3 H1      brut   +648079520.0  23.66   (maliyetsiz — sinyalin varlığı)
+           maker     -99.8 -10.03 -25.81  -4.64  -100.0     303.1  +0.04 | -234.10 | XXYY
+           taker    -100.0 -70.26 -108.27 -62.04  -100.0     303.1  +0.04 | -518.04 | XXYY
+K3 H3      brut   +59038.4  16.40   (maliyetsiz — sinyalin varlığı)
+           maker     -99.5 -13.82 -18.93 -11.19  -100.0     160.3  +0.06 | -77.11 | XXYY
+           taker    -100.0 -63.05 -69.23 -61.03  -100.0     160.3  +0.06 | -194.20 | XXYY
+K3 H12     brut     +230.6   3.55   (maliyetsiz — sinyalin varlığı)
+           maker     -81.7  -4.67 -10.15  -1.82   -98.9      39.6  +0.04 | -18.62 | XXYY
+           taker     -99.8 -17.20 -23.75 -14.14  -100.0      39.6  +0.04 | -48.17 | XXYY
+
+```
+
+- **Brüt sinyal var ve büyük** (K1 H12 brüt Sharpe 5,85; plasebo çok
+  negatif). Ama 1-3 barlık tutmalarda brüt Sharpe 16-27 gerçekçi değil:
+  5 dakikalık kapanışta alış-satış makası sıçraması (bid-ask bounce)
+  geri dönüş gibi görünür ve işlenemez. H12 (1 saat) bu etkiden en az
+  etkilenen kol.
+- **Başabaş komisyon taraf başına ~0,8-1,4 bp.** Binance'in en ucuz
+  standart maker'ı 2 bp, taker 5 bp; 2.000 $'lık bir hesap VIP maker
+  iadesine erişemez. Sinyal, ödenecek komisyonun ~yarısı ile üçte biri
+  kadar kazanıyor; her net kol −%69..−%100.
+- Madde 353-B'nin 4 saatlik sonucu (sinyal var, maliyet yutuyor) 5
+  dakikada da aynı — çözünürlük artınca sinyal güçleniyor ama devir
+  daha hızlı artıyor.
+
+**Yasa: bir sinyalin değeri, ödenen komisyon başına brüt getiridir; daha
+sık işlem sinyali güçlendirse bile bu oranı düşürebilir.** Ayar DEĞİŞMEDİ.
+Veri (data_5m/, ~1,2 GB) gitignore'da duruyor.
