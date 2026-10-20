@@ -3668,3 +3668,23 @@ HUKUM KE9: RED
 
 **Protokol işledi:** %80 barında bile geçmeyecekti; ham getiriye
 bakılsaydı "+%17 bulundu" denirdi. AYAR DEĞİŞMEDİ.
+
+## MADDE 377 — KARAR ARACININ KALİBRASYONU (araç: `arastirma_m377_arac_kalibrasyon.py`)
+
+(1) Determinizm: madde 352'nin HAVUZ 4 hücreleri aynı araçla yeniden
+hesaplandı — P %92,6 (kayıtlı %92,6) ve %94,2 (kayıtlı %94,3; bootstrap
+örnek sayısı farkı). (2) Sıfır etkili aday (kontrol + ortalaması sıfır
+gürültü, std = HAVUZ 4 − HAVUZ 3 günlük farkının std'si, 0,25-0,26 %/gün),
+200 çekiliş, tek hücre:
+
+    hiza   dört şart   + P >= %80   + P >= %95
+     0       %11,5        %4,5         %0,0
+     1       %10,0        %4,0         %0,0
+
+Kural iki hiza istediği için %80 barında yanlış kabul ≈ 0,045² ≈ %0,2
+(iki seviye istenirse daha da düşük); ~80 adayda beklenen yanlış kabul
+~0,16. **HAVUZ 4'ün kabulü (madde 352) şans eseri olma ihtimali düşük.**
+Sınır: gürültü günler arası bağımsız; gerçek izleme hatası otokorelasyonlu
+olduğundan gerçek oran biraz yüksek olabilir (bootstrap bloklar bunu
+kısmen yakalar). Madde 375'in %95 barı bu modelde yanlış pozitifi
+sıfırlıyor — gerçek bir etkiyi kaçırma (güç) bedeliyle.
