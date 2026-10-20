@@ -3576,3 +3576,37 @@ seçeneği (1,0 / 1,25 / 1,55x) ve kaldıracın evren kanalı, 1,55x'in
 eşik gerekçesi, iki yeni log satırının anlamı, yoğunlaşma notu. Madde
 276'nın kapısı (önce 1x canlı çeyrek + üç şart) DEĞİŞMEDİ. Ön uçuş
 testi temiz.
+
+---
+
+## MADDE 373 — EVREN KANALINI DİLİM AZALTARAK AÇMAK: RED (faz bedeli evren kazancını yiyor)
+
+```
+kol     bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%    med   (kontrol: 15x4 HAVUZ 4; farklar)
+F10_D8 2000  0    -1.1 +0.22 -0.27   -3.0   +40.6  1.23  XYYX  62.3   +7.4
+F10_D8 2000  1    -6.3 -0.26 +0.02   +2.4   -28.2  0.87  XYXY   8.9  -21.3
+HUKUM F10_D8: RED
+
+F10_D2 2000  0    -0.0 +0.16 -0.07   -2.5   +32.5  1.18  XYYX  66.5  +10.3
+F10_D2 2000  1    -7.8 -0.20 +0.02   +0.5   -13.0  0.97  XYXY  18.6  -17.9
+HUKUM F10_D2: RED
+
+F9_D2  2000  0    +3.8 +0.07 +0.05   -0.7   +11.5  1.04  YYYY  59.0   +4.2
+F9_D2  2000  1    -1.1 -0.11 +0.16   +0.2    -3.3  0.99  XYXY  52.0   +0.8
+HUKUM F9_D2: RED
+
+```
+
+- **Faz bedeli hizalamaya aşırı bağlı:** 10 dilim D8'de hiza 0 eşit
+  riskte +40,6, hiza 1 −28,2 — 69 puanlık yayılım. Madde 323'ün yasası:
+  daha az faz, başlangıç saatine daha çok bağımlılık; canlı bot tek
+  hizada koşar ve hangisini alacağını seçemez.
+- **Evren kanalı kaldıraçsız da gerçek ama küçük:** F10_D2 − F10_D8
+  hiza 1'de +15 puan (eşit risk), hiza 0'da −8. 9x4 D2 en dengeli (iki
+  hizada ham +3,8 / −1,1) ama P %52-59.
+- Sonuç: 2.000 $'da geniş evrene giden ölçülmüş tek güvenilir yol
+  bakiye (3.000 $) ya da kaldıraç (≥1,55x, madde 369); dilim kesmek
+  değil. Madde 295'in "faz çeşitlendirmesi bacak büyüklüğünden kat kat
+  değerli" yasası bu kitapta da ayakta.
+
+**AYAR DEĞİŞMEDİ.**
