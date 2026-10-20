@@ -3274,3 +3274,60 @@ içindeki önbellekle kalabalık seçimi korunuyor; 25 saatlik önbellek
 reddediliyor; 0 ile kapalı). Paket **146 [OK], 0 [HATA]**;
 `test_carry_bot.py` ve ön uçuş da temiz. Önbellek dosyası depoya
 sızmadı.
+
+---
+
+## MADDE 364 — TARAF BAŞINA HAVUZ VE ORAN YUMUŞATMA: ALTISI DA RED
+
+```
+kol     bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%    med   (kontrol: 15x4 HAVUZ 4; farklar)
+L6     2000  0    +0.3 +0.01 +0.00   -0.0    +0.6  1.00  YYYY  79.3   +5.1
+L6     2000  1    +0.7 -0.02 +0.04   -0.5    +7.1  1.03  XYYY  76.6   +4.6
+L6     3500  0    +2.9 +0.04 +0.04   +0.6    -4.7  0.96  YYXY  73.2   +4.3
+L6     3500  1    +3.5 +0.02 +0.07   +0.7    -5.1  0.95  YYXY  79.5   +6.2
+HUKUM L6: RED
+
+L3     2000  0    -6.1 -0.10 -0.08   +1.1   -16.5  0.93  XYXY   7.1  -11.7
+L3     2000  1    -4.3 -0.12 +0.02   +0.2    -6.4  0.99  XYXY  15.2   -8.6
+L3     3500  0    -6.0 -0.08 -0.10   +0.3    -9.7  0.98  XYXY  12.3  -10.5
+L3     3500  1    +1.3 -0.01 +0.08   -0.4    +6.4  1.03  XYYY  66.3   +3.6
+HUKUM L3: RED
+
+S6     2000  0    -7.1 -0.16 -0.05   +2.1   -24.8  0.88  XYXY   1.8  -16.6
+S6     2000  1    -5.1 -0.11 -0.06   +2.4   -27.6  0.86  XYXY   6.9  -11.2
+S6     3500  0    -6.6 -0.19 -0.02   +3.3   -35.8  0.81  XXXY   4.2  -15.6
+S6     3500  1    -3.6 -0.11 -0.02   +1.0   -14.2  0.94  XYXY  16.9   -7.1
+HUKUM S6: RED
+
+S3     2000  0    -1.4 -0.06 +0.05   +1.0   -11.3  0.94  XYXY  24.5   -6.7
+S3     2000  1    -4.5 -0.10 -0.05   +4.1   -39.1  0.79  XXXY  13.3  -14.9
+S3     3500  0    +0.4 -0.03 +0.07   +2.1   -21.6  0.87  XYXY  36.2   -3.6
+S3     3500  1    -2.6 -0.04 -0.04   +1.4   -17.1  0.91  XYXY  26.1   -5.7
+HUKUM S3: RED
+
+ORT6   2000  0    +4.7 +0.03 -0.01   -0.9   +15.3  1.06  XYYY  61.9   +5.2
+ORT6   2000  1    -0.2 -0.06 -0.03   +1.1   -11.5  0.94  XYXY  34.0   -8.2
+ORT6   3500  0    +4.3 +0.06 -0.02   -0.9   +16.8  1.07  XYYY  66.7   +7.6
+ORT6   3500  1    +3.2 -0.03 +0.02   +0.6    -4.1  0.96  XYXY  45.5   -2.1
+HUKUM ORT6: RED
+
+ORT12  2000  0    +2.6 +0.02 -0.18   +0.6    -4.1  0.96  XYXY  26.4  -15.5
+ORT12  2000  1    -6.7 -0.17 -0.24   +1.3   -19.5  0.92  XYXY  12.1  -27.1
+ORT12  3500  0    -1.2 -0.04 -0.19   +0.9   -11.0  0.94  XYXY  22.7  -18.9
+ORT12  3500  1    -6.4 -0.20 -0.21   +1.4   -20.3  0.91  XYXY  17.0  -23.8
+HUKUM ORT12: RED
+
+```
+
+- **Havuz 4 iki tarafta da yerinde.** Short havuzunu değiştirmek (3 ya da
+  6) her hücrede zarar; long havuzunu daraltmak (3) zarar. Long 6 en yakın
+  kol (ham +0,3..+3,5, P %73-80, bir hücrede YYYY %79,3) ama eşit riskte
+  3.500 $'da negatif — **long tarafta 4-6 plato**, madde 352'nin
+  bulgusuyla tutarlı.
+- **Oranın 1 gün ortalaması (ORT6) karışık, 2 gün (ORT12) açıkça kötü.**
+  ORT12'de 25-26 Sharpe her hücrede −0,18..−0,24: kalabalık bilgisi
+  günler içinde eskiyor (madde 362) ve ortalamaya eski veri katmak onu
+  sulandırıyor. **Anlık değer gürültü değil, sinyal** — madde 340'ın
+  yasasının aynası ("tahminciyi yavaşlatmak, onu bayatlatmak").
+
+**AYAR DEĞİŞMEDİ.**
