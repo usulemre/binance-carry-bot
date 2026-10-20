@@ -3786,3 +3786,24 @@ değişikliklerinden değil.
 
 Zemin paritesi yeniden koşuldu: +%111,39 / 3,087 / −%14,39 — dünküyle
 birebir (deterministik).
+
+### Madde 378 sonucu — üç tohumda tam tarama
+
+Tohum 7 ve 42 (test_carry_rapor düzeltmesinden sonra): **42 paketin 36'sı
+geçiyor**; düşen 6'sı her iki tohumda da AYNI ve hepsi elenmiş
+sinyal/kesitsel bota ait (eksik eski veri). Carry botuna ait paketlerin
+TAMAMI üç tohumda da temiz. Tohuma bağlı kararsızlık yok.
+
+## DENETİMİN ÖZETİ (madde 375-378)
+
+- **Zemin:** parite deterministik (+%111,39, iki gün arayla birebir).
+- **Karar aracı:** deterministik; sıfır etkili adayda hücre başına
+  yanlış pozitif %80 barında %4-4,5, %95'te %0 (madde 377).
+- **Bileşenler:** hiçbiri çıkarılmıyor. Kâr al hasadı (−47..−59) ve yaş
+  filtresi (−97..−104) kitabın taşıyıcısı; rezerv risk aracı; akış ve uç
+  hareket elemesi bu kitapta nötr (madde 376).
+- **Testler:** carry botu üç tohumda temiz; bir bayat test düzeltildi
+  (canlı alarm doğruydu); 6 eski-bot paketi önceden kırık (madde 378).
+- **Ayar değişikliği yok.** Bu turun iki kalıcı değişikliği (HAVUZ 4, oran
+  önbelleği) denetimden geçti; HAVUZ 4 %95 barında kabul edilmezdi, ~%0,2
+  yanlış kabul olasılığıyla duruyor.
