@@ -3331,3 +3331,39 @@ HUKUM ORT12: RED
   yasasının aynası ("tahminciyi yavaşlatmak, onu bayatlatmak").
 
 **AYAR DEĞİŞMEDİ.**
+
+## MADDE 365 — KALABALIK SÜTUNU: ÜÇÜ DE RED
+
+```
+kol     bak hz  yillik  Sh22  Sh25  dusus   esitR  kald 4sart    P%    med   (kontrol: 15x4 HAVUZ 4; farklar)
+TTH    2000  0    -5.4 -0.25 +0.11   +3.7   -33.6  0.81  XXXY  14.5  -28.1
+TTH    2000  1    -3.4 -0.33 +0.27   +4.8   -41.5  0.77  XXXY  16.8  -30.0
+TTH    3500  0    -6.7 -0.25 +0.07   +7.9   -59.1  0.64  XXXY  14.8  -28.4
+TTH    3500  1    -8.1 -0.34 +0.15   +8.5   -62.5  0.62  XXXY  13.5  -32.0
+HUKUM TTH: RED
+
+TAK    2000  0   -85.1 -0.53 -1.25   -2.0   -79.0  1.14  XYXX   1.6  -74.9
+TAK    2000  1   -96.4 -0.75 -1.59   -3.5   -85.7  1.28  XYXX   0.1  -88.0
+TAK    3500  0   -86.4 -0.47 -1.21   -2.8   -75.4  1.24  XYXX   1.4  -73.1
+TAK    3500  1   -96.3 -1.11 -1.32   -1.7   -91.7  1.13  XYXX   0.1  -87.6
+HUKUM TAK: RED
+
+ORT    2000  0    -1.3 -0.20 +0.21   +3.7   -31.1  0.81  XXXY  21.9  -15.4
+ORT    2000  1    -5.1 -0.23 +0.13   +4.8   -42.7  0.77  XXXY  18.8  -22.4
+ORT    3500  0    -3.2 -0.15 +0.07   +7.9   -57.4  0.64  XXXY  23.1  -16.9
+ORT    3500  1    -4.9 -0.23 +0.15   +8.5   -61.0  0.62  XXXY  15.8  -26.6
+HUKUM ORT: RED
+
+```
+
+- **Taker hacim oranı (TAK):** plasebo kadar kötü (−85..−96) — kalabalık
+  değil akış ölçüyor; zaten sinyalde %20 akış var.
+- **Üst trader HESAP oranı (TTH) bir REJİM aracı:** 25-26 Sharpe
+  +0,07..+0,27 İYİLEŞİYOR ama 22-24 −0,25..−0,34 kötüleşiyor, düşüş
+  +3,7..+8,5 derin. İki dönemi tersine ayırıyor — prim çarpanının
+  (madde 357) aynası. Genel oranla ortalaması (ORT) aynı deseni taşıyor.
+  Madde 258'in yasası: rejim aracı kabul edilmez ama çöpe de atılmaz.
+- Genel hesap oranı (`ls`) bu kitapta en iyi kalabalık ölçüsü olarak
+  kalıyor; kalabalık ekseni bu zeminde kapandı (358, 364, 365).
+
+**AYAR DEĞİŞMEDİ.**
