@@ -284,6 +284,7 @@ GUN={}
 # pozisyon yonu, butun fazlarin TOPLAMI (sonra faz sayisina bolunur). Bos -> kapali.
 _GK_YOL=os.environ.get('GUNLUK_KATKI','').strip()
 _GK={}
+_GK_BAS=pd.Timestamp(os.environ.get('GK_BAS','2026-01-01'))
 YIL={}   # yil -> [Lf,Lp,Ltp,Sf,Sp,Stp]
 def bt2(bas,n,olcut=None,tp=None):
     # MADDE 415: bt2 artik _bt2g uretecini koordinasyonsuz surer (parite).
@@ -570,7 +571,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
             kapanis=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0)
             br=np.where(yaridan,0.5*br+0.5*np.nan_to_num(kapanis),br)
         r=np.nansum(poz*br)+np.nansum(np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1])))
-        if _GK_YOL and C.index[i+1]>=pd.Timestamp('2026-01-01'):
+        if _GK_YOL and C.index[i+1]>=_GK_BAS:
             _gd=C.index[i+1].normalize()
             _fu=np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1]))
             for _k in np.flatnonzero(poz!=0):
