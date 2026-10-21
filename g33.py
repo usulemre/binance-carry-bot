@@ -136,6 +136,16 @@ if _SPOT:
     _ay=(_pds.DatetimeIndex(C.index).to_period('M')-1).astype(str)
     _SPV=np.column_stack([np.isin(_ay,_J.get(str(c_),{}).get('aylar',[])) for c_ in C.columns])
     print(f"# SPOT_SART={_SPOT}: spotlu pay {_SPV.mean():.2f}",flush=True)
+# MADDE 423: LONG KALABALIK VETOSU. Tam donem katki atfi (gercekci model): long
+# bacaklarin log(long/short hesap orani) ust beste birligi (>=0,64, oran ~1,9+)
+# IKI DONEMDE DE zarar ediyor (22-24 −150 $/yil, 25-26 −127 $/yil, 2.000 $). Funding
+# negatif olsa da hesaplar LONG kalabaliksa coin long adayi olmasin. 0/bos = kapali.
+_LSL=os.environ.get('LS_L_MAKS','').strip()
+_LSLV=None
+if _LSL:
+    import pickle as _pk6
+    _LSLV=np.log(_pk6.load(open('/tmp/metrik_panel.pkl','rb'))['count_long_short_ratio']).reindex(index=C.index,columns=C.columns).values
+    _LSL=float(_LSL)
 _uc6=int(os.environ.get("UCGERI","6"))
 _UART=np.full_like(cv,np.nan); _UART[_uc6:]=cv[_uc6:]/np.where(cv[:-_uc6]>0,cv[:-_uc6],np.nan)-1
 SSEC=os.environ.get("SSEC","funding")  # funding|rast|voldus|volyuk|btc
@@ -359,6 +369,11 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 _sr2=np.where(g,S[i],np.nan)
                 _md2=np.nanmedian(_sr2) if np.isfinite(_sr2).any() else 0.0
                 g=g&~(_yuk&(_sr2>_md2))&~(_dus&(_sr2<_md2))
+            if _LSLV is not None:
+                _lv=_LSLV[i]
+                _sr4=np.where(g,S[i],np.nan)
+                _md4=np.nanmedian(_sr4) if np.isfinite(_sr4).any() else 0.0
+                g=g&~(np.isfinite(_lv)&(_lv>_LSL)&(_sr4<_md4))
             if _SPV is not None:
                 _sp=_SPV[i]
                 if _SPOT=='iki':
