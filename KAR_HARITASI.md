@@ -4274,3 +4274,27 @@ Madde 391: getiri = alınan risk; aynı riskte daha çok kâr ancak Sharpe'la.
   kazancı aşar.
 **Yasa: aynı makinenin varyantları aynı kitaptır (rho 0,98); çeşitlendirme
 ancak farklı GELİR KAYNAĞINDAN gelir, ayardan gelmez.** AYAR DEĞİŞMEDİ.
+
+## Madde 393 — Koşullu limit giriş ("zıplamada short, geri çekilmede long"): RED
+
+Kullanıcı: "doğru yerde girme çıkma bulsan kâr artmalı". Ölçülmüş olanlar:
+sabit gecikme konveks kayıp (+4 sa −1,1 · +8 sa −5,9 puan), mükemmel çıkış
+kâhini ulaşılamaz (154), küçük ofsetli maker emir zaten var. Ölçülmemiş:
+BÜYÜK ofsetli koşullu limit — short'u girişin %x üstüne, long'u %x altına
+koy; B saat içinde dolmazsa piyasadan gir.
+Teşhis (panel, carry aday bacakları sk üst/alt %8, 5 günde bir iki faz,
+3.536 bacak, 5 gün tutma, gerçek funding, 10 bp maliyet), bacak başı ortalama:
+
+| ofset | bekleme | dolum | 22-24 ort | 25-26 ort |
+|---|---|---|---|---|
+| hemen gir | — | %100 | **+0,76%** | **+0,87%** |
+| %2 | 8 sa / 24 sa | %57 / %76 | +0,66 / +0,60 | +0,40 / +0,55 |
+| %3 | 8 sa / 24 sa | %44 / %65 | +0,65 / +0,66 | +0,46 / +0,72 |
+| %5 | 8 sa / 24 sa | %26 / %48 | +0,71 / +0,75 | +0,42 / +0,52 |
+
+Sekiz kolun sekizi de iki dönemde "hemen gir"in altında; p1 değişmiyor.
+**Yasa: limit emrin dolması TERS SEÇİLİMDİR — short limitin dolduğu an fiyat
+aleyhine koşuyor demektir ve koşmaya devam ediyor; dolmadığında da girişi
+kaçırıyorsun (madde 193'ün konveks gecikme maliyeti). Kalabalığa karşı
+pozisyonda "daha iyi fiyat" beklemek kalabalığın daha da büyümesini
+beklemektir.** AYAR DEĞİŞMEDİ.
