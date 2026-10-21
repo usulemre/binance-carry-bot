@@ -4770,3 +4770,16 @@ işe yarıyor, 25-26'da (daha oynak evren) yaramıyor.
 **Yasa (191'in genişletilmiş hali): bu kitapta long bacağın çöküşü çoğu zaman
 geçicidir ve dipte en yüksek funding'i öder; HİÇBİR genişlikte stop çalışmıyor.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 417 — Kâr hedefi sıfırlama (TP_SIFIRLA, aleyhe hareketten sonra TP referansını taşı): ÜÇÜ DE RED
+
+g33'e `TP_SIFIRLA` / `TP_SIF_TARAF` (varsayılan kapalı). Kontrol bugünkü kitap.
+- R30 (iki taraf %30): −12..−13 puan, Sh22 +0,24..+0,25, Sh25 −0,34..−0,39, düşüş 1-2 sığ; P %43-49
+- R50: −10..−12 puan, Sh22 +0,16..+0,17, Sh25 −0,22..−0,30; P %34-44
+- R30L (yalnız long): −12..−13 puan, Sh22 +0,21..+0,22, Sh25 −0,31..−0,35; P %31-37
+**Madde 416 ile aynı imza: her savunma çıkışı 22-24'te Sharpe'ı artırıyor, 25-26'da
+düşürüyor.** 25-26 evreninde çöküş sonrası toparlanmalar +%40'ta durmuyor (H: dip
+0,07 → 0,146, +%100+); erken hasat dönüşün büyük kısmını bırakıyor. Kitabın TP'si
+GİRİŞTEN %40 — çöken bacak için fiilen "tam toparlanmayı bekle" demek ve bu,
+2025-26'da doğru bahis.
+AYAR DEĞİŞMEDİ.
