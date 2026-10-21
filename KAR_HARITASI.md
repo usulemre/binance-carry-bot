@@ -4471,3 +4471,24 @@ gerçek funding, 10 bp). 4 sa ızgara → TRT 03/07/11/15/19/23.
 **Öneri (kullanıcı kararı): canlı ikinci bot −%62 ile −%30 toleransın iki
 katında; durdurulması ya da pozisyon başı %5'e indirilmesi.** AYAR DEĞİŞMEDİ
 (ikinci botun kodu bu depoda değil).
+
+## Madde 400 — OLAY MOTORU (kullanıcının ±% kuralı + ölçülmüş bulgular): RED
+
+Kullanıcı: "bunları baz alan bir motor geliştir". `olay_motoru.py` (yeniden
+kullanılabilir: Ayar(saat, X, H, stop, nmax, yön, filtre) → olc()), ızgara
+`arastirma_m400_olay_motoru.py`: 96 kol (03/07 TRT · X %30/%50 · H 1/3/7 ·
+stop %25/yok · NMAX 10/20 · iki/short), funding filtresi sabit.
+
+| | kol | IS Sh | OOS Sh | OOS yıllık | OOS gün-t | tam düşüş |
+|---|---|---|---|---|---|---|
+| IS seçimi 1 | 03TRT X30 H1 stopsuz N20 iki | +0,66 | +0,71 | +21,1 | +0,05 | −40,1 |
+| IS seçimi 2 | 03TRT X30 H1 S25 N20 iki | +0,66 | +0,52 | +11,1 | +0,44 | −25,8 |
+| IS seçimi 3 | 03TRT X30 H1 S25 N10 iki | +0,63 | +0,46 | +11,5 | +0,44 | −47,4 |
+| geriye dönük en iyi | 03TRT X30 H1 stopsuz N20 iki | — | — | tam +13,1 | — | −40,1 |
+
+96 kolun 48'i OOS'ta Sh > 0, 22'si iki dönemde birden. Geriye dönük en iyi
+kol bile yılda +%13, düşüş −%40 (carry +%124, −%17). Madde 398'in güçlü
+"pump + f>0 short 7 g" işareti portföyde OOS +%35/yıl ama düşüş −%40 ve
+22-24'te sıfır. **Hüküm: RED — kuralın en iyi ölçülmüş hali bile carry'nin
+onda biri getiriyi dört kat sığ olmayan düşüşle veriyor.** Motor dosyası
+gelecekteki olay testleri için depoda. AYAR DEĞİŞMEDİ.
