@@ -4597,3 +4597,15 @@ G2R4  (REB 4 g)       +17..+22     Sh25 −0.19..+0.05  düşüş +0,9..+3,3   P
 - Botta hazır: `CARRY_PRIM_E=0.10` (ref 150 varsayılan).
 **HÜKÜM: protokolle RED (P < %95), ama bu konuşmanın en tutarlı adayı;
 "GE2 + prim" kullanıcı kararı paketi.** AYAR DEĞİŞMEDİ.
+
+## Madde 407 — G2P üzerine işleyiş fikirleri: DÖRDÜ DE RED
+
+Kontrol M357_G2P (GE2 + prim):
+- AYNI (TP sonrası aynı yönde yeniden giriş): +8..+13 puan ham ama Sharpe
+  22-24 −0,11..−0,16, 25-26 −0,34..−0,40, düşüş +4..+5 derin (−%22..−25). Doz.
+- YARIM (TP'de yarısını kapat): −5..−7 puan, Sharpe 25-26 −0,64..−0,73. TP
+  hasadının tamamı gelirdir (madde 290'ın dersi tekrar).
+- L5/S3 (long ağır): −3..−17 puan ama düşüş −0,2..−3,4 sığ, Sharpe ±; P %47-88.
+  Risk aracı sınıfı (merdiven gibi).
+- TOL 0,2: ±0,4 puan — devir toleransı etkisiz (bacaklar zaten tam dönüyor).
+**G2P'nin işleyişi bugünkü haliyle optimumda.** AYAR DEĞİŞMEDİ.
