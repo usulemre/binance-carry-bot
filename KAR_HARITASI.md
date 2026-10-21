@@ -4567,3 +4567,14 @@ Kontrol GE2. HAVUZ 3: GE2'ye −2,6..−8,7 puan (P %17-37); HAVUZ 5: −6,7..+1
 havuz ayarına duyarlı değil** (komşularda platoda). HAVUZ 4 GE2'de de en iyi.
 Sağlamlık notu: GE2'nin avantajı kalabalık seçim ayarından bağımsız, evren
 kanalından geliyor. AYAR DEĞİŞMEDİ.
+
+## Madde 405 — GE2 kitabında kâr alma seviyeleri: TPL 0,40 / TPS 0,20 yerinde
+
+Kontrol GE2, dört kol x dört hücre:
+- TPL 0,50: +7..+10 puan ham ama Sharpe 22-24 −0,03..−0,05, 25-26 −0,04..−0,13
+  → doz (daha uzun tutulan oynak bacak), eşit riskte kazanç yok; P %47-52. RED.
+- TPS 0,25: +0,6..+0,9 puan, düşüş +0,4..+3,1 derin; P %44-52. RED.
+- TPL 0,30: −22..−24 puan (P %8-10). TPS 0,15: −10..−14 puan (P %10-18). RED.
+GE2'nin kâr alma ayarı bugünkü kitabınkiyle aynı kalıyor; madde 404 ile
+birlikte: **GE2 = yalnız üç evren eşiği değişir, seçim ve hasat ayarları aynı.**
+AYAR DEĞİŞMEDİ.
