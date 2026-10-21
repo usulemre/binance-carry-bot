@@ -4373,3 +4373,31 @@ Eğri 0 → 60 → 90 → 120 → 180: −25 · **+19** · 0 · −17 · −20 (
 ama P %67-86 → %95 barı altı; kazanç ağırlıkla 25-26'da (Sh +0,27..+0,48;
 22-24'te +0,01..+0,12). Kısaltma yönünün ikinci adımı madde 397'de (45 / 30 g).
 AYAR DEĞİŞMEDİ (henüz).
+
+## Madde 397 — Yaş eşiği 45 / 30 g: PLATO VAR, KANIT BARI ALTINDA → RED (en güçlü bekleyen aday)
+
+Betik `arastirma_m397_yas_kisa.py`.
+```
+kol    bak hz  yillik  Sh22  Sh25  dusus  esitR  kald 4sart   P%    med
+YAS45  2000 0   +13.7 +0.07 +0.17  -2.5  +50.2  1.18  YYYY  68.1  +14.5
+YAS45  2000 1   +16.0 +0.05 +0.22  -2.3  +51.8  1.16  YYYY  72.8  +19.6
+YAS45  3500 0   +16.0 +0.01 +0.34  +0.5  +10.0  0.97  YYYY  71.9  +16.4
+YAS45  3500 1   +21.2 +0.11 +0.31  -0.1  +23.1  1.01  YYYY  79.7  +22.6
+YAS30  2000 0   +12.5 +0.18 +0.01  -2.5  +48.5  1.18  YYYY  60.5  +10.9
+YAS30  2000 1   +12.1 +0.09 +0.06  +0.9   +1.6  0.95  YYYY  48.9   -1.0
+YAS30  3500 0   +13.1 +0.10 +0.14  +0.8   +3.5  0.95  YYYY  64.6  +14.1
+YAS30  3500 1   +11.2 +0.10 +0.04  +1.6   -7.8  0.90  YYXY  49.8   -0.4
+```
+**Tam eğri (dört hücre ortalama yıllık fark, 90 g = 0):**
+0 g −25 · 30 g +12 · 45 g +17 · **60 g +19** · 90 g 0 · 120 g −17 · 180 g −20.
+- 30-60 g arası düz bir PLATO; 12 hücrenin 12'si ham pozitif (+11..+26),
+  dört şart 12'nin 11'inde. Düşüş aynı ya da sığ (−15..−18).
+- Ama hiçbir hücre P %95'e ulaşmıyor (en yüksek %86; dozlar aynı coinleri
+  paylaştığı için bağımsız kanıt sayılmaz). 60/45'te kazanç 25-26'da,
+  30'da 22-24'te — dönem imzası tutarlı değil.
+- Eski %80 protokolüyle de iki hizada birden geçmiyor (60 g: hz1 geçer, hz0 %67-75).
+- Uçurum 0 ile 30 arasında: ilk 30 gün (listeleme keşfi) gerçekten zehirli;
+  30-90 arası coinler kitaba katkı veriyor, 90 g eşiği gereğinden muhafazakâr.
+**HÜKÜM: protokolle RED. Sınıf: "sermayeden bağımsız kullanıcı kararı" —
+bot ayarı `CARRY_MIN_LISTING_DAYS` (varsayılan 90); 60 seçilirse beklenen
++15..+26 puan, kanıt gücü P %67-86.** AYAR DEĞİŞMEDİ.
