@@ -4739,3 +4739,19 @@ En kötü günler (iki hiza ortalaması):
   dağıtım yok) — motor dilimleri bağımsız simüle ediyor; doğru test için
   dilimler arası ortak tavan motora eklenmeli.
 AYAR DEĞİŞMEDİ.
+
+## Madde 415 — Dilimler arası ortak coin tavanı (CAP_ORTAK, lockstep motor): ÜÇÜ DE RED
+
+Motor: `_bt2g` üreteci + `_ortak_kos` (15 dilim eşzamanlı); parite tavan kapalı ve
+tavan 10'da 0,0. Kontrol: bugünkü kitap, zemin 2026-09-30.
+| tavan | kırpılan bacak / ağırlık | yıllık fark | Sh 22-24 | Sh 25-26 | düşüş | eşit-risk | P |
+|---|---|---|---|---|---|---|---|
+| 0,10 | ~880 / 2,2 | −3,3..−4,6 | −0,07..−0,08 | +0,04..+0,07 | ±0,3 | −2..−8 | %9-18 |
+| 0,08 | ~3.150 / 17 | −8,4..−10,0 | −0,14..−0,18 | +0,03..+0,07 | +1,1..+1,9 derin | −19..−27 | %13-16 |
+| 0,06 | ~9.500 / 50 | −16..−22 | −0,06..−0,13 | −0,09..+0,06 | −0,5..−2,1 sığ | −10..+2 | %18-30 |
+Madde 414'ün kaba 2026 tahmini (tavan 0,08 → Sh +0,17) tam dönemde tutmadı:
+2022-24'te yoğunlaşma GELİRDİ (aynı coini çok dilimin seçmesi = en güçlü sinyal),
+kırpınca Sharpe 22-24'te düşüyor; 25-26'da hafif iyileşme fark etmiyor.
+**Yasa: dilimlerin aynı coinde buluşması bir hata değil sinyalin gücüdür; tek-gün
+kuyruğu o gücün bedeli.** Motor yeteneği (CAP_ORTAK) kalıyor, varsayılan kapalı.
+AYAR DEĞİŞMEDİ.
