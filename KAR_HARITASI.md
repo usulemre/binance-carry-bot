@@ -4827,3 +4827,18 @@ Sabit ağırlıkta stop'un maliyeti −9..−16 puandı; kaymalı modelde −5..
 TP sıfırlama kaymalı modelde RİSK ARACI sınıfına geçiyor: getiri −6, düşüş ~2 puan
 sığ, eşit riskte +12..+23 ama P %54-64 — merdiven (366) gibi kullanıcı kararı.
 AYAR DEĞİŞMEDİ.
+
+## Madde 421 — Alarm eşikleri gerçekçi ağırlık kaymasıyla yeniden türetildi: KAYITLI EŞİKLER GEÇERLİ
+
+Kanonik yöntem (madde 231/303/341: rejim ayrımı 2025-01-01, `arastirma_rejim.yil_bootstrap`
+n=4000 blok=21 tohum=11, EN KÖTÜ rejimin p5/p1'i, aşağı yuvarlama), zemin 2026-09-30:
+| kitap | sabit ağırlık (HAVUZ 4) | KAYMA | kayıtlı (carry_rapor) |
+|---|---|---|---|
+| D8 (2.000 $) hz0 / hz1 | (−21,−27) / (−20,−25) | **(−23,−29)** / (−21,−26) | (−23, −30) |
+| D2 (3.500 $) hz0 / hz1 | (−20,−25) / (−20,−24) | **(−21,−26)** / (−20,−25) | (−21, −27) |
+En kötü rejim her hücrede 2022-24. Gerçekçi modelin en kötü hizası kayıtlı eşiklerle
+İNCELE'de birebir, DURDUR'da 1 puan içeride (kayıt 1 puan daha geniş = ihtiyatlı yönde
+fazladan yanlış-alarm koruması). Tam dönem düşüşü KAYMA'da D8 22,4 / D2 20,1 → İNCELE
+payı +0,6 / +0,9 puan (ince ama pozitif). **carry_rapor eşikleri DEĞİŞMEDİ.**
+Not: sabit ağırlıklı HAVUZ 4 kitabı eşiği (−21,−27)'ye daraltırdı — kaymasız ölçümle
+güncellenmiş olsaydı alarm gerçek düşüşte boşa çalardı.
