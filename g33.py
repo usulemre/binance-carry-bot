@@ -276,12 +276,28 @@ _GK_YOL=os.environ.get('GUNLUK_KATKI','').strip()
 _GK={}
 YIL={}   # yil -> [Lf,Lp,Ltp,Sf,Sp,Stp]
 def bt2(bas,n,olcut=None,tp=None):
+    # MADDE 415: bt2 artik _bt2g uretecini koordinasyonsuz surer (parite).
+    _g=_bt2g(bas,n,olcut,tp)
+    try:
+        next(_g)
+        while True:
+            _g.send(None)
+    except StopIteration as _e:
+        return _e.value
+
+def _bt2g(bas,n,olcut=None,tp=None):
     tp=TPX if tp is None else tp
     hedef_brut=[0.0]; _acik={}
     nk=C.shape[1]; poz=np.zeros(nk); giris=np.full(nk,np.nan); zirve=np.full(nk,np.nan); tp_yapildi=np.zeros(nk,bool); eq=[1.0]; bek=None; _yas=np.zeros(nk,int)
     merd_yapildi=np.zeros(nk,bool)
     ek_say=np.zeros(nk,int); ilk_w=np.zeros(nk)
     for i in range(bas,len(C)-1):
+        # MADDE 415: her bar koordinatore (i, poz, yeni hedef ya da None) bildirilir;
+        # koordinator hedefi degistirebilir (dilimler arasi ortak coin tavani).
+        _ytek=bek[1] if (bek is not None and bek[0]==i) else None
+        _cvp=yield (i, poz, _ytek)
+        if _ytek is not None and _cvp is not None:
+            bek=(bek[0], _cvp)
         if bek is not None and bek[0]==i:
             y=bek[1]
             if TOL>0:
@@ -602,6 +618,53 @@ def bt2(bas,n,olcut=None,tp=None):
                 _EKS[0]+=1; _EKS[1]+=dw
     return pd.Series(eq,index=C.index[bas:])
 
+# MADDE 415: DILIMLER ARASI ORTAK COIN TAVANI. Canli botta 15 dilim TEK hesapta;
+# ayni coin bircok dilimde secilince toplam agirligi kitabin %10-15'ine cikiyor
+# (madde 414: LAB 0,148). CAP_ORTAK=c -> bir dilim yeniden dengelerken coin basina
+# toplam (diger dilimler + bu dilim) agirlik / faz sayisi <= c. CAP_DAGIT=1 ->
+# kirpilan pay ayni taraftaki diger bacaklara orantili dagitilir (brut korunur).
+CAP_ORTAK=float(os.environ.get('CAP_ORTAK','0'))
+CAP_DAGIT=int(os.environ.get('CAP_DAGIT','0'))
+_CAPS=[0,0]   # [kirpilan bacak sayisi, toplam kirpilan agirlik]
+def _ortak_kos(baslar,n,olcut,tp):
+    gens=[_bt2g(b,n,olcut,tp) for b in baslar]
+    NF_=len(gens); lim=CAP_ORTAK*NF_
+    msg=[next(g) for g in gens]; bitti=[False]*NF_; son=[None]*NF_
+    poz_son=[np.zeros(C.shape[1]) for _ in gens]
+    t=min(m[0] for m in msg)
+    while not all(bitti):
+        aktif=[j for j in range(NF_) if not bitti[j] and msg[j][0]==t]
+        for j in aktif: poz_son[j]=msg[j][1]
+        for j in aktif:
+            _i,_p,y=msg[j]
+            cev=None
+            if y is not None:
+                diger=sum(poz_son[q] for q in range(NF_) if q!=j)
+                y2=y.copy(); serbest={1:0.0,-1:0.0}
+                for k in np.flatnonzero(y2!=0):
+                    sg=1 if y2[k]>0 else -1
+                    izin=max(0.0,lim-sg*diger[k])
+                    if abs(y2[k])>izin:
+                        serbest[sg]+=abs(y2[k])-izin; _CAPS[0]+=1; _CAPS[1]+=abs(y2[k])-izin
+                        y2[k]=sg*izin
+                if CAP_DAGIT:
+                    for sg in (1,-1):
+                        if serbest[sg]<=0: continue
+                        ad=[k for k in np.flatnonzero(y2*sg>0) if abs(y2[k])<max(0.0,lim-sg*diger[k])-1e-12]
+                        top=sum(abs(y2[k]) for k in ad)
+                        if top<=0: continue
+                        for k in ad:
+                            ek=serbest[sg]*abs(y2[k])/top
+                            y2[k]=sg*min(abs(y2[k])+ek,max(0.0,lim-sg*diger[k]))
+                cev=y2
+            try:
+                msg[j]=gens[j].send(cev)
+            except StopIteration as e:
+                bitti[j]=True; son[j]=e.value
+        t+=1
+    print(f"# CAP_ORTAK={CAP_ORTAK} DAGIT={CAP_DAGIT}: kirpilan bacak {_CAPS[0]}, toplam kirpilan agirlik {_CAPS[1]/NF_:.1f}",flush=True)
+    return son
+
 def calis2(ad,n,olcut):
     # MADDE 338: FAZ_LISTE geri yazildi (madde 325'te eklenmisti, konteyner
     # kaybinda gitti - madde 335). Faz ofsetleri ARTIK LISTE olabilir, yani
@@ -620,7 +683,10 @@ def calis2(ad,n,olcut):
     # (CAGR/Sharpe/dusus) etkilenmemisti cunku onlar E'den gelir; sisen
     # yalniz atif tablolariydi. Artik fiili faz sayisina bolunuyor.
     NF=len(ofs)
-    gs=[bt2(1200+_fz+f,n,olcut,tp=TP).pct_change() for f in ofs]
+    if CAP_ORTAK>0:
+        gs=[x.pct_change() for x in _ortak_kos([1200+_fz+f for f in ofs],n,olcut,TP)]
+    else:
+        gs=[bt2(1200+_fz+f,n,olcut,tp=TP).pct_change() for f in ofs]
     g=pd.concat(gs,axis=1).mean(axis=1).dropna(); E=(1+g).cumprod()
     out=[]
     for p,m in [('tam',E.index>='2022-01-01'),('22-24',E.index<'2025-01-01'),('25-26',E.index>='2025-01-01')]:
