@@ -4755,3 +4755,18 @@ kırpınca Sharpe 22-24'te düşüyor; 25-26'da hafif iyileşme fark etmiyor.
 **Yasa: dilimlerin aynı coinde buluşması bir hata değil sinyalin gücüdür; tek-gün
 kuyruğu o gücün bedeli.** Motor yeteneği (CAP_ORTAK) kalıyor, varsayılan kapalı.
 AYAR DEĞİŞMEDİ.
+
+## Madde 416 — Felaket stop'u (long −%50/−%60, short +%100): ÜÇÜ DE RED
+
+Kontrol bugünkü kitap (zemin 2026-09-30). Yıllık fark / Sh 22-24 / Sh 25-26 / P:
+- SL50: −11..−14 puan, Sh22 +0,21..+0,23, Sh25 −0,04..−0,14, düşüş aynı; P %32-51
+- SL60: −9..−13 puan, Sh22 +0,14..+0,17, Sh25 −0,08..−0,22; P %34-59
+- SL50+S100: −14..−16 puan, Sh22 +0,19..+0,20, Sh25 −0,10..−0,19; P %32-53
+"Nadiren tetiklenir" varsayımı yanlış: bu evrendeki long bacaklar (negatif
+funding, kalabalık short) 5 günlük tutuşta sık sık −%50'yi görüp GERİ DÖNÜYOR —
+H'nin kendisi ertesi gün +%40-50 zıpladı ve funding −%6,7 ödedi (long ALIR).
+Stop dibi satıp dönüşü ve dipteki dev funding'i kaçırıyor. 22-24'te koruma
+işe yarıyor, 25-26'da (daha oynak evren) yaramıyor.
+**Yasa (191'in genişletilmiş hali): bu kitapta long bacağın çöküşü çoğu zaman
+geçicidir ve dipte en yüksek funding'i öder; HİÇBİR genişlikte stop çalışmıyor.**
+AYAR DEĞİŞMEDİ.
