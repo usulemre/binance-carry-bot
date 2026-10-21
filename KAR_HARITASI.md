@@ -4137,3 +4137,24 @@ Sekiz hücrenin sekizi kontrolden kötü (−12..−56 puan); düşüş de iyile
 fiyatlanmış; onların yüksek funding'i kitabın gelirinin büyük parçası
 (özellikle 2025-26). Tutma-süresi teşhisi, TP'li kitabın kararını vermez.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 387 — Aynı coinin USDT ve USDC perp'i arasında funding farkı: RED
+
+Madde 296'nın açık ekseni ("ince quote çiftleri ayrı bir akış"). Veri:
+`indir_usdc.sh` → data_usdc/ (40 USDC perp, funding + 4 sa kline, çoğu
+2024-01'den); betik `arastirma_m387_usdc_usdt.py`. IS 2024 / OOS 2025-26.
+Kural: 3 günlük funding farkı > T ise pahalıyı short, ucuzu long (fiyat
+riski ~0: iki perp arasındaki 4 sa fiyat farkı sd %0,057).
+
+| T (8 sa) | IS Sh | OOS Sh | OOS yıllık 1x | 3x | açık çift |
+|---|---|---|---|---|---|
+| 0,005% | −9,71 | −10,78 | −5,1 | −14,6 | 13,8 |
+| 0,010% | −6,15 | −5,72 | −4,9 | −14,0 | 5,1 |
+| 0,020% | 0,09 | 1,24 | +1,9 | +5,6 | 1,1 |
+| 0,050% (IS seçimi) | 1,24 | 2,19 | +0,8 | +2,6 | 0,1 |
+
+39 çiftte ortalama fark yılda yalnız ~%2 (USDC tarafı daha pahalı).
+Sık işlemde maliyet her şeyi yiyor; seyrek işlemde Sharpe güzel ama
+sermayenin neredeyse tamamı boşta, 3x'te bile yılda +%2,6.
+**Yasa: fiyat riski sıfır olan bir fark, ancak maliyetten büyükse
+kaldıraçla büyütülebilir; burada fark maliyet mertebesinde.** AYAR DEĞİŞMEDİ.
