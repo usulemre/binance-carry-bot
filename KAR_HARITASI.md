@@ -4178,3 +4178,30 @@ yalnız-HODLer düzeninde tahmini %5–15/yıl sermayeye. Carry 2.000 $'da
 +%124; sermayeyi bölmek carry'nin bacağını küçültür (madde 294). Ancak
 bir "Launchpool dönemi" geri gelirse yeniden açılacak eksen.
 AYAR DEĞİŞMEDİ.
+
+## Madde 389 — Makine öğrenmesiyle kesitsel fiyat tahmini (madde 152 bugünkü zeminde): RED
+
+Betik `arastirma_m389_ml_tahmin.py`. 18 özellik (1-90 g getiri, oynaklık,
+funding, hacim oranı, aralık konumu, ls, OI değişimi, taker, beta, yaş);
+hedef ertesi 1 / 5 gün getirisinin kesitsel sırası; ridge ve
+HistGradientBoosting; yürüyen doğrulama (her yıl yalnız önceki veriyle
+eğitim), hiperparametre seçimi yok. Portföy üst/alt %10, maliyet 6 bp.
+
+| model | H | yıllık rank IC (2023 / 24 / 25 / 26) | OOS net Sh | yıllık |
+|---|---|---|---|---|
+| ridge | 1 | +0,087 / +0,097 / +0,126 / +0,104 | −1,22 | −%58 |
+| ağaç | 1 | +0,091 / +0,097 / +0,130 / +0,119 | −0,19 | −%21 |
+| ridge | 5 | +0,113 / +0,123 / +0,160 / +0,160 | −0,74 | −%38 |
+| ağaç | 5 | +0,082 / +0,107 / +0,159 / +0,170 | −0,61 | −%32 |
+
+**Çelişkinin kaynağı (ondalık teşhisi, ağaç H1):** tahminin en düşük
+ondalığı ertesi gün MEDYAN −130 bp, en yüksek +1 bp — sıralama çok iyi.
+Ama ORTALAMA getiriler −3..+10 bp, düz: düşük tahminli coinler yüksek
+oynaklı (|r| 824 bp vs 293), çoğu gün biraz düşüyor ama arada büyük
+pump yapıyor. Sağa çarpık dağılımda medyanı tahmin etmek kolay, ortalamayı
+değil; para ortalamadan kazanılır. Brüt %0,038/gün (Sh 0,26) < maliyet
+%0,051/gün (devir 0,84).
+**Yasa: yüksek rank IC, kârlı bir portföy demek değildir — kripto
+getirileri sağa çarpık; sıra hedefi medyanı öğrenir, pozisyon ortalamayı
+öder.** (Bu, madde 381'in "yükseleni short'lama kaybettiriyor" bulgusunun
+aynı mekanizması.) AYAR DEĞİŞMEDİ.
