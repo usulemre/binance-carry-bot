@@ -4578,3 +4578,22 @@ Kontrol GE2, dört kol x dört hücre:
 GE2'nin kâr alma ayarı bugünkü kitabınkiyle aynı kalıyor; madde 404 ile
 birlikte: **GE2 = yalnız üç evren eşiği değişir, seçim ve hasat ayarları aynı.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 406 — GE2 üzerine sınırdaki adaylar: PRİM ÇARPANI tutarlı (+10, P %88-90), diğerleri RED
+
+Kontrol GE2, P GE2'ye karşı:
+```
+G2P   (prim çarpanı)  +9.5..+10.0  Sh22 +0.08  Sh25 +0.01..+0.03  düşüş −0,1..−0,5  YYYY x4  P %88-90
+G2KE3 (kal. eğim 0,3) +22..+25     Sh22 −0.04..+0.02  Sh25 +0.10..+0.13  düşüş +0,5..+1,7  P %39-61
+G2M   (merdiven 20/33) −2.6..−5.4  Sh25 +0.18..+0.26  düşüş −0,3..−1,5   P %72-84 (risk aracı)
+G2R4  (REB 4 g)       +17..+22     Sh25 −0.19..+0.05  düşüş +0,9..+3,3   P %33-56
+```
+- **Prim çarpanı GE2'yi TAMAMLIYOR:** dört hücrenin dördünde dört şart, iki
+  dönemde de Sharpe artıyor (22-24 +0,08 — GE2'nin zayıf olduğu dönem), düşüş
+  sığlaşıyor. P %88-90: %95 barının hemen altı (eski %80 protokolünde KABUL).
+  Bugünkü kitapta (madde 346/357) rejim aracıydı; GE2 tabanında kayıp tarafı yok.
+- G2P yıllık (2.000 $, 1x): +171..+174, düşüş −15,7..−16,6, 1y p1 −25..−26;
+  1,2x'te +227..+228, p1 −29,5..−30,3, gün 6,9 $.
+- Botta hazır: `CARRY_PRIM_E=0.10` (ref 150 varsayılan).
+**HÜKÜM: protokolle RED (P < %95), ama bu konuşmanın en tutarlı adayı;
+"GE2 + prim" kullanıcı kararı paketi.** AYAR DEĞİŞMEDİ.
