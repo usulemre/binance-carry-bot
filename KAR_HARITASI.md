@@ -4877,3 +4877,22 @@ bacağın yerine giren bacak (havuzdaki sıradaki) ortalama bacaktan iyi değil,
 2022-24'te yer değiştiren bacaklar düşüşü derinleştiriyor.
 **Yasa: kovanın zararı ≠ vetonun kazancı. Atıf "bu bacaklar kaybettirdi" der, "yerine
 daha iyisi vardı" demez; karşı-olgu ancak motorla ölçülür.** AYAR DEĞİŞMEDİ.
+
+## Madde 424 — Dilim aralığı 4 / 8 / 12 / 24 sa (gerçekçi model): 8 sa YERİNDE
+
+| aralık (faz) | 2.000 $ hz0 / hz1 | 3.500 $ hz0 / hz1 | tam düşüş |
+|---|---|---|---|
+| 4 sa (30) | +128,6 / +128,5 | +127,7 / +127,5 | −22,1 / −20,0 |
+| **8 sa (15, bugün)** | +123,1 / +134,0 (ort 128,6) | +124,4 / +130,9 (ort 127,7) | −22,4..−19,9 |
+| 12 sa (10) | +121,6 / +129,7 | +123,8 / +127,0 | −16,1..−25,7 |
+| 24 sa (5) | +129,0 / +149,1 | +128,1 / +139,2 | −18,8..−25,8 |
+- 30 faz iki hizada BİREBİR aynı ve 15 fazın iki hizasının ORTALAMASINA eşit: 4 sa
+  dilimleme beklentiyi değiştirmiyor, yalnız hiza şansını sıfırlıyor (zaten 15'te
+  ±5 puan). Bedeli: iki kat emir, yarı büyüklükte bacak (2.000 $'da ~7 $ → asgari
+  işlem ve evren riski motorda yalnız yaklaşık).
+- 10 ve 5 faz hiza şansını BÜYÜTÜYOR (5 fazda +129 ile +149 arası, düşüş −18,8..−25,8):
+  madde 184'ün "faz kumarı" bulgusu bugünkü kitapta da geçerli.
+- Kararlar (madde 375): hiçbiri iki hizada %95 geçmiyor (FZ30 hz0 P %96 ama hz1 %8 —
+  aynı serinin iki farklı kontrol hizasına karşı ölçülmesi).
+**8 sa / 15 dilim yerinde; 4 sa yalnız hiza şansını yok etmek isteyen için,
+sermaye ≥3.500 $ iken düşünülebilir.** AYAR DEĞİŞMEDİ.
