@@ -4057,3 +4057,28 @@ UCELE kapatılınca da (MQ20_UC0) RED.
 kitabın SEÇİMİNE filtre olarak eklenince o kitabın gelirini kesebilir —
 iki kitap aynı coinlerde zıt yönden para kazanıyor olabilir.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 384 — Çift ticareti ve oynaklık sıkışması kırılımı: İKİSİ DE RED
+
+Projede hiç denenmemiş iki aile; madde 381'in örnek dışı yöntemiyle (seçim
+yalnız IS 2022-04..2024-12, IS'te en iyi tek kol OOS 2025-01..2026-08'de;
+kabul: OOS Sh >= 1,0, plaseboyu >= 0,5 geçer, carry rho <= 0,30).
+Betik: `arastirma_m384_cift_sikisma.py`.
+
+| Aile | Kol (IS'te seçilen) | IS Sh | OOS Sh | OOS plasebo | rho | düşüş |
+|---|---|---|---|---|---|---|
+| Çift ticareti (90 g korelasyon, 60 g z-skor) | K30, giriş 2,5 | 0,28 | −0,56 | −1,59 | +0,04 | −%63 |
+| Sıkışma kırılımı (20 g aralık, 180 g yüzdelik) | Q0,10, H3, iki yön | 0,54 | −0,01 | −1,31 | +0,06 | −%48 |
+
+- Çift ticareti: 6 kolun 6'sı da OOS'ta negatif (−0,56..−1,75); IS'te bile
+  en iyi 0,28. Kripto çiftlerinde açılan fark kapanmıyor — genelde birinin
+  hikâyesi değişmiş oluyor (listeleme, haber, token açılışı); ortalamaya
+  dönüş yerine kalıcı kopuş.
+- Sıkışma: 12 kolun hiçbiri iki dönemde birden 0,5'i geçmiyor; yalnız
+  long kollar BTC betasıyla (+0,2..+0,5) sürükleniyor, alfa yok.
+- Korelasyon carry ile ~0 — çeşitlendirici olabilirdi, ama getiri yok.
+
+**Yasa: kripto perp evreninde ortalamaya dönüş (çift) ve kırılım (sıkışma)
+günlük ölçekte maliyet sonrası para kazandırmıyor; carry'nin kaynağı
+(kalabalık funding) bu iki fiyat davranışından bağımsız.**
+AYAR DEĞİŞMEDİ.
