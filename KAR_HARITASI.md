@@ -4414,3 +4414,31 @@ bot ayarı `CARRY_MIN_LISTING_DAYS` (varsayılan 90); 60 seçilirse beklenen
 
 −%30 içinde: yaş 60 g @1,25x, bugünkü 90 g @1,25x'ten +23..+30 puan. Sınır
 çizgisinde yukarı kayış — ama tamamı madde 397'nin P %67-86 kanıtına bağlı.
+
+## Madde 398 — Pump/dump x funding işareti (kullanıcının cockpit ekranından): REJİM ARACI, RED
+
+Kullanıcının ekranı: DOOD +%198 / funding −%0,24, GTC 30 g +%277 / funding
+−%0,17 → "kalabalık hareketin yanlış tarafında". Betik
+`arastirma_m398_pump_funding.py`; günlük, gerçek funding, 10 bp, t GÜN
+kümesinde (madde 395'in yasası).
+
+| olay → yön, 7 g | 22-24 ort / gün-t | 25-26 ort / med / gün-t | 25-26 p5 |
+|---|---|---|---|
+| pump ≥%30, f>0 → SHORT | −1,4% / −0,46 | **+7,2% / +14,4% / +4,31** | −56 |
+| pump ≥%50, f>0 → SHORT | −3,1% / −0,23 | **+14,3% / +21,3% / +5,07** | −68 |
+| pump ≥%30, f<0 → LONG | −3,2% / −1,09 | +4,7% / −11,0% / +0,75 | −45 |
+| dump ≤−%15, f<0 → LONG | +2,6% / +0,66 | +5,3% / −2,5% / +1,03 | −37 |
+| dump ≤−%15, f>0 → SHORT | −3,1% / −0,30 | +0,3% / +1,6% / +0,06 | −43 |
+
+- Pump'ta funding pozitifken (long kalabalık) short: 2025-26'da güçlü
+  (gün-t 4-5, medyan +%14..+21) — ama 2022-24'te NEGATİF. Madde 379/380'in
+  bulduğu tek-rejim işaretiyle aynı: 2023-24 boğasında pump'lar devam etti,
+  2025-26'da geri veriyor.
+- Pump'ta funding negatifken long (DOOD tipi): ortalama + ama medyan −%11,
+  birkaç dev sıkışma taşıyor; iki dönemde de anlamsız.
+- Kuyruk ağır: short p5 −%56..−68 (madde 203'ün sıkışma kuyruğu).
+**Hüküm: iki dönem şartı geçmiyor → RED; "pump + pozitif funding short"
+REJİM ARACI olarak kayıtta (25-26'da çalışıyor, 22-24'te kaybettiriyor).**
+Not: kullanıcının cockpit'inde "DÜNKÜ" sütunu 24 sa %'si ile tutarsız
+(AGT 0,04537 / 0,02126 ama −%31,4) — veri hatası olabilir.
+AYAR DEĞİŞMEDİ.
