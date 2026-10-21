@@ -108,6 +108,11 @@ KOM=float(os.environ.get("KOM","0.0002"))
 AKW=float(os.environ.get("AKIS","0.2")); TPX=float(os.environ.get("TP","0.7"))
 SLL=float(os.environ.get("SLL","0"))   # LONG bacak stop (0=kapali)
 SLS=float(os.environ.get("SLS","0"))   # SHORT bacak stop
+# MADDE 417: KAR HEDEFI SIFIRLAMA. Bacak girisinden aleyhe TP_SIFIRLA kadar gidince
+# kar-al referansi o anki kapanisa tasinir (islem YOK, yalniz TP seviyesi). Cokus
+# sonrasi toparlanmada eski dilimler de hasat eder (madde 414: H). 0 = kapali.
+TP_SIFIRLA=float(os.environ.get("TP_SIFIRLA","0"))
+TP_SIF_TARAF=os.environ.get("TP_SIF_TARAF","iki")   # iki | long | short
 UCELE=float(os.environ.get("UCELE","0"))   # 0=kapali. >=UCELE pump long adayi OLAMAZ
 MOM_Q=float(os.environ.get('MOM_Q','0'))   # madde 383: 0 = kapali
 _MOMV=None
@@ -469,6 +474,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 e=giris[k]
                 if not (np.isfinite(e) and np.isfinite(cv[i,k]) and cv[i,k]>0 and np.isfinite(HV[i+1,k]) and np.isfinite(LV[i+1,k])): continue
                 uzun=poz[k]>0
+                if TP_SIFIRLA>0 and (TP_SIF_TARAF=='iki' or (TP_SIF_TARAF=='long')==uzun):
+                    if (uzun and cv[i,k]<=e*(1-TP_SIFIRLA)) or ((not uzun) and cv[i,k]>=e*(1+TP_SIFIRLA)):
+                        giris[k]=cv[i,k]; e=cv[i,k]
                 if TAKIP_BAS>0:
                     zirve[k]=max(zirve[k],HV[i+1,k]) if uzun else min(zirve[k],LV[i+1,k])
                     kar=(zirve[k]/e-1) if uzun else (1-zirve[k]/e)
