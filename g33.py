@@ -114,6 +114,18 @@ _MOMV=None
 if MOM_Q>0:
     import pickle as _pk5
     _MOMV=_pk5.load(open(os.environ.get('MOM_DOSYA','/tmp/mom5_panel.pkl'),'rb')).reindex(index=C.index,columns=C.columns).values
+# MADDE 386: SPOT SARTI. Spot piyasasi olmayan perp'te arbitrajci funding'i
+# bastiramaz; OOS'ta en yuksek funding short adaylarinin %72'si spotsuz ve
+# kuyrugu iki kat derin. SPOT_SART='short' -> yalniz (onceki ayda) spotu olan
+# coin SHORT adayi olur; 'iki' -> spotsuz coin hic aday olmaz. Bos -> parite.
+_SPOT=os.environ.get('SPOT_SART','').strip()
+_SPV=None
+if _SPOT:
+    import json as _js, pandas as _pds
+    _J=_js.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)),'data_spot_varlik.json')))
+    _ay=(_pds.DatetimeIndex(C.index).to_period('M')-1).astype(str)
+    _SPV=np.column_stack([np.isin(_ay,_J.get(str(c_),{}).get('aylar',[])) for c_ in C.columns])
+    print(f"# SPOT_SART={_SPOT}: spotlu pay {_SPV.mean():.2f}",flush=True)
 _uc6=int(os.environ.get("UCGERI","6"))
 _UART=np.full_like(cv,np.nan); _UART[_uc6:]=cv[_uc6:]/np.where(cv[:-_uc6]>0,cv[:-_uc6],np.nan)-1
 SSEC=os.environ.get("SSEC","funding")  # funding|rast|voldus|volyuk|btc
@@ -316,6 +328,14 @@ def bt2(bas,n,olcut=None,tp=None):
                 _sr2=np.where(g,S[i],np.nan)
                 _md2=np.nanmedian(_sr2) if np.isfinite(_sr2).any() else 0.0
                 g=g&~(_yuk&(_sr2>_md2))&~(_dus&(_sr2<_md2))
+            if _SPV is not None:
+                _sp=_SPV[i]
+                if _SPOT=='iki':
+                    g=g&_sp
+                else:
+                    _sr3=np.where(g,S[i],np.nan)
+                    _md3=np.nanmedian(_sr3) if np.isfinite(_sr3).any() else 0.0
+                    g=g&~(~_sp&(_sr3>_md3))
             ix=np.flatnonzero(g)
             _nl=N_L if N_L>0 else n; _ns=N_S if N_S>0 else n
             # her iki taraf da ayni havuzdan beslenir; havuz en buyuk

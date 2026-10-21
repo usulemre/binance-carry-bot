@@ -4117,3 +4117,23 @@ maliyeti ister, kurtarılan en fazla birkaç bp. Uygulanabilir değil.
 **Yasa: bir anomalinin t'si yüksek olabilir ve yine de para etmeyebilir —
 günlük tekrarlanan bir 4 saatlik pencerede kenar, gidiş-dönüş maliyetini
 (12 bp) geçmek zorunda; bu geçmiyor.** AYAR DEĞİŞMEDİ.
+
+## Madde 386 — Spot şartı (spotsuz coini short'lama / hiç seçme): RED
+
+Veri: `indir_spot_varlik.py` → `data_spot_varlik.json` (data.binance.vision
+spot 1d aylık anahtarları; 850 perp'in 475'inin spotu var; nedensel = önceki
+ayda spot var). Motor ayarı `SPOT_SART` (g33, varsayılan boş = parite).
+Teşhis (panel, 5 gün tutma, TP yok): OOS'ta yüksek funding short adaylarının
+%72'si spotsuz, kuyruk iki kat derin (p1 −154 vs −63).
+
+| kol | 2000/0 | 2000/1 | 3500/0 | 3500/1 | 25-26 (2000/0) |
+|---|---|---|---|---|---|
+| kontrol (15x4 HAVUZ 4) | +123,7 | +130,8 | +126,0 | +127,4 | +148,4 |
+| SPS (spotsuz short olamaz) | +111,5 | +115,9 | +112,5 | +114,6 | +122,2 |
+| SPI (spotsuz hiç aday olamaz) | +75,2 | +82,2 | +76,3 | +81,6 | +46,1 |
+
+Sekiz hücrenin sekizi kontrolden kötü (−12..−56 puan); düşüş de iyileşmiyor.
+**Yasa: TP hasadı ve rezerv olan kitapta spotsuz coinlerin derin kuyruğu zaten
+fiyatlanmış; onların yüksek funding'i kitabın gelirinin büyük parçası
+(özellikle 2025-26). Tutma-süresi teşhisi, TP'li kitabın kararını vermez.**
+AYAR DEĞİŞMEDİ.
