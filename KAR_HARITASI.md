@@ -4298,3 +4298,26 @@ aleyhine koşuyor demektir ve koşmaya devam ediyor; dolmadığında da girişi
 kaçırıyorsun (madde 193'ün konveks gecikme maliyeti). Kalabalığa karşı
 pozisyonda "daha iyi fiyat" beklemek kalabalığın daha da büyümesini
 beklemektir.** AYAR DEĞİŞMEDİ.
+
+## Madde 394 — Spot listeleme olayı ("haberi sat" short'u): RED; ters yön (long) açık eksen, örnek küçük
+
+Veri: `indir_spot_ilk_gun.py` → data_spot_ilk_gun.json (475 spotlu perp'in
+ilk spot günü). Olay: perp en az 14 gün önce işlem görüyor, sonra Binance
+spotta listeleniyor (TradFi hariç). 43 olay (2023: 2 · 2024: 5 · 2025: 25 ·
+2026: 11). Giriş listeleme günü 04 UTC kapanışı, gerçek funding, 10 bp.
+
+| short tutma | 2022-24 (n 7) ort | 2025-26 (n 36) ort / med | p5 | t (tüm) |
+|---|---|---|---|---|
+| 1 gün | −1,1% | **−10,8% / −0,9%** | −66 | −1,55 |
+| 3 gün | −3,4% | −7,5% / +1,1% | −73 | −1,24 |
+| 7 gün | −5,2% | −2,4% / +6,9% | −87 | −0,47 |
+| 14 gün | −6,3% | +5,4% / +10,3% | −60 | +0,63 |
+
+BTC-nötr hali aynı. "Haberi sat" YOK: listeleme günü perp birkaç olayda
+çok sert pump yapıyor (short'un p5'i −%66), sonra 2 haftada yavaşça geri
+veriyor (14 g medyan +%10). İki yönde de t < 1,6, 43 olay; listeleme
+DUYURUSU (genelde birkaç gün önce) veride yok — gerçek giriş anı odur.
+**Açık eksen:** (a) listeleme günü long 1 gün (ort +%10,8, medyan +%0,9 —
+çarpık, birkaç pump taşıyor), (b) listelemeden 3 gün sonra short 14 gün.
+Olay sayısı yılda ~25-35; 2027 sonunda ~80 olayla yeniden ölçülmeli.
+AYAR DEĞİŞMEDİ.
