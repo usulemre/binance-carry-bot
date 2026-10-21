@@ -4539,3 +4539,23 @@ GE1 = yaş 60 + UCELE 0 · GE2 = GE1 + hacim 70M. Yıllık (2.000/0): kontrol +1
 bot ayarları: `CARRY_MIN_LISTING_DAYS=60`, uç hareket elemesi kapalı, hacim
 eşiği 70M. Beklenen: 25-26 tipi piyasada +%30-40 puan/yıl, 22-24 tipinde ~0.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 403 — Geniş evrenin sınırı: TEPE GE2'de
+
+```
+kol  bak hz  yillik  Sh22  Sh25  dusus  esitR  kald 4sart   P%    med
+GE3  2000 0   +27.6 -0.14 +0.68  +2.5   -0.5  0.86  XYXY  51.8   +2.3
+GE3  2000 1   +16.8 -0.31 +0.47  +1.5   -0.4  0.92  XYXY  35.4  -17.8
+GE3  3500 0   +20.9 -0.15 +0.43  +5.7  -33.4  0.71  XXXY  40.9  -11.6
+GE3  3500 1   +18.1 -0.15 +0.29  +4.4  -26.6  0.77  XXXY  33.1  -18.4
+GE4  2000 0   +38.0 -0.02 +0.74  +0.6  +29.6  0.96  XYYY  71.8  +26.4
+GE4  2000 1   +32.5 -0.10 +0.66  +1.5  +13.1  0.92  XYYY  55.4   +5.2
+GE4  3500 0   +41.2 +0.01 +0.77  +1.4  +20.6  0.91  YYYY  73.0  +24.4
+GE4  3500 1   +36.9 +0.09 +0.54  +3.3   -4.0  0.82  YXXY  57.1   +8.3
+```
+GE3 (yaş 45, hacim 50M, UCELE 0, donuk kapalı): fazla geniş — 22-24 Sharpe
+−0,14..−0,31, tam düşüş −%19..−22 (kontrol −%17..−18), eşit-riskte sıfır/eksi.
+GE4 (GE2 + donuk kapalı): GE2 ile aynı getiri, düşüş 1-3 puan derin → donuk
+filtresi kalmalı. **Tepe GE2 (yaş 60, hacim 70M, UCELE 0, donuk 0,10).**
+Ötesinde 2022-24'te kayıp başlıyor — "asimetrik bahis" özelliği kayboluyor.
+Hepsi RED (P ≤ %73). AYAR DEĞİŞMEDİ.
