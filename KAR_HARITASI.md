@@ -4205,3 +4205,25 @@ değil; para ortalamadan kazanılır. Brüt %0,038/gün (Sh 0,26) < maliyet
 getirileri sağa çarpık; sıra hedefi medyanı öğrenir, pozisyon ortalamayı
 öder.** (Bu, madde 381'in "yükseleni short'lama kaybettiriyor" bulgusunun
 aynı mekanizması.) AYAR DEĞİŞMEDİ.
+
+## Madde 390 — ML sıkışma olasılığıyla carry short vetosu: RED (veto büyüdükçe monoton kötüleşiyor)
+
+Betik `arastirma_m390_sikisma_vetosu.py` (panel /tmp/m390_veto_panel.pkl,
+teşhis betiği oturum notunda). Sınıflandırıcı AUC 0,66/0,62/0,71/0,80
+(2023-26, yürüyen) — sıkışmayı gerçekten seziyor; panel teşhisinde 2025-26
+short adaylarının ort/sd'si 0,027 → 0,063.
+
+| hücre (yıllık %) | kontrol | q0,05 (%10 veto) | q0,10 (%20) | q0,15 (%30) |
+|---|---|---|---|---|
+| 2000 / 0 | +123,7 | +118,3 | +110,8 | +106,4 |
+| 2000 / 1 | +130,8 | +121,2 | +112,8 | +108,8 |
+| 3500 / 0 | +126,0 | +115,0 | +107,9 | +106,0 |
+| 3500 / 1 | +127,4 | +117,2 | +109,6 | +106,9 |
+| 25-26, 2000/0 | +148,4 | +139,6 | +128,9 | +122,1 |
+
+Düşüş de iyileşmiyor (−18,2 → −18,3 / −18,5 / −17,3).
+**Yasa: kitabın TP hasadı ve rezervi sıkışma kuyruğunu zaten yönetiyor; ML'nin
+"riskli" bulduğu coinler aynı zamanda en yüksek funding ve en büyük short
+TP hasadının olduğu coinler — kuyruğu kesmek, onu fiyatlayan geliri kesiyor
+(madde 191, 383, 386'nın dördüncü örneği). Panel teşhisi (TP'siz 5 gün
+tutma) TP'li kitabın kararını vermez.** AYAR DEĞİŞMEDİ.
