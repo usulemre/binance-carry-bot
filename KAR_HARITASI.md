@@ -4637,3 +4637,15 @@ Tek başına bakınca XAU'nun +%13'ü büyük görünüyordu ama aynı dönemde
 öbür altın perp'leri de ödüyor; fark yılda birkaç puan, yönü dönüyor.
 **Yasa (387'nin ikinci örneği): aynı dayanaktaki funding farkı arbitrajcılar
 tarafından maliyet mertebesine bastırılıyor.** AYAR DEĞİŞMEDİ.
+
+## Madde 410 — G2P üzerinde KAP / pencere / prim duyarlılığı / rezerv: hepsi RED
+
+Kontrol M357_G2P:
+- KAP 0,08: +8,8..+9,5 puan ham, Sharpe ±0,02, düşüş +1,1..+1,4 derin → doz; P %44-50.
+- 36 sa pencere: −5..−15 puan, düşüş +1,4..+2,9 derin; P %8-30. 48 sa yerinde.
+- **BRUT_PRIM 0,15: +5,4..+5,7 puan, dört hücrenin 3'ünde dört şart, 22-24 Sharpe
+  +0,04, düşüş değişmiyor; P %83-86** — prim duyarlılığının dozu, tutarlı ama
+  bar altı (0,10 → 0,15 ek getirinin çoğu brütün yükselmesi).
+- REZ_ESIK 0,010: +4..+6 puan, düşüş +0,7..+2,1 derin; P %17-24 → doz.
+**G2P'nin ayarları komşularında platoda; prim 0,15 en tutarlı ek (+5) ama kanıt
+yetersiz.** AYAR DEĞİŞMEDİ.
