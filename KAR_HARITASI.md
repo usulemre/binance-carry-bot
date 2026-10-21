@@ -4671,3 +4671,29 @@ Sharpe'ı 2025'te negatif), IRFA 2024 "anomalies and economic constraints"
 - Size mikro coin etkisi likit evrende yok.
 **Literatürün sinyalleri bizim evrende (likit perp, gerçek funding + maliyet)
 carry'ye bir şey eklemiyor.** AYAR DEĞİŞMEDİ.
+
+## Madde 412 — GERÇEK ÖRNEK DIŞI: Eylül 2026 — G2P bugünkü kitabın GERİSİNDE (−0,7..−4,3 puan)
+
+Zemin `indir_ek_ay.py 2026-09` + `yeniden_kur.py` ile 30 Eyl 2026'ya uzatıldı.
+**İlk deneme geçersizdi — kendi ekleme betiğimin hatası:** gece yarısı tek barlı
+günlerde tarih saatsiz yazılmış ("2026-09-01"); karışık biçim okuyucuda tarih
+kolonunu metne çevirdi ve 480 sembolün kalabalık oranı GEÇMİŞİNİN TAMAMI boş
+okundu (eski dönemde G2P −7..−10 puan/yıl kaydı). Teşhis: eski zeminle motor
+birebir (+%123,7) → kod sağlam; girdi NaN deseni karşılaştırması → metrik
+paneli. Düzeltme: açık tarih biçimi + delist sonrası sıfır satırlar atılıyor.
+Düzeltilmiş parite: 2022-07..2026-08 farkı 0,00 (dört hücre, iki kitap).
+
+| hücre | Eylül: bugün | Eylül: G2P | fark | geçmiş aylık fark ort / sd | Eylül'ün yüzdeliği |
+|---|---|---|---|---|---|
+| 2000/0 | +6,46% | +4,31% | −2,15 | +1,90 / 5,54 | %26 |
+| 2000/1 | +8,84% | +6,66% | −2,19 | +1,73 / 6,64 | %26 |
+| 3500/0 | +6,61% | +5,88% | −0,74 | +1,92 / 5,28 | %36 |
+| 3500/1 | +9,51% | +5,26% | −4,25 | +1,78 / 5,87 | %10 |
+
+- Tek ay: aylık fark sd ~5,5 puan, Eylül olağan aralıkta (yüzdelik %10-36) →
+  tek başına karar değiştirmez. G2P'nin Eylül düşüşü 3 hücrede daha sığ.
+- **Ama uyarı:** son üç ay üst üste G2P geride — Tem −6,8..−9,2, Ağu −5,0..−15,6
+  (örnek içi), Eyl −0,7..−4,3 (örnek dışı). 2025-26'nın "geniş evren" kazancı
+  soğuyor olabilir (yeni listeleme/kalabalık dalgasının sönmesi).
+**Hüküm: G2P için yeşil ışık YOK; Ekim verisi (Kasım başı) ile yeniden ölç.**
+AYAR DEĞİŞMEDİ.
