@@ -4842,3 +4842,20 @@ fazladan yanlış-alarm koruması). Tam dönem düşüşü KAYMA'da D8 22,4 / D2
 payı +0,6 / +0,9 puan (ince ama pozitif). **carry_rapor eşikleri DEĞİŞMEDİ.**
 Not: sabit ağırlıklı HAVUZ 4 kitabı eşiği (−21,−27)'ye daraltırdı — kaymasız ölçümle
 güncellenmiş olsaydı alarm gerçek düşüşte boşa çalardı.
+
+## Madde 422 — "Çok fazla coin alıyor" denetimi (2026, bugünkü kitap): coin sayısı sorun değil
+
+Günde ~29 farklı coin (16 L / 12 S), 9'u %1'den küçük gün-ortalama ağırlıkta.
+Ağırlık kovasına göre birim ağırlık başına günlük getiri (2026, iki hiza):
+| | <%0,5 | %0,5-1 | %1-2 | %2-4 | %4-8 | >%8 |
+|---|---|---|---|---|---|---|
+| LONG brüt payı / bp | %1,7 / 486 | %6,9 / 96 | %15,7 / 140 | %31,0 / 31 | %33,4 / 41 | %11,3 / **2,5** |
+| SHORT brüt payı / bp | %1,1 / 453 | %5,0 / 58 | %8,4 / 85 | %20,3 / 21 | %38,1 / 37 | %27,1 / **4,0** |
+- Küçük kovalar ölçüm etkisiyle şişkin: gün içi TP ile kapanan bacak gün-ortalama
+  ağırlıkta küçük görünür ama hasadı taşır. Yine de küçük bacaklar KÖTÜ DEĞİL.
+- En büyük kova (çok dilimin aynı coinde buluştuğu, >%8) 2026'da birim başına en az
+  kazanan: L +6 $ / S +23 $ (brütün %11 / %27'si). Ama madde 415: tam dönemde tavan
+  kaybettiriyor (2022-24'te yoğunlaşma gelirdi) → 2026'ya özgü, eyleme dönmez.
+- Tutma gününe göre (motorun kendi dökümü): L net 1.gün +15,9 → 5.gün +5,6 yıllık
+  puan; S +7,4 → +3,2. Her gün pozitif; bayat bacak yok.
+AYAR DEĞİŞMEDİ.
