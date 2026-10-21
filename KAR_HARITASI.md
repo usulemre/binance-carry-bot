@@ -4082,3 +4082,38 @@ Betik: `arastirma_m384_cift_sikisma.py`.
 günlük ölçekte maliyet sonrası para kazandırmıyor; carry'nin kaynağı
 (kalabalık funding) bu iki fiyat davranışından bağımsız.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 385 — 00 UTC funding ödemesinden sonraki 4 saat: GERÇEK ANOMALİ, YAKALANAMIYOR → RED
+
+Betik: `arastirma_m385_odeme_sonrasi.py` (teşhis + ön kayıtlı strateji).
+
+**Teşhis (yeni bir yapısal bulgu).** 00 UTC ödemesinden HEMEN SONRAKİ bar
+(00–04 UTC) içinde, son bilinen funding'e göre üst ondalık − alt ondalık
+getirisi (8 saatlik coinler, TradFi hariç, hacim >= 20M$):
+
+| ölçü | fark | t |
+|---|---|---|
+| ham | +33,7 bp | +3,9 |
+| son 24 sa + son 4 sa getiriden arındırılmış | +24,8 bp | +5,4 |
+| hacim >= 100M$ | +56,0 bp | +3,3 |
+| ödemesiz barlar (04/12/20) | ~0 | <1 |
+| 08 ve 16 ödemeleri sonrası | tutarsız | — |
+
+Yıllar: 2022 +47 · 2023 −3 · 2024 +55 · 2025 +32 · 2026 +27 bp. Yüksek
+funding'li (long kalabalık) coin 00–04 UTC'de düşük funding'liyi geçiyor —
+**carry kitabının ters yönü**, ve yalnız günün İLK ödemesinden sonra.
+
+**Strateji olarak (ön kayıtlı, IS seçim / OOS sınav):** 00:00'da üst q long,
+alt q short, 04:00'da çık (hiç ödeme anından geçmez), maliyet 12 bp/gün.
+IS'te seçilen q0,10 50M → OOS Sh **0,22** (yıllar +0,70 / −0,52 / +2,31 /
+−0,54 / +1,08). Brüt kenar ~17 bp/gün, maliyet 12 bp; ondalık başına
+yalnız 2–3 coin → gürültü. **RED.**
+
+**Carry içinde:** kitabın kendi 4 sa getirisi saate göre (4 kontrol hücresi
+aynı): 00–04 barı IS +1,5 / OOS −1,8 bp, diğer barlar +4..+8 bp. Etki
+kitapta görünüyor, ama o 4 saati boş geçmek en az 4–10 bp/gün devir
+maliyeti ister, kurtarılan en fazla birkaç bp. Uygulanabilir değil.
+
+**Yasa: bir anomalinin t'si yüksek olabilir ve yine de para etmeyebilir —
+günlük tekrarlanan bir 4 saatlik pencerede kenar, gidiş-dönüş maliyetini
+(12 bp) geçmek zorunda; bu geçmiyor.** AYAR DEĞİŞMEDİ.
