@@ -4814,3 +4814,16 @@ dengeleme (çöken bacak kâğıt üzerinde tamamlanıyor). g33'e `AGIRLIK_KAYMA
 - Çöküş sonrası toparlanma sabit ağırlıkta şişiyordu (H haftası +37 → −25 $).
   **Savunma çıkışları (416, 417) sabit ağırlıkla ölçüldü — kaymalı yeniden ölçülmeli.**
 Varsayılan (0) değişmedi; yayımlanmış sayılar sabit ağırlık modeline aittir.
+
+## Madde 420 — Savunmalar GERÇEKÇİ AĞIRLIK KAYMASIYLA (kontrol: KAYMA kitabı): hâlâ RED, fark küçüldü
+
+| kol | yıllık fark | Sh 22-24 | Sh 25-26 | düşüş | eşit-risk | P |
+|---|---|---|---|---|---|---|
+| long stop −%50 | −7,0..−7,4 | +0,05..+0,06 | −0,12..−0,14 | 0 | −7 | %9-16 |
+| long stop −%60 | −5,1..−6,7 | +0,02..+0,04 | −0,13..−0,19 | 0 | −5..−7 | %6-18 |
+| TP sıfırlama %30 | −5,5..−7,4 | +0,11..+0,12 | −0,17..−0,25 | **−1,7..−2,5 sığ** | **+12..+23** | %54-64 |
+Sabit ağırlıkta stop'un maliyeti −9..−16 puandı; kaymalı modelde −5..−7 (madde 419'un
+öngördüğü gibi şişkinlik azaldı) ama yine negatif ve düşüşü HİÇ iyileştirmiyor.
+TP sıfırlama kaymalı modelde RİSK ARACI sınıfına geçiyor: getiri −6, düşüş ~2 puan
+sığ, eşit riskte +12..+23 ama P %54-64 — merdiven (366) gibi kullanıcı kararı.
+AYAR DEĞİŞMEDİ.
