@@ -4859,3 +4859,21 @@ Ağırlık kovasına göre birim ağırlık başına günlük getiri (2026, iki 
 - Tutma gününe göre (motorun kendi dökümü): L net 1.gün +15,9 → 5.gün +5,6 yıllık
   puan; S +7,4 → +3,2. Her gün pozitif; bayat bacak yok.
 AYAR DEĞİŞMEDİ.
+
+## Madde 423 — Tam dönem katkı atfı → long kalabalık vetosu (LS_L_MAKS): RED
+
+Atıf (`arastirma_m423_segment.py`, gerçekçi model, 2.000 $, 9 özellik x 5 kova x 2 taraf =
+90 kova): iki dönemde de zarar eden TEK kova = long bacak, log(long/short hesap) üst
+beşte bir: 22-24 −150 $/yıl, 25-26 −127 $/yıl. En çok kazandıran: aynı oranın en düşük
+beşte biri (+928 / +1.221). Toplam 22-24 +1.621, 25-26 +1.944 $/yıl.
+Veto (g33 `LS_L_MAKS`, kontrol M357_KAYMA):
+| eşik | yıllık fark | Sh 22-24 | Sh 25-26 | düşüş | eşit-risk | P |
+|---|---|---|---|---|---|---|
+| 0,80 | −0,8..+4,9 | −0,06..+0,02 | 0..+0,19 | 0..+0,9 derin | −6..+2 | %48-79 |
+| 0,64 | −1,3..+5,3 | −0,17..+0,01 | +0,08..+0,14 | +1,0..+2,1 derin | −8..−17 | %25-55 |
+| 0,50 | −3,0..+6,4 | −0,22..−0,04 | +0,15..+0,25 | +1,8..+2,6 derin | −11..−23 | %20-54 |
+Atıfta 22-24'te en net zarar eden kova, vetoda 22-24'ü KÖTÜLEŞTİRİYOR. Sebep: elenen
+bacağın yerine giren bacak (havuzdaki sıradaki) ortalama bacaktan iyi değil, ve
+2022-24'te yer değiştiren bacaklar düşüşü derinleştiriyor.
+**Yasa: kovanın zararı ≠ vetonun kazancı. Atıf "bu bacaklar kaybettirdi" der, "yerine
+daha iyisi vardı" demez; karşı-olgu ancak motorla ölçülür.** AYAR DEĞİŞMEDİ.
