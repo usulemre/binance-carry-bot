@@ -4559,3 +4559,11 @@ GE4 (GE2 + donuk kapalı): GE2 ile aynı getiri, düşüş 1-3 puan derin → do
 filtresi kalmalı. **Tepe GE2 (yaş 60, hacim 70M, UCELE 0, donuk 0,10).**
 Ötesinde 2022-24'te kayıp başlıyor — "asimetrik bahis" özelliği kayboluyor.
 Hepsi RED (P ≤ %73). AYAR DEĞİŞMEDİ.
+
+## Madde 404 — GE2 kitabında kalabalık havuzu: HAVUZ 4 yerinde (3 ve 5 RED)
+
+Kontrol GE2. HAVUZ 3: GE2'ye −2,6..−8,7 puan (P %17-37); HAVUZ 5: −6,7..+1,6
+(P %23-59). İkisi de bugünkü kitaba göre hâlâ +23..+34 puan → **GE2'nin kazancı
+havuz ayarına duyarlı değil** (komşularda platoda). HAVUZ 4 GE2'de de en iyi.
+Sağlamlık notu: GE2'nin avantajı kalabalık seçim ayarından bağımsız, evren
+kanalından geliyor. AYAR DEĞİŞMEDİ.
