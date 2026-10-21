@@ -4012,3 +4012,48 @@ HUKUM w=0.2: RED (0/4)
 **AYAR DEĞİŞMEDİ.** Kullanıcının sorusunun cevabı: yükseleni short'lamak
 hiçbir ufuk kombinasyonunda çalışmıyor; tersi (momentum) çalışıyor ama
 carry'ye kanıtlanabilir değer katmıyor ve küçük sermayede kurulamıyor.
+
+---
+
+## MADDE 383 — ÇOK UFUKLU MOMENTUM VETOSU: RED, VE VETO ARTTIKÇA KÖTÜLEŞİYOR
+
+```
+MQ10   2000  0    -4.9 +0.01 -0.02   +0.0    -5.3  1.00  XYXY  42.4   -2.2
+MQ10   2000  1    -6.5 +0.04 -0.14   -0.2    -4.1  1.01  XYXX  42.3   -1.7
+MQ10   3500  0    -6.1 +0.01 -0.06   +0.5   -11.4  0.97  XYXY  35.0   -4.3
+MQ10   3500  1    -7.0 +0.04 -0.16   -1.3    +9.4  1.10  XYYX  58.3   +2.4
+HUKUM MQ10: RED
+
+MQ20   2000  0    -7.2 -0.00 -0.05   +1.3   -18.9  0.92  XYXY  32.6   -8.5
+MQ20   2000  1    -8.9 -0.03 -0.11   +0.4   -13.0  0.97  XYXY  41.3   -4.4
+MQ20   3500  0    -9.7 -0.01 -0.12   +0.8   -17.6  0.95  XYXY  36.5   -6.9
+MQ20   3500  1    -7.3 +0.09 -0.18   -0.5    -1.7  1.03  XYXX  52.6   +1.5
+HUKUM MQ20: RED
+
+MQ30   2000  0   -13.3 -0.04 -0.17   -1.6    +3.4  1.11  XYYX  41.1   -4.9
+MQ30   2000  1   -17.6 -0.19 -0.20   -0.5   -12.5  1.03  XYXX  22.3  -14.5
+MQ30   3500  0   -12.7 -0.06 -0.12   -1.3    +2.6  1.10  XYYX  41.3   -6.1
+MQ30   3500  1   -11.5 -0.07 -0.10   -1.1    +1.2  1.08  XYYX  45.9   -2.3
+HUKUM MQ30: RED
+
+MQ20_UC0 2000  0    +1.4 -0.04 -0.04   -1.2   +15.9  1.08  XYYY  41.8   -4.5
+MQ20_UC0 2000  1    -6.6 -0.10 -0.23   -0.8    +2.3  1.05  XYYX  26.9  -16.2
+MQ20_UC0 3500  0    -4.7 -0.04 -0.25   -0.8    +4.6  1.06  XYYX  30.8  -13.1
+MQ20_UC0 3500  1    -3.4 +0.02 -0.25   -0.7    +4.7  1.05  XYYX  31.0  -15.4
+HUKUM MQ20_UC0: RED
+
+```
+
+Veto dilimi büyüdükçe ham getiri monoton DÜŞÜYOR (%10 → −5..−7, %20 →
+−7..−10, %30 → −12..−18 puan) ve 25-26 Sharpe her hücrede kötüleşiyor.
+Momentumun güçlü olduğu coinlere TERS pozisyon, carry kitabında zarar
+değil GELİR: kitap funding'i kalabalığın ters tarafından topluyor ve
+kalabalığın en uç olduğu yer çoğu zaman momentumun en güçlü olduğu yer.
+Madde 236'nın yasasının (zarar ve kazanç aynı popülasyonda; önceki
+hareket bir kuyruk seçicisi, zarar seçicisi değil) çok ufuklu hâli.
+UCELE kapatılınca da (MQ20_UC0) RED.
+
+**Yasa: tek başına çalışan bir sinyal (momentum, OOS Sh 1,27), başka bir
+kitabın SEÇİMİNE filtre olarak eklenince o kitabın gelirini kesebilir —
+iki kitap aynı coinlerde zıt yönden para kazanıyor olabilir.**
+AYAR DEĞİŞMEDİ.
