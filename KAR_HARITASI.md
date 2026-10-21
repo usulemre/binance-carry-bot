@@ -4649,3 +4649,25 @@ Kontrol M357_G2P:
 - REZ_ESIK 0,010: +4..+6 puan, düşüş +0,7..+2,1 derin; P %17-24 → doz.
 **G2P'nin ayarları komşularında platoda; prim 0,15 en tutarlı ek (+5) ama kanıt
 yetersiz.** AYAR DEĞİŞMEDİ.
+
+## Madde 411 — Literatürdeki kesitsel anomaliler (CMOM, MAX, IVOL, SIZE): DÖRDÜ DE RED
+
+Kaynak taraması: arXiv 2510.14435 (CMOM 2 hafta en tutarlı; BTC nakit-taşıma
+Sharpe'ı 2025'te negatif), IRFA 2024 "anomalies and economic constraints"
+(size/hacim mikro coinlerden, momentum maliyetle zayıf), Quant. Finance 2023
+"factor momentum" (boyut/oynaklıktan). Betik `arastirma_m411_literatur.py`
+(haftalık, beşte birlik L/S, gerçek funding + maliyet, ön kayıtlı).
+
+| sinyal | IS Sh / yıllık | OOS Sh / yıllık | plasebo OOS | düşüş | carry rho |
+|---|---|---|---|---|---|
+| CMOM14 (2 hafta momentum) | +0,20 / +2 | **+1,93 / +96** | −1,06 | −29 | +0,09 |
+| MAX30 (piyango, yüksek short) | −0,55 / −13 | −0,43 / −22 | +0,90 | −67 | −0,04 |
+| IVOL30 (yüksek short) | −0,11 / −5 | −0,18 / −14 | +0,51 | −58 | −0,05 |
+| SIZE (küçük long) | +0,41 / +6 | −0,08 / −7 | −1,72 | −30 | +0,03 |
+
+- Momentum yine tek-rejim (madde 381 ile aynı: 25-26'da güçlü, 22-24'te yok).
+- Hisse piyasasının piyango/IVOL anomalileri kriptoda TERS: piyango coinleri
+  geride kalmıyor (ters yön de zayıf, Sh +0,4..+0,55).
+- Size mikro coin etkisi likit evrende yok.
+**Literatürün sinyalleri bizim evrende (likit perp, gerçek funding + maliyet)
+carry'ye bir şey eklemiyor.** AYAR DEĞİŞMEDİ.
