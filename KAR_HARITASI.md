@@ -4492,3 +4492,24 @@ kol bile yılda +%13, düşüş −%40 (carry +%124, −%17). Madde 398'in güç
 22-24'te sıfır. **Hüküm: RED — kuralın en iyi ölçülmüş hali bile carry'nin
 onda biri getiriyi dört kat sığ olmayan düşüşle veriyor.** Motor dosyası
 gelecekteki olay testleri için depoda. AYAR DEĞİŞMEDİ.
+
+## Madde 401 — Hacim eşiğinin komşuları (15x4 HAVUZ 4): 50-70M hafif iyi (bar altı), 150M RED
+
+```
+kol    bak hz  yillik  Sh22  Sh25  dusus  esitR  kald 4sart   P%    med
+HAC50  2000 0    +8.7 -0.02 +0.44  -1.3  +25.0  1.09  XYYY  59.7   +8.0
+HAC50  2000 1    +1.8 -0.09 +0.29  -0.2   +4.1  1.01  XYYY  40.8   -8.4
+HAC50  3500 0    +6.6 -0.07 +0.35  +1.0   -4.7  0.94  XYXY  49.9   -0.0
+HAC50  3500 1    +4.0 -0.04 +0.24  +0.3   +1.0  0.98  XYYY  43.5   -5.6
+HAC70  2000 0    +7.0 -0.02 +0.38  +0.4   +3.1  0.98  XYYY  70.8   +9.7
+HAC70  2000 1    +3.3 -0.04 +0.23  -0.8  +13.5  1.05  XYYY  56.3   +3.5
+HAC70  3500 0    +3.1 -0.07 +0.29  +0.4   -2.2  0.97  XYXY  51.7   +0.8
+HAC70  3500 1    +7.2 +0.06 +0.21  -0.6  +14.6  1.04  YYYY  61.9   +6.8
+HAC150 (dört hücre) −19..−29 puan, P %2-16                     RED
+```
+Eşiği düşürmek +2..+9 puan, ama 22-24 Sharpe'ı hafif kötüleşiyor (−0,02..−0,09),
+kazanç tamamen 25-26'da (+0,21..+0,44) → şart 1 çoğu hücrede düşüyor.
+**Desen (396, 397, 401): evreni GENİŞLETEN her eşik (daha genç, daha düşük
+hacim, pump-long serbest) 25-26'da kazandırıyor** — 2025-26'da çok sayıda yeni
+listeleme ve kalabalık var. Bir rejim işareti olabilir; birleşimi madde 402.
+AYAR DEĞİŞMEDİ.
