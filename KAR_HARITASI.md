@@ -4158,3 +4158,23 @@ Sık işlemde maliyet her şeyi yiyor; seyrek işlemde Sharpe güzel ama
 sermayenin neredeyse tamamı boşta, 3x'te bile yılda +%2,6.
 **Yasa: fiyat riski sıfır olan bir fark, ancak maliyetten büyükse
 kaldıraçla büyütülebilir; burada fark maliyet mertebesinde.** AYAR DEĞİŞMEDİ.
+
+## Madde 388 — İkinci kitap adayı: BNB airdrop taşıması (spot BNB Earn'de + perp short): RED (karşılaştırmada)
+
+Fiyat tahmininden bağımsız bir gelir: Binance BNB tutana Launchpool /
+Megadrop / HODLer airdrop dağıtıyor; spot BNB + eşit BNB perp short fiyatı
+sıfırlar, kalan = airdrop + Earn faizi − perp funding.
+Kaynak (web, geri test değil — airdrop başına BNB getirisi açık veri değil):
+- Oca 2024 – Mar 2025: Launchpool ort. APY %84, Megadrop+HODLer ~%19,7
+  (15 ay; ~%16/yıl), BNB başına ödül 226 $ / 313 $ (~%58/yıl basit).
+- 2025-26: Launchpool temposu düştü, dağıtım HODLer airdrop'larına kaydı
+  (53. proje Eki 2025, 64. proje Eki 2026 → ~11/yıl); güncel BNB başına
+  getiri yayımlanmamış.
+Hedge bacağı (bizim veri, BNBUSDT short'un aldığı funding/yıl):
+2022 −12,6 · 2023 −8,4 · 2024 −3,3 · 2025 −2,1 · 2026 +1,8 → short ÖDÜYOR.
+Sermaye: 1 $ hedge'li BNB = 1 $ spot + perp teminatı → ~1,3-1,5 $ sermaye.
+**Sonuç:** 2024'ün Launchpool yılında güçlü (~%40+/yıl sermayeye), bugünkü
+yalnız-HODLer düzeninde tahmini %5–15/yıl sermayeye. Carry 2.000 $'da
++%124; sermayeyi bölmek carry'nin bacağını küçültür (madde 294). Ancak
+bir "Launchpool dönemi" geri gelirse yeniden açılacak eksen.
+AYAR DEĞİŞMEDİ.
