@@ -4353,3 +4353,23 @@ maliyeti (madde 294) ayrıca hesaba girmedi.
 **Yasa: olay çalışmasında birim İŞLEM değil GÜN'dür — piyasa çapında bir
 çöküş yüzlerce "bağımsız" olay üretir; t'yi gün kümesinde ölç.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 396 — Yaş eşiğinin komşuları (15x4 HAVUZ 4): 60 g GÜÇLÜ AMA BAR ALTI, 120/180 RED
+
+Betik `arastirma_m396_yas_esigi.py`. Kontrol 90 g.
+
+```
+kol    bak hz  yillik  Sh22  Sh25  dusus  esitR  kald 4sart   P%    med
+YAS60  2000 0   +15.3 +0.06 +0.27  -0.5  +22.1  1.03  YYYY  74.6  +12.9
+YAS60  2000 1   +19.6 +0.04 +0.37  -0.7  +30.6  1.05  YYYY  80.3  +21.9
+YAS60  3500 0   +16.2 +0.01 +0.35  +1.4   -2.0  0.91  YYXY  66.5   +9.5
+YAS60  3500 1   +26.0 +0.12 +0.48  -0.4  +31.4  1.02  YYYY  86.4  +28.9
+YAS120 (dört hücre) −15,7..−18,1 puan, P %10-14            RED
+YAS180 (dört hücre) −17,1..−24,2 puan, P %7-21             RED
+(YASOFF, madde 376: −21..−29 puan, düşüş −%47)
+```
+Eğri 0 → 60 → 90 → 120 → 180: −25 · **+19** · 0 · −17 · −20 (ortalama puan).
+60 g dört hücrenin üçünde dört şartı geçiyor, ham fark her hücrede +15..+26,
+ama P %67-86 → %95 barı altı; kazanç ağırlıkla 25-26'da (Sh +0,27..+0,48;
+22-24'te +0,01..+0,12). Kısaltma yönünün ikinci adımı madde 397'de (45 / 30 g).
+AYAR DEĞİŞMEDİ (henüz).
