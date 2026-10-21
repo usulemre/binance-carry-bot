@@ -4401,3 +4401,16 @@ YAS30  3500 1   +11.2 +0.10 +0.04  +1.6   -7.8  0.90  YYXY  49.8   -0.4
 **HÜKÜM: protokolle RED. Sınıf: "sermayeden bağımsız kullanıcı kararı" —
 bot ayarı `CARRY_MIN_LISTING_DAYS` (varsayılan 90); 60 seçilirse beklenen
 +15..+26 puan, kanıt gücü P %67-86.** AYAR DEĞİŞMEDİ.
+
+### Madde 397 eki — yaş 60 g'nin kaldıraç sınırı (ortak 3.000 yol, madde 391 yöntemi)
+
+| kitap | k | yıllık (hz0/hz1) | 25-26 | gün $ | tam düşüş | 1y p1 |
+|---|---|---|---|---|---|---|
+| bugün (90 g) | 1,25 | +169 / +180 | +205..217 | 5,8-6,0 | −21 | −28..−30 |
+| yaş 60 g | 1,00 | +139 / +150 | +180..201 | 5,0-5,3 | −16..−17 | −22..−24 |
+| **yaş 60 g** | **1,25** | **+192 / +210** | +255..289 | **6,3-6,6** | −20 | **−28..−30** |
+| yaş 45 g | 1,25 | +190 / +205 | +244..267 | 6,3-6,5 | −18 | −27..−29 |
+| yaş 60 g | 1,50 | +263 / +289 | +388..430 | 7,7-8,0 | −22..−24 | −32..−34 |
+
+−%30 içinde: yaş 60 g @1,25x, bugünkü 90 g @1,25x'ten +23..+30 puan. Sınır
+çizgisinde yukarı kayış — ama tamamı madde 397'nin P %67-86 kanıtına bağlı.
