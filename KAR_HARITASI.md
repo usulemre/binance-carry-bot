@@ -4783,3 +4783,13 @@ düşürüyor.** 25-26 evreninde çöküş sonrası toparlanmalar +%40'ta durmuy
 GİRİŞTEN %40 — çöken bacak için fiilen "tam toparlanmayı bekle" demek ve bu,
 2025-26'da doğru bahis.
 AYAR DEĞİŞMEDİ.
+
+## Madde 418 — Çöküş sonrası dip alımı (H vakasından): RED
+
+Betik `arastirma_m418_cokus_dip_alimi.py`. Olay: 24 sa getiri ≤ −X VE 24 sa
+funding ≤ −FE (short kalabalık) → long, TP veya H gün; gerçek funding, 10 bp.
+8 kolun 8'i 2025-26'da gün-t −0,55..−1,80 (ort −0,40..−2,61%, kazanan %41-53);
+2022-24'te olay az (13-44) ve gün-t ≤ 0. H tipi dönüş istisna, kural değil:
+çöken coinlerin çoğu dönmüyor. Carry'nin H'de kazanması "çöküşü al" değil,
+geniş bir kalabalık-funding portföyünün içinde 5 gün tutmanın sonucu.
+AYAR DEĞİŞMEDİ.
