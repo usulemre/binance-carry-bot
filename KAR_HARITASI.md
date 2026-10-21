@@ -4261,3 +4261,16 @@ kazananın laneti; bu yüzden en iyi adaylar ORTAK 3.000 yolla yeniden
   reddediyor (1,55 kullanılmalı).
 - Gün içi düşüş kapanış serisinden ~1,46x derin (madde 291).
 AYAR DEĞİŞMEDİ (kaldıraç kullanıcı kararı, madde 225).
+
+## Madde 392 — İki carry varyantını harmanlamak (Sharpe yoluyla kâr): RED
+
+Madde 391: getiri = alınan risk; aynı riskte daha çok kâr ancak Sharpe'la.
+68 seri (2.000 $) arası tüm 50/50 ikili harmanlar tarandı.
+- Kontrolle korelasyon: medyan 0,98, çeyrek 0,96, en düşük 0,67 (o da zayıf kol).
+- En iyi harman Sharpe: hz0 2,94 (kontrol 2,77), hz1 3,03 (kontrol 2,90) → ~+%5;
+  2.278 harman arasından seçilmiş (kazananın laneti) ve harmanı oluşturan
+  kolların hepsi tek başına RED.
+- 2.000 $'ı ikiye bölmek bacağı yarıya indirir → evren kaybı (madde 294),
+  kazancı aşar.
+**Yasa: aynı makinenin varyantları aynı kitaptır (rho 0,98); çeşitlendirme
+ancak farklı GELİR KAYNAĞINDAN gelir, ayardan gelmez.** AYAR DEĞİŞMEDİ.
