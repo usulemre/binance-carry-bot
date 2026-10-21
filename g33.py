@@ -112,6 +112,11 @@ SLS=float(os.environ.get("SLS","0"))   # SHORT bacak stop
 # kar-al referansi o anki kapanisa tasinir (islem YOK, yalniz TP seviyesi). Cokus
 # sonrasi toparlanmada eski dilimler de hasat eder (madde 414: H). 0 = kapali.
 TP_SIFIRLA=float(os.environ.get("TP_SIFIRLA","0"))
+# MADDE 419: AGIRLIK KAYMASI. Eski motor bacak agirligini tutus boyunca SABIT
+# tutuyordu = her 4 sa bedava yeniden dengeleme (coken bacak kagit uzerinde
+# tamamlaniyor). Gercek hesapta coin MIKTARI sabittir: agirlik fiyatla kayar.
+# AGIRLIK_KAYMA=1 -> her bar sonunda poz = poz*(1+br)/(1+r). 0 = eski (parite).
+AGIRLIK_KAYMA=int(os.environ.get("AGIRLIK_KAYMA","0"))
 TP_SIF_TARAF=os.environ.get("TP_SIF_TARAF","iki")   # iki | long | short
 UCELE=float(os.environ.get("UCELE","0"))   # 0=kapali. >=UCELE pump long adayi OLAMAZ
 MOM_Q=float(os.environ.get('MOM_Q','0'))   # madde 383: 0 = kapali
@@ -572,6 +577,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 _e=_GK.setdefault((_gd,_k),[0.0,0.0,0.0,0])
                 _e[0]+=float(np.nan_to_num(poz[_k]*br[_k])); _e[1]+=float(_fu[_k]); _e[2]+=float(poz[_k]); _e[3]+=1
         eq.append(eq[-1]*(1+r))
+        if AGIRLIK_KAYMA:
+            poz=poz*(1.0+np.nan_to_num(br))/(1.0+r)
         if merd.any():
             eq[-1]*=1-np.abs(poz[merd]).sum()*MERD_PAY*KOM
             poz=np.where(merd,poz*(1-MERD_PAY),poz)
