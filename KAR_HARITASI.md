@@ -4321,3 +4321,35 @@ DUYURUSU (genelde birkaç gün önce) veride yok — gerçek giriş anı odur.
 çarpık, birkaç pump taşıyor), (b) listelemeden 3 gün sonra short 14 gün.
 Olay sayısı yılda ~25-35; 2027 sonunda ~80 olayla yeniden ölçülmeli.
 AYAR DEĞİŞMEDİ.
+
+## Madde 395 — Toplu olay taraması (10 olay x 3 tutma): elekten 2 kol geçti, harmanda RED
+
+Betik `arastirma_m395_olay_tarama.py` (ön kayıt başlıkta). Olaylar: funding
+tavanı −/+, long teslimiyeti, sessiz birikim, perakende akını (ls +%40),
+180 g zirve/dip kırılımı, BTC çöküşünde göreli güç, taker tükenişi,
+tasfiye sonrası (OI −%25 ve fiyat −%10 bir günde).
+**İlk koşuda portföy hatası:** `sorted(isl)` aynı gün olaylarını GETİRİYE
+göre diziyordu → kalabalık günlerde en KÖTÜ 10 işlem seçiliyordu (E10:
+işlem başı +%4,7 ama Sh 0,03). Aynı gün içinde rastgele sıraya çevrildi.
+IS'te seçilen 3 kol (düzeltilmiş):
+
+| kol | IS t | OOS n | OOS ort | OOS t | OOS Sh | elek |
+|---|---|---|---|---|---|---|
+| E10 tasfiye sonrası long H3 | +5,13 | 1.068 | +4,73% | +5,71 | 0,50 | RED |
+| E10 tasfiye sonrası long H7 | +4,33 | 1.011 | +3,83% | +3,11 | 1,35 | geçti |
+| E5 perakende akını short H7 | +3,99 | 1.146 | +2,07% | +2,70 | 1,32 | geçti |
+
+**Kümelenme denetimi (sonradan, şeffaflık için):** işlem t'si aynı gün
+olaylarıyla şişiyor (E10: 11 Eki 2025'te 189 işlem). Gün başına
+ortalamayla t: E10 H7 IS +0,45 / OOS +2,06; E5 H7 IS −0,14 / OOS +1,56.
+E10'un plasebosu (aynı çöküş, OI sabit) benzer büyüklükte.
+**Harman (carry + kol, eşit risk, 2.000 blok yolu):**
+- E10 %10: hz0 +130,6 vs +123,5 (P %81) · hz1 +137,2 vs +130,7 (P %79);
+  22-24 −1 puan, 25-26 +21 puan → kazanç tek rejimde.
+- E10 %20: P %53-60. E5: P %19-32, harman kötüleştiriyor.
+%95 barının altında → **RED.** E10 "rejim aracı" olarak kayıtta (25-26
+çöküşlerinde tasfiye sonrası toparlanma), 2.000 $'da sermaye bölme
+maliyeti (madde 294) ayrıca hesaba girmedi.
+**Yasa: olay çalışmasında birim İŞLEM değil GÜN'dür — piyasa çapında bir
+çöküş yüzlerce "bağımsız" olay üretir; t'yi gün kümesinde ölç.**
+AYAR DEĞİŞMEDİ.
