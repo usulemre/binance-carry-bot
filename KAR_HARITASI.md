@@ -4714,3 +4714,28 @@ kline'ı, Binance'in dakikalık etki-primi ve sembol başı tavanını yakalamı
 **Hüküm: tahmini funding'le Ekim koşmak sonucu uydurmak olur — yapılmadı.**
 Ekim gerçek funding'i yayımlanınca (Kasım başı): `python3 indir_ek_ay.py 2026-10`
 → `yeniden_kur.py` → `indir_metrik_surdurulebilir.py panel` → `arastirma_m412_eylul_oos.py kos/analiz`.
+
+## Madde 414 — Kayıp günlerinin anatomisi (2026, bugünkü kitap, 2.000 $): KAYIP = TEK COİN LONG ÇÖKÜŞÜ, AMA O COİNLER EN ÇOK KAZANDIRANLAR
+
+g33'e `GUNLUK_KATKI=<yol>` (2026+ gün x sembol fiyat/funding katkısı, fazlar
+ortalaması; parite 0,0). Katkı toplamı vs gerçek günlük getiri korelasyonu 0,9999.
+En kötü günler (iki hiza ortalaması):
+| gün | kayıp | baş sebep |
+|---|---|---|
+| 3 Tem | −113 $ | LAB long −126 $ (ağırlık 0,148) |
+| 31 Mar | −108 $ | SIREN long −103 $ |
+| 8 Haz | −107 $ | H long −106 $ |
+| 1 Tem | −96 $ | LAB long −88 $ |
+| 24 Eyl | −90 $ | ONDO short −46 $, AKE/ONE long −43 $ |
+| 8 Tem | −75 $ | LAB long −83 $ |
+- Bu coinlerin 2026 TOPLAMI: LAB **+170 $ (yılın 1 numarası; funding +240)**,
+  SIREN +117 $ (5.), H +47 $. Coin-gün kuyruğu iki yönlü: −50 $ altı 9 olay
+  −722 $, +50 $ üstü 16 olay +1.205 $. Yasaklamak kazancı da keser (191, 383,
+  386, 390'ın beşinci örneği).
+- Yoğunlaşma: aynı coin birçok dilimde → toplam ağırlık p99 0,10, maks 0,15.
+  Kaba tahmin (dilimler arası coin tavanı, serbest kalan sermaye dağıtılmadan,
+  yalnız 2026): tavan 0,10 → Sh 3,44→3,53, yıllık +238→+242; 0,08 → Sh 3,61,
+  +243; 0,05 → Sh 3,82, +221 (brüt −%14,5). Kanıt değil (2026, kaba, yeniden
+  dağıtım yok) — motor dilimleri bağımsız simüle ediyor; doğru test için
+  dilimler arası ortak tavan motora eklenmeli.
+AYAR DEĞİŞMEDİ.

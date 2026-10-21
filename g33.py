@@ -270,6 +270,10 @@ fon=[0.0,0]   # [toplam funding (sermaye orani), bar sayisi]
 fon_seri=[]   # (zaman, bar basina funding) - rejim ayrimi icin
 AY={'Lf':0.0,'Lp':0.0,'Sf':0.0,'Sp':0.0,'Ltp':0.0,'Stp':0.0,'kom':0.0}
 GUN={}
+# MADDE 414: GUNLUK_KATKI=<yol> -> (gun, sembol) basina fiyat/funding katkisi ve
+# pozisyon yonu, butun fazlarin TOPLAMI (sonra faz sayisina bolunur). Bos -> kapali.
+_GK_YOL=os.environ.get('GUNLUK_KATKI','').strip()
+_GK={}
 YIL={}   # yil -> [Lf,Lp,Ltp,Sf,Sp,Stp]
 def bt2(bas,n,olcut=None,tp=None):
     tp=TPX if tp is None else tp
@@ -537,6 +541,12 @@ def bt2(bas,n,olcut=None,tp=None):
             kapanis=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0)
             br=np.where(yaridan,0.5*br+0.5*np.nan_to_num(kapanis),br)
         r=np.nansum(poz*br)+np.nansum(np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1])))
+        if _GK_YOL and C.index[i+1]>=pd.Timestamp('2026-01-01'):
+            _gd=C.index[i+1].normalize()
+            _fu=np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1]))
+            for _k in np.flatnonzero(poz!=0):
+                _e=_GK.setdefault((_gd,_k),[0.0,0.0,0.0,0])
+                _e[0]+=float(np.nan_to_num(poz[_k]*br[_k])); _e[1]+=float(_fu[_k]); _e[2]+=float(poz[_k]); _e[3]+=1
         eq.append(eq[-1]*(1+r))
         if merd.any():
             eq[-1]*=1-np.abs(poz[merd]).sum()*MERD_PAY*KOM
@@ -618,6 +628,10 @@ def calis2(ad,n,olcut):
     # MADDE 346: E_CIKTI verilirse oraya yaz (paralel kosular birbirinin
     # /tmp/g19E_{_fz}.pkl'ini ezmesin). Bos -> eski davranis, parite ayni.
     pickle.dump(E,open(os.environ.get('E_CIKTI') or f'/tmp/g19E_{_fz}.pkl','wb'))
+    if _GK_YOL:
+        _df=pd.DataFrame([(d,C.columns[k],v[0]/NF,v[1]/NF,v[2]/max(v[3],1),v[3]/NF) for (d,k),v in _GK.items()],
+                         columns=['gun','sembol','fiyat','funding','ort_poz','bar'])
+        _df.to_pickle(_GK_YOL)
     if KATKI and katki_defter:
         import pickle as _pk4
         _pk4.dump(pd.DataFrame(katki_defter), open(f'/tmp/katki_{_fz}.pkl','wb'))
