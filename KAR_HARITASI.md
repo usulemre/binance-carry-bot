@@ -4513,3 +4513,29 @@ kazanç tamamen 25-26'da (+0,21..+0,44) → şart 1 çoğu hücrede düşüyor.
 hacim, pump-long serbest) 25-26'da kazandırıyor** — 2025-26'da çok sayıda yeni
 listeleme ve kalabalık var. Bir rejim işareti olabilir; birleşimi madde 402.
 AYAR DEĞİŞMEDİ.
+
+## Madde 402 — "Geniş evren" birleşimi: +25..+39 puan, 25-26 rejiminde; P %58-77 → RED (en güçlü kullanıcı kararı adayı)
+
+```
+kol  bak hz  yillik  Sh22  Sh25  dusus  esitR  kald 4sart   P%    med
+GE1  2000 0   +25.6 +0.04 +0.25  -2.0  +55.7  1.13  YYYY  65.5  +14.2
+GE1  2000 1   +25.7 -0.03 +0.35  -1.1  +42.2  1.07  XYYY  57.9   +7.4
+GE1  3500 0   +24.7 -0.00 +0.27  +1.3   +8.3  0.92  XYYY  60.1   +7.9
+GE1  3500 1   +27.6 +0.05 +0.32  +0.0  +27.5  1.00  YYYY  59.2   +8.2
+GE2  2000 0   +37.9 -0.01 +0.74  -1.1  +55.3  1.07  XYYY  76.5  +30.4
+GE2  2000 1   +31.6 -0.10 +0.65  -0.1  +33.6  1.01  XYYY  59.6  +10.0
+GE2  3500 0   +38.7 +0.01 +0.72  +0.5  +31.1  0.97  YYYY  73.1  +25.2
+GE2  3500 1   +33.3 +0.08 +0.47  +2.5   +1.5  0.86  YYYY  57.8   +7.6
+```
+GE1 = yaş 60 + UCELE 0 · GE2 = GE1 + hacim 70M. Yıllık (2.000/0): kontrol +123,7
+→ GE1 +149,3 → GE2 +161,6; 25-26: +148 → +212 → +257. Düşüş −16..−18 (aynı).
+- Etkiler TOPLANIYOR (yaş +19, UCELE +6, hacim +5 ≈ GE2 +35) — bileşenler
+  bağımsız kanallar (hepsi evrene daha çok coin sokuyor).
+- **Rejim imzası net:** 22-24 Sharpe farkı −0,10..+0,08 (SIFIR, zarar yok),
+  25-26 +0,47..+0,74. Eski rejimde maliyetsiz, yeni rejimde büyük kazanç —
+  madde 244'ün başabaş rejim olasılığı p* ≈ 0 (kayıp tarafı yok).
+- Ama bootstrap P %58-77: kazanç tarihin yarısında yoğun, %95 bar altında.
+**HÜKÜM: protokolle RED. Sınıf: "asimetrik rejim bahsi, kullanıcı kararı" —
+bot ayarları: `CARRY_MIN_LISTING_DAYS=60`, uç hareket elemesi kapalı, hacim
+eşiği 70M. Beklenen: 25-26 tipi piyasada +%30-40 puan/yıl, 22-24 tipinde ~0.**
+AYAR DEĞİŞMEDİ.
