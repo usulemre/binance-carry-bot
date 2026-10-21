@@ -4442,3 +4442,32 @@ REJİM ARACI olarak kayıtta (25-26'da çalışıyor, 22-24'te kaybettiriyor).**
 Not: kullanıcının cockpit'inde "DÜNKÜ" sütunu 24 sa %'si ile tutarsız
 (AGT 0,04537 / 0,02126 ama −%31,4) — veri hatası olabilir.
 AYAR DEĞİŞMEDİ.
+
+## Madde 399 — Kullanıcının ikinci botu (±%30 ters işlem) KARAR SAATİNE göre: hiçbir saat kurtarmıyor
+
+Kullanıcının ekranı (27 Tem – 21 Eki 2026, 2.000 $): 03:00 TRT (canlı)
+−%62; 12:00 +%46, 17:00 +%36; diğerleri −%22..−%52. 8 saat x 3 ay → en
+iyi saati seçmek seçilim yanlılığı. Betik `arastirma_m399_karar_saati.py`
+(madde 380 motoru: 24 sa ≥ +%30 short / ≤ −%30 long, 1 gün tut, −%25 stop,
+gerçek funding, 10 bp). 4 sa ızgara → TRT 03/07/11/15/19/23.
+
+| karar TRT | işlem başı ort / med | NMAX 4 (%25'lik) yıllık | 2025 | 2026 | NMAX 20 (%5'lik) yıllık |
+|---|---|---|---|---|---|
+| 03:00 | +1,03 / +2,98 | −74 | −91 | −98 | +5,0 |
+| 07:00 | +0,90 / +2,31 | −78 | −92 | −98 | +4,9 |
+| 11:00 | +0,89 / +2,16 | −75 | −40 | −99 | +4,8 |
+| 15:00 | −2,09 / −0,61 | −95 | −93 | −100 | −35,6 |
+| 19:00 | −2,26 / −0,95 | −98 | −98 | −100 | −39,3 |
+| 23:00 | −0,14 / +1,14 | −78 | −59 | −100 | −7,2 |
+
+- Hiçbir karar saati 2022-26'da kârlı değil; ekrandaki 12:00/17:00'ın en
+  yakın komşuları (11:00, 15:00) 27 Temmuz'dan beri −%88 / −%91 — ekrandaki
+  farklar bu 3 aya özgü (gürültü / botun ayrıntıları).
+- Gece saatleri (03-11) işlem başına hafif pozitif (+%0,9..+1,0, medyan
+  +%2..3), öğleden sonra (15-19) negatif — saat etkisi GERÇEK ama küçük.
+- **Asıl katil BOYUT:** aynı işlemler %25'lik pozisyonla (NMAX 4) yılda
+  −%74..−98, %5'lik pozisyonla (NMAX 20) ~0..+5. Pozisyon başı ±%25-100
+  oynayan işlemlerde %25'lik boyut oynaklık sürüklenmesiyle sermayeyi eritir.
+**Öneri (kullanıcı kararı): canlı ikinci bot −%62 ile −%30 toleransın iki
+katında; durdurulması ya da pozisyon başı %5'e indirilmesi.** AYAR DEĞİŞMEDİ
+(ikinci botun kodu bu depoda değil).
