@@ -4793,3 +4793,24 @@ funding ≤ −FE (short kalabalık) → long, TP veya H gün; gerçek funding, 
 çöken coinlerin çoğu dönmüyor. Carry'nin H'de kazanması "çöküşü al" değil,
 geniş bir kalabalık-funding portföyünün içinde 5 gün tutmanın sonucu.
 AYAR DEĞİŞMEDİ.
+
+## Madde 419 — MODELLEME DENETİMİ: SABİT AĞIRLIK vs GERÇEKÇİ AĞIRLIK KAYMASI
+
+Motor bacak ağırlığını tutuş boyunca SABİT tutuyordu = her 4 sa bedava yeniden
+dengeleme (çöken bacak kâğıt üzerinde tamamlanıyor). g33'e `AGIRLIK_KAYMA=1`
+(poz ← poz·(1+br)/(1+r); coin miktarı sabit). Zemin 2026-09-30.
+| | sabit | kayma |
+|---|---|---|
+| bugün 1x yıllık (4 hücre) | +123,5..+131,7 | +123,1..+134,0 |
+| Sharpe | 2,97-3,12 | 3,09-3,29 |
+| tam düşüş | −15,8..−18,2 | −19,9..−22,4 |
+| 1x 1y p1 (ortak 3.000 yol) | −22,5..−24,1 | −22,7..−24,5 |
+| 1,25x yıllık / tam düşüş / 1y p1 | +169..+182 / −21 / −27,5..−29,4 | +169..+186 / −25,4..−25,9 / −27,8..−29,9 |
+| G2P 1x yıllık / tam düşüş | +168..+173 / −17..−18 | +176..+184 / −20..−23 |
+| H haftası (8-14 Haz, 2.000 $) | +37 $ | −25 $ (8 Haz −73 $) |
+- Getiri ve kuyruk (1y p1) neredeyse aynı; TAM DÜŞÜŞ ~4 puan derin (2022-24'te tek
+  bir epizot) → kaldıraç kararının p1 sınırı değişmiyor, ama tarihsel en kötü
+  düşüş 1,25x'te −%25-26.
+- Çöküş sonrası toparlanma sabit ağırlıkta şişiyordu (H haftası +37 → −25 $).
+  **Savunma çıkışları (416, 417) sabit ağırlıkla ölçüldü — kaymalı yeniden ölçülmeli.**
+Varsayılan (0) değişmedi; yayımlanmış sayılar sabit ağırlık modeline aittir.
