@@ -4623,3 +4623,17 @@ Carry ile rho ~0,03 (bağımsız akış). **212 günle karar verilemez — RED (
 Not: funding +%11..+20 güvenilir şekilde geliyor; fiyat bacağını aynı varlığın
 spot/ETF'iyle hedge edecek bir yapı (borsada yok) ancak çözer. 2027'de yeniden.
 AYAR DEĞİŞMEDİ.
+
+## Madde 409 — Aynı dayanağın iki perp'i (altın/petrol): RED
+
+Fiyat riski ~0, funding farkını topla (madde 387'nin TradFi'deki hali).
+| çift | gün | fiyat rho (4 sa) | funding farkı/yıl | strateji 1x | 3x |
+|---|---|---|---|---|---|
+| XAU – XAUT | 158 | 0,993 | −%3,0 | −%0,6 | −%1,7 |
+| XAU – PAXG | 264 | 0,981 | +%9,3 | +%2,8 (Sh 1,05) | +%8,3 |
+| XAUT – PAXG | 158 | 0,997 | +%0,3 | −%2,2 | −%6,5 |
+| CL – BZ | 153 | 0,967 | −%5,8 | −%8,4 | −%23,7 |
+Tek başına bakınca XAU'nun +%13'ü büyük görünüyordu ama aynı dönemde
+öbür altın perp'leri de ödüyor; fark yılda birkaç puan, yönü dönüyor.
+**Yasa (387'nin ikinci örneği): aynı dayanaktaki funding farkı arbitrajcılar
+tarafından maliyet mertebesine bastırılıyor.** AYAR DEĞİŞMEDİ.
