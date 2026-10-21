@@ -4609,3 +4609,17 @@ Kontrol M357_G2P (GE2 + prim):
   Risk aracı sınıfı (merdiven gibi).
 - TOL 0,2: ±0,4 puan — devir toleransı etkisiz (bacaklar zaten tam dönüyor).
 **G2P'nin işleyişi bugünkü haliyle optimumda.** AYAR DEĞİŞMEDİ.
+
+## Madde 408 — TradFi perp carry (hisse/emtia perp'leri, ayrı kitap): ERKEN, RED
+
+Panelde 150 TradFi perp; en eskisi XAU (Ara 2025), çoğu Haz-Tem 2026 → en çok
+~8 ay. Funding seviyeleri belirgin ve kalıcı: SKHYNIX +%47/yıl, NATGAS +%39,
+SAMSUNG +%28, XAG +%23, XAU +%13 (pozitif ödeme %45); CL −%22, BZ −%16.
+Kaba carry (7 g funding sırası, üst k short / alt k long, 7 g tut, Şub-Ağu 2026):
+hacim ≥ 5M: k2 −%37 · k3 −%17 · k5 −%4 ; hacim ≥ 20M: k2 −%25 · k3 +%5 · k5 +%31
+(Sh −0,45..+0,98). Funding katkısı her kolda +%11..+20/yıl ama fiyat
+−%45..+%23 arasında savruluyor (emtia/hisse trendi, 2026 metal boğası).
+Carry ile rho ~0,03 (bağımsız akış). **212 günle karar verilemez — RED (erken).**
+Not: funding +%11..+20 güvenilir şekilde geliyor; fiyat bacağını aynı varlığın
+spot/ETF'iyle hedge edecek bir yapı (borsada yok) ancak çözer. 2027'de yeniden.
+AYAR DEĞİŞMEDİ.
