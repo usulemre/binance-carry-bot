@@ -67,7 +67,13 @@ def ekle(yol, yeni, tarih_kol):
     yeni = yeni[pd.to_datetime(yeni[tarih_kol]) > son]
     if yeni.empty:
         return 0
-    yeni[eski.columns].to_csv(yol, mode="a", header=False, index=False)
+    yeni = yeni[eski.columns].copy()
+    # MADDE 412 DÜZELTMESİ: tarih kolonu AÇIK biçimle yazılır. pandas, bir kolonun
+    # tüm değerleri gece yarısıysa saati düşürür ("2026-09-01"); karışık biçim
+    # okuyucuda tarihi metne çevirip sembolün TÜM geçmişini boşaltıyordu (480 sembol).
+    if not pd.api.types.is_string_dtype(yeni[tarih_kol]):
+        yeni[tarih_kol] = pd.to_datetime(yeni[tarih_kol]).dt.strftime("%Y-%m-%d %H:%M:%S")
+    yeni.to_csv(yol, mode="a", header=False, index=False)
     return len(yeni)
 
 
@@ -130,6 +136,8 @@ def bir(s, aylar):
                 parca.append(x.sort_values("t").groupby("bar")[KOL].last())
             if parca:
                 d = pd.concat(parca); d = d[~d.index.duplicated(keep="last")].sort_index().reset_index()
+                # delist sonrası arşivdeki sıfır/boş satırlar (STORJ gibi) atılır
+                d = d[d["count_long_short_ratio"].notna() & (d["sum_open_interest_value"] > 0)]
                 out["metrik"] = ekle(pm, d, "bar")
         return s, out
     finally:
