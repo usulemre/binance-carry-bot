@@ -4227,3 +4227,37 @@ Düşüş de iyileşmiyor (−18,2 → −18,3 / −18,5 / −17,3).
 TP hasadının olduğu coinler — kuyruğu kesmek, onu fiyatlayan geliri kesiyor
 (madde 191, 383, 386'nın dördüncü örneği). Panel teşhisi (TP'siz 5 gün
 tutma) TP'li kitabın kararını vermez.** AYAR DEĞİŞMEDİ.
+
+## Madde 391 — Kitap x kaldıraç kombinasyon taraması (günlük kazanç için): SINIR ÇİZGİSİ, YENİ KENAR YOK
+
+Kullanıcı: "günlük kazanç için en yüksek kârı ara, kombinasyon yap".
+Kaba tarama: elde 4 hücresi tam olan 70 kitap serisi x kaldıraç 1,00-2,00
+(0,05 adım); bacak >= 20 $ olunca D2 evreni (madde 369). Her kitap için
+1y p1 >= −%30 veren en yüksek kaldıraç (600 yol). 70 seriden seçim →
+kazananın laneti; bu yüzden en iyi adaylar ORTAK 3.000 yolla yeniden
+ölçüldü (blok 20 gün):
+
+| kitap | k | yıllık (hz0/hz1) | 22-24 | 25-26 | gün $ (2.000) | artı ay | tam düşüş | 1y p5 | 1y p1 |
+|---|---|---|---|---|---|---|---|---|---|
+| 15x4 H4 (bugün) | 1,00 | +124 / +131 | +109 | +147 | 4,7 | %82-86 | −17 | −19 | −23..−24 |
+| 15x4 H4 | 1,25 | +169 / +180 | +148 | +205 | 5,8-6,0 | %80-86 | −21 | −23..−24 | −28..−30 |
+| 15x4 H4 | 1,30 | +179 / +191 | +156 | +218 | 6,1-6,3 | %80-86 | −22 | −23..−25 | −29..−31 |
+| merdiven %10/%33 | 1,50 | +192 / +197 | +162 | +243 | 6,3-6,4 | %86-88 | −19,5 | −23..−24 | −27,5..−29,6 |
+| merdiven %20/%33 | 1,50 | +220 / +221 | +182 | +286 | 6,9 | %84-88 | −21..−22 | −25..−26 | −30..−32 |
+| 15x4 H4 | 1,50 | +228 / +232 | +192 | +290 | 7,1 | %80-82 | −22..−23 | −26..−27 | −32..−33 |
+| prim çarpanı | 1,50 | +241 / +245 | +203 | +305 | 7,3 | %80-82 | −22 | −26..−27 | −32..−33 |
+| merdiven %20/%50 | 1,60 | +239 / +239 | +196 | +316 | 7,2 | %86-88 | −22..−23 | −26..−27 | −31..−33 |
+
+**Bulgular:**
+- Bütün kitaplar AYNI getiri–risk çizgisinde: 1y p1 −%30'da ~+%190-200,
+  −%32..−33'te ~+%230-245. Getiriyi kitap değil ALINAN RİSK belirliyor
+  (madde 366'nın eşit-risk farkları zaten P %52-67, gürültü).
+- Merdiven + 1,5x'in tek gerçek farkı DÜZENLİLİK: artı ay %86-88 (düz
+  kitapta %80-82) ve tam düşüş −19,5 (1,25x düz kitapta −21). Kullanıcının
+  "günlük/düzenli kazanç" isteğine uyan tek eksen bu.
+- −%30 içinde iki seçenek: (a) 15x4 H4 @1,25x (+169..180, bota bağlı, ön
+  uçuş onaylı) · (b) merdiven %10/%33 @1,5x (+192..197, D2 evreni, daha
+  düzenli ay) — (b) için merdiven BOTA BAĞLI DEĞİL ve ön uçuş 1,50-1,54'ü
+  reddediyor (1,55 kullanılmalı).
+- Gün içi düşüş kapanış serisinden ~1,46x derin (madde 291).
+AYAR DEĞİŞMEDİ (kaldıraç kullanıcı kararı, madde 225).
