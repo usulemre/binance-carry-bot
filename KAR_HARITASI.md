@@ -4697,3 +4697,20 @@ Düzeltilmiş parite: 2022-07..2026-08 farkı 0,00 (dört hücre, iki kitap).
   soğuyor olabilir (yeni listeleme/kalabalık dalgasının sönmesi).
 **Hüküm: G2P için yeşil ışık YOK; Ekim verisi (Kasım başı) ile yeniden ölç.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 413 — Ekim 2026 için funding'i prim endeksinden tahmin: YETERSİZ, Ekim simülasyonu YAPILMADI
+
+Arşivde Ekim fundingRate yok (ay bitince yayımlanır; API bu ortamda 451). Binance
+formülü F = P_ort + clamp(I − P_ort, ±%0,05), P_ort 1 sa prim kline'larından;
+Eylül'ün GERÇEK funding'iyle doğrulandı (`indir_ekim_tahmini.py dogrula`, 690 sembol):
+| varyant | aylık toplam kor | ort mutlak fark | ort |gerçek| | Spearman |
+|---|---|---|---|---|
+| tarihsel tavan, tahmini aralık | 0,839 | %1,64 | %1,59 | 0,769 |
+| GERÇEK ödeme zamanı ve aralığı | 0,929 | %3,41 | %1,81 | 0,777 |
+| tavan = son 30 / 60 / 120 g | 0,73 / 0,78 / 0,83 | %1,6-2,1 | %1,81 | 0,76-0,78 |
+Hata sinyal büyüklüğünde; en büyük hatalar tam da carry'nin seçtiği uç primli
+coinlerde (LSK tahmin −%4,3 / gerçek −%0,7; ONE −%2,8 / −%0,4). Saatlik prim
+kline'ı, Binance'in dakikalık etki-primi ve sembol başı tavanını yakalamıyor.
+**Hüküm: tahmini funding'le Ekim koşmak sonucu uydurmak olur — yapılmadı.**
+Ekim gerçek funding'i yayımlanınca (Kasım başı): `python3 indir_ek_ay.py 2026-10`
+→ `yeniden_kur.py` → `indir_metrik_surdurulebilir.py panel` → `arastirma_m412_eylul_oos.py kos/analiz`.

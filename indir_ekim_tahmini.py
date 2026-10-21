@@ -96,7 +96,7 @@ def dogrula(syms):
         g = pd.read_csv(os.path.join(R, "data_funding_genis", f"{s}.csv"), parse_dates=["date"])
         g = g[(g.date >= "2026-09-01") & (g.date < "2026-10-01")]
         g.index = g.date.dt.floor("h")
-        g = g.funding
+        g = g.funding.groupby(level=0).sum()
         ix = t.index.intersection(g.index)
         if len(ix) < 20:
             continue
