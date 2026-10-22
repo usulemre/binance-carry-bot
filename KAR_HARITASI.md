@@ -4958,3 +4958,26 @@ güçlü, "aynı riskte daha çok kazandırır" %69-90.
 **Sonuç: (1) yaş eşiği 60'ın altına inmemeli; (2) yaşlı bir coinde aynı sıkışmaya karşı
 short tarafında hiçbir koruma yok — madde 428 short felaket stop'unu kaymalı modelde ölçer.**
 AYAR DEĞİŞMEDİ.
+
+## Madde 428 — SHORT FELAKET SİGORTASI (SLS, kaymalı model): KONTROLDE BEDAVA, KUYRUKTA HAYAT KURTARIR
+
+Kontrol (bugünkü kitap, M357_KAYMA), 4 hücre:
+| sigorta | yıllık fark | düşüş | eşit-risk | P |
+|---|---|---|---|---|
+| short +%100'de kapat | −2,7..−5,1 | −1,4..−1,9 SIĞ | +9..+18 | %48-56 |
+| short +%200 | −0,8..−1,5 | +0,2..+0,9 | −3..−9 | %2-17 |
+| short +%300 | −0,1..+0,2 (≈0) | 0 | ≈0 | %14-93 |
+Yaş 45 kombinasyonu (R30, hz0; madde 427'de hesabı sıfırlayan):
+| | son özsermaye (x) | en düşük | tam düşüş |
+|---|---|---|---|
+| sigortasız | −16,7 | −17,6 | −%191 (BATTI) |
+| short +%100 | **61,2** | 0,91 | **−%21,5** |
+| short +%200 | **61,9** | 0,92 | **−%21,7** |
+- +%300 sigorta bugünkü kitabın 4 yıllık tarihinde HİÇ tetiklenmemiş (fark ≈0); +%200 yılda
+  ~1 puan. İkisi de MYX/AIA tipi bir sıkışmada hesabı kurtarır.
+- Bu bir getiri adayı değil, KUYRUK SİGORTASI: protokolün P'si (ortalama getiri) onu
+  ölçemez; karar kuyruk mantığıyla verilir. Canlı botta short stop YOK (madde 143/191:
+  "stop yoktur") — sigorta bota eklenmeli (kullanıcı kararı).
+- Yan bulgu: sigortalı R30 (yaş 45, hacim 70M, UCELE 0, REZ 0,10, 60 sa) 4,2 yılda ~61x
+  (kontrol ~29x) — geniş evren + sigorta ayrıca protokolde ölçülmeli.
+AYAR DEĞİŞMEDİ.
