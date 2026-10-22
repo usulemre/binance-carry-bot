@@ -5105,3 +5105,12 @@ AYAR DEĞİŞMEDİ (kullanıcı kararı). Önerilen aday ailesi: hacim 70M, yaş
 - Testler: entegrasyon 12c (10 kontrol) + tüm entegrasyon ve preflight suitleri geçti.
 - Varsayılan profil (BUGUN) davranışı değişmedi; tek fark varsayılan olarak short +%200 stop'unun
   artık AÇIK olması (madde 428: yaş 90'da maliyeti ≈0).
+
+## Madde 438 — T60 bölgesinde rastgele tarama (20 + T60): T60 BÖLGENİN TEPESİNDE → AYAR DEĞİŞMEDİ
+2.000 $ D8, iki hiza, kaymalı; T60 paritesi tam (136,2087 = madde 436).
+- Genelleme IS→OOS sıra korelasyonu 0,45 (madde 433'ün 0,75'inden zayıf: uzak komşular).
+- T60 IS sırası 2/21 (+155,5); IS 1.'si Q07 (+156,0) OOS'ta T60'ın 97 puan gerisinde → RED.
+- OOS'ta T60'ı geçen yalnız Q06 (+373) ve Q16 (+369), ikisi de dd 2 puandan fazla kötü (−23).
+- Tem-Eyl 2026: hacim 100M + UCELE 0,40'lı kombinasyonlar +%28-39, T60 +%14 — son çeyreği
+  kaçıran şey 70M evren. T60 + Q15 (100M, TPL 0,70, SLS 3, 48 sa) yarı yarıya: yıllık −5 puan,
+  dd aynı, son çeyrek +%21 (T60 +%14); korelasyon 0,96. 3 aya bakılarak bulunduğu için kayıt yalnız.
