@@ -4913,3 +4913,21 @@ Kontrol K00: IS 3,00, OOS 3,21 / +149, düşüş −21,0. Ortak iz: hacim 70M (5
 REZERV 0,10 (3/5). Yıllar (R16 / kontrol): 2023 +366/+201, 2024 +132/+100, 2025 +309/+103,
 2026 +202/+142; ama Tem-Ağu 2026 R16 −2,7/+11,0 vs +6,6/+15,9. Uyarı: 3 ve 5 bacak D8
 dışlama listesiyle (4 bacak için) yaklaşık. R16/R19/R18 madde 426'da protokole.
+
+## Madde 426 — Taramanın kazananları protokolde (kontrol: M357_KAYMA): ÜÇÜ DE %95 ALTINDA — RED, ama en güçlü adaylar
+
+| aday | yıllık fark (4 hücre) | Sh 22-24 | Sh 25-26 | düşüş | eşit-risk | 4 şart | P |
+|---|---|---|---|---|---|---|---|
+| R16 | +92..+108 | +0,07..+0,25 | +0,12..+0,49 | +3,1..+4,1 DERİN | +29..+59 | YXYY x4 | %51-74 |
+| R19 | +47..+57 | +0,03..+0,22 | +0,43..+0,68 | −0,4..−2,8 sığ | +55..+106 | **YYYY x4** | %72-88 |
+| R18 | +47..+58 | −0,04..+0,12 | +0,55..+0,89 | −2,1..+3,9 | +3..+93 | YYYY x2, X x2 | %69-90 |
+**Yapısal uyarı:** REB 4 gün = 24 bar → motor FAZ=15 ile `range(0,24,1)` = **24 dilim** kurdu
+(R16, R19 iki hizada birebir aynı). 24 dilim + 3-5 bacak 2.000 $'da bacağı ~6-7 $'a,
+3.500 $'da ~12 $'a indirir; D8/D2 dışlama listeleri 15x4 bacağına (13,3 / 23 $) göre →
+R16/R19'un evreni GERÇEKTE olacağından geniş ölçüldü (iyimser). R18 (REB 5, 15 dilim,
+4 bacak) bu çarpıtmadan muaf — en güvenilir aday: HAVUZ 5, REZERV 0,10, yaş 60,
+hacim 70M, 60 sa pencere (TP ve UCELE bugünkü gibi).
+R18 son aylar (2.000 $, iki hiza ort.): Tem +3,2 / Ağu +5,7 / Eyl +3,1 vs kontrol +6,6 /
++15,9 / +5,9 — GE2 ile aynı yaz zayıflığı.
+**HÜKÜM: RED (P < %95). R18 bu konuşmanın en güçlü kullanıcı-kararı adayı; canlı/demo
+yan yana kıyas için ilk aday.** AYAR DEĞİŞMEDİ.
