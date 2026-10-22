@@ -5166,3 +5166,15 @@ POZ_CIKTI paritesi 6/6 tam; +819 sembol-ay 1 sa kline; saatlik kitap motorla kor
   kesme kurallarının gerçek maliyeti daha da yüksek.
 - SONUÇ: düşüşü azaltmanın en ucuz yolu sabit dozu düşürmek; zamanlamalı hiçbir kural onu geçmiyor.
 AYAR DEĞİŞMEDİ.
+
+## Madde 442 — T60 VARSAYILAN PROFİL (kullanıcı kararı: "her şeyi T60 ile çalışacak şekilde ayarla")
+- `carry_bot.py` varsayılanları: CARRY_MIN_VOLUME 70M, CARRY_MIN_LISTING_DAYS 60, CARRY_REZERV 0,10,
+  CARRY_UC_HAREKET 0, CARRY_FUNDING_WINDOW_H 60, CARRY_KAR_AL 0,60, CARRY_SHORT_STOP 2,0 (madde 437).
+  Eski değerler `BUGUN_PROFIL` sözlüğünde; tarihsel denetimler ona bakar.
+- `carry_preflight.py`: varsayılan profil T60; CARRY_PROFIL=BUGUN eski kitabı tanır. Yaş < 60 → HATA;
+  yaş < 90 ve stop kapalı → HATA. `.env`'de eski değer kalırsa SAPMA → HATA.
+- `carry_parite.py`: REFERANS_PENCERE_SAAT 48 → 60; beklenen ödeme sayısı tavan(p/a) (60/8 = 8 ödeme,
+  canlı kodun dışlayıcı sınırıyla aynı; 48/8'de eski formülle aynı, kapsayıcı sınır hatasını hâlâ yakalar).
+- Rezerv 0,10 → taban pay 0,45: bacak = bakiye / 166,7 (2.000 $'da ~12 $), tam 5+5 asgari 1.667 $.
+- Testler: 42 dosyanın 36'sı geçiyor; başarısız 6 (accounting, compound_mode, core_modules,
+  doc_accuracy, flags_effective, parameter_effect) DEĞİŞİKLİKTEN ÖNCE de başarısızdı, carry dışı.
