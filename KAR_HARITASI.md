@@ -4896,3 +4896,20 @@ daha iyisi vardı" demez; karşı-olgu ancak motorla ölçülür.** AYAR DEĞİ�
   aynı serinin iki farklı kontrol hizasına karşı ölçülmesi).
 **8 sa / 15 dilim yerinde; 4 sa yalnız hiza şansını yok etmek isteyen için,
 sermaye ≥3.500 $ iken düşünülebilir.** AYAR DEĞİŞMEDİ.
+
+## Madde 425 — Rastgele kombinasyon taraması (10 ayar, 24 + kontrol, gerçekçi model): AYAR SEÇİMİ GENELLİYOR
+
+`arastirma_m425_rastgele_tarama.py`, 2.000 $ iki hiza ortalaması. IS (22-24) Sharpe sırası
+ile OOS (25-26) Sharpe sırası Spearman **0,61** (n=25). Kontrol IS'te 7/25, OOS'ta 17/25.
+IS'te seçilen ilk 5 → OOS:
+| ad | ayar | IS Sh | OOS Sh (fark) | OOS yıllık (fark) | tam düşüş |
+|---|---|---|---|---|---|
+| R16 | H3 REB4 TPL.30 TPS.15 3 bacak REZ.10 UCELE0 yaş60 70M 60sa | 3,15 | 3,58 (+0,36) | +321 (+172) | −24,3 |
+| R19 | H4 REB4 TPL.40 TPS.25 5 bacak REZ.10 UCELE0 yaş60 70M 36sa | 3,11 | 3,72 (+0,50) | +256 (+106) | −18,4 |
+| R13 | H3 REB4 TPL.50 TPS.20 3 bacak REZ.30 UCELE.4 yaş90 70M 36sa | 3,06 | 3,16 (−0,05) | +199 (+50) | −19,7 |
+| R18 | H5 REB5 TPL.40 TPS.20 4 bacak REZ.10 UCELE.4 yaş60 70M 60sa | 3,04 | 3,90 (+0,69) | +246 (+97) | −20,5 |
+| R22 | H4 REB5 TPL.50 TPS.25 4 bacak REZ.30 UCELE.4 yaş60 70M 36sa | 3,03 | 3,77 (+0,56) | +190 (+41) | −20,8 |
+Kontrol K00: IS 3,00, OOS 3,21 / +149, düşüş −21,0. Ortak iz: hacim 70M (5/5), yaş 60 (4/5),
+REZERV 0,10 (3/5). Yıllar (R16 / kontrol): 2023 +366/+201, 2024 +132/+100, 2025 +309/+103,
+2026 +202/+142; ama Tem-Ağu 2026 R16 −2,7/+11,0 vs +6,6/+15,9. Uyarı: 3 ve 5 bacak D8
+dışlama listesiyle (4 bacak için) yaklaşık. R16/R19/R18 madde 426'da protokole.
