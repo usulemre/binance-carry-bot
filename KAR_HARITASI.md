@@ -5093,3 +5093,15 @@ Madde 433 komşularında IS→OOS sıra korelasyonu 0,75 (bölge içi ayar burad
 - Son çeyrek: T60 R30Y60S'ten biraz iyi, bugünkü kitaptan hâlâ geride.
 AYAR DEĞİŞMEDİ (kullanıcı kararı). Önerilen aday ailesi: hacim 70M, yaş 60, REZ 0,10, UCELE 0,
 60 sa, TPL 0,50-0,60, short +%200 felaket stop'u.
+
+## Madde 437 — T60'a GEÇİŞ ALTYAPISI (kod): short felaket stop'u + preflight T60 profili
+- `carry_bot.py`: `CARRY_SHORT_STOP` (varsayılan 2,0 = +%200). Her short pozisyona kâr al ile birlikte
+  STOP_MARKET (reduceOnly, MARK fiyatı) konur; Binance 2025-12-09'dan beri koşullu emirleri yalnız
+  algo API'sinde kabul ettiği için `/fapi/v1/algoOrder` (algoType CONDITIONAL, triggerPrice) kullanılır.
+  Her tur iptal edilip yenilenir; tetiklenen sembol tüm dilimlerden çıkar. Konamazsa ERROR.
+  `requirements.txt`: python-binance >= 1.0.37 (algo metodları).
+- `carry_preflight.py`: `CARRY_PROFIL=T60` onaylı ikinci profil (hacim 70M, yaş 60, REZ 0,10,
+  uç hareket 0, 60 sa, TPL 0,60, stop 2,0). Yaş < 60 → HATA; yaş < 90 ve stop kapalı → HATA.
+- Testler: entegrasyon 12c (10 kontrol) + tüm entegrasyon ve preflight suitleri geçti.
+- Varsayılan profil (BUGUN) davranışı değişmedi; tek fark varsayılan olarak short +%200 stop'unun
+  artık AÇIK olması (madde 428: yaş 90'da maliyeti ≈0).
