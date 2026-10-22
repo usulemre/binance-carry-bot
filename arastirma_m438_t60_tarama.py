@@ -43,7 +43,7 @@ def tek(ad, k, h):
     pkl = os.path.join(CIKTI, f"{ad}_{h}.pkl")
     if os.path.exists(pkl):
         return ad, h, "var"
-    env = dict(os.environ, **dict(M.TABAN, **k), REB_GUN="5", AGIRLIK_KAYMA="1", FAZ_KAY=str(h),
+    env = dict(os.environ, **dict(M.TABAN, **k, REB_GUN="5"), AGIRLIK_KAYMA="1", FAZ_KAY=str(h),
                SEMBOL_HARIC=",".join(M.D8), E_CIKTI=pkl)
     with open(os.path.join(CIKTI, f"{ad}_{h}.txt"), "w") as f:
         r = subprocess.run([sys.executable, "g33.py", "ls", "4"], cwd=KOK, env=env,
