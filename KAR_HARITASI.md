@@ -5082,3 +5082,14 @@ Madde 433 komşularında IS→OOS sıra korelasyonu 0,75 (bölge içi ayar burad
   getiriyi dd pahasına alıyor (kaldıraç benzeri).
 - TPL ekseni dd'yi bozmadan +25 puan: 0,50 / 0,60 / 0,70 plato. T60 dd'ye bakılarak seçildi →
   madde 436 iki seviye protokolü (yanlılık kayıtlı).
+
+## Madde 436 — T60 (R30Y60S + TPL 0,60) iki seviye protokol: RED (P %75-87), kontrole +88..+101 puan
+| karşılaştırma | yıllık fark | eşit-risk | şartlar | P | Tem-Eyl26 (T60 vs karşı) |
+|---|---|---|---|---|---|
+| vs bugünkü kitap (4 hücre) | +87..+101 | +76..+170 | YYYY / XYYY | %75-87 | +13..+14% vs +22..+37% |
+| vs R30Y60S (4 hücre) | +21..+29 | +17..+53 | XYYY x4 | %58-62 | +13..+14% vs +12..+14% |
+- Projede ölçülen en büyük fark (+88..+101 puan, dd aynı). P madde 434 güç sınırında (+71 puanlık
+  gerçek fark ~%88 verir). R30Y60S'e göre artış küçük ve 2022-24 Sharpe'ında belirsiz (X).
+- Son çeyrek: T60 R30Y60S'ten biraz iyi, bugünkü kitaptan hâlâ geride.
+AYAR DEĞİŞMEDİ (kullanıcı kararı). Önerilen aday ailesi: hacim 70M, yaş 60, REZ 0,10, UCELE 0,
+60 sa, TPL 0,50-0,60, short +%200 felaket stop'u.
