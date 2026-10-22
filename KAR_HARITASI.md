@@ -5026,3 +5026,42 @@ AYAR DEĞİŞMEDİ. Sıradaki: madde 433, R30Y60S komşuluk (plato) testi.
   vardı); en yüksek P %92,5. Bar (%95) yine geçilmedi.
 - Son çeyrekte kontrol belirgin önde (−10..−25 puan). REB 4 üyelerin D8/D2 dışlama iyimserliği geçerli.
 AYAR DEĞİŞMEDİ.
+
+## Madde 433 — R30Y60S komşuluk testi: PLATO (14/14 komşu kontrolü +33..+88 puan geçiyor)
+2.000 $ D8, iki hiza, kaymalı. Kontrol +128,5 / dd −21,0; R30Y60S +197,7 / −20,9.
+| komşu | yıllık fark | dd farkı | Tem-Eyl26 |   | komşu | yıllık fark | dd farkı | Tem-Eyl26 |
+|---|---|---|---|---|---|---|---|---|
+| HAVUZ 3 | +42,8 | −1,0 | +12,6 | | REZ 0,20 | +43,7 | +2,4 | +11,0 |
+| HAVUZ 5 | +60,9 | +2,1 | +12,9 | | UCELE 0,40 | +56,7 | −2,1 | +14,0 |
+| TPL 0,30 | +37,5 | +0,4 | +8,7 | | yaş 75 | +56,3 | −4,5 | +21,6 |
+| TPL 0,50 | +87,7 | −0,1 | +15,4 | | yaş 90 | +33,3 | −1,2 | +22,8 |
+| TPS 0,15 | +57,0 | +4,0 | +11,4 | | hacim 50M | +53,7 | +0,8 | +6,7 |
+| TPS 0,25 | +70,6 | −3,1 | +12,0 | | hacim 100M | +57,0 | +2,7 | +25,2 |
+| REZ 0,05 | +74,8 | −1,1 | +13,8 | | pencere 48 sa | +61,4 | −0,1 | +12,4 |
+(kontrol Tem-Eyl26 ≈ +30,6%)
+- Ön kayıt şartı (>= %80 komşu +20 puan, hiçbiri dd'de −5'ten kötü) TAM geçti → kazanç tek nokta şansı DEĞİL.
+- Hacim 100M komşusu da +57: fark hacim eşiğinden değil, REZ 0,10 + UCELE 0 + yaş 60 + 60 sa + SLS
+  birleşiminden geliyor. Tem-Eyl 2026'da yaşlı/yüksek hacimli komşular (yaş 90, 100M) kontrole en yakın.
+
+## Madde 434 — GÜVEN ÖLÇÜSÜ DENETİMİ: P YANLIŞ DEĞİL, AMA GÜÇSÜZ (bu büyüklükte farkı %95'e taşıyamaz)
+Yapay adaylar (cevabı bilinen), 500 eşli blok bootstrap yolu, kontrol M357_KAYMA_2000_0:
+| aday | ESIT_DD (protokol) | HAM | SHARPE | ESIT_VOL |
+|---|---|---|---|---|
+| plasebo kontrol x1,25 (doğru ≈50) | 47,0 | 100 (YANLIŞ: kaldıraç beceri sanılır) | — | — |
+| R30Y60S gürültüsü + 0 üstünlük | 13,6 | 41,8 | 4,0 | 4,0 |
+| ... + 2 bp/gün (+13 puan) | 35,8 | 77,6 | 17,8 | 17,8 |
+| ... + 5 bp/gün (+41 puan) | 67,4 | 98,8 | 69,4 | 69,4 |
+| ... + 8 bp/gün (+71 puan) | **87,6** | 100 | 97,4 | 97,4 |
+| GERÇEK R30Y60S h0 / h1 | 87,6 / 78,0 | 100 / 99,8 | 97,8 / 90,8 | 97,8 / 90,8 |
+| GERÇEK TOP5 h0 / h1 | 90,8 / 77,0 | 100 / 98,8 | 99,2 / 89,2 | 99,2 / 89,2 |
+- Ölçü KALİBRE (plasebo %47) ve TEMKİNLİ (sıfır üstünlükte %14). Ama 4,2 yıllık veride, R30Y60S
+  kadar gürültülü bir adayın +71 puanlık GERÇEK üstünlüğü bile ESIT_DD'de ancak ~%88 verir —
+  gözlenen değerin ta kendisi. %95 bar bu veri boyunda ~+90 puanın altındaki gerçek farkları
+  görmez → madde 426-433'teki "%78-93" sonuçları "şans" kanıtı DEĞİL, testin gücünün sınırı.
+- HAM getiri ölçüsü kullanılamaz (kaldıracı beceri sayar); SHARPE/ESIT_VOL daha güçlü ama
+  kuyruk riskini görmez — tek başına karar ölçüsü olamaz.
+- SONUÇ: karar yalnız P'ye değil kanıt birleşimine dayanmalı: (1) IS'te seçilip OOS'ta geçme
+  (madde 425), (2) plato (433, 14/14), (3) ileri yürüyen seçimin aynı bölgeyi bulması (432),
+  (4) protokolde 4 hücrenin hepsinde dört şart (431), (5) P ≈ güç sınırında. Hepsi R30Y60S
+  bölgesini destekliyor; karşı kanıt: Tem-Ağu 2026 (iki ay) geride.
+AYAR DEĞİŞMEDİ (kullanıcı kararı).
