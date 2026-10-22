@@ -56,6 +56,30 @@ def kontrol_ayarlar() -> None:
         "KALABALIK_HAVUZ": (cb.KALABALIK_HAVUZ, 4.0, "madde 352"),
         "REZERV_PAY": (cb.REZERV_PAY, 0.20, "madde 156"),
     }
+    # MADDE 437: ÖLÇÜLMÜŞ İKİNCİ PROFİL "T60" (madde 429-436: hacim 70M, yaş 60,
+    # REZ 0,10, uç hareket kapalı, 60 sa, long TP 0,60, short +%200 stop).
+    # CARRY_PROFIL=T60 ile BİLEREK seçilir; yaş 60 short felaket stop'u
+    # OLMADAN çalıştırılamaz (madde 427: yaş 45 hesabı sıfırladı).
+    profil = os.getenv("CARRY_PROFIL", "BUGUN").strip().upper()
+    if profil == "T60":
+        bekle.update({
+            "FUNDING_WINDOW_HOURS": (cb.FUNDING_WINDOW_HOURS, 60.0, "madde 429"),
+            "KAR_AL_ORAN": (cb.KAR_AL_ORAN, 0.60, "madde 435-436"),
+            "UC_HAREKET_ELE": (cb.UC_HAREKET_ELE, 0.0, "madde 429"),
+            "REZERV_PAY": (cb.REZERV_PAY, 0.10, "madde 429"),
+            "MIN_DAILY_VOLUME_USD": (cb.MIN_DAILY_VOLUME_USD, 7e7, "madde 429"),
+            "MIN_LISTELEME_GUN": (cb.MIN_LISTELEME_GUN, 60, "madde 429/433"),
+            "SHORT_FELAKET": (cb.SHORT_FELAKET, 2.0, "madde 428"),
+        })
+        kontrol("profil", TAMAM, "CARRY_PROFIL=T60 (madde 437; beklenti KAR_HARITASI madde 433-436)")
+    elif profil != "BUGUN":
+        kontrol("profil", HATA, f"CARRY_PROFIL={profil} tanımsız (BUGUN | T60)")
+    if getattr(cb, "MIN_LISTELEME_GUN", 90) < 60:
+        kontrol("yaş eşiği", HATA, f"CARRY_MIN_LISTING_DAYS={cb.MIN_LISTELEME_GUN} < 60: "
+                "madde 427'de yaş 45 short sıkışmalarıyla hesabı sıfırladı")
+    if getattr(cb, "MIN_LISTELEME_GUN", 90) < 90 and getattr(cb, "SHORT_FELAKET", 0) <= 0:
+        kontrol("short felaket stop'u", HATA, "yaş eşiği 90'ın altında ama CARRY_SHORT_STOP=0: "
+                "genç coin short'u sigortasız (madde 427-428)")
     # MADDE 374: ÖLÇÜLMÜŞ DOZ, AÇIK ONAYLA. Madde 368/369 2.000 $ için
     # 1,25x ve 1,55-1,60x'i gerçek serilerle ölçtü. Kapı (madde 276: önce
     # 1x canlı çeyrek) KOD değil SÜREÇ; kod yalnız şunu garanti eder:

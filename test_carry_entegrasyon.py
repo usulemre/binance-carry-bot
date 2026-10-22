@@ -119,6 +119,9 @@ class SahteIcClient:
         self.emir_durumu = {}         # oid -> NEW / FILLED / CANCELED
         self.iptal_kar_al = []
         self.son_kar_al_kw = []
+        self.felaket_emirleri = {}    # algoId -> (sembol, yon, tetik, miktar, kw)
+        self.felaket_durumu = {}      # algoId -> NEW / TRIGGERED / CANCELED
+        self._aid = 50000
         self._oid = 100000
         self.iptal_edilen = []
         # madde 163: borsada ASILI DURAN emirler (dolmamış GTX, kâr al...).
@@ -298,6 +301,22 @@ class SahteIcClient:
             out.append({"symbol": s, "orderId": 8000 + j,
                         "clientOrderId": f"OLAY123{s[:6]}"})
         return out
+
+    def futures_create_algo_order(self, **kw):
+        """madde 437: short felaket stop'u (Binance algo emir API'si)."""
+        self._aid += 1
+        self.felaket_emirleri[self._aid] = (kw["symbol"], kw["side"], float(kw["triggerPrice"]),
+                                            float(kw["quantity"]), dict(kw))
+        self.felaket_durumu[self._aid] = "NEW"
+        return {"algoId": self._aid, "algoStatus": "NEW"}
+
+    def futures_get_algo_order(self, symbol, algoId):
+        d = self.felaket_durumu.get(algoId, "CANCELED")
+        return {"algoStatus": d, "actualOrderId": "777" if d == "TRIGGERED" else ""}
+
+    def futures_cancel_algo_order(self, symbol, algoId):
+        if self.felaket_durumu.get(algoId) == "NEW":
+            self.felaket_durumu[algoId] = "CANCELED"
 
     def futures_get_order(self, symbol, orderId):
         return {"status": self.emir_durumu.get(orderId, "CANCELED")}
@@ -1092,6 +1111,70 @@ kontrol("sağlık kapısı kapanınca açık kâr al emirleri iptal edildi",
 cb.SAGLIK_MODU = _em
 cb.KAR_AL_ORAN = _eski_ka
 cb.KAR_AL_SHORT = _eski_kas
+
+print("\n12c) SHORT FELAKET STOP'U (madde 437)")
+_eski = (cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET)
+cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = 0.60, 0.20, 2.0
+temiz_ortam()
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+cb.bir_tur(c, dry_run=False)
+poz = {p["symbol"]: (float(p["positionAmt"]), float(p["entryPrice"])) for p in c.get_open_positions()}
+fe = {v[0]: v for k, v in c.client.felaket_emirleri.items() if c.client.felaket_durumu[k] == "NEW"}
+shortlar = {s_ for s_, (m, _) in poz.items() if m < 0}
+kontrol("her SHORT pozisyona bir felaket stop'u kondu, long'lara HİÇ konmadı",
+        shortlar and set(fe) == shortlar, f"({len(fe)} stop / {len(shortlar)} short)")
+kontrol("stop BUY, tetik giriş x3,00 (+%200), miktar pozisyonun tamamı",
+        all(fe[s_][1] == "BUY" and abs(fe[s_][2] / poz[s_][1] - 3.0) < 0.01
+            and abs(fe[s_][3] - abs(poz[s_][0])) < 1e-3 for s_ in fe))
+kontrol("stop algo API'sinden: CONDITIONAL + STOP_MARKET + reduceOnly + MARK_PRICE",
+        all(v[4].get("algoType") == "CONDITIONAL" and v[4].get("type") == "STOP_MARKET"
+            and v[4].get("reduceOnly") == "true" and v[4].get("workingType") == "MARK_PRICE"
+            for v in fe.values()))
+_ka = {v[0]: v for k, v in c.client.kar_al_emirleri.items() if c.client.emir_durumu[k] == "NEW"}
+kontrol("kâr al emirleri stop'tan etkilenmedi (long %60 / short %20 her pozisyonda)",
+        set(_ka) == set(poz) and all(
+            abs(_ka[s_][2] / poz[s_][1] - (1.60 if poz[s_][0] > 0 else 0.80)) < 0.01 for s_ in _ka))
+onceki = [k for k, v in c.client.felaket_durumu.items() if v == "NEW"]
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+cb.bir_tur(c, dry_run=False)
+kontrol("sonraki turda eski stop'lar iptal edilip yenileri kondu",
+        onceki and all(c.client.felaket_durumu[k] == "CANCELED" for k in onceki)
+        and any(v == "NEW" for v in c.client.felaket_durumu.values()))
+durum = cb.dilim_durum_oku()
+aid, sem_t = next((k, v[0]) for k, v in c.client.felaket_emirleri.items()
+                  if c.client.felaket_durumu[k] == "NEW")
+c.client.felaket_durumu[aid] = "TRIGGERED"
+dol = cb.kar_al_kontrol(c, durum)
+kontrol("tetiklenen stop tespit edildi", sem_t in dol, f"({dol})")
+kontrol("tetiklenen sembol TÜM dilimlerden çıktı (yeniden açılmasın)",
+        all(sem_t not in h for h in durum["dilimler"].values()))
+# stop kapalıyken (0) hiç algo emri yok
+temiz_ortam(); cb.SHORT_FELAKET = 0.0
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+cb.bir_tur(c, dry_run=False)
+kontrol("CARRY_SHORT_STOP=0 iken felaket stop'u konmuyor", c.client.felaket_emirleri == {})
+# kâr al kapalı, yalnız stop açık -> stop yine konur, kâr al konmaz
+temiz_ortam(); cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = 0.0, 0.0, 2.0
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+cb.bir_tur(c, dry_run=False)
+kontrol("kâr al kapalıyken de stop konuyor, kâr al konmuyor",
+        c.client.felaket_emirleri and c.client.kar_al_emirleri == {})
+# eski kütüphane: algo metodu yoksa ERROR ile sigortasız raporlanır, tur bozulmaz
+temiz_ortam(); cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = 0.60, 0.20, 2.0
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+_m = type(c.client).futures_create_algo_order
+del type(c.client).futures_create_algo_order
+try:
+    r = cb.bir_tur(c, dry_run=False)
+    kontrol("algo API yoksa tur yine tamamlanıyor, kâr al konuyor",
+            r and c.client.kar_al_emirleri, f"({r})")
+finally:
+    type(c.client).futures_create_algo_order = _m
+cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
 
 print("\n12b) KÂR AL PATLASA BİLE DİLİM DEFTERİ YAZILIR (madde 208)")
 # Borsa bakiminda `get_open_positions()` hata firlatir; eskiden bu hata

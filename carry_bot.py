@@ -1784,6 +1784,23 @@ parametrenin docstring'inde duruyordu. Defterin yapısal sınırı bu:
 birlikte taranan parametrelerde ölçümü taşıyan docstring tek olunca
 öteki BAYAT görünür. Çözüm çapraz atıf - bu paragraf onun kendisi."""
 
+SHORT_FELAKET = float(os.getenv("CARRY_SHORT_STOP", "2.0"))
+"""SHORT FELAKET STOP'U (madde 428-436). Short bacak girişten +%X aleyhe
+giderse borsada bekleyen STOP_MARKET (reduceOnly, MARK fiyatı) kapatır.
+0 kapatır. Varsayılan 2,0 = +%200.
+
+Bu bir getiri ayarı DEĞİL, kuyruk sigortasıdır. Madde 427: yaş 45
+evreninde MYX (6 Ağu 2025, tek gün −%63) ve AIA (7 Kas 2025, −%165) short
+sıkışmaları gerçekçi ağırlık kaymalı modelde hesabı SIFIRLADI. Madde 428:
+yaş 90 kitapta +%300 stop 4 yılda hiç tetiklenmedi (maliyet ≈0), +%200
+yılda ~1 puan; yaş 45 kombinasyonunda dd −%191 -> −%21,7. Eski "stop
+YOKTUR" kuralı (madde 143/191) DAR stoplar (%10-30) içindir: onlar
+gürültüyle tetiklenip kirayı öldürüyordu; +%200 gürültüye takılmaz.
+Yaş eşiği 60'a indirilirse (CARRY_MIN_LISTING_DAYS=60) bu stop ŞARTTIR.
+
+Dolan stop, dolan kâr al gibi işlenir: sembol tüm dilim hedeflerinden
+çıkar (aynı turda yeniden açılmasın)."""
+
 TEMINAT_MODU = os.getenv("CARRY_TEMINAT_MODU", "usdt").strip().lower()
 """Sermaye nasıl okunsun: "usdt" (varsayılan) | "coklu" (madde 141).
 
@@ -3193,6 +3210,37 @@ def tp_defteri_oku(dosya: str = None, gun: float = 30.0) -> dict:
     return out
 
 
+def felaket_emri_gonder(client: ExchangeClient, sem: str, adet: float, tetik: str):
+    """Short için +%X koruyucu STOP_MARKET. algoId döner.
+
+    Binance 2025-12-09'dan beri koşullu emirleri (STOP_MARKET vb.) normal
+    `/fapi/v1/order` uç noktasında REDDEDİYOR (-4120); `/fapi/v1/algoOrder`
+    (algoType=CONDITIONAL, triggerPrice) kullanılmalı. python-binance
+    >= 1.0.37 `futures_create_algo_order` sağlar; yoksa açık hata verilir
+    (sessizce sigortasız kalmak yerine)."""
+    f = getattr(client.client, "futures_create_algo_order", None)
+    if f is None:
+        raise RuntimeError("python-binance eski: futures_create_algo_order yok "
+                           "(pip install -U python-binance)")
+    e = f(algoType="CONDITIONAL", symbol=sem, side="BUY", type="STOP_MARKET",
+          triggerPrice=tetik, quantity=adet, reduceOnly="true",
+          workingType="MARK_PRICE")
+    return e.get("algoId")
+
+
+def felaket_tetiklendi_mi(e: dict) -> bool:
+    """Algo emri tetiklendi mi: tetiklenince `actualOrderId` dolar (piyasa
+    emri olduğu için tetik = dolum)."""
+    if str(e.get("actualOrderId") or "").strip() not in ("", "0"):
+        return True
+    return str(e.get("algoStatus", "")).upper() in ("TRIGGERED", "FINISHED", "FILLED")
+
+
+def koruma_acik() -> bool:
+    """Kâr al veya short felaket stop'undan biri açık mı."""
+    return KAR_AL_ORAN > 0 or KAR_AL_SHORT > 0 or SHORT_FELAKET > 0
+
+
 def kar_al_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
     """Önceki turda konan kâr al emirlerinden DOLANLARI bulur ve o
     sembolleri tüm dilim hedeflerinden çıkarır. Dolan sembolleri döner.
@@ -3213,7 +3261,21 @@ def kar_al_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
                 hedef.pop(sem, None)
     if dolan:
         logger.info("KÂR AL doldu: %s - eski dilimlerden çıkarıldı", ", ".join(dolan))
-    return dolan
+    felaket = []
+    for sem, oid in list(durum.get("felaket", {}).items()):
+        try:
+            e = client.client.futures_get_algo_order(symbol=sem, algoId=oid)
+        except Exception as ex:
+            logger.warning("felaket stop durumu alınamadı %s: %s", sem, ex)
+            continue
+        if felaket_tetiklendi_mi(e):
+            felaket.append(sem)
+            for hedef in durum.get("dilimler", {}).values():
+                hedef.pop(sem, None)
+    if felaket:
+        logger.error("SHORT FELAKET STOP'U DOLDU (+%%%.0f): %s - short kapandı, "
+                     "eski dilimlerden çıkarıldı", SHORT_FELAKET * 100, ", ".join(felaket))
+    return dolan + felaket
 
 
 def kar_al_iptal(client: ExchangeClient, durum: dict) -> None:
@@ -3225,6 +3287,12 @@ def kar_al_iptal(client: ExchangeClient, durum: dict) -> None:
         except Exception:
             pass
     durum["kar_al"] = {}
+    for sem, oid in list(durum.get("felaket", {}).items()):
+        try:
+            client.client.futures_cancel_algo_order(symbol=sem, algoId=oid)
+        except Exception:
+            pass
+    durum["felaket"] = {}
 
 
 def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
@@ -3241,7 +3309,7 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
     Artık: başarısızlar BİR KEZ yeniden denenir, sonuç
     `carry_tp_kurulum.csv`'ye yazılır ve eksik kalırsa **ERROR**
     seviyesinde, sembol adlarıyla raporlanır."""
-    if KAR_AL_ORAN <= 0 and KAR_AL_SHORT <= 0:
+    if not koruma_acik():
         return 0
     kar_al_iptal(client, durum)
     try:
@@ -3251,6 +3319,17 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                      "konulamadı, pozisyonlar korumasız", ex)
         _tp_kurulum_kaydet(-1, 0, -1)
         return 0
+
+    def _felaket_koy(sem, giris, adet, pr) -> None:
+        """Short için +%X STOP_MARKET (reduceOnly, MARK). Hata kâr al'ı
+        bozmaz ama ERROR olarak raporlanır: sigortasız short demektir."""
+        try:
+            durum.setdefault("felaket", {})[sem] = felaket_emri_gonder(
+                client, sem, adet, f"{giris * (1 + SHORT_FELAKET):.{pr.get('price_precision', 2)}f}")
+        except Exception as ex:
+            felaket_basarisiz[sem] = str(ex)[:80]
+
+    felaket_basarisiz: dict = {}
 
     def _koy(p) -> tuple:
         """(sembol, kondu_mu, sebep). Hedef dışıysa sembol None döner."""
@@ -3271,6 +3350,10 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
             adet = round(abs(miktar), pr["quantity_precision"])
             if adet <= 0:
                 return (None, False, "miktar hassasiyete yuvarlanınca 0")
+            if miktar < 0 and SHORT_FELAKET > 0 and sem not in durum.get("felaket", {}):
+                _felaket_koy(sem, giris, adet, pr)
+            if (KAR_AL_ORAN if miktar > 0 else KAR_AL_SHORT) <= 0:
+                return (sem, True, "")
             e = client.client.futures_create_order(
                 symbol=sem, side=yon, type="LIMIT", timeInForce="GTC",
                 quantity=adet, price=f"{fiyat:.{pr.get('price_precision', 2)}f}",
@@ -3308,6 +3391,16 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                 basarisiz.pop(sem, None)
             else:
                 basarisiz[sem] = sebep
+    for sem in list(felaket_basarisiz):
+        if sem in durum.get("felaket", {}):
+            felaket_basarisiz.pop(sem)
+    if felaket_basarisiz:
+        logger.error("SHORT FELAKET STOP'U KONULAMADI: %d short SİGORTASIZ (%s). Sebep: %s",
+                     len(felaket_basarisiz), ", ".join(sorted(felaket_basarisiz)[:8]),
+                     "; ".join(f"{s}: {r}" for s, r in sorted(felaket_basarisiz.items())[:3]))
+    if SHORT_FELAKET > 0:
+        logger.info("%d short pozisyona felaket stop'u kondu (+%%%.0f)",
+                    len(durum.get("felaket", {})), SHORT_FELAKET * 100)
     _tp_kurulum_kaydet(hedeflenen, kurulan, len(basarisiz))
     if basarisiz:
         logger.error(
@@ -3725,7 +3818,7 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
         durum_kurtar(durum, mevcut_portfoy(client), bakiye)
     # Kâr al dolanları, YENİ dilim yazılmadan ÖNCE eski dilimlerden çıkar
     # (kuru çalışmada durum değiştirilmez).
-    if not dry_run and (KAR_AL_ORAN > 0 or KAR_AL_SHORT > 0):
+    if not dry_run and koruma_acik():
         kar_al_kontrol(client, durum)
     sira = int(durum.get("sira", 0)) % max(1, N_DILIM)
     dilim_sermaye = (bakiye * olcek) / max(1, N_DILIM)
@@ -3810,7 +3903,7 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     # dilim 8 saat fazla tutulur). Artık defter ÖNCE yazılır; kâr al
     # bir süstür, kendi hatası defteri bozmaz.
     dilim_durum_yaz(durum)
-    if KAR_AL_ORAN > 0 or KAR_AL_SHORT > 0:
+    if koruma_acik():
         try:
             kar_al_kur(client, durum)
         except Exception as e:
