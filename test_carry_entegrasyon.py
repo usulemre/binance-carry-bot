@@ -417,8 +417,9 @@ kontrol("tur aralığı 8 saat", abs(cb.REBALANCE_HOURS / cb.N_DILIM - 8.0) < 1e
 _gerekli = (cb.MIN_BACAK_USD * cb.N_DILIM * _GERCEK_N_LEGS
             / cb.taban_pay() / cb.GROSS_EXPOSURE)
 # MADDE 222: 5 bacakta aynı bakiyede bacak %20 büyük -> gereken bakiye düşer
-kontrol("tam bacak için gereken bakiye ~2.800$ (madde 222; 6 bacakta 3.400$)",
-        2600 <= _gerekli <= 3000, f"({_gerekli:.0f}$)")
+# MADDE 442: rezerv 0,20 -> 0,10, taban pay 0,40 -> 0,45: ~2.800$ -> ~2.500$
+kontrol("tam bacak için gereken bakiye ~2.500$ (madde 442; rezerv 0,20'de ~2.800$)",
+        2400 <= _gerekli <= 2600, f"({_gerekli:.0f}$)")
 cb.N_LEGS, cb.MIN_LEGS = _GERCEK_N_LEGS, _GERCEK_MIN_LEGS   # gercek varsayilan
 _kucuk = cb.uygun_bacak_sayisi(1200)
 cb.N_LEGS, cb.MIN_LEGS = 12, 8      # testin geri kalani 12 bacak varsayiyor
@@ -875,6 +876,8 @@ kontrol("'zaten çapraz' (-4046) hatası çapraz sayılıyor, kaldıraç ayarlan
 cb._KALDIRAC_AYARLI.clear()
 
 print("\n11e) FIRSAT REZERVİ TAM TURDA (madde 156)")
+_rez11e = cb.REZERV_PAY
+cb.REZERV_PAY = 0.20   # madde 442: mekanizma eşikleri (1,5x) rezerv 0,20 ile yazıldı
 temiz_ortam(); cb._KALDIRAC_AYARLI.clear()
 c = SahteClient()
 c.client.gonderilen = []
@@ -911,6 +914,23 @@ _al2 = sum(v for k, v in _buyukluk.items() if k in {e[0] for e in c2.client.gond
 _sat2 = sum(v for k, v in _buyukluk.items() if k in {e[0] for e in c2.client.gonderilen if e[1] == "SELL"})
 kontrol("rezerv açıkken portföy hâlâ NÖTR (long ~ short)",
         abs(_al2 - _sat2) / max(_al2, _sat2) < 0.02, f"({_al2:.0f} vs {_sat2:.0f})")
+
+cb.REZERV_PAY = _rez11e
+# MADDE 442: varsayılan rezerv 0,10'da da uç coin DAHA BÜYÜK (oran küçülür ama > 1)
+temiz_ortam(); cb._KALDIRAC_AYARLI.clear()
+c3 = SahteClient()
+c3.client.uc_funding = {"C0USDT": -0.006, "C1USDT": -0.006}
+c3.client.gonderilen = []
+cb.bir_tur(c3, dry_run=False)
+_b3 = {}
+for s_, yon, _, m in c3.client.gonderilen:
+    _b3[s_] = _b3.get(s_, 0) + m * c3.client._fiyat[s_]
+_u3 = (_b3.get("C0USDT", 0) + _b3.get("C1USDT", 0)) / 2
+_d3 = [v for k, v in _b3.items() if k not in ("C0USDT", "C1USDT")
+       and k in {e[0] for e in c3.client.gonderilen if e[1] == "BUY"}]
+kontrol("rezerv 0,10 (T60 varsayılanı) ile de uç coine daha büyük pozisyon",
+        _u3 > 1.2 * (sum(_d3) / max(1, len(_d3))),
+        f"(uc {_u3:.1f} vs dig {sum(_d3) / max(1, len(_d3)):.1f})")
 
 print("\n11f) EMİR REDDİNDE YENİDEN DENEME (madde 160)")
 temiz_ortam(); cb._KALDIRAC_AYARLI.clear()
