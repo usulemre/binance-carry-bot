@@ -4939,3 +4939,22 @@ getiri üstünlüğü sağlam. Protokolün P'si başka bir şey sorar: adayı ko
 DÖNEM DÜŞÜŞÜNE kaldıraçla eşitleyip getiriyi karşılaştırır (`_esit_risk_fark`); tam
 dönem düşüşü yol başına TEK bir olaydır ve çok gürültülüdür → "daha çok kazandırır"
 güçlü, "aynı riskte daha çok kazandırır" %69-90.
+
+## Madde 427 — İkinci rastgele tarama (REB 5 / 15 dilim / 4 bacak sabit): GENELLEME YOK + KATASTROFİK SHORT SIKIŞMASI
+
+`arastirma_m427_rastgele_tarama2.py`, 30 kombinasyon + kontrol, gerçekçi model, 2.000 $.
+- Kazanan bölgesinin İÇİNDE IS→OOS Spearman **−0,05**: bölge içi ince ayar gürültü. Kontrol
+  IS'te 2/31, OOS'ta 22/31 (bölgenin neredeyse tamamı 25-26'da kontrolü geçiyor — geniş evren
+  rejimi, madde 402).
+- **HESAP SIFIRLAYAN KOMBİNASYONLAR:** R30 (yaş 45) min özsermaye −17,6, R16 (yaş 45) −4,5;
+  R15 −%66, R04 −%79, R05 −%34,5 düşüş — hepsi yaş 45. Katkı kaydı (R30, hz0):
+  **6 Ağu 2025 MYX SHORT −%63,2 (tek gün), 7 Kas 2025 AIA SHORT −%164,9 (tek gün).**
+  Gerçekçi ağırlık kaymasında short bacağın ağırlığı fiyatla büyür → çok katlı sıkışma
+  sermayeyi aşar (canlıda = likidasyon). Sabit ağırlık modeli bunu GÖSTEREMİYORDU (bar başı
+  kayıp ağırlıkla sınırlıydı).
+- Yaş 90 filtresi bu iki olayı dışarıda tuttu (coinler 45-90 gün yaşındaydı) → madde 376'nın
+  "yaş filtresi en büyük bileşen" bulgusunun KUYRUK yüzü. Yaş 60'lı adaylar (GE2, R18) bu
+  iki olayı ıskaladı ama sınırda.
+**Sonuç: (1) yaş eşiği 60'ın altına inmemeli; (2) yaşlı bir coinde aynı sıkışmaya karşı
+short tarafında hiçbir koruma yok — madde 428 short felaket stop'unu kaymalı modelde ölçer.**
+AYAR DEĞİŞMEDİ.
