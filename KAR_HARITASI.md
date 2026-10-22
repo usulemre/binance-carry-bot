@@ -4981,3 +4981,24 @@ Yaş 45 kombinasyonu (R30, hz0; madde 427'de hesabı sıfırlayan):
 - Yan bulgu: sigortalı R30 (yaş 45, hacim 70M, UCELE 0, REZ 0,10, 60 sa) 4,2 yılda ~61x
   (kontrol ~29x) — geniş evren + sigorta ayrıca protokolde ölçülmeli.
 AYAR DEĞİŞMEDİ.
+
+## Madde 429 — Sigortalı geniş evren protokolde (SLS 2,0, kaymalı model): ÜÇÜ DE RED, R30Y60S en güçlü aday
+| kol | yıllık fark | eşit-risk | P (4 hücre) | 2026 YTD (2000 $) | Tem/Ağu/Eyl 2026 |
+|---|---|---|---|---|---|
+| kontrol | — | — | — | +%142 | +6,6 / +15,9 / +5,9 |
+| R30S (yaş 45) | +42..+47 | +70..+90 | %56-64 | +%183 | −2,1 / +4,8 / +7,1 |
+| **R30Y60S (yaş 60)** | **+66..+72** | +54..+106 | **%78-89** | **+%238** | −1,4 / +7,4 / +6,4 |
+| R18S | +44..+55 | +1..+89 | %65-88 | +%199 | +3,2 / +5,7 / +3,1 |
+- R30Y60S = HAVUZ 4, REB 5, TPL 0,40, TPS 0,20, REZ 0,10, UCELE 0, yaş 60, hacim 70M, 60 sa, short +%200 stop.
+  Projede ölçülen en büyük fark ve en yüksek P'lerden biri; ama %95 altı. Seçim yanlılığı var
+  (R30 madde 427'de tam dönemde görüldü).
+- Yaş 45 sigortayla bile yaş 60'ın gerisinde (−25 puan): genç coin kuyruğu sigortadan sonra da pahalı.
+- Tem-Ağu 2026'da üç kol da kontrolün gerisinde; Eylül'de R30 kolları önde. 2026 YTD hepsi önde.
+AYAR DEĞİŞMEDİ.
+
+## Madde 430 — İki yeni eksen (mevcut serilerden)
+A) KİTAP GETİRİSİNE GÖRE DOZ (MOM/TERS 10-90 gün, DD10/15): HEPSİ RED. Kitap getirisi 20/60 günde
+   hafif kalıcı (korelasyon +0,2) ama eşit oynaklıkta her kural kontrolün gerisinde (−0,2..−33 puan).
+B) AYAR TOPLULUĞU (madde 425, IS'te ilk k ayar, eşit sermaye): TOP5 OOS Sharpe 3,83 (en iyi tek
+   3,58, kontrol 3,21), eşit oynaklıkta +25,6 puan, dd −19,5. İlk 5'in korelasyonu 0,87.
+   Tem-Eyl 2026: TOP5 +13,7% vs kontrol +30,8%. → madde 431 protokolüne.
