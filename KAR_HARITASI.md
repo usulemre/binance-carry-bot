@@ -4931,3 +4931,11 @@ R18 son aylar (2.000 $, iki hiza ort.): Tem +3,2 / Ağu +5,7 / Eyl +3,1 vs kontr
 +15,9 / +5,9 — GE2 ile aynı yaz zayıflığı.
 **HÜKÜM: RED (P < %95). R18 bu konuşmanın en güçlü kullanıcı-kararı adayı; canlı/demo
 yan yana kıyas için ilk aday.** AYAR DEĞİŞMEDİ.
+
+### Madde 426 eki — P neden düşük? (R18, 2.000 $ hz0)
+Aylık fark (R18 − kontrol): ort +2,14 puan, sd 4,20, R18 51 ayın 37'sinde önde, aylık t 3,64;
+yıllar −0,19 / +1,89 / +1,33 / +3,28 / +3,61; en iyi 3 ay çıkınca ort +1,45. Yani HAM
+getiri üstünlüğü sağlam. Protokolün P'si başka bir şey sorar: adayı kontrolün TAM
+DÖNEM DÜŞÜŞÜNE kaldıraçla eşitleyip getiriyi karşılaştırır (`_esit_risk_fark`); tam
+dönem düşüşü yol başına TEK bir olaydır ve çok gürültülüdür → "daha çok kazandırır"
+güçlü, "aynı riskte daha çok kazandırır" %69-90.
