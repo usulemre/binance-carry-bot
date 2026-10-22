@@ -26,6 +26,21 @@ def kontrol(ad, kosul, detay=""):
 R = os.path.dirname(os.path.abspath(__file__))
 import carry_bot as cb
 import carry_preflight as pf
+# MADDE 442: varsayılan kitap T60 oldu. Aşağıdaki TARİHSEL maddeler (209-341)
+# ESKİ kitabı (rezerv 0,20, pencere 48, kâr al 0,40, hacim 100M) ölçtü; onların
+# "ayar DEĞİŞMEDİ" / "formül aynı" denetimleri cb.BUGUN_PROFIL'e bakar.
+from contextlib import contextmanager
+_TABAN_ESKI = 0.5 - cb.BUGUN_PROFIL["REZERV_PAY"] / 2
+
+
+@contextmanager
+def _eski_rezerv():
+    _r = cb.REZERV_PAY
+    cb.REZERV_PAY = cb.BUGUN_PROFIL["REZERV_PAY"]
+    try:
+        yield
+    finally:
+        cb.REZERV_PAY = _r
 
 print("1) PREFLIGHT YEREL MODDA ÇALIŞIYOR")
 pf._sayac.update({pf.TAMAM: 0, pf.UYARI: 0, pf.HATA: 0})
@@ -45,8 +60,8 @@ cb.FUNDING_WINDOW_HOURS = 8.0
 pf._sayac.update({pf.TAMAM: 0, pf.UYARI: 0, pf.HATA: 0}); pf._satirlar.clear()
 pf.kontrol_ayarlar()
 kontrol("pencere 8 saate çekilirse HATA", pf._sayac[pf.HATA] >= 1)
-kontrol("gerekçe madde 209'u ve doğru değeri söylüyor",
-        any("209" in m and "48" in m for _, d, m in pf._satirlar if d == pf.HATA),
+kontrol("gerekçe ölçüm maddesini ve doğru değeri söylüyor (madde 442: 429 / 60)",
+        any("429" in m and "60" in m for _, d, m in pf._satirlar if d == pf.HATA),
         f"({[m for _, d, m in pf._satirlar if d == pf.HATA]})")
 cb.FUNDING_WINDOW_HOURS = _eski
 _eskin = cb.N_DILIM
@@ -196,7 +211,7 @@ kontrol("N_DILIM docstring'i eski ~3.400$ eşiğini AYAR ÖNERİSİ olarak vermi
         "**3.500$\naltındaki" not in _kaynak
         and "3.500$ altındaki hesaplarda" not in _kaynak)
 # docstring'deki dilim -> asgari bakiye tablosu koddan dogru mu
-for _nd2, _bek in ((5, 62.5), (6, 75.0), (10, 125.0), (15, 187.5)):
+for _nd2, _bek in ((5, 5 * 5 / 0.45), (6, 6 * 5 / 0.45), (10, 10 * 5 / 0.45), (15, 15 * 5 / 0.45)):   # madde 442: taban 0,45
     _hesap = _nd2 * cb.N_LEGS / (cb.GROSS_EXPOSURE * cb.taban_pay())
     kontrol(f"docstring tablosu N_DILIM={_nd2} için koddan doğru",
             abs(_hesap - _bek) < 1e-9
@@ -363,9 +378,9 @@ kontrol("yeniden açma defteri parametreleri koddan okuyor (>40 parametre)",
         len(_son) + len(_atifsiz) > 40)
 kontrol("DEFTER DENETİMİ BOŞ: madde 222 öncesi hesapsız parametre yok",
         _df.denetim("carry_bot.py") == [])
-kontrol("madde 240'ta açılan dört parametre defterde 240 görünüyor",
-        all(_son.get(a) == 240 for a in ("FUNDING_WINDOW_HOURS",
-            "REZERV_ESIK_YILLIK", "REZERV_COIN_KAP", "DONUK_ESIK")))
+kontrol("madde 240'ta açılan parametreler defterde 240 (pencere madde 442'de yeniden ölçüldü)",
+        all(_son.get(a) == 240 for a in ("REZERV_ESIK_YILLIK", "REZERV_COIN_KAP", "DONUK_ESIK"))
+        and _son.get("FUNDING_WINDOW_HOURS") == 442, f"({_son.get('FUNDING_WINDOW_HOURS')})")
 kontrol("KAPALI_EKSEN gerekçeleri bir MADDEYE atıf yapıyor (kanaat değil)",
         all(_df.MADDE.search(v) for v in _df.KAPALI_EKSEN.values()))
 kontrol("LEVERAGE defterde kapalı eksende ve BEKLEYEN karar olarak yazılı",
@@ -1310,8 +1325,8 @@ kontrol("madde 266: doz aracı gün içi kısıtını SÖYLÜYOR",
 print("\n6l) MADDE 267 - KAR-AL DOLUMU")
 import arastirma_tp_dolum as _tpd
 
-kontrol("madde 267: TP eşikleri motorun GERÇEK ayarlarıyla aynı",
-        abs(_tpd.TP_LONG["esik"] - cb.KAR_AL_ORAN) < 1e-9
+kontrol("madde 267: TP eşikleri ölçülen (eski) kitabın ayarlarıyla aynı",
+        abs(_tpd.TP_LONG["esik"] - cb.BUGUN_PROFIL["KAR_AL_ORAN"]) < 1e-9
         and abs(_tpd.TP_SHORT["esik"] - cb.KAR_AL_SHORT) < 1e-9)
 kontrol("madde 267: kullanılacak bakiyelerde TP dolumu GÜVENLİ",
         _tpd.tp_guvenli_mi(10000) is True
@@ -2095,8 +2110,9 @@ kontrol("madde 285: karar meşru olarak KULLANICIYA ait ve ayar DEĞİŞMEDİ",
         _ae.karar_kullaniciya_mi_ait() is True
         and "DEGISMEDI" in _ae.hukum()
         and "KARARLASTIRILAMAZ" in _ae.hukum())
-kontrol("madde 285: motorun sinyali hâlâ funding (karar uygulanmadı)",
-        abs(cb.FUNDING_WINDOW_HOURS - 48.0) < 1e-9)
+kontrol("madde 285: karar uygulanmadı (eski kitap 48 sa; madde 442 pencereyi T60 için 60 yaptı)",
+        abs(cb.BUGUN_PROFIL["FUNDING_WINDOW_HOURS"] - 48.0) < 1e-9
+        and abs(cb.FUNDING_WINDOW_HOURS - 60.0) < 1e-9)
 kontrol("kâr haritası madde 285'i güç-sınırı yasası olarak yazdı",
         "MADDE 285" in _harita
         and "GÜÇ SINIRLI" in _harita
@@ -2489,9 +2505,10 @@ kontrol("madde 293: 15.000 $'da UYGULANAMAZ",
         _cd293.merkez_uygulanabilir_mi(15000.0) is False)
 kontrol("madde 293: 37.500 $'da uygulanabilir",
         _cd293.merkez_uygulanabilir_mi(37500.0) is True)
-kontrol("madde 293: sermaye tabani projenin KENDI fonksiyonuyla tutuyor",
-        abs(cb.bakiye_yeterli_mi(1875.0, cb.N_LEGS, 1.0)[1] - 10.0) < 1e-9
-        and abs(cb.bakiye_yeterli_mi(15000.0, cb.N_LEGS, 1.0)[1] - 80.0) < 1e-9)
+with _eski_rezerv():
+    kontrol("madde 293: sermaye tabani projenin KENDI fonksiyonuyla tutuyor (eski kitap)",
+            abs(cb.bakiye_yeterli_mi(1875.0, cb.N_LEGS, 1.0)[1] - 10.0) < 1e-9
+            and abs(cb.bakiye_yeterli_mi(15000.0, cb.N_LEGS, 1.0)[1] - 80.0) < 1e-9)
 kontrol("madde 293: madde 204 sonucu kayitli (dilim SESSIZCE var olmaz)",
         "SESSIZCE var olmaz" in _cd293.MADDE_204_SONUCU)
 kontrol("madde 293: kisitli secim kurali KENDINI CURUTTU",
@@ -2519,9 +2536,10 @@ kontrol("madde 294: 2.000 $'da standart kitap calisir",
         _ks294.kontrol_2000de_calisir_mi() is True)
 kontrol("madde 294: teknik taban formulu kontrolun 1.875 $'ini uretiyor",
         _ks294.teknik_taban_dogru_mu() is True)
-kontrol("madde 294: taban formulu botun KENDI fonksiyonuyla ayni",
-        abs(_ks294.bacak_usd(1875.0, 15, 5, 0.20)
-            - cb.bakiye_yeterli_mi(1875.0, cb.N_LEGS, 1.0)[1]) < 1e-9)
+with _eski_rezerv():
+    kontrol("madde 294: taban formulu botun KENDI fonksiyonuyla ayni (eski kitap)",
+            abs(_ks294.bacak_usd(1875.0, 15, 5, 0.20)
+                - cb.bakiye_yeterli_mi(1875.0, cb.N_LEGS, 1.0)[1]) < 1e-9)
 kontrol("madde 294: oneri 1.000 $'da CALISIR",
         _ks294.oneri_1000de_calisir_mi() is True)
 kontrol("madde 294: oneri 1.000 $'da EN BUYUK bacagi veriyor",
@@ -2700,7 +2718,7 @@ kontrol("madde 297: SINYAL paneli GUNLUK oran (kaynak duzeltildi)",
         and "# SİNYAL: yıllıklaştırılmış oran" not in _cd297_src)
 kontrol("madde 297: ayar DEGISMEDI (CARRY_MIN_VOLUME=1e8)",
         _eh297.ayar_degisti_mi() is False
-        and _eh297.AYAR["CARRY_MIN_VOLUME"] == int(cb.MIN_DAILY_VOLUME_USD))
+        and _eh297.AYAR["CARRY_MIN_VOLUME"] == int(cb.BUGUN_PROFIL["MIN_DAILY_VOLUME_USD"]))
 kontrol("madde 297: hukum RED ve gerekcesi mekanizma",
         _eh297.hukum().startswith("RED")
         and "105 bp" in _eh297.hukum())
@@ -2793,7 +2811,7 @@ kontrol("madde 298: UCELE tahminim YANLIS cikti ve kayda gecti",
         _tk298.ucele_tahmini_dogru_muydu() is False
         and "YANLIS" in _tk298.TAHMIN_YANLIS)
 kontrol("madde 298: sermaye esigi carry_bot'un KENDI formuluyle tutuyor",
-        abs(_tk298.TABAN_PAYI - cb.taban_pay()) < 1e-9
+        abs(_tk298.TABAN_PAYI - _TABAN_ESKI) < 1e-9
         and abs(_tk298.ASGARI_BACAK
                 - cb.MIN_NOTIONAL_USD * cb.ASGARI_BACAK_CARPANI) < 1e-9
         and abs(_tk298.SERMAYE_ESIGI["13x3"][0]
@@ -3209,12 +3227,12 @@ kontrol("madde 304: merdivendeki her rung o bakiyede gercekten EN IYI",
 kontrol("madde 304: merdivendeki her yapi o bakiyede KOSABILIR",
         all(_ee300.uygun_mu(b, y) for b, y, _l, _n in _sm304.MERDIVEN))
 kontrol("madde 304: bacak hesabi carry_bot'un formuluyle ayni",
-        all(abs(_l - b * cb.taban_pay() / (_ee300.IZGARA[y][0]
+        all(abs(_l - b * _TABAN_ESKI / (_ee300.IZGARA[y][0]
                                            * _ee300.IZGARA[y][1])) < 0.01
             for b, y, _l, _n in _sm304.MERDIVEN))
 kontrol("madde 304: kullanicinin 2.000 $ bacagi, rung bacagindan FARKLI",
         abs(_sm304.KULLANICI_BACAK
-            - _sm304.KULLANICI_BAKIYE * cb.taban_pay() / 39) < 0.01
+            - _sm304.KULLANICI_BAKIYE * _TABAN_ESKI / 39) < 0.01
         and abs(_sm304.KULLANICI_BACAK - _sm304.simdiki_rung()[2]) > 0.4)
 kontrol("madde 304: kullanici 13x3 rungunda ve sonraki adim 3.750 $",
         _sm304.simdiki_rung()[1] == "13x3"

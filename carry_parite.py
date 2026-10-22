@@ -58,10 +58,14 @@ FUNDING_DIZIN = os.path.join(R, "data_funding_genis")
 BAR_SAAT = 4.0
 PANEL_BAR = 18       # carry_denetim.FUNDING_PENCERE - panelin rolling'i (3 gün)
 
-REFERANS_PENCERE_SAAT = 48.0
+REFERANS_PENCERE_SAAT = 60.0
 """Referans beklentinin ÖLÇÜLDÜĞÜ funding penceresi (madde 209).
 Canlı bottaki değer bundan farklıysa beklenti geçersizdir. Bu sabiti
-değiştirmek, referans serisini yeniden üretmeyi gerektirir."""
+değiştirmek, referans serisini yeniden üretmeyi gerektirir.
+
+MADDE 442: 48 -> 60. T60 kitabının beklentisi (madde 429-438) 60 saatlik
+sinyal paneliyle (`/tmp/sk_bar60.pkl`, 15 x 4 sa bar) ölçüldü; canlı
+varsayılan da 60. Eski kitap (CARRY_PROFIL=BUGUN) 48 ile ölçülmüştü."""
 
 # Kabul eşikleri. Mevcut ayar referans pencereyle AYNI ise korelasyon
 # 1.0'dır; madde 209'un hatalı ayarında (8 saat) 0.60'a düşüyordu.
@@ -69,7 +73,7 @@ PARITE_ESIK = 0.90
 PARITE_INCELE = 0.95
 PANEL_BILGI_ESIK = 0.80
 """Panel korelasyonu bunun altına inerse bilgi amaçlı UYARI yazılır
-(karara girmez). 48 saatte beklenen değer ~0.90."""
+(karara girmez). 48 saatte beklenen değer ~0.90 (madde 209; 60 saatte ölçülmedi)."""
 
 
 def odemeleri_oku(sembol: str, dizin: str = None) -> pd.DataFrame | None:
@@ -303,9 +307,14 @@ def odeme_sayisi(pencere: float, aralik_saat: float, n: int = 400) -> int:
 def odeme_sayisi_beklenen(pencere: float, aralik_saat: float) -> int:
     """Dışlayıcı sınırla pencereye girmesi GEREKEN ödeme sayısı.
 
-    Aralık, canlı kodda olduğu gibi 4 saatte tabanlanır: yıllıklaştırma
-    4 saate göre yapıldığı için pencere de 4 saatlik ızgarada okunur."""
-    return max(1, int(pencere / max(aralik_saat, 1.0)))
+    Pencere SON ödemeden geriye `pencere` saattir ve alt sınır dışlayıcıdır:
+    son ödeme (k=0) ve k*aralik < pencere olan her k girer -> tavan(p/a).
+    Pencere aralığın katıyken (48/8) bu eski `int(p/a)` ile aynıdır; katı
+    değilken (madde 442: 60/8) eski formül 7 derdi, canlı kod (doğru olarak)
+    8 ödeme alır: 0,8,...,56 sa. Kapsayıcı sınır (madde 209 hatası) katta
+    BİR FAZLA verir; tavan formülü bunu hâlâ yakalar."""
+    import math
+    return max(1, math.ceil(pencere / max(aralik_saat, 1.0) - 1e-9))
 
 
 def yaz(sembol_sayisi: int = 0, pencere: float = None, dizin: str = None) -> str:

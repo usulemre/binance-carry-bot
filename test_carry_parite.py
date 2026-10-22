@@ -45,7 +45,7 @@ def _panel(n=60, aralik_saat=8.0, oran=None, t0="2024-01-01"):
 print("1) ÖDEME SAYISI CANLI KODDAN GERİ ÇIKIYOR")
 # Sayim, yillik_funding'in DONUSUNDEN hesaplanir - burada yeniden
 # uygulanmaz. Yoksa canli koddaki degisiklik kacirilirdi.
-for pen in (8.0, 48.0, 72.0):
+for pen in (8.0, 48.0, 60.0, 72.0):
     for ar in (1.0, 2.0, 4.0, 8.0):
         g = cp.odeme_sayisi(pen, ar)
         b = cp.odeme_sayisi_beklenen(pen, ar)
@@ -67,7 +67,7 @@ kontrol("gerekçe pencere ayrışmasını ADIYLA söylüyor",
 kontrol("gerekçe beklentinin geçersiz olduğunu söylüyor",
         any("ÖLÇÜLMEDİ" in x for x in _k8["sorunlar"]))
 _k72 = cp.karar(72.0)
-kontrol("panelin 72 saati de BOZUK sayılıyor (referans 48)",
+kontrol("panelin 72 saati de BOZUK sayılıyor (referans 60, madde 442)",
         _k72["durum"] == "BOZUK",
         "referans pencere neyse o geçerli, panelin penceresi değil")
 

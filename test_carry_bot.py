@@ -240,6 +240,8 @@ kontrol("gerçek bacak büyüklüğü, bacak sayısı hesabıyla TUTARLI",
 
 print("\n5f) FIRSAT REZERVİ (madde 156)")
 _e156 = (cb.N_LEGS, cb.MIN_LEGS)
+_rez156 = cb.REZERV_PAY
+cb.REZERV_PAY = 0.20   # madde 442: mekanizma testi rezerv 0,20 (eski kitap) sayılarıyla yazıldı
 cb.N_LEGS = cb.MIN_LEGS = 8
 _sk156 = _pd.Series({f"S{i}": float(i) for i in range(40)})
 _uc2 = _pd.Series({f"S{i}": (-6.0 if i < 2 else -0.5) for i in range(40)})
@@ -278,6 +280,7 @@ _el, _es = cb.rezerv_agirlik(["A", "C"], ["B"], _pd.Series({"A": -6.0, "C": -7.0
 kontrol("rezerv birden çok uç coine BÖLÜNÜYOR",
         abs(sum(_el.values()) - sum(_es.values())) < 1e-9 and len(_el) == 2)
 cb.N_LEGS, cb.MIN_LEGS = _e156
+cb.REZERV_PAY = _rez156
 
 print("\n5e) BORSA KALDIRACI (madde 149)")
 _e = (cb.GROSS_EXPOSURE, cb.VOL_HEDEF, cb.LEVERAGE)
@@ -592,9 +595,10 @@ cb.DOLUM_BEKLEME_SN, cb.DOLUM_DENEME = _eski_bek, _eski_den
 
 
 print("\n7d) UÇ HAREKET ELEMESİ (madde 196)")
-kontrol("varsayılan eşik %40", abs(cb.UC_HAREKET_ELE - 0.40) < 1e-9,
+kontrol("varsayılan eşik 0 = KAPALI (madde 442, T60)", abs(cb.UC_HAREKET_ELE) < 1e-9,
         f"({cb.UC_HAREKET_ELE})")
 _eski_uc = cb.UC_HAREKET_ELE
+cb.UC_HAREKET_ELE = 0.40   # mekanizma testi: eski kitabın eşiği
 _f = pd.Series({f"U{i}USDT": float(i - 7) for i in range(14)})   # -7..+6
 _d0 = {f"U{i}USDT": 0.0 for i in range(14)}
 
@@ -1306,10 +1310,17 @@ kontrol("pencere içinde kayıt yoksa ÇÖKMÜYOR, elindekini kullanıyor",
         cb.yillik_funding(_kay(3, 8, [0.001, 0.002, 0.003]), 0.001) is not None)
 kontrol("tek kayıt None döner (aralık bilinemez)",
         cb.yillik_funding([{"fundingTime": 1, "fundingRate": "0.001"}], 8) is None)
-kontrol("varsayılan pencere 48 saat = 2 gün (madde 209)",
-        cb.FUNDING_WINDOW_HOURS == 48.0, f"({cb.FUNDING_WINDOW_HOURS})")
+kontrol("varsayılan pencere 60 saat (madde 442, T60; eski kitap 48 - madde 209)",
+        cb.FUNDING_WINDOW_HOURS == 60.0, f"({cb.FUNDING_WINDOW_HOURS})")
 kontrol("8 saat ARTIK varsayılan DEĞİL (madde 182 yanlış etiketli kontrol)",
         cb.FUNDING_WINDOW_HOURS != 8.0)
+# madde 442: 60 saat, 8sa sembolde 8 odeme (0,8,...,56 sa; alt sinir disalayici)
+kontrol("60sa pencere 8sa sembolde TAM 8 ödeme ortalıyor",
+        # 8. (en eski) ödeme 0,009: 8 ödeme girerse ort. 0,002, 7 girerse 0,001
+        abs(cb.yillik_funding(_kay(20, 8, [0.0] * 12 + [0.009] + [0.0010] * 7), 60)
+            - 0.0020 * 3 * 365) < 1e-9)
+kontrol("60sa pencere 4sa sembolde TAM 15 ödeme ortalıyor",
+        abs(cb.yillik_funding(_kay(30, 4, [0.0] * 15 + [0.0010] * 15), 60) - 0.0010 * 6 * 365) < 1e-9)
 # 48 saat, 8sa sembolde TAM 6 odeme
 _k48 = _kay(20, 8, [0.0] * 14 + [0.0010] * 6)
 kontrol("48sa pencere 8sa sembolde TAM 6 ödeme ortalıyor",

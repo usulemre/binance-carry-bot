@@ -203,8 +203,12 @@ KALDIRAÇLA ölçeklenebilir: Sharpe yüksek olan, aynı riskte daha çok
 getirir. 30+30 @1.5x (+22.7%, düşüş -17.7%) > 15+15 @1x (+17.0%,
 düşüş -17.6%)."""
 
-FUNDING_WINDOW_HOURS = float(os.getenv("CARRY_FUNDING_WINDOW_H", "48"))
-"""Funding kaç SAATLİK ortalamayla sıralansın. 48 saat = 2 gün.
+FUNDING_WINDOW_HOURS = float(os.getenv("CARRY_FUNDING_WINDOW_H", "60"))
+"""MADDE 442: VARSAYILAN 60 sa (T60 kitabı, sinyal paneli sk_bar60; madde
+429-438). carry_parite.REFERANS_PENCERE_SAAT da 60. Eski kitap 48 ile
+ölçülmüştü; aşağıdaki tarih o kitabındır.
+
+Funding kaç SAATLİK ortalamayla sıralansın. 48 saat = 2 gün.
 
 MADDE 209 - 8 SAATE GERİ DÖNMEYİN. Bu değer madde 182'de 72 -> 8
 yapılmıştı; o karar **yanlış etiketlenmiş bir kontrole** dayanıyordu.
@@ -530,8 +534,11 @@ PRIM_DOSYA = os.getenv("CARRY_PRIM_DOSYA", "carry_prim.csv")
 EK API İSTEĞİ YOK, ölçü zaten toplanan funding serisinden çıkıyor.
 Dosya silinirse çarpan 1,0'a döner (zararsız yön), kazanç gider."""
 
-MIN_DAILY_VOLUME_USD = float(os.getenv("CARRY_MIN_VOLUME", "100000000"))
-"""Bu hacmin altındaki coinler elenir.
+MIN_DAILY_VOLUME_USD = float(os.getenv("CARRY_MIN_VOLUME", "70000000"))
+"""MADDE 442: VARSAYILAN 70M (T60 kitabı; madde 401-403 "geniş evren", 429-438).
+Eski kitap 100M ile ölçülmüştü; aşağıdaki tarih o kitabındır.
+
+Bu hacmin altındaki coinler elenir.
 
 DEĞİŞTİ: 5.000.000 -> 100.000.000 (madde 133).
 
@@ -589,8 +596,13 @@ bağlayıcı hâle geldi.
 eşik fiilen aynı) kontrolle birebir aynı çıktı (+%112,3 / 3,10 /
 −%14,5). Eşik taraması bu paritenin üstünde okunmalıdır."""
 
-MIN_LISTELEME_GUN = int(os.getenv("CARRY_MIN_LISTING_DAYS", "90"))
-"""Listelendikten sonra en az bu kadar gün geçmiş olmalı.
+MIN_LISTELEME_GUN = int(os.getenv("CARRY_MIN_LISTING_DAYS", "60"))
+"""MADDE 442: VARSAYILAN 60 gün (T60 kitabı; madde 396-397, 429-433). 60 gün
+ALTINA İNİLMEZ: madde 427'de 45 gün MYX/AIA short sıkışmalarıyla hesabı
+sıfırladı; 90 günün altı short felaket stop'u (CARRY_SHORT_STOP) olmadan
+çalıştırılmaz (preflight HATA). Eski kitap 90 gün ile ölçülmüştü.
+
+Listelendikten sonra en az bu kadar gün geçmiş olmalı.
 
 Yeni listelenen coinler carry için ZEHİRDİR: funding oranları uç
 değerler alır (bu yüzden sıralamada hep en üste çıkarlar) ama fiyat
@@ -1048,8 +1060,11 @@ Pratik tek kaldıraç: komisyonu BNB ile ödemek (%10 indirim, 2,0 -> 1,8bp)
 15M$ eşiği ~577.000$ özsermaye gerektiriyor. (Borsa ücret tablosu
 değişir - güncel oranları Binance'in ücret sayfasından doğrulayın.)"""
 
-REZERV_PAY = float(os.getenv("CARRY_REZERV", "0.20"))
-"""Madde 156: sermayenin bu kadarı normalde BOŞ bekler ve sadece funding
+REZERV_PAY = float(os.getenv("CARRY_REZERV", "0.10"))
+"""MADDE 442: VARSAYILAN 0.10 (T60 kitabı; madde 429-438). Taban pay
+0,40 -> 0,45 (bacak = bakiye / 166,7). Eski kitap 0.20 ile ölçülmüştü.
+
+Madde 156: sermayenin bu kadarı normalde BOŞ bekler ve sadece funding
 UÇ seviyeye gelince devreye girer. 0 = kapalı (eski davranış).
 
 Uç fırsat = günlük funding <= -%1.5 (yıllık -%547) olan LONG aday.
@@ -1428,21 +1443,23 @@ anları inceliyor. Ek komisyon YOK. Canlının %50 toleransıyla da
 
 **SERMAYE MALİYETİ (madde 223'te GÜNCELLENDİ - madde 222'den beri
 bayattı):** bacak = `bakiye x GROSS x taban_pay / (N_DILIM x N_LEGS)`,
-yani şu an `bakiye / 187,5`. Tam 5+5 bacak **1.875$** üstünde kurulur.
+yani şu an `bakiye / 166,7` (madde 442: rezerv 0,20 -> 0,10, taban pay
+0,40 -> 0,45; eski kitapta `bakiye / 187,5`, 1.875$). Tam 5+5 bacak
+**1.667$** üstünde kurulur.
 Bu paragraf madde 222'ye kadar `(15 x 6)` ve "~3.400$" diyordu; bacak
 sayısı 6'dan 5'e inince yanlışlaştı ve bir tur boyunca öyle kaldı -
 `test_carry_preflight.py` yalnızca `CANLIYA_CIKIS.md` belgesini
 denetliyordu, KOD İÇİ docstring'i kimse denetlemiyordu. Madde 223'te
 bu sayı da testle koda bağlandı.
 
-  N_DILIM    bacak       tam 5+5 için asgari bakiye
-     5     bakiye/62,5              625$
-     6     bakiye/75                750$
-    10     bakiye/125             1.250$
-    15     bakiye/187,5           1.875$   <- seçilen
+  N_DILIM    bacak       tam 5+5 için asgari bakiye (rezerv 0,10)
+     5     bakiye/55,6              556$
+     6     bakiye/66,7              667$
+    10     bakiye/111,1           1.111$
+    15     bakiye/166,7           1.667$   <- seçilen
 
 Altındaysa `uygun_bacak_sayisi` bacak sayısını kendiliğinden düşürür.
-**1.875$ altındaki hesaplarda `CARRY_N_DILIM` düşürülebilir** - madde
+**1.667$ altındaki hesaplarda `CARRY_N_DILIM` düşürülebilir** - madde
 223 ölçtü: dilim sayısı faz ORTALAMASINI hiç oynatmıyor, sadece faz
 YAYILIMINI (başlangıç saatinin kumarı) büyütür. Yani bu bir getiri
 fedası değil, belirlilik fedasıdır.
@@ -1537,8 +1554,12 @@ saklanır. Metrikler her turda Binance'ten DURUMSUZ yeniden hesaplanır,
 bu yüzden bot ilk günden silahlıdır ve bozuk bir durum dosyası
 metrikleri bozamaz."""
 
-KAR_AL_ORAN = float(os.getenv("CARRY_KAR_AL", "0.40"))
-"""Pozisyon başına KÂR AL seviyesi (madde 143). 0 = kapalı.
+KAR_AL_ORAN = float(os.getenv("CARRY_KAR_AL", "0.60"))
+"""MADDE 442: VARSAYILAN long 0,60 / short 0,20 (T60 kitabı; madde 435-436:
+TPL 0,50 / 0,60 / 0,70 dd'yi bozmadan plato, IS ve OOS'ta aynı yönde).
+Eski kitap long 0,40 ile ölçülmüştü; aşağıdaki tarih o kitabındır.
+
+Pozisyon başına KÂR AL seviyesi (madde 143). 0 = kapalı.
 
 Long: giriş x (1 + oran), short: giriş x (1 - oran) seviyesine borsada
 bekleyen, yalnızca KAPATAN (reduce-only) limit emir konur. Limit emir
@@ -1800,6 +1821,20 @@ Yaş eşiği 60'a indirilirse (CARRY_MIN_LISTING_DAYS=60) bu stop ŞARTTIR.
 
 Dolan stop, dolan kâr al gibi işlenir: sembol tüm dilim hedeflerinden
 çıkar (aynı turda yeniden açılmasın)."""
+
+BUGUN_PROFIL = {"FUNDING_WINDOW_HOURS": 48.0, "KAR_AL_ORAN": 0.40, "UC_HAREKET_ELE": 0.40,
+                "REZERV_PAY": 0.20, "MIN_DAILY_VOLUME_USD": 1e8, "MIN_LISTELEME_GUN": 90}
+"""Madde 442'den ÖNCEKİ varsayılanlar (eski kitap). Tarihsel maddelerin
+"ayar DEĞİŞMEDİ" denetimleri bu sözlüğe bakar: o maddeler bu kitabı ölçtü."""
+
+# MADDE 442 — VARSAYILAN PROFİL T60. Madde 429-438'in vardığı ayar varsayılan
+# yapıldı: hacim 70M (CARRY_MIN_VOLUME), yaş 60 (CARRY_MIN_LISTING_DAYS),
+# rezerv 0,10 (CARRY_REZERV), uç hareket eleme kapalı (CARRY_UC_HAREKET=0),
+# funding penceresi 60 sa (CARRY_FUNDING_WINDOW_H), long kâr al 0,60
+# (CARRY_KAR_AL), short felaket stop'u +%200 (CARRY_SHORT_STOP). Backtest
+# (gerçekçi ağırlık kayması, 2.000 $): yıllık +%222 / dd −%20,8; eski
+# varsayılanlar +%128 / −%21,0. Eski kitap CARRY_PROFIL=BUGUN + eski
+# değerlerle hâlâ kurulabilir (carry_preflight.py iki profili de tanır).
 
 TEMINAT_MODU = os.getenv("CARRY_TEMINAT_MODU", "usdt").strip().lower()
 """Sermaye nasıl okunsun: "usdt" (varsayılan) | "coklu" (madde 141).
@@ -2217,8 +2252,12 @@ def kalabalik_sec(adaylar: list, oran: pd.Series, n: int, taraf: int) -> list:
     return [adaylar[j] for j in sira]
 
 
-UC_HAREKET_ELE = float(os.getenv("CARRY_UC_HAREKET", "0.40"))
-"""MADDE 236 — YENİDEN AÇILDI (hiç açılmamıştı) VE 0,40 OPTİMUMDA ÇIKTI.
+UC_HAREKET_ELE = float(os.getenv("CARRY_UC_HAREKET", "0"))
+"""MADDE 442: VARSAYILAN 0 = KAPALI (T60 kitabı; madde 429-433: UCELE 0 komşusu
++56,7 puanla kontrolü geçiyor, 0,40 ise T60'tan 2 puan dd kötü). Eski kitap
+0,40 ile ölçülmüştü; aşağıdaki tarih o kitabındır.
+
+MADDE 236 — YENİDEN AÇILDI (hiç açılmamıştı) VE 0,40 OPTİMUMDA ÇIKTI.
 
 Bu eşik madde 196'da kondu ve 222'nin yeniden-açma listesine HİÇ
 girmedi. Madde 236'nın bacak bazında katkı defteri ona işaret etti: en

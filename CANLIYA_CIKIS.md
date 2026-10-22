@@ -94,19 +94,20 @@ export BINANCE_API_SECRET=...
 Bacak büyüklüğü, koddan doğrulanmış formül:
 
 ```
-bacak = bakiye / 187,5     # 15 dilim x 5+5 bacak x %40 taban payı
+bacak = bakiye / 166,7     # 15 dilim x 5+5 bacak x %45 taban payı (rezerv 0,10)
 ```
 
 | bakiye | bacak | durum |
 |---|---|---|
-| 1.800 $ | 9,6 $ | **YETERSİZ** — bot sessizce hiç işlem açmaz (madde 204 bunu yakalar ve turu atlar) |
-| **1.875 $** | **10,0 $** | teknik alt sınır (borsa minimumu 5$ × 2 güvenlik payı) |
-| 5.625 $ | 30,0 $ | rahat aralığın başı |
-| **15.000 $** | **80,0 $** | eleme minimal, **beklenti tam** |
-| 50.000 $ | 267 $ | kapasite hâlâ sorun değil (madde 204) |
+| 1.600 $ | 9,6 $ | **YETERSİZ** — bot sessizce hiç işlem açmaz (madde 204 bunu yakalar ve turu atlar) |
+| **1.667 $** | **10,0 $** | teknik alt sınır (borsa minimumu 5$ × 2 güvenlik payı) |
+| 5.000 $ | 30,0 $ | rahat aralığın başı |
+| **15.000 $** | **90,0 $** | eleme minimal, **beklenti tam** |
+| 50.000 $ | 300 $ | kapasite hâlâ sorun değil (madde 204) |
 
 (Madde 222 bacak sayısını 6'dan 5'e indirdi; aynı bakiyede bacak %20
-büyüdüğü için teknik alt sınır 2.250$'dan **1.875$**'a indi.)
+büyüdüğü için teknik alt sınır 2.250$'dan 1.875$'a indi. Madde 442 rezervi
+0,20'den 0,10'a indirdi; taban pay %40 -> %45, alt sınır **1.667$**.)
 
 **MADDE 176 — bunu hafife almayın.** Küçük bacak, pahalı sembolleri
 evrenden eler. Ölçüldü: evrenin %20'si elendiğinde getiri +%55,9'dan
@@ -126,16 +127,32 @@ gerekmiyor; `carry_preflight.py` sapma olursa **HATA** verir:
 
 | ayar | değer | madde |
 |---|---|---|
+| `CARRY_PROFIL` | **T60** | **442** |
 | `CARRY_N_LEGS` | **5** | **222** |
 | `CARRY_N_DILIM` | 15 | 184 |
-| `CARRY_FUNDING_WINDOW_H` | **48** | **209** |
+| `CARRY_FUNDING_WINDOW_H` | **60** | **429** |
 | `CARRY_REBALANCE_H` | 120 (5 gün) | 120 |
 | `CARRY_GROSS` | 1.0 (kaldıraçsız) | — |
-| `CARRY_KAR_AL_ORAN` | 0.40 | 178 |
+| `CARRY_KAR_AL` | **0.60** | **435-436** |
 | `CARRY_KAR_AL_SHORT` | 0.20 | 189 |
-| `CARRY_UC_HAREKET` | 0.40 | 196 |
+| `CARRY_UC_HAREKET` | **0** (kapalı) | **429** |
 | `CARRY_HAVUZ` | 3.0 | 179 |
-| `CARRY_REZERV` | 0.20 | 156 |
+| `CARRY_REZERV` | **0.10** | **429** |
+| `CARRY_MIN_VOLUME` | **70000000** (70M $) | **429** |
+| `CARRY_MIN_LISTING_DAYS` | **60** | **429/433** |
+| `CARRY_SHORT_STOP` | **2.0** (+%200) | **428/437** |
+
+**MADDE 442 — VARSAYILAN T60.** Madde 429-438 araştırmasının vardığı ayar
+artık kodun varsayılanı; `.env`'de bu satırlardan HİÇBİRİNİ yazmayın (eski
+bir `.env` eski değerleri taşıyorsa `carry_preflight.py` SAPMA diye HATA
+verir — o satırları silin). Backtest (gerçekçi ağırlık kayması, 2.000 $,
+1x): yıllık **+%222**, tam dönem düşüş **−%20,8** (eski kitap +%128 / −%21,0).
+Yıllar: 2023 +%308 · 2024 +%125 · 2025 +%253 · 2026 (Oca-Eyl) +%286.
+Eski kitaba dönmek için: `CARRY_PROFIL=BUGUN CARRY_FUNDING_WINDOW_H=48
+CARRY_KAR_AL=0.40 CARRY_UC_HAREKET=0.40 CARRY_REZERV=0.20
+CARRY_MIN_VOLUME=100000000 CARRY_MIN_LISTING_DAYS=90`.
+Yaş eşiği 60'ın altına İNDİRİLMEZ ve short stop'u (yaş < 90 iken) KAPATILMAZ:
+preflight ikisinde de HATA verir (madde 427: yaş 45 hesabı sıfırladı).
 
 **AÇMA listesi** — ölçülmüş, zarar veriyor:
 
