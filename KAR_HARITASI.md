@@ -5065,3 +5065,20 @@ Yapay adaylar (cevabı bilinen), 500 eşli blok bootstrap yolu, kontrol M357_KAY
   (4) protokolde 4 hücrenin hepsinde dört şart (431), (5) P ≈ güç sınırında. Hepsi R30Y60S
   bölgesini destekliyor; karşı kanıt: Tem-Ağu 2026 (iki ay) geride.
 AYAR DEĞİŞMEDİ (kullanıcı kararı).
+
+## Madde 435 — R30Y60S bölgesini itme: ön kayıtlı seçim RED (dd), ama TPL ekseni temiz iyileşme
+Madde 433 komşularında IS→OOS sıra korelasyonu 0,75 (bölge içi ayar burada genelliyor; madde 427'nin aksine).
+| kol (taban R30Y60S) | yıllık IS | yıllık OOS | tam | dd | Tem-Eyl26 |
+|---|---|---|---|---|---|
+| T60R05S25 (IS 1.) | +164,4 | +351,9 | +230,5 | −25,2 | +14,3 |
+| T50R05S25 | +160,3 | +340,8 | +224,1 | −25,6 | +15,7 |
+| T70 (TPL 0,70) | +158,8 | +344,9 | +224,2 | −20,8 | +13,2 |
+| T50R05 | +158,8 | +338,9 | +222,4 | −22,3 | +16,4 |
+| T60 (TPL 0,60) | +155,5 | +345,8 | +222,1 | −20,8 | +14,0 |
+| NTL50 | +151,7 | +335,6 | +216,2 | −21,1 | +15,4 |
+| R30Y60S | +143,2 | +295,4 | +197,7 | −20,9 | +12,7 |
+| kontrol | +114,9 | +149,1 | +128,5 | −21,0 | +30,8 |
+- Ön kayıt: IS 1.'si T60R05S25, dd R30Y60S'ten 4,3 puan kötü (>3) → RED. REZ 0,05 ve TPS 0,25
+  getiriyi dd pahasına alıyor (kaldıraç benzeri).
+- TPL ekseni dd'yi bozmadan +25 puan: 0,50 / 0,60 / 0,70 plato. T60 dd'ye bakılarak seçildi →
+  madde 436 iki seviye protokolü (yanlılık kayıtlı).
