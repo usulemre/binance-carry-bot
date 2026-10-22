@@ -5114,3 +5114,21 @@ AYAR DEĞİŞMEDİ (kullanıcı kararı). Önerilen aday ailesi: hacim 70M, yaş
 - Tem-Eyl 2026: hacim 100M + UCELE 0,40'lı kombinasyonlar +%28-39, T60 +%14 — son çeyreği
   kaçıran şey 70M evren. T60 + Q15 (100M, TPL 0,70, SLS 3, 48 sa) yarı yarıya: yıllık −5 puan,
   dd aynı, son çeyrek +%21 (T60 +%14); korelasyon 0,96. 3 aya bakılarak bulunduğu için kayıt yalnız.
+
+## Madde 439 — Kitap düşüşünden SONRA ne oluyor (T60) ve geçici doz artışı: TOPARLANMA GERÇEK, KURAL RED
+4 sa çubuk, iki hiza. Normal 24 sa ortalaması +%0,34. 4 sa getirisi < −%2 sonrası 24 sa +%1,4-1,5;
+< −%3 sonrası +%2,3-3,1; en kötü 15 günün ertesi günü +%1,4-2,1, sonraki 7 gün +%3,9-5,3 (normal +%2,4).
+→ Madde 280'in sebebi T60'da da geçerli: düşüşte kesmek toparlanmayı kaçırır.
+Ters kural (düşüşten sonra brüt D, T bar, gecikme; aynı ort. dozda sabit kaldıraçla kıyas, %0,10 maliyet):
+| E | D | süre | gecikme | IS | OOS | tam | dd farkı |
+|---|---|---|---|---|---|---|---|
+| −%2 | 1,50 | 24 sa | 8 sa | +8,8 | +41,1 | +19,3 | −1,7 (IS 1.) |
+| −%2 | 1,25 | 24 sa | 8 sa | +4,4 | +20,0 | +9,5 | −0,9 |
+| −%3 | 1,50 | 24 sa | 4 sa | +3,5 | +24,6 | +10,1 | +1,2 |
+| −%3 | 1,50 | 24 sa | 8 sa | +1,4 | +26,9 | +9,2 | −0,5 |
+- Ön kayıt: IS 1.'si dd'yi 1 puandan fazla bozuyor → RED. dd'yi iyileştiren tek aile 4 sa gecikmeli
+  (bot 8 sa'de döner, uygulanamaz). Etki IS'te küçük, OOS'ta büyük (rejime bağlı).
+- Ders: kötü günün KENDİSİ durdurulamıyor (kesmek ve stop'lar hep kaybettirdi: madde 143/191/280/416);
+  kötü günden SONRA kitap ortalamanın 4-9 katı toparlanıyor. Elle müdahale (paniğe kapanıp kapatmak)
+  en pahalı hareket.
+AYAR DEĞİŞMEDİ.
