@@ -5002,3 +5002,17 @@ A) KİTAP GETİRİSİNE GÖRE DOZ (MOM/TERS 10-90 gün, DD10/15): HEPSİ RED. Ki
 B) AYAR TOPLULUĞU (madde 425, IS'te ilk k ayar, eşit sermaye): TOP5 OOS Sharpe 3,83 (en iyi tek
    3,58, kontrol 3,21), eşit oynaklıkta +25,6 puan, dd −19,5. İlk 5'in korelasyonu 0,87.
    Tem-Eyl 2026: TOP5 +13,7% vs kontrol +30,8%. → madde 431 protokolüne.
+
+## Madde 432 — İLERİ YÜRÜYEN AYAR SEÇİMİ (her ay son L ayın en iyi k ayarı): GÜVENLİ HAVUZDA +33..+47 puan, P %57-72 → RED; GENÇ COİNLİ HAVUZDA ZARAR
+Seçim yalnız geçmişle yapıldığı için seçim yanlılığı YOK (2023-07..2026-09, 2.000 $, kaymalı).
+| havuz | kural | yıllık | dd | 2023/24/25/26 | P |
+|---|---|---|---|---|---|
+| kontrol | — | +159 | −21,0 | +124/+100/+103/+142 | — |
+| P25 (yaş ≥60) | L6 k5 | +201 | −20,8 | +140/+84/+184/+188 | %72 |
+| P25 | L12 k5 | +192 | −19,4 | +135/+94/+170/+166 | %71 |
+| P25 | L6 k1 | +250 | −24,3 | +179/+82/+265/+216 | %57 |
+| P50 (yaş 45 dahil) | L6 k5 | +164 | −30,9 | +123/+91/+91/+188 | — |
+- Uyarlamalı seçim GÜVENLİ havuzda kontrolü 3/4 yıl geçiyor (2024 geride); havuza batabilen
+  ayar girince (yaş 45) dd −%31..−36'ya iner → havuz önce güvenli yapılmalı (yaş ≥60 / SLS).
+- Bulgu madde 429 ile tutarlı: geniş evren (70M) 2023/2025/2026'da önde, 2024'te geride.
+AYAR DEĞİŞMEDİ. Sıradaki: madde 433, R30Y60S komşuluk (plato) testi.
