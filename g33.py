@@ -296,13 +296,22 @@ _GK_YOL=os.environ.get('GUNLUK_KATKI','').strip()
 _GK={}
 _GK_BAS=pd.Timestamp(os.environ.get('GK_BAS','2026-01-01'))
 YIL={}   # yil -> [Lf,Lp,Ltp,Sf,Sp,Stp]
+# MADDE 440: POZ_CIKTI=<yol> -> her barda (koordinatore bildirilen, o barin
+# rebalance'indan ONCEKI) pozisyon agirliklarinin dilimler arasi ORTALAMASI.
+# Saatlik kitap simulasyonu icin. Bos -> kapali (parite).
+_PZ_YOL=os.environ.get('POZ_CIKTI','').strip()
+_PZ=[None]
 def bt2(bas,n,olcut=None,tp=None):
     # MADDE 415: bt2 artik _bt2g uretecini koordinasyonsuz surer (parite).
     _g=_bt2g(bas,n,olcut,tp)
     try:
-        next(_g)
+        _m=next(_g)
         while True:
-            _g.send(None)
+            if _PZ_YOL:
+                if _PZ[0] is None:
+                    _PZ[0]=np.zeros((len(C),C.shape[1]),np.float32)
+                _PZ[0][_m[0]]+=_m[1]
+            _m=_g.send(None)
     except StopIteration as _e:
         return _e.value
 
@@ -725,6 +734,9 @@ def calis2(ad,n,olcut):
     # MADDE 346: E_CIKTI verilirse oraya yaz (paralel kosular birbirinin
     # /tmp/g19E_{_fz}.pkl'ini ezmesin). Bos -> eski davranis, parite ayni.
     pickle.dump(E,open(os.environ.get('E_CIKTI') or f'/tmp/g19E_{_fz}.pkl','wb'))
+    if _PZ_YOL and _PZ[0] is not None:
+        _W=_PZ[0]/NF; _ii,_kk=np.nonzero(_W)
+        pd.DataFrame({'zaman':C.index[_ii],'sembol':C.columns[_kk],'w':_W[_ii,_kk]}).to_pickle(_PZ_YOL)
     if _GK_YOL:
         _df=pd.DataFrame([(d,C.columns[k],v[0]/NF,v[1]/NF,v[2]/max(v[3],1),v[3]/NF) for (d,k),v in _GK.items()],
                          columns=['gun','sembol','fiyat','funding','ort_poz','bar'])

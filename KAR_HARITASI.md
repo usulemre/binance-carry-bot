@@ -5132,3 +5132,20 @@ Ters kural (düşüşten sonra brüt D, T bar, gecikme; aynı ort. dozda sabit k
   kötü günden SONRA kitap ortalamanın 4-9 katı toparlanıyor. Elle müdahale (paniğe kapanıp kapatmak)
   en pahalı hareket.
 AYAR DEĞİŞMEDİ.
+
+## Madde 440 — SAATLİK KİTAP (T60): ilk saatte de devam yok, saatlik kesme kuralları HEP kaybettiriyor
+Altyapı: g33 `POZ_CIKTI` (dilimler arası ortalama pozisyon, her bar; parite tam 136,2087); T60'ın
+tuttuğu 586 sembolün 4.211 sembol-ay 1 sa kline'ı (data.binance.vision). Saatlik kitap 4 sa'e
+toplanınca motorla korelasyon 0,974, 4 sa yeniden kurulumla 0,996 (funding/TP bar içi yok → yaklaşık).
+Saatlik düşüşten sonra (ortalama %; normal: 1 sa −0,006 · 4 sa +0,017 · 24 sa +0,124):
+| saat < | kez | sonraki 1 sa | 4 sa | 24 sa |
+|---|---|---|---|---|
+| −%1 | 336 | −0,016 | +0,034 | +0,41 |
+| −%1,5 | 89 | +0,075 | +0,38 | +1,00 |
+| −%2 | 35 | +0,043 | +0,60 | +2,14 |
+| −%3 | 5 | +0,60 | +0,95 | +3,02 |
+- Sert saatten sonra İLK saatte bile devam yok; 4-24 sa'te ortalamanın 5-20 katı toparlanma.
+- 36 saatlik kural (1 sa gecikme, eşit ort. dozda kıyas): KES (brüt 0 / 0,5; 2-24 sa) 18/18
+  KAYBETTİRİYOR (−0,3..−20 puan). EKLE en iyisi (−%2 → 1,5x, 24 sa) +7 puan ama dd −1,8 kötü.
+- Sonuç madde 280/439 ile aynı, saatlik çözünürlükte de: kötü gün durdurulamaz, beklenir.
+AYAR DEĞİŞMEDİ.
