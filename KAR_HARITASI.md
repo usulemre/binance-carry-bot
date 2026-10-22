@@ -5016,3 +5016,13 @@ Seçim yalnız geçmişle yapıldığı için seçim yanlılığı YOK (2023-07.
   ayar girince (yaş 45) dd −%31..−36'ya iner → havuz önce güvenli yapılmalı (yaş ≥60 / SLS).
 - Bulgu madde 429 ile tutarlı: geniş evren (70M) 2023/2025/2026'da önde, 2024'te geride.
 AYAR DEĞİŞMEDİ. Sıradaki: madde 433, R30Y60S komşuluk (plato) testi.
+
+## Madde 431 — Ayar topluluğu protokolde: TOP5 / TOP3 RED (P %74-93), dört şart her hücrede GEÇTİ
+| kol | yıllık fark | eşit-risk | şartlar | P | Tem-Eyl 2026 (kol vs kontrol) |
+|---|---|---|---|---|---|
+| TOP5 (R16 R19 R13 R18 R22) | +45..+54 | +46..+85 | YYYY x4 | %78-93 | +10..+15% vs +22..+37% |
+| TOP3 (R16 R19 R13) | +56..+67 | +51..+79 | YYYY x4 | %74-90 | +12..+17% vs +22..+37% |
+- Topluluk ilk kez 4 hücrenin hepsinde dört şartı geçen geniş evren adayı (tek ayarlarda hep bir X
+  vardı); en yüksek P %92,5. Bar (%95) yine geçilmedi.
+- Son çeyrekte kontrol belirgin önde (−10..−25 puan). REB 4 üyelerin D8/D2 dışlama iyimserliği geçerli.
+AYAR DEĞİŞMEDİ.
