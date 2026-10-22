@@ -19,6 +19,7 @@ DEG = {"H3": {"HAVUZ": "3"}, "H5": {"HAVUZ": "5"}, "TL30": {"TPL": "0.30"}, "TL5
        "TS15": {"TPS": "0.15"}, "TS25": {"TPS": "0.25"}, "RZ05": {"REZERV": "0.05"}, "RZ20": {"REZERV": "0.20"},
        "UC40": {"UCELE": "0.40"}, "Y75": {"YAS_GUN": "75"}, "Y90": {"YAS_GUN": "90"},
        "V50": {"HACIM_ESIK": "5e7"}, "V100": {"HACIM_ESIK": "1e8"}, "P48": {"SK_DOSYA": "/tmp/sk_bar48.pkl"}}
+A.SEVIYE = (2000,)
 A.KOLLAR = {f"N{a}": ({**B, **d}, 4, {2000: M.D8}) for a, d in DEG.items()}
 
 
