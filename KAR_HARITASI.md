@@ -5149,3 +5149,20 @@ Saatlik düşüşten sonra (ortalama %; normal: 1 sa −0,006 · 4 sa +0,017 · 
   KAYBETTİRİYOR (−0,3..−20 puan). EKLE en iyisi (−%2 → 1,5x, 24 sa) +7 puan ama dd −1,8 kötü.
 - Sonuç madde 280/439 ile aynı, saatlik çözünürlükte de: kötü gün durdurulamaz, beklenir.
 AYAR DEĞİŞMEDİ.
+
+## Madde 441 — Saatlik test BÜTÜN kitaplarda (bugünkü kitap, R30Y60S, T60; iki hiza): AYNI SONUÇ
+POZ_CIKTI paritesi 6/6 tam; +819 sembol-ay 1 sa kline; saatlik kitap motorla korelasyon 0,973-0,978.
+| kitap | saat < −%2 sonrası 1 sa / 4 sa / 24 sa (normal 24 sa) | en kötü 10 günde kaybın ilk 1 / 3 saatteki payı |
+|---|---|---|
+| bugünkü (KAYMA) | +0,23..+0,34 / +0,82..+1,12 / +2,9..+3,8 (+0,1) | %8-9 / %14-16 |
+| R30Y60S | +0,18..+0,38 / +0,50..+0,78 / +2,2..+2,6 (+0,13) | %6-7 / %11-14 |
+| T60 | +0,04..+0,08 / +0,60..+0,64 / +2,1 (+0,13) | %7 / %16 |
+- Tek-saat tetikli KES kuralları: 3 kitapta 24/24 negatif (−0,5..−28 puan). EKLE en iyisi (−%1,5/−%2 →
+  1,5x 24 sa) +5..+7 puan, dd −1..−2 kötü — üç kitapta da aynı.
+- Kötü günde kayıp GÜN BOYUNCA birikiyor (ilk 3 saatte yalnız %11-16). Birikmiş düşüş tetikli kural
+  (madde 441b: son 3/6/12 sa < −%2/−3/−5 → brüt 0 / 0,5, 6/24 sa): 144 kuralın yalnız 2'si pozitif
+  (+0,5..+1). dd'yi > 1 puan iyileştiren 19 kuralın neredeyse hepsi AYNI dd'yi veren sabit doz
+  düşürmeden daha pahalı; 3 istisna diğer hizada tutmuyor (gürültü). Saatlik kitapta funding yok →
+  kesme kurallarının gerçek maliyeti daha da yüksek.
+- SONUÇ: düşüşü azaltmanın en ucuz yolu sabit dozu düşürmek; zamanlamalı hiçbir kural onu geçmiyor.
+AYAR DEĞİŞMEDİ.
