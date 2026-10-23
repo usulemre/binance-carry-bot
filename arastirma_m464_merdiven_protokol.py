@@ -15,6 +15,7 @@ import arastirma_m443_kotu_gun_kalkani as K
 import karar_kurali as KK
 
 A.CIKTI = "/tmp/m412"; M.CIKTI = "/tmp/m412"; M.KANIT_BARI = 95.0
+A.SEVIYE = (2000, 3500)   # m443 importu (2000,) yapiyor
 T = {**K.T60, "SLL24": "0.45", "SLL24_TAZE": "2"}
 A.KOLLAR = {"XMR45": ({**T, "MERD_ESIK": "0.45", "MERD_PAY": "0.5"}, 4, {2000: M.D8, 3500: M.D2})}
 
