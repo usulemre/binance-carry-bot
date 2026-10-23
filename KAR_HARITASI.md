@@ -5458,3 +5458,11 @@ Kontrol: canlı varsayılan (T60 + 24 sa stop, KD24_45T2). Aday: long'un yarıs�
 - Madde 434'ün güç sınırına rağmen P %99+: getiri farkı küçük (+15..+18) ama GÜRÜLTÜSÜ çok düşük —
   merdiven kontrolle aynı coinleri tutuyor, yalnız çıkışı değiştiriyor (eşli fark dar). Plato (463) +
   iki dönem + iki seviye + son çeyrek hepsi aynı yönde. → CARRY_MERDIVEN=0,45 VARSAYILAN (madde 465).
+
+## Madde 465 — Merdiven bota eklendi ve VARSAYILAN: CARRY_MERDIVEN 0,45 / CARRY_MERDIVEN_PAY 0,5
+`carry_bot.py`: her long'a iki reduceOnly LIMIT SELL (yarısı giriş x1,45, kalanı x1,60); kademe dolunca
+sembol dilimlerden ÇIKMAZ, tüm dilim hedefleri x0,5 (motor madde 235 ile aynı; yoksa bot satılan yarıyı
+geri alırdı); kademe aynı giriş için bir kez (durum["merdiven_yapildi"], giriş fiyatı değişince sıfırlanır).
+Preflight T60 profili 0,45 / 0,5 bekler. Testler: entegrasyon 12c merdiven (+6 kontrol), 14 carry
+dosyasının hepsi geçti. Canlı varsayılan artık: T60 + 24 sa düşüş stop'u + merdiven.
+Backtest (2.000 $, kaymalı, iki hiza): yıllık ~+%233, Sharpe ~3,66, dd ~−%20,6, en kötü gün ~−%5,4.
