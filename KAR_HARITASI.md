@@ -5495,3 +5495,10 @@ Kontrol XMR45 (canlı: T60 + 24 sa stop + long ½ @ %45). Aday: long ⅔ @ +%45 
 | 3.500 $ 0 | +13,8 | +0,19 | +0,10 | −2,3 | +93,4 | YYYY | %98,3 |
 | 3.500 $ 1 | +15,3 | +0,20 | +0,13 | −1,5 | +55,5 | YYYY | %98,2 |
 → Canlıya: CARRY_MERDIVEN_PAY 0,667 ve yeni CARRY_MERDIVEN_SHORT 0,15 (madde 469).
+
+## Madde 469 — İki taraflı merdiven bota eklendi ve VARSAYILAN
+CARRY_MERDIVEN 0,45 · CARRY_MERDIVEN_SHORT 0,15 (yeni) · CARRY_MERDIVEN_PAY 0,667. Short'a iki reduceOnly
+LIMIT BUY (⅔ giriş x0,85, ⅓ x0,80); kademe dolunca hedef x⅓ (iki taraf), sembol dilimde kalır. Preflight T60
+profili yeni değerleri bekler. Testler: 14 carry dosyasının hepsi geçti (+3 kontrol).
+Canlı varsayılan: T60 + 24 sa düşüş stop'u + iki taraflı merdiven. Backtest (2.000 $): yıllık ~+%249,
+Sharpe ~3,83, dd ~−%17,4, −%5 altı gün 3.
