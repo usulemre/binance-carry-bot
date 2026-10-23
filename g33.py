@@ -59,6 +59,22 @@ if _HES != 1e8 or _DON != 0.10 or _YAS_GUN != 90:
     _uy = _uy.copy(); _uy[[c for c in _uy.columns if c in _TF]] = False
     U = _uy.values
 
+# MADDE 461: GENC COIN YARIM AGIRLIK. GENC_GUN>0 -> evren yasi GENC_GUN'e iner, ama
+# YAS_GUN'den genc coinlerin hedef agirligi GENC_PAY ile carpilir. 0 -> kapali (parite).
+_GENC = float(os.environ.get("GENC_GUN", "0")); GENC_PAY = float(os.environ.get("GENC_PAY", "0.5"))
+GENCV = None
+if _GENC > 0:
+    import pickle as _pkg, carry_denetim as _Dg
+    _Pg = _pkg.load(open('/tmp/panel.pkl', 'rb'))
+    _ug = _Dg.uygunluk(_Pg['C'], _Pg['HAC'], _Pg['YAS'], _Pg['DON'], hacim=_HES,
+                       yas_bar=int(round(_GENC * 6)), donuk_esik=_DON)
+    from tradfi_liste import TRADFI as _TFg
+    _ug = _ug.copy(); _ug[[c for c in _ug.columns if c in _TFg]] = False
+    _ug = _ug.reindex(index=C.index, columns=C.columns).fillna(False).values
+    GENCV = _ug & ~U
+    U = _ug | U
+    print(f"# GENC_GUN={_GENC} GENC_PAY={GENC_PAY}: genc hucre payi {GENCV.sum()/max(1,U.sum()):.3f}", flush=True)
+
 # DELIST UFKU: canli bot delisti duyurulmus sembolu YENI SECIME almiyor
 # (DELIST_UFUK_GUN=30). Backtest'te duyuru verisi yok; vekil olarak her
 # sembolun serisi bittiginden onceki N gunu uygunluktan dusuruyoruz.
@@ -509,6 +525,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if _PCARP is not None:
                     _mi=float(_PCARP[i]) if np.isfinite(_PCARP[i]) else 1.0
                     y=y*_mi; _BRT[0]+=_mi; _BRT[1]+=1
+                if GENCV is not None:
+                    _gm=GENCV[i]&(y!=0)
+                    if _gm.any(): y=np.where(_gm,y*GENC_PAY,y)
                 bek=(i+GEC,y); yedek_l=list(lo_s[_nl:]); yedek_s=list(sh_s[_ns:]); w_=0.5/max(_nl,_ns)
         gec=np.isfinite(cv[i])&np.isfinite(cv[i+1])
         br=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0); br=np.nan_to_num(br)
