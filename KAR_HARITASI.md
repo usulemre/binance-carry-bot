@@ -5380,3 +5380,15 @@ Bot'a eklenmedi — kullanıcı kararı bekleniyor.
 - SONUÇ (madde 457-458): T60 çevresinde 17 yeni eksen + birleşimler → T60 benzeri yapısal sıçrama YOK.
   Getiriyi büyüten her şey eşit riskte kaldıraca eşdeğer. Kalan kâr kolları: açık kaldıraç (1,25x,
   dd ~−%25) ve T60'tan bağımsız ikinci gelir kaynağı.
+
+## Madde 459 — Bağımsız ikinci kol: BTC/ETH zaman-serisi trend takibi (carry ile harman): RED (kırılgan)
+Boşta sermaye (BOSLUK) T60 + 24 sa stop'ta yalnız %6,5 → TP sonrası doldurma ekseni kapatıldı.
+Trend kolu (BTC+ETH eşit, günlük karar, funding ve 5 bp dahil), T60 ile korelasyon −0,01..−0,08:
+| L / tür | Sharpe IS / OOS | yıllık IS / OOS |
+|---|---|---|
+| 20 LS / L0 | −0,64 / +0,59 · +0,26 / +0,52 | −35 / +18 · +3 / +12 |
+| 50 LS / L0 | +0,08 / +0,90 · **+0,70 / +0,79** | −9 / +39 · **+22 / +22** |
+| 100 LS / L0 | +0,67 / −0,24 · +1,12 / −0,15 | +24 / −24 · +43 / −9 |
+- Ön kayıt: IS'te seçilen 100 g L0 OOS'ta −%8,8 → harman eşit oynaklıkta IS +10..+15 / OOS −1..−15 → RED.
+- Sonradan bakılan 50 g L0 iki dönemde tutarlı: harman (w 0,1-0,2) eşit oynaklıkta IS +6 / OOS +12..+16
+  puan. Parametreye çok duyarlı (100 g çöküyor) → kırılgan; kayıt yalnız.
