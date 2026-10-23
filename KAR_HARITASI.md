@@ -5263,3 +5263,24 @@ SHORT: 429 bar (115 coin-gün, %0,17). Üst %10 dilimde felaket riski / genel ri
   kaybettiriyor → rejime bağlı, güvenilmez. Stop coine girer ve yalnız çöküş başlarsa çıkar; bu yüzden
   aynı felaketi elemeden çok daha ucuza keser. Simetrik filtrenin short tarafı etkisizmiş (maliyet tamamen long).
 AYAR DEĞİŞMEDİ.
+
+## Madde 449 — GİRİŞTEN BAĞIMSIZ STOP'LAR: 24 sa düşüş stop'u −%45 EN UCUZ KALKAN (4 puan)
+SLL24 (yeni g33 düğmesi): coin son 24 sa kapanışından −%X düşerse long kapanır. TBAS/TGERI: zirveden geri çekilme.
+| kol | yıllık | maliyet | dd | en kötü gün | iyileşme | −%5 altı | Tem-Eyl26 | IS | OOS |
+|---|---|---|---|---|---|---|---|---|---|
+| T60 | +222,1 | — | −20,8 | −8,63 | — | 9 | +14,0 | +155,5 | +345,8 |
+| L40 (girişten −%40) | +207,9 | −14,1 | −20,9 | −5,94 | %31 | 6 | +9,7 | +153,4 | +304,8 |
+| D24_25 | +174,1 | −48,0 | −20,0 | −5,47 | %37 | 3 | +6,1 | +146,3 | +218,4 |
+| D24_35 | +195,0 | −27,1 | −20,8 | −5,47 | %37 | 5 | +15,3 | +150,5 | +271,1 |
+| **D24_45** | **+218,1** | **−4,0** | −20,8 | **−5,49** | **%36** | 7 | +14,3 | **+160,6** | +320,8 |
+| Z50 (zirveden −%50) | +153,8 | −68,3 | −20,6 | −7,06 | %18 | 7 | −12,1 | | |
+| Z40 + L40 | +108,6 | −113,5 | −21,8 | −5,78 | %33 | 4 | −10,9 | | |
+| D24_35 + L40 | +185,2 | −36,9 | −20,9 | −5,47 | %37 | 4 | +12,2 | | |
+- 24 sa düşüş tetiği normal dalgalanmada çalışmıyor, yalnız gerçek çöküşte: en kötü günü girişten stop
+  kadar keserken maliyet 4 puan (IS'te +5, OOS'ta −25). Zirveden geri çekilme çok pahalı (kârlı
+  pozisyonları normal geri çekilmede kapatıyor). 7 sonuçtan en iyisi seçildi → madde 451 sağlamlık.
+
+## Madde 450 — SHORT 24 sa yükseliş stop'u (SLS24): RED, en kötü güne etkisiz
+S24_25/35/50: en kötü gün −8,6 aynı (en kötü gün long çöküşü), yıllık −28..−37 puan, son çeyrek +%2..−%1.
+Short kârı sıkışmadan SONRAKİ dönüşten (TP) geliyor; stop tepede kapatıp dönüşü kaçırıyor. Short tarafında
+en iyi koruma T60'ın geniş +%200 felaket stop'u (madde 428).
