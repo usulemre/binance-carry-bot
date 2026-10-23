@@ -5392,3 +5392,16 @@ Trend kolu (BTC+ETH eşit, günlük karar, funding ve 5 bp dahil), T60 ile korel
 - Ön kayıt: IS'te seçilen 100 g L0 OOS'ta −%8,8 → harman eşit oynaklıkta IS +10..+15 / OOS −1..−15 → RED.
 - Sonradan bakılan 50 g L0 iki dönemde tutarlı: harman (w 0,1-0,2) eşit oynaklıkta IS +6 / OOS +12..+16
   puan. Parametreye çok duyarlı (100 g çöküyor) → kırılgan; kayıt yalnız.
+
+## Madde 460 — Sinyal penceresi topluluğu (24/96/144 sa ve ortalamaları): HEPSİ RED, 60 sa tepe
+| sinyal (T60 + 24 sa stop) | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | eşit oynaklık farkı |
+|---|---|---|---|---|---|---|---|---|
+| 60 sa (taban) | +216,3 | +158,7 | +319,5 | 3,44 | −20,8 | −5,49 | 7 | — |
+| 24 sa | +187,2 | +144,2 | +260,6 | 3,23 | −19,1 | −5,54 | 5 | −21,5 |
+| 96 sa | +208,7 | +165,6 | +281,1 | 3,33 | −17,7 | −6,75 | 7 | −12,2 |
+| 144 sa | +199,9 | +144,4 | +299,8 | 3,21 | −18,6 | −6,87 | 10 | −26,4 |
+| ort(24,60) | +206,6 | +152,9 | +301,8 | 3,35 | −20,2 | −5,50 | 8 | −10,7 |
+| ort(36,60,96) | +208,9 | +160,7 | +292,1 | 3,33 | −18,9 | −6,96 | 8 | −12,3 |
+| ort(48,96,144) | +210,8 | +156,7 | +306,4 | 3,34 | −15,8 | −6,75 | 7 | −12,1 |
+| ort(24,60,144) | +207,5 | +156,7 | +296,1 | 3,30 | −16,2 | −6,78 | 8 | −16,2 |
+Pencere ortalaması gürültüyü değil bilgiyi siliyor: 60 sa'in kendisi en iyi Sharpe. Paneller /tmp/sk_bar{24,96,144}.pkl.
