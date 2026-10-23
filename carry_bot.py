@@ -1862,7 +1862,6 @@ seviye 8 sa'te bir yenilenerek - madde 452):
 BİRLİKTE kullanmak daha kötü (madde 452: 15 puan, en kötü gün −%5,9)."""
 
 MERDIVEN = float(os.getenv("CARRY_MERDIVEN", "0.45"))
-MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.5"))
 """LONG MERDİVEN KÂR ALMA (madde 462-465). Long pozisyonun MERDIVEN_PAY'i
 girişten +%MERDIVEN'de, kalanı CARRY_KAR_AL'da (+%60) satılır. 0 = kapalı.
 VARSAYILAN 0,45 (madde 464: protokolde AYAR, dört hücre P %99,2-100).
@@ -1871,6 +1870,9 @@ bir sonraki turda satılan yarıyı geri alırdı (motor madde 235 ile aynı: ka
 yarı dilim yenilenene kadar tutulur). Backtest (T60 + 24 sa stop, 2.000 $):
 ½ @ %45 → yıllık +%216 → +%233, Sharpe 3,44 → 3,66, −%5 altı gün 7 → 5;
 plato %35-%50 (madde 463), protokol madde 464."""
+
+MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.5"))
+"""Merdivende ilk kademede satılan pay (madde 463: 1/3, 1/2, 2/3 hepsi plato; 1/2 seçildi, madde 465)."""
 
 # MADDE 442 — VARSAYILAN PROFİL T60. Madde 429-438'in vardığı ayar varsayılan
 # yapıldı: hacim 70M (CARRY_MIN_VOLUME), yaş 60 (CARRY_MIN_LISTING_DAYS),
