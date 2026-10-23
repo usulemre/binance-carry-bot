@@ -5178,3 +5178,32 @@ AYAR DEĞİŞMEDİ.
 - Rezerv 0,10 → taban pay 0,45: bacak = bakiye / 166,7 (2.000 $'da ~12 $), tam 5+5 asgari 1.667 $.
 - Testler: 42 dosyanın 36'sı geçiyor; başarısız 6 (accounting, compound_mode, core_modules,
   doc_accuracy, flags_effective, parameter_effect) DEĞİŞİKLİKTEN ÖNCE de başarısızdı, carry dışı.
+
+## Madde 443 — KÖTÜ GÜN KALKANI (T60): long felaket stop'u −%40 en kötü günü üçte bir kesiyor, maliyet ~14 puan
+ANATOMİ (T60, tüm dönem, en kötü 25 gün): piyasa geneli DEĞİL (BTC medyan +%1,5; T60~BTC −0,03). Kaybın
+medyan %49'u TEK coinden, %86'sı ilk 3'ten. Yarısı küçük coin LONG çöküşü (POWER −%91, REEF −%78, SIREN
+−%86 tek günde), yarısı yükselen piyasada büyük coin SHORT sıkışması (XRP, DOGE, ONDO, PEPE). Tek coinin
+hesap payı %7-16.
+KOLLAR (2.000 $ D8, iki hiza, kaymalı):
+| kol | yıllık | dd | en kötü gün | p1 | −%5 altı gün | Tem-Eyl26 | aynı EN KÖTÜ GÜN için sabit doz → yıllık | fark |
+|---|---|---|---|---|---|---|---|---|
+| T60 | +222,1 | −20,8 | −8,63 | −3,97 | 9 | +14,0 | — | — |
+| L30 (long −%30) | +192,0 | −21,2 | −5,47 | −3,72 | 5 | +10,1 | 0,63x → +113 | +79 |
+| **L40** | **+207,9** | −20,9 | **−5,94** | −3,80 | **6** | +9,7 | 0,69x → +127 | **+81** |
+| L50 | +210,9 | −20,8 | −6,88 | −3,97 | 7 | +11,5 | 0,80x → +157 | +54 |
+| S50 (short +%50) | +198,1 | −19,5 | −8,63 | −3,94 | 11 | +2,9 | — | (zararlı) |
+| C06 (coin tavanı %6) | +153,2 | −12,8 | −5,61 | −3,28 | 3 | +13,0 | | |
+| C08 | +181,7 | −16,5 | −6,59 | −3,56 | 5 | +15,0 | 0,76x → +147 | +34 |
+| C10 | +201,4 | −18,5 | −7,48 | −3,89 | 7 | +15,6 | | |
+| **L40C08** | +170,5 | **−16,6** | **−5,48** | −3,46 | **1** | +11,4 | 0,63x → +114 | +57 |
+| L40C08S50 | +151,9 | −15,8 | −5,31 | −3,33 | 1 | +1,6 | | |
+| L50C10 | +190,3 | −18,6 | −5,99 | −3,81 | 4 | +13,3 | | |
+- ÖN KAYITLI ölçüt (p1'e eşit sabit doz) → hepsi RED: p1 (~−%4'lük sıradan kötü günler) neredeyse
+  değişmiyor; kalkanlar yalnız FELAKET günlerini kesiyor. Kullanıcının hedefi ("bir günde çok fazla
+  düşüş") en kötü gün / −%5 altı gün → bu ölçütte (SONRADAN seçildi, kayıtlı) L40 aynı kuyruğu sabit
+  dozdan ~81 puan UCUZA alıyor; L40C08 −%5 altı günü 9'dan 1'e indiriyor ama ~52 puan maliyet.
+- L40 maliyeti yıllara eşit dağılmıyor: 2025 −40 puan (stop V dönüşlerini kaçırdı), diğer yıllar −3..+2.
+- Short stop sıkı (+%50) ZARARLI: sıkışan büyük coin short'larını tepeden kapatıyor, son çeyrek +%3.
+- Saatlik doğrulama (1 sa kline): çöküşlerin çoğu saatler içinde iniyor; POWER tek saatte −%48 (stop
+  −%40 yerine ~−%55'te dolardı), REEF −%43, SIREN −%40, HIGH −%42, BAND −%45 → model hafif iyimser.
+SONRAKİ: L35/L45 platosu, 3.500 $ D2 seviyesi, coin tavanı + long stop ince ayar. AYAR DEĞİŞMEDİ.
