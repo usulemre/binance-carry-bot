@@ -5207,3 +5207,21 @@ KOLLAR (2.000 $ D8, iki hiza, kaymalı):
 - Saatlik doğrulama (1 sa kline): çöküşlerin çoğu saatler içinde iniyor; POWER tek saatte −%48 (stop
   −%40 yerine ~−%55'te dolardı), REEF −%43, SIREN −%40, HIGH −%42, BAND −%45 → model hafif iyimser.
 SONRAKİ: L35/L45 platosu, 3.500 $ D2 seviyesi, coin tavanı + long stop ince ayar. AYAR DEĞİŞMEDİ.
+
+## Madde 444 — Kalkanın sağlamlığı: long felaket stop'u bir DOZ DÜĞMESİ (−%35/−%40/−%45 düzenli), 3.500 $'da da tutuyor
+| kol (2.000 $) | yıllık | maliyet | dd | en kötü gün | iyileşme | −%5 altı | −%4 altı | Tem-Eyl26 |
+|---|---|---|---|---|---|---|---|---|
+| T60 | +222,1 | — | −20,8 | −8,63 | — | 9 | 15 | +14,0 |
+| L35 | +203,4 | −18,7 | −20,9 | −5,52 | %36 | 5 | 12 | +9,9 |
+| L40 | +207,9 | −14,1 | −20,9 | −5,94 | %31 | 6 | 14 | +9,7 |
+| L45 | +209,7 | −12,4 | −20,8 | −6,50 | %25 (24,7) | 7 | 14 | +10,8 |
+| L40 + tavan %10 | +188,1 | −34,0 | −18,7 | −5,47 | %37 | 3 | 14 | +10,8 |
+| L40 + tavan %9 | +180,5 | −41,6 | −17,6 | −5,49 | %36 | 2 | 10 | +11,1 |
+| L40 + tavan %8 | +170,5 | −51,6 | −16,6 | −5,48 | %37 | 1 | 8 | +11,4 |
+| L40 + KAP 0,03 | +202,4 | −19,7 | −21,0 | −5,91 | %31 | 6 | 14 | +10,3 |
+3.500 $ D2: T60 +221,9 / en kötü −8,62 / −%5 altı 7 → L40 +207,6 (−14,3) / −6,10 (%29) / 4.
+- Ön kayıt kuralı (üçü de >= %25 iyileşme ve <= 20 puan maliyet) L45'in %24,7'siyle KIL PAYI kaçtı → RED.
+  Ama şekil düzenli bir doz-tepki: stop sıkılaştıkça kuyruk azalıyor, maliyet artıyor; 3.500 $'da aynı.
+  Bu bir "kâr adayı" değil, kullanıcının risk tercihine bırakılan bir DÜĞME.
+- Coin tavanı −%5 altı günü en çok kesen araç ama her %1 tavan ~8-10 puan; KAP 0,03 etkisiz.
+- Son çeyrekte kalkanlar −3..−4 puan (Tem-Eyl26 +%10 vs +%14).
