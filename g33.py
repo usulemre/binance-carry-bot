@@ -111,6 +111,8 @@ SLS=float(os.environ.get("SLS","0"))   # SHORT bacak stop
 # MADDE 449: LONG 24 SA DUSUS STOP'U. Giris fiyatindan bagimsiz: coin son 24 sa'teki
 # (6 bar once) kapanisindan SLL24 kadar duserse long bacak kapanir. 0 = kapali (parite).
 SLL24=float(os.environ.get("SLL24","0"))
+# SLL24_TAZE=n: seviye yalniz n barda bir (canli bot 8 sa = 2 bar) guncellenir; 1 = her bar (parite).
+SLL24_TAZE=int(os.environ.get("SLL24_TAZE","1"))
 # MADDE 450: SHORT 24 SA YUKSELIS STOP'U (SLL24'un aynasi). 0 = kapali (parite).
 SLS24=float(os.environ.get("SLS24","0"))
 # MADDE 417: KAR HEDEFI SIFIRLAMA. Bacak girisinden aleyhe TP_SIFIRLA kadar gidince
@@ -538,8 +540,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         _ff = (min(_ss,_op) if uzun else max(_ss,_op)) if np.isfinite(_op) else _ss
                         br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
                         continue
-                if SLL24 > 0 and uzun and i >= 5 and np.isfinite(cv[i-5,k]) and cv[i-5,k] > 0:
-                    _s24 = cv[i-5,k]*(1-SLL24)
+                _i24 = i - (i % SLL24_TAZE) if SLL24_TAZE > 1 else i
+                if SLL24 > 0 and uzun and _i24 >= 5 and np.isfinite(cv[_i24-5,k]) and cv[_i24-5,k] > 0:
+                    _s24 = cv[_i24-5,k]*(1-SLL24)
                     if LV[i+1,k] <= _s24:
                         _op = OV[i+1,k]
                         _ff = min(_s24,_op) if np.isfinite(_op) else _s24
