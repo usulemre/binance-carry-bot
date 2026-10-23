@@ -5523,3 +5523,9 @@ Tek eğilim pay ↑ (0,75 / 0,80: IS +3 / +5, OOS +7 / +11) — ön kayıt (IS >
 | short 1,0x / 1,5x | +242,5 / +247,0 | 3,78 / 3,81 | 4 / 4 | −6,1 / −2,8 |
 | long 4x + short 1,2x | +236,6 | 3,63 | 7 | −25,1 |
 Kademe coinin kendi oynaklığına göre değil, pompa büyüklüğüne göre işliyor: sabit +%45 pompa coinlerini yakalıyor.
+
+## Madde 472 — Taraf bazlı maksimum tutma (merdiven üstünde): RED
+Taban ZSR15P67 (+249,3 %/yıl, Sh 3,83, dd −17,4). YL18 +173,8 (eşitVol −32,9) · YL24 +216,2 (−6,4) ·
+YS24 +228,1 (−5,7; dd −14,6, −%5 altı 1 gün) · YL24YS24 +198,0 (Sh 3,84, dd −13,5, en kötü gün −4,53,
+−%5 altı 0 gün, eşitVol +0,7). Kalan ⅓ pozisyonun tam süre tutulması kâr getiriyor; erken kapatma eşit
+oynaklıkta kaldıraç azaltmakla aynı (YL24YS24 ≈ 0,8x kaldıraç). Kâr ekseni değil.
