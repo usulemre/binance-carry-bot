@@ -5466,3 +5466,16 @@ geri alırdı); kademe aynı giriş için bir kez (durum["merdiven_yapildi"], gi
 Preflight T60 profili 0,45 / 0,5 bekler. Testler: entegrasyon 12c merdiven (+6 kontrol), 14 carry
 dosyasının hepsi geçti. Canlı varsayılan artık: T60 + 24 sa düşüş stop'u + merdiven.
 Backtest (2.000 $, kaymalı, iki hiza): yıllık ~+%233, Sharpe ~3,66, dd ~−%20,6, en kötü gün ~−%5,4.
+
+## Madde 466 — Çıkış mekaniği 2 (taban: canlı varsayılan T60 + 24 sa stop + long merdiven ½ @ %45)
+| kol | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşit oynaklık |
+|---|---|---|---|---|---|---|---|---|---|
+| taban (XMR45) | +232,8 | +166,2 | +355,6 | 3,66 | −20,6 | −5,39 | 5 | +18,3 | — |
+| short ½ @ −%10 | +235,2 | +179,8 | +331,9 | 3,72 | **−15,3** | −5,69 | **3** | +18,0 | +6,6 |
+| short ½ @ −%12 | +237,7 | +177,8 | +344,3 | 3,73 | −16,7 | −5,56 | 4 | +18,7 | +7,3 |
+| **short ½ @ −%15** | **+240,7** | +176,2 | +357,5 | **3,74** | −18,3 | −5,39 | 5 | +19,1 | **+8,4** |
+| başabaş (rung sonrası) | +229,6 | +167,3 | +342,4 | 3,66 | −20,7 | −5,39 | 5 | +16,8 | −0,4 |
+| başabaş + short −%12 | +229,7 | +179,5 | +316,0 | 3,69 | −15,4 | −5,57 | 3 | +15,4 | +3,4 |
+| long ⅔ @ %45 | +238,4 | +168,7 | +367,9 | 3,73 | −20,5 | −5,36 | 4 | +19,5 | +8,2 |
+- Short merdiveni platoda (−%10..−%15 hepsi Sharpe +0,06-0,08, dd 2-5 puan sığ); short kârının bir
+  kısmını sıkışma geri dönmeden kilitler. SR15 ön kaydı geçti → madde 467 protokol. Başabaş etkisiz.
