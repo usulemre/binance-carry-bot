@@ -5514,3 +5514,12 @@ Sharpe ~3,83, dd ~−%17,4, −%5 altı gün 3.
 | son short TP 0,25 | +249,0 | | | 3,83 | −18,8 | | 4 | | −0,2 |
 | son long TP 0,50 / 0,70 | +237,9 / +248,7 | | | 3,82 / 3,77 | | | 3 | | −1,2 / −7,3 |
 Tek eğilim pay ↑ (0,75 / 0,80: IS +3 / +5, OOS +7 / +11) — ön kayıt (IS >= +8) altında; gürültü sınırı. AYAR DEĞİŞMEDİ.
+
+## Madde 471 — Oynaklığa ölçekli kademe (MERD_KAT/MERDS_KAT): RED — sabit kademe daha iyi
+| kol (taban ZSR15P67) | yıllık | Sharpe | −%5 altı | eşit oynaklık |
+|---|---|---|---|---|
+| taban (sabit +%45 / −%15) | +249,3 | 3,83 | 3 | — |
+| long 3x / 5x oynaklık | +238,6 / +238,3 | 3,65 / 3,64 | 6 / 6 | −22,3 / −23,1 |
+| short 1,0x / 1,5x | +242,5 / +247,0 | 3,78 / 3,81 | 4 / 4 | −6,1 / −2,8 |
+| long 4x + short 1,2x | +236,6 | 3,63 | 7 | −25,1 |
+Kademe coinin kendi oynaklığına göre değil, pompa büyüklüğüne göre işliyor: sabit +%45 pompa coinlerini yakalıyor.
