@@ -5529,3 +5529,9 @@ Taban ZSR15P67 (+249,3 %/yıl, Sh 3,83, dd −17,4). YL18 +173,8 (eşitVol −32
 YS24 +228,1 (−5,7; dd −14,6, −%5 altı 1 gün) · YL24YS24 +198,0 (Sh 3,84, dd −13,5, en kötü gün −4,53,
 −%5 altı 0 gün, eşitVol +0,7). Kalan ⅓ pozisyonun tam süre tutulması kâr getiriyor; erken kapatma eşit
 oynaklıkta kaldıraç azaltmakla aynı (YL24YS24 ≈ 0,8x kaldıraç). Kâr ekseni değil.
+
+## Madde 473 — Boşalan ağırlığı açık bacaklara yayma (MERD_YAY): RED
+Taban ZSR15P67 +249,3 (Sh 3,83, dd −17,4, −%5 altı 3 gün). YAY1 (rung) +260,3, Sh 3,83, dd −18,5,
+−%5 altı 5 gün, eşitVol −0,1 · YAY2 (rung+TP) +263,5, Sh 3,69, dd −20,1, en kötü −6,82, eşitVol −18,9.
+Getiri artışı tamamen fazladan maruziyet (gizli kaldıraç); YAY2 kötü günleri de büyütüyor. Boşta %8,8
+sermaye nakit olarak kalmalı — madde 229 bulgusu merdivenli kitapta da geçerli.
