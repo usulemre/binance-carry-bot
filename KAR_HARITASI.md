@@ -5584,3 +5584,16 @@ Long lD1 (defter derinliği, ince → kalın): IS 2,23 1,53 1,06 0,67 1,13 | OOS
 Long cek (derinlik / 7 g medyan, düşük → yüksek): IS 2,60 1,06 1,34 0,71 0,54 | OOS **1,07** −0,78 0,27 −0,77 0,45.
 İnce defterli long hem çöküşte hem getiride en uçta, ama risk başına da EN İYİ, iki dönemde de → seçim ölçütü
 olarak denenir (madde 479). Short tarafında tutarlı sıra yok.
+
+## Madde 479 — Emir defteriyle long seçimi (ls + DW·defter, yalnız long): DÖRDÜ DE RED
+| kol (taban ZSR15P67) | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşitVol |
+|---|---|---|---|---|---|---|---|---|---|
+| taban | +249,3 | +182,4 | +370,8 | 3,83 | −17,4 | −5,45 | 3 | +20,5 | — |
+| ince defter DW 0,5 | +240,7 | +173,9 | +363,0 | 3,66 | −16,4 | −6,26 | 7 | +24,2 | −21,3 |
+| ince defter DW 1,0 | +204,5 | +141,9 | +320,8 | 3,34 | −15,9 | −7,11 | 6 | +18,9 | −57,1 |
+| derinlik çekilmesi DW 0,5 | +201,3 | +165,3 | +260,1 | 3,72 | −14,5 | −5,80 | 3 | +29,5 | −10,4 |
+| derinlik çekilmesi DW 1,0 | +126,4 | +107,0 | +156,8 | 3,11 | −18,3 | −5,70 | 3 | +30,6 | −49,1 |
+Tutulan bacaklardaki risk ayarlı üstünlük (madde 477 eki) SEÇİMDE para etmiyor: defter kalabalık ölçütünün yerini
+aldıkça kitap bozuluyor (DW ↑ → monoton kötü). Kalabalık ölçütü defterin taşıdığı bilgiyi zaten içeriyor ve daha
+temiz. Tek ilginç iz: son çeyrek (Tem-Eyl 2026) dört kolda da tabandan iyi — tek çeyrek, ön kayıt dışı, karar
+vermez. Emir defteri ekseni kapandı.
