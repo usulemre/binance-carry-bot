@@ -5225,3 +5225,41 @@ SONRAKİ: L35/L45 platosu, 3.500 $ D2 seviyesi, coin tavanı + long stop ince ay
   Bu bir "kâr adayı" değil, kullanıcının risk tercihine bırakılan bir DÜĞME.
 - Coin tavanı −%5 altı günü en çok kesen araç ama her %1 tavan ~8-10 puan; KAP 0,03 etkisiz.
 - Son çeyrekte kalkanlar −3..−4 puan (Tem-Eyl26 +%10 vs +%14).
+
+## Madde 445 — İsteğe bağlı LONG felaket stop'u bota eklendi (CARRY_LONG_STOP, varsayılan 0 = kapalı)
+`carry_bot.py`: long pozisyona SELL STOP_MARKET (algo API, MARK, reduceOnly) giriş x (1 − X); short
+stop'la aynı defter (durum["felaket"]), aynı iptal/yenileme ve dolunca dilimlerden çıkarma. Entegrasyon
+testi 12c (+4 kontrol) geçti. Önerilen değer 0,40 (madde 443-444); açmak kullanıcı tercihi.
+
+## Madde 446 — FELAKET İMZASI (olay çalışması, T60 iki hiza, 510 bin bar-pozisyon)
+Felaket = tutulan coinin sonraki 24 sa katkısı <= −%1,5 sermaye. LONG: 1.053 bar (272 coin-gün, %0,40);
+SHORT: 429 bar (115 coin-gün, %0,17). Üst %10 dilimde felaket riski / genel risk (IS 22-24 / OOS 25-26):
+| özellik | LONG olay medyan / kontrol | LONG üst %10 | LONG alt %10 | SHORT üst %10 |
+|---|---|---|---|---|
+| 7 g getiri | +%44 / +%5 | **5,7 / 4,1** | 1,1 / 1,1 | 3,0 / 2,4 |
+| 30 g getiri | +%132 / +%18 | **5,6 / 5,0** | 0,8 / 0,3 | 3,0 / 3,0 |
+| 24 sa aralık | %27 / %10 | 4,9 / 4,1 | 0 / 0 | 3,8 / 3,6 |
+| funding 60 sa | −0,0055 / −0,0001 | 0,3 / 0,6 | **5,2 / 3,7** | 3,5 / 3,7 |
+| hesap L/S oranı | 0,71 / 1,22 | 0,2 / 0,2 | 4,7 / 3,0 | 1,3 / 2,1 |
+| OI 1 g değişim | | 3,0 / 2,1 | 1,8 / 1,8 | 2,6 / 2,3 |
+| yaş, spot, taker | tutarsız | | | |
+- LONG çöküşünün imzası POMPALA-BOŞALT: coin uçar (POWER 7 g +%407, RAVE +%1.266, PIPPIN +%194), short'lar
+  yığılır (L/S hesap oranı düşük), funding çok negatife iner → carry seçicisi tam bu coini long seçer.
+  Short sıkışmasının imzası daha zayıf (2-3,7x): yükselen, aralığı açılan, funding'i yüksek coin.
+
+## Madde 447-448 — POMPA FİLTRESİ (UCELE 7 g / 30 g; 448: yalnız long, yeni UCELE_TARAF düğmesi): RED
+| kol | yıllık | maliyet | dd | en kötü gün | −%5 altı | IS yıllık | OOS yıllık |
+|---|---|---|---|---|---|---|---|
+| T60 | +222,1 | — | −20,8 | −8,63 | 9 | +155,5 | +345,8 |
+| L40 (long stop) | +207,9 | −14,1 | −20,9 | −5,94 | 6 | +153,4 | +304,8 |
+| 7 g +%50 | +144,4 | −77,7 | −19,0 | −7,50 | 5 | +149,8 | +137,0 |
+| 7 g +%100 (simetrik = yalnız long, aynı) | +194,6 | −27,5 | −17,6 | −7,39 | 6 | +174,0 | +226,0 |
+| 7 g +%200 yalnız long | +202,4 | −19,7 | −20,6 | −8,60 | 6 | +158,1 | +277,8 |
+| 30 g +%100 | +138,7 | −83,4 | −19,2 | −7,75 | 3 | +135,1 | +143,9 |
+| 30 g +%300 yalnız long | +191,0 | −31,0 | −20,1 | −8,86 | 5 | +167,1 | +228,4 |
+| 7 g +%100 + L40 | +190,8 | −31,2 | −17,6 | −5,94 | 3 | +175,2 | +214,3 |
+- İmza GERÇEK ama pompalanan coinler aynı zamanda en büyük kazananlar (en negatif funding): elemek
+  felaketten çok kârı kesiyor. 2022-24'te filtre KAZANDIRIYOR (+19 puan), 2025-26'da −120 puan
+  kaybettiriyor → rejime bağlı, güvenilmez. Stop coine girer ve yalnız çöküş başlarsa çıkar; bu yüzden
+  aynı felaketi elemeden çok daha ucuza keser. Simetrik filtrenin short tarafı etkisizmiş (maliyet tamamen long).
+AYAR DEĞİŞMEDİ.
