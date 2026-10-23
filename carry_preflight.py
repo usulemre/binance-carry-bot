@@ -78,6 +78,8 @@ def kontrol_ayarlar() -> None:
             "MIN_LISTELEME_GUN": (cb.MIN_LISTELEME_GUN, 60, "madde 429/433"),
             "SHORT_FELAKET": (cb.SHORT_FELAKET, 2.0, "madde 428"),
             "LONG_24S": (cb.LONG_24S, 0.45, "madde 449-453"),
+            "MERDIVEN": (cb.MERDIVEN, 0.45, "madde 463-465"),
+            "MERDIVEN_PAY": (cb.MERDIVEN_PAY, 0.5, "madde 463-465"),
         })
         kontrol("profil", TAMAM, "T60 (varsayılan, madde 442; beklenti KAR_HARITASI madde 433-438)")
     else:

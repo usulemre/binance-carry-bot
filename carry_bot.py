@@ -1861,10 +1861,11 @@ seviye 8 sa'te bir yenilenerek - madde 452):
 3.500 $'da da aynı (−%8,6 → −%5,5, 5 puan). Girişten stop'la (CARRY_LONG_STOP)
 BİRLİKTE kullanmak daha kötü (madde 452: 15 puan, en kötü gün −%5,9)."""
 
-MERDIVEN = float(os.getenv("CARRY_MERDIVEN", "0"))
+MERDIVEN = float(os.getenv("CARRY_MERDIVEN", "0.45"))
 MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.5"))
 """LONG MERDİVEN KÂR ALMA (madde 462-465). Long pozisyonun MERDIVEN_PAY'i
 girişten +%MERDIVEN'de, kalanı CARRY_KAR_AL'da (+%60) satılır. 0 = kapalı.
+VARSAYILAN 0,45 (madde 464: protokolde AYAR, dört hücre P %99,2-100).
 Kademe dolunca o sembolün TÜM dilim hedefleri (1 − PAY) ile küçülür; yoksa bot
 bir sonraki turda satılan yarıyı geri alırdı (motor madde 235 ile aynı: kalan
 yarı dilim yenilenene kadar tutulur). Backtest (T60 + 24 sa stop, 2.000 $):

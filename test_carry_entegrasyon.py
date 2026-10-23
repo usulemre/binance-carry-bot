@@ -1039,6 +1039,8 @@ _co.KILIT = _eski_kilit
 
 print("\n12) KÂR AL (madde 143)")
 _eski_ka = cb.KAR_AL_ORAN
+_eski_mr = cb.MERDIVEN
+cb.MERDIVEN = 0.0   # madde 465: bu bölüm TEK TP emrini sınar; merdiven 12c'de ayrıca
 cb.KAR_AL_ORAN = 0.70
 temiz_ortam()
 c = SahteClient()
@@ -1130,6 +1132,7 @@ kontrol("sağlık kapısı kapanınca açık kâr al emirleri iptal edildi",
         f"({len(acik_ka)} emir)")
 cb.SAGLIK_MODU = _em
 cb.KAR_AL_ORAN = _eski_ka
+cb.MERDIVEN = _eski_mr
 cb.KAR_AL_SHORT = _eski_kas
 
 print("\n12c) SHORT FELAKET STOP'U (madde 437)")
@@ -1287,6 +1290,8 @@ kontrol("aynı giriş için kademe İKİNCİ KEZ konmuyor (yalnız +%60 TP)",
         and abs([v for k, v in _acik if v[0] == _ms][0][2] / poz[_ms][1] - 1.60) < 0.01,
         f"({[v for k, v in _acik if v[0] == _ms]})")
 cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S = _em
+kontrol("CARRY_MERDIVEN varsayılanı 0,45 / pay 0,5 (madde 465)",
+        abs(cb.MERDIVEN - 0.45) < 1e-9 and abs(cb.MERDIVEN_PAY - 0.5) < 1e-9)
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
 cb.LONG_24S = _e24
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
