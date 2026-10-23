@@ -5572,3 +5572,9 @@ anlık görüntü, ±%1..±%5 notional → 4 sa bar), kitabın (ZSR15P67 hz0) 20
   birlik kitabın EN ÇOK kazandırdığı dilim (katkı +15..+19 bp/gün): madde 236'nın yasası yeni veride de geçerli —
   zarar ve kazanç aynı popülasyonda. Ön kayıttaki filtre şartını (en kötü dilim iki dönemde de en kötü) hiçbir
   özellik sağlamadı → RED. Kayma açısından da bağlayıcı değil: en ince beşte birlik bile ±%1'de ~0,5 M$.
+
+## Madde 478 — COIN-M / USDⓈ-M funding farkı (aynı borsa, aynı coin, delta-nötr): RED (ölü)
+`indir_coinm_funding.py`: COIN-M'de 49 coin (XXXUSD_PERP), 2023-01 → 2026-06, eşli USDⓈ-M funding. Ortalama
+|fark| yıllık %7,5 (en geniş AXS −18,3: USDⓈ-M çok daha negatif); 7 g geçmiş fark işaretiyle sonraki 7 g'ü
+almak yıllık **+%3,6** (IS +2,3, OOS +5,4) — iki bacak haftalık dönüş maliyetinden (%5-10/yıl) küçük, coin
+evreni dar (majörler), ters sözleşme coin teminatı ister. Kitaba ikinci kol olacak büyüklük yok.
