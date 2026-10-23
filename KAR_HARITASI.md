@@ -5446,3 +5446,15 @@ Yaş 60 doğru yerde (madde 397/427/433 ile tutarlı).
 - Ön kayıt (%35/%40/%45 üçü Sharpe +0,10 ve eşit oynaklıkta +10) GEÇTİ → PLATO. Mekanizma: pompa
   coininin kârının yarısını erken kilitlemek; kalan yarı +%60'ı bekler. T60'tan sonraki ilk gerçek
   YAPISAL iyileşme (eşit riskte +15..+29). IS'te en iyi MR45 → madde 464 protokol.
+
+## Madde 464 — MERDİVEN MR45 PROTOKOLDE: **AYAR** (dört hücrenin dördü, P %99,2-100)
+Kontrol: canlı varsayılan (T60 + 24 sa stop, KD24_45T2). Aday: long'un yarısı +%45'te, kalanı +%60'ta.
+| seviye / hiza | yıllık fark | Sh22 | Sh25 | düşüş | eşit-risk | şartlar | P | Tem-Eyl26 |
+|---|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 | +15,1 | +0,14 | +0,29 | −0,1 | +17,4 | YYYY | %99,8 | +18,2 vs +14,7 |
+| 2.000 $ 1 | +17,8 | +0,15 | +0,34 | −0,3 | +23,5 | YYYY | %100,0 | +18,4 vs +14,8 |
+| 3.500 $ 0 | +14,6 | +0,13 | +0,29 | +0,1 | +12,0 | YYYY | %99,5 | +16,9 vs +13,5 |
+| 3.500 $ 1 | +17,8 | +0,15 | +0,34 | −0,0 | +18,6 | YYYY | %99,2 | +17,4 vs +13,8 |
+- Madde 434'ün güç sınırına rağmen P %99+: getiri farkı küçük (+15..+18) ama GÜRÜLTÜSÜ çok düşük —
+  merdiven kontrolle aynı coinleri tutuyor, yalnız çıkışı değiştiriyor (eşli fark dar). Plato (463) +
+  iki dönem + iki seviye + son çeyrek hepsi aynı yönde. → CARRY_MERDIVEN=0,45 VARSAYILAN (madde 465).
