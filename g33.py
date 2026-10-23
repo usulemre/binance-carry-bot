@@ -698,6 +698,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
 # toplam (diger dilimler + bu dilim) agirlik / faz sayisi <= c. CAP_DAGIT=1 ->
 # kirpilan pay ayni taraftaki diger bacaklara orantili dagitilir (brut korunur).
 CAP_ORTAK=float(os.environ.get('CAP_ORTAK','0'))
+# MADDE 455: CAP_TARAF=short -> tavan yalniz SHORT bacaklara (long serbest). Bos/iki -> parite.
+CAP_TARAF=os.environ.get('CAP_TARAF','iki').strip()
 CAP_DAGIT=int(os.environ.get('CAP_DAGIT','0'))
 _CAPS=[0,0]   # [kirpilan bacak sayisi, toplam kirpilan agirlik]
 def _ortak_kos(baslar,n,olcut,tp):
@@ -717,6 +719,8 @@ def _ortak_kos(baslar,n,olcut,tp):
                 y2=y.copy(); serbest={1:0.0,-1:0.0}
                 for k in np.flatnonzero(y2!=0):
                     sg=1 if y2[k]>0 else -1
+                    if (CAP_TARAF=='short' and sg>0) or (CAP_TARAF=='long' and sg<0):
+                        continue
                     izin=max(0.0,lim-sg*diger[k])
                     if abs(y2[k])>izin:
                         serbest[sg]+=abs(y2[k])-izin; _CAPS[0]+=1; _CAPS[1]+=abs(y2[k])-izin
