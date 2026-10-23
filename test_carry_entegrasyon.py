@@ -1039,8 +1039,8 @@ _co.KILIT = _eski_kilit
 
 print("\n12) KÂR AL (madde 143)")
 _eski_ka = cb.KAR_AL_ORAN
-_eski_mr = cb.MERDIVEN
-cb.MERDIVEN = 0.0   # madde 465: bu bölüm TEK TP emrini sınar; merdiven 12c'de ayrıca
+_eski_mr = (cb.MERDIVEN, cb.MERDIVEN_SHORT)
+cb.MERDIVEN = cb.MERDIVEN_SHORT = 0.0   # madde 465/469: bu bölüm TEK TP emrini sınar; merdiven 12c'de
 cb.KAR_AL_ORAN = 0.70
 temiz_ortam()
 c = SahteClient()
@@ -1132,7 +1132,7 @@ kontrol("sağlık kapısı kapanınca açık kâr al emirleri iptal edildi",
         f"({len(acik_ka)} emir)")
 cb.SAGLIK_MODU = _em
 cb.KAR_AL_ORAN = _eski_ka
-cb.MERDIVEN = _eski_mr
+cb.MERDIVEN, cb.MERDIVEN_SHORT = _eski_mr
 cb.KAR_AL_SHORT = _eski_kas
 
 print("\n12c) SHORT FELAKET STOP'U (madde 437)")
@@ -1252,8 +1252,8 @@ kontrol("seviyenin altında bulunan long piyasa emriyle kapatıldı (SELL)",
 kontrol("kapatılan long tüm dilimlerden çıkarıldı",
         all(_l1 not in h for h in _d.get("dilimler", {}).values()))
 # MADDE 465: LONG MERDİVEN KÂR ALMA
-temiz_ortam(); _em = (cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S)
-cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S = 0.45, 0.5, 0.0
+temiz_ortam(); _em = (cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT)
+cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT = 0.45, 0.5, 0.0, 0.0
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = 0.60, 0.20, 2.0
 c = SahteClient(); cb.bir_tur(c, dry_run=False)
 c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
@@ -1289,9 +1289,36 @@ kontrol("aynı giriş için kademe İKİNCİ KEZ konmuyor (yalnız +%60 TP)",
         len([v for k, v in _acik if v[0] == _ms]) == 1
         and abs([v for k, v in _acik if v[0] == _ms][0][2] / poz[_ms][1] - 1.60) < 0.01,
         f"({[v for k, v in _acik if v[0] == _ms]})")
-cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S = _em
-kontrol("CARRY_MERDIVEN varsayılanı 0,45 / pay 0,5 (madde 465)",
-        abs(cb.MERDIVEN - 0.45) < 1e-9 and abs(cb.MERDIVEN_PAY - 0.5) < 1e-9)
+cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT = _em
+kontrol("merdiven varsayılanı long 0,45 / short 0,15 / pay 0,667 (madde 469)",
+        abs(cb.MERDIVEN - 0.45) < 1e-9 and abs(cb.MERDIVEN_SHORT - 0.15) < 1e-9
+        and abs(cb.MERDIVEN_PAY - 0.667) < 1e-9)
+# MADDE 469: SHORT MERDİVENİ
+temiz_ortam(); _em2 = (cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT)
+cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT = 0.45, 0.667, 0.0, 0.15
+cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = 0.60, 0.20, 2.0
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+c.client.kar_al_emirleri.clear()
+cb.bir_tur(c, dry_run=False)
+poz = {p["symbol"]: (float(p["positionAmt"]), float(p["entryPrice"])) for p in c.get_open_positions()}
+_acik = [(k, v) for k, v in c.client.kar_al_emirleri.items() if c.client.emir_durumu[k] == "NEW"]
+_sht = [s_ for s_ in poz if poz[s_][0] < 0]
+def _emr2(s_): return sorted([v for k, v in _acik if v[0] == s_], key=lambda v: -v[2])
+kontrol("short merdiveni: her short'a İKİ alış emri (−%15 ⅔, −%20 ⅓)",
+        _sht and all(len(_emr2(s_)) == 2 and _emr2(s_)[0][1] == "BUY"
+                     and abs(_emr2(s_)[0][2] / poz[s_][1] - 0.85) < 0.01
+                     and abs(_emr2(s_)[1][2] / poz[s_][1] - 0.80) < 0.01
+                     and abs(_emr2(s_)[0][3] - abs(poz[s_][0]) * 0.667) < 0.02 * abs(poz[s_][0]) for s_ in _sht),
+        f"({[(s_, _emr2(s_)) for s_ in _sht[:1]]})")
+durum = cb.dilim_durum_oku(); _ss = _sht[0]
+_once = sum(h.get(_ss, 0) for h in durum["dilimler"].values())
+c.client.emir_durumu[durum["merdiven"][_ss]["oid"]] = "FILLED"
+cb.kar_al_kontrol(c, durum)
+_sonra = sum(h.get(_ss, 0) for h in durum["dilimler"].values())
+kontrol("short kademesi dolunca short hedefi ⅓'e iniyor, sembol kalıyor",
+        _sonra < 0 and abs(_sonra - _once * (1 - 0.667)) < 1e-6 * max(1, abs(_once)), f"({_once:.2f} -> {_sonra:.2f})")
+cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT = _em2
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
 cb.LONG_24S = _e24
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski

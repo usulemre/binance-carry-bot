@@ -1871,8 +1871,15 @@ yarı dilim yenilenene kadar tutulur). Backtest (T60 + 24 sa stop, 2.000 $):
 ½ @ %45 → yıllık +%216 → +%233, Sharpe 3,44 → 3,66, −%5 altı gün 7 → 5;
 plato %35-%50 (madde 463), protokol madde 464."""
 
-MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.5"))
-"""Merdivende ilk kademede satılan pay (madde 463: 1/3, 1/2, 2/3 hepsi plato; 1/2 seçildi, madde 465)."""
+MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.667"))
+"""Merdivende ilk kademede kapanan pay, iki tarafta ortak (madde 463: 1/3-2/3 plato;
+madde 468: 2/3 + short merdiveni protokolde AYAR, P %98-99; madde 469 varsayılan)."""
+
+MERDIVEN_SHORT = float(os.getenv("CARRY_MERDIVEN_SHORT", "0.15"))
+"""SHORT MERDİVENİ (madde 466-469). Short pozisyonun MERDIVEN_PAY'i girişten −%X'te
+alınır (kapanır), kalanı CARRY_KAR_AL_SHORT'ta (−%20). 0 = kapalı. Backtest
+(madde 468, long ⅔ @ %45 ile birlikte): yıllık +%233 → +%249, Sharpe 3,66 → 3,83,
+dd −%20,6 → −%17,4, −%5 altı gün 5 → 3."""
 
 # MADDE 442 — VARSAYILAN PROFİL T60. Madde 429-438'in vardığı ayar varsayılan
 # yapıldı: hacim 70M (CARRY_MIN_VOLUME), yaş 60 (CARRY_MIN_LISTING_DAYS),
@@ -3368,12 +3375,12 @@ def merdiven_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
             dolan.append(sem)
             durum.setdefault("merdiven_yapildi", {})[sem] = kay["giris"]
             for hedef in durum.get("dilimler", {}).values():
-                if hedef.get(sem, 0) > 0:
+                if hedef.get(sem, 0) != 0:
                     hedef[sem] = hedef[sem] * (1 - MERDIVEN_PAY)
             durum["merdiven"].pop(sem, None)
     if dolan:
-        logger.info("MERDİVEN doldu (%%%.0f'i +%%%.0f'de satıldı): %s - hedefler küçültüldü",
-                    MERDIVEN_PAY * 100, MERDIVEN * 100, ", ".join(dolan))
+        logger.info("MERDİVEN doldu (%%%.0f'i kapandı; long +%%%.0f / short −%%%.0f): %s - hedefler küçültüldü",
+                    MERDIVEN_PAY * 100, MERDIVEN * 100, MERDIVEN_SHORT * 100, ", ".join(dolan))
     return dolan
 
 
@@ -3383,7 +3390,7 @@ def kar_al_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
 
     Emir durumu alınamazsa sembol dokunulmadan bırakılır (yanlışlıkla
     pozisyon silmektense bir tur beklemek güvenli)."""
-    if MERDIVEN > 0 or durum.get("merdiven"):
+    if MERDIVEN > 0 or MERDIVEN_SHORT > 0 or durum.get("merdiven"):
         merdiven_kontrol(client, durum)
     dolan = []
     for sem, oid in list(durum.get("kar_al", {}).items()):
@@ -3533,14 +3540,17 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
             _yap = durum.get("merdiven_yapildi", {}).get(sem)
             if _yap and abs(_yap / giris - 1) > 0.005:
                 durum["merdiven_yapildi"].pop(sem, None); _yap = None   # yeni giriş
-            if miktar > 0 and MERDIVEN > 0 and not _yap and MERDIVEN < KAR_AL_ORAN:
+            _m_esik = MERDIVEN if miktar > 0 else MERDIVEN_SHORT
+            _m_tp = KAR_AL_ORAN if miktar > 0 else KAR_AL_SHORT
+            if _m_esik > 0 and not _yap and _m_esik < _m_tp:
                 _q1 = round(adet * MERDIVEN_PAY, pr["quantity_precision"])
                 _q2 = round(adet - _q1, pr["quantity_precision"])
                 if _q1 > 0 and _q2 > 0:
                     if sem not in durum.get("merdiven", {}):   # yeniden denemede ikinci kademe koyma
+                        _m_fiyat = giris * (1 + _m_esik) if miktar > 0 else giris * (1 - _m_esik)
                         e1 = client.client.futures_create_order(
-                            symbol=sem, side="SELL", type="LIMIT", timeInForce="GTC",
-                            quantity=_q1, price=f"{giris * (1 + MERDIVEN):.{_pp}f}", reduceOnly=True)
+                            symbol=sem, side=yon, type="LIMIT", timeInForce="GTC",
+                            quantity=_q1, price=f"{_m_fiyat:.{_pp}f}", reduceOnly=True)
                         durum.setdefault("merdiven", {})[sem] = {"oid": e1.get("orderId"), "giris": giris}
                     adet = _q2
             e = client.client.futures_create_order(

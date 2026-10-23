@@ -142,9 +142,15 @@ gerekmiyor; `carry_preflight.py` sapma olursa **HATA** verir:
 | `CARRY_MIN_LISTING_DAYS` | **60** | **429/433** |
 | `CARRY_SHORT_STOP` | **2.0** (+%200) | **428/437** |
 | `CARRY_LONG_24S` | **0.45** (24 sa'te −%45 düşen long kapanır) | **449-453** |
-| `CARRY_MERDIVEN` | **0.45** (long'un yarısı +%45'te satılır, kalanı +%60'ta) | **463-465** |
-| `CARRY_MERDIVEN_PAY` | **0.5** | **463-465** |
+| `CARRY_MERDIVEN` | **0.45** (long'un ⅔'ü +%45'te satılır, kalanı +%60'ta) | **463-469** |
+| `CARRY_MERDIVEN_SHORT` | **0.15** (short'un ⅔'ü −%15'te kapanır, kalanı −%20'de) | **466-469** |
+| `CARRY_MERDIVEN_PAY` | **0.667** | **468-469** |
 | `CARRY_LONG_STOP` | 0 (kapalı) — 24 sa stop'u varken AÇMAYIN | **443-445, 452** |
+
+**MADDE 469 — İKİ TARAFLI MERDİVEN (varsayılan).** Long'un ⅔'ü +%45'te, short'un ⅔'ü −%15'te
+kapanır; kalanlar +%60 / −%20'de. Backtest: yıllık +%249, Sharpe 3,83, en kötü düşüş −%17,4,
+−%5'ten kötü gün 3; protokolde 4/4 P %98-99 (madde 468). Kapatmak: `CARRY_MERDIVEN=0
+CARRY_MERDIVEN_SHORT=0`.
 
 **MADDE 465 — MERDİVEN KÂR ALMA (varsayılan açık).** Long pozisyonun yarısı girişten
 +%45'te satılır, kalanı +%60'ta. Backtest: yıllık +%216 → +%233, Sharpe 3,44 → 3,66,
