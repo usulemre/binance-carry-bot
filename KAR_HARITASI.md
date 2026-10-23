@@ -5341,3 +5341,25 @@ Kalan en kötü günler ~−%5,5 ve çoğu SHORT sıkışması (ONDO, FIL, DOGE,
 Düzenli doz-tepki: tavan sıkılaştıkça dd ve −%4/−%5 altı gün azalıyor, maliyet artıyor; en kötü gün
 değişmiyor (o artık long çöküşü + 24 sa stop sınırı). Kural sonuç görüldükten sonra yazıldı (kayıtlı).
 Bot'a eklenmedi — kullanıcı kararı bekleniyor.
+
+## Madde 457 — T60 üzerinde hiç oynanmamış 17 eksen (taban: T60 + 24 sa stop, 2.000 $, kaymalı)
+| kol | yıllık | IS | OOS | dd | en kötü | −%5 altı | Sharpe | ΔIS | ΔOOS |
+|---|---|---|---|---|---|---|---|---|---|
+| taban | +216,4 | +158,7 | +319,5 | −20,8 | −5,49 | 7 | 3,44 | — | — |
+| ağırlık ∝ funding^1,0 | +337,4 | +187,1 | +689,8 | −24,1 | −10,63 | 27 | 3,05 | +28,4 | +370 |
+| ağırlık ∝ funding^0,5 | +284,2 | +177,4 | +506,9 | −21,7 | −8,46 | 14 | 3,19 | +18,7 | +187 |
+| akış ağırlığı 0 | +212,9 | +173,1 | +278,6 | −17,3 | −5,56 | 4 | 3,40 | +14,4 | −40,9 |
+| long havuzu 6 | +215,5 | +171,0 | +290,6 | −18,3 | −5,45 | 6 | 3,44 | +12,3 | −28,9 |
+| 4 long / 3 short | +228,6 | +166,6 | +340,7 | −19,8 | −6,67 | 7 | 3,50 | +7,8 | +21,2 |
+| oynaklık x3 long TP | +225,0 | +165,8 | +331,2 | −21,0 | −7,84 | 10 | 3,20 | +7,0 | +11,6 |
+| rezerv eşiği 0,010 / 0,025 | +219,5 / +208,9 | | | | | | | −0,8 / −1,1 | |
+| KAP 0,08 | = taban (bağlayıcı değil) | | | | | | | | |
+| short havuzu 3 | +202,4 | | | | | | | −0,7 | −41,8 |
+| tutma 6 g / 7 g | +179,2 / +157,1 | | | | | | | −13,8 / −31,8 | |
+| short maks 2 g / 3 g | +156,7 / +181,9 | | | | | | | −23,8 / −11,9 | |
+| 5L/4S, oynaklık x2 TP, akış 0,4 | +180,9 / +200,7 / +176,2 | | | | | | | | |
+- Genelleme (IS farkı ~ OOS farkı sıra korelasyonu) 0,75.
+- Funding'e orantılı ağırlık getiri patlaması gibi görünüyor ama EŞİT OYNAKLIKTA tabanı kaldıraçlamaktan
+  KÖTÜ (^0,5: taban x1,29 → +331 vs +284; ^1,0: x1,50 → +438 vs +337) ve en kötü gün −%8,5/−%10,6:
+  kılık değiştirmiş kaldıraç → ELENDİ. Eşit maks düşüşte önde görünmesi tek-istatistik gürültüsü.
+- Tutarlı tek aday 4L/3S (iki dönemde de önde, Sharpe ↑, BTC betası −0,026) → madde 458.
