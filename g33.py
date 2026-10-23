@@ -219,6 +219,10 @@ YARIM=int(os.environ.get("YARIM","0"))          # kar alda pozisyonun YARISI kap
 # DEGISTIRMEZ, altina bir basamak EKLER. 0 = kapali.
 MERD_ESIK=float(os.environ.get("MERD_ESIK","0"))
 MERD_PAY=float(os.environ.get("MERD_PAY","0.5"))
+# MADDE 476: ERKEN (IKINCI) KADEME. Ana kademeden ONCE MERD0_ESIK (long) / MERDS0_ESIK (short) seviyesinde
+# pozisyonun MERD0_PAY'i kapanir; kalan icin ana kademe (MERD_PAY) ve son TP aynen gecerli. 0 = kapali (parite).
+MERD0_ESIK=float(os.environ.get("MERD0_ESIK","0")); MERDS0_ESIK=float(os.environ.get("MERDS0_ESIK","0"))
+MERD0_PAY=float(os.environ.get("MERD0_PAY","0.333"))
 # MADDE 466: SHORT tarafina ayri rung (MERDS_ESIK; bos -> MERD_ESIK, parite) ve rung sonrasi
 # BASABAS stop'u (MERD_BE=1: rung dolduktan sonra fiyat girise donerse kalan kapanir).
 MERDS_ESIK=float(os.environ.get("MERDS_ESIK", str(MERD_ESIK)))
@@ -374,7 +378,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
     tp=TPX if tp is None else tp
     hedef_brut=[0.0]; _acik={}
     nk=C.shape[1]; poz=np.zeros(nk); giris=np.full(nk,np.nan); zirve=np.full(nk,np.nan); tp_yapildi=np.zeros(nk,bool); eq=[1.0]; bek=None; _yas=np.zeros(nk,int)
-    merd_yapildi=np.zeros(nk,bool)
+    merd_yapildi=np.zeros(nk,bool); merd0_yapildi=np.zeros(nk,bool)
     ek_say=np.zeros(nk,int); ilk_w=np.zeros(nk)
     for i in range(bas,len(C)-1):
         # MADDE 415: her bar koordinatore (i, poz, yeni hedef ya da None) bildirilir;
@@ -399,6 +403,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
             poz=y; giris=np.where(y!=0,cv[i],np.nan); zirve=np.where(y!=0,cv[i],np.nan); tp_yapildi=np.where(y!=0,False,tp_yapildi); bek=None
             giris=np.where(_dv,_gs,giris); zirve=np.where(_dv,_zs,zirve)
             merd_yapildi=np.where((y!=0)&~_dv,False,merd_yapildi)
+            merd0_yapildi=np.where((y!=0)&~_dv,False,merd0_yapildi)
             ek_say=np.where(y!=0,0,ek_say); ilk_w=np.where(y!=0,np.abs(y),ilk_w)
             if BOSLUK: hedef_brut[0]=float(np.abs(poz).sum())
             if KATKI:
@@ -569,7 +574,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
         gec=np.isfinite(cv[i])&np.isfinite(cv[i+1])
         br=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0); br=np.nan_to_num(br)
         cik=np.zeros(nk,bool); yaridan=np.zeros(nk,bool)
-        merd=np.zeros(nk,bool)
+        merd=np.zeros(nk,bool); mpay=np.zeros(nk)
         if tp>0 or TAKIP_BAS>0:
             for k in np.flatnonzero(poz!=0):
                 e=giris[k]
@@ -649,11 +654,26 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _me = min(MERD_KAT_UST, max(MERD_KAT_ALT, _mk*VOL5[i,k]))
                     _tpx = (TPL if TPL>=0 else tp) if uzun else (TPS if TPS>=0 else tp)
                     if _tpx > 0: _me = min(_me, 0.95*_tpx)
+                _m0 = MERD0_ESIK if uzun else MERDS0_ESIK
+                _h0 = False
+                if _m0>0 and not merd0_yapildi[k]:
+                    _s0=e*(1+_m0) if uzun else e*(1-_m0)
+                    _h0 = (uzun and HV[i+1,k]>=_s0) or ((not uzun) and LV[i+1,k]<=_s0)
+                _hm = False
                 if _me>0 and not merd_yapildi[k]:
                     _sm=e*(1+_me) if uzun else e*(1-_me)
-                    if (uzun and HV[i+1,k]>=_sm) or ((not uzun) and LV[i+1,k]<=_sm):
-                        br[k]=_sm/cv[i,k]-1
-                        merd[k]=True; merd_yapildi[k]=True; say_t[1]+=1
+                    _hm = (uzun and HV[i+1,k]>=_sm) or ((not uzun) and LV[i+1,k]<=_sm)
+                if _h0 and _hm:      # ayni barda iki kademe: once erken, sonra ana (kalanin MERD_PAY'i)
+                    f0=MERD0_PAY; f1=(1-MERD0_PAY)*MERD_PAY
+                    br[k]=(f0*(_s0/cv[i,k]-1)+f1*(_sm/cv[i,k]-1))/(f0+f1)
+                    mpay[k]=f0+f1; merd[k]=True; merd0_yapildi[k]=True; merd_yapildi[k]=True; say_t[1]+=1
+                elif _hm:
+                    br[k]=_sm/cv[i,k]-1
+                    mpay[k]=MERD_PAY; merd[k]=True; merd_yapildi[k]=True; say_t[1]+=1
+                    if _m0>0: merd0_yapildi[k]=True   # erken kademe ana kademeden sonra anlamsiz
+                elif _h0:
+                    br[k]=_s0/cv[i,k]-1
+                    mpay[k]=MERD0_PAY; merd[k]=True; merd0_yapildi[k]=True; say_t[1]+=1
         # MADDE 215: taraf bazli maks tutma suresi. TP/stop kontrolunden
         # SONRA bakilir: ayni barda TP varsa TP kazanir (daha iyi fiyat).
         if YAS_L or YAS_S:
@@ -692,7 +712,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
         AY['Ltp']+=np.nansum(pr[L_&cik]); AY['Stp']+=np.nansum(pr[S_&cik])
         if merd.any():
             kapanis=cv[i+1]/np.where(cv[i]==0,np.nan,cv[i])-1
-            br=np.where(merd,MERD_PAY*br+(1-MERD_PAY)*np.nan_to_num(kapanis),br)
+            br=np.where(merd,mpay*br+(1-mpay)*np.nan_to_num(kapanis),br)
         if yaridan.any():
             # yarisi TP seviyesinden cikar, yarisi barin kapanisiyla devam eder
             kapanis=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0)
@@ -708,9 +728,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
         if AGIRLIK_KAYMA:
             poz=poz*(1.0+np.nan_to_num(br))/(1.0+r)
         if merd.any():
-            eq[-1]*=1-np.abs(poz[merd]).sum()*MERD_PAY*KOM
-            if MERD_YAY: _bos=poz*merd*MERD_PAY
-            poz=np.where(merd,poz*(1-MERD_PAY),poz)
+            eq[-1]*=1-np.abs(poz[merd]*mpay[merd]).sum()*KOM
+            if MERD_YAY: _bos=poz*merd*mpay
+            poz=np.where(merd,poz*(1-mpay),poz)
             if MERD_YAY: _yay(poz,_bos,~merd,eq,giris,cv[i+1])
         if yaridan.any():
             eq[-1]*=1-np.abs(poz[yaridan]).sum()*0.5*KOM
