@@ -5556,3 +5556,19 @@ shortlamak felaket — sıkışma riski). TP'de boşalan koltuk nakit kalmalı (
 | ikisi | +229,5 | +179,4 | +315,4 | 3,85 | −14,4 | −5,71 | 2 | +2,2 |
 Erken basamak yalnız oynaklığı kırpıyor (eşitVol ~0..+2): daha erken kilitlemek = daha az maruziyet. Merdiven
 ailesi tükendi — tek basamak @ +%45 / −%15 doğru şekil.
+
+## Madde 477 — YENİ VERİ: emir defteri derinliği (bookDepth, 2023-01 →): KUYRUĞU ÖNGÖRÜYOR, AMA FİLTRE YOK
+Projede hiç kullanılmamış Binance kaynağı. `indir_bookdepth.py` (data.binance.vision günlük bookDepth, ~30 sn
+anlık görüntü, ±%1..±%5 notional → 4 sa bar), kitabın (ZSR15P67 hz0) 2023'ten beri tuttuğu 41.345 (coin, gün) için
+ÖNCEKİ günün derinliği → o günün yön düzeltilmiş getirisi (`arastirma_m477_defter_derinligi.py`, eşikler IS'ten).
+| özellik / taraf | en uç beşte bir: IS ort / çöküş | OOS ort / çöküş | diğerleri OOS çöküş |
+|---|---|---|---|
+| imb2 long (ince alış) | +%0,68 / %1,2 | **+%0,61 / %10,0** | %1,9-4,7 |
+| imb5 long | +%0,57 / %1,4 | **+%1,86 / %10,6** | %2,0-8,7 |
+| derinlik (lD1) long ince | +%1,24 / %1,1 | +%0,87 / %6,1 | %0,9-2,5 |
+| likidite çekilmesi (cek) long yüksek | +%0,26 / %2,3 | +%0,39 / %7,2 | %2,2-4,0 |
+| lD1 short ince | −%0,06 / %2,5 | +%1,09 / %6,9 | %0,5-2,3 |
+- Defter, çöküş günlerini GERÇEKTEN öngörüyor (OOS'ta ince alışlı long'larda çöküş 5 kat). Ama aynı beşte
+  birlik kitabın EN ÇOK kazandırdığı dilim (katkı +15..+19 bp/gün): madde 236'nın yasası yeni veride de geçerli —
+  zarar ve kazanç aynı popülasyonda. Ön kayıttaki filtre şartını (en kötü dilim iki dönemde de en kötü) hiçbir
+  özellik sağlamadı → RED. Kayma açısından da bağlayıcı değil: en ince beşte birlik bile ±%1'de ~0,5 M$.
