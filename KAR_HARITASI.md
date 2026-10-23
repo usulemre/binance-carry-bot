@@ -5405,3 +5405,14 @@ Trend kolu (BTC+ETH eşit, günlük karar, funding ve 5 bp dahil), T60 ile korel
 | ort(48,96,144) | +210,8 | +156,7 | +306,4 | 3,34 | −15,8 | −6,75 | 7 | −12,1 |
 | ort(24,60,144) | +207,5 | +156,7 | +296,1 | 3,30 | −16,2 | −6,78 | 8 | −16,2 |
 Pencere ortalaması gürültüyü değil bilgiyi siliyor: 60 sa'in kendisi en iyi Sharpe. Paneller /tmp/sk_bar{24,96,144}.pkl.
+
+## Madde 461 — Genç coinler kısmi ağırlıkla (GENC_GUN/GENC_PAY, korumalar açık): HEPSİ RED
+| kol (T60 + 24 sa stop) | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | eşit oynaklık farkı |
+|---|---|---|---|---|---|---|---|---|
+| taban (yaş 60) | +216,3 | +158,7 | +319,5 | 3,44 | −20,8 | −5,49 | 7 | — |
+| 30 g, x0,5 | +195,0 | +146,8 | +279,1 | 3,29 | −16,1 | −6,27 | 9 | −16,3 |
+| 45 g, x0,5 | +199,1 | +147,3 | +290,7 | 3,30 | −19,3 | −5,64 | 10 | −15,2 |
+| 30 g, x0,25 | +196,5 | +144,9 | +287,8 | 3,34 | −14,2 | −5,48 | 8 | −10,4 |
+| 45 g, x1,0 | +196,3 | +149,9 | +276,2 | 3,19 | −18,8 | −7,80 | 10 | −27,8 |
+Genç coin hücre payı %3-6; 24 sa stop ve short +%200 varken bile genç coin funding'i kazandırmıyor.
+Yaş 60 doğru yerde (madde 397/427/433 ile tutarlı).
