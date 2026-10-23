@@ -231,6 +231,9 @@ MERD_KAT_ALT=float(os.environ.get("MERD_KAT_ALT","0.05")); MERD_KAT_UST=float(os
 # ayni taraftaki ACIK diger bacaklara mevcut agirlikla orantili eklenir (brut korunur, yeni coin yok).
 # MERD_YAY=2 -> TP ile tam kapananlarin agirligi da ayni sekilde yayilir. 0 = kapali (parite).
 MERD_YAY=int(os.environ.get("MERD_YAY","0"))
+# MADDE 474: KADEME SONRASI DEVIR. 0 = parite (yeniden secilen coin dengelemede tam boya ve yeni girise doner).
+# 1 = tazelenmez (kalan pay ayni giris/TP ile surer, bosalan nakit) · 2 = kademesi dolan coin o dengelemede aday degil.
+MERD_DEVIR=int(os.environ.get("MERD_DEVIR","0"))
 _YAYS=[0,0.0]
 def _yay(poz,bos,uygun,eq,giris=None,f=None):
     for sg in (1,-1):
@@ -386,9 +389,16 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 bacak=0.5/max(1,int(np.count_nonzero(y)/2))
                 kucuk=np.abs(y-poz)<TOL*bacak
                 y=np.where(kucuk,poz,y)
+            _dv=np.zeros(nk,bool)
+            if MERD_DEVIR==1:
+                # MADDE 474: kademesi dolmus ve yeniden secilen coin TAZELENMEZ: kalan ⅓ ayni giris/TP ile surer
+                _dv=merd_yapildi&(poz!=0)&(np.sign(y)==np.sign(poz))
+                y=np.where(_dv,poz,y)
             eq[-1]*=1-np.abs(y-poz).sum()*KOM
+            _gs,_zs=giris.copy(),zirve.copy()
             poz=y; giris=np.where(y!=0,cv[i],np.nan); zirve=np.where(y!=0,cv[i],np.nan); tp_yapildi=np.where(y!=0,False,tp_yapildi); bek=None
-            merd_yapildi=np.where(y!=0,False,merd_yapildi)
+            giris=np.where(_dv,_gs,giris); zirve=np.where(_dv,_zs,zirve)
+            merd_yapildi=np.where((y!=0)&~_dv,False,merd_yapildi)
             ek_say=np.where(y!=0,0,ek_say); ilk_w=np.where(y!=0,np.abs(y),ilk_w)
             if BOSLUK: hedef_brut[0]=float(np.abs(poz).sum())
             if KATKI:
@@ -446,6 +456,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _sr3=np.where(g,S[i],np.nan)
                     _md3=np.nanmedian(_sr3) if np.isfinite(_sr3).any() else 0.0
                     g=g&~(~_sp&(_sr3>_md3))
+            if MERD_DEVIR==2:
+                # MADDE 474: kademesi dolmus coin bu dengelemede aday OLMAZ (pompa sonrasi yeniden alma yok)
+                g=g&~(merd_yapildi&(poz!=0))
             ix=np.flatnonzero(g)
             _nl=N_L if N_L>0 else n; _ns=N_S if N_S>0 else n
             # her iki taraf da ayni havuzdan beslenir; havuz en buyuk
