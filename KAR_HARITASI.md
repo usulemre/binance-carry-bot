@@ -5430,3 +5430,19 @@ Yaş 60 doğru yerde (madde 397/427/433 ile tutarlı).
 - Merdiven (MERD_ESIK, madde 235'in düğmesi) T60'ta Sharpe'ı 0,2 artırıyor: kârın yarısını erken
   kilitleyip pump-dump'ın geri vermesini kesiyor. IS farkı +2,9 (ön kayıt +8 istiyordu) → madde 463 komşuluk.
 - Short tarafı funding'le seçilmeli (oynaklıkla seçmek felaket); short TP sabit %20 yerinde.
+
+## Madde 463 — Long merdiven kâr alma PLATO (ön kayıt geçti)
+| kol (T60 + 24 sa stop) | yıllık | IS | OOS | Sharpe | en kötü | −%5 altı | Tem-Eyl26 | eşit oynaklık farkı |
+|---|---|---|---|---|---|---|---|---|
+| taban | +216,3 | +158,7 | +319,5 | 3,44 | −5,49 | 7 | +14,8 | — |
+| ½ @ %30 | +206,9 | +150,3 | +308,7 | 3,60 | −5,40 | 5 | +16,2 | +15,6 |
+| ½ @ %35 | +216,4 | +154,8 | +329,0 | 3,62 | −5,38 | 5 | +16,9 | +18,4 |
+| ½ @ %40 | +226,2 | +161,6 | +344,9 | 3,65 | −5,37 | 5 | +18,2 | +22,4 |
+| **½ @ %45** | **+232,8** | **+166,2** | +355,6 | 3,66 | −5,39 | 5 | +18,3 | +24,2 |
+| ½ @ %50 | +232,9 | +165,8 | +356,7 | 3,62 | −5,37 | 6 | +18,5 | +20,3 |
+| ⅓ @ %40 | +223,0 | +160,6 | +336,4 | 3,58 | −5,41 | 5 | +17,1 | +15,3 |
+| ⅔ @ %40 | +229,4 | +162,5 | +353,2 | 3,72 | −5,33 | 4 | +19,3 | +29,2 |
+| ½ @ %40, kalan %70 / %80 | +225,4 / +225,2 | | | 3,58 / 3,54 | | 4 / 5 | | +15,0 / +10,9 |
+- Ön kayıt (%35/%40/%45 üçü Sharpe +0,10 ve eşit oynaklıkta +10) GEÇTİ → PLATO. Mekanizma: pompa
+  coininin kârının yarısını erken kilitlemek; kalan yarı +%60'ı bekler. T60'tan sonraki ilk gerçek
+  YAPISAL iyileşme (eşit riskte +15..+29). IS'te en iyi MR45 → madde 464 protokol.
