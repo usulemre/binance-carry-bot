@@ -5502,3 +5502,15 @@ LIMIT BUY (⅔ giriş x0,85, ⅓ x0,80); kademe dolunca hedef x⅓ (iki taraf), 
 profili yeni değerleri bekler. Testler: 14 carry dosyasının hepsi geçti (+3 kontrol).
 Canlı varsayılan: T60 + 24 sa düşüş stop'u + iki taraflı merdiven. Backtest (2.000 $): yıllık ~+%249,
 Sharpe ~3,83, dd ~−%17,4, −%5 altı gün 3.
+
+## Madde 470 — İki taraflı merdiven çevresinde ince tarama: taban TEPEDE (ön kayıt hiçbirini geçirmedi)
+| kol (taban ZSR15P67) | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşit oynaklık |
+|---|---|---|---|---|---|---|---|---|---|
+| taban | +249,3 | +182,4 | +370,8 | 3,83 | −17,4 | −5,45 | 3 | +20,5 | — |
+| long kademe 0,40 / 0,50 | +240,0 / +249,5 | +175,8 / +181,9 | | 3,82 / 3,78 | | | 3 / 4 | | −1,4 / −6,5 |
+| short kademe 0,12 / 0,17 | +245,1 / +252,5 | +184,5 / +181,1 | +352,7 / +384,3 | 3,81 / 3,85 | −15,3 / −18,3 | | 3 / 4 | | −1,9 / +2,3 |
+| pay 0,75 | +253,5 | +185,4 | +377,5 | 3,88 | −17,0 | −5,47 | 3 | +21,2 | +5,6 |
+| pay 0,80 | +256,2 | +187,3 | +381,6 | 3,91 | −16,8 | −5,49 | 3 | +21,7 | +8,9 |
+| son short TP 0,25 | +249,0 | | | 3,83 | −18,8 | | 4 | | −0,2 |
+| son long TP 0,50 / 0,70 | +237,9 / +248,7 | | | 3,82 / 3,77 | | | 3 | | −1,2 / −7,3 |
+Tek eğilim pay ↑ (0,75 / 0,80: IS +3 / +5, OOS +7 / +11) — ön kayıt (IS >= +8) altında; gürültü sınırı. AYAR DEĞİŞMEDİ.
