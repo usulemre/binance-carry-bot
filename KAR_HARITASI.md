@@ -5328,3 +5328,16 @@ Kalan en kötü günler ~−%5,5 ve çoğu SHORT sıkışması (ONDO, FIL, DOGE,
 | short tavan %6 | +207,6 | −8,7 | −15,6 | −5,73 | 4 | 7 | −3,58 | +13,9 |
 Ön kayıt (en kötü gün de iyileşmeli) RED — en kötü gün 0,1 puan kötü (gürültü). Ama %8: 2,3 puana
 −%5 altı gün 7 → 4, dd 3,6 puan sığ. Sonradan yazılan (kayıtlı) kuralla madde 456 sağlamlık.
+
+## Madde 456 — Short coin tavanı sağlamlık: %7/%8/%9 düzenli, 3.500 $'da tutuyor (sonradan yazılan kuralla ADAY)
+| kol (T60 + 24 sa stop) | yıllık | ek maliyet | dd | en kötü gün | −%5 altı | −%4 altı | Tem-Eyl26 |
+|---|---|---|---|---|---|---|---|
+| tavansız (2.000 $) | +216,3 | — | −20,8 | −5,49 | 7 | 14 | +14,8 |
+| %9 | +215,2 | −1,2 | −18,4 | −5,56 | 5 | 11 | +14,8 |
+| %8 | +214,0 | −2,3 | −17,2 | −5,61 | 4 | 10 | +14,6 |
+| %7 | +211,8 | −4,5 | −15,7 | −5,67 | 4 | 10 | +14,1 |
+| 3.500 $ tavansız | +214,8 | — | −17,1 | −5,58 | 6 | 14 | +13,7 |
+| 3.500 $ %8 | +209,5 | −5,4 | −13,9 | −5,67 | 4 | 11 | +13,8 |
+Düzenli doz-tepki: tavan sıkılaştıkça dd ve −%4/−%5 altı gün azalıyor, maliyet artıyor; en kötü gün
+değişmiyor (o artık long çöküşü + 24 sa stop sınırı). Kural sonuç görüldükten sonra yazıldı (kayıtlı).
+Bot'a eklenmedi — kullanıcı kararı bekleniyor.
