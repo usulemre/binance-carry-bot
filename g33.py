@@ -108,6 +108,9 @@ KOM=float(os.environ.get("KOM","0.0002"))
 AKW=float(os.environ.get("AKIS","0.2")); TPX=float(os.environ.get("TP","0.7"))
 SLL=float(os.environ.get("SLL","0"))   # LONG bacak stop (0=kapali)
 SLS=float(os.environ.get("SLS","0"))   # SHORT bacak stop
+# MADDE 449: LONG 24 SA DUSUS STOP'U. Giris fiyatindan bagimsiz: coin son 24 sa'teki
+# (6 bar once) kapanisindan SLL24 kadar duserse long bacak kapanir. 0 = kapali (parite).
+SLL24=float(os.environ.get("SLL24","0"))
 # MADDE 417: KAR HEDEFI SIFIRLAMA. Bacak girisinden aleyhe TP_SIFIRLA kadar gidince
 # kar-al referansi o anki kapanisa tasinir (islem YOK, yalniz TP seviyesi). Cokus
 # sonrasi toparlanmada eski dilimler de hasat eder (madde 414: H). 0 = kapali.
@@ -531,6 +534,13 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     if _vur:
                         _op = OV[i+1,k]
                         _ff = (min(_ss,_op) if uzun else max(_ss,_op)) if np.isfinite(_op) else _ss
+                        br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        continue
+                if SLL24 > 0 and uzun and i >= 5 and np.isfinite(cv[i-5,k]) and cv[i-5,k] > 0:
+                    _s24 = cv[i-5,k]*(1-SLL24)
+                    if LV[i+1,k] <= _s24:
+                        _op = OV[i+1,k]
+                        _ff = min(_s24,_op) if np.isfinite(_op) else _s24
                         br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
                         continue
                 _tp = (TPL if TPL>=0 else tp) if uzun else (TPS if TPS>=0 else tp)
