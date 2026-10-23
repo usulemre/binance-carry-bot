@@ -5284,3 +5284,24 @@ SLL24 (yeni g33 düğmesi): coin son 24 sa kapanışından −%X düşerse long 
 S24_25/35/50: en kötü gün −8,6 aynı (en kötü gün long çöküşü), yıllık −28..−37 puan, son çeyrek +%2..−%1.
 Short kârı sıkışmadan SONRAKİ dönüşten (TP) geliyor; stop tepede kapatıp dönüşü kaçırıyor. Short tarafında
 en iyi koruma T60'ın geniş +%200 felaket stop'u (madde 428).
+
+## Madde 451 — 24 sa düşüş stop'u PLATO: −%40/−%45/−%50 hepsi en kötü günü %32-37 kesiyor, 4-5 puan
+| SLL24 (2.000 $) | yıllık | maliyet | en kötü gün | iyileşme | −%5 altı | Tem-Eyl26 | IS | OOS |
+|---|---|---|---|---|---|---|---|---|
+| — (T60) | +222,1 | — | −8,63 | — | 9 | +14,0 | +155,5 | +345,8 |
+| 0,40 | +216,7 | −5,4 | −5,47 | %37 | 6 | +16,4 | +161,7 | +314,2 |
+| 0,45 | +218,1 | −4,0 | −5,49 | %36 | 7 | +14,3 | +160,6 | +320,8 |
+| 0,50 | +217,0 | −5,0 | −5,86 | %32 | 7 | +16,0 | +157,1 | +325,5 |
+| 0,55 | +214,3 | −7,8 | −6,48 | %25 | 7 | +17,1 | +159,3 | +311,9 |
+3.500 $ D2: T60 +221,9 / −8,62 / −%5 altı 7 → 0,45: +216,6 (−5,2) / −5,49 (%36) / 5.
+Ön kayıt (üç komşu >= %25 ve <= 12 puan; 3.500 $ >= %20 ve <= 12 puan) GEÇTİ → CANLIYA ADAY.
+2022-24'te KAZANDIRIYOR (+2..+6), 2025-26'da −20..−34 (pompa coinlerinin bir kısmı stop sonrası toparlandı).
+
+## Madde 452 — Canlı hızında (seviye 8 sa'te bir yenilenir, SLL24_TAZE=2): TUTUYOR
+D24_45T2 +216,3 (−5,7) / en kötü −5,49 (%36) / −%5 altı 7 / Tem-Eyl26 +14,8. Girişten −%40 stop'la
+BİRLİKTE (D24_45L40) daha KÖTÜ: +207,1 (−15,0), en kötü −5,94 — giriş stop'u erken, kötü yerde vuruyor.
+
+## Madde 453 — 24 sa düşüş stop'u bota eklendi: CARRY_LONG_24S, VARSAYILAN 0,45
+Her turda her long için tetik = 24 sa önceki 4 sa kapanışı (kline[-7]) x 0,55; CARRY_LONG_STOP da
+açıksa yüksek olanı. Fiyat seviyenin altında bulunursa (turlar arası çöküş) long piyasa emriyle hemen
+kapanır ve dilimlerden çıkar. Preflight T60 profili 0,45 bekler. Entegrasyon testi 12c'ye 6 kontrol.
