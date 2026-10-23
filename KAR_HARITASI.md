@@ -5545,3 +5545,14 @@ Dengelemede yeniden seçilen pompalanmış coin hâlâ funding primini taşıyor
 Taban ZSR15P67 +249,3 (Sh 3,83). AYNI +253,3 ama IS −11,1, Sh 3,71, eşitVol −15,2 (yalnız OOS'ta şişiyor,
 fazladan maruziyet) · TERS +202,0, Sh 2,94, dd −47,3, en kötü gün −20,45, eşitVol −132 (pompalanmış coini
 shortlamak felaket — sıkışma riski). TP'de boşalan koltuk nakit kalmalı (madde 229, 473 ile tutarlı).
+
+## Madde 476 — Erken (ikinci) kademe, üç basamaklı merdiven (MERD0_ESIK/MERDS0_ESIK): RED
+| kol (taban ZSR15P67) | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | eşitVol |
+|---|---|---|---|---|---|---|---|---|
+| taban | +249,3 | +182,4 | +370,8 | 3,83 | −17,4 | −5,45 | 3 | — |
+| long ⅓ @ +%25 | +226,7 | +167,0 | +333,6 | 3,84 | −17,4 | −5,32 | 3 | +1,1 |
+| long ⅓ @ +%30 | +234,7 | +172,7 | +346,3 | 3,85 | −17,4 | −5,39 | 3 | +2,1 |
+| short ⅓ @ −%8 | +243,7 | +189,2 | +338,1 | 3,83 | −14,6 | −5,77 | 2 | −0,5 |
+| ikisi | +229,5 | +179,4 | +315,4 | 3,85 | −14,4 | −5,71 | 2 | +2,2 |
+Erken basamak yalnız oynaklığı kırpıyor (eşitVol ~0..+2): daha erken kilitlemek = daha az maruziyet. Merdiven
+ailesi tükendi — tek basamak @ +%45 / −%15 doğru şekil.
