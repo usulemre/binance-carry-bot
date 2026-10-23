@@ -5578,3 +5578,9 @@ anlık görüntü, ±%1..±%5 notional → 4 sa bar), kitabın (ZSR15P67 hz0) 20
 |fark| yıllık %7,5 (en geniş AXS −18,3: USDⓈ-M çok daha negatif); 7 g geçmiş fark işaretiyle sonraki 7 g'ü
 almak yıllık **+%3,6** (IS +2,3, OOS +5,4) — iki bacak haftalık dönüş maliyetinden (%5-10/yıl) küçük, coin
 evreni dar (majörler), ters sözleşme coin teminatı ister. Kitaba ikinci kol olacak büyüklük yok.
+
+### Madde 477 eki — risk ayarlı okuma (gün Sharpe'ı, beşte birlik, IS | OOS)
+Long lD1 (defter derinliği, ince → kalın): IS 2,23 1,53 1,06 0,67 1,13 | OOS **0,88** −0,27 −0,38 −0,90 −0,11.
+Long cek (derinlik / 7 g medyan, düşük → yüksek): IS 2,60 1,06 1,34 0,71 0,54 | OOS **1,07** −0,78 0,27 −0,77 0,45.
+İnce defterli long hem çöküşte hem getiride en uçta, ama risk başına da EN İYİ, iki dönemde de → seçim ölçütü
+olarak denenir (madde 479). Short tarafında tutarlı sıra yok.

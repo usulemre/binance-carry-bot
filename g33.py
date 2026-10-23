@@ -359,6 +359,8 @@ YIL={}   # yil -> [Lf,Lp,Ltp,Sf,Sp,Stp]
 # rebalance'indan ONCEKI) pozisyon agirliklarinin dilimler arasi ORTALAMASI.
 # Saatlik kitap simulasyonu icin. Bos -> kapali (parite).
 _PZ_YOL=os.environ.get('POZ_CIKTI','').strip()
+# MADDE 479: ADAY_CIKTI=<yol> -> her dengelemede long/short ADAY HAVUZU (olcutten once) kaydedilir. Bos -> kapali.
+_ADY_YOL=os.environ.get('ADAY_CIKTI','').strip(); _ADY=[]
 _PZ=[None]
 def bt2(bas,n,olcut=None,tp=None):
     # MADDE 415: bt2 artik _bt2g uretecini koordinasyonsuz surer (parite).
@@ -481,6 +483,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     lo=ix[o[:_nl]]; sh=ix[o[-_ns:]]; lo_s=ix[o[:mm]]; sh_s=ix[o[::-1][:mm]]
                 else:
                     la=ix[o[:_mml]]; sa=ix[o[-_mms:]]
+                    if _ADY_YOL: _ADY.append((i, la.copy(), sa.copy()))
                     def sec(ad,taraf,sira_skor):
                         p=np.asarray(olcut(i,ad,taraf),float)
                         # olcut yoksa: skor sirasi (en uc) ile doldur
@@ -868,6 +871,9 @@ def calis2(ad,n,olcut):
     if _PZ_YOL and _PZ[0] is not None:
         _W=_PZ[0]/NF; _ii,_kk=np.nonzero(_W)
         pd.DataFrame({'zaman':C.index[_ii],'sembol':C.columns[_kk],'w':_W[_ii,_kk]}).to_pickle(_PZ_YOL)
+    if _ADY_YOL:
+        pd.DataFrame([(C.index[i],C.columns[k],t) for i,la_,sa_ in _ADY for t,ks in ((1,la_),(-1,sa_)) for k in ks],
+                     columns=['zaman','sembol','taraf']).drop_duplicates().to_pickle(_ADY_YOL)
     if _GK_YOL:
         _df=pd.DataFrame([(d,C.columns[k],v[0]/NF,v[1]/NF,v[2]/max(v[3],1),v[3]/NF) for (d,k),v in _GK.items()],
                          columns=['gun','sembol','fiyat','funding','ort_poz','bar'])
@@ -956,6 +962,19 @@ if __name__=='__main__':
                     p2=pd.Series(-t*_art[i][a]).rank(pct=True).fillna(0.5).values
                     return (1-_w)*p1+_w*p2
                 calis2(ad,n,_bl)
+        elif ad in ('ls_derin','ls_cek'):
+            # MADDE 479: kalabalik olcutu + EMIR DEFTERI. Long tarafta onceki gunun defter derinligi
+            # (ad=ls_derin: log ±%1 notional, INCE tercih; ls_cek: derinligin 7 g medyanina orani, DUSUK tercih)
+            # sira harmani: rank(kalabalik) + DW*rank(defter). Short tarafi saf 'ls'. Veri yok -> 0,5.
+            _DP=pickle.load(open('/tmp/derin_panel.pkl','rb'))['lD1' if ad=='ls_derin' else 'cek'].values
+            _L9=np.log(M['count_long_short_ratio']).values
+            _DW=float(os.environ.get('DW','0.5'))
+            def _r9(v): return pd.Series(v).rank(pct=True).fillna(0.5).values
+            def _dsec(i,a,t):
+                b=_r9(-t*_L9[i][a])
+                if t>0: b=b+_DW*_r9(-_DP[i][a])
+                return b
+            calis2(ad,n,_dsec)
         elif ad=='ls':
             # MADDE 362: LS_GECIKME bar (4 sa) kadar BAYAT oran - canli botun
             # oran API'si cevap vermezse "son bilinen oranlari" kullanmasinin
