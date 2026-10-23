@@ -119,6 +119,8 @@ TP_SIFIRLA=float(os.environ.get("TP_SIFIRLA","0"))
 AGIRLIK_KAYMA=int(os.environ.get("AGIRLIK_KAYMA","0"))
 TP_SIF_TARAF=os.environ.get("TP_SIF_TARAF","iki")   # iki | long | short
 UCELE=float(os.environ.get("UCELE","0"))   # 0=kapali. >=UCELE pump long adayi OLAMAZ
+# MADDE 448: UCELE_TARAF=long -> yalniz pompa-long elemesi (cokmus coin short adayi KALIR). Bos/iki -> parite.
+UCELE_TARAF=os.environ.get("UCELE_TARAF","iki").strip()
 MOM_Q=float(os.environ.get('MOM_Q','0'))   # madde 383: 0 = kapali
 _MOMV=None
 if MOM_Q>0:
@@ -367,7 +369,10 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 _sr=np.where(g,S[i],np.nan)
                 _med=np.nanmedian(_sr) if np.isfinite(_sr).any() else 0.0
                 # long adayi = medyandan DUSUK funding; short adayi = YUKSEK
-                g=g&~(_pump&(_sr<_med))&~(_dump&(_sr>_med))
+                if UCELE_TARAF=="long":
+                    g=g&~(_pump&(_sr<_med))
+                else:
+                    g=g&~(_pump&(_sr<_med))&~(_dump&(_sr>_med))
             if _MOMV is not None:
                 # MADDE 383: COK UFUKLU MOMENTUM VETOSU (madde 381: kriptoda
                 # kesitsel olarak yukselen yukselmeye devam ediyor, OOS).
