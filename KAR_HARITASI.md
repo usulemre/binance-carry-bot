@@ -5305,3 +5305,26 @@ BİRLİKTE (D24_45L40) daha KÖTÜ: +207,1 (−15,0), en kötü −5,94 — giri
 Her turda her long için tetik = 24 sa önceki 4 sa kapanışı (kline[-7]) x 0,55; CARRY_LONG_STOP da
 açıksa yüksek olanı. Fiyat seviyenin altında bulunursa (turlar arası çöküş) long piyasa emriyle hemen
 kapanır ve dilimlerden çıkar. Preflight T60 profili 0,45 bekler. Entegrasyon testi 12c'ye 6 kontrol.
+
+## Madde 454 — Düşüş stop'unun penceresi / iki kademe (canlı hızında): 24 sa −%45 en dengeli kalır
+| kol (T60 + TAZE 2) | yıllık | maliyet | en kötü gün | −%5 altı | −%4 altı | Tem-Eyl26 |
+|---|---|---|---|---|---|---|
+| 24 sa −%45 (D24_45T2) | +216,3 | −5,7 | −5,49 | 7 | 14 | +14,8 |
+| 12 sa −%30 | +196,6 | −25,5 | −5,47 | 4 | 14 | +10,6 |
+| 12 sa −%35 | +207,9 | −14,2 | −5,63 | 5 | 15 | +10,8 |
+| 8 sa −%25 | +193,1 | −29,0 | −5,47 | 4 | 10 | +9,7 |
+| 48 sa −%55 | +212,9 | −9,2 | −6,77 | 8 | 15 | +19,3 |
+| 24 sa −%45 + 12 sa −%30 | +196,0 | −26,1 | −5,47 | 4 | 14 | +11,4 |
+| 24 sa −%45 + 12 sa −%35 | +207,7 | −14,4 | −5,47 | 5 | 15 | +12,4 |
+Kısa pencere −%5 altı günü biraz daha keser ama 3-5 kat pahalı (normal hızlı dalgalanmada tetikleniyor).
+Kalan en kötü günler ~−%5,5 ve çoğu SHORT sıkışması (ONDO, FIL, DOGE, 1000SATS).
+
+## Madde 455 — SHORT tarafında tek coin tavanı (CAP_TARAF=short, yeni düğme), 24 sa stop üzerine
+| kol | yıllık | ek maliyet | dd | en kötü gün | −%5 altı | −%4 altı | p1 | Tem-Eyl26 |
+|---|---|---|---|---|---|---|---|---|
+| D24_45T2 | +216,3 | — | −20,8 | −5,49 | 7 | 14 | −3,80 | +14,8 |
+| short tavan %10 | +215,3 | −1,0 | −19,5 | −5,52 | 6 | 14 | −3,75 | +15,1 |
+| **short tavan %8** | +214,0 | **−2,3** | **−17,2** | −5,61 | **4** | **10** | −3,71 | +14,6 |
+| short tavan %6 | +207,6 | −8,7 | −15,6 | −5,73 | 4 | 7 | −3,58 | +13,9 |
+Ön kayıt (en kötü gün de iyileşmeli) RED — en kötü gün 0,1 puan kötü (gürültü). Ama %8: 2,3 puana
+−%5 altı gün 7 → 4, dd 3,6 puan sığ. Sonradan yazılan (kayıtlı) kuralla madde 456 sağlamlık.
