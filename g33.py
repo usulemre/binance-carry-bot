@@ -227,6 +227,22 @@ MERD_BE=int(os.environ.get("MERD_BE","0"))
 # MERDS_KAT>0 -> short kademe = MERDS_KAT x VOL5; [MERD_KAT_ALT, MERD_KAT_UST] ile kirpilir. 0 -> sabit (parite).
 MERD_KAT=float(os.environ.get("MERD_KAT","0")); MERDS_KAT=float(os.environ.get("MERDS_KAT","0"))
 MERD_KAT_ALT=float(os.environ.get("MERD_KAT_ALT","0.05")); MERD_KAT_UST=float(os.environ.get("MERD_KAT_UST","1.0"))
+# MADDE 473: SERBEST KALAN AGIRLIGI YAYMA. MERD_YAY=1 -> rung dolunca bosalan agirlik ayni dilimde
+# ayni taraftaki ACIK diger bacaklara mevcut agirlikla orantili eklenir (brut korunur, yeni coin yok).
+# MERD_YAY=2 -> TP ile tam kapananlarin agirligi da ayni sekilde yayilir. 0 = kapali (parite).
+MERD_YAY=int(os.environ.get("MERD_YAY","0"))
+_YAYS=[0,0.0]
+def _yay(poz,bos,uygun,eq,giris=None,f=None):
+    for sg in (1,-1):
+        b=float(np.abs(bos[np.sign(bos)==sg]).sum())
+        if b<=0: continue
+        m=uygun&(np.sign(poz)==sg)
+        t=float(np.abs(poz[m]).sum())
+        if t<=0: continue
+        if giris is not None:   # canli gibi: agirlikli ortalama giris (TP yeni giristen olculur)
+            ok=m&np.isfinite(f)&(f>0)&np.isfinite(giris)
+            giris[ok]=(giris[ok]+f[ok]*b/t)/(1+b/t)
+        poz[m]=poz[m]*(1+b/t); eq[-1]*=1-b*KOM; _YAYS[0]+=1; _YAYS[1]+=b
 AYNI=int(os.environ.get("AYNI","0"))            # kar al sonrasi AYNI yonde yeniden gir
 say_r=[0]
 REZ_RAST=int(os.environ.get("REZ_RAST","0"))
@@ -680,7 +696,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
             poz=poz*(1.0+np.nan_to_num(br))/(1.0+r)
         if merd.any():
             eq[-1]*=1-np.abs(poz[merd]).sum()*MERD_PAY*KOM
+            if MERD_YAY: _bos=poz*merd*MERD_PAY
             poz=np.where(merd,poz*(1-MERD_PAY),poz)
+            if MERD_YAY: _yay(poz,_bos,~merd,eq,giris,cv[i+1])
         if yaridan.any():
             eq[-1]*=1-np.abs(poz[yaridan]).sum()*0.5*KOM
             poz=np.where(yaridan,poz*0.5,poz)
@@ -691,7 +709,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 for _k in np.flatnonzero(cik):
                     if _k in _acik:
                         _d=_acik.pop(_k); _d['kapanis']='TP'; katki_defter.append(_d)
+            if MERD_YAY>=2: _bos2=np.where(cik,poz,0.0)
             yon=np.sign(poz[cik]); poz=np.where(cik,0.0,poz); giris=np.where(cik,np.nan,giris); zirve=np.where(cik,np.nan,zirve)
+            if MERD_YAY>=2: _yay(poz,_bos2,~cik,eq,giris,cv[i+1])
             if AYNI and i+1<len(C)-1:
                 for k in np.flatnonzero(cik):
                     if U[i+1,k] and np.isfinite(cv[i+1,k]) and np.isfinite(S[i+1,k]) and (
