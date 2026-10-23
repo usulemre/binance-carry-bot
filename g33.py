@@ -223,6 +223,10 @@ MERD_PAY=float(os.environ.get("MERD_PAY","0.5"))
 # BASABAS stop'u (MERD_BE=1: rung dolduktan sonra fiyat girise donerse kalan kapanir).
 MERDS_ESIK=float(os.environ.get("MERDS_ESIK", str(MERD_ESIK)))
 MERD_BE=int(os.environ.get("MERD_BE","0"))
+# MADDE 471: OYNAKLIGA OLCEKLI KADEME. MERD_KAT>0 -> long kademe = MERD_KAT x VOL5 (5 g oynaklik),
+# MERDS_KAT>0 -> short kademe = MERDS_KAT x VOL5; [MERD_KAT_ALT, MERD_KAT_UST] ile kirpilir. 0 -> sabit (parite).
+MERD_KAT=float(os.environ.get("MERD_KAT","0")); MERDS_KAT=float(os.environ.get("MERDS_KAT","0"))
+MERD_KAT_ALT=float(os.environ.get("MERD_KAT_ALT","0.05")); MERD_KAT_UST=float(os.environ.get("MERD_KAT_UST","1.0"))
 AYNI=int(os.environ.get("AYNI","0"))            # kar al sonrasi AYNI yonde yeniden gir
 say_r=[0]
 REZ_RAST=int(os.environ.get("REZ_RAST","0"))
@@ -611,6 +615,11 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 # MADDE 235: ALT RUNG. Ust TP vurmadiysa bakilir (ayni
                 # barda ust rung varsa o kazanir - daha iyi fiyat).
                 _me = MERD_ESIK if uzun else MERDS_ESIK
+                _mk = MERD_KAT if uzun else MERDS_KAT
+                if _mk > 0 and np.isfinite(VOL5[i,k]) and VOL5[i,k] > 0:
+                    _me = min(MERD_KAT_UST, max(MERD_KAT_ALT, _mk*VOL5[i,k]))
+                    _tpx = (TPL if TPL>=0 else tp) if uzun else (TPS if TPS>=0 else tp)
+                    if _tpx > 0: _me = min(_me, 0.95*_tpx)
                 if _me>0 and not merd_yapildi[k]:
                     _sm=e*(1+_me) if uzun else e*(1-_me)
                     if (uzun and HV[i+1,k]>=_sm) or ((not uzun) and LV[i+1,k]<=_sm):
