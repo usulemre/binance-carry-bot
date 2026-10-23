@@ -113,6 +113,9 @@ SLS=float(os.environ.get("SLS","0"))   # SHORT bacak stop
 SLL24=float(os.environ.get("SLL24","0"))
 # SLL24_TAZE=n: seviye yalniz n barda bir (canli bot 8 sa = 2 bar) guncellenir; 1 = her bar (parite).
 SLL24_TAZE=int(os.environ.get("SLL24_TAZE","1"))
+# MADDE 454: pencere uzunlugu (bar) ve ikinci (kisa) kademe. SLL24_PEN=5 -> 24 sa (parite).
+SLL24_PEN=int(os.environ.get("SLL24_PEN","5"))
+SLLK=float(os.environ.get("SLLK","0")); SLLK_PEN=int(os.environ.get("SLLK_PEN","2"))
 # MADDE 450: SHORT 24 SA YUKSELIS STOP'U (SLL24'un aynasi). 0 = kapali (parite).
 SLS24=float(os.environ.get("SLS24","0"))
 # MADDE 417: KAR HEDEFI SIFIRLAMA. Bacak girisinden aleyhe TP_SIFIRLA kadar gidince
@@ -541,8 +544,12 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
                         continue
                 _i24 = i - (i % SLL24_TAZE) if SLL24_TAZE > 1 else i
-                if SLL24 > 0 and uzun and _i24 >= 5 and np.isfinite(cv[_i24-5,k]) and cv[_i24-5,k] > 0:
-                    _s24 = cv[_i24-5,k]*(1-SLL24)
+                _s24 = -1.0
+                if SLL24 > 0 and uzun and _i24 >= SLL24_PEN and np.isfinite(cv[_i24-SLL24_PEN,k]) and cv[_i24-SLL24_PEN,k] > 0:
+                    _s24 = cv[_i24-SLL24_PEN,k]*(1-SLL24)
+                if SLLK > 0 and uzun and _i24 >= SLLK_PEN and np.isfinite(cv[_i24-SLLK_PEN,k]) and cv[_i24-SLLK_PEN,k] > 0:
+                    _s24 = max(_s24, cv[_i24-SLLK_PEN,k]*(1-SLLK))
+                if _s24 > 0:
                     if LV[i+1,k] <= _s24:
                         _op = OV[i+1,k]
                         _ff = min(_s24,_op) if np.isfinite(_op) else _s24
