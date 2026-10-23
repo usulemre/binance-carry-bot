@@ -5540,3 +5540,8 @@ sermaye nakit olarak kalmalı — madde 229 bulgusu merdivenli kitapta da geçer
 Taban ZSR15P67 +249,3 (Sh 3,83, dd −17,4, −%5 altı 3). DV1 (tazeleme yok, kalan ⅓ eski giriş/TP) +236,1,
 Sh 3,83, eşitVol −0,5 · DV2 (kademesi dolan coin aday değil) +238,1, Sh 3,82, eşitVol −1,1.
 Dengelemede yeniden seçilen pompalanmış coin hâlâ funding primini taşıyor; tam boya dönmek doğru.
+
+## Madde 475 — TP sonrası yeniden giriş (AYNI) / tersine çevirme (TERS), merdivenli T60: İKİSİ DE RED
+Taban ZSR15P67 +249,3 (Sh 3,83). AYNI +253,3 ama IS −11,1, Sh 3,71, eşitVol −15,2 (yalnız OOS'ta şişiyor,
+fazladan maruziyet) · TERS +202,0, Sh 2,94, dd −47,3, en kötü gün −20,45, eşitVol −132 (pompalanmış coini
+shortlamak felaket — sıkışma riski). TP'de boşalan koltuk nakit kalmalı (madde 229, 473 ile tutarlı).
