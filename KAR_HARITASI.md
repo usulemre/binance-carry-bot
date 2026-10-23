@@ -5416,3 +5416,17 @@ Pencere ortalaması gürültüyü değil bilgiyi siliyor: 60 sa'in kendisi en iy
 | 45 g, x1,0 | +196,3 | +149,9 | +276,2 | 3,19 | −18,8 | −7,80 | 10 | −27,8 |
 Genç coin hücre payı %3-6; 24 sa stop ve short +%200 varken bile genç coin funding'i kazandırmıyor.
 Yaş 60 doğru yerde (madde 397/427/433 ile tutarlı).
+
+## Madde 462 — Çıkış şekli ve short seçimi (T60 + 24 sa stop üzerine)
+| kol | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşit oynaklık farkı |
+|---|---|---|---|---|---|---|---|---|---|
+| taban | +216,3 | +158,7 | +319,5 | 3,44 | −20,8 | −5,49 | 7 | +14,8 | — |
+| merdiven long ½ @ +%30 | +206,9 | +150,3 | +308,7 | 3,60 | −20,5 | −5,40 | 5 | +16,2 | +15,6 |
+| **merdiven long ½ @ +%40** | **+226,2** | +161,6 | **+344,9** | **3,65** | −20,5 | −5,37 | **5** | **+18,2** | **+22,4** |
+| short TP 1,0 x oynaklık | +201,3 | +142,4 | +309,0 | 3,25 | −18,7 | −7,89 | 9 | +21,2 | −21,0 |
+| short TP 1,5 x oynaklık | +214,1 | +146,6 | +341,0 | 3,38 | −19,5 | −8,11 | 8 | +21,2 | −7,3 |
+| short = yüksek oynaklık | +117,6 | +139,3 | +90,5 | 2,08 | −31,9 | −14,93 | 28 | +36,8 | −167 |
+| short = düşük oynaklık | +99,0 | +84,5 | +121,3 | 2,15 | −21,0 | −9,45 | 6 | −9,6 | −113 |
+- Merdiven (MERD_ESIK, madde 235'in düğmesi) T60'ta Sharpe'ı 0,2 artırıyor: kârın yarısını erken
+  kilitleyip pump-dump'ın geri vermesini kesiyor. IS farkı +2,9 (ön kayıt +8 istiyordu) → madde 463 komşuluk.
+- Short tarafı funding'le seçilmeli (oynaklıkla seçmek felaket); short TP sabit %20 yerinde.
