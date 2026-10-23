@@ -1248,6 +1248,45 @@ kontrol("seviyenin altında bulunan long piyasa emriyle kapatıldı (SELL)",
         any(k[0] == _l1 and k[1] == "SELL" for k in _kapatilan), f"({_kapatilan[:3]})")
 kontrol("kapatılan long tüm dilimlerden çıkarıldı",
         all(_l1 not in h for h in _d.get("dilimler", {}).values()))
+# MADDE 465: LONG MERDİVEN KÂR ALMA
+temiz_ortam(); _em = (cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S)
+cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S = 0.45, 0.5, 0.0
+cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = 0.60, 0.20, 2.0
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+c.client.kar_al_emirleri.clear()
+cb.bir_tur(c, dry_run=False)
+poz = {p["symbol"]: (float(p["positionAmt"]), float(p["entryPrice"])) for p in c.get_open_positions()}
+_acik = [(k, v) for k, v in c.client.kar_al_emirleri.items() if c.client.emir_durumu[k] == "NEW"]
+_lng = [s_ for s_ in poz if poz[s_][0] > 0]; _sht = [s_ for s_ in poz if poz[s_][0] < 0]
+def _emr(s_): return sorted([v for k, v in _acik if v[0] == s_], key=lambda v: v[2])
+kontrol("merdiven: her long'a İKİ satış emri (+%45 ve +%60), miktarlar yarı yarıya",
+        _lng and all(len(_emr(s_)) == 2 and abs(_emr(s_)[0][2] / poz[s_][1] - 1.45) < 0.01
+                     and abs(_emr(s_)[1][2] / poz[s_][1] - 1.60) < 0.01
+                     and abs(_emr(s_)[0][3] + _emr(s_)[1][3] - poz[s_][0]) < 1e-3
+                     and abs(_emr(s_)[0][3] - poz[s_][0] / 2) < 0.02 * poz[s_][0] for s_ in _lng),
+        f"({[(s_, _emr(s_)) for s_ in _lng[:1]]})")
+kontrol("merdiven short'lara uygulanmıyor (tek TP, %20)",
+        all(len(_emr(s_)) == 1 and abs(_emr(s_)[0][2] / poz[s_][1] - 0.80) < 0.01 for s_ in _sht))
+durum = cb.dilim_durum_oku()
+_ms = _lng[0]; _moid = durum["merdiven"][_ms]["oid"]
+_once = sum(h.get(_ms, 0) for h in durum["dilimler"].values())
+c.client.emir_durumu[_moid] = "FILLED"
+_dol = cb.kar_al_kontrol(c, durum)
+_sonra = sum(h.get(_ms, 0) for h in durum["dilimler"].values())
+kontrol("kademe dolunca sembol dilimlerden ÇIKMIYOR (kâr al gibi değil)", _ms not in _dol and _sonra > 0)
+kontrol("kademe dolunca toplam hedef yarıya iniyor", abs(_sonra - _once * 0.5) < 1e-6 * max(1, abs(_once)),
+        f"({_once:.2f} -> {_sonra:.2f})")
+cb.dilim_durum_yaz(durum)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+c.client.kar_al_emirleri.clear()
+cb.bir_tur(c, dry_run=False)
+_acik = [(k, v) for k, v in c.client.kar_al_emirleri.items() if c.client.emir_durumu[k] == "NEW"]
+kontrol("aynı giriş için kademe İKİNCİ KEZ konmuyor (yalnız +%60 TP)",
+        len([v for k, v in _acik if v[0] == _ms]) == 1
+        and abs([v for k, v in _acik if v[0] == _ms][0][2] / poz[_ms][1] - 1.60) < 0.01,
+        f"({[v for k, v in _acik if v[0] == _ms]})")
+cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S = _em
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
 cb.LONG_24S = _e24
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
