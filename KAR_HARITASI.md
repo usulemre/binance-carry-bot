@@ -5363,3 +5363,20 @@ Bot'a eklenmedi — kullanıcı kararı bekleniyor.
   KÖTÜ (^0,5: taban x1,29 → +331 vs +284; ^1,0: x1,50 → +438 vs +337) ve en kötü gün −%8,5/−%10,6:
   kılık değiştirmiş kaldıraç → ELENDİ. Eşit maks düşüşte önde görünmesi tek-istatistik gürültüsü.
 - Tutarlı tek aday 4L/3S (iki dönemde de önde, Sharpe ↑, BTC betası −0,026) → madde 458.
+
+## Madde 458 — Bacak asimetrisi: kural "ADAY" diyor ama eşit oynaklıkta fark ~0 → AYAR DEĞİŞMEDİ
+| kol (2.000 $) | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşit oynaklıkta taban | fark |
+|---|---|---|---|---|---|---|---|---|---|---|
+| taban 4L/4S | +216,3 | +158,7 | +319,5 | 3,44 | −20,8 | −5,49 | 7 | +14,8 | — | — |
+| 4L/3S | +228,6 | +166,6 | +340,7 | 3,50 | −19,8 | −6,67 | 7 | +18,2 | x1,01 → +221,4 | +7,2 |
+| 3L/3S | +268,3 | +189,0 | +417,7 | 3,42 | −19,9 | −7,82 | 11 | +27,8 | x1,15 → +271,5 | −3,2 |
+| 4L/2S | +230,4 | +163,3 | +354,5 | 3,43 | −19,9 | −8,86 | 9 | +20,0 | x1,04 → +231,7 | −1,3 |
+| 4L/3S + akış 0 | +224,2 | +177,6 | +303,1 | 3,44 | −18,1 | −5,96 | 8 | +13,4 | x1,02 → +224,8 | −0,7 |
+| 4L/3S + long havuz 6 | +224,2 | +178,1 | +302,1 | 3,43 | −17,4 | −7,28 | 9 | +26,8 | | |
+3.500 $: taban +214,8 / Sh 3,48 → 4L/3S +225,8 / Sh 3,53.
+- Ön kayıtlı kural geçti (3.500 $'da +11, komşular tabanı geçiyor) ama komşuların farkı DOZ: daha az bacak
+  = coin başına daha büyük ağırlık = gizli kaldıraç. Eşit oynaklıkta 4L/3S yalnız +7 puan ve en kötü gün
+  −5,5 → −6,7. Madde 222'nin dersi tekrar: bacak sayısı bir kaldıraç düğmesidir.
+- SONUÇ (madde 457-458): T60 çevresinde 17 yeni eksen + birleşimler → T60 benzeri yapısal sıçrama YOK.
+  Getiriyi büyüten her şey eşit riskte kaldıraca eşdeğer. Kalan kâr kolları: açık kaldıraç (1,25x,
+  dd ~−%25) ve T60'tan bağımsız ikinci gelir kaynağı.
