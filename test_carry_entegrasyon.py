@@ -1194,6 +1194,27 @@ try:
             r and c.client.kar_al_emirleri, f"({r})")
 finally:
     type(c.client).futures_create_algo_order = _m
+# MADDE 445: LONG felaket stop'u (CARRY_LONG_STOP) - varsayılan kapalı, açılınca long'lara SELL x(1-X)
+temiz_ortam(); _el = cb.LONG_FELAKET
+cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET, cb.LONG_FELAKET = 0.60, 0.20, 2.0, 0.40
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+cb.bir_tur(c, dry_run=False)
+poz = {p["symbol"]: (float(p["positionAmt"]), float(p["entryPrice"])) for p in c.get_open_positions()}
+fe = {v[0]: v for k, v in c.client.felaket_emirleri.items() if c.client.felaket_durumu[k] == "NEW"}
+kontrol("long stop açıkken HER pozisyona (long + short) felaket stop'u kondu",
+        set(fe) == set(poz), f"({len(fe)} / {len(poz)})")
+kontrol("long stop SELL, tetik giriş x0,60 (−%40); short stop BUY x3,00",
+        all((fe[s_][1] == "SELL" and abs(fe[s_][2] / poz[s_][1] - 0.60) < 0.01) if poz[s_][0] > 0
+            else (fe[s_][1] == "BUY" and abs(fe[s_][2] / poz[s_][1] - 3.0) < 0.01) for s_ in fe))
+durum = cb.dilim_durum_oku()
+_lsem = next(s_ for s_ in fe if poz[s_][0] > 0)
+_aid = next(k for k, v in c.client.felaket_emirleri.items() if v[0] == _lsem and c.client.felaket_durumu[k] == "NEW")
+c.client.felaket_durumu[_aid] = "TRIGGERED"
+kontrol("tetiklenen LONG stop'u sembolü tüm dilimlerden çıkarıyor",
+        _lsem in cb.kar_al_kontrol(c, durum) and all(_lsem not in h for h in durum["dilimler"].values()))
+cb.LONG_FELAKET = _el
+kontrol("CARRY_LONG_STOP varsayılanı KAPALI (kullanıcı tercihi, madde 445)", cb.LONG_FELAKET == 0.0)
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
 
 print("\n12b) KÂR AL PATLASA BİLE DİLİM DEFTERİ YAZILIR (madde 208)")

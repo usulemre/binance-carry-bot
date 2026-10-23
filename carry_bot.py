@@ -1827,6 +1827,23 @@ BUGUN_PROFIL = {"FUNDING_WINDOW_HOURS": 48.0, "KAR_AL_ORAN": 0.40, "UC_HAREKET_E
 """Madde 442'den ÖNCEKİ varsayılanlar (eski kitap). Tarihsel maddelerin
 "ayar DEĞİŞMEDİ" denetimleri bu sözlüğe bakar: o maddeler bu kitabı ölçtü."""
 
+LONG_FELAKET = float(os.getenv("CARRY_LONG_STOP", "0"))
+"""LONG FELAKET STOP'U (madde 443-445). Long bacak girişten −%X düşerse borsada
+bekleyen STOP_MARKET (SELL, reduceOnly, MARK fiyatı) kapatır. 0 = KAPALI (varsayılan).
+
+Bir KÂR ayarı değil, kullanıcının risk tercihine bırakılan DÜĞME. T60'ın en kötü
+günleri piyasa çöküşü değil, TEK küçük coinin long'ta tek günde %80-90 çökmesi
+(POWER, REEF, SIREN). Backtest (2.000 $, kaymalı model):
+  CARRY_LONG_STOP   yıllık    en kötü gün   −%5 altı gün
+  0 (kapalı)        +%222       −%8,6           9
+  0.45              +%210       −%6,5           7
+  0.40              +%208       −%5,9           6
+  0.35              +%203       −%5,5           5
+Aynı en kötü güne sabit doz düşürmeyle (0,69x) inmek yıllık ~+%127 bırakırdı;
+stop aynı korumayı çok daha ucuza verir. Maliyetin çoğu 2025'te (V dönüşleri).
+Saatlik veride çöküşlerin çoğu stop seviyesinden geçerek iniyor; tek saatte
+uçurum yapanlarda (POWER −%48/saat) dolum seviyenin altında olur."""
+
 # MADDE 442 — VARSAYILAN PROFİL T60. Madde 429-438'in vardığı ayar varsayılan
 # yapıldı: hacim 70M (CARRY_MIN_VOLUME), yaş 60 (CARRY_MIN_LISTING_DAYS),
 # rezerv 0,10 (CARRY_REZERV), uç hareket eleme kapalı (CARRY_UC_HAREKET=0),
@@ -3249,8 +3266,9 @@ def tp_defteri_oku(dosya: str = None, gun: float = 30.0) -> dict:
     return out
 
 
-def felaket_emri_gonder(client: ExchangeClient, sem: str, adet: float, tetik: str):
-    """Short için +%X koruyucu STOP_MARKET. algoId döner.
+def felaket_emri_gonder(client: ExchangeClient, sem: str, adet: float, tetik: str,
+                        yon: str = "BUY"):
+    """Koruyucu STOP_MARKET (short için BUY +%X, long için SELL −%X). algoId döner.
 
     Binance 2025-12-09'dan beri koşullu emirleri (STOP_MARKET vb.) normal
     `/fapi/v1/order` uç noktasında REDDEDİYOR (-4120); `/fapi/v1/algoOrder`
@@ -3261,7 +3279,7 @@ def felaket_emri_gonder(client: ExchangeClient, sem: str, adet: float, tetik: st
     if f is None:
         raise RuntimeError("python-binance eski: futures_create_algo_order yok "
                            "(pip install -U python-binance)")
-    e = f(algoType="CONDITIONAL", symbol=sem, side="BUY", type="STOP_MARKET",
+    e = f(algoType="CONDITIONAL", symbol=sem, side=yon, type="STOP_MARKET",
           triggerPrice=tetik, quantity=adet, reduceOnly="true",
           workingType="MARK_PRICE")
     return e.get("algoId")
@@ -3277,7 +3295,7 @@ def felaket_tetiklendi_mi(e: dict) -> bool:
 
 def koruma_acik() -> bool:
     """Kâr al veya short felaket stop'undan biri açık mı."""
-    return KAR_AL_ORAN > 0 or KAR_AL_SHORT > 0 or SHORT_FELAKET > 0
+    return KAR_AL_ORAN > 0 or KAR_AL_SHORT > 0 or SHORT_FELAKET > 0 or LONG_FELAKET > 0
 
 
 def kar_al_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
@@ -3312,8 +3330,9 @@ def kar_al_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
             for hedef in durum.get("dilimler", {}).values():
                 hedef.pop(sem, None)
     if felaket:
-        logger.error("SHORT FELAKET STOP'U DOLDU (+%%%.0f): %s - short kapandı, "
-                     "eski dilimlerden çıkarıldı", SHORT_FELAKET * 100, ", ".join(felaket))
+        logger.error("FELAKET STOP'U DOLDU: %s - pozisyon kapandı, eski dilimlerden "
+                     "çıkarıldı (short +%%%.0f / long −%%%.0f)", ", ".join(felaket),
+                     SHORT_FELAKET * 100, LONG_FELAKET * 100)
     return dolan + felaket
 
 
@@ -3359,12 +3378,14 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
         _tp_kurulum_kaydet(-1, 0, -1)
         return 0
 
-    def _felaket_koy(sem, giris, adet, pr) -> None:
+    def _felaket_koy(sem, giris, adet, pr, long_mu=False) -> None:
         """Short için +%X STOP_MARKET (reduceOnly, MARK). Hata kâr al'ı
         bozmaz ama ERROR olarak raporlanır: sigortasız short demektir."""
         try:
+            _tetik = giris * (1 - LONG_FELAKET) if long_mu else giris * (1 + SHORT_FELAKET)
             durum.setdefault("felaket", {})[sem] = felaket_emri_gonder(
-                client, sem, adet, f"{giris * (1 + SHORT_FELAKET):.{pr.get('price_precision', 2)}f}")
+                client, sem, adet, f"{_tetik:.{pr.get('price_precision', 2)}f}",
+                yon="SELL" if long_mu else "BUY")
         except Exception as ex:
             felaket_basarisiz[sem] = str(ex)[:80]
 
@@ -3391,6 +3412,8 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                 return (None, False, "miktar hassasiyete yuvarlanınca 0")
             if miktar < 0 and SHORT_FELAKET > 0 and sem not in durum.get("felaket", {}):
                 _felaket_koy(sem, giris, adet, pr)
+            if miktar > 0 and LONG_FELAKET > 0 and sem not in durum.get("felaket", {}):
+                _felaket_koy(sem, giris, adet, pr, long_mu=True)
             if (KAR_AL_ORAN if miktar > 0 else KAR_AL_SHORT) <= 0:
                 return (sem, True, "")
             e = client.client.futures_create_order(
@@ -3434,12 +3457,13 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
         if sem in durum.get("felaket", {}):
             felaket_basarisiz.pop(sem)
     if felaket_basarisiz:
-        logger.error("SHORT FELAKET STOP'U KONULAMADI: %d short SİGORTASIZ (%s). Sebep: %s",
+        logger.error("FELAKET STOP'U KONULAMADI: %d pozisyon SİGORTASIZ (%s). Sebep: %s",
                      len(felaket_basarisiz), ", ".join(sorted(felaket_basarisiz)[:8]),
                      "; ".join(f"{s}: {r}" for s, r in sorted(felaket_basarisiz.items())[:3]))
-    if SHORT_FELAKET > 0:
-        logger.info("%d short pozisyona felaket stop'u kondu (+%%%.0f)",
-                    len(durum.get("felaket", {})), SHORT_FELAKET * 100)
+    if SHORT_FELAKET > 0 or LONG_FELAKET > 0:
+        logger.info("%d pozisyona felaket stop'u kondu (short +%%%.0f / long %s)",
+                    len(durum.get("felaket", {})), SHORT_FELAKET * 100,
+                    f"−%{LONG_FELAKET * 100:.0f}" if LONG_FELAKET > 0 else "kapalı")
     _tp_kurulum_kaydet(hedeflenen, kurulan, len(basarisiz))
     if basarisiz:
         logger.error(

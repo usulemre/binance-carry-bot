@@ -141,6 +141,12 @@ gerekmiyor; `carry_preflight.py` sapma olursa **HATA** verir:
 | `CARRY_MIN_VOLUME` | **70000000** (70M $) | **429** |
 | `CARRY_MIN_LISTING_DAYS` | **60** | **429/433** |
 | `CARRY_SHORT_STOP` | **2.0** (+%200) | **428/437** |
+| `CARRY_LONG_STOP` | 0 (kapalı) — isteğe bağlı **0.40** | **443-445** |
+
+**MADDE 445 — LONG FELAKET STOP'U (isteğe bağlı düğme).** `CARRY_LONG_STOP=0.40`
+long bacağı girişten −%40'ta kapatır. Backtest: en kötü gün −%8,6 → −%5,9, −%5'ten kötü
+gün 9 → 6, yıllık getiri +%222 → +%208. Daha sıkı (0.35) daha az kötü gün / daha çok
+maliyet; daha gevşek (0.45) tersi. Varsayılan kapalı; açmak kullanıcının risk tercihidir.
 
 **MADDE 442 — VARSAYILAN T60.** Madde 429-438 araştırmasının vardığı ayar
 artık kodun varsayılanı; `.env`'de bu satırlardan HİÇBİRİNİ yazmayın (eski
