@@ -5479,3 +5479,19 @@ Backtest (2.000 $, kaymalı, iki hiza): yıllık ~+%233, Sharpe ~3,66, dd ~−%2
 | long ⅔ @ %45 | +238,4 | +168,7 | +367,9 | 3,73 | −20,5 | −5,36 | 4 | +19,5 | +8,2 |
 - Short merdiveni platoda (−%10..−%15 hepsi Sharpe +0,06-0,08, dd 2-5 puan sığ); short kârının bir
   kısmını sıkışma geri dönmeden kilitler. SR15 ön kaydı geçti → madde 467 protokol. Başabaş etkisiz.
+
+## Madde 467 — Short merdiveni SR15 tek başına protokolde: KIL PAYI RED (dört şart 4/4, P %91-95)
+SR15 vs XMR45: yıllık +6,4..+9,0, Sh22 +0,11, dd −1,1..−2,4 (sığ), eşit-risk +34..+68, YYYY x4, P %93,2 / %95,0
+(2.000 $) · %92,7 / %91,0 (3.500 $). Birleşimler (2.000 $): SR15 + long ⅔ (SR15P67) +249,3 / Sh 3,83 /
+dd −17,4 / −%5 altı 3 / eşit oynaklık +19,4; SR12P67 +245,1 / 3,81 / −15,3 / 3 / +17,3.
+
+## Madde 468 — BİRLEŞİM SR15P67 PROTOKOLDE: **AYAR** (4/4, P %98,2-99,3)
+Kontrol XMR45 (canlı: T60 + 24 sa stop + long ½ @ %45). Aday: long ⅔ @ +%45 (kalan +%60), short ⅔ @ −%15
+(kalan −%20) — MERD_PAY ortak 0,667.
+| seviye / hiza | yıllık fark | Sh22 | Sh25 | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 | +14,6 | +0,19 | +0,10 | −3,0 | +100,7 | YYYY | %99,1 |
+| 2.000 $ 1 | +18,3 | +0,20 | +0,17 | −3,3 | +111,2 | YYYY | %99,3 |
+| 3.500 $ 0 | +13,8 | +0,19 | +0,10 | −2,3 | +93,4 | YYYY | %98,3 |
+| 3.500 $ 1 | +15,3 | +0,20 | +0,13 | −1,5 | +55,5 | YYYY | %98,2 |
+→ Canlıya: CARRY_MERDIVEN_PAY 0,667 ve yeni CARRY_MERDIVEN_SHORT 0,15 (madde 469).
