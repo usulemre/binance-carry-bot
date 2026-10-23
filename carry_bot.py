@@ -1844,6 +1844,23 @@ stop aynı korumayı çok daha ucuza verir. Maliyetin çoğu 2025'te (V dönüş
 Saatlik veride çöküşlerin çoğu stop seviyesinden geçerek iniyor; tek saatte
 uçurum yapanlarda (POWER −%48/saat) dolum seviyenin altında olur."""
 
+LONG_24S = float(os.getenv("CARRY_LONG_24S", "0.45"))
+"""24 SA DÜŞÜŞ STOP'U (madde 449-453). Long bacak, coinin 24 sa önceki kapanışından
+−%X düşerse borsada bekleyen STOP_MARKET (SELL, reduceOnly, MARK) ile kapanır;
+seviye her turda (8 sa) yenilenir. 0 = kapalı. VARSAYILAN 0,45.
+
+Girişten bağımsızdır: normal dalgalanmada (yavaş düşüş) çalışmaz, yalnız gerçek
+çöküşte (pompala-boşalt, madde 446) devreye girer. Backtest (T60, 2.000 $, kaymalı,
+seviye 8 sa'te bir yenilenerek - madde 452):
+  CARRY_LONG_24S   yıllık    en kötü gün   −%5 altı gün
+  0 (kapalı)       +%222       −%8,6           9
+  0.40             +%217       −%5,5           6
+  0.45             +%216       −%5,5           7     <- varsayılan
+  0.50             +%217       −%5,9           7
+  0.55             +%214       −%6,5           7
+3.500 $'da da aynı (−%8,6 → −%5,5, 5 puan). Girişten stop'la (CARRY_LONG_STOP)
+BİRLİKTE kullanmak daha kötü (madde 452: 15 puan, en kötü gün −%5,9)."""
+
 # MADDE 442 — VARSAYILAN PROFİL T60. Madde 429-438'in vardığı ayar varsayılan
 # yapıldı: hacim 70M (CARRY_MIN_VOLUME), yaş 60 (CARRY_MIN_LISTING_DAYS),
 # rezerv 0,10 (CARRY_REZERV), uç hareket eleme kapalı (CARRY_UC_HAREKET=0),
@@ -3285,6 +3302,32 @@ def felaket_emri_gonder(client: ExchangeClient, sem: str, adet: float, tetik: st
     return e.get("algoId")
 
 
+def long_24s_referans(client: ExchangeClient, sem: str) -> float | None:
+    """24 sa önceki 4 sa kapanış (madde 453). Son kline açık bar; son kapanmış
+    bar [-2]; motorun cv[i-5]'i ile aynı hiza için [-7]. Okunamazsa None."""
+    try:
+        k = client.client.futures_klines(symbol=sem, interval="4h", limit=8)
+        if len(k) >= 7:
+            v = float(k[-7][4])
+            return v if v > 0 else None
+    except Exception as ex:
+        logger.warning("24 sa referans fiyatı okunamadı %s: %s", sem, ex)
+    return None
+
+
+def felaket_simdi_kapat(client: ExchangeClient, durum: dict, sem: str, adet: float) -> None:
+    """Fiyat stop seviyesini turlar arasında geçmişse long'u hemen kapatır ve
+    sembolü dilimlerden çıkarır (yeniden açılmasın)."""
+    try:
+        client.close_position(sem, "SELL", adet)
+        for hedef in durum.get("dilimler", {}).values():
+            hedef.pop(sem, None)
+        logger.error("24 SA DÜŞÜŞ STOP'U: %s seviyenin altında bulundu - long piyasa "
+                     "emriyle kapatıldı, dilimlerden çıkarıldı", sem)
+    except Exception as ex:
+        logger.error("24 SA DÜŞÜŞ STOP'U: %s seviyenin altında ama KAPATILAMADI (%s)", sem, ex)
+
+
 def felaket_tetiklendi_mi(e: dict) -> bool:
     """Algo emri tetiklendi mi: tetiklenince `actualOrderId` dolar (piyasa
     emri olduğu için tetik = dolum)."""
@@ -3295,7 +3338,7 @@ def felaket_tetiklendi_mi(e: dict) -> bool:
 
 def koruma_acik() -> bool:
     """Kâr al veya short felaket stop'undan biri açık mı."""
-    return KAR_AL_ORAN > 0 or KAR_AL_SHORT > 0 or SHORT_FELAKET > 0 or LONG_FELAKET > 0
+    return KAR_AL_ORAN > 0 or KAR_AL_SHORT > 0 or SHORT_FELAKET > 0 or LONG_FELAKET > 0 or LONG_24S > 0
 
 
 def kar_al_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
@@ -3379,10 +3422,34 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
         return 0
 
     def _felaket_koy(sem, giris, adet, pr, long_mu=False) -> None:
-        """Short için +%X STOP_MARKET (reduceOnly, MARK). Hata kâr al'ı
-        bozmaz ama ERROR olarak raporlanır: sigortasız short demektir."""
+        """Felaket STOP_MARKET (reduceOnly, MARK). Hata kâr al'ı bozmaz ama
+        ERROR olarak raporlanır: sigortasız pozisyon demektir.
+
+        Long tetiği (madde 453): girişten −LONG_FELAKET ve/veya 24 sa önceki
+        kapanıştan −LONG_24S; ikisi de açıksa YÜKSEK olan (önce vuran)."""
         try:
-            _tetik = giris * (1 - LONG_FELAKET) if long_mu else giris * (1 + SHORT_FELAKET)
+            if long_mu:
+                _adaylar = []
+                if LONG_FELAKET > 0:
+                    _adaylar.append(giris * (1 - LONG_FELAKET))
+                if LONG_24S > 0:
+                    _ref = long_24s_referans(client, sem)
+                    if _ref:
+                        _adaylar.append(_ref * (1 - LONG_24S))
+                if not _adaylar:
+                    return
+                _tetik = max(_adaylar)
+                try:
+                    _fiyat = float(client.client.futures_symbol_ticker(symbol=sem)["price"])
+                except Exception:
+                    _fiyat = None
+                if _fiyat is not None and _fiyat <= _tetik:
+                    # Çöküş turlar arasında seviyeyi zaten geçmiş: bekleyen stop
+                    # hemen tetiklenir/reddedilir (-2021). Motor bu barda çıkardı.
+                    felaket_simdi_kapat(client, durum, sem, adet)
+                    return
+            else:
+                _tetik = giris * (1 + SHORT_FELAKET)
             durum.setdefault("felaket", {})[sem] = felaket_emri_gonder(
                 client, sem, adet, f"{_tetik:.{pr.get('price_precision', 2)}f}",
                 yon="SELL" if long_mu else "BUY")
@@ -3412,7 +3479,7 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                 return (None, False, "miktar hassasiyete yuvarlanınca 0")
             if miktar < 0 and SHORT_FELAKET > 0 and sem not in durum.get("felaket", {}):
                 _felaket_koy(sem, giris, adet, pr)
-            if miktar > 0 and LONG_FELAKET > 0 and sem not in durum.get("felaket", {}):
+            if miktar > 0 and (LONG_FELAKET > 0 or LONG_24S > 0) and sem not in durum.get("felaket", {}):
                 _felaket_koy(sem, giris, adet, pr, long_mu=True)
             if (KAR_AL_ORAN if miktar > 0 else KAR_AL_SHORT) <= 0:
                 return (sem, True, "")

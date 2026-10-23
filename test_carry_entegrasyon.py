@@ -1134,6 +1134,8 @@ cb.KAR_AL_SHORT = _eski_kas
 
 print("\n12c) SHORT FELAKET STOP'U (madde 437)")
 _eski = (cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET)
+_e24 = cb.LONG_24S
+cb.LONG_24S = 0.0   # madde 453: bu bölüm short/long-giriş stop'larını AYRI sınar
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = 0.60, 0.20, 2.0
 temiz_ortam()
 c = SahteClient(); cb.bir_tur(c, dry_run=False)
@@ -1215,7 +1217,41 @@ kontrol("tetiklenen LONG stop'u sembolü tüm dilimlerden çıkarıyor",
         _lsem in cb.kar_al_kontrol(c, durum) and all(_lsem not in h for h in durum["dilimler"].values()))
 cb.LONG_FELAKET = _el
 kontrol("CARRY_LONG_STOP varsayılanı KAPALI (kullanıcı tercihi, madde 445)", cb.LONG_FELAKET == 0.0)
+# MADDE 453: 24 SA DÜŞÜŞ STOP'U (CARRY_LONG_24S, varsayılan 0,45)
+cb.LONG_24S = _e24
+kontrol("CARRY_LONG_24S varsayılanı 0,45 (madde 453)", abs(cb.LONG_24S - 0.45) < 1e-9)
+temiz_ortam(); cb.LONG_FELAKET = 0.0
+cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = 0.60, 0.20, 2.0
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+cb.bir_tur(c, dry_run=False)
+poz = {p["symbol"]: (float(p["positionAmt"]), float(p["entryPrice"])) for p in c.get_open_positions()}
+fe = {v[0]: v for k, v in c.client.felaket_emirleri.items() if c.client.felaket_durumu[k] == "NEW"}
+_ref = {s_: cb.long_24s_referans(c, s_) for s_ in poz if poz[s_][0] > 0}
+kontrol("24 sa stop'u her LONG'a kondu (short'lar +%200 ile)", set(fe) == set(poz), f"({len(fe)}/{len(poz)})")
+kontrol("long tetiği = 24 sa önceki kapanış x 0,55 (girişten bağımsız)",
+        all(fe[s_][1] == "SELL" and _ref[s_] and abs(fe[s_][2] - _ref[s_] * 0.55) < 0.01 for s_ in _ref),
+        f"({[(s_, fe[s_][2], _ref[s_]) for s_ in list(_ref)[:2]]})")
+# fiyat seviyenin altındaysa: hemen kapat + dilimlerden çıkar
+temiz_ortam()
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+_kapatilan = []
+c.close_position = lambda sem, yon, adet, verify_fill=True: _kapatilan.append((sem, yon, adet))
+_l1 = next(p["symbol"] for p in c.get_open_positions() if float(p["positionAmt"]) > 0)
+_eski_tk = c.client.futures_symbol_ticker
+c.client.futures_symbol_ticker = lambda symbol: {"price": "0.01"} if symbol == _l1 else _eski_tk(symbol)
+cb.bir_tur(c, dry_run=False)
+c.client.futures_symbol_ticker = _eski_tk
+_d = cb.dilim_durum_oku()
+kontrol("seviyenin altında bulunan long piyasa emriyle kapatıldı (SELL)",
+        any(k[0] == _l1 and k[1] == "SELL" for k in _kapatilan), f"({_kapatilan[:3]})")
+kontrol("kapatılan long tüm dilimlerden çıkarıldı",
+        all(_l1 not in h for h in _d.get("dilimler", {}).values()))
 cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
+cb.LONG_24S = _e24
+cb.KAR_AL_ORAN, cb.KAR_AL_SHORT, cb.SHORT_FELAKET = _eski
+cb.LONG_24S = _e24
 
 print("\n12b) KÂR AL PATLASA BİLE DİLİM DEFTERİ YAZILIR (madde 208)")
 # Borsa bakiminda `get_open_positions()` hata firlatir; eskiden bu hata

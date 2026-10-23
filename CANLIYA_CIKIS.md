@@ -141,7 +141,12 @@ gerekmiyor; `carry_preflight.py` sapma olursa **HATA** verir:
 | `CARRY_MIN_VOLUME` | **70000000** (70M $) | **429** |
 | `CARRY_MIN_LISTING_DAYS` | **60** | **429/433** |
 | `CARRY_SHORT_STOP` | **2.0** (+%200) | **428/437** |
-| `CARRY_LONG_STOP` | 0 (kapalı) — isteğe bağlı **0.40** | **443-445** |
+| `CARRY_LONG_24S` | **0.45** (24 sa'te −%45 düşen long kapanır) | **449-453** |
+| `CARRY_LONG_STOP` | 0 (kapalı) — 24 sa stop'u varken AÇMAYIN | **443-445, 452** |
+
+**MADDE 453 — 24 SA DÜŞÜŞ STOP'U (varsayılan açık, 0.45).** Long bacak, coinin 24 saat
+önceki fiyatından %45 düşerse kapanır; seviye her turda yenilenir. Backtest: en kötü gün
+−%8,6 → −%5,5, yıllık maliyet ~5 puan (+%222 → +%216). Kapatmak: `CARRY_LONG_24S=0`.
 
 **MADDE 445 — LONG FELAKET STOP'U (isteğe bağlı düğme).** `CARRY_LONG_STOP=0.40`
 long bacağı girişten −%40'ta kapatır. Backtest: en kötü gün −%8,6 → −%5,9, −%5'ten kötü
