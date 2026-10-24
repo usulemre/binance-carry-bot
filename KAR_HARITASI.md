@@ -5893,3 +5893,12 @@ T3'e karşı (yıllık · Sh · dd farkı) — TÜM 2020-07..2026-09 | YENİ 202
 | 3.500 $ 1 | +10,4 | +0,07 | +0,17 | −0,4 | +23,2 | YYYY | %98,9 |
 Canlı gibi giriş + 5 bp, 6 yıl. Merdiven gibi yalnız çıkışı değiştirdiği için eşli fark gürültüsü düşük → P yüksek.
 T3 üzerinde AYAR; T3'ün kendisi kullanıcı kararı. T1 (canlı) üzerinde aynı soru → madde 505.
+
+## Madde 505 — T1 (canlı) + kademe payı 0,80 vs T1, uzun zemin protokol: RED (P %60-87) — P80 T3'le birlikte işe yarıyor
+| seviye / hiza | yıllık fark | Sh (≤2024) | Sh (2025+) | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 / 1 | +6,0 / +7,1 | +0,02 / +0,03 | +0,10 / +0,15 | +0,7 / −0,3 | −8,8 / +13,3 | YYXY / YYYY | %60,2 / %87,3 |
+| 3.500 $ 0 / 1 | +8,2 / +8,2 | +0,04 / +0,04 | +0,12 / +0,17 | +0,5 / −0,3 | −3,1 / +16,1 | YYXY / YYYY | %59,7 / %86,6 |
+T1 üzerinde etki yarıya iniyor ve hiza 0'da düşüş biraz derin → RED. Kademe payını artırmak, short tarafı sık yenilenen
+(T3) kitapta daha değerli: long kârı daha çok kilitlenirken short tarafı taze kalıyor. CARRY_MERDIVEN_PAY DEĞİŞMEDİ (0,667).
+**T3'ün son hali (aday): T1 + CARRY_SHORT_ARA_SAAT 48 + CARRY_SHORT_TAVAN 0,08 + CARRY_MERDIVEN_PAY 0,80.**
