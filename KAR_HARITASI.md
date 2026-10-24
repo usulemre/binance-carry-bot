@@ -5694,3 +5694,7 @@ Kontrol ZSR15P67 (canlı).
 | tavan %9 | +260,9 | +193,7 | +381,8 | 4,01 | −13,1 | −5,51 | 1 | +24,1 | +21,3 |
 Dört komşunun dördü Sharpe ≥ 3,93 ve eşitVol ≥ +8 → PLATO: birleşim tek nokta değil, bölge (dd −13..−14, −%5 altı
 1 gün, Sharpe ~4,0 her yerde). Protokol P %76-86 (madde 486) → sunum: "plato, kanıt sınırda" — KULLANICI KARARI.
+
+**KULLANICI KARARI (2026-10-24):** BRP80_CAP_A43 "şu anki bottan sonra 2. en büyük aday" olarak kaydedildi
+(`ADAYLAR.md`). Bundan sonraki kâr denemeleri İKİ taban üzerinden: her kol hem ZSR15P67'ye hem BRP80_CAP_A43'e
+uygulanır ve kendi tabanına karşı ölçülür (`arastirma_tabanlar.py`).
