@@ -45,6 +45,14 @@ if _SKD:
     S = _S2.reindex(index=C.index, columns=C.columns).values
     print(f"# sinyal DISTAN: {_SKD}  ({np.isfinite(S).sum()} hucre)", flush=True)
 
+# MADDE 490: TARAF BAZLI SINYAL PENCERESI. SK_DOSYA_S verilirse SHORT adaylari bu panelin sirasiyla secilir
+# (long'lar SK_DOSYA ile). Long havuzuna giren coin short adayi olamaz. Bos -> tek panel (parite).
+_SKDS = os.environ.get("SK_DOSYA_S", "").strip()
+SS = None
+if _SKDS:
+    import pickle as _pk3
+    SS = _pk3.load(open(_SKDS, "rb")).reindex(index=C.index, columns=C.columns).values
+    print(f"# short sinyali DISTAN: {_SKDS}", flush=True)
 _HES = float(os.environ.get("HACIM_ESIK", "1e8"))
 _DON = float(os.environ.get("DONUK_ESIK", "0.10"))
 # MADDE 228: listeleme yasi esigi (gun). Madde 133'te taranmis, hic
@@ -481,10 +489,17 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 sc=rk(S[i][ix]); a=pd.Series(A[i][ix])
                 if AKW>0 and a.notna().sum()>=0.5*len(ix): sc=(1-AKW)*sc+AKW*(-a).rank(pct=True).fillna(0.5).values
                 o=np.argsort(sc)
-                if olcut is None:
-                    lo=ix[o[:_nl]]; sh=ix[o[-_ns:]]; lo_s=ix[o[:mm]]; sh_s=ix[o[::-1][:mm]]
+                if SS is not None:
+                    _ss=pd.Series(SS[i][ix]).rank(pct=True).fillna(0.5).values
+                    _lav=set(int(x) for x in ix[o[:max(_mml,_nl)]])
+                    _ss=np.where(np.array([int(x) in _lav for x in ix]),-1.0,_ss)   # long havuzu short olamaz
+                    o_s=np.argsort(_ss)
                 else:
-                    la=ix[o[:_mml]]; sa=ix[o[-_mms:]]
+                    o_s=o
+                if olcut is None:
+                    lo=ix[o[:_nl]]; sh=ix[o_s[-_ns:]]; lo_s=ix[o[:mm]]; sh_s=ix[o_s[::-1][:mm]]
+                else:
+                    la=ix[o[:_mml]]; sa=ix[o_s[-_mms:]]
                     if _ADY_YOL: _ADY.append((i, la.copy(), sa.copy()))
                     def sec(ad,taraf,sira_skor):
                         p=np.asarray(olcut(i,ad,taraf),float)
