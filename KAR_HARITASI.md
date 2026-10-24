@@ -5630,3 +5630,9 @@ Kontrol THTG1 (canlının bugünkü davranışı), aday ZSR15P67 (dilim başına
 Dilim başına emir dört hücrede de Sharpe'ı biraz artırıyor ama getiri farkı ~0 → canlıyı değiştirmeye değmez.
 ÖNEMLİ YAN SONUÇ: canlının tek hesap davranışı backtest getirisini TUTUYOR (fark −3,6..+1,5 puan); motor-canlı
 farkı kâr değil, küçük bir risk farkı (−%5 altı gün birkaç fazla). Bot değişmedi.
+
+## Madde 483 — KOŞUCU (kademe sonrası kalan pay iz süren çıkışla): BEŞİ DE RED
+Taban ZSR15P67 +249,3 / Sh 3,83. Long zirveden %15 / %25 / %35 geri çekilme: +241,3 / +245,8 / +242,3 (eşitVol
+−4,7 / −5,0 / −11,1) · short dipten +%10: +245,5 (−3,3) · ikisi: +242,0 (−8,3). Kötü gün sayısı değişmiyor (3).
+Pompaların üst kuyruğu kalan ⅓ için sabit +%60'tan fazlasını ödemiyor: pompa +%60'ı geçtiğinde genellikle tepeye
+yakın, geri dönüş iz süren çıkışın kazandığını götürüyor. Sabit son TP doğru şekil.
