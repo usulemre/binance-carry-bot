@@ -5618,3 +5618,15 @@ içine kurulur). Lockstep paritesi (CAP_ORTAK=10, bağlayıcı değil) tabanı B
   düşüyor ve motor zararına dolum yazıyordu — gerçekte limit anında piyasadan dolar. Düzeltildi (`_dol`, yalnız TEK_GIRIS).
 - Sonuç: canlı backtest'in getirisini veriyor ama Sharpe −0,11, −%5 altı gün 3 → 6. Canlıyı DİLİM BAŞINA emre
   (her dilimin kendi girişinden ayrı reduceOnly TP/kademe) çevirmek bu farkı geri alır → protokol adayı (madde 482).
+
+## Madde 482 — Dilim başına emir vs tek hesap ortalama giriş PROTOKOL: RED (P %76-85) — canlı ≈ backtest
+Kontrol THTG1 (canlının bugünkü davranışı), aday ZSR15P67 (dilim başına giriş).
+| seviye / hiza | yıllık fark | Sh22 | Sh25 | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 | −3,6 | +0,04 | +0,16 | −0,1 | −2,1 | YYXY | %76,4 |
+| 2.000 $ 1 | +1,5 | +0,13 | +0,11 | −2,0 | +55,0 | YYYY | %84,8 |
+| 3.500 $ 0 | −2,4 | +0,03 | +0,20 | −0,8 | +24,3 | YYYX | %78,5 |
+| 3.500 $ 1 | +0,6 | +0,13 | +0,10 | −1,1 | +29,7 | YYYY | %84,6 |
+Dilim başına emir dört hücrede de Sharpe'ı biraz artırıyor ama getiri farkı ~0 → canlıyı değiştirmeye değmez.
+ÖNEMLİ YAN SONUÇ: canlının tek hesap davranışı backtest getirisini TUTUYOR (fark −3,6..+1,5 puan); motor-canlı
+farkı kâr değil, küçük bir risk farkı (−%5 altı gün birkaç fazla). Bot değişmedi.
