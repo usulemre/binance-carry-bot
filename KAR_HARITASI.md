@@ -6020,3 +6020,9 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
 | 48 sa | −6,1 · −0,07 · +0,8 | −33,4 · −0,22 · −1,3 | −11,2 · −0,14 · +0,4 | +10,6 · −0,01 · +0,4 |
 | 96 sa | +1,7 · −0,02 · 0,0 | −15,2 · −0,13 · −1,0 | +17,8 · +0,12 · +0,7 | −15,5 · −0,08 · 0,0 |
 60 sa 2022-26'da seçilmişti; 2020-21'de de en iyisi (kısa pencereler orada en çok kaybediyor). Pencere ekseni 6 yılda kapalı.
+
+## Madde 517 — T4 üzerinde son TP seviyeleri 6 yılda (kaldıraçsız): +%60 / −%20 YERİNDE
+T4'e karşı (yıllık · Sh · dd) TÜM: long son TP 0,70 −1,2 · −0,06 · −0,1 · 0,50 −12,2 · 0,00 · +0,4 · short son TP 0,25 −6,7 ·
+−0,04 · 0,0 · 0,17 −8,9 · −0,05 · 0,0. Dördü de üç dönemin çoğunda eksi. Kademe payı 0,80'e rağmen son TP optimumu kaymadı.
+ÖZET (madde 506-517, T4 üzerinde, 6 yıl): stop, kademe seviyesi, rezerv, havuz, short sıklığı (32/36/40/72 sa), ağırlık,
+sinyal penceresi, son TP — HEPSİNDE T4 tepede. Bölge kapalı.
