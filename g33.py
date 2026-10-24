@@ -235,6 +235,8 @@ MERD_KAT_ALT=float(os.environ.get("MERD_KAT_ALT","0.05")); MERD_KAT_UST=float(os
 # ayni taraftaki ACIK diger bacaklara mevcut agirlikla orantili eklenir (brut korunur, yeni coin yok).
 # MERD_YAY=2 -> TP ile tam kapananlarin agirligi da ayni sekilde yayilir. 0 = kapali (parite).
 MERD_YAY=int(os.environ.get("MERD_YAY","0"))
+# MADDE 483: kademe sonrasi kalan pay icin iz suren cikis (long KOSUCU, short KOSUCU_S; zirveden geri cekilme orani). 0 = sabit TP (parite).
+KOSUCU=float(os.environ.get("KOSUCU","0")); KOSUCU_S=float(os.environ.get("KOSUCU_S","0"))
 # MADDE 474: KADEME SONRASI DEVIR. 0 = parite (yeniden secilen coin dengelemede tam boya ve yeni girise doner).
 # 1 = tazelenmez (kalan pay ayni giris/TP ile surer, bosalan nakit) · 2 = kademesi dolan coin o dengelemede aday degil.
 MERD_DEVIR=int(os.environ.get("MERD_DEVIR","0"))
@@ -643,6 +645,26 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         _ff = (min(e,_op) if uzun else max(e,_op)) if np.isfinite(_op) else e
                         br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
                         continue
+                if KOSUCU>0 and uzun and merd_yapildi[k]:
+                    # MADDE 483: KOSUCU. Kademe dolduktan sonra kalan pay sabit TP yerine zirveden KOSUCU kadar
+                    # geri cekilince kapanir (onceki barlarin zirvesi -> bar ici bakis yok; acilis gecmisse acilistan).
+                    _pz=zirve[k] if np.isfinite(zirve[k]) else e
+                    _st=_pz*(1-KOSUCU)
+                    if LV[i+1,k]<=_st:
+                        _op=OV[i+1,k]; _ff=min(_st,_op) if np.isfinite(_op) else _st
+                        br[k]=_ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        continue
+                    zirve[k]=max(_pz,HV[i+1,k])
+                    continue
+                if KOSUCU_S>0 and (not uzun) and merd_yapildi[k]:
+                    _pz=zirve[k] if np.isfinite(zirve[k]) else e
+                    _st=_pz*(1+KOSUCU_S)
+                    if HV[i+1,k]>=_st:
+                        _op=OV[i+1,k]; _ff=max(_st,_op) if np.isfinite(_op) else _st
+                        br[k]=_ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        continue
+                    zirve[k]=min(_pz,LV[i+1,k])
+                    continue
                 _tp = (TPL if TPL>=0 else tp) if uzun else (TPS if TPS>=0 else tp)
                 # MADDE 221: oynakliga gore olcekle (nedensel: VOL5[i])
                 _kat = (TPKATL if uzun and TPKATL>=0 else
@@ -682,6 +704,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     mpay[k]=f0+f1; merd[k]=True; merd0_yapildi[k]=True; merd_yapildi[k]=True; say_t[1]+=1
                 elif _hm:
                     br[k]=_dol(_sm,uzun,i,k)/cv[i,k]-1
+                    if KOSUCU>0 or KOSUCU_S>0: zirve[k]=_sm
                     mpay[k]=MERD_PAY; merd[k]=True; merd_yapildi[k]=True; say_t[1]+=1
                     if _m0>0: merd0_yapildi[k]=True   # erken kademe ana kademeden sonra anlamsiz
                 elif _h0:
