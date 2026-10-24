@@ -670,8 +670,9 @@ kontrol("madde 249: ters dolum fiyatı hatası KAYITLI ve felaket boyutunda",
         and "LIMIT" in _ib.__doc__ and "STOP" in _ib.__doc__)
 kontrol("madde 249: motorun ETKİLENMEDİĞİ yazılı ve g33.py gerçekten tam seviyeden dolar",
         "Motor etkilenmedi" in _ib.__doc__
-        and "br[k]=sev/cv[i,k]-1" in open(os.path.join(R, "g33.py"),
-                                          encoding="utf-8").read())
+        and ("br[k]=sev/cv[i,k]-1" in (_g33 := open(os.path.join(R, "g33.py"), encoding="utf-8").read())
+             # madde 481: dolum _dol() üzerinden; parite modunda (TEK_GIRIS=0) _dol tam seviyeyi döner
+             or ("br[k]=_dol(sev,uzun,i,k)/cv[i,k]-1" in _g33 and "if not TEK_GIRIS: return sev" in _g33)))
 kontrol("madde 249: bt() artık STOP konvansiyonunu KULLANMIYOR",
         "min(sev, op)" not in open(os.path.join(R, "arastirma_ikinci_borsa.py"),
                                    encoding="utf-8").read().split("HATA 1")[-1])

@@ -1881,6 +1881,18 @@ alınır (kapanır), kalanı CARRY_KAR_AL_SHORT'ta (−%20). 0 = kapalı. Backte
 (madde 468, long ⅔ @ %45 ile birlikte): yıllık +%233 → +%249, Sharpe 3,66 → 3,83,
 dd −%20,6 → −%17,4, −%5 altı gün 5 → 3."""
 
+SHORT_ARA_SAAT = float(os.getenv("CARRY_SHORT_ARA_SAAT", "0"))
+"""SHORT ARA DENGELEMESİ (madde 493-502). >0 ise her dilimin SHORT tarafı, dilim yenilendikten bu kadar saat
+sonra (ve katlarında, bir sonraki tam yenilemeye kadar) güncel sıralamayla yeniden seçilir; long'lara dokunulmaz.
+Motor karşılığı S_REB (bar = saat/4). 0 = KAPALI (varsayılan). Aday ayar 48 (2 günde bir) + CARRY_SHORT_TAVAN 0,08:
+uzun zeminde (2020-07..2026-09) üç dönemin üçünde önde, canlı gibi giriş + 5 bp ile dört şart 16/16, P %68-82
+(protokol eşiği %95 → RED, KULLANICI KARARI; ADAYLAR.md)."""
+
+SHORT_TAVAN = float(os.getenv("CARRY_SHORT_TAVAN", "0"))
+"""SHORT COIN TAVANI (madde 455-456, 500-502). >0 ise yeni yazılan short hedefleri, coinin TÜM dilimlerdeki toplam
+short büyüklüğü (toplam sermaye × ölçek) × bu oranı aşmayacak şekilde kırpılır (motor CAP_ORTAK + CAP_TARAF=short;
+kırpılan pay dağıtılmaz). 0 = KAPALI (varsayılan)."""
+
 # MADDE 442 — VARSAYILAN PROFİL T60. Madde 429-438'in vardığı ayar varsayılan
 # yapıldı: hacim 70M (CARRY_MIN_VOLUME), yaş 60 (CARRY_MIN_LISTING_DAYS),
 # rezerv 0,10 (CARRY_REZERV), uç hareket eleme kapalı (CARRY_UC_HAREKET=0),
@@ -2772,6 +2784,73 @@ def dilim_durum_yaz(durum: dict, dosya: str = None) -> None:
 DILIM_OLCEK_TAVAN = float(os.getenv("CARRY_DILIM_OLCEK_TAVAN", "1.5"))
 """Bayat dilim hedefi en fazla bu katsayıyla ölçeklenir (madde 205).
 Bakiye çok hızlı düşerse ölçek patlamasın diye güvenlik sınırı."""
+
+
+def _dilim_olcek(durum: dict, anahtar: str, bakiye: float | None) -> float:
+    """toplam_hedef'in dilim ölçeği (madde 205): güncel bakiye / dilimin kurulduğu bakiye."""
+    if bakiye is None or bakiye <= 0:
+        return 1.0
+    try:
+        eski = float((durum.get("dilim_bakiye", {}) or {}).get(str(anahtar)) or 0.0)
+    except (TypeError, ValueError):
+        eski = 0.0
+    if eski <= 0:
+        return 1.0
+    return min(DILIM_OLCEK_TAVAN, max(1.0 / DILIM_OLCEK_TAVAN, bakiye / eski))
+
+
+def short_tavan_kirp(durum: dict, anahtar: str, dilim: dict, bakiye: float, sermaye: float) -> dict:
+    """Dilimin SHORT hedeflerini hesap düzeyi tavana göre kırpar (madde 500). `dilim` saklanan birimde (kurulduğu
+    bakiyede) USD; diğer dilimler güncel ölçeğe çevrilir. Tavan = SHORT_TAVAN × sermaye (toplam, ölçekli)."""
+    if SHORT_TAVAN <= 0 or sermaye <= 0:
+        return dilim
+    lim = SHORT_TAVAN * sermaye
+    o_bu = _dilim_olcek(durum, anahtar, bakiye)
+    diger: dict = {}
+    for k, h in (durum.get("dilimler", {}) or {}).items():
+        if str(k) == str(anahtar):
+            continue
+        ok = _dilim_olcek(durum, k, bakiye)
+        for sem, usd in h.items():
+            if usd < 0:
+                diger[sem] = diger.get(sem, 0.0) + (-usd) * ok
+    out = dict(dilim)
+    for sem, usd in dilim.items():
+        if usd >= 0:
+            continue
+        izin = max(0.0, lim - diger.get(sem, 0.0))
+        if -usd * o_bu > izin:
+            out[sem] = -izin / max(o_bu, 1e-12)
+            if out[sem] == 0:
+                out.pop(sem)
+    return out
+
+
+def short_ara_dengele(durum: dict, sira: int, yeni_dilim: dict, bakiye: float, sermaye: float) -> list:
+    """SHORT ARA DENGELEMESİ (madde 493-502). Bu turda yeni kurulan dilimin short tarafı (güncel sıralama),
+    SHORT_ARA_SAAT'in katı kadar önce kurulmuş dilimlere aktarılır; o dilimlerin long'ları korunur. Güncellenen
+    dilim anahtarlarını döner. Motor: S_REB (ara dengelemede yalnız short değişir, long girişi/kademesi korunur)."""
+    if SHORT_ARA_SAAT <= 0 or N_DILIM <= 1:
+        return []
+    adim = int(round(SHORT_ARA_SAAT / max(1e-9, REBALANCE_HOURS / N_DILIM)))
+    if adim <= 0 or adim >= N_DILIM:
+        return []
+    yeni_s = {s: v for s, v in yeni_dilim.items() if v < 0}
+    if not yeni_s:
+        return []
+    out = []
+    for k in range(adim, N_DILIM, adim):
+        j = str((sira - k) % N_DILIM)
+        eski = (durum.get("dilimler", {}) or {}).get(j)
+        if not eski:
+            continue
+        o = _dilim_olcek(durum, j, bakiye)          # saklanan birime çevir (güncel USD / o)
+        uzun = {s: v for s, v in eski.items() if v > 0}
+        kisa = {s: v / o for s, v in yeni_s.items() if s not in uzun}
+        d = {**uzun, **kisa}
+        durum["dilimler"][j] = short_tavan_kirp(durum, j, d, bakiye, sermaye)
+        out.append(j)
+    return out
 
 
 def toplam_hedef(durum: dict, bakiye: float | None = None) -> dict:
@@ -4044,6 +4123,12 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     durum.setdefault("dilimler", {})[str(sira)] = yeni_dilim
     # madde 205: bu dilimin hangi bakiyeyle kurulduğunu KAYDET
     durum.setdefault("dilim_bakiye", {})[str(sira)] = float(bakiye)
+    # MADDE 500-502: short coin tavanı ve short ara dengelemesi (ikisi de varsayılan KAPALI)
+    if SHORT_TAVAN > 0:
+        durum["dilimler"][str(sira)] = short_tavan_kirp(durum, str(sira), yeni_dilim, bakiye, bakiye * olcek)
+    _ara = short_ara_dengele(durum, sira, yeni_dilim, bakiye, bakiye * olcek)
+    if _ara:
+        logger.info("short ara dengelemesi: %d dilimin short tarafı yenilendi (%s)", len(_ara), ", ".join(_ara))
     durum["sira"] = (sira + 1) % max(1, N_DILIM)
     giris_funding_yaz(durum, yeni_dilim, funding)
     # MADDE 167: kirası kesilmiş bacaklar 5 günü beklemeden bırakılır.
