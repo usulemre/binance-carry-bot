@@ -5990,3 +5990,13 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
 | 3.500 $ 0 / 1 | +10,6 / +12,5 | +0,13 / +0,04 | −0,03 / +0,12 | +0,7 / −0,2 | −14,4 / +22,4 | XYXY / YYYY | %65,2 / %61,5 |
 Muhafazakar varsayımda fark küçülüyor ve düşüş hafif derinleşiyor; sıklık ekseni zaten düzgün değildi (madde 512) →
 gürültü. CARRY_SHORT_ARA_SAAT adayı 48'de KALIR.
+
+## Madde 514 — T4 üzerinde taraf bazlı funding büyüklüğü ağırlığı (SK_TARAF), uzun zemin: RED
+T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26 · eşit oynaklık (TÜM)
+| kol | TÜM | YENİ | 2022-24 | 2025-26 | eşitVol |
+|---|---|---|---|---|---|
+| short ^0,5 | +17,8 · +0,04 · −1,5 | +14,2 · +0,08 · +0,2 | −3,0 · −0,03 · 0,0 | +90,0 · +0,13 · −2,7 | +6,4 |
+| short ^1,0 | +17,8 · −0,02 · −5,4 | +24,9 · +0,13 · 0,0 | −4,1 · −0,04 · −0,4 | +94,3 · −0,02 · −6,6 | −2,7 |
+| long ^0,5 (kontrol) | +44,0 · −0,48 · −3,4 | +54,4 · −0,12 · +0,1 | +8,2 · −0,57 · −1,7 | +120,0 · −0,59 · −3,6 | −103,2 |
+Long'da yine saf gizli kaldıraç (eşitVol −103, Sharpe −0,48). Short ^0,5 en iyi ama 2022-24'te eksi, dd 1,5 derin,
+eşitVol +6 → ön kayıt düştü. Ağırlık ekseni (iki taraf da) kapalı; eşit ağırlık doğru.
