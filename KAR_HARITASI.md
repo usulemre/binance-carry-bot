@@ -5597,3 +5597,10 @@ Tutulan bacaklardaki risk ayarlı üstünlük (madde 477 eki) SEÇİMDE para etm
 aldıkça kitap bozuluyor (DW ↑ → monoton kötü). Kalabalık ölçütü defterin taşıdığı bilgiyi zaten içeriyor ve daha
 temiz. Tek ilginç iz: son çeyrek (Tem-Eyl 2026) dört kolda da tabandan iyi — tek çeyrek, ön kayıt dışı, karar
 vermez. Emir defteri ekseni kapandı.
+
+## Madde 480 — Merdivenli kitapta rastgele ORTAK tarama (24 ayar × 11 düğme, tohum 480): TABAN TEPEDE
+Ön kayıt: IS Sharpe'ına göre seç. IS'te birinci MTR08 (havuz 3, TPL 0,50, TPS 0,25, kademe 0,35/0,12, 96 sa
+sinyal): IS Sh 3,48 vs taban 3,42, ama OOS +242,5 vs +370,8, eşitVol −29,8 → RED. Taban IS'te 2./25, tüm dönem
+Sharpe'ında (3,83) ve yıllıkta (+249,3) 1./25; 24 ayarın hiçbiri eşit oynaklıkta tabanı geçmedi (en yakın MTR18
+−5,3). IS↔OOS Sharpe sıra korelasyonu 0,60 (seçim genelliyor — yani tablo gürültü değil, taban gerçekten tepe).
+Merdivenden sonra bölge yeniden tarandı; düğme ekseni kapalı.
