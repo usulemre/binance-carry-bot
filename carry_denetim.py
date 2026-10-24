@@ -66,7 +66,7 @@ def panel_yukle_temiz(fiyat_dir="data_genis", funding_dir="data_funding_genis"):
         fu[s] = f.drop_duplicates("date").set_index("date").sort_index()["funding"]
 
     C = pd.DataFrame(cl).sort_index()
-    C = C[C.index.year >= 2022]
+    C = C[C.index.year >= int(os.environ.get("BAS_YIL", "2022"))]   # madde 497: uzun geçmiş için 2020
     kol = list(C.columns)
     ham = pd.DataFrame({s: fu[s] for s in kol}).sort_index()
     HACIM = pd.DataFrame({s: hc[s] for s in kol}).reindex(C.index).rolling(6).sum()

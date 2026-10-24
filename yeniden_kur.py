@@ -78,7 +78,10 @@ ZEMIN = "/tmp/zemin.pkl"
 def paneller():
     import carry_denetim as D
     print("panel_yukle_temiz() ...", flush=True)
-    C, SIN, ODE, HAC, YAS, DON = D.panel_yukle_temiz()
+    _ek = os.environ.get("VERI_EK", "")   # madde 497: "uzun" -> data_genis_uzun / data_funding_uzun / data_taker_uzun
+    C, SIN, ODE, HAC, YAS, DON = D.panel_yukle_temiz(
+        fiyat_dir="data_genis_" + _ek if _ek else "data_genis",
+        funding_dir="data_funding_" + _ek if _ek else "data_funding_genis")
     print("  C: %d bar x %d sembol  (%s .. %s)"
           % (len(C), C.shape[1], C.index[0], C.index[-1]), flush=True)
     uy = D.uygunluk(C, HAC, YAS, DON)
@@ -94,7 +97,7 @@ def paneller():
 
     # AKIS paneli: canli formulle birebir (carry_guncel_backtest.panel)
     tb, qv = {}, {}
-    for p in glob.glob(os.path.join(R, "data_taker_genis", "*.csv")):
+    for p in glob.glob(os.path.join(R, ("data_taker_" + os.environ["VERI_EK"]) if os.environ.get("VERI_EK") else "data_taker_genis", "*.csv")):
         s = os.path.basename(p)[:-4]
         if s in C.columns:
             d = pd.read_csv(p, parse_dates=["date"]).set_index("date")
@@ -108,7 +111,7 @@ def paneller():
 
     # OPEN / HIGH / LOW panelleri (motor TP ve takip cikisi icin ister)
     O, H, L = {}, {}, {}
-    for yol in sorted(glob.glob(os.path.join(R, "data_genis", "*_4h.csv"))):
+    for yol in sorted(glob.glob(os.path.join(R, ("data_genis_" + os.environ["VERI_EK"]) if os.environ.get("VERI_EK") else "data_genis", "*_4h.csv"))):
         s = os.path.basename(yol).replace("_4h.csv", "")
         if s not in C.columns:
             continue

@@ -18,7 +18,7 @@ NK = max(4, min(400, int(PEN) + 4))
 bar_h = C.index.values.astype('datetime64[s]').astype(np.int64) / 3600.0
 out = np.full((len(bar_h), len(kol)), np.nan)
 for j, s in enumerate(kol):
-    fy = os.path.join(R, 'data_funding_genis', f'{s}.csv')
+    fy = os.path.join(R, ('data_funding_' + os.environ['VERI_EK']) if os.environ.get('VERI_EK') else 'data_funding_genis', f'{s}.csv')
     if not os.path.exists(fy): continue
     try:
         f = pd.read_csv(fy, parse_dates=['date'])
