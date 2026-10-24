@@ -5727,3 +5727,13 @@ düğmeleri daha fazla oynatmak gürültü avı. Not: aynı tabloda T1, T2'ye g�
 | long 48 / 96 sa | +247,0 · 3,80 · 3 · −3,1 / +243,6 · 3,72 · 4 · −13,2 | +246,5 · 3,91 · 1 · −10,2 / +239,6 · 3,79 · 1 · −24,6 |
 12 kolun hiçbiri tabanını geçmedi; uzun short penceresi IS'i artırıp OOS'u düşürüyor (gürültü). İki tarafın mekanizması
 farklı olsa da aynı 60 sa penceresi ikisinde de optimum.
+
+## Madde 491 — Kademe geri alımı (MERD_GERI, merdivenin ızgara hali): RED — OOS'ta artı, IS'te eksi
+| kol | T1 yıllık · IS · OOS · Sh · −%5 · eşitVol | T2 yıllık · IS · OOS · Sh · −%5 · eşitVol |
+|---|---|---|
+| taban | +249,3 · +182,4 · +370,8 · 3,83 · 3 · — | +256,1 · +191,7 · +371,2 · 4,00 · 1 · — |
+| iki taraf | +253,9 · +179,4 · +393,4 · 3,82 · 5 · −1,9 | +263,3 · +188,0 · +403,5 · 3,99 · 2 · −0,4 |
+| yalnız long | +251,0 · +179,9 · +382,3 · 3,80 · 4 · −3,8 | +258,9 · +188,8 · +386,9 · 3,96 · 2 · −4,5 |
+| yalnız short | +252,2 · +181,9 · +381,7 · 3,85 · 4 · +2,0 | +260,5 · +190,9 · +387,3 · 4,03 · 1 · +4,2 |
+Geri alım getiriyi artırıyor (+2..+7) ama eşit oynaklıkta ~0: tam boya dönmek = daha çok ortalama maruziyet. Fark
+yalnız OOS'ta (+11..+32), IS'te −1..−4 → dönem şansı, kural değil. Tem-Eyl 2026'da dördü de önde (+3..+5) — not.
