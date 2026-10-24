@@ -1,7 +1,7 @@
 /* Ledger: printed trading-journal pages — ink navy, ledger green/red, warm paper */
 :root{
   --kagit:#ffffff; --murekkep:#1d2433; --ikincil:#5b6474; --cizgi:#e3e0d8; --zemin2:#f4f2ed;
-  --t60:#1f5f8b; --eski:#b0894a; --pos:#1d7a4c; --neg:#b3392f;
+  --t60:#1f5f8b; --t1:#1f5f8b; --t2:#7a4fa3; --eski:#b0894a; --pos:#1d7a4c; --neg:#b3392f;
   --serif:"Lora", "DejaVu Serif", serif; --sans:"Inter", "DejaVu Sans", sans-serif;
 }
 @page{size:A4; margin:13mm 13mm 15mm 13mm}
@@ -19,8 +19,7 @@ h3{font-family:var(--serif); font-weight:600; font-size:12pt; margin:16pt 0 4pt}
 .strong{font-weight:600} .muted{color:var(--ikincil)}
 .kpi-buyuk{display:grid; grid-template-columns:repeat(3,1fr); gap:10pt; margin:14pt 0 4pt}
 .kpi-buyuk div{border-top:2.5pt solid var(--murekkep); padding-top:6pt}
-.kpi-buyuk div:first-child{border-color:var(--t60)}
-.kpi-buyuk div:last-child{border-color:var(--eski)}
+.kpi-buyuk .k-t1{border-color:var(--t1)} .kpi-buyuk .k-t2{border-color:var(--t2)} .kpi-buyuk .k-eski{border-color:var(--eski)}
 .kpi-buyuk span{display:block; font-size:7.8pt; color:var(--ikincil); text-transform:uppercase; letter-spacing:.08em}
 .kpi-buyuk b{display:block; font-family:var(--serif); font-size:19pt; font-weight:600; margin:3pt 0 2pt; font-variant-numeric:tabular-nums}
 .kpi-buyuk em{font-style:normal; font-size:8pt; color:var(--ikincil)}
@@ -32,10 +31,14 @@ h3{font-family:var(--serif); font-weight:600; font-size:12pt; margin:16pt 0 4pt}
 .l-eski{fill:none; stroke:var(--eski); stroke-width:1.3}
 .l-eski-ince{fill:none; stroke:var(--eski); stroke-width:1; stroke-dasharray:2 1.5}
 .d-t60{fill:var(--t60)} .d-eski{fill:var(--eski)}
+.l-t1{fill:none; stroke:var(--t1); stroke-width:1.6}
+.l-t2{fill:none; stroke:var(--t2); stroke-width:1.4}
+.l-t2-ince{fill:none; stroke:var(--t2); stroke-width:1; stroke-dasharray:2 1.5}
+.d-t1{fill:var(--t1)} .d-t2{fill:var(--t2)}
 .b-pos{fill:var(--pos); opacity:.85} .b-neg{fill:var(--neg); opacity:.85}
 .lej{font-size:7.8pt; color:var(--ikincil); display:inline-flex; gap:5pt; align-items:center}
 .sw{display:inline-block; width:12pt; height:3pt; margin-left:6pt; vertical-align:middle}
-.sw-t60{background:var(--t60)} .sw-eski{background:var(--eski)}
+.sw-t60{background:var(--t60)} .sw-eski{background:var(--eski)} .sw-t1{background:var(--t1)} .sw-t2{background:var(--t2)}
 table{border-collapse:collapse; width:100%}
 th{font-weight:600; font-size:7.6pt; color:var(--ikincil); text-transform:uppercase; letter-spacing:.06em; text-align:right; padding:4pt 5pt; border-bottom:1pt solid var(--murekkep)}
 th:first-child{text-align:left}
@@ -65,3 +68,4 @@ th:first-child{text-align:left}
 .gunluk td.dt{font-variant-numeric:tabular-nums}
 .gunluk td.gn{color:var(--ikincil); text-align:left; width:30pt}
 .gunluk tr.hs td{background:var(--zemin2)}
+.notlar > span:first-child{white-space:nowrap}
