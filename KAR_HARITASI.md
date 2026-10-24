@@ -5787,3 +5787,20 @@ Long'u sık yenilemek kademe/TP ile boşalan long ağırlığını tam boya geri
 çöküşleri büyür (−%5 altı gün 6 → 29, en kötü gün −%9,8). Getiri kaldıraç gibi; eşit oynaklıkta çok kötü. Short
 tarafında aynı şey olmaması (madde 494) asimetriyi doğruluyor: short kârı tazelikten, long kârı pompadan.
 (Not: LR12SR12 kolu aynı barda çakıştığı için yalnız short ara dengelemesini çalıştırdı = SR12; bilgi değeri yok.)
+
+## Madde 497 — UZUN GEÇMİŞ SINAVI (2020-07 → 2021-12, hiç görülmemiş 18 ay): S_REB12 TUTTU, T2 TUTMADI
+Zemin 2020'den (`indir_uzun_gecmis.py`, VERI_EK=uzun BAS_YIL=2020; 2022+ kısmı eski zeminle birebir). 2021-12 öncesi
+kalabalık oranı yok → seçim funding sırasıyla (her kolda aynı). Kendi tabanına karşı yıllık fark / eşit oynaklık:
+| kol (taban) | YENİ 2020-07..2021-12 | 2022-07..2024 | 2025-26 |
+|---|---|---|---|
+| T1 merdivenli (M0 = merdivensiz) | +8,5 / +8,1 | +25,9 / +31,1 | +50,3 / +72,5 |
+| **T2 (T1)** | **−14,9 / −13,9** | +10,2 / +17,2 | +0,1 / +25,9 |
+| T1 + short her 1 g (T1) | +62,2 / +8,9 | +32,3 / +21,4 | +295,0 / +183,8 |
+| **T1 + short her 2 g (T1)** | **+56,8 / +35,0** | **+29,8 / +22,2** | **+164,8 / +115,8** |
+| T2 + short her 1 g (T2) | −36,3 / −27,9 | −6,7 / −4,1 | +220,6 / +164,3 |
+YENİ dönem mutlak (yıllık · Sh · dd · en kötü gün): T1 +255,6 · 3,95 · −16,4 · −13,58 · T1+SR12 +312,4 · 4,20 · −21,6 ·
+−8,86 · T2 +240,7 · 3,83 · −16,5 · −14,69.
+- Ön kayda göre: **merdiven yeni dönemde tuttu** (küçük, +8). **S_REB12 üç bağımsız dönemin ÜÇÜNDE de** tabanı yıllıkta
+  ve eşit oynaklıkta geçiyor → "2025-26 rejimi" açıklaması yanlıştı; madde 495'teki düşük P, 2022-24'ün tek başına
+  zayıf gücünden. **T2 yeni dönemde TUTMADI** (−15 / −14) → "2022-26'ya özel" (kayıtlı 2. aday statüsü kullanıcıya bildirilir).
+- → madde 498: S_REB12 uzun zeminde TAM PROTOKOL (canlı gibi giriş + 5 bp, iki seviye, iki hiza).
