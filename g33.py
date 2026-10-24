@@ -243,6 +243,9 @@ MERD_KAT_ALT=float(os.environ.get("MERD_KAT_ALT","0.05")); MERD_KAT_UST=float(os
 # ayni taraftaki ACIK diger bacaklara mevcut agirlikla orantili eklenir (brut korunur, yeni coin yok).
 # MERD_YAY=2 -> TP ile tam kapananlarin agirligi da ayni sekilde yayilir. 0 = kapali (parite).
 MERD_YAY=int(os.environ.get("MERD_YAY","0"))
+# MADDE 491: MERD_GERI=1 -> kademe sonrasi fiyat girise donunce satilan pay geri alinir, kademe yeniden kurulur. 0 = parite.
+MERD_GERI=int(os.environ.get("MERD_GERI","0"))
+MERD_GERI_TARAF=os.environ.get("MERD_GERI_TARAF","iki").strip()
 # MADDE 483: kademe sonrasi kalan pay icin iz suren cikis (long KOSUCU, short KOSUCU_S; zirveden geri cekilme orani). 0 = sabit TP (parite).
 KOSUCU=float(os.environ.get("KOSUCU","0")); KOSUCU_S=float(os.environ.get("KOSUCU_S","0"))
 # MADDE 474: KADEME SONRASI DEVIR. 0 = parite (yeniden secilen coin dengelemede tam boya ve yeni girise doner).
@@ -594,7 +597,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
         gec=np.isfinite(cv[i])&np.isfinite(cv[i+1])
         br=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0); br=np.nan_to_num(br)
         cik=np.zeros(nk,bool); yaridan=np.zeros(nk,bool)
-        merd=np.zeros(nk,bool); mpay=np.zeros(nk)
+        merd=np.zeros(nk,bool); mpay=np.zeros(nk); _gx=np.zeros(nk); _gw=np.zeros(nk)
         if TEK_GIRIS:
             _REG[bas]=(poz,giris)
             _Pw=np.zeros(nk); _Pe=np.zeros(nk)
@@ -652,6 +655,18 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         _op = OV[i+1,k]
                         _ff = max(_s24s,_op) if np.isfinite(_op) else _s24s
                         br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        continue
+                if MERD_GERI and merd_yapildi[k] and not merd0_yapildi[k] and (MERD_GERI_TARAF=='iki' or (MERD_GERI_TARAF=='long')==uzun):
+                    # MADDE 491: KADEME GERI ALIMI. Kademe sattiktan sonra fiyat girise donerse satilan pay girisle
+                    # GERI alinir (bekleyen limit; acilis gecmisse acilistan) ve kademe yeniden kurulur -> pompa-dump
+                    # salinimini tekrar tekrar hasat eder. Funding de tam boyda toplanmaya devam eder.
+                    _vg = (LV[i+1,k] <= e) if uzun else (HV[i+1,k] >= e)
+                    if _vg:
+                        _op = OV[i+1,k]
+                        _fg = (min(e,_op) if uzun else max(e,_op)) if np.isfinite(_op) else e
+                        _dw = abs(poz[k])*MERD_PAY/(1-MERD_PAY)
+                        _gx[k] = np.sign(poz[k])*_dw*(cv[i+1,k]/_fg-1); _gw[k] = np.sign(poz[k])*_dw
+                        merd_yapildi[k] = False; say_t[1]+=1
                         continue
                 if MERD_BE and merd_yapildi[k]:
                     _vbe = (LV[i+1,k] <= e) if uzun else (HV[i+1,k] >= e)
@@ -769,6 +784,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
             kapanis=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0)
             br=np.where(yaridan,0.5*br+0.5*np.nan_to_num(kapanis),br)
         r=np.nansum(poz*br)+np.nansum(np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1])))
+        if MERD_GERI and _gw.any():
+            r+=float(np.nansum(_gx)-np.nansum(_gw*np.nan_to_num(fv[i+1])))
         if _GK_YOL and C.index[i+1]>=_GK_BAS:
             _gd=C.index[i+1].normalize()
             _fu=np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1]))
@@ -778,6 +795,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
         eq.append(eq[-1]*(1+r))
         if AGIRLIK_KAYMA:
             poz=poz*(1.0+np.nan_to_num(br))/(1.0+r)
+        if MERD_GERI and _gw.any():
+            poz=poz+_gw; eq[-1]*=1-np.abs(_gw).sum()*KOM
         if merd.any():
             eq[-1]*=1-np.abs(poz[merd]*mpay[merd]).sum()*KOM
             if MERD_YAY: _bos=poz*merd*mpay
