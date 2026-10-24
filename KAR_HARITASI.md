@@ -5741,3 +5741,15 @@ yalnız OOS'ta (+11..+32), IS'te −1..−4 → dönem şansı, kural değil. Te
 ## Madde 492 — Ekim 2026 OOS izleme listesi (ön kayıt, `izleme_ekim_oos.py`)
 Tek dönem şansını yeni deneme yapmadan ayırmak için: Tem-Eyl 2026'da önde görünen kollar (491 geri alım, 488 MS18,
 479 defter) + T1/T2 Ekim verisinde bir kez koşulacak. Kural dosyada; Kasım başı.
+
+## Madde 493 — Short ara dengelemesi (S_REB): BÜYÜK SIÇRAMA — ama önce gerçekçilik denetimi (madde 494)
+| kol | T1 yıllık · IS · OOS · Sh · dd · en kötü · −%5 · eşitVol | T2 yıllık · Sh · dd · en kötü · −%5 · eşitVol |
+|---|---|---|
+| taban | +249,3 · +182,4 · +370,8 · 3,83 · −17,4 · −5,45 · 3 · — | +256,1 · 4,00 · −13,4 · −5,53 · 1 · — |
+| short her 1 g | +349,2 · +209,5 · +657,7 · 4,21 · −16,3 · −7,17 · 6 · +59,4 | +318,0 · 4,35 · −13,6 · −5,60 · 1 · +47,8 |
+| short her 2 g | +305,9 · +204,5 · +507,6 · 4,11 · −15,7 · −6,20 · 3 · +38,7 | +292,1 · 4,27 · −15,6 · −4,55 · 0 · +33,5 |
+| short her 3 g | +300,8 · +206,8 · +483,5 · 4,14 · −14,4 · −5,82 · 3 · +41,1 | +293,3 · 4,28 · −15,9 · −4,50 · 0 · +34,8 |
+Atıf (T1, hz0, puan/yıl): short fiyat +17,6 → +29,3, short kâr-al +29,6 → +48,8, funding ~aynı. Kazanç SHORT FİYATINDAN.
+ŞÜPHE: ara dengelemede devam eden short'un girişi (ve TP/kademe) güncel fiyata SIFIRLANIYOR — kademe tekrar tekrar
+hasat ediliyor olabilir. Canlı bot devam eden pozisyonun entryPrice'ını sıfırlamaz. Ayrıca devir maliyeti 2 bp ile
+modellendi. → madde 494: TEK_GIRIS=1 (canlı gibi giriş) ve KOM 5 bp / 10 bp ile yeniden.
