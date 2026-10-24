@@ -64,6 +64,20 @@ k = cb.short_tavan_kirp(d, "2", {"A": -30.0}, 1000.0, 1000.0)
 kontrol("tavan dolmuşsa coin dilimden çıkar", "A" not in k, k)
 
 cb.SHORT_ARA_SAAT = 0.0; cb.SHORT_TAVAN = 0.0
+
+print("6) preflight profilleri (alt süreç, temiz ortam)")
+import os, subprocess
+def _pf(env):
+    kod = ("import carry_preflight as p; p.kontrol_ayarlar(); "
+           "print('HATA_SAYISI', sum(1 for a,d,m in p._satirlar if d=='HATA'))")
+    e = {k: v for k, v in os.environ.items() if not k.startswith("CARRY_")}; e.update(env)
+    o = subprocess.run([sys.executable, "-c", kod], capture_output=True, text=True, env=e).stdout
+    return int(o.split("HATA_SAYISI")[-1].strip() or -1)
+kontrol("T60 varsayılan: HATA yok", _pf({}) == 0)
+kontrol("T3 tam ayarla: HATA yok", _pf({"CARRY_PROFIL": "T3", "CARRY_SHORT_ARA_SAAT": "48", "CARRY_SHORT_TAVAN": "0.08",
+                                        "CARRY_MERDIVEN_PAY": "0.80"}) == 0)
+kontrol("T3 ayarsız: HATA", _pf({"CARRY_PROFIL": "T3"}) > 0)
+kontrol("T60 + T3 düğmeleri profilsiz açık: HATA", _pf({"CARRY_SHORT_ARA_SAAT": "48"}) > 0)
 print()
 if basarisiz:
     print(f"BAŞARISIZ: {len(basarisiz)} -> {basarisiz}"); sys.exit(1)

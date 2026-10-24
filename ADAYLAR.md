@@ -34,4 +34,4 @@ Bota eklendi (varsayılan KAPALI): açmak için `.env`'e `CARRY_SHORT_ARA_SAAT=4
 ### Güncelleme (madde 503-505): T3'ün son hali = T1 + short 2 g + short tavan %8 + **kademe payı 0,80**
 Kademe payı 0,80, T3 üzerinde uzun zemin protokolünde **AYAR** (P %97-99, madde 504): yıllık ~+10, Sharpe ↑, düşüş aynı.
 T1 (canlı) üzerinde tek başına RED (P %60-87, madde 505) → yalnız T3 ile birlikte açılmalı.
-Açmak için `.env`: `CARRY_SHORT_ARA_SAAT=48`, `CARRY_SHORT_TAVAN=0.08`, `CARRY_MERDIVEN_PAY=0.80`.
+Açmak için `.env`: `CARRY_PROFIL=T3`, `CARRY_SHORT_ARA_SAAT=48`, `CARRY_SHORT_TAVAN=0.08`, `CARRY_MERDIVEN_PAY=0.80` (preflight T3 profili bu dördünü birlikte bekler; biri eksikse HATA).
