@@ -6031,3 +6031,12 @@ sinyal penceresi, son TP — HEPSİNDE T4 tepede. Bölge kapalı.
 T4'e karşı (yıllık · Sh · dd) TÜM: hacim 50M −21,2 · −0,16 · −3,4 · hacim 100M −29,1 · −0,19 · −1,0 · yaş 90 −49,6 · −0,25 ·
 +0,7 · pompa filtresi 0,40 −21,3 · −0,05 · 0,0. Dördü de RED; 2025-26 en çok kaybeden dönem (yaş 90 −152, 100M −122, pompa
 filtresi −93). Evren ekseni 6 yılda kapalı.
+
+## Madde 519 — Maliyet stresi T4 vs T1 (canlı gibi giriş, uzun zemin, 2.000 $, iki hiza ort.): T4 ~29 bp'ye kadar önde
+| maliyet (işlem başı) | T1 yıllık · Sh · dd | T4 yıllık · Sh · dd | fark |
+|---|---|---|---|
+| 5 bp | +234,0 · 3,59 · −16,8 | +312,2 · 4,24 · −15,2 | +78,2 |
+| 10 bp | +218,3 · 3,45 · −17,5 | +279,2 · 4,01 · −16,1 | +60,9 |
+| 15 bp | +203,4 · 3,32 · −18,2 | +248,9 · 3,77 · −17,0 | +45,5 |
+Fark her 5 bp'de ~16 puan eriyor → doğrusal uzatmayla T4 = T1 noktası ~29 bp. Maker (2 bp) + makul kayma bölgesinde T4 rahat
+önde; Sharpe ve dd her maliyette T4 lehine. Demo hesapta ölçülecek gerçek dolum maliyeti bu eşikle karşılaştırılmalı.
