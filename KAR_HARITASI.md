@@ -5664,3 +5664,21 @@ yoğunlaşmanın riskini değiştirmemiş; "bacak azaltmak = kaldıraç" yasası
 - Üç küçük eksen (kademe payı, short tavanı, short bacak sayısı) FARKLI şeyleri düzeltiyor ve eşit riskte üstüne
   ekleniyor: tek tek +6..+9 → üçü birlikte +19,2; Sharpe 3,83 → 4,00, dd −17,4 → −13,4, −%5 altı gün 3 → 1.
   E08 dördüncü olarak eklenince bozuyor (aynı short riskini ikinci kez kesiyor). → madde 486 protokol.
+
+## Madde 486 — Birleşim protokolü: İKİSİ DE RED (P %72-88) — yön 8/8 hücrede aynı, kanıt eşiğe yetmiyor
+Kontrol ZSR15P67 (canlı).
+| aday | seviye / hiza | yıllık fark | Sh22 | Sh25 | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|---|
+| P80+CAP+A43 | 2.000 $ 0 | +7,3 | +0,20 | +0,11 | −3,6 | +155,2 | YYYY | %78,3 |
+| | 2.000 $ 1 | +6,3 | +0,15 | +0,18 | −3,6 | +148,4 | YYYY | %86,4 |
+| | 3.500 $ 0 | +5,7 | +0,13 | +0,14 | −0,0 | +6,0 | YYYY | %76,1 |
+| | 3.500 $ 1 | −0,9 | +0,11 | +0,08 | −3,6 | +142,0 | YYYX | %77,3 |
+| P80+A43 | 2.000 $ 0 | +17,7 | +0,10 | +0,14 | −2,1 | +90,1 | YYYY | %72,7 |
+| | 2.000 $ 1 | +19,4 | +0,08 | +0,19 | −1,7 | +73,4 | YYYY | %88,0 |
+| | 3.500 $ 0 | +20,9 | +0,05 | +0,23 | +1,1 | −13,2 | YYXY | %75,2 |
+| | 3.500 $ 1 | +14,9 | +0,08 | +0,13 | −1,9 | +80,3 | YYYY | %79,4 |
+- Sharpe 16/16 hücrede iki dönemde de artıyor, dört şart 14/16; ama getiri farkı küçük ve eşli fark gürültülü
+  (merdivenden farklı olarak bu kollar SEÇİLEN coinleri de değiştiriyor) → P %95'e çıkmıyor (madde 434'ün güç
+  sınırı). Ayrıca birleşim sonuç görüldükten sonra kuruldu (seçim yanlılığı). AYAR DEĞİŞMEDİ.
+- Kayıtlı durum: "güçlü aday, protokolde RED" — madde 456 gibi KULLANICI KARARI. Bot'a eklenecekse iki yeni
+  düğme gerekir (short bacak sayısı, short coin tavanı); pay 0,80 mevcut CARRY_MERDIVEN_PAY.
