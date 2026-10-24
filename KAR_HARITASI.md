@@ -5982,3 +5982,11 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
 | **40 sa (SR10)** | **+17,1 · +0,12 · −0,2** | +63,1 · +0,24 · 0,0 | +1,6 · +0,04 · −0,8 | +19,8 · +0,11 · 0,0 → ADAY |
 40 sa: dd neredeyse aynı (−14,5), ön kayıt geçti; SR8-SR10 arası düzgün değil (32 sa kötü) → plato değil, dikkat.
 → madde 513: T4 + 40 sa vs T4, uzun zemin protokol.
+
+## Madde 513 — T4 short yenileme 48 → 40 sa, uzun zemin protokol (canlı gibi giriş + 5 bp): RED (P %52-65)
+| seviye / hiza | yıllık fark | Sh (≤2024) | Sh (2025+) | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 / 1 | +12,5 / +13,5 | +0,15 / +0,06 | −0,01 / +0,10 | +0,9 / +0,4 | −20,8 / −2,0 | XYXY / YYXY | %58,3 / %51,8 |
+| 3.500 $ 0 / 1 | +10,6 / +12,5 | +0,13 / +0,04 | −0,03 / +0,12 | +0,7 / −0,2 | −14,4 / +22,4 | XYXY / YYYY | %65,2 / %61,5 |
+Muhafazakar varsayımda fark küçülüyor ve düşüş hafif derinleşiyor; sıklık ekseni zaten düzgün değildi (madde 512) →
+gürültü. CARRY_SHORT_ARA_SAAT adayı 48'de KALIR.
