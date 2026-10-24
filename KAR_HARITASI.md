@@ -5962,3 +5962,13 @@ Rezerv yine saf DOZ düğmesi (Sharpe sabit, getiri/dd birlikte oynuyor — madd
   geçti, ikisi %89,6-92,5. Protokol (iki hizanın İKİSİ de) → RED, ama bugüne kadarki en yakın paket. Sh (≤2024) farkının
   büyüğü evren tabanından (2020'de kitap işlem yapamıyordu) — o parça canlıda yalnız piyasa daralırsa devreye girer.
 - KULLANICI KARARI; kanıt: 6 yıl, 3 dönem, muhafazakar maliyet, dört şart 16/16, P 2/4 hücrede ≥ %95.
+
+## Madde 511 — T4 üzerinde short yenileme sıklığı, uzun zemin: 1,5 g ADAY
+T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
+| kol | TÜM | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| her 1 g (SR6) | −4,3 · −0,09 · −1,4 | −77,0 · −0,37 · −3,2 | −4,2 · −0,05 · −0,2 | +53,9 · +0,07 · +1,2 |
+| **1,5 g (SR9)** | **+23,0 · +0,15 · −0,9** | +41,8 · +0,17 · −0,3 | +2,9 · +0,06 · −0,2 | +56,0 · +0,20 · +2,2 → ADAY |
+| 3 g (SR18) | +4,8 · +0,08 · +1,3 | +43,9 · +0,31 · −0,6 | +1,0 · +0,01 · +1,0 | −7,4 · +0,06 · +1,6 |
+T4+SR9 mutlak: +353,7 / Sh 4,59 / dd −15,2 / en kötü −11,18 / −%5 altı 3. Bot 8 sa'te bir döndüğü için 36 sa birebir yok
+(32 sa = 4 tur, 40 sa = 5 tur) → madde 512: uygulanabilir komşular SR8 / SR10 önce elekte.
