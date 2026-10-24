@@ -5883,3 +5883,13 @@ T3'e karşı (yıllık · Sh · dd farkı) — TÜM 2020-07..2026-09 | YENİ 202
 | GS (short geri alım) | +1,2 · +0,01 · +0,1 | −2,1 · −0,02 · +0,1 | −2,5 · −0,02 · 0,0 | +15,5 · +0,07 · +0,3 |
 - T2'nin 2020-21 başarısızlığının kaynağı A43 (yalnız 2025-26'da işe yarıyor) — P80 ise üç dönemin üçünde küçük ama tutarlı
   artı, düşüş değişmiyor (yalnız çıkış değişiyor, aynı coinler → düşük gürültü, merdiven gibi). → madde 504: T3+P80 vs T3 protokol.
+
+## Madde 504 — T3 + kademe payı 0,80 vs T3, uzun zemin protokol: **AYAR** (4/4, P %97,3-99,2)
+| seviye / hiza | yıllık fark | Sh (≤2024) | Sh (2025+) | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 | +10,7 | +0,07 | +0,13 | 0,0 | +10,6 | YYYY | %97,3 |
+| 2.000 $ 1 | +9,7 | +0,07 | +0,16 | 0,0 | +11,0 | YYYY | %99,2 |
+| 3.500 $ 0 | +10,7 | +0,06 | +0,15 | −0,1 | +12,4 | YYYY | %97,5 |
+| 3.500 $ 1 | +10,4 | +0,07 | +0,17 | −0,4 | +23,2 | YYYY | %98,9 |
+Canlı gibi giriş + 5 bp, 6 yıl. Merdiven gibi yalnız çıkışı değiştirdiği için eşli fark gürültüsü düşük → P yüksek.
+T3 üzerinde AYAR; T3'ün kendisi kullanıcı kararı. T1 (canlı) üzerinde aynı soru → madde 505.
