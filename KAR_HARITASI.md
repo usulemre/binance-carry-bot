@@ -5902,3 +5902,17 @@ T3 üzerinde AYAR; T3'ün kendisi kullanıcı kararı. T1 (canlı) üzerinde ayn
 T1 üzerinde etki yarıya iniyor ve hiza 0'da düşüş biraz derin → RED. Kademe payını artırmak, short tarafı sık yenilenen
 (T3) kitapta daha değerli: long kârı daha çok kilitlenirken short tarafı taze kalıyor. CARRY_MERDIVEN_PAY DEĞİŞMEDİ (0,667).
 **T3'ün son hali (aday): T1 + CARRY_SHORT_ARA_SAAT 48 + CARRY_SHORT_TAVAN 0,08 + CARRY_MERDIVEN_PAY 0,80.**
+
+## Madde 506 — T3f (T3 + kademe payı 0,80) üzerinde 24 sa stop ve long kademe seviyesi, uzun zemin: T3f YERİNDE
+T3f'ye karşı (yıllık · Sh · dd farkı) — TÜM | YENİ 2020-21 | 2022-24 | 2025-26; ve tüm dönem en kötü gün / −%5 altı:
+| kol | TÜM | YENİ | 2022-24 | 2025-26 | en kötü · −%5 |
+|---|---|---|---|---|---|
+| T3f | — | — | — | — | −11,69 · 3 |
+| 24 sa stop KAPALI | +8,0 · −0,01 · −1,4 | +26,0 · +0,32 · 0,0 | −1,8 · −0,11 · 0,0 | +38,9 · 0,00 · +0,3 | **−6,76 · 8** |
+| stop −%35 | −23,4 · −0,10 · 0,0 | −40,1 | −9,3 | −50,6 | −6,91 · 3 |
+| long kademe +%40 | −12,9 · −0,01 · 0,0 | −18,8 | −8,3 | −21,0 | −11,69 · 3 |
+| long kademe +%50 | +5,3 · −0,03 · −0,1 | +17,7 | −1,1 | +4,4 | −11,69 · 5 |
+- Hiçbiri ön kaydı geçmedi → T3f ayarları yerinde (stop −%45, kademe +%45).
+- 24 SA STOP'UN İKİ YÜZÜ (kullanıcının sorusu, 6 yıl): stop −%5 altı gün sayısını 8 → 3'e indiriyor (asıl işi bu), ama
+  TEK en kötü günü (2021-05-19) KÖTÜLEŞTİRİYOR: −6,76 → −11,69 — ani çöküşte dipte satıp sıçramayı kaçırıyor. Getiri
+  etkisi ~0 (Sh −0,01). Stop "en kötü günü kesen" değil, "kötü gün SAYISINI azaltan" kalkan.
