@@ -5950,3 +5950,15 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
 | havuz 3 | −23,5 · −0,25 · −1,8 | 0 (ls verisi yok) | −13,8 · −0,12 · −0,6 | −79,7 · −0,69 · 0,0 |
 | havuz 5 | −6,3 · −0,02 · +0,8 | 0 | −3,9 · −0,07 · +0,4 | −17,8 · +0,02 · 0,0 |
 Rezerv yine saf DOZ düğmesi (Sharpe sabit, getiri/dd birlikte oynuyor — madde 192 6 yılda da doğru); havuz 4 yerinde.
+
+## Madde 510 — PAKET PROTOKOLÜ T4 vs T1 (canlı), uzun zemin, canlı gibi giriş + 5 bp: dört şart 16/16, P %89,6-96,2 → RED (sınırda)
+| seviye / hiza | yıllık fark | Sh (≤2024) | Sh (2025+) | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 | +86,5 | +0,76 | +0,46 | −1,6 (sığ) | +153,0 | YYYY | %92,5 |
+| 2.000 $ 1 | +69,5 | +0,67 | +0,48 | −3,7 | +248,1 | YYYY | **%96,2** |
+| 3.500 $ 0 | +79,3 | +0,67 | +0,60 | −2,8 | +191,9 | YYYY | %89,6 |
+| 3.500 $ 1 | +73,4 | +0,68 | +0,65 | −3,8 | +254,6 | YYYY | **%95,7** |
+- Yıllık +70..+87 puan, Sharpe her iki dönemde +0,46..+0,76, düşüş her hücrede 1,6-3,8 puan SIĞ. Dört hücrenin ikisi %95'i
+  geçti, ikisi %89,6-92,5. Protokol (iki hizanın İKİSİ de) → RED, ama bugüne kadarki en yakın paket. Sh (≤2024) farkının
+  büyüğü evren tabanından (2020'de kitap işlem yapamıyordu) — o parça canlıda yalnız piyasa daralırsa devreye girer.
+- KULLANICI KARARI; kanıt: 6 yıl, 3 dönem, muhafazakar maliyet, dört şart 16/16, P 2/4 hücrede ≥ %95.

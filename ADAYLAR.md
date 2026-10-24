@@ -40,3 +40,9 @@ Açmak için `.env`: `CARRY_PROFIL=T3`, `CARRY_SHORT_ARA_SAAT=48`, `CARRY_SHORT_
 `CARRY_EVREN_MIN=30` (bota eklendi, varsayılan KAPALI): 70M eşiği 30'dan az coin bırakırsa evren hacim sırasıyla 30'a
 tamamlanır (20M taban). 2022-26'da T3f ile ~aynı (devreye nadiren girer); 2020'de (eşik ~5 coin bırakıyordu) kitabı
 çalıştırıyor: 6 yılda yıllık +52, Sharpe +0,33, dd 2 puan sığ. Ön kayıt 2022-24'te −1,0 ile kıl payı düştü.
+
+## PAKET T4 (madde 510) — tümü birlikte, canlıya karşı
+T4 = T1 + short 2 g + short tavan %8 + kademe payı 0,80 + evren tabanı 30. Uzun zemin protokolü (canlı gibi giriş + 5 bp):
+yıllık +70..+87 puan, Sharpe +0,46..+0,76, düşüş 1,6-3,8 puan sığ, dört şart 16/16, P %89,6 / 92,5 / 95,7 / 96,2 → RED
+(sınırda; en yakın paket). `.env`: CARRY_PROFIL=T3, CARRY_SHORT_ARA_SAAT=48, CARRY_SHORT_TAVAN=0.08, CARRY_MERDIVEN_PAY=0.80,
+CARRY_EVREN_MIN=30.
