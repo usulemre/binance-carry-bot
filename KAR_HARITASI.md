@@ -5939,3 +5939,14 @@ T3f'ye karşı (yıllık · Sh · dd): TÜM | YENİ 2020-21 | 2022-24 | 2025-26
 - Yorum: bu bir kâr kuralı değil, SİGORTA — piyasa daralırsa botun durmasını önler (2026 ortalama uygun 38'e inmişti).
   N30 2022-26'da maliyetsiz. KULLANICI KARARI (bota henüz eklenmedi; canlıda eşdeğeri: evren_sec'te 70M'yi geçen coin
   30'dan azsa hacim sırasıyla 30'a tamamla, 20M tabanla).
+
+## Madde 509 — T4 (= T3f + evren tabanı 30) üzerinde rezerv ve havuz, uzun zemin: T4 YERİNDE
+T4: +330,8 / Sh 4,45 / dd −14,3 / en kötü −11,69 / −%5 altı 2 (T1: +240,5 / 3,73 / −16,4 / −13,58 / 7).
+T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
+| kol | TÜM | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| rezerv 0,05 | +14,1 · −0,02 · −0,1 | +54,5 · −0,01 · −0,7 | +7,9 · −0,02 · −0,8 | +6,4 · −0,02 · +0,3 |
+| rezerv 0,15 | −21,8 · +0,03 · +0,6 | −48,3 · +0,05 · +0,4 | −11,9 · +0,01 · +0,8 | −34,9 · +0,01 · +0,4 |
+| havuz 3 | −23,5 · −0,25 · −1,8 | 0 (ls verisi yok) | −13,8 · −0,12 · −0,6 | −79,7 · −0,69 · 0,0 |
+| havuz 5 | −6,3 · −0,02 · +0,8 | 0 | −3,9 · −0,07 · +0,4 | −17,8 · +0,02 · 0,0 |
+Rezerv yine saf DOZ düğmesi (Sharpe sabit, getiri/dd birlikte oynuyor — madde 192 6 yılda da doğru); havuz 4 yerinde.
