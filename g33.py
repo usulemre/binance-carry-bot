@@ -586,7 +586,10 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         if AG_KIRP>0:
                             iy=np.minimum(iy,AG_KIRP*iy.mean())
                         return iy/iy.sum()
-                    y[lo]=taban*_agb(lo); y[sh]=-taban*_agb(sh)
+                    # MADDE 514: SK_TARAF=short/long -> buyukluk agirligi yalniz o tarafta (diger taraf esit). Bos -> iki taraf (parite).
+                    _skt=os.environ.get("SK_TARAF","iki")
+                    y[lo]=taban*(_agb(lo) if _skt in ("iki","long") else np.full(len(lo),1.0/len(lo)))
+                    y[sh]=-taban*(_agb(sh) if _skt in ("iki","short") else np.full(len(sh),1.0/len(sh)))
                 elif AGIRLIK in ("vol","volduz"):
                     # MADDE 251: her bacak esit RISK tasisin, esit PARA degil.
                     # Taraf basina normalize -> taraf notrlugu ve brut AYNEN korunur.
