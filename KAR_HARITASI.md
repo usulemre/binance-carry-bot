@@ -5717,3 +5717,13 @@ IS Sh 3,71 vs T2 3,60, ama OOS +298,7 vs +371,2, eşitVol −43,1 → RED. T2 IS
 (önündekiler Q12 +284 / Q10 +277 — ikisi de eşitVol −15/−30: kaldıraç). Eşit oynaklıkta T2'yi geçen tek ayar Q03
 (+4,1, Sh 4,04, dd −12,4) — eşik altı. IS↔OOS Sharpe sıra korelasyonu **−0,38**: bu bölgede IS seçimi GENELLEMİYOR —
 düğmeleri daha fazla oynatmak gürültü avı. Not: aynı tabloda T1, T2'ye göre eşit oynaklıkta −20,5.
+
+## Madde 490 — Taraf bazlı sinyal penceresi (SK_DOSYA_S, yeni yapı): RED — 60 sa iki taraf için de doğru
+| kol | T1 yıllık · Sh · −%5 · eşitVol | T2 yıllık · Sh · −%5 · eşitVol |
+|---|---|---|
+| taban | +249,3 · 3,83 · 3 · — | +256,1 · 4,00 · 1 · — |
+| short 24 / 36 sa | +240,9 · 3,75 · 3 · −9,9 / +245,8 · 3,78 · 4 · −5,8 | +249,0 · 3,89 · 2 · −12,5 / +252,1 · 3,93 · 1 · −7,5 |
+| short 96 / 144 sa | +250,0 · 3,83 · 2 · 0,0 / +246,2 · 3,79 · 3 · −5,0 | +244,0 · 3,90 · 2 · −11,1 / +245,9 · 3,92 · 1 · −8,7 |
+| long 48 / 96 sa | +247,0 · 3,80 · 3 · −3,1 / +243,6 · 3,72 · 4 · −13,2 | +246,5 · 3,91 · 1 · −10,2 / +239,6 · 3,79 · 1 · −24,6 |
+12 kolun hiçbiri tabanını geçmedi; uzun short penceresi IS'i artırıp OOS'u düşürüyor (gürültü). İki tarafın mekanizması
+farklı olsa da aynı 60 sa penceresi ikisinde de optimum.
