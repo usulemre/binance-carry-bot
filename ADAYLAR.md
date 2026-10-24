@@ -23,3 +23,8 @@ short kademe −%18 (madde 488), short ara dengelemesi S_REB 1 g / 2 g (madde 49
 Şu anki bot + short tarafı her 2 günde bir yeniden seçilir (long'lar 5 günde bir). 2020-21 / 2022-24 / 2025-26 üç dönemin
 üçünde de yıllık ve Sharpe'ta önde (madde 497), canlı gibi giriş + 5 bp maliyette de (madde 494). AMA en büyük düşüş
 ~5 puan derin (2021 çöküşü) → uzun zemin protokolü RED, P %49-74 (madde 498). Getiri +46..+61 puan/yıl (muhafazakar).
+
+## T1 + short 2 g'de bir + short tavan %8 (madde 500-501) — EN GÜÇLÜ kullanıcı kararı adayı
+6 yıllık uzun zeminde (2020-07..2026-09) üç dönemin üçünde önde; canlı gibi giriş + 5 bp ile protokolde dört şart 16/16
+hücrede GEÇTİ, düşüş her hücrede sığ, yalnız P %68-82 (eşik %95). Getiri +17..+26 puan/yıl (muhafazakar), Sharpe
++0,13..+0,47, −%5 altı gün 7 → 3, en kötü gün −13,6 → −11,6 (uzun zemin, standart model).

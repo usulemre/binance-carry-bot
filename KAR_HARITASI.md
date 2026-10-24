@@ -5844,3 +5844,16 @@ o olayı yakalamıyor (coin özelinde sıkışma). En kötü GÜN ise her S_REB 
   −11,6, Sharpe +0,31, ÜÇ dönemin üçünde de yıllıkta önde. Ön kayıt: dd şartı GEÇTİ; "kazancın ≥ yarısı" Sharpe'ta geçti
   (+0,31 ≥ +0,19), yıllıkta KIL PAYI kaldı (+29,9 < +33,8) — şeffaf not. Tavan tek başına ~0 (kontrol) → etki BİRLEŞİMDEN.
 - → madde 501: SR12+CAP8 uzun zeminde TAM PROTOKOL (canlı gibi giriş + 5 bp, iki seviye, iki hiza).
+
+## Madde 501 — T1 + short 2 g'de bir + short tavan %8, UZUN ZEMİN PROTOKOLÜ: dört şart 4/4 hücrede, P %68-82 → RED (yalnız P)
+| seviye / hiza | yıllık fark | Sh (≤2024) | Sh (2025+) | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 | +26,3 | +0,25 | +0,36 | −0,1 (sığ) | +28,8 | YYYY | %71,9 |
+| 2.000 $ 1 | +17,4 | +0,16 | +0,36 | −1,4 | +56,7 | YYYY | %68,2 |
+| 3.500 $ 0 | +19,8 | +0,13 | +0,47 | −0,8 | +38,7 | YYYY | %69,8 |
+| 3.500 $ 1 | +20,1 | +0,18 | +0,47 | −2,9 | +109,6 | YYYY | %82,2 |
+- Canlı gibi giriş + 5 bp, 6 yıl (2020-07..2026-09), 3 bağımsız dönemin üçünde önde (madde 500), düşüş her hücrede SIĞ,
+  dört şart 16/16. Tek eksik: eşli bootstrap P %95'e çıkmıyor (madde 434'ün güç sınırı: +17..+26 puanlık fark bu
+  oynaklıkta %95'e ~10+ yıl ister). Bugüne kadarki EN GÜÇLÜ "yalnız P'den RED" adayı. AYAR DEĞİŞMEDİ → KULLANICI KARARI.
+- Bota eklemek: short ara dengelemesi (yeni düğme: short dilimlerini 2 günde bir yeniden seç) + short coin tavanı %8 (yeni
+  düğme, hesap düzeyi). İkisi de motorda var (S_REB, CAP_TARAF=short).
