@@ -65,6 +65,25 @@ kontrol("tavan dolmuşsa coin dilimden çıkar", "A" not in k, k)
 
 cb.SHORT_ARA_SAAT = 0.0; cb.SHORT_TAVAN = 0.0
 
+print("6a) evren tabanı (madde 508)")
+class _C:
+    class client:
+        @staticmethod
+        def futures_ticker():
+            return [{"symbol": f"C{i}USDT", "quoteVolume": str(v), "priceChangePercent": "0"}
+                    for i, v in enumerate([9e7, 8e7, 5e7, 4e7, 3e7, 1e7])]
+cb.sembol_bilgisi = lambda c: {}; cb.listeleme_yaslari = lambda c, b=None: {}
+_mv, _ms = cb.MIN_DAILY_VOLUME_USD, cb.MIN_LEGS
+cb.MIN_DAILY_VOLUME_USD = 7e7
+kontrol("kapalıyken yalnız eşik üstü (2)", cb.evren_sec(_C) == ["C0USDT", "C1USDT"], cb.evren_sec(_C))
+cb.EVREN_MIN = 4
+kontrol("N=4: hacim sırasıyla 4'e tamamlandı", cb.evren_sec(_C) == ["C0USDT", "C1USDT", "C2USDT", "C3USDT"], cb.evren_sec(_C))
+cb.EVREN_MIN = 10
+kontrol("N=10: 20M tabanın altı (1e7) girmez", "C5USDT" not in cb.evren_sec(_C) and len(cb.evren_sec(_C)) == 5)
+cb.EVREN_MIN = 2
+kontrol("eşik yeterliyse evren değişmez", cb.evren_sec(_C) == ["C0USDT", "C1USDT"])
+cb.EVREN_MIN = 0; cb.MIN_DAILY_VOLUME_USD = _mv
+
 print("6) preflight profilleri (alt süreç, temiz ortam)")
 import os, subprocess
 def _pf(env):

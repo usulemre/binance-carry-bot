@@ -146,6 +146,7 @@ gerekmiyor; `carry_preflight.py` sapma olursa **HATA** verir:
 | `CARRY_MERDIVEN_SHORT` | **0.15** (short'un ⅔'ü −%15'te kapanır, kalanı −%20'de) | **466-469** |
 | `CARRY_SHORT_ARA_SAAT` | 0 = kapalı (aday: **48** — short tarafı 2 günde bir yeniden seçilir; ADAYLAR.md, kullanıcı kararı) | **493-502** |
 | `CARRY_SHORT_TAVAN` | 0 = kapalı (aday: **0.08** — coin başına toplam short ≤ sermayenin %8'i; 48 ile birlikte) | **455-456, 500-502** |
+| `CARRY_EVREN_MIN` | 0 = kapalı (aday: **30** — 70M eşiği 30'dan az coin bırakırsa hacim sırasıyla 30'a tamamla, 20M taban; sigorta) | **507-508** |
 | `CARRY_MERDIVEN_PAY` | **0.667** | **468-469** |
 | `CARRY_LONG_STOP` | 0 (kapalı) — 24 sa stop'u varken AÇMAYIN | **443-445, 452** |
 

@@ -3103,6 +3103,16 @@ SON_24S_DEGISIM: dict[str, float] = {}
 24 saatlik yüzde değişim buraya yazılır (sembol -> oran)."""
 
 
+EVREN_MIN = int(os.getenv("CARRY_EVREN_MIN", "0"))
+"""EVREN TABANI (madde 508). >0 ise hacim eşiği (CARRY_MIN_VOLUME) bundan az sembol bırakırsa evren, diğer filtreleri
+geçen ve EVREN_TABAN_USD üstündeki semboller arasından hacim sırasıyla bu sayıya tamamlanır; eşik yeterliyse evren
+DEĞİŞMEZ. Motor HACIM_MIN_EVREN. Uzun zeminde (2020-26) N=30: 2022-26'da T3f ile ~aynı, 2020'de (70M ~5 coin bırakıyordu)
+kitabı çalıştırıyor — sigorta. 0 = KAPALI (varsayılan; KULLANICI KARARI)."""
+
+EVREN_TABAN_USD = float(os.getenv("CARRY_EVREN_TABAN_USD", "2e7"))
+"""Evren tabanı tamamlamasında kabul edilen en düşük 24 sa hacim (USD). Motor HACIM_TABAN."""
+
+
 def evren_sec(client: ExchangeClient) -> list[str]:
     """Likidite VE listelenme yaşı filtresinden geçen evreni kurar.
 
@@ -3116,6 +3126,7 @@ def evren_sec(client: ExchangeClient) -> list[str]:
     bilgi = sembol_bilgisi(client)
     yaslar = listeleme_yaslari(client, bilgi) if MIN_LISTELEME_GUN > 0 else {}
     uygun = []
+    yedek = []      # madde 508: hacim eşiğinin altında ama EVREN_TABAN_USD üstünde, diğer filtreleri geçen
     elenen_hacim = elenen_yas = elenen_tradfi = elenen_delist = 0
     for t in tickers:
         s = t["symbol"]
@@ -3131,7 +3142,8 @@ def evren_sec(client: ExchangeClient) -> list[str]:
             SON_24S_DEGISIM[s] = float(t["priceChangePercent"]) / 100.0
         except (KeyError, TypeError, ValueError):
             SON_24S_DEGISIM.pop(s, None)
-        if hacim < MIN_DAILY_VOLUME_USD:
+        dusuk = hacim < MIN_DAILY_VOLUME_USD
+        if dusuk and (EVREN_MIN <= 0 or hacim < EVREN_TABAN_USD):
             elenen_hacim += 1
             continue
         if delist_mi(bilgi.get(s)):
@@ -3144,8 +3156,17 @@ def evren_sec(client: ExchangeClient) -> list[str]:
         if MIN_LISTELEME_GUN > 0 and s in yaslar and yaslar[s] < MIN_LISTELEME_GUN:
             elenen_yas += 1
             continue
-        uygun.append((s, hacim))
+        (yedek if dusuk else uygun).append((s, hacim))
     uygun.sort(key=lambda x: x[1], reverse=True)
+    ek = []
+    if EVREN_MIN > 0 and len(uygun) < EVREN_MIN and yedek:
+        # MADDE 508: EVREN TABANI - eşik yeterli coin bırakmadıysa hacim sırasıyla EVREN_MIN'e tamamla
+        yedek.sort(key=lambda x: x[1], reverse=True)
+        ek = yedek[:EVREN_MIN - len(uygun)]
+        logger.warning("evren tabanı: %d sembol < %d, hacim sırasıyla %d eklendi (en düşük %.0fM$)",
+                       len(uygun), EVREN_MIN, len(ek), ek[-1][1] / 1e6)
+        uygun += ek
+    elenen_hacim += len(yedek) - len(ek)
     logger.info("evren: %d sembol (hacim filtresi %d eledi, yaş %d, TradFi %d, delist %d)",
                 len(uygun), elenen_hacim, elenen_yas, elenen_tradfi, elenen_delist)
     if len(uygun) < 2 * MIN_LEGS:
