@@ -655,7 +655,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if _tp>0 and ((uzun and HV[i+1,k]>=sev) or ((not uzun) and LV[i+1,k]<=sev)):
                     if YARIM and tp_yapildi[k]:
                         continue                  # yarisi zaten alindi, kalan normal getiri alir
-                    br[k]=sev/cv[i,k]-1; say_t[1]+=1
+                    br[k]=_dol(sev,uzun,i,k)/cv[i,k]-1; say_t[1]+=1
                     if YARIM: yaridan[k]=True; tp_yapildi[k]=True
                     else: cik[k]=True
                     continue
@@ -678,14 +678,14 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _hm = (uzun and HV[i+1,k]>=_sm) or ((not uzun) and LV[i+1,k]<=_sm)
                 if _h0 and _hm:      # ayni barda iki kademe: once erken, sonra ana (kalanin MERD_PAY'i)
                     f0=MERD0_PAY; f1=(1-MERD0_PAY)*MERD_PAY
-                    br[k]=(f0*(_s0/cv[i,k]-1)+f1*(_sm/cv[i,k]-1))/(f0+f1)
+                    br[k]=(f0*(_dol(_s0,uzun,i,k)/cv[i,k]-1)+f1*(_dol(_sm,uzun,i,k)/cv[i,k]-1))/(f0+f1)
                     mpay[k]=f0+f1; merd[k]=True; merd0_yapildi[k]=True; merd_yapildi[k]=True; say_t[1]+=1
                 elif _hm:
-                    br[k]=_sm/cv[i,k]-1
+                    br[k]=_dol(_sm,uzun,i,k)/cv[i,k]-1
                     mpay[k]=MERD_PAY; merd[k]=True; merd_yapildi[k]=True; say_t[1]+=1
                     if _m0>0: merd0_yapildi[k]=True   # erken kademe ana kademeden sonra anlamsiz
                 elif _h0:
-                    br[k]=_s0/cv[i,k]-1
+                    br[k]=_dol(_s0,uzun,i,k)/cv[i,k]-1
                     mpay[k]=MERD0_PAY; merd[k]=True; merd0_yapildi[k]=True; say_t[1]+=1
         # MADDE 215: taraf bazli maks tutma suresi. TP/stop kontrolunden
         # SONRA bakilir: ayni barda TP varsa TP kazanir (daha iyi fiyat).
@@ -807,6 +807,13 @@ CAP_ORTAK=float(os.environ.get('CAP_ORTAK','0'))
 # MADDE 481: TEK_GIRIS=1 -> dilimler lockstep kosar ve TP/kademe/stop coinin hesap duzeyindeki agirlikli
 # ortalama girisinden olculur (canli botun Binance entryPrice'i). 0 -> dilim basina giris (parite).
 TEK_GIRIS=int(os.environ.get('TEK_GIRIS','0')); _REG={}
+def _dol(sev,uzun,i,k):
+    """Kar-al limitinin dolum fiyati. TEK_GIRIS'te ortalama giris kayinca seviye barin ACILISINDA zaten gecilmis
+    olabilir (limit piyasanin icine kurulur -> acilistan dolar, daha iyi fiyat). Parite modunda eski davranis."""
+    if not TEK_GIRIS: return sev
+    o=OV[i+1,k]
+    if not np.isfinite(o): return sev
+    return max(sev,o) if uzun else min(sev,o)
 # MADDE 455: CAP_TARAF=short -> tavan yalniz SHORT bacaklara (long serbest). Bos/iki -> parite.
 CAP_TARAF=os.environ.get('CAP_TARAF','iki').strip()
 CAP_DAGIT=int(os.environ.get('CAP_DAGIT','0'))

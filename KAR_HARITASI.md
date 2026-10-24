@@ -5604,3 +5604,17 @@ sinyal): IS Sh 3,48 vs taban 3,42, ama OOS +242,5 vs +370,8, eşitVol −29,8 �
 Sharpe'ında (3,83) ve yıllıkta (+249,3) 1./25; 24 ayarın hiçbiri eşit oynaklıkta tabanı geçmedi (en yakın MTR18
 −5,3). IS↔OOS Sharpe sıra korelasyonu 0,60 (seçim genelliyor — yani tablo gürültü değil, taban gerçekten tepe).
 Merdivenden sonra bölge yeniden tarandı; düğme ekseni kapalı.
+
+## Madde 481 — TEK HESAP GİRİŞ PARİTESİ: canlı bot (ortalama entryPrice) motordan biraz KÖTÜ — aynı getiri, daha çok kötü gün
+Motor TP/kademe/stop'u her dilimin KENDİ girişinden ölçüyor; canlı bot 15 dilimi tek hesapta tutup emirleri Binance'in
+ağırlıklı ortalama entryPrice'ından kuruyor (TP dolunca coin bütün dilimlerde birden kapanır). Hiç ölçülmemişti.
+`TEK_GIRIS=1` (lockstep + hesap düzeyi ortalama giriş; seviye açılışta geçilmişse dolum açılıştan — limit piyasanın
+içine kurulur). Lockstep paritesi (CAP_ORTAK=10, bağlayıcı değil) tabanı BİREBİR verdi.
+| kol | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşitVol |
+|---|---|---|---|---|---|---|---|---|---|
+| motor (dilim başına giriş) | +249,3 | +182,4 | +370,8 | 3,83 | −17,4 | −5,45 | 3 | +20,5 | — |
+| canlı gibi (tek hesap, ortalama giriş) | +250,3 | +182,1 | +374,8 | 3,72 | −18,5 | −5,71 | 6 | +20,4 | −13,3 |
+- İlk koşu (dolum hep seviyeden) −%51 gün verdi: ortalama giriş kayınca TP seviyesi piyasanın YANLIŞ tarafına
+  düşüyor ve motor zararına dolum yazıyordu — gerçekte limit anında piyasadan dolar. Düzeltildi (`_dol`, yalnız TEK_GIRIS).
+- Sonuç: canlı backtest'in getirisini veriyor ama Sharpe −0,11, −%5 altı gün 3 → 6. Canlıyı DİLİM BAŞINA emre
+  (her dilimin kendi girişinden ayrı reduceOnly TP/kademe) çevirmek bu farkı geri alır → protokol adayı (madde 482).
