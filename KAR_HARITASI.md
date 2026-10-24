@@ -5927,3 +5927,15 @@ T3f'ye karşı (yıllık · Sh · dd): TÜM | YENİ 2020-21 | 2022-24 | 2025-26
 70M eşiği 2020'de ortalama 5,3 coin bırakıyordu (kitap ~işlem yapamadı) → göreli evren 2020-21'i +%600'e taşıyor; ama
 2022-26'da mutlak 70M evreni daha iyi (marjinal coin nakitten kötü, madde 229). Üç dönem şartı düştü → RED.
 Ara yol → madde 508: EVREN TABANI (mutlak eşik N'den az coin bırakırsa ilk N'e tamamla; yeterliyse dokunma).
+
+## Madde 508 — EVREN TABANI (HACIM_MIN_EVREN: mutlak eşik N'den az bırakırsa ilk N'e tamamla), T3f üzerinde, uzun zemin
+T3f'ye karşı (yıllık · Sh · dd): TÜM | YENİ 2020-21 | 2022-24 | 2025-26
+| kol (tamamlanan bar payı) | TÜM | YENİ | 2022-24 | 2025-26 | tüm: dd · en kötü · −%5 |
+|---|---|---|---|---|---|
+| N30 (%20) | +52,0 · +0,33 · +2,1 | +283,1 · +1,42 · +4,6 | −1,0 · −0,01 · 0,0 | +1,2 · 0,00 · 0,0 | −14,3 · −11,69 · 2 |
+| N40 (%36) | +57,7 · +0,38 · 0,0 | +312,7 · +1,58 · +4,7 | −3,3 · −0,04 · +0,4 | +13,0 · +0,09 · −3,2 | −16,4 · −11,69 · 2 |
+- N30: evren yeterliyken (2022-26) T3f ile ~birebir (−1,0 / +1,2 — gürültü), evren daraldığında (2020) kitabı çalıştırıyor:
+  tüm dönem yıllık +52, Sharpe +0,33, dd 2,1 puan SIĞ. Ön kayıt (üç dönemin üçünde > 0) 2022-24'te −1,0 ile KIL PAYI düştü.
+- Yorum: bu bir kâr kuralı değil, SİGORTA — piyasa daralırsa botun durmasını önler (2026 ortalama uygun 38'e inmişti).
+  N30 2022-26'da maliyetsiz. KULLANICI KARARI (bota henüz eklenmedi; canlıda eşdeğeri: evren_sec'te 70M'yi geçen coin
+  30'dan azsa hacim sırasıyla 30'a tamamla, 20M tabanla).
