@@ -5830,3 +5830,17 @@ YENİ dönem mutlak (yıllık · Sh · dd · en kötü gün): T1 +255,6 · 3,95 
 (altcoin sıçraması, evren dar ~20 coin): T1 −16,4, short yenileme −21,6. 2022-24 ve 2025-26'da dd farkı ~0 (−0,3/−0,6),
 3 g'de bir kolunda 2022-24 dd +2,3 SIĞ. Yani S_REB'in kuyruk maliyeti tek bir dar-evren olayına bağlı; piyasa medyanı
 o olayı yakalamıyor (coin özelinde sıkışma). En kötü GÜN ise her S_REB kolunda daha iyi (−13,6 → −8,9..−11,8).
+
+## Madde 500 — S_REB + coin bazlı sıkışma koruması (uzun zemin): S_REB + SHORT TAVANI %8 kuyruğu KAPATIYOR
+| kol (vs T1: yıllık · Sh · dd) | TÜM 2020-07..2026-09 | YENİ 2020-21 | 2022-24 | 2025-26 | tüm: dd · en kötü gün · −%5 altı |
+|---|---|---|---|---|---|
+| T1 | — | — | — | — | −16,4 · −13,58 · 7 |
+| T1 + short 2 g | +67,5 · +0,38 · −5,2 | +56,8 · +0,25 · −5,2 | +29,8 · +0,22 · −0,3 | +164,8 · +0,51 · −0,6 | −21,6 · −8,86 · 9 |
+| + SLS24 0,40 | +28,7 · +0,13 · −2,4 | +74,0 · +0,60 · −2,4 | +27,2 · +0,22 · +0,5 | −29,2 · −0,46 · −4,2 | −18,8 · −8,89 · 10 |
+| + SLS24 0,60 | +37,8 · +0,17 · −3,9 | +52,1 · +0,31 · −3,9 | +20,1 · +0,13 · −1,2 | +41,5 · −0,09 · −3,8 | −20,3 · −8,89 · 13 |
+| **+ short tavan %8** | **+29,9 · +0,31 · 0,0** | +20,7 · +0,31 · 0,0 | +13,7 · +0,25 · **+2,4** | +87,1 · +0,37 · −0,5 | **−16,4 · −11,59 · 3** |
+| T1 + tavan %8 (kontrol) | −5,0 · +0,03 · +0,4 | −4,8 · +0,05 · +0,6 | −0,2 · +0,08 · +2,2 | −11,2 · +0,01 · 0,0 | −16,0 · −13,85 · 5 |
+- SLS24 RED (2025-26'da kazancı siliyor). SR12+CAP8: düşüş T1 ile AYNI (−16,4), −%5 altı gün 7 → 3, en kötü gün −13,6 →
+  −11,6, Sharpe +0,31, ÜÇ dönemin üçünde de yıllıkta önde. Ön kayıt: dd şartı GEÇTİ; "kazancın ≥ yarısı" Sharpe'ta geçti
+  (+0,31 ≥ +0,19), yıllıkta KIL PAYI kaldı (+29,9 < +33,8) — şeffaf not. Tavan tek başına ~0 (kontrol) → etki BİRLEŞİMDEN.
+- → madde 501: SR12+CAP8 uzun zeminde TAM PROTOKOL (canlı gibi giriş + 5 bp, iki seviye, iki hiza).
