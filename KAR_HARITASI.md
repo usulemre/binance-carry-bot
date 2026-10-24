@@ -5646,3 +5646,21 @@ yakın, geri dönüş iz süren çıkışın kazandığını götürüyor. Sabit
 | 6+6 | +165,0 | +131,4 | +220,8 | 3,54 | −15,2 | −6,01 | 3 | +18,8 | −23,2 |
 3+3'ün +59 puanı eşit oynaklıkta −4,6: tabanı ~1,2x kaldıraçlamak aynı getiriyi daha az kötü günle verir. Merdiven
 yoğunlaşmanın riskini değiştirmemiş; "bacak azaltmak = kaldıraç" yasası (madde 339) sürüyor.
+
+## Madde 485 — KIL PAYI BULGULARIN BİRLEŞİMİ: İLK KEZ TOPLANIYORLAR → iki ADAY
+| kol (taban ZSR15P67, 2.000 $) | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşitVol |
+|---|---|---|---|---|---|---|---|---|---|
+| taban | +249,3 | +182,4 | +370,8 | 3,83 | −17,4 | −5,45 | 3 | +20,5 | — |
+| CAP (short tavan %8) | +245,8 | +182,5 | +359,4 | 3,88 | −14,5 | −5,48 | 2 | +20,3 | +5,8 |
+| A43 (4L/3S) | +261,0 | +191,0 | +388,8 | 3,88 | −16,3 | −6,06 | 5 | +22,4 | +6,5 |
+| P80 (madde 470) | +256,2 | +187,3 | +381,6 | 3,91 | −16,8 | −5,49 | 3 | +21,7 | +8,9 |
+| P80+CAP | +252,7 | +187,3 | +370,2 | 3,96 | −14,5 | −5,52 | 2 | +21,5 | +14,5 |
+| **P80+A43** | **+267,8** | +196,1 | +398,9 | 3,96 | −15,6 | −5,93 | 5 | +23,3 | +15,5 ADAY |
+| CAP+A43 | +249,9 | +187,2 | +361,6 | 3,93 | −13,3 | −5,49 | 1 | +22,7 | +11,0 |
+| P80+E08 | +249,7 | +193,3 | +347,8 | 3,89 | −14,6 | −5,80 | 2 | +20,7 | +7,4 |
+| **P80+CAP+A43** | +256,1 | +191,7 | +371,2 | **4,00** | **−13,4** | −5,53 | **1** | +23,6 | **+19,2 ADAY** |
+| P80+CAP+A43+E08 | +252,1 | +198,0 | +345,3 | 3,97 | −14,2 | −5,82 | 1 | +22,3 | +15,6 |
+| CAP+E08 | +241,7 | +189,0 | +332,2 | 3,86 | −14,9 | −5,80 | 1 | +20,0 | +3,1 |
+- Üç küçük eksen (kademe payı, short tavanı, short bacak sayısı) FARKLI şeyleri düzeltiyor ve eşit riskte üstüne
+  ekleniyor: tek tek +6..+9 → üçü birlikte +19,2; Sharpe 3,83 → 4,00, dd −17,4 → −13,4, −%5 altı gün 3 → 1.
+  E08 dördüncü olarak eklenince bozuyor (aynı short riskini ikinci kez kesiyor). → madde 486 protokol.
