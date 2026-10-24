@@ -5804,3 +5804,16 @@ YENİ dönem mutlak (yıllık · Sh · dd · en kötü gün): T1 +255,6 · 3,95 
   ve eşit oynaklıkta geçiyor → "2025-26 rejimi" açıklaması yanlıştı; madde 495'teki düşük P, 2022-24'ün tek başına
   zayıf gücünden. **T2 yeni dönemde TUTMADI** (−15 / −14) → "2022-26'ya özel" (kayıtlı 2. aday statüsü kullanıcıya bildirilir).
 - → madde 498: S_REB12 uzun zeminde TAM PROTOKOL (canlı gibi giriş + 5 bp, iki seviye, iki hiza).
+
+## Madde 498 — S_REB uzun zeminde protokol (2020-07 → 2026-09, canlı gibi giriş + 5 bp): RED — Sharpe her yerde ↑, ama düşüş derinleşiyor
+| aday | seviye / hiza | yıllık fark | Sh (≤2024) | Sh (2025+) | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|---|
+| short her 1 g | 2.000 $ 0 / 1 | +85,1 / +79,1 | +0,22 / +0,18 | +0,58 / +0,64 | +5,7 / +4,7 | −40,0 / −30,4 | YXXY / YXXY | %47,9 / %52,4 |
+| | 3.500 $ 0 / 1 | +74,6 / +73,8 | +0,07 / +0,07 | +0,74 / +0,84 | +7,6 / +5,9 | −64,3 / −45,7 | YXXY / YXXY | %48,9 / %57,2 |
+| short her 2 g | 2.000 $ 0 / 1 | +61,4 / +46,3 | +0,26 / +0,13 | +0,53 / +0,52 | +5,8 / +3,8 | −53,8 / −36,0 | YXXY / YXXY | %48,8 / %49,5 |
+| | 3.500 $ 0 / 1 | +56,0 / +50,6 | +0,16 / +0,16 | +0,67 / +0,62 | +3,9 / +2,6 | −24,7 / −7,5 | YXXY / YYXY | %57,6 / %74,1 |
+- Uzun zeminde Sharpe 8/8 hücrede İKİ dönemde de artıyor (≤2024 artık +0,07..+0,26), ama EN BÜYÜK DÜŞÜŞ 2,6-7,6 puan
+  derinleşiyor (2021 ortası çöküşü: −16 → −22) ve protokolün eşit-risk ölçüsü düşüşe göre olduğundan −8..−64 → şart 2-3
+  düşüyor, P ~%50. Short'u sık yenilemek çöküş anında short kitabını taze (henüz kâr tamponu olmayan) pozisyonlarla
+  doldurur. Getiri/Sharpe ekseni ile kuyruk ekseni çatışıyor → AYAR DEĞİŞMEDİ; KULLANICI KARARI olarak kayıtlı
+  (getiri +50..+85 puan, Sharpe ↑, en kötü düşüş ~5 puan derin).
