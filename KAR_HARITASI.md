@@ -5698,3 +5698,15 @@ Dört komşunun dördü Sharpe ≥ 3,93 ve eşitVol ≥ +8 → PLATO: birleşim 
 **KULLANICI KARARI (2026-10-24):** BRP80_CAP_A43 "şu anki bottan sonra 2. en büyük aday" olarak kaydedildi
 (`ADAYLAR.md`). Bundan sonraki kâr denemeleri İKİ taban üzerinden: her kol hem ZSR15P67'ye hem BRP80_CAP_A43'e
 uygulanır ve kendi tabanına karşı ölçülür (`arastirma_tabanlar.py`).
+
+## Madde 488 — İki tabanda ilk tur (çıkış eksenleri, havuz, iki taraflı tavan): İKİ TABAN DA TEPEDE
+| kol | T1 (ZSR15P67 +249,3 / 3,83) yıllık · Sh · −%5 · eşitVol | T2 (BRP80_CAP_A43 +256,1 / 4,00) yıllık · Sh · −%5 · eşitVol |
+|---|---|---|
+| son long TP 0,70 | +248,7 · 3,77 · 3 · −7,3 | +255,1 · 3,94 · 1 · −6,5 |
+| son short TP 0,25 | +249,0 · 3,83 · 4 · −0,2 | +255,4 · 4,00 · 1 · −0,3 |
+| short kademe −%12 | +245,1 · 3,81 · 3 · −1,9 | +250,9 · 3,95 · 1 · −5,9 |
+| short kademe −%18 | +250,7 · 3,83 · 4 · +0,2 | +259,6 · 4,03 · 1 · +4,1 |
+| havuz 5 | +240,9 · 3,77 · 4 · −7,6 | +252,4 · 3,97 · 1 · −2,7 |
+| tavan iki tarafa %8 | +202,4 · 3,84 · 1 · +0,8 | +211,8 · 3,99 · **0** · −1,0 (en kötü gün −4,65, dd −12,5) |
+Hiçbiri ön kaydı geçmedi. Long'a tavan koymak kötü günleri sıfırlıyor ama tam bir doz düğmesi (eşitVol ~0): pompa
+coininin ağırlığını kesmek = kaldıraç azaltmak. Short kademe −%18 T2'de hafif (+4,1) — gürültü bandı.
