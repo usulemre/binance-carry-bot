@@ -58,14 +58,24 @@ _DON = float(os.environ.get("DONUK_ESIK", "0.10"))
 # MADDE 228: listeleme yasi esigi (gun). Madde 133'te taranmis, hic
 # yeniden acilmamisti; motor onu disari vermiyordu.
 _YAS_GUN = float(os.environ.get("YAS_GUN", "90"))
-if _HES != 1e8 or _DON != 0.10 or _YAS_GUN != 90:
+# MADDE 507: GORELI EVREN. HACIM_SIRA=K>0 -> hacim kosulu "mutlak esik" yerine "hacimde ilk K" (yas/donuk/tradfi ayni;
+# HACIM_TABAN altindaki coin yine giremez). Piyasa buyuklugune uyarlanir (2020'de 70M esigi ~5 coin birakiyordu). 0 -> parite.
+_HSIRA = int(os.environ.get("HACIM_SIRA", "0")); _HTABAN = float(os.environ.get("HACIM_TABAN", "2e7"))
+if _HES != 1e8 or _DON != 0.10 or _YAS_GUN != 90 or _HSIRA > 0:
     import pickle as _pk, carry_denetim as _D
     _P = _pk.load(open('/tmp/panel.pkl', 'rb'))
     _uy = _D.uygunluk(_P['C'], _P['HAC'], _P['YAS'], _P['DON'], hacim=_HES,
                       yas_bar=int(round(_YAS_GUN * 6)), donuk_esik=_DON)
     from tradfi_liste import TRADFI as _TF
     _uy = _uy.copy(); _uy[[c for c in _uy.columns if c in _TF]] = False
-    U = _uy.values
+    if _HSIRA > 0:
+        _taban = _D.uygunluk(_P['C'], _P['HAC'], _P['YAS'], _P['DON'], hacim=_HTABAN,
+                             yas_bar=int(round(_YAS_GUN * 6)), donuk_esik=_DON)
+        _taban[[c for c in _taban.columns if c in _TF]] = False
+        _rk = _P['HAC'].where(_taban).rank(axis=1, ascending=False)
+        _uy = _taban & (_rk <= _HSIRA)
+        print(f"# HACIM_SIRA={_HSIRA} taban {_HTABAN:.0e}: ortalama uygun {float(_uy.sum(axis=1).mean()):.1f}", flush=True)
+    U = _uy.reindex(index=C.index, columns=C.columns).fillna(False).values
 
 # MADDE 461: GENC COIN YARIM AGIRLIK. GENC_GUN>0 -> evren yasi GENC_GUN'e iner, ama
 # YAS_GUN'den genc coinlerin hedef agirligi GENC_PAY ile carpilir. 0 -> kapali (parite).
