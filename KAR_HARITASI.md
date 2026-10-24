@@ -5737,3 +5737,7 @@ farklı olsa da aynı 60 sa penceresi ikisinde de optimum.
 | yalnız short | +252,2 · +181,9 · +381,7 · 3,85 · 4 · +2,0 | +260,5 · +190,9 · +387,3 · 4,03 · 1 · +4,2 |
 Geri alım getiriyi artırıyor (+2..+7) ama eşit oynaklıkta ~0: tam boya dönmek = daha çok ortalama maruziyet. Fark
 yalnız OOS'ta (+11..+32), IS'te −1..−4 → dönem şansı, kural değil. Tem-Eyl 2026'da dördü de önde (+3..+5) — not.
+
+## Madde 492 — Ekim 2026 OOS izleme listesi (ön kayıt, `izleme_ekim_oos.py`)
+Tek dönem şansını yeni deneme yapmadan ayırmak için: Tem-Eyl 2026'da önde görünen kollar (491 geri alım, 488 MS18,
+479 defter) + T1/T2 Ekim verisinde bir kez koşulacak. Kural dosyada; Kasım başı.

@@ -13,3 +13,8 @@ düğme, 3); short coin başına tavan %8 (yeni düğme — bot 15 dilimi tek he
 preflight profili + testler. Bekleyen doğrulama: Ekim 2026 gerçek verisiyle OOS (Kasım başı).
 
 Diğer kayıtlı kullanıcı kararları: kaldıraç 1,25x (madde 458/478 tablosu), 24 sa stop'u isteğe bağlı yapmak.
+
+## Ekim 2026 OOS izleme listesi (madde 492, ön kayıt — `izleme_ekim_oos.py`)
+Tem-Eyl 2026'da tabandan iyi görünen ama ön kaydı geçemeyen kollar Ekim gerçek verisinde TEK seferde ölçülecek
+(karar vermez; T2 vs T1 kanıtını güçlendirir/zayıflatır): kademe geri alımı (iki taraf / yalnız short, madde 491),
+short kademe −%18 (madde 488), defterle long seçimi DR50/CK50 (madde 479, defter verisi indirilirse).
