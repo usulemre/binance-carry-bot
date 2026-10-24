@@ -5682,3 +5682,15 @@ Kontrol ZSR15P67 (canlı).
   sınırı). Ayrıca birleşim sonuç görüldükten sonra kuruldu (seçim yanlılığı). AYAR DEĞİŞMEDİ.
 - Kayıtlı durum: "güçlü aday, protokolde RED" — madde 456 gibi KULLANICI KARARI. Bot'a eklenecekse iki yeni
   düğme gerekir (short bacak sayısı, short coin tavanı); pay 0,80 mevcut CARRY_MERDIVEN_PAY.
+
+## Madde 487 — P80+CAP+A43 komşuluğu: PLATO (ön kayıt geçti, 4/4)
+| kol (2.000 $) | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşitVol |
+|---|---|---|---|---|---|---|---|---|---|
+| taban ZSR15P67 | +249,3 | +182,4 | +370,8 | 3,83 | −17,4 | −5,45 | 3 | +20,5 | — |
+| P80+CAP8+A43 | +256,1 | +191,7 | +371,2 | 4,00 | −13,4 | −5,53 | 1 | +23,6 | +19,2 |
+| pay 0,75 | +253,8 | +190,0 | +367,6 | 3,97 | −13,3 | −5,52 | 1 | +23,3 | +16,1 |
+| pay 0,85 | +258,5 | +193,4 | +374,8 | 4,02 | −13,4 | −5,55 | 1 | +23,9 | +22,2 |
+| tavan %7 | +250,4 | +189,0 | +359,1 | 3,98 | −13,9 | −5,57 | 1 | +23,1 | +16,5 |
+| tavan %9 | +260,9 | +193,7 | +381,8 | 4,01 | −13,1 | −5,51 | 1 | +24,1 | +21,3 |
+Dört komşunun dördü Sharpe ≥ 3,93 ve eşitVol ≥ +8 → PLATO: birleşim tek nokta değil, bölge (dd −13..−14, −%5 altı
+1 gün, Sharpe ~4,0 her yerde). Protokol P %76-86 (madde 486) → sunum: "plato, kanıt sınırda" — KULLANICI KARARI.
