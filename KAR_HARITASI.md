@@ -5636,3 +5636,13 @@ Taban ZSR15P67 +249,3 / Sh 3,83. Long zirveden %15 / %25 / %35 geri çekilme: +2
 −4,7 / −5,0 / −11,1) · short dipten +%10: +245,5 (−3,3) · ikisi: +242,0 (−8,3). Kötü gün sayısı değişmiyor (3).
 Pompaların üst kuyruğu kalan ⅓ için sabit +%60'tan fazlasını ödemiyor: pompa +%60'ı geçtiğinde genellikle tepeye
 yakın, geri dönüş iz süren çıkışın kazandığını götürüyor. Sabit son TP doğru şekil.
+
+## Madde 484 — Bacak sayısı merdivenli kitapta: 4+4 YERİNDE (3+3 yine kılık değiştirmiş kaldıraç)
+| kol | yıllık | IS | OOS | Sharpe | dd | en kötü | −%5 altı | Tem-Eyl26 | eşitVol |
+|---|---|---|---|---|---|---|---|---|---|
+| 4+4 (taban) | +249,3 | +182,4 | +370,8 | 3,83 | −17,4 | −5,45 | 3 | +20,5 | — |
+| 3+3 | +308,6 | +214,1 | +491,1 | 3,80 | −17,9 | −6,74 | 7 | +33,3 | −4,6 |
+| 5+5 | +196,0 | +151,1 | +272,9 | 3,66 | −15,3 | −5,81 | 2 | +22,2 | −16,0 |
+| 6+6 | +165,0 | +131,4 | +220,8 | 3,54 | −15,2 | −6,01 | 3 | +18,8 | −23,2 |
+3+3'ün +59 puanı eşit oynaklıkta −4,6: tabanı ~1,2x kaldıraçlamak aynı getiriyi daha az kötü günle verir. Merdiven
+yoğunlaşmanın riskini değiştirmemiş; "bacak azaltmak = kaldıraç" yasası (madde 339) sürüyor.
