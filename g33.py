@@ -578,9 +578,19 @@ def _bt2g(bas,n,olcut=None,tp=None):
         br=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0); br=np.nan_to_num(br)
         cik=np.zeros(nk,bool); yaridan=np.zeros(nk,bool)
         merd=np.zeros(nk,bool); mpay=np.zeros(nk)
+        if TEK_GIRIS:
+            _REG[bas]=(poz,giris)
+            _Pw=np.zeros(nk); _Pe=np.zeros(nk)
+            for _pq,_gq in _REG.values():
+                _ok=np.isfinite(_gq)&(_pq!=0)
+                _Pw[_ok]+=_pq[_ok]; _Pe[_ok]+=_pq[_ok]*_gq[_ok]
         if tp>0 or TAKIP_BAS>0:
             for k in np.flatnonzero(poz!=0):
                 e=giris[k]
+                if TEK_GIRIS and _Pw[k]*poz[k]>0:
+                    # MADDE 481: canli gibi TEK HESAP - TP/kademe/stop referansi coinin TUM dilimlerdeki
+                    # agirlikli ortalama girisi (Binance entryPrice). Ters yonlu dilim varsa (nadir) kendi girisi.
+                    e=_Pe[k]/_Pw[k]
                 if not (np.isfinite(e) and np.isfinite(cv[i,k]) and cv[i,k]>0 and np.isfinite(HV[i+1,k]) and np.isfinite(LV[i+1,k])): continue
                 uzun=poz[k]>0
                 if TP_SIFIRLA>0 and (TP_SIF_TARAF=='iki' or (TP_SIF_TARAF=='long')==uzun):
@@ -794,13 +804,16 @@ def _bt2g(bas,n,olcut=None,tp=None):
 # toplam (diger dilimler + bu dilim) agirlik / faz sayisi <= c. CAP_DAGIT=1 ->
 # kirpilan pay ayni taraftaki diger bacaklara orantili dagitilir (brut korunur).
 CAP_ORTAK=float(os.environ.get('CAP_ORTAK','0'))
+# MADDE 481: TEK_GIRIS=1 -> dilimler lockstep kosar ve TP/kademe/stop coinin hesap duzeyindeki agirlikli
+# ortalama girisinden olculur (canli botun Binance entryPrice'i). 0 -> dilim basina giris (parite).
+TEK_GIRIS=int(os.environ.get('TEK_GIRIS','0')); _REG={}
 # MADDE 455: CAP_TARAF=short -> tavan yalniz SHORT bacaklara (long serbest). Bos/iki -> parite.
 CAP_TARAF=os.environ.get('CAP_TARAF','iki').strip()
 CAP_DAGIT=int(os.environ.get('CAP_DAGIT','0'))
 _CAPS=[0,0]   # [kirpilan bacak sayisi, toplam kirpilan agirlik]
 def _ortak_kos(baslar,n,olcut,tp):
     gens=[_bt2g(b,n,olcut,tp) for b in baslar]
-    NF_=len(gens); lim=CAP_ORTAK*NF_
+    NF_=len(gens); lim=CAP_ORTAK*NF_ if CAP_ORTAK>0 else np.inf
     msg=[next(g) for g in gens]; bitti=[False]*NF_; son=[None]*NF_
     poz_son=[np.zeros(C.shape[1]) for _ in gens]
     t=min(m[0] for m in msg)
@@ -857,7 +870,7 @@ def calis2(ad,n,olcut):
     # (CAGR/Sharpe/dusus) etkilenmemisti cunku onlar E'den gelir; sisen
     # yalniz atif tablolariydi. Artik fiili faz sayisina bolunuyor.
     NF=len(ofs)
-    if CAP_ORTAK>0:
+    if CAP_ORTAK>0 or TEK_GIRIS:
         gs=[x.pct_change() for x in _ortak_kos([1200+_fz+f for f in ofs],n,olcut,TP)]
     else:
         gs=[bt2(1200+_fz+f,n,olcut,tp=TP).pct_change() for f in ofs]
