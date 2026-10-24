@@ -6011,3 +6011,12 @@ eşitVol +6 → ön kayıt düştü. Ağırlık ekseni (iki taraf da) kapalı; e
 | T4 1,25x | +509,1 | 4,45 | −17,7 | −14,61 | 8 | +1181 / +302 / +779 |
 - T4 1,15x canlıyla (T1 1,0x) AYNI en büyük düşüş ve en kötü günde yıllık +%241 yerine +%431 ve daha az kötü gün
   (7 → 5). T4 1,25x, T1 1,25x'ten her ölçüde iyi. Kaba ölçek (komisyon/kayma kaldıraçla büyür; gerçek biraz düşük).
+
+## Madde 516 — T4 üzerinde sinyal penceresi 6 yılda (kaldıraçsız): 60 sa YERİNDE
+T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
+| kol | TÜM | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| 36 sa | −28,4 · −0,21 · −0,2 | −73,7 · −0,33 · −1,8 | −26,8 · −0,28 · −0,7 | −17,2 · −0,20 · +0,6 |
+| 48 sa | −6,1 · −0,07 · +0,8 | −33,4 · −0,22 · −1,3 | −11,2 · −0,14 · +0,4 | +10,6 · −0,01 · +0,4 |
+| 96 sa | +1,7 · −0,02 · 0,0 | −15,2 · −0,13 · −1,0 | +17,8 · +0,12 · +0,7 | −15,5 · −0,08 · 0,0 |
+60 sa 2022-26'da seçilmişti; 2020-21'de de en iyisi (kısa pencereler orada en çok kaybediyor). Pencere ekseni 6 yılda kapalı.
