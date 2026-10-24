@@ -247,6 +247,14 @@ MERD_YAY=int(os.environ.get("MERD_YAY","0"))
 S_REB=int(os.environ.get("S_REB","0"))
 # MADDE 496: L_REB=<bar> -> LONG tarafi ara dengelemesi (aynalanmis S_REB). 0 = parite.
 L_REB=int(os.environ.get("L_REB","0"))
+# MADDE 499: S_REB_DUR=x -> evrenin (U) medyan 3 g getirisi |.| >= x iken short ara dengelemesi atlanir (cokus/sikisma
+# aninda taze short acilmaz). S_REB_PEN bar (varsayilan 18 = 3 g). 0 -> kapali (parite).
+S_REB_DUR=float(os.environ.get("S_REB_DUR","0")); S_REB_PEN=int(os.environ.get("S_REB_PEN","18")); _SRD=[0]
+if S_REB_DUR>0:
+    _rp=np.full_like(cv,np.nan); _rp[S_REB_PEN:]=cv[S_REB_PEN:]/np.where(cv[:-S_REB_PEN]>0,cv[:-S_REB_PEN],np.nan)-1
+    _PIY=np.nanmedian(np.where(U,_rp,np.nan),axis=1)
+else:
+    _PIY=None
 # MADDE 491: MERD_GERI=1 -> kademe sonrasi fiyat girise donunce satilan pay geri alinir, kademe yeniden kurulur. 0 = parite.
 MERD_GERI=int(os.environ.get("MERD_GERI","0"))
 MERD_GERI_TARAF=os.environ.get("MERD_GERI_TARAF","iki").strip()
@@ -445,6 +453,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                                    uc=float(_UART[i,_k]) if np.isfinite(_UART[i,_k]) else np.nan,
                                    pnl=0.0, fon=0.0, fiy=0.0, bar=0)
         _kis=(S_REB>0 and (i-bas)%S_REB==0 and (i-bas)%REB!=0)
+        if _kis and S_REB_DUR>0 and np.isfinite(_PIY[i]) and abs(_PIY[i])>=S_REB_DUR:
+            _kis=False; _SRD[0]+=1        # MADDE 499: piyasa sert hareketteyse short yenileme DURUR
         _kisL=(L_REB>0 and (i-bas)%L_REB==0 and (i-bas)%REB!=0)
         if _kisL and _kis: _kisL=False      # ikisi ayni barda -> once short (basit kural)
         if (i-bas)%REB==0 or _kis or _kisL:
