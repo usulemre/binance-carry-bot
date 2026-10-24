@@ -5817,3 +5817,16 @@ YENİ dönem mutlak (yıllık · Sh · dd · en kötü gün): T1 +255,6 · 3,95 
   düşüyor, P ~%50. Short'u sık yenilemek çöküş anında short kitabını taze (henüz kâr tamponu olmayan) pozisyonlarla
   doldurur. Getiri/Sharpe ekseni ile kuyruk ekseni çatışıyor → AYAR DEĞİŞMEDİ; KULLANICI KARARI olarak kayıtlı
   (getiri +50..+85 puan, Sharpe ↑, en kötü düşüş ~5 puan derin).
+
+## Madde 499 — S_REB'te sert piyasada durdurma (S_REB_DUR) ve 3 g'de bir: ön kayıt GEÇMEDİ — düşüş TEK bir olaydan
+| kol (uzun zemin, 2020-07..2026-09) | yıllık | Sh | dd | en kötü gün | vs T1: yıllık · Sh · dd |
+|---|---|---|---|---|---|
+| T1 | +240,5 | 3,73 | −16,4 | −13,58 | — |
+| T1 + short 2 g | +308,0 | 4,11 | −21,6 | −8,86 | +67,5 · +0,38 · −5,2 |
+| + durdur \|medyan 3 g\| ≥ %10 | +289,9 | 3,98 | −19,1 | −11,81 | +49,4 · +0,25 · −2,7 |
+| + durdur ≥ %15 | +302,5 | 4,06 | −20,9 | −10,62 | +62,0 · +0,33 · −4,4 |
+| short 3 g'de bir | +301,9 | 4,15 | −22,3 | −10,71 | +61,4 · +0,42 · −5,9 |
+Ön kayıt (dd en fazla 1 puan derin) hiçbiri geçmedi. Teşhis: tüm dönem en büyük düşüşü HER kolda AYNI olay — 2020-11-19 → 25
+(altcoin sıçraması, evren dar ~20 coin): T1 −16,4, short yenileme −21,6. 2022-24 ve 2025-26'da dd farkı ~0 (−0,3/−0,6),
+3 g'de bir kolunda 2022-24 dd +2,3 SIĞ. Yani S_REB'in kuyruk maliyeti tek bir dar-evren olayına bağlı; piyasa medyanı
+o olayı yakalamıyor (coin özelinde sıkışma). En kötü GÜN ise her S_REB kolunda daha iyi (−13,6 → −8,9..−11,8).
