@@ -17,4 +17,4 @@ Diğer kayıtlı kullanıcı kararları: kaldıraç 1,25x (madde 458/478 tablosu
 ## Ekim 2026 OOS izleme listesi (madde 492, ön kayıt — `izleme_ekim_oos.py`)
 Tem-Eyl 2026'da tabandan iyi görünen ama ön kaydı geçemeyen kollar Ekim gerçek verisinde TEK seferde ölçülecek
 (karar vermez; T2 vs T1 kanıtını güçlendirir/zayıflatır): kademe geri alımı (iki taraf / yalnız short, madde 491),
-short kademe −%18 (madde 488), defterle long seçimi DR50/CK50 (madde 479, defter verisi indirilirse).
+short kademe −%18 (madde 488), short ara dengelemesi S_REB 1 g / 2 g (madde 493-495, 2025-26 rejim etkisi), defterle long seçimi DR50/CK50 (madde 479, defter verisi indirilirse).

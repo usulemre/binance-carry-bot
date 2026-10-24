@@ -5766,3 +5766,14 @@ Her kol AYNI varsayımlı kontrolüne karşı (TG = TEK_GIRIS=1, canlı entryPri
   eşitVol +51, IS +15 → ön kayıt GEÇTİ (T1). SR12 de geçti (IS +9,3, eşitVol +33).
 - AMA kazancın çoğu 2025-26'da (OOS +133..+301, IS +9..+27); T2'de IS'te kazanç YOK. En kötü gün −5,5 → −7,1.
 - → madde 495: T1 SR6/SR12 tam protokol (TG+K5 varsayımıyla, iki seviye, iki hiza).
+
+## Madde 495 — S_REB protokol (T1, canlı gibi giriş + 5 bp): İKİSİ DE RED (P %65-82) — kazanç bir REJİM etkisi
+| aday | seviye / hiza | yıllık fark | Sh22 | Sh25 | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|---|
+| short her 1 g | 2.000 $ 0 / 1 | +84,3 / +79,5 | +0,04 / +0,09 | +0,58 / +0,59 | +1,0 / −4,0 | +52,7 / +253,5 | YYYY / YYYY | %67,9 / %81,9 |
+| | 3.500 $ 0 / 1 | +86,9 / +80,6 | −0,06 / −0,06 | +0,74 / +0,82 | +3,6 / −0,5 | −18,3 / +99,6 | XXXY / XYYY | %64,6 / %78,0 |
+| short her 2 g | 2.000 $ 0 / 1 | +49,9 / +40,5 | +0,06 / +0,05 | +0,49 / +0,39 | −0,1 / −2,4 | +52,7 / +117,2 | YYYY / YYYY | %65,9 / %73,2 |
+| | 3.500 $ 0 / 1 | +57,8 / +40,2 | +0,01 / −0,01 | +0,67 / +0,52 | +1,8 / −2,3 | +3,2 / +123,3 | YYYY / XYYY | %68,7 / %73,4 |
+- 2022-24'te Sharpe farkı ~0 (−0,06..+0,09), 2025-26'da +0,4..+0,8. Kısa aralıkla short yenilemek, altcoin'lerin
+  sürekli eridiği 2025-26 rejiminde çok kazandırıyor, öncesinde nötr. Rejime bağlı kazanç = P düşük → AYAR DEĞİŞMEDİ.
+- Ekim 2026 izleme listesine eklendi (madde 492): rejim sürüyorsa Ekim'de de önde olmalı.

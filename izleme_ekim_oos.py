@@ -26,6 +26,7 @@ IZLE = {  # ad -> (taban no, değişiklik)
     "K_G": (None, {"MERD_GERI": "1"}),                 # madde 491, iki tabanda
     "K_GS": (None, {"MERD_GERI": "1", "MERD_GERI_TARAF": "short"}),
     "E_MS18": (2, {"MERDS_ESIK": "0.18"}),             # madde 488 (T2 +4,1)
+    "SR6": (None, {"S_REB": "6"}), "SR12": (None, {"S_REB": "12"}),   # madde 493-495 (2025-26 rejim etkisi)
 }
 TB.kur({a: d for a, (t, d) in IZLE.items()}, onek="OK")
 DEFTER = os.path.exists("/tmp/derin_panel.pkl")
