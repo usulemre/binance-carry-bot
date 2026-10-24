@@ -6026,3 +6026,8 @@ T4'e karşı (yıllık · Sh · dd) TÜM: long son TP 0,70 −1,2 · −0,06 · 
 −0,04 · 0,0 · 0,17 −8,9 · −0,05 · 0,0. Dördü de üç dönemin çoğunda eksi. Kademe payı 0,80'e rağmen son TP optimumu kaymadı.
 ÖZET (madde 506-517, T4 üzerinde, 6 yıl): stop, kademe seviyesi, rezerv, havuz, short sıklığı (32/36/40/72 sa), ağırlık,
 sinyal penceresi, son TP — HEPSİNDE T4 tepede. Bölge kapalı.
+
+## Madde 518 — T4 üzerinde evren parametreleri 6 yılda (kaldıraçsız): 70M / 60 g / pompa filtresi kapalı YERİNDE
+T4'e karşı (yıllık · Sh · dd) TÜM: hacim 50M −21,2 · −0,16 · −3,4 · hacim 100M −29,1 · −0,19 · −1,0 · yaş 90 −49,6 · −0,25 ·
++0,7 · pompa filtresi 0,40 −21,3 · −0,05 · 0,0. Dördü de RED; 2025-26 en çok kaybeden dönem (yaş 90 −152, 100M −122, pompa
+filtresi −93). Evren ekseni 6 yılda kapalı.
