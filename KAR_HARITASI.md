@@ -6000,3 +6000,14 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26 · eşit o
 | long ^0,5 (kontrol) | +44,0 · −0,48 · −3,4 | +54,4 · −0,12 · +0,1 | +8,2 · −0,57 · −1,7 | +120,0 · −0,59 · −3,6 | −103,2 |
 Long'da yine saf gizli kaldıraç (eşitVol −103, Sharpe −0,48). Short ^0,5 en iyi ama 2022-24'te eksi, dd 1,5 derin,
 eşitVol +6 → ön kayıt düştü. Ağırlık ekseni (iki taraf da) kapalı; eşit ağırlık doğru.
+
+## Madde 515 — AYNI RİSKTE NE KAZANDIRIR: T4 kaldıraç tablosu (uzun zemin, 2020-07..2026-09, standart model, günlük × kaldıraç)
+| ayar | yıllık | Sh | dd | en kötü gün | −%5 altı | 2021 / 2022-24 / 2025-26 |
+|---|---|---|---|---|---|---|
+| T1 1,0x (canlı) | +240,5 | 3,73 | −16,4 | −13,58 | 7 | +528 / +188 / +372 |
+| T1 1,25x | +354,0 | 3,73 | −20,2 | −16,98 | 20 | +871 / +269 / +581 |
+| T4 1,0x | +330,8 | 4,45 | −14,3 | −11,69 | 2 | +683 / +208 / +480 |
+| **T4 1,15x** | **+430,8** | 4,45 | **−16,4** | **−13,44** | **5** | +953 / +261 / +645 |
+| T4 1,25x | +509,1 | 4,45 | −17,7 | −14,61 | 8 | +1181 / +302 / +779 |
+- T4 1,15x canlıyla (T1 1,0x) AYNI en büyük düşüş ve en kötü günde yıllık +%241 yerine +%431 ve daha az kötü gün
+  (7 → 5). T4 1,25x, T1 1,25x'ten her ölçüde iyi. Kaba ölçek (komisyon/kayma kaldıraçla büyür; gerçek biraz düşük).
