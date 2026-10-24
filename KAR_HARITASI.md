@@ -5916,3 +5916,14 @@ T3f'ye karşı (yıllık · Sh · dd farkı) — TÜM | YENİ 2020-21 | 2022-24 
 - 24 SA STOP'UN İKİ YÜZÜ (kullanıcının sorusu, 6 yıl): stop −%5 altı gün sayısını 8 → 3'e indiriyor (asıl işi bu), ama
   TEK en kötü günü (2021-05-19) KÖTÜLEŞTİRİYOR: −6,76 → −11,69 — ani çöküşte dipte satıp sıçramayı kaçırıyor. Getiri
   etkisi ~0 (Sh −0,01). Stop "en kötü günü kesen" değil, "kötü gün SAYISINI azaltan" kalkan.
+
+## Madde 507 — Göreli evren (hacimde ilk K, HACIM_SIRA) T3f üzerinde, uzun zemin: RED — ama 2020 boşluğunu kapatıyor
+T3f'ye karşı (yıllık · Sh · dd): TÜM | YENİ 2020-21 | 2022-24 | 2025-26
+| kol (ort. uygun coin) | TÜM | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| ilk 40 (36,0) | +17,3 · +0,13 · −0,2 | **+315,5 · +1,51 · +5,0** | −24,5 · −0,16 · 0,0 | −104,2 · −0,46 · −3,5 |
+| ilk 60 (52,9) | +19,5 · +0,06 · −6,0 | +273,4 · +1,53 · +4,5 | −9,3 · −0,02 · −3,4 | −98,3 · −0,76 · −8,5 |
+| ilk 80 (68,5) | +10,8 · −0,01 · −2,6 | +244,9 · +1,48 · +4,3 | −22,0 · −0,17 · +1,1 | −109,2 · −0,89 · −5,8 |
+70M eşiği 2020'de ortalama 5,3 coin bırakıyordu (kitap ~işlem yapamadı) → göreli evren 2020-21'i +%600'e taşıyor; ama
+2022-26'da mutlak 70M evreni daha iyi (marjinal coin nakitten kötü, madde 229). Üç dönem şartı düştü → RED.
+Ara yol → madde 508: EVREN TABANI (mutlak eşik N'den az coin bırakırsa ilk N'e tamamla; yeterliyse dokunma).

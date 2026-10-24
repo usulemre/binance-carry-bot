@@ -15,7 +15,8 @@ import arastirma_tabanlar as TB
 
 T3F = {**TB.T1, "S_REB": "12", "CAP_ORTAK": "0.08", "CAP_TARAF": "short", "MERD_PAY": "0.80"}
 U.KOL = {"U_T1": TB.T1, "U_T3P80": T3F, "U_T3FK40": {**T3F, "HACIM_SIRA": "40"}, "U_T3FK60": {**T3F, "HACIM_SIRA": "60"},
-         "U_T3FK80": {**T3F, "HACIM_SIRA": "80"}}
+         "U_T3FK80": {**T3F, "HACIM_SIRA": "80"},
+         "U_T3FN30": {**T3F, "HACIM_MIN_EVREN": "30"}, "U_T3FN40": {**T3F, "HACIM_MIN_EVREN": "40"}}   # madde 508
 U.A.KOLLAR = {k: (v, 4, {2000: U.M.D8}) for k, v in U.KOL.items()}
 
 
@@ -23,7 +24,7 @@ def analiz():
     D.analiz()
     S = {k: U.seri(k) for k in U.KOL}; b = S["U_T3P80"]
     print("\n== T3f'ye karşı (yıllık · Sh · dd farkı; TÜM / YENİ / 22-24 / 25-26)")
-    for k in ("U_T3FK40", "U_T3FK60", "U_T3FK80"):
+    for k in ("U_T3FK40", "U_T3FK60", "U_T3FK80", "U_T3FN30", "U_T3FN40"):
         r = []
         for a, z in (("2020-01-01", "2027-01-01"), ("2020-01-01", "2022-01-01"), ("2022-07-20", "2025-01-01"), ("2025-01-01", "2027-01-01")):
             x = S[k][(S[k].index >= a) & (S[k].index < z)]; y = b[(b.index >= a) & (b.index < z)]

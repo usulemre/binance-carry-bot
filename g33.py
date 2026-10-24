@@ -61,7 +61,10 @@ _YAS_GUN = float(os.environ.get("YAS_GUN", "90"))
 # MADDE 507: GORELI EVREN. HACIM_SIRA=K>0 -> hacim kosulu "mutlak esik" yerine "hacimde ilk K" (yas/donuk/tradfi ayni;
 # HACIM_TABAN altindaki coin yine giremez). Piyasa buyuklugune uyarlanir (2020'de 70M esigi ~5 coin birakiyordu). 0 -> parite.
 _HSIRA = int(os.environ.get("HACIM_SIRA", "0")); _HTABAN = float(os.environ.get("HACIM_TABAN", "2e7"))
-if _HES != 1e8 or _DON != 0.10 or _YAS_GUN != 90 or _HSIRA > 0:
+# MADDE 508: EVREN TABANI. HACIM_MIN_EVREN=N>0 -> mutlak esik (HACIM_ESIK) N'den az coin birakirsa evren hacimde ilk N'e
+# tamamlanir (HACIM_TABAN altina inmeden). Esik yeterliyse evren DEGISMEZ. 0 -> parite.
+_HMIN = int(os.environ.get("HACIM_MIN_EVREN", "0"))
+if _HES != 1e8 or _DON != 0.10 or _YAS_GUN != 90 or _HSIRA > 0 or _HMIN > 0:
     import pickle as _pk, carry_denetim as _D
     _P = _pk.load(open('/tmp/panel.pkl', 'rb'))
     _uy = _D.uygunluk(_P['C'], _P['HAC'], _P['YAS'], _P['DON'], hacim=_HES,
@@ -75,6 +78,14 @@ if _HES != 1e8 or _DON != 0.10 or _YAS_GUN != 90 or _HSIRA > 0:
         _rk = _P['HAC'].where(_taban).rank(axis=1, ascending=False)
         _uy = _taban & (_rk <= _HSIRA)
         print(f"# HACIM_SIRA={_HSIRA} taban {_HTABAN:.0e}: ortalama uygun {float(_uy.sum(axis=1).mean()):.1f}", flush=True)
+    if _HMIN > 0:
+        _taban = _D.uygunluk(_P['C'], _P['HAC'], _P['YAS'], _P['DON'], hacim=_HTABAN,
+                             yas_bar=int(round(_YAS_GUN * 6)), donuk_esik=_DON)
+        _taban[[c for c in _taban.columns if c in _TF]] = False
+        _rk = _P['HAC'].where(_taban).rank(axis=1, ascending=False)
+        _az = _uy.sum(axis=1) < _HMIN
+        _uy = _uy | (_taban & (_rk <= _HMIN)).where(_az, False)
+        print(f"# HACIM_MIN_EVREN={_HMIN}: tamamlanan bar payi {float(_az.mean()):.3f}, ortalama uygun {float(_uy.sum(axis=1).mean()):.1f}", flush=True)
     U = _uy.reindex(index=C.index, columns=C.columns).fillna(False).values
 
 # MADDE 461: GENC COIN YARIM AGIRLIK. GENC_GUN>0 -> evren yasi GENC_GUN'e iner, ama
