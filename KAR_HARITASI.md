@@ -5753,3 +5753,16 @@ Atıf (T1, hz0, puan/yıl): short fiyat +17,6 → +29,3, short kâr-al +29,6 →
 ŞÜPHE: ara dengelemede devam eden short'un girişi (ve TP/kademe) güncel fiyata SIFIRLANIYOR — kademe tekrar tekrar
 hasat ediliyor olabilir. Canlı bot devam eden pozisyonun entryPrice'ını sıfırlamaz. Ayrıca devir maliyeti 2 bp ile
 modellendi. → madde 494: TEK_GIRIS=1 (canlı gibi giriş) ve KOM 5 bp / 10 bp ile yeniden.
+
+## Madde 494 — S_REB gerçekçilik denetimi: KAZANÇ CANLI GİBİ GİRİŞ VE 5 bp MALİYETTE DE DURUYOR (T1'de)
+Her kol AYNI varsayımlı kontrolüne karşı (TG = TEK_GIRIS=1, canlı entryPrice gibi; K5 = KOM 5 bp).
+| taban / varsayım | kontrol yıllık · Sh · −%5 | short her 1 g: fark · IS · OOS · Sh · en kötü · −%5 · eşitVol | short her 2 g: fark · IS · OOS · eşitVol |
+|---|---|---|---|
+| T1 TG | +250,3 · 3,72 · 6 | +102,6 · +26,5 · +301 · 4,16 · −7,13 · 7 · +69,1 | +55,6 · +15,7 · +152 · +42,4 |
+| T1 TG+K5 | +239,6 · 3,64 · 6 | +82,5 · +14,7 · +261 · 3,98 · −7,15 · 7 · +50,9 | +45,3 · +9,3 · +133 · +32,9 |
+| T2 TG | +260,2 · 3,92 · 2 | +60,3 · +0,9 · +217 · 4,27 · −7,00 · 1 · +48,7 | +32,3 · −0,6 · +114 · +31,1 |
+| T2 TG+K5 | +249,8 · 3,84 · 2 | +41,2 · −10,8 · +180 · 4,07 · −7,02 · 1 · +30,3 | +23,8 · −5,9 · +98 · +22,6 |
+- Şüphe (a) giriş sıfırlaması ve (b) maliyet kazancı AÇIKLAMIYOR: canlı gibi giriş + 5 bp'de T1 SR6 hâlâ +82 puan,
+  eşitVol +51, IS +15 → ön kayıt GEÇTİ (T1). SR12 de geçti (IS +9,3, eşitVol +33).
+- AMA kazancın çoğu 2025-26'da (OOS +133..+301, IS +9..+27); T2'de IS'te kazanç YOK. En kötü gün −5,5 → −7,1.
+- → madde 495: T1 SR6/SR12 tam protokol (TG+K5 varsayımıyla, iki seviye, iki hiza).
