@@ -5710,3 +5710,10 @@ uygulanır ve kendi tabanına karşı ölçülür (`arastirma_tabanlar.py`).
 | tavan iki tarafa %8 | +202,4 · 3,84 · 1 · +0,8 | +211,8 · 3,99 · **0** · −1,0 (en kötü gün −4,65, dd −12,5) |
 Hiçbiri ön kaydı geçmedi. Long'a tavan koymak kötü günleri sıfırlıyor ama tam bir doz düğmesi (eşitVol ~0): pompa
 coininin ağırlığını kesmek = kaldıraç azaltmak. Short kademe −%18 T2'de hafif (+4,1) — gürültü bandı.
+
+## Madde 489 — T2 bölgesinde rastgele ortak tarama (16 ayar × 11 düğme, tohum 489): T2 TEPEDE
+IS birincisi Q11 (havuz 3, REB 4 g, TPL 0,55, kademe 0,40/0,12, pay 0,85, rezerv 0,05, tavan %7, 4 short, 96 sa):
+IS Sh 3,71 vs T2 3,60, ama OOS +298,7 vs +371,2, eşitVol −43,1 → RED. T2 IS'te 2./18, tüm dönem yıllıkta 3./18
+(önündekiler Q12 +284 / Q10 +277 — ikisi de eşitVol −15/−30: kaldıraç). Eşit oynaklıkta T2'yi geçen tek ayar Q03
+(+4,1, Sh 4,04, dd −12,4) — eşik altı. IS↔OOS Sharpe sıra korelasyonu **−0,38**: bu bölgede IS seçimi GENELLEMİYOR —
+düğmeleri daha fazla oynatmak gürültü avı. Not: aynı tabloda T1, T2'ye göre eşit oynaklıkta −20,5.
