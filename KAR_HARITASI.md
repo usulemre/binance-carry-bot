@@ -5972,3 +5972,13 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
 | 3 g (SR18) | +4,8 · +0,08 · +1,3 | +43,9 · +0,31 · −0,6 | +1,0 · +0,01 · +1,0 | −7,4 · +0,06 · +1,6 |
 T4+SR9 mutlak: +353,7 / Sh 4,59 / dd −15,2 / en kötü −11,18 / −%5 altı 3. Bot 8 sa'te bir döndüğü için 36 sa birebir yok
 (32 sa = 4 tur, 40 sa = 5 tur) → madde 512: uygulanabilir komşular SR8 / SR10 önce elekte.
+
+## Madde 512 — Botta uygulanabilir short sıklığı (T4 üzerinde): 40 sa (5 tur) ADAY, 32 sa değil
+T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
+| kol | TÜM | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| 32 sa (SR8) | +5,3 · +0,04 · −1,5 | −18,2 · −0,08 · −0,9 | −6,3 · −0,01 · +0,2 | +48,3 · +0,14 · +2,1 |
+| 36 sa (SR9, botta yok) | +23,0 · +0,15 · −0,9 | +41,8 · +0,17 · −0,3 | +2,9 · +0,06 · −0,2 | +56,0 · +0,20 · +2,2 |
+| **40 sa (SR10)** | **+17,1 · +0,12 · −0,2** | +63,1 · +0,24 · 0,0 | +1,6 · +0,04 · −0,8 | +19,8 · +0,11 · 0,0 → ADAY |
+40 sa: dd neredeyse aynı (−14,5), ön kayıt geçti; SR8-SR10 arası düzgün değil (32 sa kötü) → plato değil, dikkat.
+→ madde 513: T4 + 40 sa vs T4, uzun zemin protokol.
