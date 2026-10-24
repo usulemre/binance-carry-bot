@@ -5872,3 +5872,14 @@ o olayı yakalamıyor (coin özelinde sıkışma). En kötü GÜN ise her S_REB 
 - Ama YÖN tutarlı: beş noktanın beşi de Sharpe'ı +0,23..+0,44 artırıyor, 15 (nokta × dönem) hücrenin 15'inde yıllık > 0,
   en kötü gün hepsinde daha iyi. Tavan ekseni bir getiri/kuyruk düğmesi (%7: düşük getiri sığ dd · %10: yüksek getiri
   derin dd); %8 ortada. Kanıt: güçlü yön, sınırda büyüklük → KULLANICI KARARI statüsü değişmedi.
+
+## Madde 503 — T3 (= T1 + short 2 g + short tavan %8) üzerinde kıl payı eksenler, uzun zemin: P80 ADAY, T2'nin sorunu A43
+T3'e karşı (yıllık · Sh · dd farkı) — TÜM 2020-07..2026-09 | YENİ 2020-21 | 2022-24 | 2025-26:
+| kol | TÜM | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| **P80 (kademe payı 0,80)** | **+8,4 · +0,08 · 0,0** | +7,2 · +0,06 · 0,0 | +6,9 · +0,08 · 0,0 | +19,1 · +0,12 · 0,0 → **ADAY** |
+| A43 (4L/3S) | −17,6 · −0,14 · −0,3 | −36,9 · −0,40 · −0,3 | −18,0 · −0,20 · −1,6 | +32,7 · +0,25 · +2,5 |
+| MS18 (short kademe −%18) | −13,1 · −0,09 · 0,0 | −27,0 · −0,18 · 0,0 | −11,3 · −0,11 · 0,0 | −3,7 · −0,02 · +0,4 |
+| GS (short geri alım) | +1,2 · +0,01 · +0,1 | −2,1 · −0,02 · +0,1 | −2,5 · −0,02 · 0,0 | +15,5 · +0,07 · +0,3 |
+- T2'nin 2020-21 başarısızlığının kaynağı A43 (yalnız 2025-26'da işe yarıyor) — P80 ise üç dönemin üçünde küçük ama tutarlı
+  artı, düşüş değişmiyor (yalnız çıkış değişiyor, aynı coinler → düşük gürültü, merdiven gibi). → madde 504: T3+P80 vs T3 protokol.
