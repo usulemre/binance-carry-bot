@@ -245,6 +245,8 @@ MERD_KAT_ALT=float(os.environ.get("MERD_KAT_ALT","0.05")); MERD_KAT_UST=float(os
 MERD_YAY=int(os.environ.get("MERD_YAY","0"))
 # MADDE 493: S_REB=<bar> -> SHORT tarafi tam dengeleme arasinda bu siklikla yeniden secilir (long'lar REB ile). 0 = parite.
 S_REB=int(os.environ.get("S_REB","0"))
+# MADDE 496: L_REB=<bar> -> LONG tarafi ara dengelemesi (aynalanmis S_REB). 0 = parite.
+L_REB=int(os.environ.get("L_REB","0"))
 # MADDE 491: MERD_GERI=1 -> kademe sonrasi fiyat girise donunce satilan pay geri alinir, kademe yeniden kurulur. 0 = parite.
 MERD_GERI=int(os.environ.get("MERD_GERI","0"))
 MERD_GERI_TARAF=os.environ.get("MERD_GERI_TARAF","iki").strip()
@@ -411,7 +413,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 kucuk=np.abs(y-poz)<TOL*bacak
                 y=np.where(kucuk,poz,y)
             _dv=np.zeros(nk,bool)
-            if _kisb[0]:
+            if _kisb[0]=='L':
+                _dv=poz<0; y=np.where(_dv,poz,y)      # short'lar dokunulmadan surer
+            elif _kisb[0]:
                 _dv=poz>0; y=np.where(_dv,poz,y)      # long'lar dokunulmadan surer (giris/kademe durumu korunur)
             if MERD_DEVIR==1:
                 # MADDE 474: kademesi dolmus ve yeniden secilen coin TAZELENMEZ: kalan ⅓ ayni giris/TP ile surer
@@ -441,7 +445,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                                    uc=float(_UART[i,_k]) if np.isfinite(_UART[i,_k]) else np.nan,
                                    pnl=0.0, fon=0.0, fiy=0.0, bar=0)
         _kis=(S_REB>0 and (i-bas)%S_REB==0 and (i-bas)%REB!=0)
-        if (i-bas)%REB==0 or _kis:
+        _kisL=(L_REB>0 and (i-bas)%L_REB==0 and (i-bas)%REB!=0)
+        if _kisL and _kis: _kisL=False      # ikisi ayni barda -> once short (basit kural)
+        if (i-bas)%REB==0 or _kis or _kisL:
             g=np.isfinite(S[i])&np.isfinite(cv[i])&U[i]
             if UCELE>0:
                 # MADDE 196: uc hareket etmis coin KARSI tarafta aday olmasin.
@@ -599,6 +605,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _gm=GENCV[i]&(y!=0)
                     if _gm.any(): y=np.where(_gm,y*GENC_PAY,y)
                 if _kis: y=np.where(y>0,0.0,y); _kisb[0]=True     # MADDE 493: ara dengeleme yalniz SHORT
+                elif _kisL: y=np.where(y<0,0.0,y); _kisb[0]='L'   # MADDE 496: ara dengeleme yalniz LONG
                 else: _kisb[0]=False
                 bek=(i+GEC,y); yedek_l=list(lo_s[_nl:]); yedek_s=list(sh_s[_ns:]); w_=0.5/max(_nl,_ns)
         gec=np.isfinite(cv[i])&np.isfinite(cv[i+1])
