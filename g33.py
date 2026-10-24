@@ -243,6 +243,8 @@ MERD_KAT_ALT=float(os.environ.get("MERD_KAT_ALT","0.05")); MERD_KAT_UST=float(os
 # ayni taraftaki ACIK diger bacaklara mevcut agirlikla orantili eklenir (brut korunur, yeni coin yok).
 # MERD_YAY=2 -> TP ile tam kapananlarin agirligi da ayni sekilde yayilir. 0 = kapali (parite).
 MERD_YAY=int(os.environ.get("MERD_YAY","0"))
+# MADDE 493: S_REB=<bar> -> SHORT tarafi tam dengeleme arasinda bu siklikla yeniden secilir (long'lar REB ile). 0 = parite.
+S_REB=int(os.environ.get("S_REB","0"))
 # MADDE 491: MERD_GERI=1 -> kademe sonrasi fiyat girise donunce satilan pay geri alinir, kademe yeniden kurulur. 0 = parite.
 MERD_GERI=int(os.environ.get("MERD_GERI","0"))
 MERD_GERI_TARAF=os.environ.get("MERD_GERI_TARAF","iki").strip()
@@ -393,7 +395,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
     tp=TPX if tp is None else tp
     hedef_brut=[0.0]; _acik={}
     nk=C.shape[1]; poz=np.zeros(nk); giris=np.full(nk,np.nan); zirve=np.full(nk,np.nan); tp_yapildi=np.zeros(nk,bool); eq=[1.0]; bek=None; _yas=np.zeros(nk,int)
-    merd_yapildi=np.zeros(nk,bool); merd0_yapildi=np.zeros(nk,bool)
+    merd_yapildi=np.zeros(nk,bool); merd0_yapildi=np.zeros(nk,bool); _kisb=[False]
     ek_say=np.zeros(nk,int); ilk_w=np.zeros(nk)
     for i in range(bas,len(C)-1):
         # MADDE 415: her bar koordinatore (i, poz, yeni hedef ya da None) bildirilir;
@@ -409,6 +411,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 kucuk=np.abs(y-poz)<TOL*bacak
                 y=np.where(kucuk,poz,y)
             _dv=np.zeros(nk,bool)
+            if _kisb[0]:
+                _dv=poz>0; y=np.where(_dv,poz,y)      # long'lar dokunulmadan surer (giris/kademe durumu korunur)
             if MERD_DEVIR==1:
                 # MADDE 474: kademesi dolmus ve yeniden secilen coin TAZELENMEZ: kalan ⅓ ayni giris/TP ile surer
                 _dv=merd_yapildi&(poz!=0)&(np.sign(y)==np.sign(poz))
@@ -436,7 +440,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                                    vol=float(VOL[i,_k]) if np.isfinite(VOL[i,_k]) else np.nan,
                                    uc=float(_UART[i,_k]) if np.isfinite(_UART[i,_k]) else np.nan,
                                    pnl=0.0, fon=0.0, fiy=0.0, bar=0)
-        if (i-bas)%REB==0:
+        _kis=(S_REB>0 and (i-bas)%S_REB==0 and (i-bas)%REB!=0)
+        if (i-bas)%REB==0 or _kis:
             g=np.isfinite(S[i])&np.isfinite(cv[i])&U[i]
             if UCELE>0:
                 # MADDE 196: uc hareket etmis coin KARSI tarafta aday olmasin.
@@ -593,6 +598,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if GENCV is not None:
                     _gm=GENCV[i]&(y!=0)
                     if _gm.any(): y=np.where(_gm,y*GENC_PAY,y)
+                if _kis: y=np.where(y>0,0.0,y); _kisb[0]=True     # MADDE 493: ara dengeleme yalniz SHORT
+                else: _kisb[0]=False
                 bek=(i+GEC,y); yedek_l=list(lo_s[_nl:]); yedek_s=list(sh_s[_ns:]); w_=0.5/max(_nl,_ns)
         gec=np.isfinite(cv[i])&np.isfinite(cv[i+1])
         br=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0); br=np.nan_to_num(br)
