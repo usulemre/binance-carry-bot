@@ -28,3 +28,5 @@ short kademe −%18 (madde 488), short ara dengelemesi S_REB 1 g / 2 g (madde 49
 6 yıllık uzun zeminde (2020-07..2026-09) üç dönemin üçünde önde; canlı gibi giriş + 5 bp ile protokolde dört şart 16/16
 hücrede GEÇTİ, düşüş her hücrede sığ, yalnız P %68-82 (eşik %95). Getiri +17..+26 puan/yıl (muhafazakar), Sharpe
 +0,13..+0,47, −%5 altı gün 7 → 3, en kötü gün −13,6 → −11,6 (uzun zemin, standart model).
+
+Bota eklendi (varsayılan KAPALI): açmak için `.env`'e `CARRY_SHORT_ARA_SAAT=48` ve `CARRY_SHORT_TAVAN=0.08`. Testler: `test_carry_short_ara.py`.
