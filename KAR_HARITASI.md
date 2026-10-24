@@ -5777,3 +5777,13 @@ Her kol AYNI varsayımlı kontrolüne karşı (TG = TEK_GIRIS=1, canlı entryPri
 - 2022-24'te Sharpe farkı ~0 (−0,06..+0,09), 2025-26'da +0,4..+0,8. Kısa aralıkla short yenilemek, altcoin'lerin
   sürekli eridiği 2025-26 rejiminde çok kazandırıyor, öncesinde nötr. Rejime bağlı kazanç = P düşük → AYAR DEĞİŞMEDİ.
 - Ekim 2026 izleme listesine eklendi (madde 492): rejim sürüyorsa Ekim'de de önde olmalı.
+
+## Madde 496 — Long ara dengelemesi (L_REB, canlı gibi giriş + 5 bp): RED — gizli maruziyet
+| taban | kontrol (TG+K5) | long her 1 g: fark · IS · Sh · en kötü · −%5 · eşitVol | long her 2 g: fark · IS · Sh · en kötü · −%5 · eşitVol |
+|---|---|---|---|
+| T1 | +239,6 · Sh 3,64 · −%5 6 | +129,9 · +22,9 · 3,14 · −9,77 · 29 · −143,1 | +86,5 · +18,3 · 3,29 · −8,94 · 24 · −75,1 |
+| T2 | +249,8 · Sh 3,84 · −%5 2 | +136,0 · +21,1 · 3,23 · −9,72 · 29 · −186,0 | +85,1 · +16,9 · 3,38 · −8,65 · 21 · −104,1 |
+Long'u sık yenilemek kademe/TP ile boşalan long ağırlığını tam boya geri doldurur → ortalama maruziyet ve tek coin
+çöküşleri büyür (−%5 altı gün 6 → 29, en kötü gün −%9,8). Getiri kaldıraç gibi; eşit oynaklıkta çok kötü. Short
+tarafında aynı şey olmaması (madde 494) asimetriyi doğruluyor: short kârı tazelikten, long kârı pompadan.
+(Not: LR12SR12 kolu aynı barda çakıştığı için yalnız short ara dengelemesini çalıştırdı = SR12; bilgi değeri yok.)
