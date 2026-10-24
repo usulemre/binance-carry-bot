@@ -5857,3 +5857,18 @@ o olayı yakalamıyor (coin özelinde sıkışma). En kötü GÜN ise her S_REB 
   oynaklıkta %95'e ~10+ yıl ister). Bugüne kadarki EN GÜÇLÜ "yalnız P'den RED" adayı. AYAR DEĞİŞMEDİ → KULLANICI KARARI.
 - Bota eklemek: short ara dengelemesi (yeni düğme: short dilimlerini 2 günde bir yeniden seç) + short coin tavanı %8 (yeni
   düğme, hesap düzeyi). İkisi de motorda var (S_REB, CAP_TARAF=short).
+
+## Madde 502 — SR12+CAP8 komşuluğu (uzun zemin): YÖN PLATOSU VAR, ön kayıt 2/4 → GEÇMEDİ
+| kol (vs T1, tüm 2020-07..2026-09) | yıllık | Sh | dd | en kötü gün | −%5 | 2020-21 / 2022-24 / 2025-26 yıllık farkı |
+|---|---|---|---|---|---|---|
+| SR12+CAP8 | +29,9 | +0,31 | 0,0 | −11,59 | 3 | +20,7 / +13,7 / +87,1 |
+| SR9 (1,5 g) | +47,7 | +0,44 | −0,8 | −11,10 | 4 | +43,7 / +16,2 / +135,8 |
+| SR18 (3 g) | +33,5 | +0,38 | **−1,6** | −12,19 | 3 | +39,7 / +15,7 / +82,5 |
+| CAP %7 | **+14,0** | +0,23 | +0,7 | −12,08 | 2 | +5,3 / +1,9 / +64,6 |
+| CAP %10 | +48,7 | +0,35 | **−1,8** | −10,25 | 3 | +40,3 / +19,9 / +128,6 |
+(T1: +240,5, Sh 3,73, dd −16,4, en kötü −13,58, −%5 altı 7)
+- Ön kayıt (dördü de yıllık ≥ +15, Sh ≥ +0,15, dd ≤ 1 puan derin, üç dönemde > 0): CAP7 yıllıkta (+14,0),
+  SR18 ve CAP10 düşüşte (−1,6/−1,8) kaldı → 2/4, PLATO DEĞİL (kayıtlı kurala göre).
+- Ama YÖN tutarlı: beş noktanın beşi de Sharpe'ı +0,23..+0,44 artırıyor, 15 (nokta × dönem) hücrenin 15'inde yıllık > 0,
+  en kötü gün hepsinde daha iyi. Tavan ekseni bir getiri/kuyruk düğmesi (%7: düşük getiri sığ dd · %10: yüksek getiri
+  derin dd); %8 ortada. Kanıt: güçlü yön, sınırda büyüklük → KULLANICI KARARI statüsü değişmedi.
