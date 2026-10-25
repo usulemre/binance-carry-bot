@@ -408,6 +408,16 @@ if BRUT_PRIM>0:
         np.random.default_rng(int(os.environ.get("BRUT_TOHUM","7"))).shuffle(_PCARP)
     print(f"# BRUT_PRIM={BRUT_PRIM} alt={BRUT_ALT} ust={BRUT_UST} "
           f"ort carpan={np.nanmean(_PCARP[1200:]):.3f}",flush=True)
+# MADDE 541: PIYASA ISINMASI. LISI=x -> dengeleme aninda evrenin (U) medyan LISI_PEN bar getirisi >= x ise yeni LONG
+# agirliklari LISI_PAY ile carpilir (serbest kalan agirlik dagitilmaz: brut azalir). Nedensel (bar i kapanisi). 0 = kapali.
+LISI=float(os.environ.get("LISI","0")); LISI_PEN=int(os.environ.get("LISI_PEN","42")); LISI_PAY=float(os.environ.get("LISI_PAY","0.5")); _LIS=[0,0]
+LISI_IKI=int(os.environ.get("LISI_IKI","0"))   # 1 -> iki taraf birlikte kuculur (notr kalir)
+if LISI>0:
+    _rl=np.full_like(cv,np.nan); _rl[LISI_PEN:]=cv[LISI_PEN:]/np.where(cv[:-LISI_PEN]>0,cv[:-LISI_PEN],np.nan)-1
+    _LI=np.nanmedian(np.where(U,_rl,np.nan),axis=1)
+    _lt=np.isfinite(_LI)&(_LI>=LISI)
+    print(f"# LISI={LISI} PEN={LISI_PEN} PAY={LISI_PAY}: sicak bar payi {_lt.mean():.3f} · sicak gunler (ilk 60) "
+          f"{sorted(set(str(C.index[j].date()) for j in np.flatnonzero(_lt)))[:60]}", flush=True)
 _BRT=[0.0,0]   # [brut carpan toplami, sayi] - fiili ortalama kaldirac icin
 FON_OLC=int(os.environ.get("FON_OLC","0"))
 fon=[0.0,0]   # [toplam funding (sermaye orani), bar sayisi]
@@ -664,6 +674,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if _PCARP is not None:
                     _mi=float(_PCARP[i]) if np.isfinite(_PCARP[i]) else 1.0
                     y=y*_mi; _BRT[0]+=_mi; _BRT[1]+=1
+                if LISI>0 and np.isfinite(_LI[i]) and _LI[i]>=LISI:
+                    y=y*LISI_PAY if LISI_IKI else np.where(y>0,y*LISI_PAY,y); _LIS[0]+=1
                 if GENCV is not None:
                     _gm=GENCV[i]&(y!=0)
                     if _gm.any(): y=np.where(_gm,y*GENC_PAY,y)
