@@ -6207,3 +6207,8 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 4 sa −%8 · 3 bar +4,1 · −0,03 · −2,5 | +15,1 | +7,3 | +0,8 · −3,3 · 2 — 6 bar +3,2 · −0,05 · −4,4 — geri yok +2,1 · −0,06 · −2,7 —
 4 sa −%5 · 3 bar −9,1 · −0,25 · −5,9 · 7. En kötü gün 2021-05-19 −12,8 → −15,0..−17,1 (çöküş ikinci dalga yapınca hedge yok).
 Çöküş anı sinyalleri iki yönde de RED (538-540): tepkisel piyasa freni ekseni kapandı.
+
+## Madde 541 — Piyasa ısınması (evren 7 g medyanı ≥ eşik → yeni long yarım): RED — çöküşlerden önce ısınma yok
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı: +%15 yalnız long −23,9 · −0,12 · 2 —
++%25 −8,3 · −0,04 · 2 — iki taraf +%15 −34,2 · 2 — +%25 −13,8 · 2. Büyük kötü günlerin HİÇBİRİ değişmedi (o günlerden önce
+evren ısınmış değildi); kesinti yalnız 2020-21 boğasında kâr kaçırıyor. Piyasa zamanlaması ekseni (538-541) kapandı.

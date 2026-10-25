@@ -983,10 +983,12 @@ def _dol(sev,uzun,i,k):
 # MADDE 455: CAP_TARAF=short -> tavan yalniz SHORT bacaklara (long serbest). Bos/iki -> parite.
 CAP_TARAF=os.environ.get('CAP_TARAF','iki').strip()
 CAP_DAGIT=int(os.environ.get('CAP_DAGIT','0'))
+# MADDE 542: CAP_LONG=x -> LONG bacaklara AYRI coin tavani (CAP_TARAF'tan bagimsiz; short tavani CAP_ORTAK ile surer). 0 = kapali.
+CAP_LONG=float(os.environ.get('CAP_LONG','0'))
 _CAPS=[0,0]   # [kirpilan bacak sayisi, toplam kirpilan agirlik]
 def _ortak_kos(baslar,n,olcut,tp):
     gens=[_bt2g(b,n,olcut,tp) for b in baslar]
-    NF_=len(gens); lim=CAP_ORTAK*NF_ if CAP_ORTAK>0 else np.inf
+    NF_=len(gens); lim=CAP_ORTAK*NF_ if CAP_ORTAK>0 else np.inf; lim_l=CAP_LONG*NF_
     msg=[next(g) for g in gens]; bitti=[False]*NF_; son=[None]*NF_
     poz_son=[np.zeros(C.shape[1]) for _ in gens]
     t=min(m[0] for m in msg)
@@ -1001,21 +1003,24 @@ def _ortak_kos(baslar,n,olcut,tp):
                 y2=y.copy(); serbest={1:0.0,-1:0.0}
                 for k in np.flatnonzero(y2!=0):
                     sg=1 if y2[k]>0 else -1
-                    if (CAP_TARAF=='short' and sg>0) or (CAP_TARAF=='long' and sg<0):
+                    _lm=lim
+                    if sg>0 and CAP_LONG>0: _lm=lim_l
+                    elif (CAP_TARAF=='short' and sg>0) or (CAP_TARAF=='long' and sg<0):
                         continue
-                    izin=max(0.0,lim-sg*diger[k])
+                    izin=max(0.0,_lm-sg*diger[k])
                     if abs(y2[k])>izin:
                         serbest[sg]+=abs(y2[k])-izin; _CAPS[0]+=1; _CAPS[1]+=abs(y2[k])-izin
                         y2[k]=sg*izin
                 if CAP_DAGIT:
                     for sg in (1,-1):
                         if serbest[sg]<=0: continue
-                        ad=[k for k in np.flatnonzero(y2*sg>0) if abs(y2[k])<max(0.0,lim-sg*diger[k])-1e-12]
+                        _lm=lim_l if (sg>0 and CAP_LONG>0) else lim
+                        ad=[k for k in np.flatnonzero(y2*sg>0) if abs(y2[k])<max(0.0,_lm-sg*diger[k])-1e-12]
                         top=sum(abs(y2[k]) for k in ad)
                         if top<=0: continue
                         for k in ad:
                             ek=serbest[sg]*abs(y2[k])/top
-                            y2[k]=sg*min(abs(y2[k])+ek,max(0.0,lim-sg*diger[k]))
+                            y2[k]=sg*min(abs(y2[k])+ek,max(0.0,_lm-sg*diger[k]))
                 cev=y2
             try:
                 msg[j]=gens[j].send(cev)
