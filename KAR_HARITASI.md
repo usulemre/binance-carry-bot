@@ -6337,3 +6337,7 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 3× long −114,2 · −0,49 · 4 — 3× iki −143,4 · −0,77 · 3. HEPSİ RED. Hacim sıçrayan coinler (özellikle 2025-26) kitabın kâr kaynağı;
 funding'den farklı olarak hacim sıçraması tuzak değil, carry fırsatının kendisi. Not: işaretli pay yüksek (HAC 4 sa'lik bar hacmi
 gibi davranıyor, gürültülü) — eşik anlamı "olağan dışı" değil "hareketli"; yine de iki eşikte de yön aynı.
+
+## Madde 559 — Varyant harmanı (yarım sermaye T4 + yarım varyant, günlük seriden; çevrim farkı yok sayıldı): yeni bilgi yok
+T4 ile korelasyon 0,91 (T1) … 0,999; harman = varyant etkisinin yarısı. T4+36 sa short (botta yok) kural ADAY (+9,2 · +0,08);
+T4+96 sa short sinyali −%5 altı gün 2 → 1 (+4,9 · +0,08); T4+T1 −30,5 (T1 belirgin zayıf). Dilim karması T4'e bir şey eklemiyor.
