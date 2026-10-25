@@ -1,6 +1,9 @@
 import pandas as pd, numpy as np, math
 # Seriler: t1 = şu anki bot (ZSR15P67), t2 = 2. aday (BRP80_CAP_A43), bot = eski bot (T60 öncesi, referans)
-D = pd.read_pickle("../gunluk.pkl")
+import os
+UZUN = os.environ.get("PDF_PROFIL", "") == "uzun"     # 6 yıllık defter: t1=T1, t2=T4, sr=T3, bot=merdivensiz T60
+D = pd.read_pickle("../gunluk_uzun.pkl" if UZUN else "../gunluk.pkl")
+ILK_YIL = int(D.index[0].year)
 BAS = 2000.0
 S = [("t1", "Şu anki bot", "l-t1", "sw-t1"), ("t2", "2. aday (T2)", "l-t2", "sw-t2"), ("sr", "Short ara dengeli", "l-sr", "sw-sr"), ("bot", "Eski bot", "l-eski", "sw-eski")]
 for c, *_ in S:
@@ -108,7 +111,7 @@ for p in sorted(set(D.index.to_period("M"))):
 yil_rows = []
 for y in sorted(set(D.index.year)):
     Y_ = D[D.index.year == y]
-    et = f"{y}" + (" <small>20 Tem–Ara</small>" if y == 2022 else " <small>Oca–Eyl</small>" if y == 2026 else "")
+    et = f"{y}" + (f" <small>{D.index[0].day} {AYK[D.index[0].month-1]}–Ara</small>" if y == ILK_YIL else " <small>Oca–Eyl</small>" if y == 2026 else "")
     g = {c: donem_getiri(Y_, c) for c, *_ in S}
     yil_rows.append(f'<tr><td class="yl">{et}</td><td class="num {sinif(g["t1"])} strong">{yuzde(g["t1"],0)}</td><td class="num">{para(Y_.t1_b.iloc[-1])}</td>'
                     f'<td class="num {sinif(g["t2"])} strong">{yuzde(g["t2"],0)}</td><td class="num">{para(Y_.t2_b.iloc[-1])}</td>'
@@ -178,5 +181,20 @@ kapak = f'''
 
 css = open("stil.css").read()
 html_ = f'<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Kazanç Defteri</title><style>{css}</style></head><body>{kapak}{"".join(sayfalar)}</body></html>'
+if UZUN:
+    for a, b in [("2. aday (T2)", "T4 (aday)"), ("2. aday T2", "T4 (aday)"), ("2, aday T2", "T4 (aday)"), ("T2 yıl sonu", "T4 yıl sonu"), ("T2 en kötü gün", "T4 en kötü gün"),
+                 ("T2 bakiye", "T4 bakiye"), ("T2 en kötü", "T4 en kötü"), ("Short ara dengeli · eski bot", "T3 · merdivensiz T60"),
+                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T3 (şu anki bot + short 2 g'de bir + short tavan %8)"),
+                 ("Short ara dengeli", "T3"), ("SAD bakiye", "T3 bakiye"), ("Eski bot (referans)", "Merdivensiz T60 (referans)"),
+                 ("Eski bot", "Merdivensiz T60"), ("20 Temmuz 2022", "19 Temmuz 2020"), ("T2'nin farkı getiriden çok kötü günlerde.", "Kaldıraçsız (1,0x)."),
+                 ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T4")]:
+        html_ = html_.replace(a, b)
+    i = html_.index('<p class="dipnot">'); j = html_.index("</p>", i)
+    html_ = html_[:i] + ('<p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), UZUN ZEMİN (2020-01 verisi, ölçüm 19.07.2020 – 30.09.2026), '
+        'gerçekçi ağırlık kayması, 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması, KALDIRAÇSIZ (1,0x). Kalabalık (long/short) oranı 2021-12 '
+        'öncesi yok → o dönemde seçim funding sırasıyla (tüm serilerde aynı). Şu anki bot = canlı varsayılan (T60 + 24 sa stop + iki taraflı merdiven). '
+        'T3 = şu anki bot + short 2 g\'de bir + short coin tavanı %8. T4 = T3 + merdiven payı 0,80 + evren tabanı 30 (madde 497-519; botta hazır, '
+        'varsayılan kapalı — kullanıcı kararı). Merdivensiz T60 = merdivenden önceki canlı ayar. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
+        'sonucu değildir ve gelecek için garanti vermez. Büyük bakiyelerde likidite nedeniyle bileşik büyüme gerçekte bu kadar sürmez.') + html_[j:]
 open("defter.html", "w").write(html_)
 print("sayfa", 3 + len(sayfalar))

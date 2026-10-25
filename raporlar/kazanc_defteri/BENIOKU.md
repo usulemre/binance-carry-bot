@@ -16,3 +16,7 @@ Backtest sonuçlarıdır, canlı getiri değildir.
 Yeniden üretmek: `raporlar/gunluk.pkl` (sütunlar `t1`, `t2`, `sr`, `bot`; `arastirma_m443_kotu_gun_kalkani.seri()` ile
 /tmp/m412/M357_{ZSR15P67,BRP80_CAP_A43,D1_SR6,KAYMA}_2000_{0,1}.pkl ortalamaları), sonra bu klasörde `python3 pdf_uret.py`
 ve Playwright ile `defter.html` → PDF (A4, arka plan açık).
+
+## Kazanc_Defteri_6_Yil.pdf (uzun zemin, kaldıraçsız)
+19.07.2020 – 30.09.2026, 78 sayfa: şu anki bot · **T4 (aday)** · T3 · merdivensiz T60. Veri `raporlar/gunluk_uzun.pkl`
+(/tmp/m_uzun/M357_{U_T1,U_T3FN30,U_SR12CAP8,U_M0}_2000_{0,1}), üretim `PDF_PROFIL=uzun python3 pdf_uret.py` + Playwright.
