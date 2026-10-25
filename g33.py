@@ -268,6 +268,7 @@ MERD_YAY=int(os.environ.get("MERD_YAY","0"))
 S_REB=int(os.environ.get("S_REB","0"))
 # MADDE 496: L_REB=<bar> -> LONG tarafi ara dengelemesi (aynalanmis S_REB). 0 = parite.
 L_REB=int(os.environ.get("L_REB","0"))
+L_REB_MOD=int(os.environ.get("L_REB_MOD","1"))   # madde 520: 2 = yalniz solan long degisir, agirlik devredilir
 # MADDE 499: S_REB_DUR=x -> evrenin (U) medyan 3 g getirisi |.| >= x iken short ara dengelemesi atlanir (cokus/sikisma
 # aninda taze short acilmaz). S_REB_PEN bar (varsayilan 18 = 3 g). 0 -> kapali (parite).
 S_REB_DUR=float(os.environ.get("S_REB_DUR","0")); S_REB_PEN=int(os.environ.get("S_REB_PEN","18")); _SRD=[0]
@@ -442,7 +443,16 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 kucuk=np.abs(y-poz)<TOL*bacak
                 y=np.where(kucuk,poz,y)
             _dv=np.zeros(nk,bool)
-            if _kisb[0]=='L':
+            if _kisb[0]=='L' and L_REB_MOD==2:
+                # MADDE 520: SOLAN LONG DEGISIMI. Devam eden long'a dokunulmaz; yeni secimde olmayan (funding'i solmus) long
+                # kapanir ve SERBEST KALAN agirlik (dolu bacagin GUNCEL agirligi) yeni girenlere esit dagitilir. Brut artmaz.
+                _old=poz>0; _new=y>0
+                _kalan=_old&_new; _cik=_old&~_new; _gir=_new&~_old
+                _serb=float(poz[_cik].sum())
+                y2=np.where(poz<0,poz,0.0); y2=np.where(_kalan,poz,y2)
+                if _gir.any() and _serb>0: y2=np.where(_gir,_serb/_gir.sum(),y2)
+                y=y2; _dv=(poz<0)|_kalan
+            elif _kisb[0]=='L':
                 _dv=poz<0; y=np.where(_dv,poz,y)      # short'lar dokunulmadan surer
             elif _kisb[0]:
                 _dv=poz>0; y=np.where(_dv,poz,y)      # long'lar dokunulmadan surer (giris/kademe durumu korunur)
