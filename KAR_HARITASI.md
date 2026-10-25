@@ -6134,3 +6134,12 @@ Q_T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26 · eşit
 Merdiveni gevşetmek (daha az/daha geç kilit) getiriyi artırıp riski artırıyor, sıkılaştırmak tersi — eşit riskte hepsi
 −10..+1 aralığında. Düzeltilmiş modelde merdivenin "doğru" ayarı yok; bir getiri↔kötü gün tercihi. T4 ayarı (0,45 / 0,15 /
 0,80) eşit riskte en iyi bölgede ve −%5 altı gün en az (2) → DEĞİŞMEDİ.
+
+## Madde 530 — T4 vs T1 PAKET PROTOKOLÜ, DÜZELTİLMİŞ MODEL (MERD_SIRA=1, canlı gibi giriş + 5 bp, uzun zemin): 16/16 şart, P %86-95
+| seviye / hiza | yıllık fark | Sh (≤2024) | Sh (2025+) | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 / 1 | +58,7 / +43,3 | +0,68 / +0,55 | +0,33 / +0,33 | −1,8 / −3,3 (sığ) | +110,3 / +137,4 | YYYY / YYYY | %90,4 / %93,7 |
+| 3.500 $ 0 / 1 | +52,6 / +47,2 | +0,59 / +0,59 | +0,49 / +0,49 | −2,3 / −3,0 (sığ) | +115,5 / +127,2 | YYYY / YYYY | %86,5 / %94,5 |
+Düzeltilmiş modelde fark küçüldü (+70..+87 → +43..+59 puan/yıl) ama dört şart her hücrede geçiyor, düşüş her hücrede sığ,
+Sharpe iki dönemde de belirgin yüksek. P %86-95 → protokol RED (sınırda). T4'ün demo kararı (madde 523) bu kanıtla
+uyumlu; canlıya geçiş için demo dolumları + Ekim OOS beklenir.
