@@ -582,9 +582,10 @@ kontrol("hacim eşiği altındakiler ELENİYOR", len(ev6) == 40, f"({len(ev6)})"
 # 8d) filtre eşiği gerçekten okunuyor mu (sabit kodlanmış değil)
 _eski = cb.MIN_DAILY_VOLUME_USD
 cb.MIN_DAILY_VOLUME_USD = 1_000_000_000.0
+_eskimin = cb.EVREN_MIN; cb.EVREN_MIN = 0   # madde 534: T4 varsayılanında evren tabanı 30 boşluğu doldurur
 kontrol("eşik yükseltilince evren boşalıyor (eşik CANLI okunuyor)",
         cb.evren_sec(c6) == [])
-cb.MIN_DAILY_VOLUME_USD = _eski
+cb.MIN_DAILY_VOLUME_USD = _eski; cb.EVREN_MIN = _eskimin
 
 _eskiy = cb.MIN_LISTELEME_GUN
 cb.MIN_LISTELEME_GUN = 0
@@ -1290,9 +1291,9 @@ kontrol("aynı giriş için kademe İKİNCİ KEZ konmuyor (yalnız +%60 TP)",
         and abs([v for k, v in _acik if v[0] == _ms][0][2] / poz[_ms][1] - 1.60) < 0.01,
         f"({[v for k, v in _acik if v[0] == _ms]})")
 cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT = _em
-kontrol("merdiven varsayılanı long 0,45 / short 0,15 / pay 0,667 (madde 469)",
+kontrol("merdiven varsayılanı long 0,45 / short 0,15 / pay 0,80 (madde 469; pay madde 534 T4 varsayılanı)",
         abs(cb.MERDIVEN - 0.45) < 1e-9 and abs(cb.MERDIVEN_SHORT - 0.15) < 1e-9
-        and abs(cb.MERDIVEN_PAY - 0.667) < 1e-9)
+        and abs(cb.MERDIVEN_PAY - (0.80 if cb._PROFIL_T4 else 0.667)) < 1e-9)
 # MADDE 469: SHORT MERDİVENİ
 temiz_ortam(); _em2 = (cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT)
 cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT = 0.45, 0.667, 0.0, 0.15
