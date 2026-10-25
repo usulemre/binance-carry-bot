@@ -6167,3 +6167,9 @@ FAZ 10: −7,3 · −0,07 · −1,1 | −25,0 | +0,5 | −10,4 · −8,5 · 1. F
 
 ## Madde 534 — KULLANICI KARARI (2026-10-25): T4 KOD VARSAYILANI
 `CARRY_PROFIL` boşsa artık T4 (carry_bot `_PROFIL_T4`, preflight varsayılanı). Eski varsayılan T1 = `CARRY_PROFIL=T60`.
+
+## Madde 535 — Düzeltilmiş modelde T4: kademe sonrası çıkışlar HEPSİ RED
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+geri alım (long) +1,9 · −0,03 · −0,2 | +5,6 | −3,1 | +12,2 · −3,3 · 3 — koşucu %25 −0,7 · −0,02 | +3,9 | +0,5 | −6,9 · −2,4 · 2 —
+koşucu %40 −0,5 · −0,04 | +9,5 | −0,2 | −8,7 · −4,6 · 2 — başabaş −1,7 · −0,01 | +0,2 | +1,3 | −10,3 · −0,6 · 2.
+Sabit TP + kademe zaten en iyisi; kademe sonrası ekseni kapandı. T4 değişmedi.
