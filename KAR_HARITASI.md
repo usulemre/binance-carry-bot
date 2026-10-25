@@ -6238,3 +6238,11 @@ short 72 sa +5,9 · +0,09 · −0,6 · +10,2 · 2 (yön aynı, < +8) — rezerv 
 Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
 32 sa +3,9 · +0,03 · −1,3 | −19,1 | −3,4 | +31,5 · +3,3 · 3 — 36 sa +18,3 · +0,15 · −0,9 · ADAY — 40 sa +14,0 · +0,12 · −0,2 |
 +51,5 | +1,8 | +14,6 · +14,5 · 3 · ADAY. Plato 36-40 sa; 32 sa düşüyor. → madde 546: T4-40 sa vs T4 protokolü (canlı gibi giriş + 5 bp).
+
+## Madde 546 — T4 short 40 sa vs T4 (48 sa) PROTOKOLÜ (düzeltilmiş model, canlı gibi giriş + 5 bp, uzun zemin): RED
+| seviye / hiza | yıllık | Sh ≤2024 | Sh 2025+ | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 / 1 | +11,3 / +10,6 | +0,16 / +0,06 | −0,02 / +0,09 | +0,6 / −0,6 | −5,7 / +29,2 | XYXY / YYYY | %69 / %63 |
+| 3.500 $ 0 / 1 | +9,8 / +10,4 | +0,15 / +0,05 | −0,05 / +0,12 | +0,4 / −0,9 | −0,9 / +33,3 | XYXY / YYYY | %72 / %69 |
+Canlı gibi girişte fark ~+10 puan/yıl'a iniyor, hiza 0'da 2025+ Sharpe ve eşit-risk şartı düşüyor, P %63-72. Madde 513 ile aynı
+sonuç: 40 sa bir doz farkı, kanıt değil. T4 48 sa'te kalır.
