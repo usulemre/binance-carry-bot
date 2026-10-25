@@ -6233,3 +6233,8 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 short 36 sa (S_REB 9) +18,3 · +0,15 · −0,9 | +31,4 | +3,5 | +39,3 · +17,8 · 3 → madde 503 kuralından ADAY.
 short 72 sa +5,9 · +0,09 · −0,6 · +10,2 · 2 (yön aynı, < +8) — rezerv 0 +18,3 · −0,06 · −1,8 · −7,9 · 4 (gizli risk, RED) — havuz 5 −4,5 RED.
 36 sa botta uygulanamaz (tur 8 sa: 32 = 4 tur, 40 = 5 tur, madde 512) → madde 545: 32 / 40 sa düzeltilmiş modelde.
+
+## Madde 545 — Botta uygulanabilir short sıklığı (düzeltilmiş model, T4 üzerinde): 40 sa ADAY, 32 sa değil
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+32 sa +3,9 · +0,03 · −1,3 | −19,1 | −3,4 | +31,5 · +3,3 · 3 — 36 sa +18,3 · +0,15 · −0,9 · ADAY — 40 sa +14,0 · +0,12 · −0,2 |
++51,5 | +1,8 | +14,6 · +14,5 · 3 · ADAY. Plato 36-40 sa; 32 sa düşüyor. → madde 546: T4-40 sa vs T4 protokolü (canlı gibi giriş + 5 bp).
