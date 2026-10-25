@@ -6217,3 +6217,13 @@ evren ısınmış değildi); kesinti yalnız 2020-21 boğasında kâr kaçırıy
 Q_T4'e karşı (yıllık · Sh · dd) TÜM · eşitVol · −%3 altı gün (T4 45): %6 −76,0 · −0,17 · +1,5 · −13,6 · 33 — %8 −45,6 · −0,08 · +0,9 ·
 −7,2 · 37 — %10 −21,5 · −0,03 · +0,1 · −3,2 · 42. Kötü günleri hafifletiyor (2024-10-15 −3,8 → −2,1) ama kâr kaynağı da yoğun long'lar.
 Dağıtımlı sürüm (CAP_DAGIT=2, yalnız long) madde 543.
+
+## Madde 543 — Long coin tavanı + kırpılanı diğer long'lara dağıt (CAP_DAGIT=2): RED
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%3 altı (T4 45): %8 −34,5 · −0,09 · +0,7 | −66,5 | −20,3 | −36,7 ·
+−9,4 · 42 — %10 −15,1 · −0,04 · +0,2 | −21,7 | −10,4 | −15,8 · −4,9 · 43. Brüt korunsa da kayıp: yoğun long'lar (aynı coin birçok
+dilimde) kâr kaynağı. Long yoğunluk ekseni kapandı.
+
+### Madde 537-543 özeti (kötü gün odaklı tur)
+Otopsi: kaybın %60'ı long, en büyük günler piyasa çapında çöküş. Sınananlar — tepkisel fren (long kapat / yeniden gir / short kapat),
+ısınma ölçeği, long coin tavanı (dağıtımsız / dağıtımlı) — HEPSİ RED. Ortak sonuç: çöküş günleri öngörülemiyor, sonradan tepki dibe
+satmak oluyor; tek coin yoğunluğu kâr kaynağı. T4'ün savunması (24 sa stop %45, long merdiven, short tavan %8) bu modelde en iyi denge.
