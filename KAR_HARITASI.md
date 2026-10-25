@@ -6054,3 +6054,8 @@ artıyor: Sharpe her dönemde düşüyor. Long tarafında 5 g'lük tutma doğru 
 T4'e karşı (yıllık · Sh · dd) TÜM · eşitVol: short kademesi kapalı −40,0 · −0,25 · 0,0 · −35,0 · 5 short −8,0 · −0,09 · −2,3 ·
 −12,7 · 6 short −14,4 · −0,16 · −2,4 · −23,6. Short kademesi sık yenilenen kitapta da gerekli (her dönemde en çok o kayıp);
 daha çok short bacak en kötü günü iyileştiriyor (−11,7 → −10,2 / −9,0) ama getiri ve Sharpe düşüyor. 4+4 ve −%15 doğru.
+
+## Madde 522 — T4 üzerinde long tutma süresi (REB 4/6/7 g), uzun zemin: 5 g YERİNDE — tutma bir DOZ düğmesi
+T4'e karşı (yıllık · Sh · dd) TÜM: 4 g +41,2 · −0,02 · −0,7 · 6 g −33,2 · +0,04 · +0,6 · 7 g −54,8 · +0,07 · −0,7.
+Sharpe ~sabit, getiri ve risk birlikte oynuyor (4 g: daha sık dengeleme = boşalan koltuklar daha erken dolar = daha çok
+ortalama maruziyet). Ön kaydın Sharpe şartını (≥ +0,05) hiçbiri sağlamadı. Getiri isteniyorsa açık kaldıraç daha temiz.
