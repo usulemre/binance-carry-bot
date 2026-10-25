@@ -6085,3 +6085,23 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
 Pay 1,00 = merdiven yok, tek TP long +%45 / short −%15. T4'ün yapısında (short 2 g'de bir yenileniyor) kalan ⅕'i +%60/−%20'ye
 taşımak para kaybettiriyor. Botta pay 1,00 çalışmaz (kalan 0 → kademe emri konmaz) — eşdeğeri MERDIVEN=0 + KAR_AL 0,45 +
 KAR_AL_SHORT 0,15. → madde 526: tek TP seviyeleri (long 0,40/0,45/0,50 · short 0,12/0,15/0,18), merdivensiz T4.
+
+## Madde 527 — !!! MOTOR HATASI: AYNI BARDA KADEME + SON TP İYİMSERDİ — MERDİVENİN KAZANCI BU HATADANMIŞ
+Eski kural: bir 4 sa barda fiyat hem kademeyi (+%45) hem son TP'yi (+%60) geçerse pozisyonun TAMAMI +%60'tan kapanıyordu.
+Gerçekte fiyat önce +%45'ten geçer, bekleyen kademe limiti orada dolar. Düzeltme `MERD_SIRA=1` (kademe payı kademe
+fiyatından, kalan TP'den). Uzun zemin (2020-07..2026-09), kaldıraçsız; düzeltilen olay: T1 2.257, T4 2.800.
+| kol | TÜM yıllık · Sh · dd · −%5 | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| M0 merdivensiz T60 (hatadan etkilenmez) | +217,5 · 3,46 · −19,6 · 10 | +247,2 | +162,2 | +322,0 |
+| T1 canlı — ESKİ kural | +240,5 · 3,73 · −16,4 · 7 | +255,6 | +188,0 | +372,3 |
+| **T1 canlı — DÜZELTİLMİŞ** | **+196,0 · 3,40 · −16,9 · 7** | +215,6 | +156,9 | +286,9 |
+| T4 — ESKİ kural | +330,8 · 4,45 · −14,3 · 2 | +566,6 | +207,7 | +479,6 |
+| **T4 — DÜZELTİLMİŞ** | **+255,9 · 4,02 · −14,4 · 2** | +449,3 | +168,5 | +339,8 |
+| T4 pay 0,999 — düzeltilmiş | +251,7 · 4,03 · −14,5 · 2 | +442,8 | +168,3 | +330,9 |
+- DÜZELTİLMİŞ modelde merdiven (T1) merdivensiz T60'tan (M0) KÖTÜ: yıllık −21,5, Sharpe −0,06, üç dönemin üçünde de geride.
+  Madde 463-469'un merdiven kazancı (+15..+18, P %99) bu iyimser dolum kuralından geliyordu. Canlı bot merdivenle çalışıyor
+  → gerçek getirisi backtest'in (+%249/+%240) altında olur; merdivensiz hali daha iyi olmalı.
+- T4 düzeltilmiş modelde de T1'den iyi (+60 yıllık, Sh +0,62) ve M0'dan iyi (+38, Sh +0,56) — T4'ün özü (short ara
+  dengelemesi + tavan + evren tabanı) hatadan bağımsız görünüyor; ama T4'ün İÇİNDEKİ merdiven de muhtemelen zararlı.
+- Merdiven / kademe payı / tek TP üzerine KURULU tüm sonuçlar (madde 462-472, 476, 483, 491, 503-505, 524-526) bu hatayı
+  taşıyor; yeniden ölçülmeli. → madde 528: düzeltilmiş modelde T4 merdivensiz + T1 merdivensiz (= M0) karşılaştırması.
