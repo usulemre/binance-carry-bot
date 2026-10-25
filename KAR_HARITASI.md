@@ -6367,3 +6367,16 @@ aynı oynaklıkta T4 × 1,24 +377 (K3 +331) ve daha az kötü gün (8 / 10). Ham
 | T4 × 1,24 (K3 oynaklığı) | +355,1 · −%5 10 | +349,6 · −%5 12 |
 K3 gerçekçi koşulda T4'ten +51..+62 puan/yıl (iki seviyede de); merdivensiz farkı gerçekçi girişte +7'ye iniyor (kâr K1-K3'ten).
 Aynı oynaklıkta T4 × 1,24 yine +50..+57 önde. Sonuç: kaldıraçsız şartta K3 en yüksek ham kâr; ham kâr için kaldıraç daha verimli.
+
+## Madde 562 — Ham kâr: K3 üzerinde ek kollar (standart model, uzun zemin)
+| kol | yıllık | Sh | düşüş | en kötü | −%5 | −%3 | 2.000 $ → |
+|---|---|---|---|---|---|---|---|
+| T4 | +255,9 | 4,02 | −14,4 | −12,77 | 2 | 45 | 5,2 M |
+| K3 | +330,8 | 3,77 | −16,8 | −13,57 | 10 | 73 | 17,2 M |
+| K3 + long TP yok | +298,1 | 3,31 | −20,2 | −13,57 | 16 | 90 | 10,5 M |
+| K3 + 24 sa stop %55 | +325,9 | 3,71 | −17,3 | −14,68 | 10 | 75 | 16,0 M |
+| **K3 + short tavanı YOK** | **+422,8** | **4,04** | −19,6 | **−9,51** | 17 | 94 | 56,9 M |
+| K3 + evren 50M | +317,6 | 3,69 | −20,5 | −13,78 | 13 | 73 | 14,1 M |
+| K3 + short felaket +%300 | +330,0 | 3,76 | −16,8 | −13,57 | 10 | 73 | 17,0 M |
+Short tavanı kaldırmak çarpıcı (+92 puan, Sh T4'ten bile yüksek, en kötü gün iyileşiyor) ama CAP_ORTAK=0 motorda farklı yol
+(bt2, dilimler arası koordinatör yok) → aynı yolda tavan 1,0 / 0,15 / 0,12 ile doğrulama (madde 563), sonra canlı gibi giriş.
