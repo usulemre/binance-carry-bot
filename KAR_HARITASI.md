@@ -6355,3 +6355,15 @@ T4+96 sa short sinyali −%5 altı gün 2 → 1 (+4,9 · +0,08); T4+T1 −30,5 (
 Ham kâr kolları gerçekten getiri ekliyor (+75 puan/yıl) ama risk-ayarlı her adım T4'ü küçük kaldıraçla büyütmekten KÖTÜ:
 aynı oynaklıkta T4 × 1,24 +377 (K3 +331) ve daha az kötü gün (8 / 10). Ham kâr hedefinde en verimli yol kaldıraç; kaldıraçsız
 şartta en yüksek ham kâr K3 (+331). Yalnız standart modelde ölçüldü (canlı gibi giriş + 5 bp değil).
+
+## Madde 561 — Ham kâr kolları GERÇEKÇİ koşulda (canlı gibi giriş + 5 bp, iki hiza ort.): sıra aynı, fark biraz küçük
+| kol | 2.000 $: yıllık · Sh · dd · −%5 | 3.500 $: yıllık · Sh · dd · −%5 |
+|---|---|---|
+| T4 | +244,3 · 3,84 · −15,3 · 3 | +241,6 · 3,89 · −16,0 · 3 |
+| T4 merdivensiz | +251,6 · 3,66 · −16,9 · 6 | +248,0 · 3,69 · −19,2 · 6 |
+| K1 (+ rezerv 0) | +271,3 · 3,62 · −17,8 · 8 | +264,8 · 3,63 · −19,9 · 7 |
+| K2 (+ long TP %100) | +296,2 · 3,50 · −18,5 · 11 | +287,7 · 3,50 · −20,2 · 9 |
+| K3 (+ short 40 sa + 96 sa) | +306,1 · 3,56 · −18,6 · 9 | +292,2 · 3,55 · −19,5 · 10 |
+| T4 × 1,24 (K3 oynaklığı) | +355,1 · −%5 10 | +349,6 · −%5 12 |
+K3 gerçekçi koşulda T4'ten +51..+62 puan/yıl (iki seviyede de); merdivensiz farkı gerçekçi girişte +7'ye iniyor (kâr K1-K3'ten).
+Aynı oynaklıkta T4 × 1,24 yine +50..+57 önde. Sonuç: kaldıraçsız şartta K3 en yüksek ham kâr; ham kâr için kaldıraç daha verimli.
