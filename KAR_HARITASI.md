@@ -6290,3 +6290,11 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 −15,1 · −0,06 · 2 — ≤ 2 sa iki taraftan −45,1 · −0,34 · −1,9 | 0 | −1,4 | −165,9 · 4. HEPSİ RED.
 Aralığı kısalmış coinler sıkışma riski değil, kitabın EN KÂRLI short'ları (tavan funding'i topluyorlar; 2025-26'da onları çıkarmak
 yılda 166 puan). Short tavanı %8 ve 24 sa stop bu riski zaten taşınabilir tutuyor.
+
+## Madde 553 — T5 ADAYI (T4 + short 40 sa + short sinyali 96 sa) vs T4 PROTOKOLÜ (canlı gibi giriş + 5 bp, uzun zemin): RED
+| seviye / hiza | yıllık | Sh ≤2024 | Sh 2025+ | düşüş | eşit-risk | şartlar | P |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 / 1 | +9,7 / +18,1 | +0,16 / +0,09 | −0,03 / +0,27 | −0,5 / −0,1 | +24,8 / +20,1 | XYYY / YYYY | %76 / %71 |
+| 3.500 $ 0 / 1 | +9,4 / +8,9 | +0,26 / +0,07 | −0,28 / +0,10 | −0,4 / −0,9 | +20,2 / +33,6 | XYYY / YYYY | %71 / %62 |
+Birleşim tek tek adaylardan daha tutarlı (eşit-risk her hücrede +20..+34, düşüş her hücrede ≤ 1 puan) ama hiza 0'da 2025+ Sharpe
+düşüyor ve P %62-76 (bar %95). T5 kaydedildi, canlıya önerilmez; Ekim OOS'ta T4 ile yan yana izlenebilir.
