@@ -6105,3 +6105,20 @@ fiyatından, kalan TP'den). Uzun zemin (2020-07..2026-09), kaldıraçsız; düze
   dengelemesi + tavan + evren tabanı) hatadan bağımsız görünüyor; ama T4'ün İÇİNDEKİ merdiven de muhtemelen zararlı.
 - Merdiven / kademe payı / tek TP üzerine KURULU tüm sonuçlar (madde 462-472, 476, 483, 491, 503-505, 524-526) bu hatayı
   taşıyor; yeniden ölçülmeli. → madde 528: düzeltilmiş modelde T4 merdivensiz + T1 merdivensiz (= M0) karşılaştırması.
+
+## Madde 528 — DÜZELTİLMİŞ MODELDE merdiven = SAVUNMA (kâr değil); T4'ün üstünlüğü GERÇEK
+Uzun zemin, kaldıraçsız, MERD_SIRA=1. (M0 = merdivensiz T60; NL = merdivensiz)
+| kol | TÜM yıllık · Sh · dd · en kötü · −%5 | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| M0 | +217,5 · 3,46 · −19,6 · −12,52 · 10 | +247,2 | +162,2 | +322,0 |
+| T1 (canlı) | +196,0 · 3,40 · −16,9 · −14,09 · 7 | +215,6 | +156,9 | +286,9 |
+| T4 (demo) | +255,9 · 4,02 · −14,4 · −12,77 · 2 | +449,3 | +168,5 | +339,8 |
+| T4 merdivensiz | +274,7 · 3,94 · −16,5 · −11,12 · 4 | +482,8 | +169,2 | +377,1 |
+| T4 merdivensiz, long TP 0,50 / 0,70 | +260,9 · 4,00 / +279,6 · 3,85 | | | |
+| T4 merdivensiz, short TP 0,15 / 0,25 | +274,3 · 3,93 / +266,9 · 3,87 | | | |
+Eşit oynaklıkta: T1 vs M0 −5,7 (merdiven canlıda ~nötr/hafif eksi), T4 vs T4-merdivensiz +8,3 (T4'te merdiven verimli bir
+savunma: getiri −19, Sharpe +0,07, dd 2 puan sığ, −%5 altı 4 → 2), **T4 vs M0 +59,5** (T4'ün özü sağlam).
+SONUÇ: (1) Canlı/backtest beklentisi düzeltildi: T1 ~+%196/yıl (eski hesap +%241), T4 ~+%256 (eski +%331). (2) Merdiven kâr
+değil kötü-gün savunması; T1'de getiri maliyeti ~22 puan, T4'te ~19 puan. (3) T4 hâlâ en iyi aday — demo devam. (4) Pay 0,80
+ve "tek TP" bulguları (madde 504, 524-526) hatalı kuralın ürünüydü → geçersiz; T4 profilinde pay 0,80 zararsız (merdiven
+ekseni eşit riskte ~nötr). Bundan sonraki TÜM merdivenli ölçümler MERD_SIRA=1 ile.

@@ -1,3 +1,8 @@
+> **DİKKAT (madde 527-528, 2026-10-25): motorda "aynı barda kademe + son TP" iyimser dolum hatası bulundu. Merdivenli
+> tüm rakamlar (şu anki bot dahil) şişkindi. Düzeltilmiş (uzun zemin, kaldıraçsız): şu anki bot ~+%196/yıl (eski +%241),
+> T4 ~+%256 (eski +%331), merdivensiz T60 +%218. T4 yine en iyi aday (merdivensiz T60'a eşit riskte +59). Merdiven artık
+> "kâr" değil "kötü gün savunması" sayılır.**
+
 # AYAR ADAYLARI — sıralı kayıt
 
 Kullanıcı kararı (2026-10-24): araştırma bundan sonra İKİ taban üzerinden yürür — her yeni deneme ikisine de
