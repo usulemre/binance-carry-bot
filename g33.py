@@ -287,6 +287,9 @@ PFREN=float(os.environ.get("PFREN","0")); PFREN_PEN=int(os.environ.get("PFREN_PE
 # PFREN_GERI=n (madde 539): frenle kapanan long n bar sonra (fren o barda tetikte degilse) AYNI agirlikla, o barin kapanisindan
 # yeniden acilir (yeni giris, kademe sifir, komisyon). Arada dilimin tam dengelemesi olursa iptal. 0 = yeniden acilmaz (parite).
 PFREN_GERI=int(os.environ.get("PFREN_GERI","0")); _PFG=[0]
+# PFREN_YON=short (madde 540): fren LONG yerine SHORT bacaklari kapatir (cokuste short kazanci kilitlenir, donuste short kaybi
+# onlenir; brut azalir, kaldirac yok). Varsayilan long (madde 538-539).
+PFREN_YON=os.environ.get("PFREN_YON","long").strip()
 if PFREN>0:
     _rq=np.full_like(cv,np.nan); _rq[PFREN_PEN:]=cv[PFREN_PEN:]/np.where(cv[:-PFREN_PEN]>0,cv[:-PFREN_PEN],np.nan)-1
     _PF=np.nanmedian(np.where(U,_rq,np.nan),axis=1)
@@ -695,7 +698,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     e=_Pe[k]/_Pw[k]
                 if not (np.isfinite(e) and np.isfinite(cv[i,k]) and cv[i,k]>0 and np.isfinite(HV[i+1,k]) and np.isfinite(LV[i+1,k])): continue
                 uzun=poz[k]>0
-                if PFREN>0 and uzun and np.isfinite(_PF[i]) and _PF[i]<=-PFREN:
+                if PFREN>0 and (uzun if PFREN_YON=='long' else not uzun) and np.isfinite(_PF[i]) and _PF[i]<=-PFREN:
                     _op=OV[i+1,k]; _ff=_op if np.isfinite(_op) else cv[i,k]
                     br[k]=_ff/cv[i,k]-1; cik[k]=True; _PFS[0]+=1
                     if PFREN_GERI>0: _pfg[k]=(float(poz[k]), i+1+PFREN_GERI)

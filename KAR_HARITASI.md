@@ -6193,3 +6193,11 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 Çöküş günleri gerçekten kurtuluyor (4 sa −%8: 2021-05-19 −12,8 → +6,8; FTX 2022-11-09 −3,4 → +2,7; 24 sa −%15: 2021-05-19 → −1,2,
 LUNA −4,3 → −1,0) ama long'lar dengelemeye kadar (≤ 5 g) boş kalınca dipten dönüş kaçıyor. Hepsi RED. → madde 539: fren + n bar
 sonra yeniden giriş (PFREN_GERI).
+
+## Madde 539 — Piyasa freni + yeniden giriş (PFREN_GERI): RED — çöküş anında long satmak DİBE satmak
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+4 sa −%8 · 1 bar sonra −20,9 · −0,14 | −82,9 | −17,5 | −10,3 · −15,8 · 1 — 3 bar −25,3 · −0,19 · 2 — 6 bar −21,9 · −0,18 · 2 —
+24 sa −%15 · 6 bar −15,0 · −0,12 | −88,3 | −5,4 | −21,0 · −13,5 · 2.
+59 tetik barında long'u yalnız 4 saat dışarıda tutmak bile yılda ~21 puan kaybettiriyor → çöküş barından sonraki 4 sa'te evren
+güçlü DÖNÜYOR. Long tarafında tepkisel fren ekseni kapandı. Ters yüz: çöküşte SHORT'u kapatmak (kazancı kilitle, dönüşten kaç;
+brüt azalır) → madde 540 (PFREN_YON=short).
