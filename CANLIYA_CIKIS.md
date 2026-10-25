@@ -127,7 +127,7 @@ gerekmiyor; `carry_preflight.py` sapma olursa **HATA** verir:
 
 | ayar | değer | madde |
 |---|---|---|
-| `CARRY_PROFIL` | **T60** | **442** |
+| `CARRY_PROFIL` | **T4** (eski: T60) | **534** (önce 442) |
 | `CARRY_N_LEGS` | **5** | **222** |
 | `CARRY_N_DILIM` | 15 | 184 |
 | `CARRY_FUNDING_WINDOW_H` | **60** | **429** |

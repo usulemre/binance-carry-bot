@@ -1872,10 +1872,13 @@ yarı dilim yenilenene kadar tutulur). Backtest (T60 + 24 sa stop, 2.000 $):
 plato %35-%50 (madde 463), protokol madde 464."""
 
 # MADDE 523: CARRY_PROFIL=T4 -> T4 adayının dört ayarı VARSAYILAN olur (.env'de açıkça verilen değer yine kazanır).
+# MADDE 534: KULLANICI KARARI (2026-10-25) — T4 KOD VARSAYILANI. CARRY_PROFIL boşsa T4; eski varsayılan T1 için
+# CARRY_PROFIL=T60 yazılır.
 # T4 = T60 + short 2 g'de bir + short tavan %8 + kademe payı 0,80 + evren tabanı 30 (madde 497-522; kullanıcı kararı:
 # demo hesapta canlı çalışma, 2026-10-25).
-_PROFIL_T4 = os.getenv("CARRY_PROFIL", "").strip().upper() == "T4"
-"""CARRY_PROFIL=T4 mü (madde 523): T4'ün dört ayarı varsayılan olur, .env'deki açık değer yine kazanır."""
+_PROFIL_T4 = (os.getenv("CARRY_PROFIL", "").strip().upper() or "T4") == "T4"
+"""T4 profili mi (madde 523; madde 534'ten beri varsayılan, boş CARRY_PROFIL = T4): T4'ün dört ayarı varsayılan olur,
+.env'deki açık değer yine kazanır. Eski varsayılan T1 için CARRY_PROFIL=T60."""
 MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.80" if _PROFIL_T4 else "0.667"))
 """Merdivende ilk kademede kapanan pay, iki tarafta ortak (madde 463: 1/3-2/3 plato;
 madde 468: 2/3 + short merdiveni protokolde AYAR, P %98-99; madde 469 varsayılan)."""

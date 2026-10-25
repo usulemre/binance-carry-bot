@@ -61,7 +61,7 @@ def kontrol_ayarlar() -> None:
     # BUGUN (eski kitap): CARRY_PROFIL=BUGUN + eski değerler .env'de açıkça.
     # Yaş 90'ın altı short felaket stop'u OLMADAN çalıştırılamaz (madde 427).
     # Not: `bekle` sözlüğünün temel değerleri BUGUN kitabınındır; T60 bunları ezer.
-    profil = os.getenv("CARRY_PROFIL", "T60").strip().upper()   # madde 442: varsayılan T60
+    profil = os.getenv("CARRY_PROFIL", "").strip().upper() or "T4"   # madde 534: varsayılan T4 (önce T60, madde 442)
     if profil == "BUGUN":
         bekle.update({
             "MIN_DAILY_VOLUME_USD": (cb.MIN_DAILY_VOLUME_USD, 1e8, "madde 401"),
@@ -93,9 +93,10 @@ def kontrol_ayarlar() -> None:
             })
             if profil == "T4":
                 bekle["EVREN_MIN"] = (getattr(cb, "EVREN_MIN", 0), 30, "madde 508")
-            kontrol("profil", TAMAM, f"{profil} (kullanıcı kararı; ADAYLAR.md, madde 497-522)")
+            kontrol("profil", TAMAM, f"{profil} (kullanıcı kararı; ADAYLAR.md, madde 497-522"
+                    + ("; varsayılan, madde 534)" if profil == "T4" else ")"))
         else:
-            kontrol("profil", TAMAM, "T60 (varsayılan, madde 442; beklenti KAR_HARITASI madde 433-438)")
+            kontrol("profil", TAMAM, "T60 = eski varsayılan T1 (madde 442; madde 534'ten beri varsayılan T4)")
     else:
         kontrol("profil", HATA, f"CARRY_PROFIL={profil} tanımsız (BUGUN | T60 | T3 | T4)")
     if getattr(cb, "MIN_LISTELEME_GUN", 90) < 60:

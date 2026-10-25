@@ -12,7 +12,7 @@ pip install -U -r requirements.txt
 `.env` dosyasında:
 ```
 BINANCE_MODE=demo          # DEMO — gerçek para değil
-CARRY_PROFIL=T4            # T4'ün dört ayarı bu satırla gelir
+CARRY_PROFIL=T4            # madde 534'ten beri varsayılan; satır yazılmasa da T4
 ```
 `.env`'de şunlar VARSA silin (profil değerlerini ezerler): `CARRY_SHORT_ARA_SAAT`, `CARRY_SHORT_TAVAN`,
 `CARRY_MERDIVEN_PAY`, `CARRY_EVREN_MIN`, `CARRY_LONG_STOP`. CARRY_GROSS tanımlıysa 1.0 olmalı.
@@ -39,5 +39,5 @@ journalctl -u carry -f
 - **Kötü günler**: backtest'te T4'te −%5 altı gün 6 yılda 2 (T1: 7).
 
 ## Geri dönüş
-`.env`'den `CARRY_PROFIL=T4` satırını silin (kod varsayılanı = eski varsayılan T1) → `sudo systemctl restart carry`.
+`.env`'ye `CARRY_PROFIL=T60` yazın (eski varsayılan T1; madde 534'ten beri kod varsayılanı T4) → `sudo systemctl restart carry`.
 Dilim defteri uyumludur; ek işlem gerekmez.

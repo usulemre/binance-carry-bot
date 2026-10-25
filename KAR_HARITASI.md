@@ -6159,3 +6159,11 @@ seçeneği (canlıda short merdiven emri yok = daha az emir). T4 profili DEĞİ�
 T4-YL: +256,0 / Sh 4,02 / dd −14,4 / en kötü −11,12 / −%5 altı 1. Karşı (yıllık · Sh · dd) TÜM · eşitVol: −%15 −0,2 · −0,01 ·
 −0,1 · −1,2 · −%25 −7,5 · −0,08 · −0,5 · −9,4 · −%30 −12,9 · −0,15 · −3,9 · −17,1 · TP yok −43,8 · −0,42 · −4,8 · −46,6.
 Short TP hâlâ kitabın ana kâr kaynaklarından (kapatınca −44); seviye −%15..−%20 düz plato, −%20 doğru.
+
+## Madde 533 — T4'te dilim sayısı (düzeltilmiş model, uzun zemin, 1,0x): 15 YERİNDE
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+FAZ 10: −7,3 · −0,07 · −1,1 | −25,0 | +0,5 | −10,4 · −8,5 · 1. FAZ 30: +0,9 · +0,01 · −0,3 | +6,4 | −0,3 | −0,0 · +1,2 · 2.
+İkisi de madde 503 kuralından RED; 15-30 düz plato, 10 açıkça kötü. T4 değişmedi.
+
+## Madde 534 — KULLANICI KARARI (2026-10-25): T4 KOD VARSAYILANI
+`CARRY_PROFIL` boşsa artık T4 (carry_bot `_PROFIL_T4`, preflight varsayılanı). Eski varsayılan T1 = `CARRY_PROFIL=T60`.

@@ -1,8 +1,11 @@
 """Short ara dengelemesi ve short coin tavanı (madde 500-502) birim testleri.
 
-İkisi de varsayılan KAPALI; testler düğmeleri modül düzeyinde açar.
+T60 profilinde (eski varsayılan T1) ikisi de KAPALI; testler düğmeleri modül düzeyinde açar.
+Madde 534'ten beri kod varsayılanı T4; bu yüzden modül T60 profiliyle yüklenir.
 """
+import os
 import sys
+os.environ["CARRY_PROFIL"] = "T60"
 sys.path.insert(0, '.')
 import carry_bot as cb
 
@@ -17,7 +20,7 @@ def kontrol(ad, kosul, detay=""):
         basarisiz.append(ad)
 
 
-print("1) varsayılanlar kapalı")
+print("1) T60 profilinde kapalı")
 kontrol("CARRY_SHORT_ARA_SAAT varsayılan 0", cb.SHORT_ARA_SAAT == 0)
 kontrol("CARRY_SHORT_TAVAN varsayılan 0", cb.SHORT_TAVAN == 0)
 d = {"dilimler": {"0": {"A": 10, "B": -10}}, "dilim_bakiye": {"0": 1000}}
@@ -92,17 +95,24 @@ def _pf(env):
     e = {k: v for k, v in os.environ.items() if not k.startswith("CARRY_")}; e.update(env)
     o = subprocess.run([sys.executable, "-c", kod], capture_output=True, text=True, env=e).stdout
     return int(o.split("HATA_SAYISI")[-1].strip() or -1)
-kontrol("T60 varsayılan: HATA yok", _pf({}) == 0)
+kontrol("profilsiz = T4 (madde 534): HATA yok", _pf({}) == 0)
+kontrol("T60 açıkça: HATA yok", _pf({"CARRY_PROFIL": "T60"}) == 0)
 kontrol("T3 tam ayarla: HATA yok", _pf({"CARRY_PROFIL": "T3", "CARRY_SHORT_ARA_SAAT": "48", "CARRY_SHORT_TAVAN": "0.08",
                                         "CARRY_MERDIVEN_PAY": "0.80"}) == 0)
 kontrol("T3 ayarsız: HATA", _pf({"CARRY_PROFIL": "T3"}) > 0)
-kontrol("T60 + T3 düğmeleri profilsiz açık: HATA", _pf({"CARRY_SHORT_ARA_SAAT": "48"}) > 0)
+kontrol("T60 + T3 düğmesi açık: HATA", _pf({"CARRY_PROFIL": "T60", "CARRY_SHORT_ARA_SAAT": "48"}) > 0)
 kontrol("T4: yalnız CARRY_PROFIL=T4 yeterli (varsayılanlar profilden)", _pf({"CARRY_PROFIL": "T4"}) == 0)
 kontrol("T4 ama evren tabanı elle 0: HATA", _pf({"CARRY_PROFIL": "T4", "CARRY_EVREN_MIN": "0"}) > 0)
 _k = ("import carry_bot as cb; print('V', cb.SHORT_ARA_SAAT, cb.SHORT_TAVAN, cb.MERDIVEN_PAY, cb.EVREN_MIN)")
 _e = {k: v for k, v in os.environ.items() if not k.startswith("CARRY_")}; _e["CARRY_PROFIL"] = "T4"
 _o = subprocess.run([sys.executable, "-c", _k], capture_output=True, text=True, env=_e).stdout.split("V")[-1].split()
 kontrol("T4 profil değerleri 48 / 0,08 / 0,80 / 30", _o == ["48.0", "0.08", "0.8", "30"], _o)
+_e.pop("CARRY_PROFIL")
+_o = subprocess.run([sys.executable, "-c", _k], capture_output=True, text=True, env=_e).stdout.split("V")[-1].split()
+kontrol("profilsiz varsayılan = T4 değerleri (madde 534)", _o == ["48.0", "0.08", "0.8", "30"], _o)
+_e["CARRY_PROFIL"] = "T60"
+_o = subprocess.run([sys.executable, "-c", _k], capture_output=True, text=True, env=_e).stdout.split("V")[-1].split()
+kontrol("CARRY_PROFIL=T60 = eski T1 değerleri 0 / 0 / 0,667 / 0", _o == ["0.0", "0.0", "0.667", "0"], _o)
 print()
 if basarisiz:
     print(f"BAŞARISIZ: {len(basarisiz)} -> {basarisiz}"); sys.exit(1)
