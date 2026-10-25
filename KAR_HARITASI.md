@@ -6262,3 +6262,8 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
 48 sa −0,6 · +0,01 · −0,6 | +9,2 | −11,8 | +16,7 · +0,9 · 2 — 72 sa +0,9 · −0,01 · −1,3 | +15,1 | −6,8 | +16,5 · −1,0 · 2 —
 96 sa −9,5 · −0,12 · −2,2 · −14,3 · 3. Sinyal penceresi ekseni (516, 547-549) kapandı.
+
+## Madde 550 — YENİ VERİ: premiumIndexKlines (mark − endeks primi), 2020-01..2026-09, 4 sa bar (indir_premium.py → /tmp/premium)
+Neden: parametre ekseni doydu (533-549 hepsi RED/plato). Seçim bugüne kadar yalnız GERÇEKLEŞMİŞ funding'e (60 sa) bakıyor; prim bir
+sonraki funding'in ana bileşeni ve dakika dakika güncel. Soru: prim, gerçekleşmiş funding'in söylemediği bir şey söylüyor mu?
+Önce tanı (sonraki 60 sa funding ve fiyatı ne kadar açıklıyor), sonra seçime katkı ön kayıtla.

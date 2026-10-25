@@ -1,34 +1,56 @@
-"""Premium index 4s mumlari (data.binance.vision) — sadece evrene en az bir kez girmis semboller.
-Premium = (perp fiyat - endeks) / endeks; funding bundan hesaplanir. Madde 148.
-Kullanim: python indir_premium.py /tmp/evren_hic.txt
-"""
-import concurrent.futures as cf, io, os, sys, urllib.request, zipfile
-import pandas as pd
-B="https://data.binance.vision/data/futures/um/monthly/premiumIndexKlines"
-R=os.path.dirname(os.path.abspath(__file__)); HEDEF=os.path.join(R,"data_premium")
-os.makedirs(HEDEF,exist_ok=True)
-AYLAR=[a for a in (f"{y}-{m:02d}" for y in range(2022,2027) for m in range(1,13)) if a<="2026-08"]
-def ay(s,a):
+#!/usr/bin/env python3
+# -*- coding: utf-8 -*-
+"""MADDE 550 veri: Binance USDⓈ-M aylık premiumIndexKlines 1h (data.binance.vision). Prim = (mark − endeks)/endeks; funding'in
+ana bileşeni. Her ay bellekte açılır, 4 saatlik barın kapanış primi ve bar ortalaması alınır. Çıktı: tek pickle (uzun tablo).
+Kullanım: python3 indir_premium.py <sembol_listesi> <ilk_ay YYYY-MM> <son_ay YYYY-MM> <cikti.pkl>"""
+import io, sys, zipfile, threading
+from concurrent.futures import ThreadPoolExecutor, as_completed
+import pandas as pd, requests
+
+LISTE, ILK, SON, CIKTI = sys.argv[1:5]
+URL = "https://data.binance.vision/data/futures/um/monthly/premiumIndexKlines/{s}/1h/{s}-1h-{a}.zip"
+ses = threading.local()
+AD = ["acilis_t", "acilis", "yuksek", "dusuk", "kapanis", "hacim", "kapanis_t", "q", "n", "a", "b", "c"]
+
+
+def al(sem, ay):
+    if not hasattr(ses, "s"): ses.s = requests.Session()
+    for _ in range(4):
+        try:
+            r = ses.s.get(URL.format(s=sem, a=ay), timeout=60)
+            if r.status_code == 404: return None
+            r.raise_for_status(); break
+        except Exception:
+            continue
+    else:
+        return ("HATA", sem, ay)
     try:
-        b=urllib.request.urlopen(f"{B}/{s}/4h/{s}-4h-{a}.zip",timeout=45).read()
-        z=zipfile.ZipFile(io.BytesIO(b)); t=z.read(z.namelist()[0]).decode()
-        return [l.split(",") for l in t.splitlines() if l and not l.startswith("open_time")]
-    except Exception: return []
-def sembol(s):
-    p=os.path.join(HEDEF,f"{s}.csv")
-    if os.path.exists(p): return None
-    rows=[]
-    with cf.ThreadPoolExecutor(14) as ex:
-        for r in ex.map(lambda a: ay(s,a),AYLAR): rows+=r
-    if not rows: return f"{s} bos"
-    d=pd.DataFrame(rows).iloc[:,[0,1,2,3,4]]; d.columns=["open_time","open","high","low","close"]
-    ot=pd.to_numeric(d.open_time,errors="coerce")
-    d["date"]=pd.to_datetime(ot.where(ot<1e14,ot/1000),unit="ms")
-    for c in ["open","high","low","close"]: d[c]=pd.to_numeric(d[c],errors="coerce")
-    d.dropna(subset=["date","close"]).drop_duplicates("date").sort_values("date")[["date","open","high","low","close"]].to_csv(p,index=False)
-syms=open(sys.argv[1]).read().split()
-with cf.ThreadPoolExecutor(6) as ex:
-    for i,r in enumerate(ex.map(sembol,syms)):
-        if r: print(r,flush=True)
-        if i%50==0: print(i,len(syms),flush=True)
-print("bitti",flush=True)
+        z = zipfile.ZipFile(io.BytesIO(r.content))
+        d = pd.read_csv(z.open(z.namelist()[0]), header=None)
+        if not str(d.iloc[0, 0]).isdigit(): d = d.iloc[1:]
+        d.columns = AD[:d.shape[1]]
+    except Exception:
+        return ("HATA", sem, ay)
+    t = pd.to_datetime(pd.to_numeric(d["acilis_t"]), unit="ms")
+    x = pd.DataFrame({"t": t, "p": pd.to_numeric(d["kapanis"])})
+    x["bar"] = x["t"].dt.floor("4h")
+    g = x.groupby("bar").p.agg(["last", "mean"]).reset_index()
+    g["sembol"] = sem
+    return g
+
+
+semler = [l.strip() for l in open(LISTE) if l.strip()]
+aylar = [str(p) for p in pd.period_range(ILK, SON, freq="M")]
+is_ = [(s, a) for s in semler for a in aylar]
+out = []; hata = []; n = 0
+with ThreadPoolExecutor(24) as ex:
+    fs = [ex.submit(al, s, a) for s, a in is_]
+    for f in as_completed(fs):
+        n += 1; x = f.result()
+        if isinstance(x, tuple): hata.append(x[1:])
+        elif x is not None: out.append(x)
+        if n % 3000 == 0:
+            print(f"{n}/{len(is_)} dolu {len(out)} hata {len(hata)}", flush=True)
+pd.concat(out).to_pickle(CIKTI)
+open(CIKTI + ".hata", "w").write("\n".join(f"{s} {a}" for s, a in hata))
+print("bitti", n, len(out), "hata", len(hata), flush=True)
