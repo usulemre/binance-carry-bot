@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""MADDE 565 — HAM KÂR: K4 (= K3 tavansız) üzerinde yoğunlaşma ve tutma (bacak 3 / 2, long tutma 7 g, havuz 3) (kaldıraçsız, uzun zemin; önce ./zemin_sec.sh uzun).
+"""MADDE 565 — HAM KÂR: K4 (= K3 tavansız) üzerinde yoğunlaşma ve tutma (bacak 3 / 2, long tutma 7 g, havuz 3, short payı %60 / %40 — dolar nötrlüğü bilerek bozulur, madde 566 düğmesi) (kaldıraçsız, uzun zemin; önce ./zemin_sec.sh uzun).
 Merdivenin bütün ayarları (kademe +%45 / −%15, pay) iyimser dolum kuralıyla seçilmişti (madde 527). Düzeltilmiş modelde
 optimum kaymış olabilir. Taban Q_T4 (T4 + MERD_SIRA=1). KOLLAR: M35 / M55 (long kademe) · MS10 / MS18 (short kademe) ·
 P50 / P67 (pay). Ayrıca Q_T4NL (merdivensiz) referans.
@@ -13,7 +13,8 @@ Q = {**B.T4, "MERD_SIRA": "1"}
 NL = {**Q, "MERD_ESIK": "0", "MERDS_ESIK": "0"}
 K1 = {**NL, "REZERV": "0"}; K2 = {**K1, "TPL": "1.00"}; K3 = {**K2, "S_REB": "10", "SK_DOSYA_S": "/tmp/sk_bar96.pkl"}
 K4 = {**K3, "CAP_ORTAK": "1.0"}
-U.KOL = {"Q_T4": Q, "Q_K3C100": K4, "Q_K4B3": K4, "Q_K4B2": K4, "Q_K4R7": {**K4, "REB_GUN": "7"}, "Q_K4H3": {**K4, "HAVUZ": "3"}}
+U.KOL = {"Q_T4": Q, "Q_K3C100": K4, "Q_K4B3": K4, "Q_K4B2": K4, "Q_K4R7": {**K4, "REB_GUN": "7"}, "Q_K4H3": {**K4, "HAVUZ": "3"},
+         "Q_K4S60": {**K4, "TARAF_S": "0.60"}, "Q_K4S40": {**K4, "TARAF_S": "0.40"}}
 BACAK = {"Q_K4B3": 3, "Q_K4B2": 2}
 U.A.KOLLAR = {k: (v, BACAK.get(k, 4), {2000: U.M.D8}) for k, v in U.KOL.items()}
 

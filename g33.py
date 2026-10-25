@@ -313,6 +313,7 @@ if ARALIK_MOD:
 # farki h kadar kapanacak sekilde olceklenir (brut korunur, kaldirac yok). Beta: BETA_PEN bar (varsayilan 180 = 30 g)
 # 4 sa getirileriyle, bar i'ye kadar (nedensel). Olcek BETA_SINIR icinde kirpilir. Yalniz-short ara dengelemede short
 # olcegi mevcut long'larin betasina gore ayarlanir. 0 = kapali (parite).
+TARAF_S=float(os.environ.get("TARAF_S","0.5"))   # madde 566: short tarafin brut payi (0,5 = notr, parite)
 BETA_H=float(os.environ.get("BETA_H","0")); BETA_PEN=int(os.environ.get("BETA_PEN","180"))
 BETA_SINIR=float(os.environ.get("BETA_SINIR","0.4")); _BTS=[0,0.0]
 if BETA_H>0:
@@ -720,6 +721,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         for k in ul: y[k]+=pay
                         for k in sh: y[k]-=kullanilan/len(sh)   # notrluk korunur
                         say_r[0]+=1
+                if TARAF_S!=0.5:
+                    # MADDE 566: brut sabit, short tarafin payi TARAF_S (long 1-TARAF_S). Dolar notrlugu BILEREK bozulur.
+                    y=np.where(y>0,y*(1-TARAF_S)/0.5,np.where(y<0,y*TARAF_S/0.5,y))
                 if BETA_H>0:
                     _b=np.where(np.isfinite(BETA[i]),BETA[i],1.0)
                     if _kis:
