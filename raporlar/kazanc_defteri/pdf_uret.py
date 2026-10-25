@@ -181,20 +181,21 @@ kapak = f'''
 
 css = open("stil.css").read()
 html_ = f'<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Kazanç Defteri</title><style>{css}</style></head><body>{kapak}{"".join(sayfalar)}</body></html>'
-if UZUN:
+if True:   # madde 528: iki defter de düzeltilmiş seriyle (t1=şu anki bot, t2=T4, sr=T4 merdivensiz, bot=merdivensiz T60)
     for a, b in [("2. aday (T2)", "T4 (aday)"), ("2. aday T2", "T4 (aday)"), ("2, aday T2", "T4 (aday)"), ("T2 yıl sonu", "T4 yıl sonu"), ("T2 en kötü gün", "T4 en kötü gün"),
-                 ("T2 bakiye", "T4 bakiye"), ("T2 en kötü", "T4 en kötü"), ("Short ara dengeli · eski bot", "T3 · merdivensiz T60"),
-                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T3 (şu anki bot + short 2 g'de bir + short tavan %8)"),
-                 ("Short ara dengeli", "T3"), ("SAD bakiye", "T3 bakiye"), ("Eski bot (referans)", "Merdivensiz T60 (referans)"),
-                 ("Eski bot", "Merdivensiz T60"), ("20 Temmuz 2022", "19 Temmuz 2020"), ("T2'nin farkı getiriden çok kötü günlerde.", "Kaldıraçsız (1,0x)."),
+                 ("T2 bakiye", "T4 bakiye"), ("T2 en kötü", "T4 en kötü"), ("Short ara dengeli · eski bot", "T4 merdivensiz · merdivensiz T60"),
+                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T4 merdivensiz (T4 − iki taraflı merdiven)"),
+                 ("Short ara dengeli", "T4 merdivensiz"), ("SAD bakiye", "T4M bakiye"), ("Eski bot (referans)", "Merdivensiz T60 (referans)"),
+                 ("Eski bot", "Merdivensiz T60"), ("20 Temmuz 2022", "19 Temmuz 2020" if UZUN else "20 Temmuz 2022"), ("T2'nin farkı getiriden çok kötü günlerde.", "Kaldıraçsız (1,0x)."),
                  ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T4")]:
         html_ = html_.replace(a, b)
     i = html_.index('<p class="dipnot">'); j = html_.index("</p>", i)
-    html_ = html_[:i] + ('<p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), UZUN ZEMİN (2020-01 verisi, ölçüm 19.07.2020 – 30.09.2026), '
+    html_ = html_[:i] + ('<p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), UZUN ZEMİN (2020-01 verisi), ölçüm ' + ('19.07.2020' if UZUN else '20.07.2022') + ' – 30.09.2026, DÜZELTİLMİŞ DOLUM KURALI '
+        '(madde 527: aynı barda kademe + son TP vurursa kademe payı kademe fiyatından dolar; önceki defterdeki merdivenli rakamlar iyimserdi), '
         'gerçekçi ağırlık kayması, 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması, KALDIRAÇSIZ (1,0x). Kalabalık (long/short) oranı 2021-12 '
         'öncesi yok → o dönemde seçim funding sırasıyla (tüm serilerde aynı). Şu anki bot = canlı varsayılan (T60 + 24 sa stop + iki taraflı merdiven). '
-        'T3 = şu anki bot + short 2 g\'de bir + short coin tavanı %8. T4 = T3 + merdiven payı 0,80 + evren tabanı 30 (madde 497-519; botta hazır, '
-        'varsayılan kapalı — kullanıcı kararı). Merdivensiz T60 = merdivenden önceki canlı ayar. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
+         'T4 = şu anki bot + short 2 g\'de bir + short coin tavanı %8 + merdiven payı 0,80 + evren tabanı 30 (demo hesapta, madde 523). '
+        'T4 merdivensiz = T4 − iki taraflı merdiven (merdiven düzeltilmiş modelde kâr değil kötü-gün savunması, madde 528). Merdivensiz T60 = merdivenden önceki canlı ayar. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
         'sonucu değildir ve gelecek için garanti vermez. Büyük bakiyelerde likidite nedeniyle bileşik büyüme gerçekte bu kadar sürmez.') + html_[j:]
 open("defter.html", "w").write(html_)
 print("sayfa", 3 + len(sayfalar))

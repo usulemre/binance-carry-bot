@@ -1,3 +1,7 @@
+> **2026-10-25 DÜZELTME (madde 527-528):** iki PDF de düzeltilmiş dolum kuralıyla (MERD_SIRA=1, uzun zemin) yeniden üretildi.
+> Seriler: t1 = şu anki bot (Q_T1), t2 = T4 (Q_T4), sr = T4 merdivensiz (Q_T4NL), bot = merdivensiz T60 (U_M0);
+> `Kazanc_Defteri.pdf` aynı serilerin 20.07.2022 sonrası kesitidir. Aşağıdaki eski açıklamalar düzeltme öncesine aittir.
+
 # Kazanç Defteri (backtest)
 
 - `Kazanc_Defteri.pdf` — 54 sayfa: kapak (özet + yıllık tablo + bakiye eğrisi), şu anki bot / 2. aday karşılaştırması
