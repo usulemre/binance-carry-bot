@@ -6179,3 +6179,10 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 TP +%80 +3,0 · −0,01 · +0,1 | +4,7 | +1,4 | +2,6 · −1,5 · 2 — TP +%100 +5,3 · −0,01 | +4,8 | +2,5 | +8,3 · −1,7 · 3 —
 24 sa stop %35 −21,0 · −0,10 | −57,9 | −8,0 | −34,3 · −10,9 · 3 — %55 −2,2 · −0,05 · −1,1 | −1,9 | +0,8 | −7,2 · −6,4 · 4.
 TP yükseltmek ham getiriyi biraz artırıyor ama Sharpe/eşit-risk düşüyor (= gizli risk); kural RED. Stop %45 plato tepesi.
+
+## Madde 537 — T4 KÖTÜ GÜN OTOPSİSİ (düzeltilmiş model, uzun zemin, 1,0x): kaybın %60'ı LONG tarafı, funding kaybettirmiyor
+≤ −%2 gün: 135, toplam −392 puan. Taraf payı: long −233,8 · short −160,0 · funding +21,8 (kötü günde bile funding kazandırıyor).
+Tip (gün · puan): iki taraf 56 · −163,7 — yalnız long 29 · −82,4 — yalnız short 23 · −62,8 — tek coin (> kaybın yarısı) 27 · −83,3.
+En büyük günler PİYASA ÇAPINDA LONG ÇÖKÜŞÜ: 2021-05-19 (long −21,2 / short +8,1), 2022-05-09 LUNA (−11,0 / +6,6),
+2022-11-09 FTX (−7,2 / +3,7), 2022-06-13 (−5,2 / +1,5). Tek coin short sıkışmaları ikinci tip (TAC −4,2, ENJ −3,7, SHIB −3,6,
+XLM −3,4, SAND −3,2); SLS24 zaten iki kez RED (madde 450, 503 civarı) → madde 538'de piyasa freni sınanıyor.

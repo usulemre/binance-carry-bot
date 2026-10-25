@@ -280,6 +280,15 @@ if S_REB_DUR>0:
     _PIY=np.nanmedian(np.where(U,_rp,np.nan),axis=1)
 else:
     _PIY=None
+# MADDE 538: PIYASA FRENI. PFREN=x -> evrenin (U) medyan PFREN_PEN bar getirisi bar i kapanisinda <= -x ise
+# BUTUN long bacaklar bar i+1 ACILISINDA kapanir (nedensel: yalniz i kapanisina kadar bilgi). Short'lar dokunulmaz.
+# Kapanan long bir sonraki dengelemeye kadar bos kalir (diger stop'lar gibi). 0 = kapali (parite).
+PFREN=float(os.environ.get("PFREN","0")); PFREN_PEN=int(os.environ.get("PFREN_PEN","1")); _PFS=[0]
+if PFREN>0:
+    _rq=np.full_like(cv,np.nan); _rq[PFREN_PEN:]=cv[PFREN_PEN:]/np.where(cv[:-PFREN_PEN]>0,cv[:-PFREN_PEN],np.nan)-1
+    _PF=np.nanmedian(np.where(U,_rq,np.nan),axis=1)
+else:
+    _PF=None
 # MADDE 491: MERD_GERI=1 -> kademe sonrasi fiyat girise donunce satilan pay geri alinir, kademe yeniden kurulur. 0 = parite.
 MERD_GERI=int(os.environ.get("MERD_GERI","0"))
 MERD_GERI_TARAF=os.environ.get("MERD_GERI_TARAF","iki").strip()
@@ -674,6 +683,10 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     e=_Pe[k]/_Pw[k]
                 if not (np.isfinite(e) and np.isfinite(cv[i,k]) and cv[i,k]>0 and np.isfinite(HV[i+1,k]) and np.isfinite(LV[i+1,k])): continue
                 uzun=poz[k]>0
+                if PFREN>0 and uzun and np.isfinite(_PF[i]) and _PF[i]<=-PFREN:
+                    _op=OV[i+1,k]; _ff=_op if np.isfinite(_op) else cv[i,k]
+                    br[k]=_ff/cv[i,k]-1; cik[k]=True; _PFS[0]+=1
+                    continue
                 if TP_SIFIRLA>0 and (TP_SIF_TARAF=='iki' or (TP_SIF_TARAF=='long')==uzun):
                     if (uzun and cv[i,k]<=e*(1-TP_SIFIRLA)) or ((not uzun) and cv[i,k]>=e*(1+TP_SIFIRLA)):
                         giris[k]=cv[i,k]; e=cv[i,k]
@@ -1019,6 +1032,10 @@ def calis2(ad,n,olcut):
     if _ADY_YOL:
         pd.DataFrame([(C.index[i],C.columns[k],t) for i,la_,sa_ in _ADY for t,ks in ((1,la_),(-1,sa_)) for k in ks],
                      columns=['zaman','sembol','taraf']).drop_duplicates().to_pickle(_ADY_YOL)
+    if PFREN>0:
+        _tg=np.isfinite(_PF)&(_PF<=-PFREN)
+        print(f"# PFREN={PFREN} PEN={PFREN_PEN}: tetik bar {int(_tg.sum())} · kapanan long bacak {_PFS[0]} · tetik gunleri "
+              f"{sorted(set(str(C.index[j].date()) for j in np.flatnonzero(_tg)))[:40]}", flush=True)
     if _GK_YOL:
         _df=pd.DataFrame([(d,C.columns[k],v[0]/NF,v[1]/NF,v[2]/max(v[3],1),v[3]/NF) for (d,k),v in _GK.items()],
                          columns=['gun','sembol','fiyat','funding','ort_poz','bar'])
