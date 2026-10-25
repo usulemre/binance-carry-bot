@@ -6302,3 +6302,8 @@ düşüyor ve P %62-76 (bar %95). T5 kaydedildi, canlıya önerilmez; Ekim OOS't
 ## Madde 554 — YENİ SEVİYE: BETA NÖTR T4 (BETA_H düğmesi, varsayılan kapalı)
 Otopsi (madde 537): çöküş günü long −21 / short +8 → kitap dolar-nötr ama BETA-nötr değil (long'lar yüksek betalı). Dengelemede
 long/short ölçeği, 30 g (ya da 90 g) betalarla kitabın betası h kadar kapanacak şekilde ayarlanır; brüt korunur (kaldıraç yok).
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı (−%3 altı, T4 45):
+h 0,5 −4,7 · −0,05 · −1,6 | +17,7 | −4,1 | −16,1 · −6,3 · 1 (44) — h 1 −12,0 · −0,16 · −3,9 | +28,1 | −9,3 | −36,6 · −19,4 · 3 (46) —
+h 1, 90 g beta −5,0 · −0,03 · −3,0 | +35,7 | −7,4 | −12,0 · −3,9 · 3 (42) — h 1, geniş sınır = h 1. HEPSİ RED.
+2021-05-19 −12,8 → −9,3..−11,4 iyileşiyor ama LUNA/FTX kötüleşiyor ve düşüş 3-4 puan derinleşiyor: short'lar (yüksek funding'li
+pompa coinleri) betası düşük ölçülüp büyütülünce sıkışma riski artıyor. Beta, carry kitabında risk ölçüsü olarak yanıltıcı. RED.
