@@ -6257,3 +6257,8 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
 72 sa +1,0 · +0,01 · −1,8 | +11,8 | −5,3 | +17,0 · +1,8 · 2 — 96 sa +9,0 · +0,08 · −0,5 · ADAY — 144 sa +4,4 · +0,07 · −1,7 |
 +16,6 | +4,2 | +7,8 · +8,1 · 2. Komşular kuralın altında, düşüş daha derin: 96 sa izole tepe. Short penceresi 60 sa (ortak) kalır.
+
+## Madde 549 — T4: long tarafına ayrı sinyal penceresi (short 60 sa): RED — 60 sa iki taraf için de yerinde
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+48 sa −0,6 · +0,01 · −0,6 | +9,2 | −11,8 | +16,7 · +0,9 · 2 — 72 sa +0,9 · −0,01 · −1,3 | +15,1 | −6,8 | +16,5 · −1,0 · 2 —
+96 sa −9,5 · −0,12 · −2,2 · −14,3 · 3. Sinyal penceresi ekseni (516, 547-549) kapandı.
