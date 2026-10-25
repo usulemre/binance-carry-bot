@@ -6064,3 +6064,13 @@ ortalama maruziyet). Ön kaydın Sharpe şartını (≥ +0,05) hiçbiri sağlama
 `CARRY_PROFIL=T4` tek satırla T4'ün dört ayarını varsayılan yapar (short 48 sa · short tavan 0,08 · merdiven payı 0,80 · evren
 tabanı 30; .env'deki açık değer kazanır). Preflight T4 profili bunları bekler. Kurulum/izleme: DEMO_T4.md. Testler:
 test_carry_short_ara (T4 profil kontrolleri), preflight, bot — geçti. Araştırma bundan sonra T4 tabanı üzerinden sürer.
+
+## Madde 524 — T4 kademe payı komşuluğu (uzun zemin): PLATO, eğim yukarı doğru
+T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
+| pay | TÜM | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| 0,75 | −3,7 · −0,03 · −0,2 | −5,8 | −2,5 | −7,3 |
+| 0,85 | +3,9 · +0,03 · +0,2 | +7,1 | +2,4 | +6,8 |
+| 0,90 | +7,9 · +0,06 · +0,3 | +13,5 | +5,1 | +13,8 |
+0,75-0,90 arası düzgün ve MONOTON (her dönemde aynı sıra, dd değişmiyor) → 0,80 plato içinde, eğim yukarı. 0,90 ön kaydın
+yıllık şartına kıl payı (+7,9 < 8). → madde 525: 0,95 / 1,00 (kademede tamamı kapanır) tepe nerede.
