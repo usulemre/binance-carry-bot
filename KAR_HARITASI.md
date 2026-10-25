@@ -6074,3 +6074,14 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
 | 0,90 | +7,9 · +0,06 · +0,3 | +13,5 | +5,1 | +13,8 |
 0,75-0,90 arası düzgün ve MONOTON (her dönemde aynı sıra, dd değişmiyor) → 0,80 plato içinde, eğim yukarı. 0,90 ön kaydın
 yıllık şartına kıl payı (+7,9 < 8). → madde 525: 0,95 / 1,00 (kademede tamamı kapanır) tepe nerede.
+
+## Madde 525 — T4 kademe payı tepesi: MONOTON 1,00'a kadar → "kademede TAMAMI kapansın" (= tek TP +%45 / −%15)
+T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
+| pay | TÜM | YENİ | 2022-24 | 2025-26 |
+|---|---|---|---|---|
+| 0,90 | +7,9 · +0,06 · +0,3 | +13,5 · +0,07 | +5,1 · +0,06 | +13,8 · +0,08 |
+| 0,95 | +11,7 · +0,09 · +0,4 | +19,6 · +0,09 | +7,6 · +0,09 | +20,8 · +0,12 → ADAY |
+| 1,00 | +16,0 · +0,13 · +0,5 | +27,1 · +0,13 | +10,1 · +0,12 | +28,2 · +0,16 → ADAY |
+Pay 1,00 = merdiven yok, tek TP long +%45 / short −%15. T4'ün yapısında (short 2 g'de bir yenileniyor) kalan ⅕'i +%60/−%20'ye
+taşımak para kaybettiriyor. Botta pay 1,00 çalışmaz (kalan 0 → kademe emri konmaz) — eşdeğeri MERDIVEN=0 + KAR_AL 0,45 +
+KAR_AL_SHORT 0,15. → madde 526: tek TP seviyeleri (long 0,40/0,45/0,50 · short 0,12/0,15/0,18), merdivensiz T4.
