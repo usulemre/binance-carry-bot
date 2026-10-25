@@ -6281,3 +6281,7 @@ W 0,3 iki taraf −6,3 · −0,11 · −2,0 | −33,0 | −16,1 | +30,6 · −12
 W 0,5 yalnız short +5,0 · +0,05 · −1,6 | −1,8 | −6,2 | +41,5 · +6,2 · 3 — W 0,5 yalnız long −4,8 · −0,04 · −2,7 · 4. HEPSİ RED.
 Prim funding'i daha iyi tahmin ediyor ama kâr funding tahmininden değil fiyat yolundan belirleniyor; daha "doğru" seçim, fiyatça
 daha riskli coinleri öne çekiyor (dd derinleşiyor). Yalnız 2025-26'da yardımcı (rejim). Prim ekseni kapandı.
+
+## Madde 552 — Funding aralığı filtresi (yeni panel aralik_kur.py; ARALIK_MOD düğmesi, varsayılan kapalı)
+Aralık dağılımı (uzun zemin): 8 sa 2,21 M hücre · 4 sa 1,72 M · 1 sa 29 bin · 2 sa 7 bin. <8 sa payı 2020-22 ~0 → 2024 %12 → 2025 %37 →
+2026 %59 (yeni listelemeler 4 sa ile başlıyor; 4 sa tek başına sıkışma işareti değil). İşaretler: aralık ≤ 2 sa; aralık son 7 g'de kısaldı.

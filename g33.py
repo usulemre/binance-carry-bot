@@ -295,6 +295,20 @@ if PFREN>0:
     _PF=np.nanmedian(np.where(U,_rq,np.nan),axis=1)
 else:
     _PF=None
+# MADDE 552: ARALIK_MOD=kisa -> guncel funding araligi <= ARALIK_ESIK sa olan coin; =degisti -> aralik ARALIK_GERI bar
+# oncekinden KISA (Binance tavana dayaninca araligi kisaltir). ARALIK_TARAF=short (varsayilan) / iki. Panel /tmp/aralik.pkl.
+ARALIK_MOD=os.environ.get("ARALIK_MOD","").strip(); ARALIK_ESIK=float(os.environ.get("ARALIK_ESIK","2"))
+ARALIK_GERI=int(os.environ.get("ARALIK_GERI","42")); ARALIK_TARAF=os.environ.get("ARALIK_TARAF","short").strip(); _ARV=None
+if ARALIK_MOD:
+    import pickle as _pk5
+    _AR=_pk5.load(open(os.environ.get("ARALIK_DOSYA","/tmp/aralik.pkl"),"rb")).reindex(index=C.index,columns=C.columns).values
+    if ARALIK_MOD=='kisa':
+        _ARV=np.isfinite(_AR)&(_AR<=ARALIK_ESIK)
+    else:
+        _ARo=np.full_like(_AR,np.nan); _ARo[ARALIK_GERI:]=_AR[:-ARALIK_GERI]
+        _ARV=np.isfinite(_AR)&np.isfinite(_ARo)&(_AR<_ARo-0.5)
+    print(f"# ARALIK_MOD={ARALIK_MOD} esik={ARALIK_ESIK} geri={ARALIK_GERI} taraf={ARALIK_TARAF}: isaretli hucre payi "
+          f"{float(_ARV[U].mean()):.4f}", flush=True)
 # MADDE 491: MERD_GERI=1 -> kademe sonrasi fiyat girise donunce satilan pay geri alinir, kademe yeniden kurulur. 0 = parite.
 MERD_GERI=int(os.environ.get("MERD_GERI","0"))
 MERD_GERI_TARAF=os.environ.get("MERD_GERI_TARAF","iki").strip()
@@ -557,6 +571,14 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _sr3=np.where(g,S[i],np.nan)
                     _md3=np.nanmedian(_sr3) if np.isfinite(_sr3).any() else 0.0
                     g=g&~(~_sp&(_sr3>_md3))
+            if _ARV is not None:
+                # MADDE 552: FUNDING ARALIGI FILTRESI. _ARV[i] True = isaretli coin (aralik kisa ya da yakinda kisaldi).
+                if ARALIK_TARAF=='iki':
+                    g=g&~_ARV[i]
+                else:
+                    _sr5=np.where(g,S[i],np.nan)
+                    _md5=np.nanmedian(_sr5) if np.isfinite(_sr5).any() else 0.0
+                    g=g&~(_ARV[i]&(_sr5>_md5))       # yalniz SHORT tarafi adaylarindan (sinyal medyan ustu) cikar
             if MERD_DEVIR==2:
                 # MADDE 474: kademesi dolmus coin bu dengelemede aday OLMAZ (pompa sonrasi yeniden alma yok)
                 g=g&~(merd_yapildi&(poz!=0))
