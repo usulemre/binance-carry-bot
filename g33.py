@@ -264,6 +264,9 @@ MERD_KAT_ALT=float(os.environ.get("MERD_KAT_ALT","0.05")); MERD_KAT_UST=float(os
 # ayni taraftaki ACIK diger bacaklara mevcut agirlikla orantili eklenir (brut korunur, yeni coin yok).
 # MERD_YAY=2 -> TP ile tam kapananlarin agirligi da ayni sekilde yayilir. 0 = kapali (parite).
 MERD_YAY=int(os.environ.get("MERD_YAY","0"))
+# MADDE 527: MERD_SIRA=1 -> ayni barda hem kademe hem son TP vurursa kademe payi KADEME fiyatindan, kalan TP'den dolar
+# (gercek emir sirasi). 0 -> eski kural: tamami TP fiyatindan (parite; iyimser). _MSQ: duzeltilen olay sayisi.
+MERD_SIRA=int(os.environ.get("MERD_SIRA","0")); _MSQ=[0]
 # MADDE 493: S_REB=<bar> -> SHORT tarafi tam dengeleme arasinda bu siklikla yeniden secilir (long'lar REB ile). 0 = parite.
 S_REB=int(os.environ.get("S_REB","0"))
 # MADDE 496: L_REB=<bar> -> LONG tarafi ara dengelemesi (aynalanmis S_REB). 0 = parite.
@@ -766,6 +769,13 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     if YARIM and tp_yapildi[k]:
                         continue                  # yarisi zaten alindi, kalan normal getiri alir
                     br[k]=_dol(sev,uzun,i,k)/cv[i,k]-1; say_t[1]+=1
+                    if MERD_SIRA:
+                        # MADDE 527: AYNI BARDA KADEME + TP. Fiyat TP'ye giderken kademe seviyesinden GEÇER; bekleyen kademe
+                        # limiti once dolar. Eski kural (0) tamamini TP fiyatindan sayiyordu -> pompa barlarinda iyimser.
+                        _mq = MERD_ESIK if uzun else MERDS_ESIK
+                        if _mq>0 and not merd_yapildi[k] and _mq<_tp:
+                            _sq=e*(1+_mq) if uzun else e*(1-_mq)
+                            br[k]=MERD_PAY*(_dol(_sq,uzun,i,k)/cv[i,k]-1)+(1-MERD_PAY)*br[k]; _MSQ[0]+=1
                     if YARIM: yaridan[k]=True; tp_yapildi[k]=True
                     else: cik[k]=True
                     continue
@@ -1029,6 +1039,7 @@ def calis2(ad,n,olcut):
     if _BRT[1]>0:
         print(f'BRUT: fiili ortalama carpan {_BRT[0]/_BRT[1]:.4f} '
               f'({_BRT[1]} kurulum)',flush=True)
+    if MERD_SIRA: print(f"# MERD_SIRA: ayni barda kademe+TP duzeltmesi {_MSQ[0]} olay", flush=True)
     if BOSLUK and bos[1]>0:
         print(f'BOSLUK: fiili/hedef brut = {bos[0]/bos[1]*100:.2f}%  '
               f'(bos sermaye {100-bos[0]/bos[1]*100:.2f}%, {bos[2]} bar)',flush=True)
