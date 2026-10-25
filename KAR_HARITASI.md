@@ -6201,3 +6201,9 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 59 tetik barında long'u yalnız 4 saat dışarıda tutmak bile yılda ~21 puan kaybettiriyor → çöküş barından sonraki 4 sa'te evren
 güçlü DÖNÜYOR. Long tarafında tepkisel fren ekseni kapandı. Ters yüz: çöküşte SHORT'u kapatmak (kazancı kilitle, dönüşten kaç;
 brüt azalır) → madde 540 (PFREN_YON=short).
+
+## Madde 540 — Çöküşte SHORT kapat (PFREN_YON=short): RED — getiri biraz ↑ ama kalkan gidiyor, en kötü gün derinleşiyor
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+4 sa −%8 · 3 bar +4,1 · −0,03 · −2,5 | +15,1 | +7,3 | +0,8 · −3,3 · 2 — 6 bar +3,2 · −0,05 · −4,4 — geri yok +2,1 · −0,06 · −2,7 —
+4 sa −%5 · 3 bar −9,1 · −0,25 · −5,9 · 7. En kötü gün 2021-05-19 −12,8 → −15,0..−17,1 (çöküş ikinci dalga yapınca hedge yok).
+Çöküş anı sinyalleri iki yönde de RED (538-540): tepkisel piyasa freni ekseni kapandı.
