@@ -1,3 +1,6 @@
+> **2026-10-25 GÜNCELLEME (madde 534):** T4 kod varsayılanı (asıl bot). İki PDF'te başlık sütunu artık **Asıl bot T4**,
+> ikinci sütun **Eski bot T1** (pdf_uret.py t1/t2'yi yer değiştirir; pickle'da t1=T1, t2=T4 kalır). Rakamlar değişmedi.
+
 > **2026-10-25 DÜZELTME (madde 527-528):** iki PDF de düzeltilmiş dolum kuralıyla (MERD_SIRA=1, uzun zemin) yeniden üretildi.
 > Seriler: t1 = şu anki bot (Q_T1), t2 = T4 (Q_T4), sr = T4 merdivensiz (Q_T4NL), bot = merdivensiz T60 (U_M0);
 > `Kazanc_Defteri.pdf` aynı serilerin 20.07.2022 sonrası kesitidir. Aşağıdaki eski açıklamalar düzeltme öncesine aittir.

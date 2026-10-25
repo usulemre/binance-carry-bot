@@ -3,6 +3,8 @@ import pandas as pd, numpy as np, math
 import os
 UZUN = os.environ.get("PDF_PROFIL", "") == "uzun"     # 6 yıllık defter: t1=T1, t2=T4, sr=T3, bot=merdivensiz T60
 D = pd.read_pickle("../gunluk_uzun.pkl" if UZUN else "../gunluk.pkl")
+# MADDE 534: T4 kod varsayılanı (asıl bot) -> başlık sütunu T4. Pickle'da t1=T1, t2=T4; burada yer değiştirir.
+D[["t1", "t2"]] = D[["t2", "t1"]].values
 ILK_YIL = int(D.index[0].year)
 BAS = 2000.0
 S = [("t1", "Şu anki bot", "l-t1", "sw-t1"), ("t2", "2. aday (T2)", "l-t2", "sw-t2"), ("sr", "Short ara dengeli", "l-sr", "sw-sr"), ("bot", "Eski bot", "l-eski", "sw-eski")]
@@ -181,20 +183,23 @@ kapak = f'''
 
 css = open("stil.css").read()
 html_ = f'<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Kazanç Defteri</title><style>{css}</style></head><body>{kapak}{"".join(sayfalar)}</body></html>'
-if True:   # madde 528: iki defter de düzeltilmiş seriyle (t1=şu anki bot, t2=T4, sr=T4 merdivensiz, bot=merdivensiz T60)
-    for a, b in [("2. aday (T2)", "T4 (aday)"), ("2. aday T2", "T4 (aday)"), ("2, aday T2", "T4 (aday)"), ("T2 yıl sonu", "T4 yıl sonu"), ("T2 en kötü gün", "T4 en kötü gün"),
-                 ("T2 bakiye", "T4 bakiye"), ("T2 en kötü", "T4 en kötü"), ("Short ara dengeli · eski bot", "T4 merdivensiz · merdivensiz T60"),
+if True:   # madde 528/534: iki defter de düzeltilmiş seriyle (görünen t1=T4 asıl bot, t2=eski bot T1, sr=T4 merdivensiz, bot=merdivensiz T60)
+    for a, b in [("Şu anki bot ve adaylar", "Asıl bot T4 ve karşılaştırmalar"), ("2. aday (T2)", "§T1§"), ("2. aday T2", "§T1§"), ("2, aday T2", "§T1§"),
+                 ("T2 yıl sonu", "T1 yıl sonu"), ("T2 en kötü gün", "T1 en kötü gün"),
+                 ("T2 bakiye", "T1 bakiye"), ("T2 en kötü", "T1 en kötü"), ("Short ara dengeli · eski bot", "T4 merdivensiz · merdivensiz T60"),
                  ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T4 merdivensiz (T4 − iki taraflı merdiven)"),
                  ("Short ara dengeli", "T4 merdivensiz"), ("SAD bakiye", "T4M bakiye"), ("Eski bot (referans)", "Merdivensiz T60 (referans)"),
                  ("Eski bot", "Merdivensiz T60"), ("20 Temmuz 2022", "19 Temmuz 2020" if UZUN else "20 Temmuz 2022"), ("T2'nin farkı getiriden çok kötü günlerde.", "Kaldıraçsız (1,0x)."),
-                 ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T4")]:
+                 ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T1"),
+                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T4 merdivensiz (T4 − iki taraflı merdiven)")]:
         html_ = html_.replace(a, b)
+    html_ = html_.replace("Şu anki bot", "Asıl bot T4").replace("şu anki bot", "asıl bot T4").replace("§T1§", "Eski bot T1")
     i = html_.index('<p class="dipnot">'); j = html_.index("</p>", i)
     html_ = html_[:i] + ('<p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), UZUN ZEMİN (2020-01 verisi), ölçüm ' + ('19.07.2020' if UZUN else '20.07.2022') + ' – 30.09.2026, DÜZELTİLMİŞ DOLUM KURALI '
         '(madde 527: aynı barda kademe + son TP vurursa kademe payı kademe fiyatından dolar; önceki defterdeki merdivenli rakamlar iyimserdi), '
         'gerçekçi ağırlık kayması, 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması, KALDIRAÇSIZ (1,0x). Kalabalık (long/short) oranı 2021-12 '
-        'öncesi yok → o dönemde seçim funding sırasıyla (tüm serilerde aynı). Şu anki bot = canlı varsayılan (T60 + 24 sa stop + iki taraflı merdiven). '
-         'T4 = şu anki bot + short 2 g\'de bir + short coin tavanı %8 + merdiven payı 0,80 + evren tabanı 30 (demo hesapta, madde 523). '
+        'öncesi yok → o dönemde seçim funding sırasıyla (tüm serilerde aynı). Asıl bot T4 = kod varsayılanı (madde 534) ve demo hesapta çalışan ayar: '
+         'eski bot T1 + short 2 g\'de bir + short coin tavanı %8 + merdiven payı 0,80 + evren tabanı 30. Eski bot T1 = eski varsayılan (T60 + 24 sa stop + iki taraflı merdiven; CARRY_PROFIL=T60). '
         'T4 merdivensiz = T4 − iki taraflı merdiven (merdiven düzeltilmiş modelde kâr değil kötü-gün savunması, madde 528). Merdivensiz T60 = merdivenden önceki canlı ayar. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
         'sonucu değildir ve gelecek için garanti vermez. Büyük bakiyelerde likidite nedeniyle bileşik büyüme gerçekte bu kadar sürmez.') + html_[j:]
 open("defter.html", "w").write(html_)
