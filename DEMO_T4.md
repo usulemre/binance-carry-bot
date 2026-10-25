@@ -1,6 +1,6 @@
 # T4'ü DEMO HESAPTA ÇALIŞTIRMA (kullanıcı kararı, 2026-10-25)
 
-T4 = şu anki bot (T60 + 24 sa stop + iki taraflı merdiven) + short 2 günde bir yenileme + short coin tavanı %8 +
+T4 = demo/asıl bot = eski varsayılan T1 (T60 + 24 sa stop + iki taraflı merdiven) + short 2 günde bir yenileme + short coin tavanı %8 +
 merdiven payı 0,80 + evren tabanı 30. Kanıt: ADAYLAR.md, KAR_HARITASI madde 497-522. Kaldıraçsız (CARRY_GROSS 1,0).
 
 ## 1) Sunucuda (demo hesabın olduğu makine)
@@ -39,5 +39,5 @@ journalctl -u carry -f
 - **Kötü günler**: backtest'te T4'te −%5 altı gün 6 yılda 2 (T1: 7).
 
 ## Geri dönüş
-`.env`'den `CARRY_PROFIL=T4` satırını silin (varsayılan T60 = şu anki bot) → `sudo systemctl restart carry`.
+`.env`'den `CARRY_PROFIL=T4` satırını silin (kod varsayılanı = eski varsayılan T1) → `sudo systemctl restart carry`.
 Dilim defteri uyumludur; ek işlem gerekmez.
