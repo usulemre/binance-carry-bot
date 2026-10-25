@@ -6380,3 +6380,9 @@ Aynı oynaklıkta T4 × 1,24 yine +50..+57 önde. Sonuç: kaldıraçsız şartta
 | K3 + short felaket +%300 | +330,0 | 3,76 | −16,8 | −13,57 | 10 | 73 | 17,0 M |
 Short tavanı kaldırmak çarpıcı (+92 puan, Sh T4'ten bile yüksek, en kötü gün iyileşiyor) ama CAP_ORTAK=0 motorda farklı yol
 (bt2, dilimler arası koordinatör yok) → aynı yolda tavan 1,0 / 0,15 / 0,12 ile doğrulama (madde 563), sonra canlı gibi giriş.
+
+## Madde 563 — K3 short tavanı doğrulaması (AYNI motor yolu): ETKİ GERÇEK, motor yolu değil
+K3 tavan 1,0 = tavansız (bt2) birebir: +422,8 · Sh 4,04 · dd −19,6 · en kötü −9,51 · −%5 17. Tavan %15 +419,3 · 4,03 · 18;
+%12 +395,1 · 3,96 · −19,8 · −10,97 · 13; %8 (K3) +330,8 · 3,77 · 10. Fark çoğunlukla 2021 (+710 → +1085) ve 2025-26; 2022-24 aynı.
+Tavan, 4+4 bacak × 15 dilimde aynı short'un birçok dilimde birikmesini kesiyor — o yoğun short'lar ortalamada en kârlıları.
+Madde 500'deki 2020-11 kuyruğu burada görünmüyor (en kötü gün tavansız daha İYİ). → madde 564: canlı gibi giriş + 5 bp, T4 ve K3.
