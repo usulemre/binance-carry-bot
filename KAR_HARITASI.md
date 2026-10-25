@@ -6246,3 +6246,9 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 | 3.500 $ 0 / 1 | +9,8 / +10,4 | +0,15 / +0,05 | −0,05 / +0,12 | +0,4 / −0,9 | −0,9 / +33,3 | XYXY / YYYY | %72 / %69 |
 Canlı gibi girişte fark ~+10 puan/yıl'a iniyor, hiza 0'da 2025+ Sharpe ve eşit-risk şartı düşüyor, P %63-72. Madde 513 ile aynı
 sonuç: 40 sa bir doz farkı, kanıt değil. T4 48 sa'te kalır.
+
+## Madde 547 — T4: short tarafına ayrı sinyal penceresi (long 60 sa): 96 sa kıl payı ADAY, yön UZUN pencere
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+36 sa −6,5 · −0,08 · −0,5 | −26,1 | −16,0 | +24,8 · −9,4 · 2 — 48 sa +4,9 · +0,02 | +0,5 | −9,8 | +44,2 · +2,8 · 3 —
+96 sa +9,0 · +0,08 · −0,5 | +3,2 | +9,5 | +18,3 · +10,0 · 2 · ADAY (kural sınırında). → madde 548: 72 / 144 sa ile plato kontrolü
+(uzun zemin için sk_bar72 / sk_bar144 kuruldu, /tmp/zu).
