@@ -6386,3 +6386,16 @@ K3 tavan 1,0 = tavansız (bt2) birebir: +422,8 · Sh 4,04 · dd −19,6 · en k�
 %12 +395,1 · 3,96 · −19,8 · −10,97 · 13; %8 (K3) +330,8 · 3,77 · 10. Fark çoğunlukla 2021 (+710 → +1085) ve 2025-26; 2022-24 aynı.
 Tavan, 4+4 bacak × 15 dilimde aynı short'un birçok dilimde birikmesini kesiyor — o yoğun short'lar ortalamada en kârlıları.
 Madde 500'deki 2020-11 kuyruğu burada görünmüyor (en kötü gün tavansız daha İYİ). → madde 564: canlı gibi giriş + 5 bp, T4 ve K3.
+
+## Madde 564 — Short tavanı GERÇEKÇİ koşulda (canlı gibi giriş + 5 bp, iki hiza ort.) + protokol (önbellekten)
+| kol | 2.000 $: yıllık · Sh · dd · en kötü · −%5 | 3.500 $: yıllık · Sh · dd · en kötü · −%5 |
+|---|---|---|
+| T4 | +244,3 · 3,84 · −15,3 · −13,3 · 3 | +241,6 · 3,89 · −16,0 · −13,0 · 3 |
+| T4 tavan %12 | +273,3 · 3,91 · −17,5 · −11,2 · 8 | +271,2 · 3,97 · −16,4 · −11,2 · 6 |
+| T4 tavansız | +277,8 · 3,92 · −17,8 · −11,0 · 8 | +275,3 · 3,98 · −16,3 · −11,0 · 7 |
+| K3 (tavan %8) | +306,1 · 3,56 · −18,6 · −14,2 · 9 | +292,2 · 3,55 · −19,5 · −14,5 · 10 |
+| K3 tavan %12 | +362,0 · 3,74 · −20,8 · −11,4 · 15 | +353,7 · 3,76 · −20,1 · −11,4 · 15 |
+| K3 tavansız | +389,2 · 3,82 · −20,6 · −10,0 · 21 | +379,0 · 3,84 · −20,2 · −10,0 · 21 |
+Protokol (T4'e karşı): T4 tavansız P %61-79 (2.000 $'da eşit-risk şartı X) RED; T4 %12 P %60-73 RED; K3 tavansız 2025+ Sharpe ↓,
+P %63-78 RED. Ham kâr ölçeğinde: T4 tavansız +31..+36/yıl ve Sharpe ↑ (kötü gün 3 → 7-8, en kötü gün −13 → −11);
+K3 tavansız +135/yıl ama −%5 altı gün 3 → 21. Short tavanı (madde 455-456) kötü-gün sayısı için; kâr pahasına.
