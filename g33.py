@@ -284,6 +284,9 @@ else:
 # BUTUN long bacaklar bar i+1 ACILISINDA kapanir (nedensel: yalniz i kapanisina kadar bilgi). Short'lar dokunulmaz.
 # Kapanan long bir sonraki dengelemeye kadar bos kalir (diger stop'lar gibi). 0 = kapali (parite).
 PFREN=float(os.environ.get("PFREN","0")); PFREN_PEN=int(os.environ.get("PFREN_PEN","1")); _PFS=[0]
+# PFREN_GERI=n (madde 539): frenle kapanan long n bar sonra (fren o barda tetikte degilse) AYNI agirlikla, o barin kapanisindan
+# yeniden acilir (yeni giris, kademe sifir, komisyon). Arada dilimin tam dengelemesi olursa iptal. 0 = yeniden acilmaz (parite).
+PFREN_GERI=int(os.environ.get("PFREN_GERI","0")); _PFG=[0]
 if PFREN>0:
     _rq=np.full_like(cv,np.nan); _rq[PFREN_PEN:]=cv[PFREN_PEN:]/np.where(cv[:-PFREN_PEN]>0,cv[:-PFREN_PEN],np.nan)-1
     _PF=np.nanmedian(np.where(U,_rq,np.nan),axis=1)
@@ -439,7 +442,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
     tp=TPX if tp is None else tp
     hedef_brut=[0.0]; _acik={}
     nk=C.shape[1]; poz=np.zeros(nk); giris=np.full(nk,np.nan); zirve=np.full(nk,np.nan); tp_yapildi=np.zeros(nk,bool); eq=[1.0]; bek=None; _yas=np.zeros(nk,int)
-    merd_yapildi=np.zeros(nk,bool); merd0_yapildi=np.zeros(nk,bool); _kisb=[False]
+    merd_yapildi=np.zeros(nk,bool); merd0_yapildi=np.zeros(nk,bool); _kisb=[False]; _pfg={}
     ek_say=np.zeros(nk,int); ilk_w=np.zeros(nk)
     for i in range(bas,len(C)-1):
         # MADDE 415: her bar koordinatore (i, poz, yeni hedef ya da None) bildirilir;
@@ -478,6 +481,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
             giris=np.where(_dv,_gs,giris); zirve=np.where(_dv,_zs,zirve)
             merd_yapildi=np.where((y!=0)&~_dv,False,merd_yapildi)
             merd0_yapildi=np.where((y!=0)&~_dv,False,merd0_yapildi)
+            if not _kisb[0]: _pfg.clear()        # madde 539: tam dengeleme bekleyen fren geri acilislarini iptal eder
             ek_say=np.where(y!=0,0,ek_say); ilk_w=np.where(y!=0,np.abs(y),ilk_w)
             if BOSLUK: hedef_brut[0]=float(np.abs(poz).sum())
             if KATKI:
@@ -664,6 +668,14 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 elif _kisL: y=np.where(y<0,0.0,y); _kisb[0]='L'   # MADDE 496: ara dengeleme yalniz LONG
                 else: _kisb[0]=False
                 bek=(i+GEC,y); yedek_l=list(lo_s[_nl:]); yedek_s=list(sh_s[_ns:]); w_=0.5/max(_nl,_ns)
+        if _pfg:
+            for _k,(_w,_ib) in list(_pfg.items()):
+                if i<_ib: continue
+                if _PF is not None and np.isfinite(_PF[i]) and _PF[i]<=-PFREN: continue   # fren hala tetikte: bekle
+                del _pfg[_k]
+                if poz[_k]==0 and U[i,_k] and np.isfinite(cv[i,_k]) and cv[i,_k]>0:
+                    poz[_k]=_w; giris[_k]=cv[i,_k]; zirve[_k]=cv[i,_k]; tp_yapildi[_k]=False
+                    merd_yapildi[_k]=False; merd0_yapildi[_k]=False; eq[-1]*=1-abs(_w)*KOM; _PFG[0]+=1
         gec=np.isfinite(cv[i])&np.isfinite(cv[i+1])
         br=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0); br=np.nan_to_num(br)
         cik=np.zeros(nk,bool); yaridan=np.zeros(nk,bool)
@@ -686,6 +698,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if PFREN>0 and uzun and np.isfinite(_PF[i]) and _PF[i]<=-PFREN:
                     _op=OV[i+1,k]; _ff=_op if np.isfinite(_op) else cv[i,k]
                     br[k]=_ff/cv[i,k]-1; cik[k]=True; _PFS[0]+=1
+                    if PFREN_GERI>0: _pfg[k]=(float(poz[k]), i+1+PFREN_GERI)
                     continue
                 if TP_SIFIRLA>0 and (TP_SIF_TARAF=='iki' or (TP_SIF_TARAF=='long')==uzun):
                     if (uzun and cv[i,k]<=e*(1-TP_SIFIRLA)) or ((not uzun) and cv[i,k]>=e*(1+TP_SIFIRLA)):
@@ -1034,7 +1047,7 @@ def calis2(ad,n,olcut):
                      columns=['zaman','sembol','taraf']).drop_duplicates().to_pickle(_ADY_YOL)
     if PFREN>0:
         _tg=np.isfinite(_PF)&(_PF<=-PFREN)
-        print(f"# PFREN={PFREN} PEN={PFREN_PEN}: tetik bar {int(_tg.sum())} · kapanan long bacak {_PFS[0]} · tetik gunleri "
+        print(f"# PFREN={PFREN} PEN={PFREN_PEN} GERI={PFREN_GERI}: tetik bar {int(_tg.sum())} · kapanan long bacak {_PFS[0]} · geri acilan {_PFG[0]} · tetik gunleri "
               f"{sorted(set(str(C.index[j].date()) for j in np.flatnonzero(_tg)))[:40]}", flush=True)
     if _GK_YOL:
         _df=pd.DataFrame([(d,C.columns[k],v[0]/NF,v[1]/NF,v[2]/max(v[3],1),v[3]/NF) for (d,k),v in _GK.items()],

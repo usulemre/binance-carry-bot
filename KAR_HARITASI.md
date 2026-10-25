@@ -6186,3 +6186,10 @@ Tip (gün · puan): iki taraf 56 · −163,7 — yalnız long 29 · −82,4 — 
 En büyük günler PİYASA ÇAPINDA LONG ÇÖKÜŞÜ: 2021-05-19 (long −21,2 / short +8,1), 2022-05-09 LUNA (−11,0 / +6,6),
 2022-11-09 FTX (−7,2 / +3,7), 2022-06-13 (−5,2 / +1,5). Tek coin short sıkışmaları ikinci tip (TAC −4,2, ENJ −3,7, SHIB −3,6,
 XLM −3,4, SAND −3,2); SLS24 zaten iki kez RED (madde 450, 503 civarı) → madde 538'de piyasa freni sınanıyor.
+
+## Madde 538 — PİYASA FRENİ (evren medyanı çökünce bütün long kapanır, dengelemeye kadar boş): KÖTÜ GÜNÜ SİLİYOR, KÂRI DAHA ÇOK
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+4 sa −%5 −82,4 · −0,80 · −5,1 · 3 — 4 sa −%8 −26,2 · −0,20 · 0,0 · 3 — 24 sa −%10 −67,0 · −0,68 · 3 — 24 sa −%15 −26,2 · −0,24 · 3.
+Çöküş günleri gerçekten kurtuluyor (4 sa −%8: 2021-05-19 −12,8 → +6,8; FTX 2022-11-09 −3,4 → +2,7; 24 sa −%15: 2021-05-19 → −1,2,
+LUNA −4,3 → −1,0) ama long'lar dengelemeye kadar (≤ 5 g) boş kalınca dipten dönüş kaçıyor. Hepsi RED. → madde 539: fren + n bar
+sonra yeniden giriş (PFREN_GERI).
