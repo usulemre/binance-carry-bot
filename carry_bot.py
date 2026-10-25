@@ -1871,7 +1871,12 @@ yarı dilim yenilenene kadar tutulur). Backtest (T60 + 24 sa stop, 2.000 $):
 ½ @ %45 → yıllık +%216 → +%233, Sharpe 3,44 → 3,66, −%5 altı gün 7 → 5;
 plato %35-%50 (madde 463), protokol madde 464."""
 
-MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.667"))
+# MADDE 523: CARRY_PROFIL=T4 -> T4 adayının dört ayarı VARSAYILAN olur (.env'de açıkça verilen değer yine kazanır).
+# T4 = T60 + short 2 g'de bir + short tavan %8 + kademe payı 0,80 + evren tabanı 30 (madde 497-522; kullanıcı kararı:
+# demo hesapta canlı çalışma, 2026-10-25).
+_PROFIL_T4 = os.getenv("CARRY_PROFIL", "").strip().upper() == "T4"
+"""CARRY_PROFIL=T4 mü (madde 523): T4'ün dört ayarı varsayılan olur, .env'deki açık değer yine kazanır."""
+MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.80" if _PROFIL_T4 else "0.667"))
 """Merdivende ilk kademede kapanan pay, iki tarafta ortak (madde 463: 1/3-2/3 plato;
 madde 468: 2/3 + short merdiveni protokolde AYAR, P %98-99; madde 469 varsayılan)."""
 
@@ -1881,14 +1886,14 @@ alınır (kapanır), kalanı CARRY_KAR_AL_SHORT'ta (−%20). 0 = kapalı. Backte
 (madde 468, long ⅔ @ %45 ile birlikte): yıllık +%233 → +%249, Sharpe 3,66 → 3,83,
 dd −%20,6 → −%17,4, −%5 altı gün 5 → 3."""
 
-SHORT_ARA_SAAT = float(os.getenv("CARRY_SHORT_ARA_SAAT", "0"))
+SHORT_ARA_SAAT = float(os.getenv("CARRY_SHORT_ARA_SAAT", "48" if _PROFIL_T4 else "0"))
 """SHORT ARA DENGELEMESİ (madde 493-502). >0 ise her dilimin SHORT tarafı, dilim yenilendikten bu kadar saat
 sonra (ve katlarında, bir sonraki tam yenilemeye kadar) güncel sıralamayla yeniden seçilir; long'lara dokunulmaz.
 Motor karşılığı S_REB (bar = saat/4). 0 = KAPALI (varsayılan). Aday ayar 48 (2 günde bir) + CARRY_SHORT_TAVAN 0,08:
 uzun zeminde (2020-07..2026-09) üç dönemin üçünde önde, canlı gibi giriş + 5 bp ile dört şart 16/16, P %68-82
 (protokol eşiği %95 → RED, KULLANICI KARARI; ADAYLAR.md)."""
 
-SHORT_TAVAN = float(os.getenv("CARRY_SHORT_TAVAN", "0"))
+SHORT_TAVAN = float(os.getenv("CARRY_SHORT_TAVAN", "0.08" if _PROFIL_T4 else "0"))
 """SHORT COIN TAVANI (madde 455-456, 500-502). >0 ise yeni yazılan short hedefleri, coinin TÜM dilimlerdeki toplam
 short büyüklüğü (toplam sermaye × ölçek) × bu oranı aşmayacak şekilde kırpılır (motor CAP_ORTAK + CAP_TARAF=short;
 kırpılan pay dağıtılmaz). 0 = KAPALI (varsayılan)."""
@@ -3103,14 +3108,14 @@ SON_24S_DEGISIM: dict[str, float] = {}
 24 saatlik yüzde değişim buraya yazılır (sembol -> oran)."""
 
 
-EVREN_MIN = int(os.getenv("CARRY_EVREN_MIN", "0"))
+EVREN_MIN = int(os.getenv("CARRY_EVREN_MIN", "30" if _PROFIL_T4 else "0"))
 """EVREN TABANI (madde 508). >0 ise hacim eşiği (CARRY_MIN_VOLUME) bundan az sembol bırakırsa evren, diğer filtreleri
 geçen ve EVREN_TABAN_USD üstündeki semboller arasından hacim sırasıyla bu sayıya tamamlanır; eşik yeterliyse evren
 DEĞİŞMEZ. Motor HACIM_MIN_EVREN. Uzun zeminde (2020-26) N=30: 2022-26'da T3f ile ~aynı, 2020'de (70M ~5 coin bırakıyordu)
 kitabı çalıştırıyor — sigorta. 0 = KAPALI (varsayılan; KULLANICI KARARI)."""
 
 EVREN_TABAN_USD = float(os.getenv("CARRY_EVREN_TABAN_USD", "2e7"))
-"""Evren tabanı tamamlamasında kabul edilen en düşük 24 sa hacim (USD). Motor HACIM_TABAN."""
+"""Evren tabanı tamamlamasında kabul edilen en düşük 24 sa hacim (USD); madde 508. Motor HACIM_TABAN."""
 
 
 def evren_sec(client: ExchangeClient) -> list[str]:

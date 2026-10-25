@@ -6059,3 +6059,8 @@ daha çok short bacak en kötü günü iyileştiriyor (−11,7 → −10,2 / −
 T4'e karşı (yıllık · Sh · dd) TÜM: 4 g +41,2 · −0,02 · −0,7 · 6 g −33,2 · +0,04 · +0,6 · 7 g −54,8 · +0,07 · −0,7.
 Sharpe ~sabit, getiri ve risk birlikte oynuyor (4 g: daha sık dengeleme = boşalan koltuklar daha erken dolar = daha çok
 ortalama maruziyet). Ön kaydın Sharpe şartını (≥ +0,05) hiçbiri sağlamadı. Getiri isteniyorsa açık kaldıraç daha temiz.
+
+## Madde 523 — KULLANICI KARARI: T4 DEMO HESAPTA CANLI (2026-10-25)
+`CARRY_PROFIL=T4` tek satırla T4'ün dört ayarını varsayılan yapar (short 48 sa · short tavan 0,08 · merdiven payı 0,80 · evren
+tabanı 30; .env'deki açık değer kazanır). Preflight T4 profili bunları bekler. Kurulum/izleme: DEMO_T4.md. Testler:
+test_carry_short_ara (T4 profil kontrolleri), preflight, bot — geçti. Araştırma bundan sonra T4 tabanı üzerinden sürer.

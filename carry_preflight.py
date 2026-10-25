@@ -68,7 +68,7 @@ def kontrol_ayarlar() -> None:
             "MIN_LISTELEME_GUN": (cb.MIN_LISTELEME_GUN, 90, "madde 396"),
         })
         kontrol("profil", TAMAM, "CARRY_PROFIL=BUGUN (eski kitap; T60 madde 442'den beri varsayılan)")
-    elif profil in ("T60", "T3"):
+    elif profil in ("T60", "T3", "T4"):
         bekle.update({
             "FUNDING_WINDOW_HOURS": (cb.FUNDING_WINDOW_HOURS, 60.0, "madde 429"),
             "KAR_AL_ORAN": (cb.KAR_AL_ORAN, 0.60, "madde 435-436"),
@@ -84,18 +84,20 @@ def kontrol_ayarlar() -> None:
             "SHORT_ARA_SAAT": (getattr(cb, "SHORT_ARA_SAAT", 0.0), 0.0, "madde 493-502 (T60'ta kapalı)"),
             "SHORT_TAVAN": (getattr(cb, "SHORT_TAVAN", 0.0), 0.0, "madde 500-502 (T60'ta kapalı)"),
         })
-        if profil == "T3":
+        if profil in ("T3", "T4"):
             # MADDE 501-505: T3 = T60 varsayılanı + short 2 g'de bir + short tavan %8 + kademe payı 0,80 (KULLANICI KARARI)
             bekle.update({
                 "SHORT_ARA_SAAT": (getattr(cb, "SHORT_ARA_SAAT", 0.0), 48.0, "madde 497-502"),
                 "SHORT_TAVAN": (getattr(cb, "SHORT_TAVAN", 0.0), 0.08, "madde 500-502"),
                 "MERDIVEN_PAY": (cb.MERDIVEN_PAY, 0.80, "madde 504"),
             })
-            kontrol("profil", TAMAM, "T3 (kullanıcı kararı; ADAYLAR.md, madde 497-505)")
+            if profil == "T4":
+                bekle["EVREN_MIN"] = (getattr(cb, "EVREN_MIN", 0), 30, "madde 508")
+            kontrol("profil", TAMAM, f"{profil} (kullanıcı kararı; ADAYLAR.md, madde 497-522)")
         else:
             kontrol("profil", TAMAM, "T60 (varsayılan, madde 442; beklenti KAR_HARITASI madde 433-438)")
     else:
-        kontrol("profil", HATA, f"CARRY_PROFIL={profil} tanımsız (BUGUN | T60 | T3)")
+        kontrol("profil", HATA, f"CARRY_PROFIL={profil} tanımsız (BUGUN | T60 | T3 | T4)")
     if getattr(cb, "MIN_LISTELEME_GUN", 90) < 60:
         kontrol("yaş eşiği", HATA, f"CARRY_MIN_LISTING_DAYS={cb.MIN_LISTELEME_GUN} < 60: "
                 "madde 427'de yaş 45 short sıkışmalarıyla hesabı sıfırladı")

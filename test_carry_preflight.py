@@ -1945,7 +1945,9 @@ kontrol("madde 282: YENİ motor kolu varsayılanı ETKİSİZ (SK_GAMMA=0)",
         and 'SK_GAMMA=float(os.environ.get("SK_GAMMA","0"))' in _cbg33
         and 'AGIRLIK=="buyukluk"' in _cbg33)
 kontrol("madde 282: yeni kol taraf başına NORMALİZE (dolar nötrlüğü korunur)",
-        "y[lo]=taban*_agb(lo); y[sh]=-taban*_agb(sh)" in _cbg33
+        ("y[lo]=taban*_agb(lo); y[sh]=-taban*_agb(sh)" in _cbg33
+         # madde 514: taraf bazlı hali (SK_TARAF=iki -> iki tarafta _agb, parite)
+         or ("y[lo]=taban*(_agb(lo) if _skt in (\"iki\",\"long\")" in _cbg33 and "y[sh]=-taban*(_agb(sh) if _skt in (\"iki\",\"short\")" in _cbg33))
         and "normalize" in _bg.YENI_KOL["notrluk"])
 kontrol("madde 282: İKİ parite de BİREBİR geçti",
         _bg.parite_gecti_mi() is True and len(_bg.PARITE) == 2)
