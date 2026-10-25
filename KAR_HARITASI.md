@@ -6332,3 +6332,8 @@ ve kalıcılık: hepsi RED. Yeni bilgi: (1) yeni sıçrayan funding tuzak (doz-y
 en kârlı dönemi, risk azaltma Sharpe'ı artırmıyor; (3) beta carry kitabında riski yanlış ölçüyor (short'lar pompa riskli).
 
 ## Madde 558 — Hacim sıçraması filtresi (HSICRA düğmesi, varsayılan kapalı): 24 sa hacim ≥ 3× / 5× son 30 g medyanı → aday olmaz
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı (işaretli hücre: 3× %21, 5× %14):
+3× short −36,8 · −0,23 · −2,1 | +10,7 | −17,0 | −117,7 · −24,0 · 3 — 5× short −22,8 · −0,11 · −2,6 | +74,3 | −7,3 | −111,7 · 2 —
+3× long −114,2 · −0,49 · 4 — 3× iki −143,4 · −0,77 · 3. HEPSİ RED. Hacim sıçrayan coinler (özellikle 2025-26) kitabın kâr kaynağı;
+funding'den farklı olarak hacim sıçraması tuzak değil, carry fırsatının kendisi. Not: işaretli pay yüksek (HAC 4 sa'lik bar hacmi
+gibi davranıyor, gürültülü) — eşik anlamı "olağan dışı" değil "hareketli"; yine de iki eşikte de yön aynı.
