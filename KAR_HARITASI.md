@@ -6285,3 +6285,8 @@ daha riskli coinleri öne çekiyor (dd derinleşiyor). Yalnız 2025-26'da yardı
 ## Madde 552 — Funding aralığı filtresi (yeni panel aralik_kur.py; ARALIK_MOD düğmesi, varsayılan kapalı)
 Aralık dağılımı (uzun zemin): 8 sa 2,21 M hücre · 4 sa 1,72 M · 1 sa 29 bin · 2 sa 7 bin. <8 sa payı 2020-22 ~0 → 2024 %12 → 2025 %37 →
 2026 %59 (yeni listelemeler 4 sa ile başlıyor; 4 sa tek başına sıkışma işareti değil). İşaretler: aralık ≤ 2 sa; aralık son 7 g'de kısaldı.
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı (işaretli hücre: ≤ 2 sa %0,99, kısaldı %0,69):
+≤ 2 sa short'tan −8,8 · −0,07 | 0 | 0 | −37,3 · 2 — kısaldı short'tan −5,2 · −0,04 | 0 | −1,5 | −19,2 · 2 — kısaldı iki taraftan
+−15,1 · −0,06 · 2 — ≤ 2 sa iki taraftan −45,1 · −0,34 · −1,9 | 0 | −1,4 | −165,9 · 4. HEPSİ RED.
+Aralığı kısalmış coinler sıkışma riski değil, kitabın EN KÂRLI short'ları (tavan funding'i topluyorlar; 2025-26'da onları çıkarmak
+yılda 166 puan). Short tavanı %8 ve 24 sa stop bu riski zaten taşınabilir tutuyor.
