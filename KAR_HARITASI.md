@@ -6298,3 +6298,7 @@ yılda 166 puan). Short tavanı %8 ve 24 sa stop bu riski zaten taşınabilir tu
 | 3.500 $ 0 / 1 | +9,4 / +8,9 | +0,26 / +0,07 | −0,28 / +0,10 | −0,4 / −0,9 | +20,2 / +33,6 | XYYY / YYYY | %71 / %62 |
 Birleşim tek tek adaylardan daha tutarlı (eşit-risk her hücrede +20..+34, düşüş her hücrede ≤ 1 puan) ama hiza 0'da 2025+ Sharpe
 düşüyor ve P %62-76 (bar %95). T5 kaydedildi, canlıya önerilmez; Ekim OOS'ta T4 ile yan yana izlenebilir.
+
+## Madde 554 — YENİ SEVİYE: BETA NÖTR T4 (BETA_H düğmesi, varsayılan kapalı)
+Otopsi (madde 537): çöküş günü long −21 / short +8 → kitap dolar-nötr ama BETA-nötr değil (long'lar yüksek betalı). Dengelemede
+long/short ölçeği, 30 g (ya da 90 g) betalarla kitabın betası h kadar kapanacak şekilde ayarlanır; brüt korunur (kaldıraç yok).

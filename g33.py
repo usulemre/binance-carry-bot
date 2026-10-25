@@ -309,6 +309,19 @@ if ARALIK_MOD:
         _ARV=np.isfinite(_AR)&np.isfinite(_ARo)&(_AR<_ARo-0.5)
     print(f"# ARALIK_MOD={ARALIK_MOD} esik={ARALIK_ESIK} geri={ARALIK_GERI} taraf={ARALIK_TARAF}: isaretli hucre payi "
           f"{float(_ARV[U].mean()):.4f}", flush=True)
+# MADDE 554: BETA NOTR KITAP. BETA_H=h (0..1) -> dengelemede long/short agirliklari, kitabin evren medyanina karsi beta
+# farki h kadar kapanacak sekilde olceklenir (brut korunur, kaldirac yok). Beta: BETA_PEN bar (varsayilan 180 = 30 g)
+# 4 sa getirileriyle, bar i'ye kadar (nedensel). Olcek BETA_SINIR icinde kirpilir. Yalniz-short ara dengelemede short
+# olcegi mevcut long'larin betasina gore ayarlanir. 0 = kapali (parite).
+BETA_H=float(os.environ.get("BETA_H","0")); BETA_PEN=int(os.environ.get("BETA_PEN","180"))
+BETA_SINIR=float(os.environ.get("BETA_SINIR","0.4")); _BTS=[0,0.0]
+if BETA_H>0:
+    _r4=pd.DataFrame(cv).pct_change().where(pd.DataFrame(U))
+    _mk=_r4.median(axis=1)
+    _cov=_r4.rolling(BETA_PEN,min_periods=BETA_PEN//2).cov(_mk)
+    _var=_mk.rolling(BETA_PEN,min_periods=BETA_PEN//2).var()
+    BETA=(_cov.div(_var,axis=0)).clip(-1,4).values
+    print(f"# BETA_H={BETA_H} PEN={BETA_PEN} SINIR={BETA_SINIR}: beta medyan {np.nanmedian(BETA[U]):.2f}",flush=True)
 # MADDE 491: MERD_GERI=1 -> kademe sonrasi fiyat girise donunce satilan pay geri alinir, kademe yeniden kurulur. 0 = parite.
 MERD_GERI=int(os.environ.get("MERD_GERI","0"))
 MERD_GERI_TARAF=os.environ.get("MERD_GERI_TARAF","iki").strip()
@@ -693,6 +706,22 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         for k in ul: y[k]+=pay
                         for k in sh: y[k]-=kullanilan/len(sh)   # notrluk korunur
                         say_r[0]+=1
+                if BETA_H>0:
+                    _b=np.where(np.isfinite(BETA[i]),BETA[i],1.0)
+                    if _kis:
+                        _BL=float(np.sum(np.where(poz>0,poz,0.0)*_b)); _ys=np.where(y<0,-y,0.0); _BS=float(np.sum(_ys*_b))
+                        if _BL>0 and _BS>0:
+                            _bb=1.0+BETA_H*(_BL*(_ys.sum()/max(np.where(poz>0,poz,0).sum(),1e-9))/_BS-1.0)
+                            _bb=float(np.clip(_bb,1-BETA_SINIR,1+BETA_SINIR)); y=np.where(y<0,y*_bb,y); _BTS[0]+=1; _BTS[1]+=abs(_bb-1)
+                    else:
+                        _yl=np.where(y>0,y,0.0); _ys=np.where(y<0,-y,0.0)
+                        _Lg,_Sg=_yl.sum(),_ys.sum(); _BL=float(np.sum(_yl*_b)); _BS=float(np.sum(_ys*_b))
+                        if _Lg>0 and _Sg>0 and _BL>0 and _BS>0:
+                            _G=_Lg+_Sg; _a=_G/(_Lg+_Sg*_BL/_BS); _c=_a*_BL/_BS     # tam notr cozum
+                            _a=1+BETA_H*(_a-1); _c=1+BETA_H*(_c-1)
+                            _a=float(np.clip(_a,1-BETA_SINIR,1+BETA_SINIR)); _c=float(np.clip(_c,1-BETA_SINIR,1+BETA_SINIR))
+                            _k=_G/(_a*_Lg+_c*_Sg); _a*=_k; _c*=_k                 # brut korunur
+                            y=np.where(y>0,y*_a,np.where(y<0,y*_c,y)); _BTS[0]+=1; _BTS[1]+=abs(_a-1)
                 if _PCARP is not None:
                     _mi=float(_PCARP[i]) if np.isfinite(_PCARP[i]) else 1.0
                     y=y*_mi; _BRT[0]+=_mi; _BRT[1]+=1
@@ -1087,6 +1116,8 @@ def calis2(ad,n,olcut):
     if _ADY_YOL:
         pd.DataFrame([(C.index[i],C.columns[k],t) for i,la_,sa_ in _ADY for t,ks in ((1,la_),(-1,sa_)) for k in ks],
                      columns=['zaman','sembol','taraf']).drop_duplicates().to_pickle(_ADY_YOL)
+    if BETA_H>0:
+        print(f"# BETA: olceklenen dengeleme {_BTS[0]} · ort |olcek-1| {(_BTS[1]/max(_BTS[0],1)):.3f}",flush=True)
     if PFREN>0:
         _tg=np.isfinite(_PF)&(_PF<=-PFREN)
         print(f"# PFREN={PFREN} PEN={PFREN_PEN} GERI={PFREN_GERI}: tetik bar {int(_tg.sum())} · kapanan long bacak {_PFS[0]} · geri acilan {_PFG[0]} · tetik gunleri "
