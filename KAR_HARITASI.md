@@ -6319,3 +6319,14 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 L 0,5 −44,1 · −0,35 · −0,2 | −112,5 | −28,8 | −57,7 · −37,4 · 6 — L 1 −70,3 · −0,58 · −0,7 | −158,9 | −45,8 | −88,3 · −57,9 · 5 —
 L 1 yalnız short −40,5 · −0,35 | −163,1 | −17,0 | −4,8 · −38,8 · 3. Doza düzenli bağlı (L ↑ → kötü), üç dönemde aynı yön: YENİ
 sıçrayan funding tuzak (sıkışma/pompa), KALICI funding kâr. Ters yön (L < 0: uzun pencere ağır) ön kayıtla madde 557.
+
+## Madde 557 — Kalıcı funding (ters eğim, L < 0): PLATO YOK → RED
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+L −0,25 +8,6 · +0,08 · −0,6 | +20,4 | +2,3 | +30,8 · +8,9 · 4 (kural ADAY, ama −%5 altı gün 2 → 4) — L −0,5 −15,2 · −0,13 · 5 —
+−0,5 yalnız long −15,9 · −0,16 · 4 — −0,5 yalnız short −5,5 · −0,01 · 2. Doz yanıtı tepeli değil kırık (−0,25 +, −0,5 −) ve
+kötü gün artıyor: 60 sa düz ortalama iki yönden de yerel optimum. Funding zaman yapısı ekseni (516, 547-549, 556-557) kapandı.
+
+### Madde 553-557 özeti (kullanıcı: "akla gelmeyen başka yaklaşımlar")
+T5 birleşimi (protokol P %62-76), beta-nötr kitap, kitap ölçeği (oynaklık hedefi / düşüş freni / kötü gün sonrası), funding eğimi
+ve kalıcılık: hepsi RED. Yeni bilgi: (1) yeni sıçrayan funding tuzak (doz-yanıtlı, üç dönemde); (2) yüksek oynaklık = carry'nin
+en kârlı dönemi, risk azaltma Sharpe'ı artırmıyor; (3) beta carry kitabında riski yanlış ölçüyor (short'lar pompa riskli).
