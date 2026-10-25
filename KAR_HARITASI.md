@@ -6330,3 +6330,5 @@ kötü gün artıyor: 60 sa düz ortalama iki yönden de yerel optimum. Funding 
 T5 birleşimi (protokol P %62-76), beta-nötr kitap, kitap ölçeği (oynaklık hedefi / düşüş freni / kötü gün sonrası), funding eğimi
 ve kalıcılık: hepsi RED. Yeni bilgi: (1) yeni sıçrayan funding tuzak (doz-yanıtlı, üç dönemde); (2) yüksek oynaklık = carry'nin
 en kârlı dönemi, risk azaltma Sharpe'ı artırmıyor; (3) beta carry kitabında riski yanlış ölçüyor (short'lar pompa riskli).
+
+## Madde 558 — Hacim sıçraması filtresi (HSICRA düğmesi, varsayılan kapalı): 24 sa hacim ≥ 3× / 5× son 30 g medyanı → aday olmaz

@@ -322,6 +322,14 @@ if BETA_H>0:
     _var=_mk.rolling(BETA_PEN,min_periods=BETA_PEN//2).var()
     BETA=(_cov.div(_var,axis=0)).clip(-1,4).values
     print(f"# BETA_H={BETA_H} PEN={BETA_PEN} SINIR={BETA_SINIR}: beta medyan {np.nanmedian(BETA[U]):.2f}",flush=True)
+# MADDE 558: HACIM SICRAMASI. HSICRA=x -> coinin 24 sa hacmi son 30 g medyaninin x katindan fazlaysa isaretli (dikkat/pompa).
+# HSICRA_TARAF=short (sinyal medyan ustu adaylardan cikar) / long (medyan alti) / iki. 0 = kapali (parite).
+HSICRA=float(os.environ.get("HSICRA","0")); HSICRA_TARAF=os.environ.get("HSICRA_TARAF","short").strip(); _HSV=None
+if HSICRA>0:
+    import pickle as _pk6
+    _HP=_pk6.load(open('/tmp/panel.pkl','rb'))['HAC'].reindex(index=C.index,columns=C.columns)
+    _HSV=((_HP/_HP.rolling(180,min_periods=90).median().shift(1))>HSICRA).values
+    print(f"# HSICRA={HSICRA} taraf={HSICRA_TARAF}: isaretli hucre payi {float(_HSV[U].mean()):.4f}",flush=True)
 # MADDE 491: MERD_GERI=1 -> kademe sonrasi fiyat girise donunce satilan pay geri alinir, kademe yeniden kurulur. 0 = parite.
 MERD_GERI=int(os.environ.get("MERD_GERI","0"))
 MERD_GERI_TARAF=os.environ.get("MERD_GERI_TARAF","iki").strip()
@@ -584,6 +592,12 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _sr3=np.where(g,S[i],np.nan)
                     _md3=np.nanmedian(_sr3) if np.isfinite(_sr3).any() else 0.0
                     g=g&~(~_sp&(_sr3>_md3))
+            if _HSV is not None:
+                _sr6=np.where(g,S[i],np.nan)
+                _md6=np.nanmedian(_sr6) if np.isfinite(_sr6).any() else 0.0
+                if HSICRA_TARAF=='iki': g=g&~_HSV[i]
+                elif HSICRA_TARAF=='long': g=g&~(_HSV[i]&(_sr6<_md6))
+                else: g=g&~(_HSV[i]&(_sr6>_md6))
             if _ARV is not None:
                 # MADDE 552: FUNDING ARALIGI FILTRESI. _ARV[i] True = isaretli coin (aralik kisa ya da yakinda kisaldi).
                 if ARALIK_TARAF=='iki':
