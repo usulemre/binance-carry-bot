@@ -6276,3 +6276,8 @@ short lehine). Long adayları (sk alt %10) içinde primi düşük yarı 67 bp da
 Net etki motorda ölçülmeli → madde 551.
 
 ## Madde 551 — Prim harmanlı sinyal (prim_sinyal_kur.py; B = (1−W)·sk60 + W·primden funding tahmini, prim 1 bar gecikmeli)
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+W 0,3 iki taraf −6,3 · −0,11 · −2,0 | −33,0 | −16,1 | +30,6 · −12,6 · 3 — W 0,5 −15,3 · −0,16 · −1,6 · 4 —
+W 0,5 yalnız short +5,0 · +0,05 · −1,6 | −1,8 | −6,2 | +41,5 · +6,2 · 3 — W 0,5 yalnız long −4,8 · −0,04 · −2,7 · 4. HEPSİ RED.
+Prim funding'i daha iyi tahmin ediyor ama kâr funding tahmininden değil fiyat yolundan belirleniyor; daha "doğru" seçim, fiyatça
+daha riskli coinleri öne çekiyor (dd derinleşiyor). Yalnız 2025-26'da yardımcı (rejim). Prim ekseni kapandı.
