@@ -6307,3 +6307,9 @@ h 0,5 −4,7 · −0,05 · −1,6 | +17,7 | −4,1 | −16,1 · −6,3 · 1 (44)
 h 1, 90 g beta −5,0 · −0,03 · −3,0 | +35,7 | −7,4 | −12,0 · −3,9 · 3 (42) — h 1, geniş sınır = h 1. HEPSİ RED.
 2021-05-19 −12,8 → −9,3..−11,4 iyileşiyor ama LUNA/FTX kötüleşiyor ve düşüş 3-4 puan derinleşiyor: short'lar (yüksek funding'li
 pompa coinleri) betası düşük ölçülüp büyütülünce sıkışma riski artıyor. Beta, carry kitabında risk ölçüsü olarak yanıltıcı. RED.
+
+## Madde 555 — KİTAP DÜZEYİNDE RİSK ÖLÇEĞİ (yalnız azaltır; T4 günlük serisi, nedensel, ölçek değişimi 5 bp): HEPSİ RED
+Q_T4'e karşı yıllık · Sh · dd (TÜM): oynaklık hedefi (T4 oyn. ×0,8/1,0/1,2; 10/20/60 g) −8..−85 · Sh −0,17..+0,00 — en hafifi
+(×1,2, 60 g) −8,4 · −0,01 · +0,6. Düşüş freni (tepeden −%8/−%12'de ×0,5/×0,75) −3..−20 · Sh −0,01..−0,09. Kötü gün sonrası
+(dün ≤ −%3 → ×0,5 / 0) −12 / −23; (≤ −%5) ±0. Yüksek oynaklık dönemleri carry'nin EN KÂRLI dönemleri: risk azaltmak Sharpe'ı
+artırmıyor, yalnız getiriyi kesiyor. Kötü günü kitap ölçeğiyle önlemek ekseni kapandı.
