@@ -1012,7 +1012,7 @@ def _ortak_kos(baslar,n,olcut,tp):
                         serbest[sg]+=abs(y2[k])-izin; _CAPS[0]+=1; _CAPS[1]+=abs(y2[k])-izin
                         y2[k]=sg*izin
                 if CAP_DAGIT:
-                    for sg in (1,-1):
+                    for sg in ((1,) if CAP_DAGIT==2 else (1,-1)):   # madde 542: 2 -> yalniz long tarafinda dagit
                         if serbest[sg]<=0: continue
                         _lm=lim_l if (sg>0 and CAP_LONG>0) else lim
                         ad=[k for k in np.flatnonzero(y2*sg>0) if abs(y2[k])<max(0.0,_lm-sg*diger[k])-1e-12]

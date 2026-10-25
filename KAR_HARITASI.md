@@ -6212,3 +6212,8 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı: +%15 yalnız long −23,9 · −0,12 · 2 —
 +%25 −8,3 · −0,04 · 2 — iki taraf +%15 −34,2 · 2 — +%25 −13,8 · 2. Büyük kötü günlerin HİÇBİRİ değişmedi (o günlerden önce
 evren ısınmış değildi); kesinti yalnız 2020-21 boğasında kâr kaçırıyor. Piyasa zamanlaması ekseni (538-541) kapandı.
+
+## Madde 542 — Long coin tavanı (CAP_LONG, kırpılan ağırlık dağıtılmadan): RED — brüt düşüyor, eşit-risk de negatif
+Q_T4'e karşı (yıllık · Sh · dd) TÜM · eşitVol · −%3 altı gün (T4 45): %6 −76,0 · −0,17 · +1,5 · −13,6 · 33 — %8 −45,6 · −0,08 · +0,9 ·
+−7,2 · 37 — %10 −21,5 · −0,03 · +0,1 · −3,2 · 42. Kötü günleri hafifletiyor (2024-10-15 −3,8 → −2,1) ama kâr kaynağı da yoğun long'lar.
+Dağıtımlı sürüm (CAP_DAGIT=2, yalnız long) madde 543.
