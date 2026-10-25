@@ -6313,3 +6313,9 @@ Q_T4'e karşı yıllık · Sh · dd (TÜM): oynaklık hedefi (T4 oyn. ×0,8/1,0/
 (×1,2, 60 g) −8,4 · −0,01 · +0,6. Düşüş freni (tepeden −%8/−%12'de ×0,5/×0,75) −3..−20 · Sh −0,01..−0,09. Kötü gün sonrası
 (dün ≤ −%3 → ×0,5 / 0) −12 / −23; (≤ −%5) ±0. Yüksek oynaklık dönemleri carry'nin EN KÂRLI dönemleri: risk azaltmak Sharpe'ı
 artırmıyor, yalnız getiriyi kesiyor. Kötü günü kitap ölçeğiyle önlemek ekseni kapandı.
+
+## Madde 556 — Funding eğimi (sk60 + L·(sk36 − sk144); yeni artan funding öne): GÜÇLÜ NEGATİF → RED, ters yön madde 557
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+L 0,5 −44,1 · −0,35 · −0,2 | −112,5 | −28,8 | −57,7 · −37,4 · 6 — L 1 −70,3 · −0,58 · −0,7 | −158,9 | −45,8 | −88,3 · −57,9 · 5 —
+L 1 yalnız short −40,5 · −0,35 | −163,1 | −17,0 | −4,8 · −38,8 · 3. Doza düzenli bağlı (L ↑ → kötü), üç dönemde aynı yön: YENİ
+sıçrayan funding tuzak (sıkışma/pompa), KALICI funding kâr. Ters yön (L < 0: uzun pencere ağır) ön kayıtla madde 557.
