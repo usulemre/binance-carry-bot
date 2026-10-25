@@ -6040,3 +6040,12 @@ filtresi −93). Evren ekseni 6 yılda kapalı.
 | 15 bp | +203,4 · 3,32 · −18,2 | +248,9 · 3,77 · −17,0 | +45,5 |
 Fark her 5 bp'de ~16 puan eriyor → doğrusal uzatmayla T4 = T1 noktası ~29 bp. Maker (2 bp) + makul kayma bölgesinde T4 rahat
 önde; Sharpe ve dd her maliyette T4 lehine. Demo hesapta ölçülecek gerçek dolum maliyeti bu eşikle karşılaştırılmalı.
+
+## Madde 520 — Solan long değişimi (L_REB_MOD=2, brüt artmaz) T4 üzerinde, uzun zemin: RED — getiri ↑, Sharpe ↓
+T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
+| kol | TÜM | YENİ | 2022-24 | 2025-26 | tüm −%5 altı |
+|---|---|---|---|---|---|
+| her 3 g | +13,0 · −0,16 · −1,5 | +30,1 · −0,04 · −0,1 | −12,3 · −0,25 · −0,3 | +74,7 · −0,08 · −0,4 | 3 |
+| her 2,5 g | +40,9 · −0,24 · −4,1 | +15,7 · −0,36 · 0,0 | +9,1 · −0,25 · −2,7 | +181,3 · −0,08 · −1,0 | 7 |
+Brüt artmasa da yeni giren long'a solan bacağın (çoğu zaman kâr etmiş, büyümüş) ağırlığı devredilince tek coin yoğunlaşması
+artıyor: Sharpe her dönemde düşüyor. Long tarafında 5 g'lük tutma doğru (madde 496'nın asimetri bulgusu güçlendi).
