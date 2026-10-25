@@ -6122,3 +6122,15 @@ SONUÇ: (1) Canlı/backtest beklentisi düzeltildi: T1 ~+%196/yıl (eski hesap +
 değil kötü-gün savunması; T1'de getiri maliyeti ~22 puan, T4'te ~19 puan. (3) T4 hâlâ en iyi aday — demo devam. (4) Pay 0,80
 ve "tek TP" bulguları (madde 504, 524-526) hatalı kuralın ürünüydü → geçersiz; T4 profilinde pay 0,80 zararsız (merdiven
 ekseni eşit riskte ~nötr). Bundan sonraki TÜM merdivenli ölçümler MERD_SIRA=1 ile.
+
+## Madde 529 — Düzeltilmiş modelde T4 merdiven ayarları: HİÇBİRİ ADAY DEĞİL — merdiven bir doz düğmesi
+Q_T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı (Q_T4: +255,9 / 4,02 / −14,4 / 2)
+| kol | TÜM | YENİ | 2022-24 | 2025-26 | eşitVol | −%5 |
+|---|---|---|---|---|---|---|
+| merdivensiz | +18,8 · −0,07 · −2,0 | +33,5 | +0,7 | +37,3 | −9,5 | 4 |
+| long kademe 0,35 / 0,55 | −25,5 · −0,02 / +14,8 · −0,04 · −1,8 | −51,6 / +44,1 | −16,6 / +2,4 | −32,1 / +18,2 | −2,3 / −5,6 | 2 / 4 |
+| short kademe 0,10 / 0,18 | +1,2 · +0,01 · −3,3 / −1,5 · −0,01 | +43,7 / −23,0 | +4,9 / −1,9 | −34,1 / +12,3 | +1,0 / −1,1 | 2 / 2 |
+| pay 0,50 / 0,667 | +6,9 · −0,02 · −0,8 / +3,1 · −0,01 | +10,4 / +4,4 | +0,1 / +0,3 | +14,7 / +5,9 | −2,2 / −0,8 | 3 / 2 |
+Merdiveni gevşetmek (daha az/daha geç kilit) getiriyi artırıp riski artırıyor, sıkılaştırmak tersi — eşit riskte hepsi
+−10..+1 aralığında. Düzeltilmiş modelde merdivenin "doğru" ayarı yok; bir getiri↔kötü gün tercihi. T4 ayarı (0,45 / 0,15 /
+0,80) eşit riskte en iyi bölgede ve −%5 altı gün en az (2) → DEĞİŞMEDİ.
