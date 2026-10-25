@@ -6252,3 +6252,8 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 36 sa −6,5 · −0,08 · −0,5 | −26,1 | −16,0 | +24,8 · −9,4 · 2 — 48 sa +4,9 · +0,02 | +0,5 | −9,8 | +44,2 · +2,8 · 3 —
 96 sa +9,0 · +0,08 · −0,5 | +3,2 | +9,5 | +18,3 · +10,0 · 2 · ADAY (kural sınırında). → madde 548: 72 / 144 sa ile plato kontrolü
 (uzun zemin için sk_bar72 / sk_bar144 kuruldu, /tmp/zu).
+
+## Madde 548 — Short sinyal penceresi platosu: PLATO YOK → RED (96 sa tek tepe, gürültü)
+Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı:
+72 sa +1,0 · +0,01 · −1,8 | +11,8 | −5,3 | +17,0 · +1,8 · 2 — 96 sa +9,0 · +0,08 · −0,5 · ADAY — 144 sa +4,4 · +0,07 · −1,7 |
++16,6 | +4,2 | +7,8 · +8,1 · 2. Komşular kuralın altında, düşüş daha derin: 96 sa izole tepe. Short penceresi 60 sa (ortak) kalır.
