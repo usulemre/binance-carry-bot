@@ -6154,3 +6154,8 @@ Q_T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26 · eşit
 Short ara dengelemesi short tarafını zaten 2 g'de bir tazelediği için short merdiveni T4'te ek bir şey yapmıyor; savunma
 (dd, kötü günler) tamamen long merdiveninden. Yalnız-long T4 ile T4 eşit (−%5 altı 2 → 1). Kâr ekseni değil; sadeleştirme
 seçeneği (canlıda short merdiven emri yok = daha az emir). T4 profili DEĞİŞMEDİ.
+
+## Madde 532 — T4-YL (yalnız long merdiven, düzeltilmiş model) üzerinde short TP: −%20 YERİNDE
+T4-YL: +256,0 / Sh 4,02 / dd −14,4 / en kötü −11,12 / −%5 altı 1. Karşı (yıllık · Sh · dd) TÜM · eşitVol: −%15 −0,2 · −0,01 ·
+−0,1 · −1,2 · −%25 −7,5 · −0,08 · −0,5 · −9,4 · −%30 −12,9 · −0,15 · −3,9 · −17,1 · TP yok −43,8 · −0,42 · −4,8 · −46,6.
+Short TP hâlâ kitabın ana kâr kaynaklarından (kapatınca −44); seviye −%15..−%20 düz plato, −%20 doğru.
