@@ -6049,3 +6049,8 @@ T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26
 | her 2,5 g | +40,9 · −0,24 · −4,1 | +15,7 · −0,36 · 0,0 | +9,1 · −0,25 · −2,7 | +181,3 · −0,08 · −1,0 | 7 |
 Brüt artmasa da yeni giren long'a solan bacağın (çoğu zaman kâr etmiş, büyümüş) ağırlığı devredilince tek coin yoğunlaşması
 artıyor: Sharpe her dönemde düşüyor. Long tarafında 5 g'lük tutma doğru (madde 496'nın asimetri bulgusu güçlendi).
+
+## Madde 521 — T4 üzerinde short yapısı (kademe, bacak sayısı), uzun zemin: T4 YERİNDE
+T4'e karşı (yıllık · Sh · dd) TÜM · eşitVol: short kademesi kapalı −40,0 · −0,25 · 0,0 · −35,0 · 5 short −8,0 · −0,09 · −2,3 ·
+−12,7 · 6 short −14,4 · −0,16 · −2,4 · −23,6. Short kademesi sık yenilenen kitapta da gerekli (her dönemde en çok o kayıp);
+daha çok short bacak en kötü günü iyileştiriyor (−11,7 → −10,2 / −9,0) ama getiri ve Sharpe düşüyor. 4+4 ve −%15 doğru.
