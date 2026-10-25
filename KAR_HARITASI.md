@@ -6267,3 +6267,12 @@ Q_T4'e karşı (yıllık · Sh · dd) TÜM | YENİ | 2022-24 | 2025-26 · eşitV
 Neden: parametre ekseni doydu (533-549 hepsi RED/plato). Seçim bugüne kadar yalnız GERÇEKLEŞMİŞ funding'e (60 sa) bakıyor; prim bir
 sonraki funding'in ana bileşeni ve dakika dakika güncel. Soru: prim, gerçekleşmiş funding'in söylemediği bir şey söylüyor mu?
 Önce tanı (sonraki 60 sa funding ve fiyatı ne kadar açıklıyor), sonra seçime katkı ön kayıtla.
+
+### Madde 550 tanı sonucu (günlük kesitsel Spearman IC, evren, uzun zemin; t'ler örtüşen pencereden ŞİŞİK)
+Sonraki 60 sa funding'i: sk60 IC 0,60 · prim 24 sa 0,57 · prim, sk60 SABİTKEN kısmi IC 0,28 (üç dönemde 0,28-0,29) → prim gelecek
+funding'e GÜÇLÜ ek bilgi taşıyor. Sonraki 5 g fiyat: hiçbiri anlamlı değil (|IC| < 0,05).
+Botun ucu: short adayları (sk üst %10) içinde primi yüksek yarı +4,9 bp daha çok funding (60 sa), 5 g fiyatı −0,26 % (2025-26: −2,07 %,
+short lehine). Long adayları (sk alt %10) içinde primi düşük yarı 67 bp daha çok funding ALIYOR ama 5 g fiyatı −1,43 % (2025-26 +1,79).
+Net etki motorda ölçülmeli → madde 551.
+
+## Madde 551 — Prim harmanlı sinyal (prim_sinyal_kur.py; B = (1−W)·sk60 + W·primden funding tahmini, prim 1 bar gecikmeli)
