@@ -6143,3 +6143,14 @@ Merdiveni gevşetmek (daha az/daha geç kilit) getiriyi artırıp riski artırı
 Düzeltilmiş modelde fark küçüldü (+70..+87 → +43..+59 puan/yıl) ama dört şart her hücrede geçiyor, düşüş her hücrede sığ,
 Sharpe iki dönemde de belirgin yüksek. P %86-95 → protokol RED (sınırda). T4'ün demo kararı (madde 523) bu kanıtla
 uyumlu; canlıya geçiş için demo dolumları + Ekim OOS beklenir.
+
+## Madde 531 — Düzeltilmiş modelde T4: merdivenin SAVUNMASI LONG TARAFINDAN; short merdiveni T4'te gereksiz
+Q_T4'e karşı (yıllık · Sh · dd): TÜM | YENİ | 2022-24 | 2025-26 · eşitVol · −%5 altı
+| kol | TÜM | YENİ | 2022-24 | 2025-26 | eşitVol | −%5 |
+|---|---|---|---|---|---|---|
+| merdivensiz | +18,8 · −0,07 · −2,0 | +33,5 | +0,7 | +37,3 | −9,5 | 4 |
+| yalnız LONG merdiven | +0,1 · 0,00 · 0,0 | −25,4 | −2,8 | +21,1 | +0,4 | 1 |
+| yalnız SHORT merdiven | +18,3 · −0,08 · −2,1 | +59,0 | +3,6 | +15,7 | −10,5 | 4 |
+Short ara dengelemesi short tarafını zaten 2 g'de bir tazelediği için short merdiveni T4'te ek bir şey yapmıyor; savunma
+(dd, kötü günler) tamamen long merdiveninden. Yalnız-long T4 ile T4 eşit (−%5 altı 2 → 1). Kâr ekseni değil; sadeleştirme
+seçeneği (canlıda short merdiven emri yok = daha az emir). T4 profili DEĞİŞMEDİ.
