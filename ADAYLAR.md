@@ -17,7 +17,7 @@ Diğer kayıtlı kullanıcı kararları: kaldıraç 1,25x (madde 458/478 tablosu
 ## Ekim 2026 OOS izleme listesi (madde 492, ön kayıt — `izleme_ekim_oos.py`)
 Tem-Eyl 2026'da tabandan iyi görünen ama ön kaydı geçemeyen kollar Ekim gerçek verisinde TEK seferde ölçülecek
 (karar vermez; T2 vs T1 kanıtını güçlendirir/zayıflatır): kademe geri alımı (iki taraf / yalnız short, madde 491),
-short kademe −%18 (madde 488), short ara dengelemesi S_REB 1 g / 2 g (madde 493-495, 2025-26 rejim etkisi), defterle long seçimi DR50/CK50 (madde 479, defter verisi indirilirse).
+short kademe −%18 (madde 488), short ara dengelemesi S_REB 1 g / 2 g (madde 493-495), **T3 / T3F / T4 (madde 497-519, asıl soru: T4 vs şu anki bot)**, defterle long seçimi DR50/CK50 (madde 479, defter verisi indirilirse).
 
 ## Short ara dengelemesi (S_REB, madde 493-498) — kullanıcı kararı adayı
 Şu anki bot + short tarafı her 2 günde bir yeniden seçilir (long'lar 5 günde bir). 2020-21 / 2022-24 / 2025-26 üç dönemin

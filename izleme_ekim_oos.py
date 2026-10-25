@@ -8,6 +8,8 @@ hiçbir seçimde kullanılmadı) TEK seferde ölçülür. Deneme sayısı artmad
 ÖN KAYIT (veri gelmeden yazıldı):
   - Ölçüt: 2026-10-01..31 aylık getiri ve günlük Sharpe, iki hiza ortalaması, kendi tabanına karşı.
   - T2 vs T1: T2 Ekim'de T1'den KÖTÜ değilse (aylık fark ≥ −1 puan) ve dd'si sığsa → T2 kanıtı güçlenir (kullanıcıya).
+  - ASIL SORU (madde 497-519): OK1_T4 vs ZSR15P67 — T4 Ekim'de T1'den kötü değilse (aylık fark ≥ −1 puan) T4 açılması için
+    son doğrulama TAMAM (kullanıcıya bildirilir); kötüyse fark ve sebebi (hangi parça: T3 / T3F / T4) raporlanır.
   - İzleme kolları: yalnız tek ay olduğundan KARAR VERMEZ; tabanı geçen kol "Kasım'da tekrar" listesinde kalır, geçemeyen
     listeden düşer.
 ADIMLAR (Kasım başı, funding verisi yayınlanınca):
@@ -27,6 +29,10 @@ IZLE = {  # ad -> (taban no, değişiklik)
     "K_GS": (None, {"MERD_GERI": "1", "MERD_GERI_TARAF": "short"}),
     "E_MS18": (2, {"MERDS_ESIK": "0.18"}),             # madde 488 (T2 +4,1)
     "SR6": (None, {"S_REB": "6"}), "SR12": (None, {"S_REB": "12"}),   # madde 493-495 (2025-26 rejim etkisi)
+    # madde 497-519: ASIL ADAY T4 ve parçaları (T1 tabanına uygulanır; T2 tabanındaki kopyaları bilgi amaçlı)
+    "T3": (None, {"S_REB": "12", "CAP_ORTAK": "0.08", "CAP_TARAF": "short"}),
+    "T3F": (None, {"S_REB": "12", "CAP_ORTAK": "0.08", "CAP_TARAF": "short", "MERD_PAY": "0.80"}),
+    "T4": (None, {"S_REB": "12", "CAP_ORTAK": "0.08", "CAP_TARAF": "short", "MERD_PAY": "0.80", "HACIM_MIN_EVREN": "30"}),
 }
 TB.kur({a: d for a, (t, d) in IZLE.items()}, onek="OK")
 DEFTER = os.path.exists("/tmp/derin_panel.pkl")
