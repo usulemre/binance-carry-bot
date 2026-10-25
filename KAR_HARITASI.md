@@ -6341,3 +6341,17 @@ gibi davranıyor, gürültülü) — eşik anlamı "olağan dışı" değil "har
 ## Madde 559 — Varyant harmanı (yarım sermaye T4 + yarım varyant, günlük seriden; çevrim farkı yok sayıldı): yeni bilgi yok
 T4 ile korelasyon 0,91 (T1) … 0,999; harman = varyant etkisinin yarısı. T4+36 sa short (botta yok) kural ADAY (+9,2 · +0,08);
 T4+96 sa short sinyali −%5 altı gün 2 → 1 (+4,9 · +0,08); T4+T1 −30,5 (T1 belirgin zayıf). Dilim karması T4'e bir şey eklemiyor.
+
+## Madde 560 — KULLANICI HEDEFİ: YALNIZ HAM KÂR (kaldıraçsız). Ham getiri kollarının birleşimi (standart model, uzun zemin)
+| kol | yıllık | Sh | düşüş | en kötü | −%5 | −%3 | 2.000 $ → 30.09.2026 |
+|---|---|---|---|---|---|---|---|
+| T4 | +255,9 | 4,02 | −14,4 | −12,77 | 2 | 45 | 5,25 M |
+| T4 merdivensiz | +274,7 | 3,94 | −16,5 | −11,12 | 4 | 56 | 7,22 M |
+| K1 = + rezerv 0 | +294,9 | 3,89 | −17,6 | −12,79 | 5 | 65 | 9,99 M |
+| K2 = + long TP %100 | +320,2 | 3,70 | −17,9 | −12,78 | 9 | 77 | 14,7 M |
+| K3 = + short 40 sa + short sinyali 96 sa | +330,8 | 3,77 | −16,8 | −13,57 | 10 | 73 | 17,2 M |
+| K3B = merdivensiz + short 40 sa + 96 sa | +284,6 | 4,01 | −16,5 | −11,57 | 6 | 53 | 8,49 M |
+| T4 × 1,24 (K3 ile aynı oynaklık = hafif kaldıraç) | +376,8 | 4,02 | — | — | 8 | — | — |
+Ham kâr kolları gerçekten getiri ekliyor (+75 puan/yıl) ama risk-ayarlı her adım T4'ü küçük kaldıraçla büyütmekten KÖTÜ:
+aynı oynaklıkta T4 × 1,24 +377 (K3 +331) ve daha az kötü gün (8 / 10). Ham kâr hedefinde en verimli yol kaldıraç; kaldıraçsız
+şartta en yüksek ham kâr K3 (+331). Yalnız standart modelde ölçüldü (canlı gibi giriş + 5 bp değil).
