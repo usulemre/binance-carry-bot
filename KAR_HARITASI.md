@@ -6802,3 +6802,18 @@ Tavanı gevşetmek ham getiriyi artırıyor ama maks düşüşü de büyütüyor
 önde, 3.500 $'da %12 +5,7 (bar +8 altı, −%5 altı 9 gün). Hepsi RED. T7K'nın eşit-risk tepesi: tavan %8, taban 0,7, 1,10-1,15x.
 Not (madde 596 tablosu): 3.500 $ ve üstünde T6 1,0x (+310,1, dd −15,4, en kötü −10,8, −%5 altı 8) eşit riskte T7K 1,10x'ten (+272) yüksek;
 seçim yine "en kötü gün ↔ getiri" tercihi.
+
+## Madde 601 — TAM EVREN (≥ 12.541 $; kullanıcının 1-5 M TL ≈ 20-100 bin $ bakiyesi): T6 ve T7K eşit riskte T4'ün açık ara üstünde
+Araç `arastirma_m601_tam_evren.py` (ön kayıt başlıkta). Canlı gibi giriş + 5 bp + MERD_SIRA=1, uzun zemin, SEMBOL_HARIC boş, iki hiza.
+Eşit-risk kısıtı: TAM evrendeki T4 1,0x'in dd / en kötü gün / 1y p1'i (madde 596 yöntemi).
+| kitap | ham: yıllık · Sh · dd · en kötü | eşit risk k | yıllık | dd | en kötü | −%5 altı | 1y p1 |
+|---|---|---|---|---|---|---|---|
+| T4 (referans 1,0x) | +232,4 · 3,84 · −16,6 · −12,94 | 1,00 | +232,4 | −16,6 | −12,94 | 4 | −24,9 |
+| T1 (eski canlı) | +187,9 · 3,29 · −18,7 · −13,68 | 0,85 | +147,5 | −16,1 | −11,63 | 5 | −24,4 |
+| **T6** | +298,8 · **4,18** · −15,1 · −10,95 | **1,10** | **+354,9** | −16,5 | −12,04 | 10 | −24,0 |
+| **T7K** | +227,6 · 4,13 · **−14,3** · **−8,02** | **1,15** | **+288,4** | −16,3 | **−9,22** | 6 | **−21,4** |
+- Sıralama D8/D2 ile aynı ama fark TAM evrende BÜYÜYOR: T6 kaldıraçsız bile T4'ü +66 puan / Sh +0,34 / dd 1,5 puan sığ geçiyor;
+  T4'ün düşüşüne 1,10x kaldıraçla +122,5 puan. T7K 1,15x +56 puan ve en kötü gün −12,9 → −9,2.
+- Bedel aynı: −%5 altı gün T4 4 → T7K 6 / T6 10. "Tek büyük kötü gün" (T4) ↔ "sık orta kötü gün" (T6) ekseni.
+- T6 1,10x preflight'ta ölçülmüş doz DEĞİL (yalnız T7K 1,10/1,15, madde 599). T6 1,0x onaysız çalışır. KULLANICI KARARI;
+  madde 276'nın kapısı (önce 1x canlı/demo ölçüm) geçerli.
