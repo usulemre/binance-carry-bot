@@ -6414,3 +6414,16 @@ K3 tavansız +135/yıl ama −%5 altı gün 3 → 21. Short tavanı (madde 455-4
 Yoğunlaşma (bacak 4 → 3) Sharpe'ı KORUYARAK ham getiriyi büyütüyor (= kitap içi kaldıraç gibi: daha az coin, coin başına daha çok
 ağırlık); 2 bacakta kırılıyor (dd −40, en kötü −26). Taraf payını bozmak (madde 566 düğmesi) iki yönde de Sharpe düşürüyor.
 → madde 567: 3 bacak canlı gibi giriş + 5 bp (T4-3B, T4-3B tavansız, K4-3B).
+
+## Madde 567 — 3 bacak GERÇEKÇİ koşulda (canlı gibi giriş + 5 bp, iki hiza ort.)
+| kol | 2.000 $: yıllık · Sh · dd · en kötü · −%5 | 3.500 $: yıllık · Sh · dd · en kötü · −%5 |
+|---|---|---|
+| T4 | +244,3 · 3,84 · −15,3 · −13,3 · 3 | +241,6 · 3,89 · −16,0 · −13,0 · 3 |
+| T4 3 bacak | +264,5 · 3,59 · −20,5 · −14,6 · 9 | +266,1 · 3,64 · −21,5 · −14,7 · 11 |
+| T4 3 bacak tavansız | +325,8 · 3,74 · −21,4 · −10,5 · 19 | +330,7 · 3,81 · −22,3 · −10,6 · 19 |
+| K4 (K3 tavansız) | +389,2 · 3,82 · −20,6 · −10,0 · 21 | +379,0 · 3,84 · −20,2 · −10,0 · 21 |
+| K4 3 bacak | +549,5 · 3,87 · −24,4 · −10,2 · 38 | +508,5 · 3,76 · −28,1 · −13,1 · 39 |
+| T4 × 1,54-1,56 (K4-3B oynaklığı, kaldıraç) | +539,5 · −%5 32 | +549,4 · −%5 37 |
+SONUÇ (madde 560-567, ham kâr turu): bütün ham kâr kolları Sharpe ~3,6-3,9 bandında; hepsi T4'ün aynı riske kaldıraçlanmış hâliyle
+AYNI çizgide (K4-3B ≈ T4 × 1,55). Kaldıraçsız "ham kâr" = kitap içi yoğunlaşma = gizli kaldıraç. Gerçek karar bir RİSK DÜZEYİ
+seçimi: T4 (−%5 altı ~3) … K4 (~21) … K4-3B (~38). Bedava kâr yok; T4'ün risk-ayarlı verimi korunuyor.
