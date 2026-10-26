@@ -68,7 +68,7 @@ def kontrol_ayarlar() -> None:
             "MIN_LISTELEME_GUN": (cb.MIN_LISTELEME_GUN, 90, "madde 396"),
         })
         kontrol("profil", TAMAM, "CARRY_PROFIL=BUGUN (eski kitap; T60 madde 442'den beri varsayılan)")
-    elif profil in ("T60", "T3", "T4"):
+    elif profil in ("T60", "T3", "T4", "T6"):
         bekle.update({
             "FUNDING_WINDOW_HOURS": (cb.FUNDING_WINDOW_HOURS, 60.0, "madde 429"),
             "KAR_AL_ORAN": (cb.KAR_AL_ORAN, 0.60, "madde 435-436"),
@@ -83,22 +83,30 @@ def kontrol_ayarlar() -> None:
             "MERDIVEN_SHORT": (cb.MERDIVEN_SHORT, 0.15, "madde 466-469"),
             "SHORT_ARA_SAAT": (getattr(cb, "SHORT_ARA_SAAT", 0.0), 0.0, "madde 493-502 (T60'ta kapalı)"),
             "SHORT_TAVAN": (getattr(cb, "SHORT_TAVAN", 0.0), 0.0, "madde 500-502 (T60'ta kapalı)"),
+            "SHORT_FUNDING_WINDOW_HOURS": (getattr(cb, "SHORT_FUNDING_WINDOW_HOURS", 0.0), 0.0, "madde 575 (yalnız T6'da 96)"),
         })
-        if profil in ("T3", "T4"):
+        if profil in ("T3", "T4", "T6"):
             # MADDE 501-505: T3 = T60 varsayılanı + short 2 g'de bir + short tavan %8 + kademe payı 0,80 (KULLANICI KARARI)
             bekle.update({
                 "SHORT_ARA_SAAT": (getattr(cb, "SHORT_ARA_SAAT", 0.0), 48.0, "madde 497-502"),
                 "SHORT_TAVAN": (getattr(cb, "SHORT_TAVAN", 0.0), 0.08, "madde 500-502"),
                 "MERDIVEN_PAY": (cb.MERDIVEN_PAY, 0.80, "madde 504"),
             })
-            if profil == "T4":
+            if profil in ("T4", "T6"):
                 bekle["EVREN_MIN"] = (getattr(cb, "EVREN_MIN", 0), 30, "madde 508")
+            if profil == "T6":
+                # MADDE 575: T6 = T4 + short tavanı yok + short 40 sa + short penceresi 96 sa (madde 568-572)
+                bekle.update({
+                    "SHORT_ARA_SAAT": (getattr(cb, "SHORT_ARA_SAAT", 0.0), 40.0, "madde 545/568"),
+                    "SHORT_TAVAN": (getattr(cb, "SHORT_TAVAN", 0.0), 0.0, "madde 563-568"),
+                    "SHORT_FUNDING_WINDOW_HOURS": (getattr(cb, "SHORT_FUNDING_WINDOW_HOURS", 0.0), 96.0, "madde 547/571"),
+                })
             kontrol("profil", TAMAM, f"{profil} (kullanıcı kararı; ADAYLAR.md, madde 497-522"
                     + ("; varsayılan, madde 534)" if profil == "T4" else ")"))
         else:
             kontrol("profil", TAMAM, "T60 = eski varsayılan T1 (madde 442; madde 534'ten beri varsayılan T4)")
     else:
-        kontrol("profil", HATA, f"CARRY_PROFIL={profil} tanımsız (BUGUN | T60 | T3 | T4)")
+        kontrol("profil", HATA, f"CARRY_PROFIL={profil} tanımsız (BUGUN | T60 | T3 | T4 | T6)")
     if getattr(cb, "MIN_LISTELEME_GUN", 90) < 60:
         kontrol("yaş eşiği", HATA, f"CARRY_MIN_LISTING_DAYS={cb.MIN_LISTELEME_GUN} < 60: "
                 "madde 427'de yaş 45 short sıkışmalarıyla hesabı sıfırladı")

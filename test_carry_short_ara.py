@@ -113,6 +113,28 @@ kontrol("profilsiz varsayılan = T4 değerleri (madde 534)", _o == ["48.0", "0.0
 _e["CARRY_PROFIL"] = "T60"
 _o = subprocess.run([sys.executable, "-c", _k], capture_output=True, text=True, env=_e).stdout.split("V")[-1].split()
 kontrol("CARRY_PROFIL=T60 = eski T1 değerleri 0 / 0 / 0,667 / 0", _o == ["0.0", "0.0", "0.667", "0"], _o)
+
+print("6) MADDE 575: T6 profili ve ayrı short penceresi")
+_e6 = {k: v for k, v in os.environ.items() if not k.startswith("CARRY_")}; _e6["CARRY_PROFIL"] = "T6"
+_k6 = ("import carry_bot as cb; print('V', cb.SHORT_ARA_SAAT, cb.SHORT_TAVAN, cb.MERDIVEN_PAY, cb.EVREN_MIN, cb.SHORT_FUNDING_WINDOW_HOURS)")
+_o6 = subprocess.run([sys.executable, "-c", _k6], capture_output=True, text=True, env=_e6).stdout.split("V")[-1].split()
+kontrol("T6 profil değerleri 40 / 0 / 0,80 / 30 / 96", _o6 == ["40.0", "0.0", "0.8", "30", "96.0"], _o6)
+_e6.pop("CARRY_PROFIL")
+_o6 = subprocess.run([sys.executable, "-c", _k6], capture_output=True, text=True, env=_e6).stdout.split("V")[-1].split()
+kontrol("varsayılan (T4) short penceresi 0 = long ile aynı", _o6[-1:] == ["0.0"], _o6)
+kontrol("T6: yalnız CARRY_PROFIL=T6 yeterli", _pf({"CARRY_PROFIL": "T6"}) == 0)
+kontrol("T6 ama short tavanı elle 0,08: HATA", _pf({"CARRY_PROFIL": "T6", "CARRY_SHORT_TAVAN": "0.08"}) > 0)
+kontrol("T4 + short penceresi elle 96: HATA (profilsiz açılmaz)", _pf({"CARRY_SHORT_FUNDING_WINDOW_H": "96"}) > 0)
+import pandas as _pd
+_f = _pd.Series({f"C{i}": float(i) for i in range(40)})            # C0 en düşük funding (long), C39 en yüksek
+_fs = _pd.Series({f"C{i}": float(40 - i) for i in range(40)})       # ters sıra: kısa vadede en yüksek C0
+_la, _sa = cb.kalabalik_adaylar(_f, 4, havuz=4, skor_s=_fs)
+kontrol("long havuzu 60 sa sırasıyla (C0..C15)", _la == [f"C{i}" for i in range(16)], _la[:4])
+kontrol("short havuzu long havuzunu İÇERMEZ", not (set(_la) & set(_sa)), _sa[:4])
+kontrol("short havuzu 96 sa sırasıyla (C16 en üstte)", _sa[:3] == ["C16", "C17", "C18"], _sa[:3])
+_la0, _sa0 = cb.kalabalik_adaylar(_f, 4, havuz=4)
+kontrol("skor_s yoksa eski davranış (C39 en üstte)", _sa0[0] == "C39" and _la0 == _la)
+
 print()
 if basarisiz:
     print(f"BAŞARISIZ: {len(basarisiz)} -> {basarisiz}"); sys.exit(1)

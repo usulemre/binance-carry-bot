@@ -281,6 +281,12 @@ optimum belirsizleşmedi, keskinleşti** — yani bu parametre artık
 
 Araç: `arastirma_madde240.py`."""
 
+SHORT_FUNDING_WINDOW_HOURS = float(os.getenv("CARRY_SHORT_FUNDING_WINDOW_H",
+                                             "96" if (os.getenv("CARRY_PROFIL", "").strip().upper() == "T6") else "0"))
+"""MADDE 547/575: SHORT adaylarının sıralandığı ayrı funding penceresi (saat). 0 = long ile aynı (FUNDING_WINDOW_HOURS).
+Motor karşılığı SK_DOSYA_S. Long havuzundaki coin short olamaz (motorla aynı kural). T6 profilinde 96."""
+
+
 REBALANCE_HOURS = float(os.getenv("CARRY_REBALANCE_H", "120"))
 """Kaç saatte bir yeniden dengelensin. 120sa = 5 gün.
 
@@ -1876,7 +1882,13 @@ plato %35-%50 (madde 463), protokol madde 464."""
 # CARRY_PROFIL=T60 yazılır.
 # T4 = T60 + short 2 g'de bir + short tavan %8 + kademe payı 0,80 + evren tabanı 30 (madde 497-522; kullanıcı kararı:
 # demo hesapta canlı çalışma, 2026-10-25).
-_PROFIL_T4 = (os.getenv("CARRY_PROFIL", "").strip().upper() or "T4") == "T4"
+_PROFIL_AD = os.getenv("CARRY_PROFIL", "").strip().upper() or "T4"
+"""Etkin profil adı (madde 534: boş = T4; madde 575: T6 isteğe bağlı)."""
+_PROFIL_T6 = _PROFIL_AD == "T6"
+"""MADDE 575: CARRY_PROFIL=T6 (İSTEĞE BAĞLI, varsayılan DEĞİL). T6 = T4 + short coin tavanı YOK + short 40 sa'te bir +
+short adayları 96 sa funding penceresiyle sıralanır (madde 568-572: canlı gibi giriş + 5 bp, 15/16 şart, P %87-92, plato
+madde 571). T4'ün diğer ayarları aynen geçerli."""
+_PROFIL_T4 = _PROFIL_AD in ("T4", "T6")
 """T4 profili mi (madde 523; madde 534'ten beri varsayılan, boş CARRY_PROFIL = T4): T4'ün dört ayarı varsayılan olur,
 .env'deki açık değer yine kazanır. Eski varsayılan T1 için CARRY_PROFIL=T60."""
 MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.80" if _PROFIL_T4 else "0.667"))
@@ -1889,14 +1901,14 @@ alınır (kapanır), kalanı CARRY_KAR_AL_SHORT'ta (−%20). 0 = kapalı. Backte
 (madde 468, long ⅔ @ %45 ile birlikte): yıllık +%233 → +%249, Sharpe 3,66 → 3,83,
 dd −%20,6 → −%17,4, −%5 altı gün 5 → 3."""
 
-SHORT_ARA_SAAT = float(os.getenv("CARRY_SHORT_ARA_SAAT", "48" if _PROFIL_T4 else "0"))
+SHORT_ARA_SAAT = float(os.getenv("CARRY_SHORT_ARA_SAAT", "40" if _PROFIL_T6 else ("48" if _PROFIL_T4 else "0")))
 """SHORT ARA DENGELEMESİ (madde 493-502). >0 ise her dilimin SHORT tarafı, dilim yenilendikten bu kadar saat
 sonra (ve katlarında, bir sonraki tam yenilemeye kadar) güncel sıralamayla yeniden seçilir; long'lara dokunulmaz.
 Motor karşılığı S_REB (bar = saat/4). 0 = KAPALI (varsayılan). Aday ayar 48 (2 günde bir) + CARRY_SHORT_TAVAN 0,08:
 uzun zeminde (2020-07..2026-09) üç dönemin üçünde önde, canlı gibi giriş + 5 bp ile dört şart 16/16, P %68-82
 (protokol eşiği %95 → RED, KULLANICI KARARI; ADAYLAR.md)."""
 
-SHORT_TAVAN = float(os.getenv("CARRY_SHORT_TAVAN", "0.08" if _PROFIL_T4 else "0"))
+SHORT_TAVAN = float(os.getenv("CARRY_SHORT_TAVAN", "0" if _PROFIL_T6 else ("0.08" if _PROFIL_T4 else "0")))
 """SHORT COIN TAVANI (madde 455-456, 500-502). >0 ise yeni yazılan short hedefleri, coinin TÜM dilimlerdeki toplam
 short büyüklüğü (toplam sermaye × ölçek) × bu oranı aşmayacak şekilde kırpılır (motor CAP_ORTAK + CAP_TARAF=short;
 kırpılan pay dağıtılmaz). 0 = KAPALI (varsayılan)."""
@@ -2302,12 +2314,21 @@ def kalabalik_onbellekle_tamamla(taze: pd.Series, adaylar: list, simdi: float = 
     return pd.concat([taze, pd.Series(ek, dtype=float)]), len(ek)
 
 
-def kalabalik_adaylar(skor: pd.Series, n: int, havuz: float = None) -> tuple[list, list]:
-    """Her taraf için aday havuzu (skor sırasına göre, en uç önce)."""
+def kalabalik_adaylar(skor: pd.Series, n: int, havuz: float = None,
+                      skor_s: pd.Series = None) -> tuple[list, list]:
+    """Her taraf için aday havuzu (skor sırasına göre, en uç önce).
+    MADDE 575: skor_s verilirse SHORT havuzu bu sırayla kurulur; long havuzundaki coin short havuzuna giremez
+    (motorda SK_DOSYA_S ile birebir)."""
     havuz = KALABALIK_HAVUZ if havuz is None else havuz
     f = skor.dropna().sort_values()
     m = min(max(n, int(havuz * n)), len(f) // 2)
-    return list(f.index[:m]), list(f.index[::-1][:m])
+    la = list(f.index[:m])
+    if skor_s is None:
+        return la, list(f.index[::-1][:m])
+    _lav = set(la)
+    fs = skor_s.reindex(f.index).dropna()
+    fs = fs[[s not in _lav for s in fs.index]].sort_values(ascending=False)
+    return la, list(fs.index[:m])
 
 
 def kalabalik_sec(adaylar: list, oran: pd.Series, n: int, taraf: int) -> list:
@@ -3205,7 +3226,7 @@ def rezerv_agirlik(uzun: list, kisa: list, ham_funding: pd.Series) -> tuple[dict
 
 def hedef_portfoy(funding: pd.Series, bakiye: float,
                   n_legs: int = None, kalabalik: pd.Series = None,
-                  ham_funding: pd.Series = None) -> dict[str, float]:
+                  ham_funding: pd.Series = None, funding_s: pd.Series = None) -> dict[str, float]:
     """Funding sıralamasından hedef pozisyonları (USD, işaretli) üretir.
 
     funding YÜKSEK -> SHORT (funding alırız)
@@ -3230,12 +3251,16 @@ def hedef_portfoy(funding: pd.Series, bakiye: float,
     bacak_usd = (bakiye * GROSS_EXPOSURE / 2) / n
     if kalabalik is not None and KALABALIK_HAVUZ > 1 and len(kalabalik) > 0:
         # madde 148: aday havuzundan kalabalık olanları seç
-        la, sa = kalabalik_adaylar(f, n)
+        la, sa = kalabalik_adaylar(f, n, skor_s=funding_s)
         uzun = kalabalik_sec(la, kalabalik, n, +1)
         kisa = kalabalik_sec(sa, kalabalik, n, -1)
     else:
         uzun = list(sirali.index[:n])          # en düşük funding -> LONG
         kisa = list(sirali.index[-n:])         # en yüksek funding -> SHORT
+        if funding_s is not None:              # MADDE 575: short ayrı pencereyle, long havuzu hariç
+            _, _sa = kalabalik_adaylar(f, n, skor_s=funding_s)
+            if len(_sa) >= n:
+                kisa = _sa[:n]
     ek_l, ek_s = rezerv_agirlik(uzun, kisa, ham_funding)
     # rezerv ayrılınca taban bacaklar küçülür; uç adaylara EK pay eklenir
     taban = taban_pay()
@@ -4101,6 +4126,16 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
             funding = funding.drop(index=_at)
     funding = uc_hareket_ele(funding)
     skor = birlesik_skor(funding, akis)
+    # MADDE 575: short adayları ayrı pencereyle (T6: 96 sa). Aynı evren, aynı eleme.
+    skor_s = None
+    if SHORT_FUNDING_WINDOW_HOURS > 0 and SHORT_FUNDING_WINDOW_HOURS != FUNDING_WINDOW_HOURS:
+        _fs = funding_topla(client, list(funding.index), SHORT_FUNDING_WINDOW_HOURS)
+        if len(_fs) >= 0.5 * max(1, len(funding)):
+            skor_s = birlesik_skor(_fs.reindex(funding.index), akis)
+            logger.info("short penceresi %.0f sa: %d sembol", SHORT_FUNDING_WINDOW_HOURS, int(_fs.notna().sum()))
+        else:
+            logger.warning("short penceresi %.0f sa funding'i eksik (%d/%d) - bu tur short da %.0f sa ile seçiliyor",
+                           SHORT_FUNDING_WINDOW_HOURS, len(_fs), len(funding), FUNDING_WINDOW_HOURS)
 
     bakiye = sermaye_oku(client)
     if bakiye is None:
@@ -4133,7 +4168,7 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     kalabalik = None
     if KALABALIK_HAVUZ > 1:
         _n = min(N_LEGS, max(MIN_LEGS, int(n_legs))) if n_legs else N_LEGS
-        _la, _sa = kalabalik_adaylar(skor, _n)
+        _la, _sa = kalabalik_adaylar(skor, _n, skor_s=skor_s)
         kalabalik = kalabalik_topla(client, _la + _sa)
         logger.info("kalabalık oranı alınan aday: %d / %d", len(kalabalik), len(_la) + len(_sa))
         # MADDE 363: API eksik cevap verirse son bilinen oranla tamamla
@@ -4146,7 +4181,7 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
                            "bu tur kalabalık seçimi KAPALI (en uç n)")
             kalabalik = None
     yeni_dilim = hedef_portfoy(skor, dilim_sermaye, n_legs=n_legs, kalabalik=kalabalik,
-                               ham_funding=funding)
+                               ham_funding=funding, funding_s=skor_s)
     if not yeni_dilim:
         return {}
     durum.setdefault("dilimler", {})[str(sira)] = yeni_dilim

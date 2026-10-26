@@ -6500,3 +6500,10 @@ kademe %55, tutma 4 g) Sharpe'ı ve eşit-risk getiriyi DÜŞÜRÜYOR. Not: long
 | tam long, 48 sa | +435,5 | 3,95 | −23,6 | −12,39 | 21 | −104,4 |
 Long tarafında sık yenileme kâr değil maruziyet ekliyor (short'ta tersi: madde 493-502). Asimetri: long carry'si yavaş (kalıcı negatif
 funding), short carry'si hızlı (funding sıçrayıp sönüyor). Long ara dengeleme ekseni T6'da da kapandı.
+
+## Madde 575 — T6 BOTA İSTEĞE BAĞLI PROFİL OLARAK EKLENDİ (CARRY_PROFIL=T6; varsayılan T4 DEĞİŞMEDİ)
+carry_bot: _PROFIL_T6 → SHORT_ARA_SAAT 40, SHORT_TAVAN 0, SHORT_FUNDING_WINDOW_HOURS 96 (yeni; CARRY_SHORT_FUNDING_WINDOW_H),
+T4'ün diğer ayarları (kademe payı 0,80, evren tabanı 30) aynen. Short adayları ayrı pencereyle sıralanır, long havuzundaki coin short
+havuzuna giremez (kalabalik_adaylar(skor_s=...), motordaki SK_DOSYA_S ile aynı kural); 96 sa funding'i adayların yarısından azında
+gelirse o tur short da 60 sa ile seçilir. Preflight T6 profilini tanır; T4'te short penceresi elle açılırsa HATA.
+Testler: test_carry_short_ara (T6 değerleri, havuz ayrımı), test_carry_preflight, test_carry_bot geçti; entegrasyon T4 ve T6 koşuluyor.
