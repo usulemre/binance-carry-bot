@@ -6729,3 +6729,14 @@ Madde 353-C bağımsız bir haftalık strateji ölçmüştü; KİTABIN gün etki
 (ön kayıt başlıkta; T4 standart + MERD_SIRA=1, 2.000 $ D8, iki hiza, uzun zemin). İki dönemde birden 1 SE'yi geçen ve kötü gün
 oranı aynı yönde ayrışan gün YOK: ≤2024'te en zayıf Cumartesi (−1,90 SE), 2025+'da Cuma (−1,33 SE); ≤2024'ün kötü gün yoğunu
 Salı (×2,62), 2025+'da Perşembe (×1,77). Gün etkisi rastgele dolaşıyor. Eksen kapandı.
+
+## Madde 595 — YENİ EKSEN: girişte funding'i uç long'a yüksek son TP (TPF_UC): RED — etki yok
+g33'e `TPF_UC` / `TPF_ESIK` (giriş sinyali S ≤ −eşik olan long'un son TP'si; varsayılan 0 = parite). Araç
+`arastirma_m595_uc_funding_tp.py` (ön kayıt başlıkta, madde 503 kuralı). T4 standart + MERD_SIRA=1, 2.000 $ D8, iki hiza, uzun zemin
+(taban +255,6 · Sh 3,98 · dd −14,5):
+| kol | yıllık | Sh | dd | 2020-21 / 22-24 / 25-26 |
+|---|---|---|---|---|
+| eşik 0,015/gün, TP +%80 | +0,2 | −0,005 | +0,1 | −0,1 / +0,2 / +0,3 |
+| eşik 0,015/gün, TP +%100 | +0,3 | −0,008 | 0,0 | −0,2 / +0,1 / +1,2 |
+| eşik 0,005/gün, TP +%80 | +1,5 | −0,004 | 0,0 | −0,2 / +1,2 / +3,1 |
+Uç funding'li long'ların kâr kuyruğu zaten kademe (+%45, ⅘) ile hasat ediliyor; kalan ⅕'in TP'sini yükseltmek ±1 puan. Eksen kapandı.
