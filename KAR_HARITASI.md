@@ -6740,3 +6740,25 @@ g33'e `TPF_UC` / `TPF_ESIK` (giriş sinyali S ≤ −eşik olan long'un son TP's
 | eşik 0,015/gün, TP +%100 | +0,3 | −0,008 | 0,0 | −0,2 / +0,1 / +1,2 |
 | eşik 0,005/gün, TP +%80 | +1,5 | −0,004 | 0,0 | −0,2 / +1,2 / +3,1 |
 Uç funding'li long'ların kâr kuyruğu zaten kademe (+%45, ⅘) ile hasat ediliyor; kalan ⅕'in TP'sini yükseltmek ±1 puan. Eksen kapandı.
+
+## Madde 596 — AYNI RİSKTE EN ÇOK KÂR: T7K'yı T4'ün düşüşüne kaldıraçlamak → +30..+59 puan/yıl
+Kâr adayları eşit riskte hep kaldıraca denk çıktığı için (257/391/567) doğru soru: hangi kitap T4'ün (1,0x) riskine kaldıraçlanınca
+en çok kazanıyor? Araç `arastirma_m596_esit_risk_kaldirac.py`. Seri: canlı gibi giriş + 5 bp + MERD_SIRA=1, uzun zemin, iki hiza
+(madde 587 kuru koşusu). Kaldıraç = günlük × k (madde 515). Kısıt: tam dönem maks düşüş, en kötü gün ve 1 yıllık düşüş p1 (blok 20 g,
+3.000 yol) T4 1,0x'i AŞMAYACAK; en yüksek k (0,05 adım).
+| bakiye · kitap | k | yıllık | dd | en kötü gün | −%5 altı | 1y p1 | bağlayıcı |
+|---|---|---|---|---|---|---|---|
+| 2.000 $ · T4 (referans) | 1,00 | +244,3 | −15,3 | −13,32 | 3 | −24,8 | — |
+| 2.000 $ · T6 | 0,90 | +263,1 | −15,0 | −9,75 | 5 | −20,6 | dd |
+| 2.000 $ · **T7K** | **1,15** | **+303,2** | −15,2 | **−9,12** | 6 | **−21,7** | dd |
+| 3.500 $ · T4 (referans) | 1,00 | +241,6 | −16,0 | −12,95 | 3 | −25,1 | — |
+| 3.500 $ · T6 | 1,00 | +310,1 | −15,4 | −10,79 | 8 | −22,8 | dd |
+| 3.500 $ · **T7K** | **1,10** | **+272,3** | −15,9 | **−8,70** | 5 | **−21,6** | dd |
+| (T1, eski canlı) | 0,80 | +138 | | | | | dd |
+- T7K @1,10-1,15x: T4 ile AYNI maks düşüş, DAHA İYİ en kötü gün (−13 → −9) ve 1y p1 (−25 → −22), yıllık +31..+59 puan.
+  Bedel: −%5 altı gün 3 → 5-6 (orta-kötü gün sayısı; madde 582'nin T6 mirası). −%5 sayısı da kısıt yapılırsa hiçbir kitap T4'ü
+  geçemiyor (T7K 1,0x'te zaten 3) — yani karar, "tek büyük kötü gün" ile "birkaç orta kötü gün" arasındaki tercihtir.
+- Kaba ölçek: komisyon/kayma da k ile büyür; madde 519'a göre 5 bp ≈ 33 puan/yıl (1x) → 0,15x ek ≈ −5 puan. Net ~+26..+54.
+- Bağlayıcı ölçü her yerde tam dönem dd (tek yol, gürültülü; madde 274). Doz ölçütü (1y p1) daha fazlasına izin veriyor.
+- Canlıda: `CARRY_PROFIL=T7K CARRY_GROSS=1.15` — ön uçuş (madde 374) yalnız ölçülmüş dozları onaylı geçirir; bu doz T7K için
+  ölçülmüş listeye eklenmeli. Madde 276'nın kapısı (önce 1x canlı) geçerli. KULLANICI KARARI.
