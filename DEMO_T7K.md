@@ -23,5 +23,18 @@ python3 carry_bot.py --dry-run --once   # log: "short penceresi 96 sa", "prim-ö
 sudo systemctl restart carry
 ```
 
+## Tohum düzeltmesi (madde 590, 2026-10-26)
+İlk `carry_prim_tohum.csv` primi yanlış evrenden ölçüyordu (değerler ~%36 küçük) → canlı çarpan ilk aylarda 1,0'a yapışıp
+backtest'teki kadar küçülmezdi. Yeni tohum `git pull` ile gelir. Sunucuda `carry_prim.csv` ESKİ tohumdan kopyalandıysa
+(bot ona kendi ölçümlerini ekliyor) tohum satırlarını yenisiyle değiştir, botun eklediği satırları KORU:
+```bash
+python3 - <<'PY'
+yeni=[l for l in open("carry_prim_tohum.csv")]; son=float(yeni[-1].split(",")[0])
+canli=[l for l in open("carry_prim.csv") if float(l.split(",")[0])>son]
+open("carry_prim.csv","w").writelines(yeni+canli); print(len(yeni),"tohum +",len(canli),"canlı satır")
+PY
+```
+`carry_prim.csv` hiç yoksa eskisi gibi: `cp carry_prim_tohum.csv carry_prim.csv`.
+
 ## Geri dönüş
 `.env`'den `CARRY_PROFIL=T7K` satırını silin (varsayılan T4) → `sudo systemctl restart carry`.

@@ -6662,3 +6662,21 @@ Kötü gün long'lar BİRBİRİNE BENZEMEZKEN daha sık (2025+'da alt beşte bir
 korelasyonlu bir sepet çöküşü değil, TEK COİN çöküşü (madde 443/537 ile tutarlı) — korelasyon filtresi onu göremez.
 2025+'da korelasyon genişleyen geçmişe göre hep düşük (üst beşte bir 1 gün): piyasa coin özelinde ayrışmış.
 Eksen kapandı.
+
+## Madde 590 — T7K PRİM TOHUMU YANLIŞ EVRENDEN ÖLÇÜLÜYORDU (canlı parite hatası, düzeltildi)
+Denetim: motor (g33 BRUT_PRIM) ve canlı bot (`prim_olc(funding)`) primi T7K'NIN KENDİ evreninden ölçer — 70M hacim, 60 g yaş,
+TradFi hariç, evren tabanı 30, bakiye kademesinin asgari-emir dışlaması (2.000 $ = D8; botta `islem_yapilabilir`). Madde 585'in
+`prim_tohum_kur.py`'si ise zeminin TEMEL maskesini ('uy': 100M, 90 g) kullanıyordu. Ölçüm (uzun zemin, sk_bar60):
+| dönem | prim medyanı: tohum evreni / T7K evreni | oran | ort. uygun coin |
+|---|---|---|---|
+| 2024+ | 0,365 / 0,464 | 1,27 | 41,1 / 49,8 |
+| 2025+ | 0,634 / 0,940 | 1,48 | 36,5 / 43,9 |
+| tohum penceresi (2026-04-03 → 09-30) | 0,908 / 1,232 | 1,36 | 27,2 / 32,7 |
+Etki: canlıda çarpan = 30 g ölçüm (canlı evren) / 180 g medyan (ilk ~6 ay çoğu tohumdan) → oran ~1,36 şişer, çarpan 1,0'a
+yapışır. 2026 için karışık hesap ortalama çarpan 0,948, doğrusu 0,905: T7K ilk aylarda backtest'in brüt küçültmesinin ~yarısını
+kaçırırdı (kötü gün koruması eksik). BACKTEST RAKAMLARI ETKİLENMEZ (motor hep doğru evrendeydi); hata yalnız canlı tohumda.
+Düzeltme: `prim_tohum_kur.py` evreni g33'ün bloklarıyla aynı kurar (TOHUM_KADEME=D8|D2|D1), `carry_prim_tohum.csv` yeniden
+üretildi (medyan 0,908 → 1,232). DEMO_T7K.md'ye sunucudaki eski tohumu canlı satırları koruyarak değiştirme adımı eklendi.
+Testler: short_ara, preflight, bot geçti.
+**Ders (madde 209'un tekrarı):** bir canlı girdiyi araştırma zemininden üretirken, motorun o girdiyi HANGİ maskeyle okuduğu
+koddan doğrulanır — zeminin hazır 'uy' alanı motorun kullandığı evren değildir (profil eşikleri onu değiştirir).
