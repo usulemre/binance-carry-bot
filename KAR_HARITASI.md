@@ -6715,3 +6715,11 @@ Bot gibi seçim T6'da her iki hizada kötü (yıllık −6 / −22, Sh −0,06 /
 (akış %20 dahil) zaten birebirdi. Testler: short_ara, bot, preflight geçti; entegrasyon T6/T7K koşuldu.
 **Ders:** yeni bir taraf/pencere eklenirken var olan yardımcıyı (`birlesik_skor`) yeniden kullanmak, motorda olmayan bir
 harmanı sessizce taşıdı — madde 209/590 ile aynı aile (canlı girdi, motorun tanımından koddan doğrulanmalı).
+
+## Madde 593 — Profil parametre paritesi (T4 / T6 / T7K, bot ↔ protokol kolları): TAMAM, fark yok
+`carry_bot` her profilde yüklenip etkin değerler protokol kollarıyla (madde 568/584 tanımları) karşılaştırıldı: bacak 4+4 (tavan 4),
+havuz 4, dengeleme 120 sa / 15 dilim, pencere 60 sa (T6/T7K short 96 sa), hacim 70M, yaş 60 g, rezerv 0,10 / eşik 5,475 yıllık
+(= motor 0,015 günlük) / coin kapı 0,05, long TP 0,60 · short TP 0,20, kademe +%45 / −%15 · pay 0,80, short felaket +%200, 24 sa stop
+−%45, uç hareket 0, akış 0,20, short ara 48 sa (T6/T7K 40), short tavan 0,08 (T6 0), evren tabanı 30, prim (T7K) e 1 · alt 0,7 ·
+üst 1,0 · ref 180 g. 24 sa stop: bot kline[-7] × 0,55, 8 sa'te bir = motor cv[i−5] SLL24_TAZE=2 (bot MARK fiyatıyla tetikler →
+fitillerde motordan seyrek, ihtiyatlı yön). Madde 590-592 sonrası açık parite farkı kalmadı.
