@@ -6789,3 +6789,16 @@ getiri kaybettiriyor. 0,8 3.500 $'da +4,4 (bar +8 altı). Hepsi RED; T7K tabanı
 `carry_preflight.py`: `CARRY_PROFIL=T7K` iken `CARRY_GROSS` 1,10 / 1,15 ölçülmüş sayılır (onay `CARRY_DOZ_ONAY` ile aynı değer; onaysız
 HATA); başka profilde ya da başka dozda eski kural (ölçülmemiş → HATA). Testler (+5): T7K 1,15/1,10 onaylı TAMAM, onaysız HATA,
 T4 1,15 HATA, T7K 1,20 HATA. DEMO_T7K.md'ye kaldıraçlı kurulum ve beklenti tablosu. Varsayılanlar DEĞİŞMEDİ (T4, 1,0x).
+
+## Madde 600 — T7K short tavanı eşit riskte (canlı gibi giriş + 5 bp, uzun zemin): %8 YERİNDE
+Araç `arastirma_m600_t7k_tavan_kaldirac.py` (madde 598'in yöntemi; bir koşu bellekten kesildi, yeniden koşuldu).
+| short tavanı | 2.000 $: ham · k · eşit-risk yıllık · en kötü · −%5 | 3.500 $: ham · k · eşit-risk yıllık · en kötü · −%5 |
+|---|---|---|
+| %6 | +212,0 · 1,10 · +247,8 · −10,11 · 3 | +209,0 · 1,10 · +244,2 · −10,11 · 5 |
+| **%8** | +238,6 · 1,15 · **+303,2** · −9,12 · 6 | +231,9 · 1,10 · +272,3 · −8,70 · 5 |
+| %10 | +251,0 · 1,05 · +272,8 · −7,94 · 4 | +244,8 · 1,05 · +265,9 · −7,92 · 6 |
+| %12 | +259,1 · 1,00 · +259,1 · −7,56 · 5 | +255,7 · 1,05 · +278,0 · −7,92 · 9 |
+Tavanı gevşetmek ham getiriyi artırıyor ama maks düşüşü de büyütüyor → taşınabilen kaldıraç düşüyor; aynı riskte %8 2.000 $'da açık ara
+önde, 3.500 $'da %12 +5,7 (bar +8 altı, −%5 altı 9 gün). Hepsi RED. T7K'nın eşit-risk tepesi: tavan %8, taban 0,7, 1,10-1,15x.
+Not (madde 596 tablosu): 3.500 $ ve üstünde T6 1,0x (+310,1, dd −15,4, en kötü −10,8, −%5 altı 8) eşit riskte T7K 1,10x'ten (+272) yüksek;
+seçim yine "en kötü gün ↔ getiri" tercihi.
