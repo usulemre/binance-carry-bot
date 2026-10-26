@@ -243,7 +243,7 @@ TERS=int(os.environ.get("TERS","0"))
 FAZ=int(os.environ.get("FAZ","5"))
 GEC=int(os.environ.get("GEC","1"))
 REZERV=float(os.environ.get("REZERV","0"))      # ucta firsat cikinca devreye giren sermaye payi
-REZ_ESIK=float(os.environ.get("REZ_ESIK","1.0"))# yillik funding esigi (|S| >= bu ise "uc firsat")
+REZ_ESIK=float(os.environ.get("REZ_ESIK","1.0")); REZ_TARAF=os.environ.get("REZ_TARAF","long").strip(); REZ_ESIK_S=float(os.environ.get("REZ_ESIK_S",os.environ.get("REZ_ESIK","1.0")))# yillik funding esigi (|S| >= bu ise "uc firsat")
 YARIM=int(os.environ.get("YARIM","0"))          # kar alda pozisyonun YARISI kapanir
 # MADDE 235: MERDIVEN. Alt rung MERD_ESIK'te pozisyonun MERD_PAY'ini
 # kapatir; KALAN normal TP'ye (TPL/TPS) devam eder. Yani tek esigi
@@ -720,10 +720,23 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     y[lo]=taban*_agk(lo); y[sh]=-taban*_agk(sh)
                 else:
                     y[lo]=taban/len(lo); y[sh]=-taban/len(sh)
-                if REZERV>0:
+                if REZERV>0 and REZ_TARAF in ("short","iki"):
+                    # MADDE 603: SHORT tarafinda rezerv (aynasi): funding'i UC POZITIF (S >= REZ_ESIK) short'a ek pay, long'lardan
+                    # esit dusulur (notr). 'iki' -> butce iki tarafa yariya bolunur. Varsayilan 'long' (parite).
+                    _SS_=S
+                    us=[k for k in sh if np.isfinite(_SS_[i,k]) and _SS_[i,k]>=REZ_ESIK_S]
+                    if us:
+                        _bt=(REZERV/2)*(0.5 if REZ_TARAF=="iki" else 1.0)
+                        pay=_bt/len(us)
+                        if KAP>0: pay=min(pay,KAP)
+                        kul=pay*len(us)
+                        for k in us: y[k]-=pay
+                        for k in lo: y[k]+=kul/len(lo)
+                        say_r[0]+=1
+                if REZERV>0 and REZ_TARAF in ("long","iki"):
                     ul=([int(_rz.choice(lo))] if _rz.random()<0.4 else []) if REZ_RAST else [k for k in lo if np.isfinite(S[i,k]) and S[i,k]<=-REZ_ESIK]
                     if ul:
-                        pay=(REZERV/2)/len(ul)
+                        pay=(REZERV/2)*(0.5 if REZ_TARAF=="iki" else 1.0)/len(ul)
                         if KAP>0: pay=min(pay,KAP)
                         kullanilan=pay*len(ul)
                         for k in ul: y[k]+=pay
