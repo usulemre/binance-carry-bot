@@ -6555,3 +6555,14 @@ T6'ya karşı kural RED (getiri −45..−90, brüt ~%14 küçük) AMA kötü g�
 −6,0; en kötü üç gün −6,3/−6,0/−6,0 (T4 −12,8/−5,2/−4,6). "T7" = T4 getirisi (+257) + T4'ten yüksek Sharpe + en kötü gün YARIYA.
 Çöküş öncesi funding yayılımı düşük (carry primi zayıf) dönemler → brüt küçük. Kullanıcının asıl önceliğine (büyük kötü günü azalt,
 kârı az kes) en uygun aday. → madde 582: T7 canlı gibi giriş + 5 bp, T4'e karşı.
+
+## Madde 582 — T7 (T6 + prim çarpanı, yalnız azaltır) vs T4 PROTOKOLÜ (canlı gibi giriş + 5 bp): RED, ama kötü gün profili ayrışıyor
+| kol · seviye/hiza | yıllık fark | şartlar | P | ham: yıllık · Sh · dd · EN KÖTÜ · −%5 (T4 −%5) |
+|---|---|---|---|---|
+| T7 (alt 0,5) 2.000 0/1 | −5,4 / +13,1 | YYXY / YYYY | %69 / %86 | +245,5 · 3,99 · −16,8 · −6,91 · 6 (4) / +250,3 · 4,11 · −14,0 · −6,36 · 6 (2) |
+| T7 (alt 0,5) 3.500 0/1 | −3,9 / +9,6 | XYYX / YYYY | %72 / %85 | +243,9 · 4,06 · −16,6 · −6,66 · 7 (4) / +244,5 · 4,16 · −13,8 · −6,72 · 7 (2) |
+| T7 (alt 0,7) 2.000 0/1 | +9,6 / +26,2 | YYYY / YYYY | %76 / %89 | +260,5 · 4,05 · −16,8 · −7,33 · 6 / +263,4 · 4,15 · −14,0 · −7,80 · 6 |
+| T7 (alt 0,7) 3.500 0/1 | +11,3 / +22,9 | XYYY / YYYY | %79 / %89 | +259,1 · 4,12 · −16,6 · −7,37 · 7 / +257,8 · 4,21 · −13,8 · −7,72 · 7 |
+Gerçekçi koşulda T7 ≈ T4 getirisi (alt 0,7: +10..+26/yıl), Sharpe T4'ten yüksek, EN KÖTÜ GÜN −13 → −6,4..−7,8 (yarıya yakın),
+ama −%5 altı gün 2-4 → 6-7: büyük çöküşün şiddeti iniyor, orta-kötü günlerin sayısı artıyor (short tavanı yok = T6 mirası).
+Kullanıcı tercihine bağlı: "tek büyük felaket günü" mü "birkaç orta kötü gün" mü.
