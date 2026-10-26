@@ -6566,3 +6566,16 @@ kârı az kes) en uygun aday. → madde 582: T7 canlı gibi giriş + 5 bp, T4'e 
 Gerçekçi koşulda T7 ≈ T4 getirisi (alt 0,7: +10..+26/yıl), Sharpe T4'ten yüksek, EN KÖTÜ GÜN −13 → −6,4..−7,8 (yarıya yakın),
 ama −%5 altı gün 2-4 → 6-7: büyük çöküşün şiddeti iniyor, orta-kötü günlerin sayısı artıyor (short tavanı yok = T6 mirası).
 Kullanıcı tercihine bağlı: "tek büyük felaket günü" mü "birkaç orta kötü gün" mü.
+
+## Madde 583 — Prim çarpanı (yalnız azaltır) + short tavanı: KULLANICI ÖNCELİĞİNE EN UYGUN ADAY (standart model)
+| kol | yıllık | Sh | dd | en kötü | −%5 | −%3 | 2020-21 / 22-24 / 25-26 |
+|---|---|---|---|---|---|---|---|
+| T4 | +255,9 | 4,02 | −14,4 | −12,77 | 2 | 45 | +230 / +182 / +340 |
+| T4 + prim (alt 0,5) | +220,4 | 4,07 | −12,6 | −5,91 | 2 | 32 | +198 / +167 / +291 |
+| T4 + prim (alt 0,7) | +231,1 | 4,10 | −12,6 | −7,39 | 2 | 33 | +209 / +169 / +312 |
+| T6 | +327,2 | 4,35 | −15,5 | −10,44 | 7 | 61 | +329 / +221 / +430 |
+| **T7K = T6 + tavan %8 + prim (alt 0,7)** | **+246,3** | **4,27** | **−13,1** | **−7,72** | **2** | **35** | +222 / +186 / +330 |
+| T6 + tavan %12 + prim (alt 0,7) | +269,2 | 4,28 | −14,0 | −7,29 | 4 | 50 | +264 / +195 / +362 |
+| T7 (tavansız, alt 0,7) | +272,0 | 4,29 | −14,8 | −7,29 | 5 | 50 | +268 / +195 / +365 |
+T7K: T4'e göre getiri −10/yıl, Sharpe +0,25, dd 1,3 puan sığ, EN KÖTÜ GÜN −12,8 → −7,7, −%5 altı aynı (2), −%3 altı 45 → 35.
+→ madde 584: T7K vs T4 protokol (canlı gibi giriş + 5 bp).
