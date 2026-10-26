@@ -4138,7 +4138,10 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     if SHORT_FUNDING_WINDOW_HOURS > 0 and SHORT_FUNDING_WINDOW_HOURS != FUNDING_WINDOW_HOURS:
         _fs = funding_topla(client, list(funding.index), SHORT_FUNDING_WINDOW_HOURS)
         if len(_fs) >= 0.5 * max(1, len(funding)):
-            skor_s = birlesik_skor(_fs.reindex(funding.index), akis)
+            # MADDE 592: motorda (SK_DOSYA_S) short sırası YALNIZ bu pencerenin funding sırasıdır, emir akışı KATILMAZ;
+            # verisi olmayan sembol orta sıraya (0,5) konur. Bot eskiden akışı %20 harmanlıyordu: T6'da yıllık −6..−22,
+            # T7K'da +1..−11 puan, kötü gün biraz daha sık. Motorla birebir yapıldı.
+            skor_s = _fs.reindex(funding.index).rank(pct=True).fillna(0.5)
             logger.info("short penceresi %.0f sa: %d sembol", SHORT_FUNDING_WINDOW_HOURS, int(_fs.notna().sum()))
         else:
             logger.warning("short penceresi %.0f sa funding'i eksik (%d/%d) - bu tur short da %.0f sa ile seçiliyor",

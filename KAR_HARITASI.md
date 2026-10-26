@@ -6699,3 +6699,19 @@ Kod okundu, bot ↔ g33:
 | 1 · bot gibi (giriş) | +256,0 | 4,01 | −13,8 | −12,69 | 3 | 44 |
 Fark gürültü bandında (yıllık +1..+3, −%5 altı +1 gün, dd ±0,6) → BOT DEĞİŞMEDİ. Tavan nadiren bağlıyor: bacak ~%0,75 hesap,
 %8 için bir coin ~10 dilimde birden short olmalı. Yayınlanmış T4/T7K rakamları canlının tavan davranışını da temsil ediyor.
+
+## Madde 592 — T6/T7K CANLI PARİTE HATASI: short sırasına emir akışı karışıyordu (bot motorla hizalandı)
+Motor (SK_DOSYA_S): short adayları YALNIZ ayrı pencerenin (96 sa) funding sırasıyla; verisi olmayan coin 0,5 sırada. Bot
+(madde 575): `skor_s = birlesik_skor(96 sa funding, akış)` → akış %20 karışıyordu. g33'e `SS_AKIS=1` (bot gibi; varsayılan 0).
+Standart model + MERD_SIRA=1, 2.000 $ D8, uzun zemin:
+| kitap · hiza | motor: yıllık · Sh · dd · en kötü · −%5 · −%3 | bot gibi (akışlı) |
+|---|---|---|
+| T7K · 0 | +240,7 · 4,15 · −14,3 · −7,95 · 3 · 38 | +241,5 · 4,18 · −14,6 · −7,89 · 3 · 35 |
+| T7K · 1 | +251,5 · 4,31 · −12,3 · −7,48 · 2 · 34 | +240,8 · 4,19 · −12,4 · −7,62 · 2 · 32 |
+| T6 · 0 | +316,8 · 4,23 · −16,3 · −10,66 · 9 · 63 | +310,6 · 4,17 · −18,4 · −10,74 · 10 · 65 |
+| T6 · 1 | +337,1 · 4,40 · −15,6 · −10,23 · 6 · 63 | +315,5 · 4,24 · −16,2 · −10,31 · 9 · 67 |
+Bot gibi seçim T6'da her iki hizada kötü (yıllık −6 / −22, Sh −0,06 / −0,16, dd ve kötü gün artıyor), T7K'da karışık (+1 / −11).
+Ölçülmüş ve kabul edilmiş olan motorun tanımı → BOT DÜZELTİLDİ: `skor_s = 96 sa funding yüzdelik sırası, eksik 0,5`. Long tarafı
+(akış %20 dahil) zaten birebirdi. Testler: short_ara, bot, preflight geçti; entegrasyon T6/T7K koşuldu.
+**Ders:** yeni bir taraf/pencere eklenirken var olan yardımcıyı (`birlesik_skor`) yeniden kullanmak, motorda olmayan bir
+harmanı sessizce taşıdı — madde 209/590 ile aynı aile (canlı girdi, motorun tanımından koddan doğrulanmalı).
