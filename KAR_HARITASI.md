@@ -6648,3 +6648,17 @@ Hipotezin TERSİ: piyasa long kaldıraçlıyken T4'ün ileri 5 g getirisi ~2,5 k
 madde 239'un "prim = kenar yoğunluğu" bulgusunun düzey eksenindeki karşılığı. Küçültmek kârı keser. 2025+'da piyasa funding'i
 2020-21'in yüksek düzeylerine hiç çıkmadı (genişleyen yüzdelik üst beşte bir boş); 2025+'da kötü gün en çok DÜŞÜK funding
 beşte birinde (%4,37). Eksen kapandı; motor koşusu yapılmadı.
+
+## Madde 589 — YENİ EKSEN: tutulan long'ların birbirine korelasyonu → kötü gün: KAPANDI (ön elemede, hipotezin TERSİ)
+Seçim funding + kalabalık sırasına bakıyor; seçilen long'ların birbirine benzerliği hiç ölçülmemişti. Araç
+`arastirma_m589_long_korelasyon.py` (ön kayıt başlıkta). g33'e: POZ_CIKTI artık lockstep (CAP_ORTAK) yolunda da yazılıyor
+(parite maks fark 0,0). T4 standart model + MERD_SIRA=1, 2.000 $ D8, hiza 0, uzun zemin (yıllık +257,7). RHO = günün son
+barında tutulan long'ların son 30 g 4 sa getiri korelasyonu (ağırlıklı ort. 0,35, sd 0,17), genişleyen yüzdelik.
+| dönem | RHO alt beşte bir: ileri 5 g · −%3 olas. | orta | üst beşte bir | tümü |
+|---|---|---|---|---|
+| ≤2024 | +1,95 · %1,78 (562 g) | +1,55 · %1,72 | +1,07 · %1,08 (186 g) | +1,64 · %1,66 |
+| 2025+ | +2,18 · %4,70 (489 g) | +2,07 · %1,35 | 1 gün | +2,15 · %3,92 |
+Kötü gün long'lar BİRBİRİNE BENZEMEZKEN daha sık (2025+'da alt beşte birde %4,7 vs orta %1,35): kitabın kötü günü
+korelasyonlu bir sepet çöküşü değil, TEK COİN çöküşü (madde 443/537 ile tutarlı) — korelasyon filtresi onu göremez.
+2025+'da korelasyon genişleyen geçmişe göre hep düşük (üst beşte bir 1 gün): piyasa coin özelinde ayrışmış.
+Eksen kapandı.

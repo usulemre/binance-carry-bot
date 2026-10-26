@@ -1064,6 +1064,10 @@ def _ortak_kos(baslar,n,olcut,tp):
     while not all(bitti):
         aktif=[j for j in range(NF_) if not bitti[j] and msg[j][0]==t]
         for j in aktif: poz_son[j]=msg[j][1]
+        if _PZ_YOL:   # madde 589: POZ_CIKTI lockstep yolda da (bt2 ile ayni tanim; bos -> parite)
+            if _PZ[0] is None:
+                _PZ[0]=np.zeros((len(C),C.shape[1]),np.float32)
+            for j in aktif: _PZ[0][msg[j][0]]+=msg[j][1]
         for j in aktif:
             _i,_p,y=msg[j]
             cev=None
