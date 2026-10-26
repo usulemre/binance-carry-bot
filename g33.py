@@ -497,6 +497,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
         # MADDE 415: her bar koordinatore (i, poz, yeni hedef ya da None) bildirilir;
         # koordinator hedefi degistirebilir (dilimler arasi ortak coin tavani).
         _ytek=bek[1] if (bek is not None and bek[0]==i) else None
+        if CAP_GIRIS: _GREF[bas]=giris      # madde 591: canli gibi tavan icin dilimin giris fiyatlari
         _cvp=yield (i, poz, _ytek)
         if _ytek is not None and _cvp is not None:
             bek=(bek[0], _cvp)
@@ -1039,6 +1040,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
 # toplam (diger dilimler + bu dilim) agirlik / faz sayisi <= c. CAP_DAGIT=1 ->
 # kirpilan pay ayni taraftaki diger bacaklara orantili dagitilir (brut korunur).
 CAP_ORTAK=float(os.environ.get('CAP_ORTAK','0'))
+CAP_GIRIS=int(os.environ.get('CAP_GIRIS','0')); _GREF={}
 # MADDE 481: TEK_GIRIS=1 -> dilimler lockstep kosar ve TP/kademe/stop coinin hesap duzeyindeki agirlikli
 # ortalama girisinden olculur (canli botun Binance entryPrice'i). 0 -> dilim basina giris (parite).
 TEK_GIRIS=int(os.environ.get('TEK_GIRIS','0')); _REG={}
@@ -1055,6 +1057,9 @@ CAP_DAGIT=int(os.environ.get('CAP_DAGIT','0'))
 # MADDE 542: CAP_LONG=x -> LONG bacaklara AYRI coin tavani (CAP_TARAF'tan bagimsiz; short tavani CAP_ORTAK ile surer). 0 = kapali.
 CAP_LONG=float(os.environ.get('CAP_LONG','0'))
 _CAPS=[0,0]   # [kirpilan bacak sayisi, toplam kirpilan agirlik]
+# MADDE 591: CAP_GIRIS=1 -> diger dilimlerin payi GUNCEL (fiyatla kaymis) agirlikla degil GIRIS agirligiyla sayilir
+# (|w_giris| = |w_guncel| * giris/fiyat). Canli bot tavani saklanan giris USD'siyle hesapliyor; bu kol onun motordaki
+# karsiligi. 0 -> parite.
 def _ortak_kos(baslar,n,olcut,tp):
     gens=[_bt2g(b,n,olcut,tp) for b in baslar]
     NF_=len(gens); lim=CAP_ORTAK*NF_ if CAP_ORTAK>0 else np.inf; lim_l=CAP_LONG*NF_
@@ -1072,7 +1077,16 @@ def _ortak_kos(baslar,n,olcut,tp):
             _i,_p,y=msg[j]
             cev=None
             if y is not None:
-                diger=sum(poz_son[q] for q in range(NF_) if q!=j)
+                if CAP_GIRIS:
+                    _cvi=cv[_i]
+                    def _gw(q):
+                        g_=_GREF.get(baslar[q])
+                        if g_ is None: return poz_son[q]
+                        r_=np.where(np.isfinite(g_)&np.isfinite(_cvi)&(_cvi>0),g_/np.where(_cvi>0,_cvi,1.0),1.0)
+                        return poz_son[q]*r_
+                    diger=sum(_gw(q) for q in range(NF_) if q!=j)
+                else:
+                    diger=sum(poz_son[q] for q in range(NF_) if q!=j)
                 y2=y.copy(); serbest={1:0.0,-1:0.0}
                 for k in np.flatnonzero(y2!=0):
                     sg=1 if y2[k]>0 else -1
