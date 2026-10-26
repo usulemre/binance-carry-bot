@@ -6522,3 +6522,9 @@ T6'nın seçimi (60 sa long / 96 sa short funding + anlık perakende sayı oran�
 ## Madde 578 — T6: taraf başına kalabalık havuzu: HEPSİ RED — ortak 4 (16 aday) iki tarafta da tepe
 T6'ya karşı TÜM yıllık · Sh · dd · −%5 (T6 7): short havuz 3 −2,6 · −0,11 · 12 / 5 −14,2 · 10 / 6 −17,9 · 10 — long havuz 3 −22,9 · −0,16 · 6 /
 5 −8,4 · −0,06 · 8. Havuz ekseni (352/364/404/565/573/578) kapalı.
+
+## Madde 579 — CARRY DIŞI YENİ OLAY AİLELERİ (tek coin; uzun zemin, 10 bp + gerçek funding, plasebo): ELEKTEN GEÇEN YOK
+Araç arastirma_m579_olay_ailesi.py (elek madde 353: Sh ≥ 1,5, üç dönem > 0,5, plasebo + 0,5, T6 kor ≤ 0,30).
+A) tek coin kapitülasyonu (24 sa ≥ −%25/−%35, piyasa sakin) LONG 1/3/5 g: Sh −0,11..0,46, düşüş ~−%100, 2020-21'de 1,0-1,6 sonra yok.
+B) funding yüksek +'dan −'ye döndü LONG: Sh 0,20-0,49 (plasebo −0,44..0,54). C) funding −'den +'ya döndü SHORT: Sh −0,37..−0,12.
+T6 ile korelasyon ~0 (bağımsız) ama hiçbiri tek başına ayakta durmuyor (madde 353 yasası: korelasyonsuz olmak bedava değil).
