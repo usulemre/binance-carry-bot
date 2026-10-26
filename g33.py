@@ -208,6 +208,7 @@ _UART=np.full_like(cv,np.nan); _UART[_uc6:]=cv[_uc6:]/np.where(cv[:-_uc6]>0,cv[:
 SSEC=os.environ.get("SSEC","funding")  # funding|rast|voldus|volyuk|btc
 _srng=np.random.default_rng(int(os.environ.get("STOHUM","0")))
 _ret=np.vstack([np.full((1,C.shape[1]),np.nan),cv[1:]/cv[:-1]-1])
+_LRT=_ret   # madde 604: SH_KOR icin 4 sa getiri paneli
 VOL=pd.DataFrame(_ret).rolling(30,min_periods=20).std().values
 _BTC=[i for i,c_ in enumerate(C.columns) if c_=='BTCUSDT']
 BTCI=_BTC[0] if _BTC else -1
@@ -243,6 +244,7 @@ TERS=int(os.environ.get("TERS","0"))
 FAZ=int(os.environ.get("FAZ","5"))
 GEC=int(os.environ.get("GEC","1"))
 REZERV=float(os.environ.get("REZERV","0"))      # ucta firsat cikinca devreye giren sermaye payi
+SH_KOR=float(os.environ.get("SH_KOR","0")); SH_KOR_PEN=int(os.environ.get("SH_KOR_PEN","180"))
 REZ_ESIK=float(os.environ.get("REZ_ESIK","1.0")); REZ_TARAF=os.environ.get("REZ_TARAF","long").strip(); REZ_ESIK_S=float(os.environ.get("REZ_ESIK_S",os.environ.get("REZ_ESIK","1.0")))# yillik funding esigi (|S| >= bu ise "uc firsat")
 YARIM=int(os.environ.get("YARIM","0"))          # kar alda pozisyonun YARISI kapanir
 # MADDE 235: MERDIVEN. Alt rung MERD_ESIK'te pozisyonun MERD_PAY'ini
@@ -652,6 +654,16 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         return ad[np.argsort(-p)]
                     uc_l=np.linspace(1,0,_mml); uc_s=np.linspace(0,1,_mms)
                     lo_s=sec(la,+1,uc_l); sh_s=sec(sa,-1,uc_s); lo=lo_s[:_nl]; sh=sh_s[:_ns]
+                    if SH_KOR>0 and len(sh_s)>_ns and i>=SH_KOR_PEN:
+                        # MADDE 604: short'u long sepetine HEDGE KALITESIYLE sec. Kalabalik sirasi (sh_s) ile son SH_KOR_PEN bar
+                        # 4 sa getirisinde long sepetiyle korelasyonun sirasi harmanlanir; yuksek korelasyon = iyi hedge.
+                        _w=_LRT[i-SH_KOR_PEN+1:i+1]
+                        _lb=np.nanmean(_w[:,lo],axis=1)
+                        _kr=np.array([np.corrcoef(_lb[np.isfinite(_w[:,k])&np.isfinite(_lb)],_w[np.isfinite(_w[:,k])&np.isfinite(_lb),k])[0,1]
+                                      if (np.isfinite(_w[:,k])&np.isfinite(_lb)).sum()>=SH_KOR_PEN//2 else np.nan for k in sh_s])
+                        _r1=1.0-np.arange(len(sh_s))/max(1,len(sh_s)-1)               # kalabalik sirasi (1 = en iyi)
+                        _r2=pd.Series(_kr).rank(pct=True).fillna(0.5).values
+                        sh_s=sh_s[np.argsort(-((1-SH_KOR)*_r1+SH_KOR*_r2),kind="stable")]; sh=sh_s[:_ns]
                 taban=0.5-REZERV/2
                 # MADDE 190: SHORT tarafi funding yerine baska olcute gore sec
                 if SSEC!="funding":
