@@ -6680,3 +6680,22 @@ Düzeltme: `prim_tohum_kur.py` evreni g33'ün bloklarıyla aynı kurar (TOHUM_KA
 Testler: short_ara, preflight, bot geçti.
 **Ders (madde 209'un tekrarı):** bir canlı girdiyi araştırma zemininden üretirken, motorun o girdiyi HANGİ maskeyle okuduğu
 koddan doğrulanır — zeminin hazır 'uy' alanı motorun kullandığı evren değildir (profil eşikleri onu değiştirir).
+
+## Madde 591 — T4 CANLI PARİTE DENETİMİ: short yenileme / evren tabanı / kademe payı BİREBİR; short tavanında küçük fark, ETKİSİZ
+Kod okundu, bot ↔ g33:
+- Short ara dengelemesi (`short_ara_dengele` ↔ S_REB 12): 48 sa ve 96 sa önce kurulan dilimlerin short'u yenilenir, long'u korunur;
+  dilimin kendi long'uyla çakışan yeni short ikisinde de düşer (yerine aday konmaz); rezerv ve prim çarpanı yeni short'a ikisinde
+  de aynı biçimde biner. AYNI.
+- Evren tabanı (`evren_sec` EVREN_MIN ↔ HACIM_MIN_EVREN 30): eşik altı ama 20M üstü, yaş/TradFi/delist geçen coinler hacim sırasıyla
+  30'a tamamlanır; eşik yeterliyse dokunulmaz. AYNI. Kademe payı 0,80 canlıda gerçek limit emri → MERD_SIRA=1 doğal hâli.
+- FARK — short tavanı %8: motor diğer dilimlerin payını GÜNCEL (fiyatla kaymış) ağırlıkla sayıyor, bot saklanan GİRİŞ USD'siyle
+  (`short_tavan_kirp`). Sıkışan short'u bot daha küçük görür, o coine daha geç dur der. g33'e `CAP_GIRIS=1` (bot gibi; varsayılan 0,
+  parite 0,0). T4 standart model + MERD_SIRA=1, 2.000 $ D8, uzun zemin:
+| hiza · tavan sayımı | yıllık | Sh | dd | en kötü gün | −%5 altı | −%3 altı |
+|---|---|---|---|---|---|---|
+| 0 · motor (güncel) | +257,7 | 3,97 | −15,8 | −12,76 | 3 | 52 |
+| 0 · bot gibi (giriş) | +258,5 | 3,96 | −15,7 | −13,07 | 4 | 52 |
+| 1 · motor (güncel) | +253,4 | 4,00 | −13,2 | −12,79 | 2 | 43 |
+| 1 · bot gibi (giriş) | +256,0 | 4,01 | −13,8 | −12,69 | 3 | 44 |
+Fark gürültü bandında (yıllık +1..+3, −%5 altı +1 gün, dd ±0,6) → BOT DEĞİŞMEDİ. Tavan nadiren bağlıyor: bacak ~%0,75 hesap,
+%8 için bir coin ~10 dilimde birden short olmalı. Yayınlanmış T4/T7K rakamları canlının tavan davranışını da temsil ediyor.
