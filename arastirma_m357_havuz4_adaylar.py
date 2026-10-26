@@ -50,7 +50,7 @@ def tek(kol, sev, h):
     env = dict(os.environ, **dict(M.TABAN, **ek), FAZ_KAY=str(h),
                SEMBOL_HARIC=",".join(evren[sev]), E_CIKTI=pkl)
     with open(os.path.join(CIKTI, ad + ".txt"), "w") as f:
-        r = subprocess.run([sys.executable, "g33.py", "ls", str(bacak)], cwd=KOK,
+        r = subprocess.run([sys.executable, "g33.py", ek.get("_OLCUT", "ls"), str(bacak)], cwd=KOK,   # madde 577: _OLCUT
                            env=env, stdout=f, stderr=subprocess.STDOUT, timeout=3000)
     return ad, f"cikis {r.returncode}"
 
