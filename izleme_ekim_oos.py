@@ -136,7 +136,7 @@ def analiz_ana():
             gecmis = d[[str(p) < AY for p in d.index]].dropna().values
             p10 = np.percentile(gecmis, 10); yuz = (gecmis < fark).mean() * 100
             if k == "EK_T1":
-                huk = ("T4 için Ekim doğrulaması TAMAM" if -fark >= -1 else "T4 bu ay T1'in gerisinde (fark < −1)")
+                huk = (f"T4 için {AY} doğrulaması TAMAM" if -fark >= -1 else "T4 bu ay T1'in gerisinde (fark < −1)")
                 print(sat + f" {fark:+8.2f} {p10:+10.2f} {yuz:7.0f}%  T4−T1 {-fark:+.2f} → {huk}")
             else:
                 print(sat + f" {fark:+8.2f} {p10:+10.2f} {yuz:7.0f}%  " + ("UYARI" if fark < p10 else "olağan"))

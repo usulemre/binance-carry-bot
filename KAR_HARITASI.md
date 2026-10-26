@@ -6614,3 +6614,22 @@ T4'te de aynı gün aynı sonuç (6/6 kapattı). Satır şarttan BİLGİ kaydın
 Prim ayarlarının hepsi Sh 4,24-4,28, −%5 altı 2, en kötü −6,5..−9,6, getiri +240..+254: ayar seçiminden bağımsız bir yapı. Taban,
 "getiri ↔ en kötü gün" doz düğmesi (0,6 en temkinli, 0,8 en kârlı). Short tavanı %10: T4'ten fazla getiri (+259) + Sh 4,28 + en kötü −7,3
 ama −%3 altı 48 (T4 45). T7K seçimleri plato ortasında.
+
+## Madde 587 — Ekim OOS izleme betiği düzeltildi: MERD_SIRA=1 + ANA BLOK (T1 / T4 / T6 / T7K), Eylül kuru koşusu
+`izleme_ekim_oos.py` (madde 492) madde 527'den önce yazılmıştı ve hiçbir kolunda `MERD_SIRA=1` yoktu → Kasım'da merdivenli kollar
+eski (iyimser) dolum kuralıyla ölçülecekti. Düzeltme Ekim verisi YAYIMLANMADAN yapıldı (ön kayıt niteliği korunuyor):
+- Bütün kollar (T1/T2 tabanları dahil) MERD_SIRA=1.
+- ANA BLOK: T1 (eski canlı), T4 (kod varsayılanı, madde 534), T6 (madde 575), T7K (madde 585) — canlı gibi giriş + 5 bp,
+  2.000 $ D8 / 3.500 $ D2 × iki hiza; tanımlar madde 568 / 584 betikleriyle birebir (kodla karşılaştırıldı).
+- Kurallar (tek ay KARAR VERMEZ): T4 − T1 ≥ −1 puan → T4 Ekim doğrulaması TAMAM. T6 / T7K'nın T4'e farkı, aynı serilerin geçmiş
+  aylık fark dağılımının %10 yüzdeliği altındaysa UYARI. T7K için ayrıca ayın en kötü günü ve −%3 altı gün sayısı.
+- Kuru koşu ayrı klasöre (`IZLEME_CIKTI`): motor var olan .pkl'yi yeniden koşmadığı için aynı klasör Kasım'da bayat seri okuturdu.
+Kuru koşu (AY=2026-09, uzun zemin; Eylül örnek İÇİ → yalnız kodun çalıştığını gösterir, karar vermez):
+| kol | 2.000 $: ay % · Sh · en kötü gün · −%3 | 3.500 $: ay % · Sh · en kötü gün · −%3 |
+|---|---|---|
+| T1 | +4,85 · 1,99 · −5,55 · 1 | +6,02 · 2,45 · −5,60 · 1 |
+| T4 | +4,54 · 1,69 · −4,43 · 2 | +7,94 · 2,87 · −4,07 · 2 |
+| T6 | +11,64 · 3,73 · −4,68 · 1 | +12,36 · 3,87 · −4,60 · 1,5 |
+| T7K | +7,27 · 3,48 · −3,17 · 0,5 | +7,69 · 3,57 · −3,12 · 0,5 |
+Geçmiş aylık fark (T4'e karşı) yüzdeliği: T6 %93 / %84, T7K %89 / %46 → olağan. T4 − T1: −0,31 / +1,92 (kural ≥ −1 içinde).
+Kasım adımları betiğin başında (indir_ek_ay → yeniden_kur → sk_bar60 / sk_bar96 → metrik paneli → kos_ana / analiz_ana).
