@@ -6513,3 +6513,8 @@ T6'ya karşı TÜM yıllık · Sh · dd · −%5 (T6 7): top trader oranı −20
 taker hacim oranı −226,2 · −1,59 · −15,0 · 10 — oran 24 sa yumuşatma −15,6 · −0,15 · 8 — 8 sa −4,2 · −0,03 · 7.
 (2020-21 aynı: oran verisi 2021-12'den.) Kalabalık sinyali = PERAKENDE hesap sayısı (count_long_short_ratio), anlık; büyük hesap ya da
 akış oranı onu bozuyor (madde 358/365 ile aynı). Ölçüt ekseni kapalı.
+
+## Madde 577 — T6: kalabalık oranı + değişimi / + top farkı / yalnız değişim: HEPSİ RED
+T6'ya karşı TÜM yıllık · Sh · dd · −%5 (T6 7): ls + 24 sa değişim −112,1 · −0,41 · −2,9 · 8 — ls + (ls − top) −40,2 · −0,25 · −6,9 · 10 —
+yalnız değişim −205,6 · −1,66 · −16,1 · 16. Oranın DÜZEYİ bilgi taşıyor, değişimi gürültü. Kalabalık ekseni (358/364/365/576/577) kapandı;
+T6'nın seçimi (60 sa long / 96 sa short funding + anlık perakende sayı oranı) yerinde.
