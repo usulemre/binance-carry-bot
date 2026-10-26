@@ -1,3 +1,5 @@
+> **2026-10-26 (madde 575):** üçüncü sütun artık **T6 aday** (standart model serisi Q_T6; önceden T4 merdivensiz). Pickle'larda `sr` = T6.
+
 > **2026-10-25 GÜNCELLEME (madde 534):** T4 kod varsayılanı (asıl bot). İki PDF'te başlık sütunu artık **Asıl bot T4**,
 > ikinci sütun **Eski bot T1** (pdf_uret.py t1/t2'yi yer değiştirir; pickle'da t1=T1, t2=T4 kalır). Rakamlar değişmedi.
 

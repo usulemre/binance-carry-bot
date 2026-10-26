@@ -183,15 +183,15 @@ kapak = f'''
 
 css = open("stil.css").read()
 html_ = f'<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Kazanç Defteri</title><style>{css}</style></head><body>{kapak}{"".join(sayfalar)}</body></html>'
-if True:   # madde 528/534: iki defter de düzeltilmiş seriyle (görünen t1=T4 asıl bot, t2=eski bot T1, sr=T4 merdivensiz, bot=merdivensiz T60)
+if True:   # madde 528/534: iki defter de düzeltilmiş seriyle (görünen t1=T4 asıl bot, t2=eski bot T1, sr=T6 aday (madde 575), bot=merdivensiz T60)
     for a, b in [("Şu anki bot ve adaylar", "Asıl bot T4 ve karşılaştırmalar"), ("2. aday (T2)", "§T1§"), ("2. aday T2", "§T1§"), ("2, aday T2", "§T1§"),
                  ("T2 yıl sonu", "T1 yıl sonu"), ("T2 en kötü gün", "T1 en kötü gün"),
-                 ("T2 bakiye", "T1 bakiye"), ("T2 en kötü", "T1 en kötü"), ("Short ara dengeli · eski bot", "T4 merdivensiz · merdivensiz T60"),
-                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T4 merdivensiz (T4 − iki taraflı merdiven)"),
-                 ("Short ara dengeli", "T4 merdivensiz"), ("SAD bakiye", "T4M bakiye"), ("Eski bot (referans)", "Merdivensiz T60 (referans)"),
+                 ("T2 bakiye", "T1 bakiye"), ("T2 en kötü", "T1 en kötü"), ("Short ara dengeli · eski bot", "T6 aday · merdivensiz T60"),
+                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T6 aday (T4 + short tavanı yok + short 40 sa + short penceresi 96 sa)"),
+                 ("Short ara dengeli", "T6 aday"), ("SAD bakiye", "T6 bakiye"), ("Eski bot (referans)", "Merdivensiz T60 (referans)"),
                  ("Eski bot", "Merdivensiz T60"), ("20 Temmuz 2022", "19 Temmuz 2020" if UZUN else "20 Temmuz 2022"), ("T2'nin farkı getiriden çok kötü günlerde.", "Kaldıraçsız (1,0x)."),
                  ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T1"),
-                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T4 merdivensiz (T4 − iki taraflı merdiven)")]:
+                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T6 aday (T4 + short tavanı yok + short 40 sa + short penceresi 96 sa)")]:
         html_ = html_.replace(a, b)
     html_ = html_.replace("Şu anki bot", "Asıl bot T4").replace("şu anki bot", "asıl bot T4").replace("§T1§", "Eski bot T1")
     i = html_.index('<p class="dipnot">'); j = html_.index("</p>", i)
@@ -200,7 +200,7 @@ if True:   # madde 528/534: iki defter de düzeltilmiş seriyle (görünen t1=T4
         'gerçekçi ağırlık kayması, 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması, KALDIRAÇSIZ (1,0x). Kalabalık (long/short) oranı 2021-12 '
         'öncesi yok → o dönemde seçim funding sırasıyla (tüm serilerde aynı). Asıl bot T4 = kod varsayılanı (madde 534) ve demo hesapta çalışan ayar: '
          'eski bot T1 + short 2 g\'de bir + short coin tavanı %8 + merdiven payı 0,80 + evren tabanı 30. Eski bot T1 = eski varsayılan (T60 + 24 sa stop + iki taraflı merdiven; CARRY_PROFIL=T60). '
-        'T4 merdivensiz = T4 − iki taraflı merdiven (merdiven düzeltilmiş modelde kâr değil kötü-gün savunması, madde 528). Merdivensiz T60 = merdivenden önceki canlı ayar. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
+        'T6 aday = T4 + short coin tavanı yok + short 40 sa\'te bir + short adayları 96 sa funding penceresiyle (CARRY_PROFIL=T6, isteğe bağlı; madde 568-575: canlı gibi giriş + 5 bp ile yıllık +55..+80 puan, P %87-92). Merdivensiz T60 = merdivenden önceki canlı ayar. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
         'sonucu değildir ve gelecek için garanti vermez. Büyük bakiyelerde likidite nedeniyle bileşik büyüme gerçekte bu kadar sürmez.') + html_[j:]
 open("defter.html", "w").write(html_)
 print("sayfa", 3 + len(sayfalar))
