@@ -6528,3 +6528,16 @@ Araç arastirma_m579_olay_ailesi.py (elek madde 353: Sh ≥ 1,5, üç dönem > 0
 A) tek coin kapitülasyonu (24 sa ≥ −%25/−%35, piyasa sakin) LONG 1/3/5 g: Sh −0,11..0,46, düşüş ~−%100, 2020-21'de 1,0-1,6 sonra yok.
 B) funding yüksek +'dan −'ye döndü LONG: Sh 0,20-0,49 (plasebo −0,44..0,54). C) funding −'den +'ya döndü SHORT: Sh −0,37..−0,12.
 T6 ile korelasyon ~0 (bağımsız) ama hiçbiri tek başına ayakta durmuyor (madde 353 yasası: korelasyonsuz olmak bedava değil).
+
+## Madde 580 — T7 arayışı: ASİMETRİK BACAK (T6 tabanında, standart model): RED — 4+4 simetrik en iyi
+| kol (long+short) | yıllık | Sh | dd | en kötü | −%5 | −%3 |
+|---|---|---|---|---|---|---|
+| T4 (4+4) | +255,9 | 4,02 | −14,4 | −12,77 | 2 | 45 |
+| T6 (4+4) | +327,2 | 4,35 | −15,5 | −10,44 | 7 | 61 |
+| 5+3 | +297,8 | 4,30 | −17,0 | −10,39 | 12 | 55 |
+| 6+3 | +260,7 | 4,23 | −17,7 | −10,15 | 12 | 47 |
+| 5+4 | +271,0 | 4,23 | −16,4 | −10,47 | 8 | 50 |
+| 6+4 | +242,4 | 4,21 | −16,2 | −10,24 | 8 | 39 |
+| 3+5 (kontrol) | +336,7 | 4,10 | −19,4 | −10,45 | 11 | 70 |
+Long'u yaymak −%3 altı günü azaltıyor (61 → 39) ama getiri ve Sharpe düşüyor; short'u 3'e yoğunlaştırmak −%5 altı günü artırıyor.
+Not: 6+4, T4 ile aynı getiri (+242 vs +256) ve daha yüksek Sharpe (4,21 vs 4,02), daha az −%3 günü (39 vs 45) — ama −%5 altı 8 (T4 2).
