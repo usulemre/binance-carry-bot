@@ -150,7 +150,7 @@ if _DUS>0:
     U=U.copy(); U[:,_at]=False
 TP=float(os.environ.get("TP","0.7"))
 KOM=float(os.environ.get("KOM","0.0002"))
-AKW=float(os.environ.get("AKIS","0.2")); TPX=float(os.environ.get("TP","0.7"))
+AKW=float(os.environ.get("AKIS","0.2")); SS_AKIS=int(os.environ.get("SS_AKIS","0")); TPX=float(os.environ.get("TP","0.7"))
 SLL=float(os.environ.get("SLL","0"))   # LONG bacak stop (0=kapali)
 SLS=float(os.environ.get("SLS","0"))   # SHORT bacak stop
 # MADDE 449: LONG 24 SA DUSUS STOP'U. Giris fiyatindan bagimsiz: coin son 24 sa'teki
@@ -626,6 +626,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 o=np.argsort(sc)
                 if SS is not None:
                     _ss=pd.Series(SS[i][ix]).rank(pct=True).fillna(0.5).values
+                    if SS_AKIS and AKW>0 and a.notna().sum()>=0.5*len(ix):
+                        # MADDE 592: canli bot short skoruna da emir akisini %AKW harmanliyor (birlesik_skor); bu kol onun karsiligi
+                        _ss=(1-AKW)*_ss+AKW*(-a).rank(pct=True).fillna(0.5).values
                     _lav=set(int(x) for x in ix[o[:max(_mml,_nl)]])
                     _ss=np.where(np.array([int(x) in _lav for x in ix]),-1.0,_ss)   # long havuzu short olamaz
                     o_s=np.argsort(_ss)
