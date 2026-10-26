@@ -6473,3 +6473,11 @@ yine bir risk düğmesi (dd −17..−25, −%5 altı 16-20). Verim adayı T6 (4
 Bütün komşular +320..+330 / Sh 4,30-4,35 ve üç dönemde T4'ün üstünde: T6 tek nokta değil bir PLATO (madde 548'de 96 sa tek başına
 tepe görünüyordu; tavansız kitapta 72-144 sa hepsi iyi). Tavan %12 kötü günü 7 → 5'e indiriyor, getiri −7 (kullanıcı önceliğine uygun
 varyant: T6-C12). Protokol P %88-92 (madde 568) — T6 projenin en sağlam adayı.
+
+## Madde 572 — T6-C12 (T6 + short tavanı %12) vs T4 PROTOKOLÜ (canlı gibi giriş + 5 bp): RED, T6 ile neredeyse aynı
+| seviye / hiza | yıllık fark | şartlar | P | ham: yıllık · Sh · dd · en kötü · −%5 (T4 −%5) |
+|---|---|---|---|---|
+| 2.000 $ 0 / 1 | +56,5 / +73,0 | YYYY / YYYY | %89,7 / %91,1 | +307,4 · 4,10 · −16,8 · −10,88 · 6 (4) / +310,2 · 4,18 · −16,8 · −11,36 · 7 (2) |
+| 3.500 $ 0 / 1 | +58,1 / +65,0 | XYYY / YYYY | %89,5 / %86,6 | +305,9 · 4,16 · −17,1 · −10,91 · 8 (4) / +299,9 · 4,19 · −16,3 · −11,24 · 8 (2) |
+Gerçekçi koşulda tavan %12, T6'ya göre kötü günü azaltmıyor (6-8 vs 7-9) — standart modeldeki 7 → 5 farkı kayboldu. T6 / T6-C12
+eşdeğer; P %87-91. İkisi de 15/16 şart.
