@@ -6399,3 +6399,18 @@ Madde 500'deki 2020-11 kuyruğu burada görünmüyor (en kötü gün tavansız d
 Protokol (T4'e karşı): T4 tavansız P %61-79 (2.000 $'da eşit-risk şartı X) RED; T4 %12 P %60-73 RED; K3 tavansız 2025+ Sharpe ↓,
 P %63-78 RED. Ham kâr ölçeğinde: T4 tavansız +31..+36/yıl ve Sharpe ↑ (kötü gün 3 → 7-8, en kötü gün −13 → −11);
 K3 tavansız +135/yıl ama −%5 altı gün 3 → 21. Short tavanı (madde 455-456) kötü-gün sayısı için; kâr pahasına.
+
+## Madde 565 — HAM KÂR: K4 (= K3 tavansız) üzerinde yoğunlaşma (standart model, uzun zemin)
+| kol | yıllık | Sh | düşüş | en kötü | −%5 | −%3 |
+|---|---|---|---|---|---|---|
+| T4 | +255,9 | 4,02 | −14,4 | −12,77 | 2 | 45 |
+| K4 | +422,8 | 4,04 | −19,6 | −9,51 | 17 | 94 |
+| K4 3+3 bacak | +590,3 | 4,05 | −23,2 | −10,02 | 37 | 126 |
+| K4 2+2 bacak | +774,0 | 3,66 | −40,5 | −26,05 | 61 | 193 |
+| K4 long tutma 7 g | +357,9 | 3,99 | −21,4 | −9,07 | 13 | 84 |
+| K4 havuz 3 | +388,4 | 3,83 | −21,5 | −11,65 | 21 | 98 |
+| K4 short payı %60 | +399,3 | 3,82 | −23,8 | −9,38 | 30 | 117 |
+| K4 short payı %40 | +430,3 | 3,66 | −21,1 | −17,08 | 20 | 115 |
+Yoğunlaşma (bacak 4 → 3) Sharpe'ı KORUYARAK ham getiriyi büyütüyor (= kitap içi kaldıraç gibi: daha az coin, coin başına daha çok
+ağırlık); 2 bacakta kırılıyor (dd −40, en kötü −26). Taraf payını bozmak (madde 566 düğmesi) iki yönde de Sharpe düşürüyor.
+→ madde 567: 3 bacak canlı gibi giriş + 5 bp (T4-3B, T4-3B tavansız, K4-3B).
