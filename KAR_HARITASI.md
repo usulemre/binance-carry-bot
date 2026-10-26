@@ -6438,3 +6438,16 @@ seçimi: T4 (−%5 altı ~3) … K4 (~21) … K4-3B (~38). Bedava kâr yok; T4'�
 HÜKÜM RED (P %88-92 < %95; bir hücrede 2025+ Sharpe −0,10) — AMA projenin EN GÜÇLÜ adayı: 15/16 şart, Sharpe 3,84-3,89 → 4,12-4,23
 (ham kâr değil VERİM artışı), eşit-risk +42..+163, en kötü gün −13 → −10,5..−11,2, düşüş aynı. Bedel: −%5 altı gün 2-4 → 7-9.
 T6 Ekim OOS izlemesine T4 ile yan yana alınmalı; kullanıcı kararıyla demo adayı.
+
+## Madde 569 — T6 ablasyonu ve komşuluğu (standart model, uzun zemin): üç parça da ayrı ayrı katkı veriyor; 3 bacak VERİMİ artırıyor
+| kol | yıllık | Sh | dd | en kötü | −%5 | −%3 |
+|---|---|---|---|---|---|---|
+| T4 | +255,9 | 4,02 | −14,4 | −12,77 | 2 | 45 |
+| T4 + tavansız | +295,1 | 4,13 | −16,9 | −10,28 | 7 | 65 |
+| + short 40 sa | +313,8 | 4,26 | −16,4 | −10,25 | 7 | 62 |
+| + short sinyali 96 sa (40 sa yerine) | +315,7 | 4,28 | −15,4 | −10,11 | 9 | 64 |
+| T6 (üçü) | +327,2 | 4,35 | −15,5 | −10,44 | 7 | 61 |
+| T6 short kademesi kapalı | +324,6 | 4,27 | −15,5 | −8,55 | 7 | 65 |
+| T6 3 bacak | +436,1 | 4,41 | −20,2 | −10,28 | 15 | 87 |
+Her parça hem getiri hem Sharpe ekliyor (birikimli 4,02 → 4,35): tek bir şanslı düğme değil. 3 bacak T6'da Sharpe'ı da artırıyor
+(4,41) — T4/K4'teki "gizli kaldıraç"tan farklı. → madde 570: T6-3B canlı gibi giriş + 5 bp protokol.
