@@ -6579,3 +6579,15 @@ Kullanıcı tercihine bağlı: "tek büyük felaket günü" mü "birkaç orta k�
 | T7 (tavansız, alt 0,7) | +272,0 | 4,29 | −14,8 | −7,29 | 5 | 50 | +268 / +195 / +365 |
 T7K: T4'e göre getiri −10/yıl, Sharpe +0,25, dd 1,3 puan sığ, EN KÖTÜ GÜN −12,8 → −7,7, −%5 altı aynı (2), −%3 altı 45 → 35.
 → madde 584: T7K vs T4 protokol (canlı gibi giriş + 5 bp).
+
+## Madde 584 — T7K (T6 + short tavanı %8 + prim alt 0,7) ve T4P (T4 + prim alt 0,7) vs T4 PROTOKOLÜ (canlı gibi giriş + 5 bp)
+| kol · seviye/hiza | yıllık fark | şartlar | P | ham: yıllık · Sh · dd · en kötü · −%5 · −%3 | T4: yıllık · Sh · dd · en kötü · −%5 · −%3 |
+|---|---|---|---|---|---|
+| T7K 2.000 0 | −12,2 | YYYX | %89 | +238,7 · 4,03 · −14,7 · −7,83 · 4 · 38 | +250,9 · 3,82 · −16,5 · −12,81 · 4 · 57 |
+| T7K 2.000 1 | +0,7 | YYYY | %95 | +238,0 · 4,11 · −12,8 · −8,03 · 3 · 29 | +237,2 · 3,79 · −15,6 · −13,83 · 2 · 48 |
+| T7K 3.500 0 | −12,3 | XYYX | %78 | +235,5 · 4,09 · −16,1 · −7,87 · 4 · 38 | +247,8 · 3,88 · −17,1 · −12,63 · 4 · 50 |
+| T7K 3.500 1 | −7,0 | YYYX | %86 | +227,9 · 4,11 · −13,8 · −7,95 · 6 · 26 | +234,9 · 3,83 · −16,5 · −13,28 · 2 · 44 |
+| T4P (4 hücre) | −22..−27 | YYYX | %65-82 | +213..+227 · 3,87-3,93 · −13..−15 · −7,5..−8,2 · 2-4 · 29-43 | |
+HÜKÜM RED (kural kâr artışı istiyor) — AMA kullanıcının asıl hedefi (kötü günü azalt, kârı az kes) için T7K: getiri T4 ile aynı
+(−12..+1), Sharpe +0,2..+0,3, düşüş 1-3 puan sığ, EN KÖTÜ GÜN −12,6..−13,8 → −7,8..−8,0, −%3 altı gün %25-40 az, −%5 altı benzer.
+T4P daha pahalı (−22..−27) ve daha zayıf. T7K, kötü-gün odaklı en iyi aday.
