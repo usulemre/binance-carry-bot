@@ -6488,3 +6488,15 @@ short TP −%15 0,0 / −%25 −2,7 — 24 sa stop %40 −13,0 / %50 −1,3 · 6
 tutma 4 g +33,7 · −0,06 · −10,8 · 8 / 6 g −29,5 — long sinyali 72 sa −0,8 — long TP %80 +3,3. Ham getiri artıran her kol (rezerv 0,
 kademe %55, tutma 4 g) Sharpe'ı ve eşit-risk getiriyi DÜŞÜRÜYOR. Not: long ara dengeleme (L_REB) S_REB ile birlikte etkisiz kaldı
 (motorda aynı turda yalnız short yolu çalışıyor) — ayrı inceleme gerektirir, sonuç sayılmadı.
+
+## Madde 574 — T6 + long ara dengeleme (short ile çakışmayan sıklık): RED — ham getiri ↑, Sharpe ↓ (gizli maruziyet, madde 496/520 ile aynı)
+| kol | yıllık | Sh | dd | en kötü | −%5 | eşitVol (T6'ya karşı) |
+|---|---|---|---|---|---|---|
+| T6 | +327,2 | 4,35 | −15,5 | −10,44 | 7 | — |
+| solan long, 48 sa | +381,1 | 4,08 | −23,2 | −10,64 | 12 | −54,7 |
+| solan long, 60 sa | +360,6 | 4,13 | −19,6 | −10,60 | 10 | −40,7 |
+| solan long, 72 sa | +355,0 | 4,10 | −19,6 | −10,58 | 12 | −45,9 |
+| tam long, 60 sa | +395,0 | 4,04 | −19,9 | −11,77 | 15 | −67,1 |
+| tam long, 48 sa | +435,5 | 3,95 | −23,6 | −12,39 | 21 | −104,4 |
+Long tarafında sık yenileme kâr değil maruziyet ekliyor (short'ta tersi: madde 493-502). Asimetri: long carry'si yavaş (kalıcı negatif
+funding), short carry'si hızlı (funding sıçrayıp sönüyor). Long ara dengeleme ekseni T6'da da kapandı.
