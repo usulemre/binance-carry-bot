@@ -6772,3 +6772,15 @@ düşüşüne kaldıraçlanmış T7K.
 | üst 1,4 | +330,3 · −16,8 | ×1,28 | −50,9 | −151 / −22 / −59 | −7,72 / −9,85 |
 Fırsat zenginken brütü artırmak, aynı düşüşte SABİT kaldıraçtan az kazandırıyor (madde 257'nin yasası T7K'da da). Prim çarpanı yalnız
 KÜÇÜLTME yönünde değerli (madde 581-586); büyütme yönü 2020-21'de pahalı. Ham kâr isteniyorsa madde 596'nın sabit kaldıracı doğru yol.
+
+## Madde 598 — T7K prim tabanı eşit riskte (canlı gibi giriş + 5 bp, uzun zemin): 0,7 YERİNDE
+Araç `arastirma_m598_t7k_taban_kaldirac.py` (ön kayıt başlıkta; madde 596'nın kısıtı ve bootstrap tohumu). Eşit-risk yıllığı:
+| taban | 2.000 $: ham · k · eşit-risk yıllık · en kötü | 3.500 $: ham · k · eşit-risk yıllık · en kötü |
+|---|---|---|
+| 0,5 | +227,5 · 1,15 · +288,2 · −7,45 | +220,8 · 1,10 · +258,7 · −7,36 |
+| 0,6 | +232,9 · 1,15 · +295,4 · −7,49 | +226,2 · 1,10 · +265,3 · −7,46 |
+| **0,7** | +238,6 · 1,15 · **+303,2** · −9,12 | +231,9 · 1,10 · +272,3 · −8,70 |
+| 0,8 | +243,2 · 1,10 · +286,1 · −10,78 | +235,5 · 1,10 · +276,7 · −10,79 |
+Bağlayıcı ölçü her kolda tam dönem dd (taban onu oynatmıyor) → daha sığ en kötü gün ek kaldıraca dönüşmüyor; düşük taban yalnız ham
+getiri kaybettiriyor. 0,8 3.500 $'da +4,4 (bar +8 altı). Hepsi RED; T7K tabanı 0,7 aynı riskte de tepe. Taban yine kullanıcının
+"en kötü gün ↔ getiri" düğmesi (0,6: en kötü −7,5, yıllık −8).
