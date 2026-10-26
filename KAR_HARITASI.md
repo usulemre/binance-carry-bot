@@ -6459,3 +6459,17 @@ Her parça hem getiri hem Sharpe ekliyor (birikimli 4,02 → 4,35): tek bir şan
 | 3.500 $ 0 / 1 | +161,8 / +150,9 | XXXY / YYYY | %57 / %70 | +409,6 · 4,15 · −25,3 · −11,37 · 17 / +385,8 · 4,12 · −18,6 · −10,60 · 20 |
 T6 (4 bacak) gerçekçi Sh 4,12-4,23; T6-3B 4,12-4,25 → aynı. Standart modeldeki +0,06 Sharpe canlı gibi girişte kayboluyor; 3 bacak
 yine bir risk düğmesi (dd −17..−25, −%5 altı 16-20). Verim adayı T6 (4 bacak) olarak kalır.
+
+## Madde 571 — T6 komşuluğu (standart model, uzun zemin): GENİŞ PLATO
+| kol | yıllık | Sh | dd | en kötü | −%5 | 2020-21 / 2022-24 / 2025-26 |
+|---|---|---|---|---|---|---|
+| T4 | +255,9 | 4,02 | −14,4 | −12,77 | 2 | +230 / +182 / +340 |
+| T6 | +327,2 | 4,35 | −15,5 | −10,44 | 7 | +329 / +221 / +430 |
+| short sinyali 72 sa | +320,2 | 4,31 | −16,9 | −10,28 | 7 | +330 / +211 / +421 |
+| short sinyali 144 sa | +321,8 | 4,33 | −17,1 | −10,31 | 6 | +336 / +209 / +402 |
+| tavan %12 | +320,4 | 4,32 | −15,6 | −10,77 | 5 | +319 / +219 / +422 |
+| tavan %15 | +326,1 | 4,34 | −15,5 | −10,44 | 7 | +328 / +221 / +425 |
+| short 32 sa | +330,1 | 4,30 | −17,4 | −10,13 | 9 | +312 / +224 / +485 |
+Bütün komşular +320..+330 / Sh 4,30-4,35 ve üç dönemde T4'ün üstünde: T6 tek nokta değil bir PLATO (madde 548'de 96 sa tek başına
+tepe görünüyordu; tavansız kitapta 72-144 sa hepsi iyi). Tavan %12 kötü günü 7 → 5'e indiriyor, getiri −7 (kullanıcı önceliğine uygun
+varyant: T6-C12). Protokol P %88-92 (madde 568) — T6 projenin en sağlam adayı.
