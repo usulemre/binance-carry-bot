@@ -6507,3 +6507,9 @@ T4'ün diğer ayarları (kademe payı 0,80, evren tabanı 30) aynen. Short adayl
 havuzuna giremez (kalabalik_adaylar(skor_s=...), motordaki SK_DOSYA_S ile aynı kural); 96 sa funding'i adayların yarısından azında
 gelirse o tur short da 60 sa ile seçilir. Preflight T6 profilini tanır; T4'te short penceresi elle açılırsa HATA.
 Testler: test_carry_short_ara (T6 değerleri, havuz ayrımı), test_carry_preflight, test_carry_bot geçti; entegrasyon T4 ve T6 koşuluyor.
+
+## Madde 576 — T6 tabanında kalabalık ölçütü ailesi: HEPSİ RED — perakende hesap SAYISI oranı açık ara en iyisi
+T6'ya karşı TÜM yıllık · Sh · dd · −%5 (T6 7): top trader oranı −203,4 · −1,79 · −7,5 · 16 — sayı+top geometrik −92,1 · −0,78 · 15 —
+taker hacim oranı −226,2 · −1,59 · −15,0 · 10 — oran 24 sa yumuşatma −15,6 · −0,15 · 8 — 8 sa −4,2 · −0,03 · 7.
+(2020-21 aynı: oran verisi 2021-12'den.) Kalabalık sinyali = PERAKENDE hesap sayısı (count_long_short_ratio), anlık; büyük hesap ya da
+akış oranı onu bozuyor (madde 358/365 ile aynı). Ölçüt ekseni kapalı.
