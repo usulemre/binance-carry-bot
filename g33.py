@@ -233,6 +233,8 @@ TPKAT_UST=float(os.environ.get("TPKAT_UST","1.50"))   # esik ust siniri
 _ret5=np.vstack([np.full((1,C.shape[1]),np.nan),cv[1:]/cv[:-1]-1])
 VOL5=pd.DataFrame(_ret5).rolling(30,min_periods=20).std().values*np.sqrt(30)
 TPL=float(os.environ.get("TPL","-1"))   # -1 = tp ile ayni
+# MADDE 595: girişte funding'i UÇ (S <= -TPF_ESIK, gunluk) olan LONG bacagin son TP'si TPF_UC. 0 = kapali (parite).
+TPF_UC=float(os.environ.get("TPF_UC","0")); TPF_ESIK=float(os.environ.get("TPF_ESIK","0.015"))
 TPS=float(os.environ.get("TPS","-1"))
 DOLDUR=int(os.environ.get("DOLDUR","0"))
 TAKIP_BAS=float(os.environ.get("TBAS","0"))
@@ -492,6 +494,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
     hedef_brut=[0.0]; _acik={}
     nk=C.shape[1]; poz=np.zeros(nk); giris=np.full(nk,np.nan); zirve=np.full(nk,np.nan); tp_yapildi=np.zeros(nk,bool); eq=[1.0]; bek=None; _yas=np.zeros(nk,int)
     merd_yapildi=np.zeros(nk,bool); merd0_yapildi=np.zeros(nk,bool); _kisb=[False]; _pfg={}
+    gsin=np.full(nk,np.nan)   # madde 595: bacagin GIRIS anindaki sinyali (S)
     ek_say=np.zeros(nk,int); ilk_w=np.zeros(nk)
     for i in range(bas,len(C)-1):
         # MADDE 415: her bar koordinatore (i, poz, yeni hedef ya da None) bildirilir;
@@ -529,6 +532,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
             _gs,_zs=giris.copy(),zirve.copy()
             poz=y; giris=np.where(y!=0,cv[i],np.nan); zirve=np.where(y!=0,cv[i],np.nan); tp_yapildi=np.where(y!=0,False,tp_yapildi); bek=None
             giris=np.where(_dv,_gs,giris); zirve=np.where(_dv,_zs,zirve)
+            if TPF_UC>0: gsin=np.where((y!=0)&~_dv,S[i],gsin)
             merd_yapildi=np.where((y!=0)&~_dv,False,merd_yapildi)
             merd0_yapildi=np.where((y!=0)&~_dv,False,merd0_yapildi)
             if not _kisb[0]: _pfg.clear()        # madde 539: tam dengeleme bekleyen fren geri acilislarini iptal eder
@@ -871,6 +875,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     zirve[k]=min(_pz,LV[i+1,k])
                     continue
                 _tp = (TPL if TPL>=0 else tp) if uzun else (TPS if TPS>=0 else tp)
+                if TPF_UC>0 and uzun and np.isfinite(gsin[k]) and gsin[k]<=-TPF_ESIK: _tp=TPF_UC   # madde 595
                 # MADDE 221: oynakliga gore olcekle (nedensel: VOL5[i])
                 _kat = (TPKATL if uzun and TPKATL>=0 else
                         TPKATS if (not uzun) and TPKATS>=0 else TPKAT)

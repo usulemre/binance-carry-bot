@@ -6723,3 +6723,9 @@ havuz 4, dengeleme 120 sa / 15 dilim, pencere 60 sa (T6/T7K short 96 sa), hacim 
 −%45, uç hareket 0, akış 0,20, short ara 48 sa (T6/T7K 40), short tavan 0,08 (T6 0), evren tabanı 30, prim (T7K) e 1 · alt 0,7 ·
 üst 1,0 · ref 180 g. 24 sa stop: bot kline[-7] × 0,55, 8 sa'te bir = motor cv[i−5] SLL24_TAZE=2 (bot MARK fiyatıyla tetikler →
 fitillerde motordan seyrek, ihtiyatlı yön). Madde 590-592 sonrası açık parite farkı kalmadı.
+
+## Madde 594 — YENİ EKSEN: haftanın günü (carry kitabının gün etkisi): KAPANDI (ön elemede)
+Madde 353-C bağımsız bir haftalık strateji ölçmüştü; KİTABIN gün etkisi hiç ölçülmemişti. Araç `arastirma_m594_haftanin_gunu.py`
+(ön kayıt başlıkta; T4 standart + MERD_SIRA=1, 2.000 $ D8, iki hiza, uzun zemin). İki dönemde birden 1 SE'yi geçen ve kötü gün
+oranı aynı yönde ayrışan gün YOK: ≤2024'te en zayıf Cumartesi (−1,90 SE), 2025+'da Cuma (−1,33 SE); ≤2024'ün kötü gün yoğunu
+Salı (×2,62), 2025+'da Perşembe (×1,77). Gün etkisi rastgele dolaşıyor. Eksen kapandı.
