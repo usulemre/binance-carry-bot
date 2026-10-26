@@ -6817,3 +6817,16 @@ Eşit-risk kısıtı: TAM evrendeki T4 1,0x'in dd / en kötü gün / 1y p1'i (ma
 - Bedel aynı: −%5 altı gün T4 4 → T7K 6 / T6 10. "Tek büyük kötü gün" (T4) ↔ "sık orta kötü gün" (T6) ekseni.
 - T6 1,10x preflight'ta ölçülmüş doz DEĞİL (yalnız T7K 1,10/1,15, madde 599). T6 1,0x onaysız çalışır. KULLANICI KARARI;
   madde 276'nın kapısı (önce 1x canlı/demo ölçüm) geçerli.
+
+## Madde 602 — 2.000 $: T7 (T6 + prim, short tavansız) eşit riskte RED; doz ölçütüyle (bootstrap) T7K 1,25x
+(a) Araç `arastirma_m602_t7_kaldirac.py` (madde 600 yöntemi, yalnız 2.000 $): T7 ham +262,2 (en kötü −7,56) ama tam dönem dd T4'ü 1,0x'te
+aşıyor → k 0,95, eşit-risk +240,5; T7K (%8) +303,2. Fark −62,6 → RED. Short tavanı %8, kaldıraç taşıma kapasitesinin kaynağı.
+(b) Doz ölçütü (madde 274/276/281: kaldıraç kararı tam dönem maks düşüşle değil 1 yıllık bootstrap düşüş dağılımıyla verilir).
+Kısıt: 1y p1 VE p5 düşüş ile en kötü gün T4 1,0x'i aşmayacak (blok 20 g, 3.000 yol, tohum 596), 2.000 $, canlı gibi giriş + 5 bp:
+| kitap | k | yıllık | tarihsel dd | en kötü | −%5 altı | 1y p1 / p5 |
+|---|---|---|---|---|---|---|
+| T4 | 1,00 | +244,3 | −15,3 | −13,32 | 3 | −24,8 / −21,0 |
+| T6 | 1,05 | +345,7 | −17,3 | −11,37 | 9 | −23,8 / −20,0 |
+| T7K | 1,25 | +352,4 | −16,5 | −9,92 | 11 | −23,3 / −20,5 |
+Bu ölçütle T7K 1,25x taşınabiliyor (+108 puan) ama tarihsel dd 1,2 puan derin ve −%5 altı gün 3 → 11. Madde 596'nın 1,15x'i (tarihsel dd
+eşit) temkinli seçenek; 1,25x agresif seçenek, preflight'ta ölçülmüş doz DEĞİL. KULLANICI KARARI.
