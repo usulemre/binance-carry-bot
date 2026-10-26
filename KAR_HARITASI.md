@@ -6481,3 +6481,10 @@ varyant: T6-C12). Protokol P %88-92 (madde 568) — T6 projenin en sağlam aday�
 | 3.500 $ 0 / 1 | +58,1 / +65,0 | XYYY / YYYY | %89,5 / %86,6 | +305,9 · 4,16 · −17,1 · −10,91 · 8 (4) / +299,9 · 4,19 · −16,3 · −11,24 · 8 (2) |
 Gerçekçi koşulda tavan %12, T6'ya göre kötü günü azaltmıyor (6-8 vs 7-9) — standart modeldeki 7 → 5 farkı kayboldu. T6 / T6-C12
 eşdeğer; P %87-91. İkisi de 15/16 şart.
+
+## Madde 573 — T6 tabanında geniş tarama (standart model, 14 kol, T6'ya karşı): ADAY YOK — T6 yerel tepe
+TÜM yıllık · Sh · dd · eşitVol · −%5 (T6 7): rezerv 0 +41,5 · −0,01 · −1,6 · −1,6 · 10 (risk düğmesi) — havuz 3 −19,8 · 11 / 5 −17,7 · 10 —
+short TP −%15 0,0 / −%25 −2,7 — 24 sa stop %40 −13,0 / %50 −1,3 · 6 — long kademe %35 −31,3 / %55 +17,4 · −0,04 · −7,2 · 9 —
+tutma 4 g +33,7 · −0,06 · −10,8 · 8 / 6 g −29,5 — long sinyali 72 sa −0,8 — long TP %80 +3,3. Ham getiri artıran her kol (rezerv 0,
+kademe %55, tutma 4 g) Sharpe'ı ve eşit-risk getiriyi DÜŞÜRÜYOR. Not: long ara dengeleme (L_REB) S_REB ile birlikte etkisiz kaldı
+(motorda aynı turda yalnız short yolu çalışıyor) — ayrı inceleme gerektirir, sonuç sayılmadı.
