@@ -6518,3 +6518,7 @@ akış oranı onu bozuyor (madde 358/365 ile aynı). Ölçüt ekseni kapalı.
 T6'ya karşı TÜM yıllık · Sh · dd · −%5 (T6 7): ls + 24 sa değişim −112,1 · −0,41 · −2,9 · 8 — ls + (ls − top) −40,2 · −0,25 · −6,9 · 10 —
 yalnız değişim −205,6 · −1,66 · −16,1 · 16. Oranın DÜZEYİ bilgi taşıyor, değişimi gürültü. Kalabalık ekseni (358/364/365/576/577) kapandı;
 T6'nın seçimi (60 sa long / 96 sa short funding + anlık perakende sayı oranı) yerinde.
+
+## Madde 578 — T6: taraf başına kalabalık havuzu: HEPSİ RED — ortak 4 (16 aday) iki tarafta da tepe
+T6'ya karşı TÜM yıllık · Sh · dd · −%5 (T6 7): short havuz 3 −2,6 · −0,11 · 12 / 5 −14,2 · 10 / 6 −17,9 · 10 — long havuz 3 −22,9 · −0,16 · 6 /
+5 −8,4 · −0,06 · 8. Havuz ekseni (352/364/404/565/573/578) kapalı.
