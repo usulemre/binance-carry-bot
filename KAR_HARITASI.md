@@ -6541,3 +6541,17 @@ T6 ile korelasyon ~0 (bağımsız) ama hiçbiri tek başına ayakta durmuyor (ma
 | 3+5 (kontrol) | +336,7 | 4,10 | −19,4 | −10,45 | 11 | 70 |
 Long'u yaymak −%3 altı günü azaltıyor (61 → 39) ama getiri ve Sharpe düşüyor; short'u 3'e yoğunlaştırmak −%5 altı günü artırıyor.
 Not: 6+4, T4 ile aynı getiri (+242 vs +256) ve daha yüksek Sharpe (4,21 vs 4,02), daha az −%3 günü (39 vs 45) — ama −%5 altı 8 (T4 2).
+
+## Madde 581 — T7 adayı: FIRSATA GÖRE BRÜT (prim çarpanı, yalnız azaltır, T6 tabanı; standart model)
+| kol | yıllık | Sh | dd | en kötü | −%5 | −%3 | ort. çarpan |
+|---|---|---|---|---|---|---|---|
+| T4 | +255,9 | 4,02 | −14,4 | −12,77 | 2 | 45 | 1 |
+| T6 | +327,2 | 4,35 | −15,5 | −10,44 | 7 | 61 | 1 |
+| T7 = T6 + prim 1, alt 0,5 | +257,0 | 4,23 | −14,8 | **−6,33** | 5 | 49 | 0,86 |
+| T6 + prim 1, alt 0,7 | +272,0 | 4,29 | −14,8 | −7,29 | 5 | 50 | 0,90 |
+| T6 + prim 2, alt 0,5 | +236,7 | 4,18 | −14,8 | −6,33 | 5 | 44 | 0,82 |
+| T6 + prim 0,5, alt 0,5 | +282,7 | 4,28 | −14,8 | −7,96 | 5 | 53 | 0,92 |
+T6'ya karşı kural RED (getiri −45..−90, brüt ~%14 küçük) AMA kötü gün profili T4'ten açık ara iyi: 2021-05-19 −12,8 (T4) / −10,4 (T6) →
+−6,0; en kötü üç gün −6,3/−6,0/−6,0 (T4 −12,8/−5,2/−4,6). "T7" = T4 getirisi (+257) + T4'ten yüksek Sharpe + en kötü gün YARIYA.
+Çöküş öncesi funding yayılımı düşük (carry primi zayıf) dönemler → brüt küçük. Kullanıcının asıl önceliğine (büyük kötü günü azalt,
+kârı az kes) en uygun aday. → madde 582: T7 canlı gibi giriş + 5 bp, T4'e karşı.
