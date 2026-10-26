@@ -40,7 +40,7 @@ import arastirma_m346_prim as M
 
 AY = os.environ.get("AY", "2026-10")
 AY_BAS = AY + "-01"
-AY_SON = str((np.datetime64(AY, "M") + 1).astype("datetime64[D]"))
+AY_SON = str((np.datetime64(AY, "M") + np.timedelta64(1, "M")).astype("datetime64[D]"))
 SIRA = {"MERD_SIRA": "1"}                                          # madde 527 düzeltmesi, madde 587 (a)
 # Motor var olan .pkl'yi yeniden koşmaz (arastirma_m357 tek()): kuru koşu AYRI klasöre yazmalı, yoksa Kasım'da bayat
 # (Ekim'siz) seriler okunur. Kuru koşu: AY=2026-09 IZLEME_CIKTI=/tmp/m_ekim_kuru
