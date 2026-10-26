@@ -6601,3 +6601,16 @@ Preflight T7K'yı tanır (tavan > 1,0 → HATA, prim geçmişi yoksa UYARI). Tes
 1,0'ı aşmaz), preflight, bot geçti.
 Entegrasyon T7K: tek başarısızlık madde 262'nin "karıştırma her tarihte kapatmıyor" satırı — rastgele çekiliş, bugünün tarihine bağlı;
 T4'te de aynı gün aynı sonuç (6/6 kapattı). Satır şarttan BİLGİ kaydına çevrildi (test_carry_entegrasyon.py); diğer her şey geçti.
+
+## Madde 586 — T7K komşuluğu (standart model): GENİŞ PLATO — T7K sağlam
+| kol | yıllık | Sh | dd | en kötü | −%5 | −%3 | 2020-21 / 22-24 / 25-26 |
+|---|---|---|---|---|---|---|---|
+| T4 | +255,9 | 4,02 | −14,4 | −12,77 | 2 | 45 | +230 / +182 / +340 |
+| **T7K** | +246,3 | 4,27 | −13,1 | −7,72 | 2 | 35 | +222 / +186 / +330 |
+| taban 0,6 / 0,8 | +239,8 / +252,1 | 4,26 / 4,24 | −13,1 / −13,3 | −6,48 / −9,56 | 2 / 2 | 34 / 36 | |
+| üs 0,5 / 2 | +253,9 / +240,4 | 4,25 / 4,26 | −14,1 / −12,6 | −8,37 / −7,72 | 2 / 2 | 38 / 33 | |
+| referans 120 / 240 g | +245,3 / +248,7 | 4,24 / 4,28 | −14,9 / −13,4 | −7,72 / −7,72 | 2 / 2 | 37 / 34 | |
+| short tavan %6 / %10 | +219,3 / +258,9 | 4,08 / 4,28 | −13,0 / −13,7 | −8,93 / −7,29 | 2 / 3 | 25 / 48 | |
+Prim ayarlarının hepsi Sh 4,24-4,28, −%5 altı 2, en kötü −6,5..−9,6, getiri +240..+254: ayar seçiminden bağımsız bir yapı. Taban,
+"getiri ↔ en kötü gün" doz düğmesi (0,6 en temkinli, 0,8 en kârlı). Short tavanı %10: T4'ten fazla getiri (+259) + Sh 4,28 + en kötü −7,3
+ama −%3 altı 48 (T4 45). T7K seçimleri plato ortasında.
