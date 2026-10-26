@@ -6633,3 +6633,18 @@ Kuru koşu (AY=2026-09, uzun zemin; Eylül örnek İÇİ → yalnız kodun çal�
 | T7K | +7,27 · 3,48 · −3,17 · 0,5 | +7,69 · 3,57 · −3,12 · 0,5 |
 Geçmiş aylık fark (T4'e karşı) yüzdeliği: T6 %93 / %84, T7K %89 / %46 → olağan. T4 − T1: −0,31 / +1,92 (kural ≥ −1 içinde).
 Kasım adımları betiğin başında (indir_ek_ay → yeniden_kur → sk_bar60 / sk_bar96 → metrik paneli → kos_ana / analiz_ana).
+
+## Madde 588 — YENİ EKSEN: piyasa geneli funding DÜZEYİ (evren medyanı) → T4 ileri getirisi / kötü gün: KAPANDI (ön elemede)
+Prim çarpanı funding'in kesitsel YAYILIMINA bakar; DÜZEYİ hiç ölçülmemişti. Araç `arastirma_m588_piyasa_funding.py` (ön kayıt
+başlıkta): uygun evrenin medyan 60 sa funding'i, 30 g / 7 g ortalama, 1 g gecikme, genişleyen yüzdelik; T4 serisi canlı gibi
+giriş + 5 bp + MERD_SIRA=1, 2.000 $ iki hiza (madde 587 kuru koşusu), 2020-07 → 2026-09.
+| ölçü · dönem | üst beşte bir: ileri 5 g · −%3 olas. | tümü: ileri 5 g · −%3 olas. | şart a · b |
+|---|---|---|---|
+| X30 · ≤2024 | +4,31 · %2,67 (187 g) | +1,68 · %1,69 | X · Y |
+| X30 · 2025+ | üst beşte bire hiç girmedi | +2,13 · %3,29 | X · X |
+| X7 · ≤2024 | +4,07 · %3,09 (194 g) | +1,68 · %1,67 | X · Y |
+| X7 · 2025+ | üst beşte bire hiç girmedi | +2,13 · %3,29 | X · X |
+Hipotezin TERSİ: piyasa long kaldıraçlıyken T4'ün ileri 5 g getirisi ~2,5 kat (kötü gün de biraz sık, ama getiri baskın) —
+madde 239'un "prim = kenar yoğunluğu" bulgusunun düzey eksenindeki karşılığı. Küçültmek kârı keser. 2025+'da piyasa funding'i
+2020-21'in yüksek düzeylerine hiç çıkmadı (genişleyen yüzdelik üst beşte bir boş); 2025+'da kötü gün en çok DÜŞÜK funding
+beşte birinde (%4,37). Eksen kapandı; motor koşusu yapılmadı.
