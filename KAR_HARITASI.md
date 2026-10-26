@@ -6830,3 +6830,14 @@ Kısıt: 1y p1 VE p5 düşüş ile en kötü gün T4 1,0x'i aşmayacak (blok 20 
 | T7K | 1,25 | +352,4 | −16,5 | −9,92 | 11 | −23,3 / −20,5 |
 Bu ölçütle T7K 1,25x taşınabiliyor (+108 puan) ama tarihsel dd 1,2 puan derin ve −%5 altı gün 3 → 11. Madde 596'nın 1,15x'i (tarihsel dd
 eşit) temkinli seçenek; 1,25x agresif seçenek, preflight'ta ölçülmüş doz DEĞİL. KULLANICI KARARI.
+
+## Madde 603 — YENİ YAPI: short tarafında fırsat rezervi (rezervin aynası): RED
+g33'e `REZ_TARAF` (long | short | iki; varsayılan long = parite) ve `REZ_ESIK_S`. Pozitif uç funding negatiften çok seyrek (uygun evrende
+S ≥ 0,015/gün %0,01, ≤ −0,015 %1,0) → short eşiği 0,003 / 0,005. Araç `arastirma_m603_short_rezerv.py`; T7K, 2.000 $, canlı gibi + 5 bp:
+| kol | ham yıllık | eşit risk k | eşit-risk yıllık | fark (T7K +303,2) |
+|---|---|---|---|---|
+| short, 0,003 | +227,7 | 1,05 | +246,8 | −56,3 |
+| short, 0,005 | +225,4 | 1,10 | +264,3 | −38,9 |
+| iki taraf, 0,003 | +233,1 | 1,10 | +273,8 | −29,4 |
+Uç pozitif funding'li short'a ek pay ham getiriyi düşürüyor (−6..−13): o coinler pompa/sıkışma adayı (madde 446), fiyat kârı tazelikten
+geliyor (madde 494), büyüklükten değil. Rezerv yalnız long tarafında kalır.
