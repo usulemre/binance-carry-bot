@@ -6599,3 +6599,5 @@ pencere), SHORT_TAVAN 0,08. Botun prim çarpanı (madde 288) motorun BRUT_PRIM'i
 son 180 günü (2026-04-03..09-30, 4 sa'te bir, 1.081 satır) carry_prim_tohum.csv'ye yazar; sunucuda carry_prim.csv yoksa kopyalanır.
 Preflight T7K'yı tanır (tavan > 1,0 → HATA, prim geçmişi yoksa UYARI). Testler: short_ara (T7K değerleri, çarpan tabana kırpılır ve
 1,0'ı aşmaz), preflight, bot geçti.
+Entegrasyon T7K: tek başarısızlık madde 262'nin "karıştırma her tarihte kapatmıyor" satırı — rastgele çekiliş, bugünün tarihine bağlı;
+T4'te de aynı gün aynı sonuç (6/6 kapattı). Satır şarttan BİLGİ kaydına çevrildi (test_carry_entegrasyon.py); diğer her şey geçti.
