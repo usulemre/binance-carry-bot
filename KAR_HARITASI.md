@@ -6762,3 +6762,13 @@ en çok kazanıyor? Araç `arastirma_m596_esit_risk_kaldirac.py`. Seri: canlı g
 - Bağlayıcı ölçü her yerde tam dönem dd (tek yol, gürültülü; madde 274). Doz ölçütü (1y p1) daha fazlasına izin veriyor.
 - Canlıda: `CARRY_PROFIL=T7K CARRY_GROSS=1.15` — ön uçuş (madde 374) yalnız ölçülmüş dozları onaylı geçirir; bu doz T7K için
   ölçülmüş listeye eklenmeli. Madde 276'nın kapısı (önce 1x canlı) geçerli. KULLANICI KARARI.
+
+## Madde 597 — T7K prim çarpanına üst (fırsat zenginken brüt > 1): RED — gizli kaldıraç, sabit kaldıraç daha iyi
+Araç `arastirma_m597_prim_ust.py` (ön kayıt başlıkta). T7K standart + MERD_SIRA=1, 2.000 $ D8, iki hiza; kıyas: kolun tam dönem
+düşüşüne kaldıraçlanmış T7K.
+| kol | ham yıllık · dd | eşit-dd T7K | fark | 2020-21 / 22-24 / 25-26 | en kötü gün (kol / kaldıraçlı T7K) |
+|---|---|---|---|---|---|
+| üst 1,2 | +288,1 · −14,7 | ×1,11 | −6,2 | −42,9 / −0,7 / +5,6 | −7,72 / −8,57 |
+| üst 1,4 | +330,3 · −16,8 | ×1,28 | −50,9 | −151 / −22 / −59 | −7,72 / −9,85 |
+Fırsat zenginken brütü artırmak, aynı düşüşte SABİT kaldıraçtan az kazandırıyor (madde 257'nin yasası T7K'da da). Prim çarpanı yalnız
+KÜÇÜLTME yönünde değerli (madde 581-586); büyütme yönü 2020-21'de pahalı. Ham kâr isteniyorsa madde 596'nın sabit kaldıracı doğru yol.
