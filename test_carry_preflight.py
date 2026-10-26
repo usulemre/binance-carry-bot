@@ -3493,6 +3493,27 @@ pf._satirlar.clear(); pf._satirlar.append(("test", pf.HATA, "sebep"))
 kontrol("hata varsa çıkış kodu 1", pf.yaz_ozet() == 1)
 
 print("\n" + "=" * 62)
+
+# MADDE 596: T7K ölçülmüş dozları (1,10 / 1,15) yalnız T7K'da ve yalnız ONAYLA geçer.
+import subprocess as _sp596
+def _doz596(ortam):
+    kod = ("import carry_preflight as p; p.kontrol_ayarlar(); "
+           "print('SONUC', [b for a, b, c in p._satirlar if a in ('doz', 'ölçülen ayarlar')])")
+    env = {k: v for k, v in os.environ.items() if not k.startswith("CARRY_")}
+    env.update(ortam)
+    o = _sp596.run([sys.executable, "-c", kod], env=env, capture_output=True, text=True).stdout
+    return [l for l in o.splitlines() if l.startswith("SONUC")][-1]
+kontrol("madde 596: T7K 1,15 + onay -> TAMAM",
+        "HATA" not in _doz596({"CARRY_PROFIL": "T7K", "CARRY_GROSS": "1.15", "CARRY_DOZ_ONAY": "1.15"}))
+kontrol("madde 596: T7K 1,10 + onay -> TAMAM",
+        "HATA" not in _doz596({"CARRY_PROFIL": "T7K", "CARRY_GROSS": "1.10", "CARRY_DOZ_ONAY": "1.10"}))
+kontrol("madde 596: T7K 1,15 onaysız -> HATA",
+        "HATA" in _doz596({"CARRY_PROFIL": "T7K", "CARRY_GROSS": "1.15"}))
+kontrol("madde 596: T4 1,15 (T7K dışı, ölçülmedi) -> HATA",
+        "HATA" in _doz596({"CARRY_PROFIL": "T4", "CARRY_GROSS": "1.15", "CARRY_DOZ_ONAY": "1.15"}))
+kontrol("madde 596: T7K 1,20 (ölçülmedi) -> HATA",
+        "HATA" in _doz596({"CARRY_PROFIL": "T7K", "CARRY_GROSS": "1.2", "CARRY_DOZ_ONAY": "1.2"}))
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:

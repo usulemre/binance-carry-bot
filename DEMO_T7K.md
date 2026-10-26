@@ -36,5 +36,20 @@ PY
 ```
 `carry_prim.csv` hiç yoksa eskisi gibi: `cp carry_prim_tohum.csv carry_prim.csv`.
 
+## Kaldıraçlı T7K (madde 596) — ÖNCE 1x demo, sonra karar
+T7K, T4 (1,0x) ile AYNI en büyük düşüşü 1,10-1,15x kaldıraçta veriyor; en kötü gün ve kötü yıl daha iyi (canlı gibi giriş + 5 bp,
+2020-07..2026-09). Bedel: −%5 altı gün 3 → 5-6.
+| bakiye | doz | yıllık | maks düşüş | en kötü gün | 1y p1 düşüş | (T4 1,0x) |
+|---|---|---|---|---|---|---|
+| < 3.500 $ | 1,15 | +303 | −15,2 | −9,1 | −21,7 | +244 · −15,3 · −13,3 · −24,8 |
+| ≥ 3.500 $ | 1,10 | +272 | −15,9 | −8,7 | −21,6 | +242 · −16,0 · −13,0 · −25,1 |
+(Komisyon kaldıraçla büyür: net ~5 puan düşük.) `.env`:
+```
+CARRY_PROFIL=T7K
+CARRY_GROSS=1.15          # 3.500 $ ve üstünde 1.10
+CARRY_DOZ_ONAY=1.15       # CARRY_GROSS ile AYNI değer; yoksa preflight HATA verir (madde 374)
+```
+Preflight bu iki dozu YALNIZ T7K'da kabul eder. Kapı (madde 276): önce 1x'te demo/canlı ölçüm, sonra doz.
+
 ## Geri dönüş
 `.env`'den `CARRY_PROFIL=T7K` satırını silin (varsayılan T4) → `sudo systemctl restart carry`.

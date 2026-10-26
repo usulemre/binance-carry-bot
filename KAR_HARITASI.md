@@ -6784,3 +6784,8 @@ Araç `arastirma_m598_t7k_taban_kaldirac.py` (ön kayıt başlıkta; madde 596'n
 Bağlayıcı ölçü her kolda tam dönem dd (taban onu oynatmıyor) → daha sığ en kötü gün ek kaldıraca dönüşmüyor; düşük taban yalnız ham
 getiri kaybettiriyor. 0,8 3.500 $'da +4,4 (bar +8 altı). Hepsi RED; T7K tabanı 0,7 aynı riskte de tepe. Taban yine kullanıcının
 "en kötü gün ↔ getiri" düğmesi (0,6: en kötü −7,5, yıllık −8).
+
+## Madde 599 — T7K kaldıraçlı doz (madde 596) preflight'a ölçülmüş doz olarak eklendi
+`carry_preflight.py`: `CARRY_PROFIL=T7K` iken `CARRY_GROSS` 1,10 / 1,15 ölçülmüş sayılır (onay `CARRY_DOZ_ONAY` ile aynı değer; onaysız
+HATA); başka profilde ya da başka dozda eski kural (ölçülmemiş → HATA). Testler (+5): T7K 1,15/1,10 onaylı TAMAM, onaysız HATA,
+T4 1,15 HATA, T7K 1,20 HATA. DEMO_T7K.md'ye kaldıraçlı kurulum ve beklenti tablosu. Varsayılanlar DEĞİŞMEDİ (T4, 1,0x).

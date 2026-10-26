@@ -135,6 +135,10 @@ def kontrol_ayarlar() -> None:
     _doz = float(cb.GROSS_EXPOSURE)
     _onay = os.getenv("CARRY_DOZ_ONAY", "").strip()
     _olculmus = abs(_doz - 1.25) < 1e-9 or (1.55 - 1e-9 <= _doz <= 1.60 + 1e-9)
+    # MADDE 596: T7K yalnız BU profil için 1,10 / 1,15x ölçüldü (T4 1,0x'in dd / en kötü gün / 1y p1'ini aşmadan; 3.500 $'da
+    # 1,10 bağlayıcı). Başka profilde bu dozlar ölçülmüş SAYILMAZ.
+    _t7k_doz = profil == "T7K" and any(abs(_doz - x) < 1e-9 for x in (1.10, 1.15))
+    _olculmus = _olculmus or _t7k_doz
     if abs(_doz - 1.0) > 1e-9:
         if 1.5 - 1e-9 <= _doz < 1.55 - 1e-9:
             kontrol("doz", HATA,
@@ -143,8 +147,9 @@ def kontrol_ayarlar() -> None:
         elif _olculmus and _onay and abs(float(_onay) - _doz) < 1e-9:
             bekle.pop("GROSS_EXPOSURE")
             kontrol("doz", TAMAM,
-                    f"CARRY_GROSS={_doz} ölçülmüş doz, onaylı (madde 368/369; "
-                    "beklenti CANLIYA_CIKIS.md §7 madde 372 tablosunda)")
+                    f"CARRY_GROSS={_doz} ölçülmüş doz, onaylı " + (
+                        "(madde 596: T7K, T4 1,0x ile aynı maks düşüş; 1,15 yalnız < 3.500 $ — üstünde 1,10)"
+                        if _t7k_doz else "(madde 368/369; beklenti CANLIYA_CIKIS.md §7 madde 372 tablosunda)"))
         elif _olculmus:
             kontrol("doz", HATA,
                     f"CARRY_GROSS={_doz} ölçülmüş bir doz ama ONAY yok: bilerek "
