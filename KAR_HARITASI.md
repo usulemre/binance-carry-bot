@@ -6427,3 +6427,14 @@ ağırlık); 2 bacakta kırılıyor (dd −40, en kötü −26). Taraf payını 
 SONUÇ (madde 560-567, ham kâr turu): bütün ham kâr kolları Sharpe ~3,6-3,9 bandında; hepsi T4'ün aynı riske kaldıraçlanmış hâliyle
 AYNI çizgide (K4-3B ≈ T4 × 1,55). Kaldıraçsız "ham kâr" = kitap içi yoğunlaşma = gizli kaldıraç. Gerçek karar bir RİSK DÜZEYİ
 seçimi: T4 (−%5 altı ~3) … K4 (~21) … K4-3B (~38). Bedava kâr yok; T4'ün risk-ayarlı verimi korunuyor.
+
+## Madde 568 — T6 (= T4 + short tavanı yok + short 40 sa + short sinyali 96 sa) vs T4 PROTOKOLÜ (canlı gibi giriş + 5 bp, uzun zemin)
+| seviye / hiza | yıllık fark | Sh ≤2024 | Sh 2025+ | düşüş | eşit-risk | şartlar | P | T6 ham (yıllık · Sh · dd · en kötü · −%5) | T4 −%5 |
+|---|---|---|---|---|---|---|---|---|---|
+| 2.000 $ 0 | +63,3 | +0,36 | +0,15 | +0,2 | +54,8 | YYYY | %88,2 | +314,2 · 4,12 · −16,8 · −10,50 · 9 | 4 |
+| 2.000 $ 1 | +80,5 | +0,38 | +0,51 | +1,1 | +42,3 | YYYY | %91,9 | +317,7 · 4,21 · −16,7 · −11,16 · 7 | 2 |
+| 3.500 $ 0 | +64,0 | +0,47 | −0,10 | −0,6 | +85,8 | XYYY | %88,9 | +311,8 · 4,17 · −16,6 · −10,54 · 8 | 4 |
+| 3.500 $ 1 | +72,7 | +0,37 | +0,46 | −2,0 | +162,6 | YYYY | %92,0 | +307,6 · 4,23 · −14,5 · −11,04 · 7 | 2 |
+HÜKÜM RED (P %88-92 < %95; bir hücrede 2025+ Sharpe −0,10) — AMA projenin EN GÜÇLÜ adayı: 15/16 şart, Sharpe 3,84-3,89 → 4,12-4,23
+(ham kâr değil VERİM artışı), eşit-risk +42..+163, en kötü gün −13 → −10,5..−11,2, düşüş aynı. Bedel: −%5 altı gün 2-4 → 7-9.
+T6 Ekim OOS izlemesine T4 ile yan yana alınmalı; kullanıcı kararıyla demo adayı.
