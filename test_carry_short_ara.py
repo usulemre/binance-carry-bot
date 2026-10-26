@@ -135,6 +135,33 @@ kontrol("short havuzu 96 sa sırasıyla (C16 en üstte)", _sa[:3] == ["C16", "C1
 _la0, _sa0 = cb.kalabalik_adaylar(_f, 4, havuz=4)
 kontrol("skor_s yoksa eski davranış (C39 en üstte)", _sa0[0] == "C39" and _la0 == _la)
 
+
+print("7) MADDE 585: T7K profili")
+_e7 = {k: v for k, v in os.environ.items() if not k.startswith("CARRY_")}; _e7["CARRY_PROFIL"] = "T7K"
+_k7 = ("import carry_bot as cb; print('V', cb.SHORT_ARA_SAAT, cb.SHORT_TAVAN, cb.SHORT_FUNDING_WINDOW_HOURS, cb.PRIM_E, cb.PRIM_ALT, "
+       "cb.PRIM_UST, cb.PRIM_REF_GUN, cb.MERDIVEN_PAY, cb.EVREN_MIN)")
+_o7 = subprocess.run([sys.executable, "-c", _k7], capture_output=True, text=True, env=_e7).stdout.split("V")[-1].split()
+kontrol("T7K değerleri 40 / 0,08 / 96 / prim 1 · 0,7 · 1,0 · 180 / 0,80 / 30",
+        _o7 == ["40.0", "0.08", "96.0", "1.0", "0.7", "1.0", "180", "0.8", "30"], _o7)
+kontrol("T7K: yalnız CARRY_PROFIL=T7K yeterli (HATA yok)", _pf({"CARRY_PROFIL": "T7K"}) == 0)
+kontrol("T7K ama prim tavanı elle 1,5: HATA (yalnız azaltır)", _pf({"CARRY_PROFIL": "T7K", "CARRY_PRIM_UST": "1.5"}) > 0)
+_e7["CARRY_PROFIL"] = "T6"
+_o7 = subprocess.run([sys.executable, "-c", _k7], capture_output=True, text=True, env=_e7).stdout.split("V")[-1].split()
+kontrol("T6'da prim kapalı ve tavan yok", _o7[:2] == ["40.0", "0.0"] and _o7[3] == "0.0", _o7)
+import tempfile, time as _tm
+cb.PRIM_E, cb.PRIM_ALT, cb.PRIM_UST, cb.PRIM_REF_GUN, cb.PRIM_OLC_GUN = 1.0, 0.7, 1.0, 180, 30
+with tempfile.NamedTemporaryFile("w", suffix=".csv", delete=False) as _fh:
+    _n = _tm.time()
+    for d in range(180, 0, -1):
+        _fh.write("%.0f,%.6f\n" % (_n - d * 86400, 1.0 if d > 30 else 0.5))   # son 30 g prim yarıya düştü
+_m = cb.prim_carpani(_fh.name, simdi=_n)
+kontrol("prim yarıya düşünce çarpan 0,5 → tabana (0,7) kırpılır", abs(_m - 0.7) < 1e-9, _m)
+with open(_fh.name, "a") as _fa:
+    for d in range(30, 0, -1):
+        _fa.write("%.0f,%.6f\n" % (_n - d * 86400 + 1, 3.0))
+_m = cb.prim_carpani(_fh.name, simdi=_n)
+kontrol("prim yükselince çarpan 1,0'ı AŞMAZ (kaldıraç yok)", abs(_m - 1.0) < 1e-9, _m)
+
 print()
 if basarisiz:
     print(f"BAŞARISIZ: {len(basarisiz)} -> {basarisiz}"); sys.exit(1)

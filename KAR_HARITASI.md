@@ -6591,3 +6591,11 @@ T7K: T4'e göre getiri −10/yıl, Sharpe +0,25, dd 1,3 puan sığ, EN KÖTÜ G�
 HÜKÜM RED (kural kâr artışı istiyor) — AMA kullanıcının asıl hedefi (kötü günü azalt, kârı az kes) için T7K: getiri T4 ile aynı
 (−12..+1), Sharpe +0,2..+0,3, düşüş 1-3 puan sığ, EN KÖTÜ GÜN −12,6..−13,8 → −7,8..−8,0, −%3 altı gün %25-40 az, −%5 altı benzer.
 T4P daha pahalı (−22..−27) ve daha zayıf. T7K, kötü-gün odaklı en iyi aday.
+
+## Madde 585 — T7K BOTA İSTEĞE BAĞLI PROFİL OLARAK EKLENDİ (CARRY_PROFIL=T7K; varsayılan T4 DEĞİŞMEDİ)
+carry_bot: _T7K → PRIM_E 1,0 · PRIM_ALT 0,7 · PRIM_UST 1,0 (yalnız azaltır) · PRIM_REF 180 g; short ayarları T6'dan (40 sa, 96 sa
+pencere), SHORT_TAVAN 0,08. Botun prim çarpanı (madde 288) motorun BRUT_PRIM'iyle aynı yapı: p90 − p10 kesitsel funding (yıllık birim),
+30 g ortalama / 180 g kayan medyan, 1 tur gecikme. Geçmiş birikmeden (~90 g) çarpan 1,0 → TOHUM: prim_tohum_kur.py araştırma zemininden
+son 180 günü (2026-04-03..09-30, 4 sa'te bir, 1.081 satır) carry_prim_tohum.csv'ye yazar; sunucuda carry_prim.csv yoksa kopyalanır.
+Preflight T7K'yı tanır (tavan > 1,0 → HATA, prim geçmişi yoksa UYARI). Testler: short_ara (T7K değerleri, çarpan tabana kırpılır ve
+1,0'ı aşmaz), preflight, bot geçti.

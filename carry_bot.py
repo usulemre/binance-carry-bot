@@ -282,7 +282,7 @@ optimum belirsizleşmedi, keskinleşti** — yani bu parametre artık
 Araç: `arastirma_madde240.py`."""
 
 SHORT_FUNDING_WINDOW_HOURS = float(os.getenv("CARRY_SHORT_FUNDING_WINDOW_H",
-                                             "96" if (os.getenv("CARRY_PROFIL", "").strip().upper() == "T6") else "0"))
+                                             "96" if (os.getenv("CARRY_PROFIL", "").strip().upper() in ("T6", "T7K")) else "0"))
 """MADDE 547/575: SHORT adaylarının sıralandığı ayrı funding penceresi (saat). 0 = long ile aynı (FUNDING_WINDOW_HOURS).
 Motor karşılığı SK_DOSYA_S. Long havuzundaki coin short olamaz (motorla aynı kural). T6 profilinde 96."""
 
@@ -506,12 +506,18 @@ Madde 216'nın takvimi bittikten sonra tek satırla açılır:
 
 Araçlar: `arastirma_prim_doz.py`."""
 
-PRIM_E = float(os.getenv("CARRY_PRIM_E", "0.0"))
+_PROFIL_ERKEN = os.getenv("CARRY_PROFIL", "").strip().upper() or "T4"
+"""Profil adı, modül başında okunur (madde 575/585: T6/T7K varsayılanları aşağıdaki sabitlerden önce gerekir)."""
+_T7K = _PROFIL_ERKEN == "T7K"
+"""MADDE 585: CARRY_PROFIL=T7K (İSTEĞE BAĞLI). T7K = T6'nın short ayarları + short tavanı %8 + prim çarpanı YALNIZ AZALTIR
+(e 1,0, taban 0,7, tavan 1,0, ref 180 g). Madde 583-584: canlı gibi giriş + 5 bp ile getiri T4 ile aynı, en kötü gün −13 → −8."""
+
+PRIM_E = float(os.getenv("CARRY_PRIM_E", "1.0" if _T7K else "0.0"))
 """Prim-ölçekli brütün duyarlılık üssü. **0 = KAPALI (varsayılan).**
 Madde 288'in kuralı geçen noktası 0,10. Üs büyüdükçe 22-24 kazancı
 büyüyor ama 25-26 şart 1'den düşüyor (yukarıdaki monoton tablo)."""
 
-PRIM_REF_GUN = int(os.getenv("CARRY_PRIM_REF", "150"))
+PRIM_REF_GUN = int(os.getenv("CARRY_PRIM_REF", "180" if _T7K else "150"))
 """Primin kendi normunu ölçtüğü KAYAN medyan penceresi (gün).
 
 MADDE 288: geçen band 120-180 (ref 90 −0,021 ve ref 270 −0,006 şart
@@ -525,11 +531,11 @@ PRIM_OLC_GUN = int(os.getenv("CARRY_PRIM_OLC", "30"))
 MADDE 288: madde 239'un ölçtüğü yapıdan birebir devralındı, taranmadı
 (taranan eksen üs ve referans penceresiydi)."""
 
-PRIM_ALT = float(os.getenv("CARRY_PRIM_ALT", "0.5"))
+PRIM_ALT = float(os.getenv("CARRY_PRIM_ALT", "0.7" if _T7K else "0.5"))
 """Çarpanın TABANI. MADDE 288: motorun BRUT_ALT'ından birebir;
 e=0,10'da gerçekleşen aralık ~0,99-1,05, yani taban hiç dolmuyor."""
 
-PRIM_UST = float(os.getenv("CARRY_PRIM_UST", "1.5"))
+PRIM_UST = float(os.getenv("CARRY_PRIM_UST", "1.0" if _T7K else "1.5"))
 """Çarpanın TAVANI. MADDE 288: motorun BRUT_UST'undan birebir. Tavan
 ancak prim kendi medyanının 57 katına çıkarsa dolar (1,5^10) - ama
 `gerekli_kaldirac()` payı yine bu tavanla büyütüyor, çünkü yanlış taraf
@@ -1884,11 +1890,11 @@ plato %35-%50 (madde 463), protokol madde 464."""
 # demo hesapta canlı çalışma, 2026-10-25).
 _PROFIL_AD = os.getenv("CARRY_PROFIL", "").strip().upper() or "T4"
 """Etkin profil adı (madde 534: boş = T4; madde 575: T6 isteğe bağlı)."""
-_PROFIL_T6 = _PROFIL_AD == "T6"
+_PROFIL_T6 = _PROFIL_AD in ("T6", "T7K")   # T7K short ayarlarını T6'dan alır (madde 585)
 """MADDE 575: CARRY_PROFIL=T6 (İSTEĞE BAĞLI, varsayılan DEĞİL). T6 = T4 + short coin tavanı YOK + short 40 sa'te bir +
 short adayları 96 sa funding penceresiyle sıralanır (madde 568-572: canlı gibi giriş + 5 bp, 15/16 şart, P %87-92, plato
 madde 571). T4'ün diğer ayarları aynen geçerli."""
-_PROFIL_T4 = _PROFIL_AD in ("T4", "T6")
+_PROFIL_T4 = _PROFIL_AD in ("T4", "T6", "T7K")
 """T4 profili mi (madde 523; madde 534'ten beri varsayılan, boş CARRY_PROFIL = T4): T4'ün dört ayarı varsayılan olur,
 .env'deki açık değer yine kazanır. Eski varsayılan T1 için CARRY_PROFIL=T60."""
 MERDIVEN_PAY = float(os.getenv("CARRY_MERDIVEN_PAY", "0.80" if _PROFIL_T4 else "0.667"))
@@ -1908,7 +1914,8 @@ Motor karşılığı S_REB (bar = saat/4). 0 = KAPALI (varsayılan). Aday ayar 4
 uzun zeminde (2020-07..2026-09) üç dönemin üçünde önde, canlı gibi giriş + 5 bp ile dört şart 16/16, P %68-82
 (protokol eşiği %95 → RED, KULLANICI KARARI; ADAYLAR.md)."""
 
-SHORT_TAVAN = float(os.getenv("CARRY_SHORT_TAVAN", "0" if _PROFIL_T6 else ("0.08" if _PROFIL_T4 else "0")))
+SHORT_TAVAN = float(os.getenv("CARRY_SHORT_TAVAN", "0.08" if _PROFIL_AD == "T7K" else
+                                ("0" if _PROFIL_T6 else ("0.08" if _PROFIL_T4 else "0"))))
 """SHORT COIN TAVANI (madde 455-456, 500-502). >0 ise yeni yazılan short hedefleri, coinin TÜM dilimlerdeki toplam
 short büyüklüğü (toplam sermaye × ölçek) × bu oranı aşmayacak şekilde kırpılır (motor CAP_ORTAK + CAP_TARAF=short;
 kırpılan pay dağıtılmaz). 0 = KAPALI (varsayılan)."""
