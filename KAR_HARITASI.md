@@ -6451,3 +6451,11 @@ T6 Ekim OOS izlemesine T4 ile yan yana alınmalı; kullanıcı kararıyla demo a
 | T6 3 bacak | +436,1 | 4,41 | −20,2 | −10,28 | 15 | 87 |
 Her parça hem getiri hem Sharpe ekliyor (birikimli 4,02 → 4,35): tek bir şanslı düğme değil. 3 bacak T6'da Sharpe'ı da artırıyor
 (4,41) — T4/K4'teki "gizli kaldıraç"tan farklı. → madde 570: T6-3B canlı gibi giriş + 5 bp protokol.
+
+## Madde 570 — T6 3 bacak vs T4 PROTOKOLÜ (canlı gibi giriş + 5 bp): RED; gerçekçi koşulda verim artışı YOK (T6 ile aynı Sharpe)
+| seviye / hiza | yıllık fark | şartlar | P | ham: yıllık · Sh · dd · en kötü · −%5 |
+|---|---|---|---|---|
+| 2.000 $ 0 / 1 | +183,7 / +173,7 | YXYY / YYYY | %84 / %86 | +434,5 · 4,25 · −20,2 · −11,35 · 16 / +410,9 · 4,22 · −17,1 · −10,87 · 20 |
+| 3.500 $ 0 / 1 | +161,8 / +150,9 | XXXY / YYYY | %57 / %70 | +409,6 · 4,15 · −25,3 · −11,37 · 17 / +385,8 · 4,12 · −18,6 · −10,60 · 20 |
+T6 (4 bacak) gerçekçi Sh 4,12-4,23; T6-3B 4,12-4,25 → aynı. Standart modeldeki +0,06 Sharpe canlı gibi girişte kayboluyor; 3 bacak
+yine bir risk düğmesi (dd −17..−25, −%5 altı 16-20). Verim adayı T6 (4 bacak) olarak kalır.
