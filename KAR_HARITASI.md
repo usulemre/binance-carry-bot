@@ -6887,3 +6887,13 @@ tepki sonraki H (1/4/12/24) sa ters ya da devam; 10 bp; gün kümesi t. 48 kol, 
 IS birincisi "sıçrama %4 → 24 sa devam" (IS +%3,78/olay, t 2,04, n 10) OOS'ta −%0,54 (t −0,26, n 11) → RED. IS'te t ≥ 2 olan 6 kolun
 hiçbiri OOS'ta t ≥ 1 değil; IS↔OOS sıra korelasyonu +0,30 ama olay sayısı küçük (saatlik %3-4 kaskad yılda 10-50). Madde 354/418'in
 günlük sonucu saatlik ölçekte de geçerli: kaskad sonrası tepki beta ve gürültü, işlenebilir kenar değil.
+
+## Madde 608 — T7K'da merdiven eşit riskte: merdiven KALDIRAÇ KAPASİTESİDİR — kalmalı (yalnız-long merdiven eşdeğer)
+Araç `arastirma_m608_merdiven_esit_risk.py` (madde 603 yöntemi); T7K, 2.000 $, canlı gibi + 5 bp, iki hiza:
+| kol | ham yıllık | eşit risk k | eşit-risk yıllık | fark (T7K +303,2) |
+|---|---|---|---|---|
+| merdivensiz | +244,1 | 1,00 | +244,1 | −59,1 |
+| yalnız long merdiven | +237,4 | 1,15 | +301,5 | −1,7 |
+Merdivensiz T7K ham olarak +5,5 puan fazla kazanıyor ama tam dönem dd 1,0x'te zaten T4'e değiyor → kaldıraç taşıyamıyor. Merdivenin
+"−19 puanlık savunma bedeli" (madde 528) eşit riskte +59 puanlık kapasiteye dönüşüyor: kaldıraçlı kullanımda merdiven KÂR aracı.
+Short merdiveni katkısız (madde 531 ile tutarlı): sadeleştirme seçeneği (daha az emir), ayar değişmedi.
