@@ -7111,3 +7111,8 @@ Taban P3T2 (+247,5 · dd −13,3 · en kötü −7,41 · −%5 4 · Sh 4,03 / 4,
 Taban P3T2 (+247,5 · dd −13,3 · Sh 4,03 / 4,42 · eşit risk +315,2). Ham · dd · Sh ≤24 / 25+ → eşit risk: b 0,15 +239,6 · −14,0 · 4,01 / 4,32 →
 +281,8 (−33) — b 0,30 +225,0 · −13,4 · 3,89 / 4,12 → +263,7 (−52) — b 0,60 +198,7 · −13,5 · 3,66 / 4,12 → +231,5 (−84). Devir tasarrufu,
 eskiyen kalabalık sinyalinin kaybını karşılamıyor. Doz-yanıt düzenli → ters yön (elde tutulana CEZA, daha sık rotasyon) madde 637.
+
+## Madde 637 — Ters histerezis (elde tutulana ceza, daha sık rotasyon): RED — seçim kuralı iki yönde de TEPEDE
+Taban P3T2 (eşit risk +315,2). Ceza 0,15: ham +233,7 · dd −13,9 · Sh 3,95 / 4,28 → +274,4 (−41) · ceza 0,30: +201,7 · −13,0 · 3,74 / 4,10 →
++253,2 (−62). 636 ile birlikte: HIST −0,30 / −0,15 / 0 / +0,15 / +0,30 / +0,60 → +253 / +274 / **+315** / +282 / +264 / +232 — saf
+kalabalık sırası (sıfır) tek tepe; seçim hem devir hem tazelik açısından optimumda. Seçim histerezisi ekseni kapandı.
