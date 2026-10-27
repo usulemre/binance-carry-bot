@@ -7026,3 +7026,10 @@ PDF sütunları: Asıl bot T4 · T7K 1,15x + koşullu stop (bot ritmi) · T7K 1,
 6 yıl (yıllık · dd · en kötü gün · 2.000 $ → 30.09.2026): T4 +244 · −15,3 · −13,32 · 4,27 M $ — T7K+KS +315 · −15,2 · −8,52 · 13,65 M $ —
 T7K eski stop +303 · −15,2 · −9,12 · 11,37 M $ — T1 +193 · −18,0 · −14,54 · 1,58 M $. Yıl yıl T7K+KS: 2020 (Tem-Ara) +112 · 2021 +637 ·
 2022 +75 · 2023 +402 · 2024 +144 · 2025 +342 · 2026 (Oca-Eyl) +364.
+
+## Madde 625 — TUTUŞ OTOPSİSİ (yeni taban T7K 1,15x + koşullu stop): sert 24 sa aleyhte hareketten sonra TUTMAK doğru, her yerde
+Araç `arastirma_m625_tutus_otopsi.py` (POZ_CIKTI, iki hiza; olay = coin 24 sa getirisinin eşiği ilk geçtiği bar). Tutuş değeri (kitap puanı/yıl,
+1 / 3 / 7 g; + = tutmak doğru): long −%20 +19,5 / +19,7 / +21,6 (sakin piyasa +16,2 / +15,0 / +11,1; piyasa ≤ −%3 +3,1 / +3,1 / +6,5) ·
+long −%30 +6,7 / +7,6 / +4,2 · short +%20 +8,2 / +10,0 / +6,9 · +%35 +6,5 / +11,2 / +10,8 · +%50 +4,0 / +6,2 / +5,4. Yalnız piyasa ≤ −%3 iken
+short sıkışmasında kesmek hafif doğru (−0,4 / −2,7). Ağırlık 2025+'da (long −%20: 2025+ +17,8, ≤2024 +2,0 3 g). Sert 24 sa hareket
+ORTALAMAYA DÖNÜYOR (madde 250'nin girişten birikmiş aleyhlik = momentum bulgusundan farklı eksen) → madde 626: ekleme.

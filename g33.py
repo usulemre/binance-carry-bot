@@ -295,11 +295,12 @@ if S_REB_DUR>0:
     _PIY=np.nanmedian(np.where(U,_rp,np.nan),axis=1)
 else:
     _PIY=None
-if SLL24_PIY>0:
+if SLL24_PIY>0 or float(os.environ.get("EK24_L","0"))>0 or float(os.environ.get("EK24_S","0"))>0:
     _r24=np.full_like(cv,np.nan); _r24[6:]=cv[6:]/np.where(cv[:-6]>0,cv[:-6],np.nan)-1
     _P24=np.nanmedian(np.where(U,_r24,np.nan),axis=1)
 else:
     _P24=None
+_P24E=_P24
 # MADDE 538: PIYASA FRENI. PFREN=x -> evrenin (U) medyan PFREN_PEN bar getirisi bar i kapanisinda <= -x ise
 # BUTUN long bacaklar bar i+1 ACILISINDA kapanir (nedensel: yalniz i kapanisina kadar bilgi). Short'lar dokunulmaz.
 # Kapanan long bir sonraki dengelemeye kadar bos kalir (diger stop'lar gibi). 0 = kapali (parite).
@@ -440,6 +441,9 @@ BRUT_PRIM=float(os.environ.get("BRUT_PRIM","0"))   # 0=kapali; >0 = duyarlilik u
 BRUT_ALT=float(os.environ.get("BRUT_ALT","0.5"))   # carpanin tabani
 BRUT_UST=float(os.environ.get("BRUT_UST","1.5"))   # carpanin tavani
 BRUT_REF=int(os.environ.get("BRUT_REF","180"))     # gun: YEREL referans penceresi
+# MADDE 626: EK24_L / EK24_S = 24 sa sert aleyhte hareket esigi (long dusus / short yukselis), EK24_PAY ek oran, EK24_PIY piyasa esigi.
+EK24_L=float(os.environ.get("EK24_L","0")); EK24_S=float(os.environ.get("EK24_S","0"))
+EK24_PAY=float(os.environ.get("EK24_PAY","0.5")); EK24_PIY=float(os.environ.get("EK24_PIY","0.03")); _E24S=[0,0]
 # MADDE 616: NET_KIRP=x -> bar sonunda dilimin (L-S)/(L+S) orani |x|'i asarsa agir taraf kucultulur. 0 = parite.
 NET_KIRP=float(os.environ.get("NET_KIRP","0")); _NKS=[0,0]
 BRUT_OLC=int(os.environ.get("BRUT_OLC","30")); BRUT_TARAF=os.environ.get("BRUT_TARAF","iki").strip()      # gun: prim olcum penceresi
@@ -516,7 +520,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
     nk=C.shape[1]; poz=np.zeros(nk); giris=np.full(nk,np.nan); zirve=np.full(nk,np.nan); tp_yapildi=np.zeros(nk,bool); eq=[1.0]; bek=None; _yas=np.zeros(nk,int)
     merd_yapildi=np.zeros(nk,bool); merd0_yapildi=np.zeros(nk,bool); _kisb=[False]; _pfg={}
     gsin=np.full(nk,np.nan)   # madde 595: bacagin GIRIS anindaki sinyali (S)
-    ek_say=np.zeros(nk,int); ilk_w=np.zeros(nk)
+    ek_say=np.zeros(nk,int); ilk_w=np.zeros(nk); ek24=np.zeros(nk,bool)
     for i in range(bas,len(C)-1):
         # MADDE 415: her bar koordinatore (i, poz, yeni hedef ya da None) bildirilir;
         # koordinator hedefi degistirebilir (dilimler arasi ortak coin tavani).
@@ -558,6 +562,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
             merd0_yapildi=np.where((y!=0)&~_dv,False,merd0_yapildi)
             if not _kisb[0]: _pfg.clear()        # madde 539: tam dengeleme bekleyen fren geri acilislarini iptal eder
             ek_say=np.where(y!=0,0,ek_say); ilk_w=np.where(y!=0,np.abs(y),ilk_w)
+            ek24=np.where(y!=0,False,ek24)
             if BOSLUK: hedef_brut[0]=float(np.abs(poz).sum())
             if KATKI:
                 # MADDE 236: yeni kohort kurulmadan ONCE acik kalanlari
@@ -1108,6 +1113,21 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 elif _q<-NET_KIRP and _S>0:
                     _f=(_L*(1+NET_KIRP)/(1-NET_KIRP))/_S
                     eq[-1]*=1-_S*(1-_f)*KOM; poz=np.where(poz<0,poz*_f,poz); _NKS[1]+=1
+        if (EK24_L>0 or EK24_S>0) and i+1<len(C)-1 and i>=5:
+            # MADDE 626: SERT 24 SA HAREKETTEN SONRA EKLE (madde 625 tutuş otopsisi: tek coin 24 sa sert aleyhte hareketten sonra
+            # ortalamaya DÖNÜŞ). Long'da coin 24 sa <= -EK24_L, short'ta >= +EK24_S, piyasa (evren medyani 24 sa) > -%3 / < +%3 degilse
+            # (EK24_PIY): bar kapanisinda pozisyonun EK24_PAY'i kadar eklenir (pozisyon basina bir kez; giris agirlikli ortalama).
+            _p=_P24E[i+1] if _P24E is not None else np.nan
+            for k in np.flatnonzero(poz!=0):
+                if cik[k] or ek24[k]: continue
+                f=cv[i+1,k]; f0=cv[i-5,k]
+                if not (np.isfinite(f) and np.isfinite(f0) and f0>0 and f>0): continue
+                g24=f/f0-1; uzun=poz[k]>0
+                if uzun and not (EK24_L>0 and g24<=-EK24_L and np.isfinite(_p) and _p>-EK24_PIY): continue
+                if (not uzun) and not (EK24_S>0 and g24>=EK24_S and np.isfinite(_p) and _p>-EK24_PIY): continue
+                dw=abs(poz[k])*EK24_PAY; e=giris[k]
+                if np.isfinite(e) and e>0: giris[k]=(abs(poz[k])*e+dw*f)/(abs(poz[k])+dw)
+                poz[k]=poz[k]+(dw if uzun else -dw); ek24[k]=True; eq[-1]*=1-dw*KOM; _E24S[0 if uzun else 1]+=1
         if EK_ESIK>0:
             # MADDE 250: ALEYHTE giden ve TP'si dolmamis bacaklara ekle
             for k in np.flatnonzero(poz!=0):
@@ -1278,6 +1298,7 @@ def calis2(ad,n,olcut):
     if _BRT[1]>0:
         print(f'BRUT: fiili ortalama carpan {_BRT[0]/_BRT[1]:.4f} '
               f'({_BRT[1]} kurulum)',flush=True)
+    if EK24_L>0 or EK24_S>0: print(f"# EK24: long ekleme {_E24S[0]} · short ekleme {_E24S[1]}", flush=True)
     if NET_KIRP>0: print(f"# NET_KIRP={NET_KIRP}: long kirpma {_NKS[0]} · short kirpma {_NKS[1]} (dilim-bar)", flush=True)
     if KAYIP_HAF>0: print(f"# KAYIP_HAF={KAYIP_HAF} PEN={KAYIP_PEN}: elenen aday (coin-dengeleme) {_ZES[0]}", flush=True)
     if ZARAR_EK>0: print(f"# ZARAR_EK={ZARAR_EK} {ZARAR_EK_TARAF}: elenen aday (coin-dengeleme) short {_ZES[0]} long {_ZES[1]}", flush=True)
