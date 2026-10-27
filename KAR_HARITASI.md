@@ -7062,3 +7062,10 @@ Otopsi ailesi (621-628) kapandı: tek büyük sızıntı 24 sa stop'tu.
 `carry_preflight.py`: `CARRY_PROFIL=T6` iken `CARRY_GROSS=1,10` + `CARRY_DOZ_ONAY=1,10` TAMAM (mesaj: yalnız ≳ 12.500 $ bakiyede ölçüldü);
 onaysız HATA; T6 1,15 HATA (+3 test, hepsi geçti). Varsayılanlar DEĞİŞMEDİ (T4, 1,0x, koşullu stop kapalı). Kurulum belgesi: T6 1,10x +
 CARRY_LONG_24S_PIYASA=0,03 (TAM eşit risk +374 vs T4 +232), sıra: Ekim OOS → 1x demo → 1,10x.
+
+## Madde 630 — 1.000 $ seviyesi (D9 = D8 + AVAX, madde 349) kazanç defterleri + 2026 Excel'leri (1.000 / 2.000 / TAM)
+Gerçekçi model, 1.000 $ (iki hiza; /tmp/m630). 6 yıl yıllık · dd · en kötü gün · 2026 (Oca-Eyl): T4 +244,5 · −15,9 · −13,25 · +298 —
+T7K 1,15x + koşullu stop (bot ritmi) +302,8 · −15,9 · −8,03 · +334 — T7K 1,15x eski stop +293,4 · −15,9 · −9,12 · +323 — T1 +192,0 · −17,4 ·
+−14,38 · +219. Sıralama 2.000 $ ile aynı; 1.000 $'da koşullu stop farkı +9 (2.000 $'da +12). PDF: Kazanc_Defteri_1000.pdf /
+Kazanc_Defteri_6_Yil_1000.pdf (SEVIYE=1000 python3 pdf_uret.py). Excel: Kazanc_2026_Gun_Hafta_Ay_{1000,2000}.xlsx ve TAM (T6 dahil),
+`SEVIYE=… python3 excel_2026_uret.py` (formüllü; başlangıç bakiyesi Varsayımlar!B3).
