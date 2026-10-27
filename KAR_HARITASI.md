@@ -6951,3 +6951,9 @@ short TP %15 +239,8 · −13,3 · −8,15 · +304,9 — %25 +236,2 · −13,3 ·
 +262,1 — %18 +238,7 · −13,3 · −7,54 · +303,2 — long TP %50 +234,0 · −13,1 · −7,93 · +297,0 — %70 +238,9 · −13,2 · −7,93 · +303,6.
 Fark −41..+1,7 (bar +8): hepsi RED, plato düz ve T7K ortasında. Short kademesini sıklaştırmak düşüşü derinleştirip kaldıraç kapasitesini
 yiyor. T7K'nın çıkış ayarları T4'ten devralındığı gibi doğru.
+
+## Madde 615 — T7K prim çarpanı tek tarafa (BRUT_TARAF): RED — çarpanın değeri DENGEYİ koruyarak küçültmesinde
+T7K gerçekçi 2.000 $ (ham yıllık · dd · en kötü · Sh ≤24 / 25+ · eşit-risk k → yıllık; T7K +238,6 · −13,3 · −7,93 · 4,02 / 4,33 · 1,15 → +303,2):
+yalnız short +249,6 · −17,0 · −14,39 · 3,83 / 4,04 · 0,90 → +210,1 — yalnız long +246,4 · −15,3 · −7,12 · 3,96 / 4,45 · 0,95 → +226,3.
+Ham getiri +8..+11 artıyor ama tek taraf küçülünce kitap net yönlü kalıyor ve düşüş 2-4 puan derinleşiyor → eşit riskte −77 / −77.
+Yalnız short küçültmek net LONG bırakıyor: 2021-05-19 −14,4 (T4'ten de kötü). T7K'nın kazancı küçültmeden değil, NÖTR küçültmeden.
