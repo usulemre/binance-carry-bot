@@ -7033,3 +7033,9 @@ Araç `arastirma_m625_tutus_otopsi.py` (POZ_CIKTI, iki hiza; olay = coin 24 sa g
 long −%30 +6,7 / +7,6 / +4,2 · short +%20 +8,2 / +10,0 / +6,9 · +%35 +6,5 / +11,2 / +10,8 · +%50 +4,0 / +6,2 / +5,4. Yalnız piyasa ≤ −%3 iken
 short sıkışmasında kesmek hafif doğru (−0,4 / −2,7). Ağırlık 2025+'da (long −%20: 2025+ +17,8, ≤2024 +2,0 3 g). Sert 24 sa hareket
 ORTALAMAYA DÖNÜYOR (madde 250'nin girişten birikmiş aleyhlik = momentum bulgusundan farklı eksen) → madde 626: ekleme.
+
+## Madde 626 — Sert 24 sa aleyhte hareketten sonra EKLE (EK24): RED — ham +4..+15 ama düşüş derinleşiyor, madde 250 yasası yine geçerli
+Taban T7K 1,15x + koşullu stop (P3T2: ham +247,5 · dd −13,3 · en kötü −7,41 · eşit risk +315,2). Ham · dd · en kötü · −%5 · Sh ≤24 / 25+ → eşit risk:
+long −%20 +%50 ek (2,3 bin ekleme) +258,4 · −15,9 · −8,31 · 5 · 3,99 / 4,25 → +237,1 (−78) — short +%35 +251,9 · −13,5 · −9,05 · 4 · 3,97 / 4,57 →
++296,9 (−18) — ikisi +262,7 · −16,4 · −8,95 · 5 → +220,5 (−95). Ortalamaya dönüş GERÇEK (ham ↑) ama ekleme kuyruğu kalınlaştırıyor (dönmeyen
+sert hareketler LUNA tipi) → eşit riskte zarar. Doğru kullanım TUTMAK (madde 622-625), eklemek değil. Pozisyon boyutu ekseni (250, 626) kapalı.
