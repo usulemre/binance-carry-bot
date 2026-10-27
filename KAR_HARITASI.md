@@ -6852,3 +6852,21 @@ Araç `arastirma_m604_short_hedge.py`; T7K, 2.000 $, canlı gibi + 5 bp, iki hiz
 Monoton kötü ve dd SIĞLAŞMIYOR (−16,9 vs T7K −13,3): long sepetine benzeyen short = kalabalığı az olan short; short kârı kalabalık
 (perakende hesap oranı) seçiminden geliyor (madde 358: rastgele havuz −77..−91). Hedge kalitesi bu kitapta bir kâr ekseni değil (madde 554
 ile birlikte ikinci kez: piyasa/korelasyon nötrlüğü, kalabalık seçiminin önüne geçince para kaybettiriyor).
+
+## Madde 605 — KULLANICI HEDEFİ "günlük kârı al, çık": kitap düzeyinde GÜNLÜK KÂR TAVANI — RED (her eşikte monoton zarar)
+Araç `arastirma_m605_gunluk_kar_al.py` (ön kayıt başlıkta). Gün içinde (4 sa barlar) birikimli getiri +X'e ulaşınca tüm kitap kapanır,
+gün sonuna kadar düz, ertesi gün yeniden açılır; maliyet tetik başına %0,10. 2.000 $, canlı gibi + 5 bp, iki hiza:
+| eşik | tetik (günlerin) | T7K yıllık farkı h0 / h1 | T4 yıllık farkı h0 / h1 |
+|---|---|---|---|
+| +%0,5 | %55 | −192 / −185 | −202 / −188 |
+| +%1,0 | %36-39 | −141 / −134 | −147 / −132 |
+| +%1,5 | %23-26 | −98 / −92 | −121 / −98 |
+| +%2,0 | %15-17 | −74 / −70 | −91 / −75 |
+| +%3,0 | %7-9 | −33 / −23 | −48 / −30 |
+(taban: T7K +238,7 / +238,0; T4 +250,9 / +237,2). Kitabın kârı SAĞ KUYRUKTA: medyan gün yalnız +%0,18-0,20, ortalama +%0,35 —
+farkı birkaç büyük gün yapıyor (madde 236'nın günlük hâli) ve günlük tavan tam onları kesiyor. Madde 264'ün ("kazananı erken kesmek,
+parayı yapan azınlığı kesmektir") gün ölçeğinde kesin doğrulaması. Ayrıca yeniden giriş varsayımı iyimser (dilim/TP durumu korunmuş sayıldı).
+DOĞRU YOL — POZİSYONU KAPATMADAN KÂR ÇEKMEK: bot boyutu bakiyeden okuduğu için baz üstünü çekmek kitabı kapatmaz, yalnız bileşiği durdurur.
+2.000 $ baz, gün sonu baz üstü çekilir (baz altındaysa önce açık kapanır), 2020-07..2026-09:
+T7K ort 6,8 $/gün (2025+ 8,1), haftalık medyan 17 $, aylık medyan 133 $ · T4 ort 7,0 $/gün, aylık medyan 146 $. Artı gün oranı %55-56;
+haftaların ve ayların en az %10'unda çekilecek kâr 0. Bileşik (çekmeden) büyüme bunun çok üstünde (yıllık +%240), seçim kullanıcının.
