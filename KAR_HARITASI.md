@@ -7081,3 +7081,8 @@ Taban T7K 1,15x + koşullu stop (P3T2, eşit risk +315,2). İşaretli hücre pay
 2025+ Sharpe ↑ ama işaretli hücre çok az → bar +8 altı. Ek not (kullanıcı sorusu, QUSDT 2026-10-27 −%73): veri 30 Eylül'de bitiyor;
 Q 2025-09'da listelendi, Eylül sonunda 70M eşiğini yalnız kısa aşıyordu (son 30 g %11 uygun), funding pozitif (+%7..+%29 yıllık)
 → evrene girdiyse SHORT adayı; 6 yılda yalnız 3 gün tutuldu (2025-11, short). Ekim OOS koşusunda Q ayrıca incelenecek.
+
+## Madde 633 ön eleme notu — coin bazında kitap P&L'i KALICI DEĞİL (kara liste ekseni kapalı)
+Giriş defterinden (madde 627) ardışık yarıyıllarda coin başı kitap P&L'i Spearman korelasyonu: long 0,024 · short 0,011 · ikisi 0,025
+(12 çift); önceki yarıyılın en kötü %20 coini sonraki yarıyılda diğerleriyle aynı (0,099 vs 0,107). Coin kara listesi / uzun hafıza
+(madde 611'in 180 g'lük sürümü) koşulmadan elendi.

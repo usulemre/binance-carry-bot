@@ -171,6 +171,7 @@ KAYIP_HAF=float(os.environ.get("KAYIP_HAF","0")); KAYIP_PEN=int(os.environ.get("
 # MADDE 622: SLL24_PIY=x (SLL24_KAP=1 ile) -> kapanis stop'u yalniz evrenin medyan 24 sa getirisi (ayni kapanis) <= -x iken
 # tetiklenir: tek coin cokusunde (piyasa sakin) stop yok, piyasa capinda cokuste var (madde 621 cikis otopsisi). 0 = kosulsuz.
 SLL24_PIY=float(os.environ.get("SLL24_PIY","0"))
+MERD_PIY_L=float(os.environ.get("MERD_PIY_L","0"))   # MADDE 633: >0 -> piyasa 24 sa medyani >= x iken long TP/kademe ertelenir
 SLL24_KAP=int(os.environ.get("SLL24_KAP","0")); SLL24_KAP_TAZE=int(os.environ.get("SLL24_KAP_TAZE","1"))
 # MADDE 450: SHORT 24 SA YUKSELIS STOP'U (SLL24'un aynasi). 0 = kapali (parite).
 SLS24=float(os.environ.get("SLS24","0"))
@@ -295,7 +296,7 @@ if S_REB_DUR>0:
     _PIY=np.nanmedian(np.where(U,_rp,np.nan),axis=1)
 else:
     _PIY=None
-if SLL24_PIY>0 or float(os.environ.get("EK24_L","0"))>0 or float(os.environ.get("EK24_S","0"))>0:
+if SLL24_PIY>0 or MERD_PIY_L>0 or float(os.environ.get("EK24_L","0"))>0 or float(os.environ.get("EK24_S","0"))>0:
     _r24=np.full_like(cv,np.nan); _r24[6:]=cv[6:]/np.where(cv[:-6]>0,cv[:-6],np.nan)-1
     _P24=np.nanmedian(np.where(U,_r24,np.nan),axis=1)
 else:
@@ -954,6 +955,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         continue
                     zirve[k]=min(_pz,LV[i+1,k])
                     continue
+                if MERD_PIY_L>0 and uzun and _P24 is not None and np.isfinite(_P24[i]) and _P24[i]>=MERD_PIY_L:
+                    continue   # MADDE 633: piyasa rallisinde (evren medyan 24 sa >= x, bar i kapanisi) long kar al / kademe ERTELENIR
                 _tp = (TPL if TPL>=0 else tp) if uzun else (TPS if TPS>=0 else tp)
                 if TPF_UC>0 and uzun and np.isfinite(gsin[k]) and gsin[k]<=-TPF_ESIK: _tp=TPF_UC   # madde 595
                 # MADDE 221: oynakliga gore olcekle (nedensel: VOL5[i])
