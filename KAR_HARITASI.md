@@ -6964,3 +6964,9 @@ T7K gerçekçi 2.000 $ (ham yıllık · dd · en kötü · 2021-05-19 · −%5 �
 x 0,40 +212,4 · −13,2 · −6,49 · −1,52 · 2 · 3,86 / 4,31 · 1,15 → +267,7. Kırpma ~5-14 bin dilim-bar.
 Mekanizma DOĞRULANDI: 2021-05-19 −7,9 → −1,0 (zarar kâr al sonrası açık kalan net long'dan). Ama dengesizlik ortalamada KÂRLI: kâr al /
 kademe sonrası kalan taraf çoğunlukla toparlanıyor (madde 539 ile aynı: dibe satmak). Ham −26..−39, eşit riskte −36..−88 → RED.
+
+## Madde 617 — T4 → T7K 1,15x geçişinin KARAR KURALI Ekim verisi gelmeden ön kayda alındı (izleme_ekim_oos.py)
+Ana blok T7K'nın 1,15x serisini de yazar. Geçiş şartı: (1) T7K vs T4 hükmü iki seviyede "olağan" (Ekim farkı geçmiş aylık farkların
+%10 yüzdeliği üstünde), (2) Ekim'de T7K 1,15x'in en kötü günü T4'ünkünden derin değil. Tutarsa öneri: T7K 1,15x (önce demo).
+Tek ay istatistiksel kanıt değil; "örnek dışında ters sinyal yok" kontrolü. Kuru koşu (AY=2026-09, örnek içi): 2.000 $ T7K×1,15 +8,35 /
+T4 +4,54, en kötü −3,65 / −4,43 → şart 1 Y · 2 Y; 3.500 $ +8,85 / +7,94, −3,58 / −4,07 → Y · Y.

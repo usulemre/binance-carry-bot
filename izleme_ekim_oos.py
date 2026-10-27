@@ -24,6 +24,14 @@ MADDE 587 GÜNCELLEMESİ (2026-10-26, Ekim funding verisi henüz YAYIMLANMADI �
       - T6 vs T4 ve T7K vs T4: Ekim aylık farkı, AYNI serilerin geçmiş aylık fark dağılımında (2022-07 → 2026-09)
         %10 yüzdeliğin ALTINDAYSA "UYARI", değilse "olağan". (Madde 412'nin yöntemi.)
       - T7K'nın amacı kötü gün olduğu için ayrıca Ekim'in en kötü günü ve −%3 altı gün sayısı T4 ile yan yana yazılır.
+MADDE 617 EKİ (2026-10-27, Ekim verisi GELMEDEN yazıldı — geçiş kararının ön kaydı):
+  Madde 596/599: T7K 1,15x, T4 1,0x ile AYNI RİSKTE yıllık +303 vs +244 (gerçekçi model, 2.000 $). Ana blok artık T7K'nın
+  1,15x serisini de (günlük getiri × 1,15) yazar. KARAR KURALI (bot varsayılanını T4 → T7K 1,15x yapmak için):
+    (1) T7K vs T4 hükmü İKİ seviyede de "olağan" (Ekim farkı geçmiş aylık farkların %10 yüzdeliğinin üstünde), VE
+    (2) Ekim'de T7K 1,15x'in en kötü günü T4'ün en kötü gününden derin DEĞİL.
+  İkisi tutarsa → kullanıcıya "T7K 1,15x'e geç" önerilir (önce demo, sonra canlı). Tutmazsa T4 kalır, Kasım'da tekrar bakılır.
+  Tek ay İSTATİSTİKSEL kanıt değildir; kural yalnız "örnek dışında ters sinyal yok" kontrolüdür (asıl kanıt 6 yıllık eşit-risk ölçümü).
+
 ADIMLAR (Kasım başı, funding verisi yayınlanınca):
   1) python3 indir_ek_ay.py 2026-10 && python3 yeniden_kur.py   (zemin + paneller)
   2) sinyal panelleri: PEN=60 AD=bar60 python3 canli_sinyal_kur.py && PEN=96 AD=bar96 python3 canli_sinyal_kur.py
@@ -123,6 +131,14 @@ def analiz_ana():
         if not len(ay["EK_T4"][0]):
             print(f"{sev}: {AY} için veri yok — zemin uzatılmamış"); continue
         top = {k: np.mean([((1 + g).prod() - 1) * 100 for g in v]) for k, v in ay.items()}
+        _k15 = [g * 1.15 for g in ay["EK_T7K"]]                 # madde 617: T7K 1,15x (eşit risk dozu)
+        _t15 = np.mean([((1 + g).prod() - 1) * 100 for g in _k15]); _e15 = min(g.min() for g in _k15) * 100
+        _e4 = min(g.min() for g in ay["EK_T4"]) * 100
+        _d = sum(_aylik(seri["EK_T7K"][h]) - _aylik(seri["EK_T4"][h]) for h in (0, 1)) / 2 * 100
+        _g = _d[[str(p) < AY for p in _d.index]].dropna().values
+        _ok1 = (top["EK_T7K"] - top["EK_T4"]) >= np.percentile(_g, 10); _ok2 = _e15 >= _e4
+        print(f"T7K×1,15 {sev:6d} {_t15:+7.2f} | en kötü {_e15:+.2f} (T4 {_e4:+.2f}) → madde 617 şart 1 {'Y' if _ok1 else 'X'} · "
+              f"şart 2 {'Y' if _ok2 else 'X'}")
         for k in ANA:
             sh = np.mean([g.mean() / g.std() * np.sqrt(365.25) if len(g) > 5 else np.nan for g in ay[k]])
             ek = min(g.min() for g in ay[k]) * 100
