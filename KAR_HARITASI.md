@@ -6841,3 +6841,14 @@ S ≥ 0,015/gün %0,01, ≤ −0,015 %1,0) → short eşiği 0,003 / 0,005. Ara�
 | iki taraf, 0,003 | +233,1 | 1,10 | +273,8 | −29,4 |
 Uç pozitif funding'li short'a ek pay ham getiriyi düşürüyor (−6..−13): o coinler pompa/sıkışma adayı (madde 446), fiyat kârı tazelikten
 geliyor (madde 494), büyüklükten değil. Rezerv yalnız long tarafında kalır.
+
+## Madde 604 — YENİ YAPI: short'u long sepetine HEDGE KALİTESİYLE seçmek (SH_KOR): RED — korelasyon short alfasını yok ediyor
+g33'e `SH_KOR` (havuzdaki short adaylarında kalabalık sırası ile son 30 g long-sepeti korelasyonu sırasının harmanı; varsayılan 0).
+Araç `arastirma_m604_short_hedge.py`; T7K, 2.000 $, canlı gibi + 5 bp, iki hiza:
+| kol | ham yıllık | Sh (h0/h1) | ham dd | eşit risk k | eşit-risk yıllık | fark (T7K +303,2) |
+|---|---|---|---|---|---|---|
+| ağırlık 0,25 | +216,8 | 3,63 / 3,53 | −16,9 | 1,10 | +253,7 | −49,4 |
+| ağırlık 0,50 | +170,1 | 3,19 / 2,90 | −15,7..−16,7 | 1,10 | +196,8 | −106,4 |
+Monoton kötü ve dd SIĞLAŞMIYOR (−16,9 vs T7K −13,3): long sepetine benzeyen short = kalabalığı az olan short; short kârı kalabalık
+(perakende hesap oranı) seçiminden geliyor (madde 358: rastgele havuz −77..−91). Hedge kalitesi bu kitapta bir kâr ekseni değil (madde 554
+ile birlikte ikinci kez: piyasa/korelasyon nötrlüğü, kalabalık seçiminin önüne geçince para kaybettiriyor).
