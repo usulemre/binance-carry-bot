@@ -7048,3 +7048,12 @@ uçlar (oynaklık Q5, 7-30 g getiri Q1/Q5, funding uçları) kârın kaynağı �
 ~+5 puan/yıl (bar +8 altında) → kural yazılmadı. Not: long'ların bir kısmı funding'i POZİTİFken seçiliyor (kalabalık ölçütü) ve
 kârlı (+%10..+%50 yıllık funding'li long'lar 2025+ +130..+977 bp) — seçimin değeri funding'den çok kalabalıkta.
 Otopsi üçlüsü (621 çıkış · 625 tutuş · 627 giriş) tamam: tek büyük sızıntı 24 sa stop'tu (madde 622-623, giderildi).
+
+## Madde 628 — Kullanıcının gerçek kitabı (TAM evren, T6 + koşullu stop) otopsisi: SIZINTI YOK
+Çıkış ve tutuş otopsisi (madde 621 / 625 araçları, CIKIS_KOK / POZ_KOK ile; /tmp/m628, bot ritmi). Çıkışlar (tutsaydık, 3 g, puan/yıl):
+short TP −7,6 · long TP −4,5 · short kademe −0,6 · long kademe −7,0 · koşullu 24 sa stop −0,8 (artık doğru) · felaket SL −1,2 → hepsi doğru.
+Tutuş: long −%20 +19,6 · short +%20 / +%35 / +%50 +14,4 / +14,4 / +8,0 → tutmak doğru (sıkışan short'u kesmek kaybettirir).
+T6 1,10x + KS'nin −%4 altı 33 günü: çoğu short tarafında GENİŞ piyasa yükselişi (birçok short aynı anda) ya da tek coin sıkışması
+(IOTX 2021-11-10 −9,5, XLM 2020-11-24 −6,8, 1000SATS, SAND, BTW, POPCAT); long tarafında tek coin çöküşü (REEF 2024-10-15 −7,2, SIREN,
+LUNA/FTX). Tek coin sıkışmasını kesmek ortalamada zarar (tutuş tablosu), tavan T7K'da var (getiri ↔ kötü gün takası, madde 600-601).
+Otopsi ailesi (621-628) kapandı: tek büyük sızıntı 24 sa stop'tu.

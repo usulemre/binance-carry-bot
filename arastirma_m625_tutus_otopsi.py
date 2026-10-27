@@ -20,7 +20,7 @@ cv = C.values; r24 = R24.values
 
 olaylar = []
 for h in (0, 1):
-    P = pd.read_pickle(f"/tmp/m621/pozKS_{h}.pkl")
+    P = pd.read_pickle(__import__("os").environ.get("POZ_KOK", "/tmp/m621/pozKS") + f"_{h}.pkl")
     ii = C.index.get_indexer(P.zaman); jj = C.columns.get_indexer(P.sembol); w = P.w.values
     for taraf, esikler in (("S", (0.20, 0.35, 0.50)), ("L", (-0.20, -0.30))):
         m = (w < 0) if taraf == "S" else (w > 0)
@@ -49,4 +49,4 @@ def tablo(g, b):
 tablo(O.groupby(["taraf", "esik"]), "TARAF × EŞİK")
 tablo(O.groupby(["taraf", "esik", "pk"], observed=True), "× PİYASA")
 tablo(O.groupby(["taraf", "esik", "donem"]), "× DÖNEM")
-O.to_pickle("/tmp/m621/tutus_olay.pkl")
+O.to_pickle(__import__("os").environ.get("POZ_KOK", "/tmp/m621/pozKS") + "_tutus.pkl")

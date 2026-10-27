@@ -20,7 +20,8 @@ Sq = S.where(uy.astype(bool)).rank(axis=1, pct=True)
 piy = (C / C.shift(6) - 1).where(uy.astype(bool)).median(axis=1)
 yil = (C.index[-1] - pd.Timestamp("2020-07-19")).days / 365.25
 
-E = pd.concat([pd.read_pickle(f"/tmp/m621/cikis_{h}.pkl").assign(h=h) for h in (0, 1)])
+import os
+E = pd.concat([pd.read_pickle(os.environ.get("CIKIS_KOK", "/tmp/m621/cikis") + f"_{h}.pkl").assign(h=h) for h in (0, 1)])
 ci = C.index.get_indexer(E.zaman); cj = C.columns.get_indexer(E.sembol)
 for ad, n in (("f1", 6), ("f3", 18), ("f7", 42)):
     ii = np.minimum(ci + n, len(C) - 1)
@@ -45,4 +46,4 @@ E["pk"] = pd.cut(E.piy, [-1, -0.05, 0.05, 10], labels=["piyasa↓5", "sakin", "p
 tablo(E.groupby(["tur", "yon", "pk"], observed=True), "TÜR × YÖN × piyasa 24 sa")
 E["donem"] = np.where(E.zaman < "2025-01-01", "≤2024", "2025+")
 tablo(E.groupby(["tur", "yon", "donem"]), "TÜR × YÖN × dönem")
-E.to_pickle("/tmp/m621/cikis_analiz.pkl")
+E.to_pickle(os.environ.get("CIKIS_KOK", "/tmp/m621/cikis") + "_analiz.pkl")
