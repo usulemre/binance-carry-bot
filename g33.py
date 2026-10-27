@@ -318,6 +318,7 @@ else:
     _PF=None
 # MADDE 552: ARALIK_MOD=kisa -> guncel funding araligi <= ARALIK_ESIK sa olan coin; =degisti -> aralik ARALIK_GERI bar
 # oncekinden KISA (Binance tavana dayaninca araligi kisaltir). ARALIK_TARAF=short (varsayilan) / iki. Panel /tmp/aralik.pkl.
+ARALIK_AG=float(os.environ.get("ARALIK_AG","0")); _ARS=[0]   # MADDE 632: >0 -> eleme yerine short agirlik carpani
 ARALIK_MOD=os.environ.get("ARALIK_MOD","").strip(); ARALIK_ESIK=float(os.environ.get("ARALIK_ESIK","2"))
 ARALIK_GERI=int(os.environ.get("ARALIK_GERI","42")); ARALIK_TARAF=os.environ.get("ARALIK_TARAF","short").strip(); _ARV=None
 if ARALIK_MOD:
@@ -630,7 +631,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if HSICRA_TARAF=='iki': g=g&~_HSV[i]
                 elif HSICRA_TARAF=='long': g=g&~(_HSV[i]&(_sr6<_md6))
                 else: g=g&~(_HSV[i]&(_sr6>_md6))
-            if _ARV is not None:
+            if _ARV is not None and ARALIK_AG<=0:
                 # MADDE 552: FUNDING ARALIGI FILTRESI. _ARV[i] True = isaretli coin (aralik kisa ya da yakinda kisaldi).
                 if ARALIK_TARAF=='iki':
                     g=g&~_ARV[i]
@@ -796,6 +797,12 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         for k in ul: y[k]+=pay
                         for k in sh: y[k]-=kullanilan/len(sh)   # notrluk korunur
                         say_r[0]+=1
+                if _ARV is not None and ARALIK_AG>0:
+                    # MADDE 632: ARALIK AGIRLIGI (552'nin tersi). Isaretli (funding araligi kisa / kisalmis) SHORT bacak agirligi
+                    # ARALIK_AG ile carpilir, short tarafi toplami korunur (digerleri orantili kuculur). Eleme YOK.
+                    _ms=(y<0)&_ARV[i]
+                    if _ms.any() and (~_ms&(y<0)).any():
+                        _top=-y[y<0].sum(); y=np.where(_ms,y*ARALIK_AG,y); y=np.where(y<0,y*_top/(-y[y<0].sum()),y); _ARS[0]+=1
                 if TARAF_S!=0.5:
                     # MADDE 566: brut sabit, short tarafin payi TARAF_S (long 1-TARAF_S). Dolar notrlugu BILEREK bozulur.
                     y=np.where(y>0,y*(1-TARAF_S)/0.5,np.where(y<0,y*TARAF_S/0.5,y))
