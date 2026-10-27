@@ -7106,3 +7106,8 @@ Dengeleme emrini birkaç dakika/saat kaydırmanın değeri yok; bot'un kapanış
 Taban P3T2 (+247,5 · dd −13,3 · en kötü −7,41 · −%5 4 · Sh 4,03 / 4,42 · eşit risk +315,2). Yaş 45: +208,1 · −15,8 · −13,19 · 10 · 3,86 / 3,13 →
 +192,0 (−123) · yaş 30: +197,1 · **−35,3** · −16,79 · 16 · 3,77 / 2,72 → eşit risk kurulamıyor. 2025+ Sharpe 4,42 → 2,7-3,1: kârın kaynağı
 "genç coin" değil, 60 g'yi geçmiş ve kalabalığı oturmuş coinler. Yaş 60 yerinde (madde 397/427/518 ile tutarlı, yeni kitapta da).
+
+## Madde 636 — Seçim histerezisi (HIST: elde tutulan coine sıra bonusu): RED, doza düzenli bağlı — TAZE seçim maliyetten değerli
+Taban P3T2 (+247,5 · dd −13,3 · Sh 4,03 / 4,42 · eşit risk +315,2). Ham · dd · Sh ≤24 / 25+ → eşit risk: b 0,15 +239,6 · −14,0 · 4,01 / 4,32 →
++281,8 (−33) — b 0,30 +225,0 · −13,4 · 3,89 / 4,12 → +263,7 (−52) — b 0,60 +198,7 · −13,5 · 3,66 / 4,12 → +231,5 (−84). Devir tasarrufu,
+eskiyen kalabalık sinyalinin kaybını karşılamıyor. Doz-yanıt düzenli → ters yön (elde tutulana CEZA, daha sık rotasyon) madde 637.

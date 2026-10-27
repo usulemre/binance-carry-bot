@@ -377,7 +377,7 @@ def _yay(poz,bos,uygun,eq,giris=None,f=None):
 AYNI=int(os.environ.get("AYNI","0"))            # kar al sonrasi AYNI yonde yeniden gir
 say_r=[0]
 REZ_RAST=int(os.environ.get("REZ_RAST","0"))
-HIST=float(os.environ.get("HIST","0"))   # MADDE 636: elde tutulan coine secimde sira bonusu (0 = parite)
+HIST=float(os.environ.get("HIST","0"))   # MADDE 636: elde tutulan coine secimde sira bonusu (0 = parite; <0 = ceza, madde 637)
 TOL=float(os.environ.get("TOL","0"))   # hedefin bu oraninden az sapan bacaga dokunma
 KAP=float(os.environ.get("KAP","0"))   # coin basina EK agirlik ust siniri
 _rz=np.random.default_rng(int(os.environ.get("TOHUM","1")))   # sinyalden kac bar sonra girilsin (1 bar = 4 saat)   # dilim sayisi: tepki suresi = 120sa / FAZ
@@ -696,7 +696,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         p=np.where(np.isfinite(p),pd.Series(p).rank(pct=True).values,np.nan)
                         yedek=sira_skor
                         p=np.where(np.isfinite(p),p,yedek)
-                        if HIST>0:
+                        if HIST!=0:
                             # MADDE 636: SECIM HISTEREZISI. Bu dilimin ELDE tuttugu (ayni yonde) coin havuzdaysa kalabalik sirasina +HIST
                             # bonus: sinir coinler gereksiz yere degismez -> devir (5 bp/islem) azalir. Havuz disina dusen coin yine cikar.
                             p=p+HIST*(np.sign(poz[ad])==taraf)
