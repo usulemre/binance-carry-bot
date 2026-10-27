@@ -164,6 +164,8 @@ SLLK=float(os.environ.get("SLLK","0")); SLLK_PEN=int(os.environ.get("SLLK_PEN","
 # MADDE 609: SLL24_KAP=1 -> 24 sa stop gun ici IGNEYLE (bar dibi) degil, 4 sa KAPANISLA tetiklenir ve kapanistan
 # cikar (19 May 2021: long'lar igne dibinde satilip ertesi gunun %10-15 donusu kacti). SLL24_KAP_TAZE=n: yalniz
 # n barda bir kontrol (bot turu 8 sa = 2). 0 = eski (igne, parite).
+# MADDE 610: ZARAR_EK=x -> hesapta girisin x aleyhindeki pozisyona dengelemede yeni dilim eklenmez (TEK_GIRIS=1 gerekir). 0 = parite.
+ZARAR_EK=float(os.environ.get("ZARAR_EK","0")); ZARAR_EK_TARAF=os.environ.get("ZARAR_EK_TARAF","short").strip(); _ZES=[0,0]
 SLL24_KAP=int(os.environ.get("SLL24_KAP","0")); SLL24_KAP_TAZE=int(os.environ.get("SLL24_KAP_TAZE","1"))
 # MADDE 450: SHORT 24 SA YUKSELIS STOP'U (SLL24'un aynasi). 0 = kapali (parite).
 SLS24=float(os.environ.get("SLS24","0"))
@@ -618,6 +620,19 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _sr5=np.where(g,S[i],np.nan)
                     _md5=np.nanmedian(_sr5) if np.isfinite(_sr5).any() else 0.0
                     g=g&~(_ARV[i]&(_sr5>_md5))       # yalniz SHORT tarafi adaylarindan (sinyal medyan ustu) cikar
+            if ZARAR_EK>0 and _REG:
+                # MADDE 610: ZARARDAKI POZISYONA EKLEME YOK. Hesaptaki (tum dilimler, Binance entryPrice gibi agirlikli
+                # ortalama giris) short'u girisin +ZARAR_EK ustundeyse (long'u -ZARAR_EK altindaysa) coin bu dengelemede
+                # aday OLMAZ -> sikisan coine her dengelemede yeni dilim eklenmez (2022 UNFI: 6 hafta +%165, hep short).
+                _Zw=np.zeros(nk); _Ze=np.zeros(nk)
+                for _pq,_gq in _REG.values():
+                    _ok=np.isfinite(_gq)&(_pq!=0); _Zw[_ok]+=_pq[_ok]; _Ze[_ok]+=_pq[_ok]*_gq[_ok]
+                _ze=np.where(_Zw!=0,_Ze/np.where(_Zw==0,1,_Zw),np.nan); _c=cv[i]
+                _zs=(_Zw<0)&np.isfinite(_ze)&np.isfinite(_c)&(_c>=_ze*(1+ZARAR_EK))
+                _zl=(_Zw>0)&np.isfinite(_ze)&np.isfinite(_c)&(_c<=_ze*(1-ZARAR_EK))
+                if ZARAR_EK_TARAF in ("short","iki"): g=g&~_zs
+                if ZARAR_EK_TARAF in ("long","iki"): g=g&~_zl
+                _ZES[0]+=int(_zs.sum()); _ZES[1]+=int(_zl.sum())
             if MERD_DEVIR==2:
                 # MADDE 474: kademesi dolmus coin bu dengelemede aday OLMAZ (pompa sonrasi yeniden alma yok)
                 g=g&~(merd_yapildi&(poz!=0))
@@ -1219,6 +1234,7 @@ def calis2(ad,n,olcut):
     if _BRT[1]>0:
         print(f'BRUT: fiili ortalama carpan {_BRT[0]/_BRT[1]:.4f} '
               f'({_BRT[1]} kurulum)',flush=True)
+    if ZARAR_EK>0: print(f"# ZARAR_EK={ZARAR_EK} {ZARAR_EK_TARAF}: elenen aday (coin-dengeleme) short {_ZES[0]} long {_ZES[1]}", flush=True)
     if MERD_SIRA: print(f"# MERD_SIRA: ayni barda kademe+TP duzeltmesi {_MSQ[0]} olay", flush=True)
     if BOSLUK and bos[1]>0:
         print(f'BOSLUK: fiili/hedef brut = {bos[0]/bos[1]*100:.2f}%  '
