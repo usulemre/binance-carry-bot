@@ -6932,3 +6932,8 @@ En kötü gün (2021-05-19) piyasa çöküşü + short hedge'inin çöküş orta
 en kötü günü −13,3 → −7,8'e indiriyor ama kaldıracı bağlayan TAM DÖNEM düşüşü (düz küme, −13,3..−15,3, farklı nedenler) oynamıyor.
 Bağlayıcı düşüşün (2022 yazı, UNFI sıkışması) iki kalıbı (girişe göre / birikmiş kayba göre ekleme yasağı) RED. Kitap bu eksende
 yerel optimumda; anlamlı iyileştirme T7K 1,15x (madde 596, Ekim OOS bekliyor).
+
+## Madde 612 — Kazanç defterleri (PDF) gerçekçi modelle güncellendi
+`raporlar/kazanc_defteri/Kazanc_Defteri.pdf` (2022-07 → 2026-09, 54 s.) ve `Kazanc_Defteri_6_Yil.pdf` (2020-07 → 2026-09, 78 s.):
+sütunlar Asıl bot T4 · Aday T7K 1,15x · T6 aday · Eski bot T1, hepsi gerçekçi model (madde 587 serisi). 6 yıl yıllık · dd · en kötü gün:
+T4 +244 · −15,3 · −13,32 — T7K 1,15x +303 · −15,2 · −9,12 — T6 +316 · −16,5 · −10,83 — T1 +193 · −18,0 · −14,54. Otopsi notu (609-611) 3. sayfada.

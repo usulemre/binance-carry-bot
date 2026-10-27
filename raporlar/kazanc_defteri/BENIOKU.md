@@ -1,3 +1,10 @@
+> **2026-10-27 GÜNCELLEME (madde 612):** iki PDF de GERÇEKÇİ modelle (canlı gibi tek hesap girişi + 5 bp + MERD_SIRA=1; madde 587
+> serisi /tmp/m_ekim_kuru/M357_EK_{T4,T7K,T6,T1}_2000_{0,1}) yeniden üretildi. Sütunlar: **Asıl bot T4** · **Aday T7K 1,15x**
+> (T7K günlük getirisi × 1,15; madde 596 eşit risk) · **T6 aday** · **Eski bot T1**. Pickle'da t2=T4, t1=T7K×1,15, sr=T6, bot=T1
+> (pdf_uret.py t1/t2'yi yer değiştirir). Kapak sonrası 3. sayfada en kötü gün otopsisi (madde 609-611). 6 yıl: T4 +244 · T7K 1,15x +303 ·
+> T6 +316 · T1 +193 yıllık (dd −15,3 / −15,2 / −16,5 / −18,0). Yeniden üretmek: pickle'ları bu serilerden kur (`gunluk_uzun.pkl` tam,
+> `gunluk.pkl` 2022-07-20 sonrası), `python3 pdf_uret.py` ve `PDF_PROFIL=uzun python3 pdf_uret.py`, Playwright ile A4 PDF.
+
 > **2026-10-26 (madde 575):** üçüncü sütun artık **T6 aday** (standart model serisi Q_T6; önceden T4 merdivensiz). Pickle'larda `sr` = T6.
 
 > **2026-10-25 GÜNCELLEME (madde 534):** T4 kod varsayılanı (asıl bot). İki PDF'te başlık sütunu artık **Asıl bot T4**,

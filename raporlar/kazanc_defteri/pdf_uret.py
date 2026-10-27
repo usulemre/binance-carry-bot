@@ -33,12 +33,12 @@ def egri_svg(w=680, h=240):
     X = lambda i: pad_l + (w - pad_l - pad_r) * i / (n - 1)
     Y = lambda v: pad_t + (h - pad_t - pad_b) * (1 - (math.log10(v) - lo) / (hi - lo))
     out = [f'<svg viewBox="0 0 {w} {h}" class="chart">']
-    for t in [2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000]:
+    for t in [2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000]:
         if lo <= math.log10(t) <= hi:
             y = Y(t)
             out.append(f'<line x1="{pad_l}" x2="{w-pad_r}" y1="{y:.1f}" y2="{y:.1f}" class="grid"/>')
             out.append(f'<text x="{pad_l-6}" y="{y+3:.1f}" class="ax" text-anchor="end">{para(t)}</text>')
-    for yr in range(2023, 2027):
+    for yr in range(ILK_YIL + 1, 2027):
         x = X(D.index.searchsorted(pd.Timestamp(f"{yr}-01-01")))
         out.append(f'<line x1="{x:.1f}" x2="{x:.1f}" y1="{pad_t}" y2="{h-pad_b}" class="grid"/>')
         out.append(f'<text x="{x:.1f}" y="{h-8}" class="ax" text-anchor="middle">{yr}</text>')
@@ -183,24 +183,33 @@ kapak = f'''
 
 css = open("stil.css").read()
 html_ = f'<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Kazanç Defteri</title><style>{css}</style></head><body>{kapak}{"".join(sayfalar)}</body></html>'
-if True:   # madde 528/534: iki defter de düzeltilmiş seriyle (görünen t1=T4 asıl bot, t2=eski bot T1, sr=T6 aday (madde 575), bot=merdivensiz T60)
-    for a, b in [("Şu anki bot ve adaylar", "Asıl bot T4 ve karşılaştırmalar"), ("2. aday (T2)", "§T1§"), ("2. aday T2", "§T1§"), ("2, aday T2", "§T1§"),
-                 ("T2 yıl sonu", "T1 yıl sonu"), ("T2 en kötü gün", "T1 en kötü gün"),
-                 ("T2 bakiye", "T1 bakiye"), ("T2 en kötü", "T1 en kötü"), ("Short ara dengeli · eski bot", "T6 aday · merdivensiz T60"),
+if True:   # madde 612: görünen t1 = T4 (asıl bot), t2 = T7K 1,15x (aday), sr = T6 (aday), bot = eski bot T1 — hepsi GERÇEKÇİ model
+    for a, b in [("Şu anki bot ve adaylar", "Asıl bot T4 ve adaylar"), ("2. aday (T2)", "§T7§"), ("2. aday T2", "§T7§"), ("2, aday T2", "§T7§"),
+                 ("T2 yıl sonu", "T7K yıl sonu"), ("T2 en kötü gün", "T7K en kötü gün"),
+                 ("T2 bakiye", "T7K bakiye"), ("T2 en kötü", "T7K en kötü"), ("Short ara dengeli · eski bot", "T6 aday · eski bot T1"),
                  ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T6 aday (T4 + short tavanı yok + short 40 sa + short penceresi 96 sa)"),
-                 ("Short ara dengeli", "T6 aday"), ("SAD bakiye", "T6 bakiye"), ("Eski bot (referans)", "Merdivensiz T60 (referans)"),
-                 ("Eski bot", "Merdivensiz T60"), ("20 Temmuz 2022", "19 Temmuz 2020" if UZUN else "20 Temmuz 2022"), ("T2'nin farkı getiriden çok kötü günlerde.", "Kaldıraçsız (1,0x)."),
-                 ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T1"),
-                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T6 aday (T4 + short tavanı yok + short 40 sa + short penceresi 96 sa)")]:
+                 ("Short ara dengeli", "T6 aday"), ("SAD bakiye", "T6 bakiye"), ("Eski bot (referans)", "§ES§ (referans)"),
+                 ("Eski bot", "§ES§"), ("20 Temmuz 2022", "19 Temmuz 2020" if UZUN else "20 Temmuz 2022"),
+                 ("T2'nin farkı getiriden çok kötü günlerde.", "T4, T6 ve eski bot kaldıraçsız (1,0x); T7K 1,15x kaldıraçla — T4 ile AYNI RİSKTE (madde 596: düşüş, en kötü gün ve 1 yıllık kötü senaryo T4'ü aşmıyor)."),
+                 ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T7K")]:
         html_ = html_.replace(a, b)
-    html_ = html_.replace("Şu anki bot", "Asıl bot T4").replace("şu anki bot", "asıl bot T4").replace("§T1§", "Eski bot T1")
+    html_ = html_.replace("Şu anki bot", "Asıl bot T4").replace("şu anki bot", "asıl bot T4").replace("§T7§", "Aday T7K 1,15x").replace("§ES§", "Eski bot T1")
     i = html_.index('<p class="dipnot">'); j = html_.index("</p>", i)
-    html_ = html_[:i] + ('<p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), UZUN ZEMİN (2020-01 verisi), ölçüm ' + ('19.07.2020' if UZUN else '20.07.2022') + ' – 30.09.2026, DÜZELTİLMİŞ DOLUM KURALI '
-        '(madde 527: aynı barda kademe + son TP vurursa kademe payı kademe fiyatından dolar; önceki defterdeki merdivenli rakamlar iyimserdi), '
-        'gerçekçi ağırlık kayması, 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması, KALDIRAÇSIZ (1,0x). Kalabalık (long/short) oranı 2021-12 '
-        'öncesi yok → o dönemde seçim funding sırasıyla (tüm serilerde aynı). Asıl bot T4 = kod varsayılanı (madde 534) ve demo hesapta çalışan ayar: '
-         'eski bot T1 + short 2 g\'de bir + short coin tavanı %8 + merdiven payı 0,80 + evren tabanı 30. Eski bot T1 = eski varsayılan (T60 + 24 sa stop + iki taraflı merdiven; CARRY_PROFIL=T60). '
-        'T6 aday = T4 + short coin tavanı yok + short 40 sa\'te bir + short adayları 96 sa funding penceresiyle (CARRY_PROFIL=T6, isteğe bağlı; madde 568-575: canlı gibi giriş + 5 bp ile yıllık +55..+80 puan, P %87-92). Merdivensiz T60 = merdivenden önceki canlı ayar. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
+    html_ = html_[:i] + ('<p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), uzun zemin, ölçüm ' + ('19.07.2020' if UZUN else '20.07.2022') + ' – 30.09.2026. '
+        'GERÇEKÇİ MODEL (madde 587, 27.10.2026 güncellemesi): canlı gibi tek hesap girişi (Binance entryPrice), işlem başı 5 bp maliyet, düzeltilmiş kademe dolumu '
+        '(MERD_SIRA); 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması. Önceki defter standart modeldi ve ~%10-20 iyimserdi. '
+        'Asıl bot T4 = kod varsayılanı ve demo hesapta çalışan ayar (madde 534). Aday T7K 1,15x = T4 + short 40 sa / 96 sa penceresi + short tavanı %8 + '
+        'prim çarpanı (yalnız azaltır, alt 0,7), 1,15x brüt (CARRY_PROFIL=T7K, CARRY_GROSS=1,15; madde 585/596/599) — canlıya geçiş Ekim OOS sonucunu bekliyor. '
+        'T6 aday = T4 + short tavanı yok + short 40 sa + 96 sa penceresi (CARRY_PROFIL=T6; 20-100 bin $ bakiyede en iyi). Eski bot T1 = eski varsayılan (CARRY_PROFIL=T60). '
+        'Kalabalık oranı 2021-12 öncesi yok → o dönemde seçim funding sırasıyla. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
         'sonucu değildir ve gelecek için garanti vermez. Büyük bakiyelerde likidite nedeniyle bileşik büyüme gerçekte bu kadar sürmez.') + html_[j:]
+    oto = """<h3>En kötü gün otopsisi (madde 609–611)</h3>
+  <p class="alt">19 Mayıs 2021 (T4 −13,3%): seçilen coinler değil piyasa çöküşü — tutulan 15 long'un hepsi −25..−40% (DOGE, YFI, IOTA, MKR …).
+  Zararı büyüten iki mekanizma: short'lar çöküşün ortasında kâr alıp kapandı (kitap net long kaldı) ve 24 saatlik stop gün içi iğnede, dipte doldu.
+  Stop'u 4 saatlik kapanışla tetiklemek o günü −7,8%'e indiriyor ama getiriyi ve kaldıraç tavanını değiştirmiyor; kaldıracı bağlayan 6 yıllık en büyük
+  düşüş (2022 yazı, UNFI short sıkışması, −15,3%) — onu kesmeye yönelik iki kural (zarardaki pozisyona ekleme yok, coin başına kayıp hafızası) RED.
+  T4 bu eksende yerel optimumda; anlamlı iyileştirme T7K 1,15x.</p>"""
+    k = html_.index("</section>", html_.index("T6 aday · eski bot T1</h2>"))
+    html_ = html_[:k] + oto + html_[k:]
 open("defter.html", "w").write(html_)
 print("sayfa", 3 + len(sayfalar))
