@@ -2,11 +2,13 @@ import pandas as pd, numpy as np, math
 # Seriler: t1 = şu anki bot (ZSR15P67), t2 = 2. aday (BRP80_CAP_A43), bot = eski bot (T60 öncesi, referans)
 import os
 UZUN = os.environ.get("PDF_PROFIL", "") == "uzun"     # 6 yıllık defter: t1=T1, t2=T4, sr=T3, bot=merdivensiz T60
-D = pd.read_pickle("../gunluk_uzun.pkl" if UZUN else "../gunluk.pkl")
+SEV = int(os.environ.get("SEVIYE", "2000"))      # madde 630: 2000 (D8) | 1000 (D9)
+_ek = "" if SEV == 2000 else f"_{SEV}"
+D = pd.read_pickle(f"../gunluk_uzun{_ek}.pkl" if UZUN else f"../gunluk{_ek}.pkl")
 # MADDE 534: T4 kod varsayılanı (asıl bot) -> başlık sütunu T4. Pickle'da t1=T1, t2=T4; burada yer değiştirir.
 D[["t1", "t2"]] = D[["t2", "t1"]].values
 ILK_YIL = int(D.index[0].year)
-BAS = 2000.0
+BAS = float(SEV)
 S = [("t1", "Şu anki bot", "l-t1", "sw-t1"), ("t2", "2. aday (T2)", "l-t2", "sw-t2"), ("sr", "Short ara dengeli", "l-sr", "sw-sr"), ("bot", "Eski bot", "l-eski", "sw-eski")]
 for c, *_ in S:
     D[c + "_b"] = BAS * (1 + D[c]).cumprod()
@@ -33,7 +35,7 @@ def egri_svg(w=680, h=240):
     X = lambda i: pad_l + (w - pad_l - pad_r) * i / (n - 1)
     Y = lambda v: pad_t + (h - pad_t - pad_b) * (1 - (math.log10(v) - lo) / (hi - lo))
     out = [f'<svg viewBox="0 0 {w} {h}" class="chart">']
-    for t in [2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000]:
+    for t in [1000, 2000, 5000, 10000, 20000, 50000, 100000, 200000, 500000, 1000000, 2000000, 5000000, 10000000, 20000000]:
         if lo <= math.log10(t) <= hi:
             y = Y(t)
             out.append(f'<line x1="{pad_l}" x2="{w-pad_r}" y1="{y:.1f}" y2="{y:.1f}" class="grid"/>')
@@ -144,7 +146,7 @@ kapak = f'''
 <section class="sayfa kapak">
   <div class="ust">binance-carry-bot · backtest defteri</div>
   <h1>Kazanç Defteri</h1>
-  <p class="alt">20 Temmuz 2022 – 30 Eylül 2026 · {len(D)} gün · 2.000 $ başlangıç, kâr her gün yeniden yatırılır</p>
+  <p class="alt">20 Temmuz 2022 – 30 Eylül 2026 · {len(D)} gün · §BAS§ başlangıç, kâr her gün yeniden yatırılır</p>
   <div class="kpi-buyuk">
     <div class="k-t1"><span>Şu anki bot · 30 Eylül 2026</span><b>{para(D.t1_b.iloc[-1])}</b><em>yıllık ort. {yuzde(cagr(D.t1),0)} · en kötü düşüş {yuzde(dd(D.t1),1)}</em></div>
     <div class="k-t2"><span>2. aday T2</span><b>{para(D.t2_b.iloc[-1])}</b><em>yıllık ort. {yuzde(cagr(D.t2),0)} · en kötü düşüş {yuzde(dd(D.t2),1)}</em></div>
@@ -197,7 +199,7 @@ if True:   # madde 612/624: görünen t1 = T4 (asıl bot), t2 = T7K 1,15x + koş
     i = html_.index('<p class="dipnot">'); j = html_.index("</p>", i)
     html_ = html_[:i] + ('<p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), uzun zemin, ölçüm ' + ('19.07.2020' if UZUN else '20.07.2022') + ' – 30.09.2026. '
         'GERÇEKÇİ MODEL (madde 587, 27.10.2026 güncellemesi): canlı gibi tek hesap girişi (Binance entryPrice), işlem başı 5 bp maliyet, düzeltilmiş kademe dolumu '
-        '(MERD_SIRA); 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması. '
+        '(MERD_SIRA); ' + ('2.000 $ seviyesi (D8 evreni)' if SEV == 2000 else '1.000 $ seviyesi (D9 evreni: D8 + AVAX, madde 349)') + ', iki dilim hizasının ortalaması. '
         'Asıl bot T4 = kod varsayılanı (madde 534). T7K 1,15x + koşullu stop = CARRY_PROFIL=T7K, CARRY_GROSS=1,15, CARRY_LONG_24S_PIYASA=0,03 (madde 596, 621-623); eski stop = aynı kitap, borsada koşulsuz 24 sa stop. '
         'Canlıya geçiş Ekim OOS sonucunu bekliyor (madde 617). '
         'Eski bot T1 = CARRY_PROFIL=T60. '
@@ -213,5 +215,6 @@ if True:   # madde 612/624: görünen t1 = T4 (asıl bot), t2 = T7K 1,15x + koş
   dört bakiye/kitap hücresinin dördünde de; Sharpe iki dönemde de ↑.</p>"""
     k = html_.index("</section>", html_.index("T7K 1,15x (eski stop) · eski bot T1</h2>"))
     html_ = html_[:k] + oto + html_[k:]
+html_ = html_.replace("§BAS§", para(BAS))
 open("defter.html", "w").write(html_)
 print("sayfa", 3 + len(sayfalar))
