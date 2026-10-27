@@ -7122,3 +7122,8 @@ T4 gerçekçi 2.000 $ (ham · dd · en kötü · −%5 · Sh ≤24 / 25+ → eş
 T4 + KS (bot ritmi) +254,0 · −15,4 · −8,20 · 7 · 3,77 / 4,16 → +233,3. Ön kayıt: eşit-risk ≥ +8 ✓, Sharpe iki dönem ✓, dd T4'ten derin
 değil ✗ (−15,4 vs −15,3, sınırda) → resmi RED. T7K'da (madde 622) −%5 günü 3 → 4 iken T4'te 3 → 7: T4'te short tavanı / prim çarpanı
 olmadığından tutulan çöküşler daha sık −%5'e taşıyor. Koşullu stop T7K / T6 ile ÖNERİLİR, T4'te isteğe bağlı kalır (CARRY_LONG_24S_PIYASA).
+
+## Madde 639 — Kademe payı taraf başına (MERDS_PAY): PLATO — 0,80 iki tarafta da yerinde
+Taban P3T2 (+315,2). Eşit risk (Sh ≤24 / 25+): short pay 0,60 +313,2 (4,01 / 4,42) · short 1,0 +317,2 (+2,0; 4,05 / 4,40) · long 0,60 +268,4
+(−47; dd −14,1 → k 1,05) · long 0,95 +312,3 (4,04 / 4,45). Short payı 0,6-1,0 arasında düz (±2); long payını düşürmek kaldıraç kapasitesini
+yiyor (madde 608: kademe = kalkan). Hepsi RED.
