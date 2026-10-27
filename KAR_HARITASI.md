@@ -7006,3 +7006,17 @@ piyasa ≤ −%5 iken +247,1 · −13,3 · −7,41 · 4 · 4,04 / 4,38 · 1,15 �
 1,15 → **+317,8 (+14,6)** — ≤ −%5, seviye −%35 +245,9 · −13,3 · −7,41 · 4 · 4,03 / 4,42 · 1,15 → **+313,2 (+10,0)** — stop yok +242,6 ·
 **−19,2** · −7,41 · 4 · 3,94 / 4,39 (stop piyasa çöküşünde ŞART). Üç komşu kol da +10..+15 → plato. Bedel: −%5 altı gün 3 → 4.
 2021-05-19 −7,9 → −4,4. Sonraki adım (madde 623): 3.500 $ D2 ve TAM evrende (T6 / T7K) doğrulama, sonra bot.
+
+## Madde 623 — Koşullu 24 sa stop DOĞRULANDI (3.500 $ D2 ve TAM) + bot ritmi (8 sa) + BOTA EKLENDİ (varsayılan kapalı)
+Araç `arastirma_m623_kosullu_stop_dogrula.py` (ön kayıt başlıkta; bar: her seviyede eşit-risk ≥ +4 ve iki dönem Sharpe ≥ taban).
+Eşit-risk yıllık (taban → piyasa ≤ −%3 koşullu) · ham en kötü gün · Sh ≤24 / 25+:
+3.500 $ T7K +272,3 → **+286,3 (+14,0)** · −7,91 → −7,32 · 4,10 / 4,26 → 4,12 / 4,40 (≤ −%5: +284,2) —
+TAM T6 1,10x +354,9 → **+374,0 (+19,1)** · −10,95 → **−6,99** · 4,06 / 4,47 → 4,11 / 4,58 — TAM T7K +288,4 → **+302,7 (+14,3)** · −8,02 → −6,92.
+Bedel her yerde −%5 altı gün +1..+2 (TAM T6 10 → 12). Bot ritmi (kontrol 8 sa'te bir, SLL24_KAP_TAZE=2), T7K 2.000 $: +315,2 (+12,0).
+Madde 622'nin otomatik tablosundaki "RED" etiketi şablondan kalan (c) −%5 altı gün şartıdır; 622'nin ön kaydı (eşit-risk + iki dönem
+Sharpe) tutuyor → ADAY → DOĞRULANDI.
+**Bot:** `CARRY_LONG_24S_PIYASA` (varsayılan 0 = eski borsa STOP_MARKET'i). x > 0: 24 sa stop borsada beklemez; her turda son kapanmış
+4 sa mumu (k[−2] / k[−8], motor cv[i+1] / cv[i−5]) ≤ −LONG_24S VE evrenin (evren_sec) medyan 24 sa getirisi ≤ −x → long piyasa emriyle
+kapanır ve dilimlerden çıkar; medyan ölçülemezse koşulsuz uygulanır. Preflight: yalnız 0,03 / 0,05 TAMAM, başka değer ya da
+LONG_24S=0 iken HATA (+5 test). Entegrasyon testine 4 kontrol (borsada long 24 sa emri yok; piyasa sakin + coin −%50 tutulur; piyasa
+−%10 + coin −%50 kapanır; coin −%20 tutulur). Varsayılan DEĞİŞMEDİ — açmak kullanıcı kararı (önce demo).
