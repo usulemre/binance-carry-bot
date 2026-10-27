@@ -432,7 +432,7 @@ BRUT_PRIM=float(os.environ.get("BRUT_PRIM","0"))   # 0=kapali; >0 = duyarlilik u
 BRUT_ALT=float(os.environ.get("BRUT_ALT","0.5"))   # carpanin tabani
 BRUT_UST=float(os.environ.get("BRUT_UST","1.5"))   # carpanin tavani
 BRUT_REF=int(os.environ.get("BRUT_REF","180"))     # gun: YEREL referans penceresi
-BRUT_OLC=int(os.environ.get("BRUT_OLC","30"))      # gun: prim olcum penceresi
+BRUT_OLC=int(os.environ.get("BRUT_OLC","30")); BRUT_TARAF=os.environ.get("BRUT_TARAF","iki").strip()      # gun: prim olcum penceresi
 _PCARP=None
 if BRUT_PRIM>0:
     _Sd=pd.DataFrame(S).where(pd.DataFrame(U))
@@ -801,7 +801,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                             y=np.where(y>0,y*_a,np.where(y<0,y*_c,y)); _BTS[0]+=1; _BTS[1]+=abs(_a-1)
                 if _PCARP is not None:
                     _mi=float(_PCARP[i]) if np.isfinite(_PCARP[i]) else 1.0
-                    y=y*_mi; _BRT[0]+=_mi; _BRT[1]+=1
+                    # MADDE 615: BRUT_TARAF=short/long -> carpan yalniz o tarafa (dolar notrlugu BILEREK bozulur). Bos/iki -> parite.
+                    y=(np.where(y<0,y*_mi,y) if BRUT_TARAF=="short" else np.where(y>0,y*_mi,y) if BRUT_TARAF=="long" else y*_mi); _BRT[0]+=_mi; _BRT[1]+=1
                 if LISI>0 and np.isfinite(_LI[i]) and _LI[i]>=LISI:
                     y=y*LISI_PAY if LISI_IKI else np.where(y>0,y*LISI_PAY,y); _LIS[0]+=1
                 if GENCV is not None:
