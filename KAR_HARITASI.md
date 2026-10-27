@@ -6919,3 +6919,16 @@ ZARAR_EK (hesaptaki ağırlıklı giriş +x aleyhteyse aday olmaz), T4 gerçekç
 short %35 +244,8 · −15,6 · +0,4 — iki %20 +243,8 · −15,4 · −0,5. Hepsi RED. Neden: short dilimleri 48 sa'te bir yenilenince ortalama
 giriş fiyatın peşinden gidiyor; UNFI'de hiçbir an "girişin +%20 üstü" olmadı, kayıp çok sayıda küçük dilime yayıldı → madde 611:
 girişe değil kitabın coin başına BİRİKMİŞ kaybına bak (KAYIP_HAF).
+
+## Madde 611 — Kitabın kendi kayıp hafızası (KAYIP_HAF: coinin short'larından son N g'de ≥ y kaybettiysek short adayı olmaz): RED
+T4 gerçekçi 2.000 $ (yıllık · dd · en kötü · −%5 · Sh ≤24 / 25+ · eşit-risk; T4 +244,3 · −15,3 · −13,32 · 3 · 3,74 / 4,08 · +224,6):
+%1 / 30 g +230,0 · −14,9 · −12,64 · 6 · 3,45 / 4,38 · +230,0 — %2 / 30 g +243,9 · −14,4 · −13,40 · 3 · 3,70 / 4,25 · +224,2 —
+%1 / 15 g +229,8 · −14,8 · −12,92 · 2 · 3,51 / 4,17 · +229,8. Kural düşüşü biraz sığlaştırıyor (−0,4..−0,9) ve 2025+ Sharpe'ı
+artırıyor, ama ≤2024'te kâr kesiyor; eşit-risk farkı +5,4'e kadar (bar +8). RED. Kayıp veren coine short'a devam etmek ortalamada
+DOĞRU (madde 474 / 552 ile aynı: sıkışan coin funding primini taşımaya devam ediyor).
+
+### Madde 609-611 özeti (kullanıcı: "PDF'te çok düşen gün hangi coini aldı, neden zarar etti, bul gider")
+En kötü gün (2021-05-19) piyasa çöküşü + short hedge'inin çöküş ortasında kâr alması + 24 sa stop'un iğnede dolması; kapanışla stop
+en kötü günü −13,3 → −7,8'e indiriyor ama kaldıracı bağlayan TAM DÖNEM düşüşü (düz küme, −13,3..−15,3, farklı nedenler) oynamıyor.
+Bağlayıcı düşüşün (2022 yazı, UNFI sıkışması) iki kalıbı (girişe göre / birikmiş kayba göre ekleme yasağı) RED. Kitap bu eksende
+yerel optimumda; anlamlı iyileştirme T7K 1,15x (madde 596, Ekim OOS bekliyor).
