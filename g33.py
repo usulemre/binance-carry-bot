@@ -161,6 +161,10 @@ SLL24_TAZE=int(os.environ.get("SLL24_TAZE","1"))
 # MADDE 454: pencere uzunlugu (bar) ve ikinci (kisa) kademe. SLL24_PEN=5 -> 24 sa (parite).
 SLL24_PEN=int(os.environ.get("SLL24_PEN","5"))
 SLLK=float(os.environ.get("SLLK","0")); SLLK_PEN=int(os.environ.get("SLLK_PEN","2"))
+# MADDE 609: SLL24_KAP=1 -> 24 sa stop gun ici IGNEYLE (bar dibi) degil, 4 sa KAPANISLA tetiklenir ve kapanistan
+# cikar (19 May 2021: long'lar igne dibinde satilip ertesi gunun %10-15 donusu kacti). SLL24_KAP_TAZE=n: yalniz
+# n barda bir kontrol (bot turu 8 sa = 2). 0 = eski (igne, parite).
+SLL24_KAP=int(os.environ.get("SLL24_KAP","0")); SLL24_KAP_TAZE=int(os.environ.get("SLL24_KAP_TAZE","1"))
 # MADDE 450: SHORT 24 SA YUKSELIS STOP'U (SLL24'un aynasi). 0 = kapali (parite).
 SLS24=float(os.environ.get("SLS24","0"))
 # MADDE 417: KAR HEDEFI SIFIRLAMA. Bacak girisinden aleyhe TP_SIFIRLA kadar gidince
@@ -847,7 +851,11 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _s24 = cv[_i24-SLL24_PEN,k]*(1-SLL24)
                 if SLLK > 0 and uzun and _i24 >= SLLK_PEN and np.isfinite(cv[_i24-SLLK_PEN,k]) and cv[_i24-SLLK_PEN,k] > 0:
                     _s24 = max(_s24, cv[_i24-SLLK_PEN,k]*(1-SLLK))
-                if _s24 > 0:
+                if _s24 > 0 and SLL24_KAP:
+                    if ((i+1) % SLL24_KAP_TAZE == 0) and np.isfinite(cv[i+1,k]) and cv[i+1,k] <= _s24:
+                        br[k] = cv[i+1,k]/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        continue
+                elif _s24 > 0:
                     if LV[i+1,k] <= _s24:
                         _op = OV[i+1,k]
                         _ff = min(_s24,_op) if np.isfinite(_op) else _s24
