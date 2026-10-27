@@ -6870,3 +6870,13 @@ DOĞRU YOL — POZİSYONU KAPATMADAN KÂR ÇEKMEK: bot boyutu bakiyeden okuduğu
 2.000 $ baz, gün sonu baz üstü çekilir (baz altındaysa önce açık kapanır), 2020-07..2026-09:
 T7K ort 6,8 $/gün (2025+ 8,1), haftalık medyan 17 $, aylık medyan 133 $ · T4 ort 7,0 $/gün, aylık medyan 146 $. Artı gün oranı %55-56;
 haftaların ve ayların en az %10'unda çekilecek kâr 0. Bileşik (çekmeden) büyüme bunun çok üstünde (yıllık +%240), seçim kullanıcının.
+
+## Madde 606 — "GÜNLÜK KİTAP": gün içi saat mevsimselliği (sepet / BTC, her gün kapanan): RED — 2024'ün saat kalıbı 2025'te kayboldu
+Kullanıcı: günlük kazanç için başka kitap. Yeni veri: `arastirma_m606_saat_panel.py` veri dalının data_5m arşivinden (100 likit sembol,
+2024-01..2026-08) saatlik panel kurar. Araç `arastirma_m606_gun_ici.py` (ön kayıt başlıkta): sabit UTC penceresinde eşit ağırlıklı sepet ya da
+BTC long/short, pencere dışı düz; 24 başlangıç × 7 uzunluk × 2 yön × 2 varlık = 672 kol; maliyet 4 bp (maker) / 10 bp (taker) gidiş-dönüş.
+- IS (2024) en iyi 8 kolun HEPSİ "sepet, 20-21 UTC'den long" ailesi (IS Sh 2,1-2,9, yıllık +%48..+215) — OOS'ta (2025-26) hepsi eksi:
+  birincisi (21:00'dan 2 sa long) OOS Sh −0,08 (4 bp) / −0,93 (10 bp), yıllık −%5 / −%24.
+- IS↔OOS Sharpe sıra korelasyonu +0,13; OOS'ta 4 bp net Sh ≥ 1 olan kol 1/672 (şansla beklenen ~54).
+Gün içi saat kalıbı kalıcı değil (madde 353-C'nin haftalık sonucunun saatlik hâli). Her gün kapanan bir kitap, gece taşımayınca carry'nin
+tek gelir kaynağını (kalabalık funding + TP hasadı, 5 g tutma) da kaybediyor. Günlük gelir için doğru yol madde 605'in kâr çekmesi.
