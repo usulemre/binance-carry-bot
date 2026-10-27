@@ -1,3 +1,7 @@
+> **2026-10-27 akşam (madde 624):** sütunlar artık **Asıl bot T4** · **T7K 1,15x + koşullu stop** (madde 621-623, bot ritmi 8 sa;
+> seri /tmp/m622/M357_EK_P3T2) · **T7K 1,15x eski stop** · **Eski bot T1**. Pickle'da t2=T4, t1=P3T2×1,15, sr=T7K×1,15, bot=T1.
+> 6 yıl yıllık: T4 +244 · T7K+KS +315 · T7K eski stop +303 · T1 +193.
+
 > **2026-10-27 GÜNCELLEME (madde 612):** iki PDF de GERÇEKÇİ modelle (canlı gibi tek hesap girişi + 5 bp + MERD_SIRA=1; madde 587
 > serisi /tmp/m_ekim_kuru/M357_EK_{T4,T7K,T6,T1}_2000_{0,1}) yeniden üretildi. Sütunlar: **Asıl bot T4** · **Aday T7K 1,15x**
 > (T7K günlük getirisi × 1,15; madde 596 eşit risk) · **T6 aday** · **Eski bot T1**. Pickle'da t2=T4, t1=T7K×1,15, sr=T6, bot=T1

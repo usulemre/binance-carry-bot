@@ -7020,3 +7020,9 @@ Sharpe) tutuyor → ADAY → DOĞRULANDI.
 kapanır ve dilimlerden çıkar; medyan ölçülemezse koşulsuz uygulanır. Preflight: yalnız 0,03 / 0,05 TAMAM, başka değer ya da
 LONG_24S=0 iken HATA (+5 test). Entegrasyon testine 4 kontrol (borsada long 24 sa emri yok; piyasa sakin + coin −%50 tutulur; piyasa
 −%10 + coin −%50 kapanır; coin −%20 tutulur). Varsayılan DEĞİŞMEDİ — açmak kullanıcı kararı (önce demo).
+
+## Madde 624 — Kazanç defterleri koşullu stop'la güncellendi
+PDF sütunları: Asıl bot T4 · T7K 1,15x + koşullu stop (bot ritmi) · T7K 1,15x eski stop · Eski bot T1 (gerçekçi model, 2.000 $).
+6 yıl (yıllık · dd · en kötü gün · 2.000 $ → 30.09.2026): T4 +244 · −15,3 · −13,32 · 4,27 M $ — T7K+KS +315 · −15,2 · −8,52 · 13,65 M $ —
+T7K eski stop +303 · −15,2 · −9,12 · 11,37 M $ — T1 +193 · −18,0 · −14,54 · 1,58 M $. Yıl yıl T7K+KS: 2020 (Tem-Ara) +112 · 2021 +637 ·
+2022 +75 · 2023 +402 · 2024 +144 · 2025 +342 · 2026 (Oca-Eyl) +364.

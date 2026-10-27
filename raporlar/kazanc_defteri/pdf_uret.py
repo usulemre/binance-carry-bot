@@ -183,24 +183,24 @@ kapak = f'''
 
 css = open("stil.css").read()
 html_ = f'<!doctype html><html lang="tr"><head><meta charset="utf-8"><title>Kazanç Defteri</title><style>{css}</style></head><body>{kapak}{"".join(sayfalar)}</body></html>'
-if True:   # madde 612: görünen t1 = T4 (asıl bot), t2 = T7K 1,15x (aday), sr = T6 (aday), bot = eski bot T1 — hepsi GERÇEKÇİ model
+if True:   # madde 612/624: görünen t1 = T4 (asıl bot), t2 = T7K 1,15x + koşullu stop, sr = T7K 1,15x eski stop, bot = eski bot T1 — hepsi GERÇEKÇİ model
     for a, b in [("Şu anki bot ve adaylar", "Asıl bot T4 ve adaylar"), ("2. aday (T2)", "§T7§"), ("2. aday T2", "§T7§"), ("2, aday T2", "§T7§"),
-                 ("T2 yıl sonu", "T7K yıl sonu"), ("T2 en kötü gün", "T7K en kötü gün"),
-                 ("T2 bakiye", "T7K bakiye"), ("T2 en kötü", "T7K en kötü"), ("Short ara dengeli · eski bot", "T6 aday · eski bot T1"),
-                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T6 aday (T4 + short tavanı yok + short 40 sa + short penceresi 96 sa)"),
-                 ("Short ara dengeli", "T6 aday"), ("SAD bakiye", "T6 bakiye"), ("Eski bot (referans)", "§ES§ (referans)"),
+                 ("T2 yıl sonu", "T7K+KS yıl sonu"), ("T2 en kötü gün", "T7K+KS en kötü gün"),
+                 ("T2 bakiye", "T7K+KS bakiye"), ("T2 en kötü", "T7K+KS en kötü"), ("Short ara dengeli · eski bot", "T7K 1,15x (eski stop) · eski bot T1"),
+                 ("Short ara dengeli (şu anki bot + short her gün yeniden seçilir)", "T7K 1,15x, eski 24 sa stop (borsada, koşulsuz)"),
+                 ("Short ara dengeli", "T7K eski stop"), ("SAD bakiye", "Eski stop bakiye"), ("Eski bot (referans)", "§ES§ (referans)"),
                  ("Eski bot", "§ES§"), ("20 Temmuz 2022", "19 Temmuz 2020" if UZUN else "20 Temmuz 2022"),
-                 ("T2'nin farkı getiriden çok kötü günlerde.", "T4, T6 ve eski bot kaldıraçsız (1,0x); T7K 1,15x kaldıraçla — T4 ile AYNI RİSKTE (madde 596: düşüş, en kötü gün ve 1 yıllık kötü senaryo T4'ü aşmıyor)."),
-                 ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T7K")]:
+                 ("T2'nin farkı getiriden çok kötü günlerde.", "T4 ve eski bot kaldıraçsız (1,0x); T7K 1,15x kaldıraçla — T4 ile AYNI RİSKTE (madde 596). Koşullu stop (KS, madde 621-623): 24 sa stop yalnız piyasa medyanı ≤ −%3 iken, 8 sa'lik bot turunda kapanışla."),
+                 ("<i class=\"sw sw-t2\"></i>T2", "<i class=\"sw sw-t2\"></i>T7K+KS")]:
         html_ = html_.replace(a, b)
-    html_ = html_.replace("Şu anki bot", "Asıl bot T4").replace("şu anki bot", "asıl bot T4").replace("§T7§", "Aday T7K 1,15x").replace("§ES§", "Eski bot T1")
+    html_ = html_.replace("Şu anki bot", "Asıl bot T4").replace("şu anki bot", "asıl bot T4").replace("§T7§", "T7K 1,15x + koşullu stop").replace("§ES§", "Eski bot T1")
     i = html_.index('<p class="dipnot">'); j = html_.index("</p>", i)
     html_ = html_[:i] + ('<p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), uzun zemin, ölçüm ' + ('19.07.2020' if UZUN else '20.07.2022') + ' – 30.09.2026. '
         'GERÇEKÇİ MODEL (madde 587, 27.10.2026 güncellemesi): canlı gibi tek hesap girişi (Binance entryPrice), işlem başı 5 bp maliyet, düzeltilmiş kademe dolumu '
-        '(MERD_SIRA); 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması. Önceki defter standart modeldi ve ~%10-20 iyimserdi. '
-        'Asıl bot T4 = kod varsayılanı ve demo hesapta çalışan ayar (madde 534). Aday T7K 1,15x = T4 + short 40 sa / 96 sa penceresi + short tavanı %8 + '
-        'prim çarpanı (yalnız azaltır, alt 0,7), 1,15x brüt (CARRY_PROFIL=T7K, CARRY_GROSS=1,15; madde 585/596/599) — canlıya geçiş Ekim OOS sonucunu bekliyor. '
-        'T6 aday = T4 + short tavanı yok + short 40 sa + 96 sa penceresi (CARRY_PROFIL=T6; 20-100 bin $ bakiyede en iyi). Eski bot T1 = eski varsayılan (CARRY_PROFIL=T60). '
+        '(MERD_SIRA); 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması. '
+        'Asıl bot T4 = kod varsayılanı (madde 534). T7K 1,15x + koşullu stop = CARRY_PROFIL=T7K, CARRY_GROSS=1,15, CARRY_LONG_24S_PIYASA=0,03 (madde 596, 621-623); eski stop = aynı kitap, borsada koşulsuz 24 sa stop. '
+        'Canlıya geçiş Ekim OOS sonucunu bekliyor (madde 617). '
+        'Eski bot T1 = CARRY_PROFIL=T60. '
         'Kalabalık oranı 2021-12 öncesi yok → o dönemde seçim funding sırasıyla. Bunlar geçmiş verinin simülasyonudur, canlı hesabın gerçek '
         'sonucu değildir ve gelecek için garanti vermez. Büyük bakiyelerde likidite nedeniyle bileşik büyüme gerçekte bu kadar sürmez.') + html_[j:]
     oto = """<h3>En kötü gün otopsisi (madde 609–611)</h3>
@@ -208,8 +208,10 @@ if True:   # madde 612: görünen t1 = T4 (asıl bot), t2 = T7K 1,15x (aday), sr
   Zararı büyüten iki mekanizma: short'lar çöküşün ortasında kâr alıp kapandı (kitap net long kaldı) ve 24 saatlik stop gün içi iğnede, dipte doldu.
   Stop'u 4 saatlik kapanışla tetiklemek o günü −7,8%'e indiriyor ama getiriyi ve kaldıraç tavanını değiştirmiyor; kaldıracı bağlayan 6 yıllık en büyük
   düşüş (2022 yazı, UNFI short sıkışması, −15,3%) — onu kesmeye yönelik iki kural (zarardaki pozisyona ekleme yok, coin başına kayıp hafızası) RED.
-  T4 bu eksende yerel optimumda; anlamlı iyileştirme T7K 1,15x.</p>"""
-    k = html_.index("</section>", html_.index("T6 aday · eski bot T1</h2>"))
+  Çıkış otopsisi (madde 621, ~12 bin çıkış): kâr al ve kademe doğru zamanda; erken satış YALNIZ 24 sa stop'ta ve yalnız piyasa sakinken
+  (tek coin çöküşü 3 günde dönüyor). Koşullu stop (madde 622-623: stop yalnız piyasa medyanı ≤ −%3 iken) aynı riskte yılda +12..+19 puan,
+  dört bakiye/kitap hücresinin dördünde de; Sharpe iki dönemde de ↑.</p>"""
+    k = html_.index("</section>", html_.index("T7K 1,15x (eski stop) · eski bot T1</h2>"))
     html_ = html_[:k] + oto + html_[k:]
 open("defter.html", "w").write(html_)
 print("sayfa", 3 + len(sayfalar))
