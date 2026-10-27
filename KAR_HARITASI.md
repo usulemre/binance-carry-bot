@@ -7074,3 +7074,10 @@ Kazanc_Defteri_6_Yil_1000.pdf (SEVIYE=1000 python3 pdf_uret.py). Excel: Kazanc_2
 Gerçekçi model, bot ritmi (/tmp/m630/T6KS_{2000,1000}). 6 yıl yıllık · dd · en kötü · −%5 altı · 2026: 2.000 $ +328,8 · −16,5 · −7,40 · 7 · +391 —
 1.000 $ +317,3 · −17,0 · −6,95 · 9 · +357. Ham getiri T7K 1,15x + KS'den yüksek ama dd T4'ten 1-1,5 puan derin → T4 riskinde ~0,9x;
 küçük bakiyede önerilen kitap değil (bilgi). PDF'ler (4) ve 2026 Excel'leri (1.000 / 2.000) beş sütunla yeniden üretildi.
+
+## Madde 632 — Kısa funding aralıklı short'lara ağırlık (ARALIK_AG, madde 552'nin tersi): yön DOĞRU, etki küçük → RED
+Taban T7K 1,15x + koşullu stop (P3T2, eşit risk +315,2). İşaretli hücre payı ≤ 2 sa %0,99, kısalmış %0,69. Eşit-risk (Sh ≤24 / 25+):
+≤ 2 sa ×1,5 +317,0 (+1,8; 4,03 / 4,45) — ≤ 2 sa ×2 +318,2 (+3,0; 4,03 / 4,48) — kısalmış ×1,5 +315,8 (+0,6). Hiçbir riski artırmıyor,
+2025+ Sharpe ↑ ama işaretli hücre çok az → bar +8 altı. Ek not (kullanıcı sorusu, QUSDT 2026-10-27 −%73): veri 30 Eylül'de bitiyor;
+Q 2025-09'da listelendi, Eylül sonunda 70M eşiğini yalnız kısa aşıyordu (son 30 g %11 uygun), funding pozitif (+%7..+%29 yıllık)
+→ evrene girdiyse SHORT adayı; 6 yılda yalnız 3 gün tutuldu (2025-11, short). Ekim OOS koşusunda Q ayrıca incelenecek.
