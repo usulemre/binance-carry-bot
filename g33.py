@@ -264,6 +264,7 @@ YARIM=int(os.environ.get("YARIM","0"))          # kar alda pozisyonun YARISI kap
 # DEGISTIRMEZ, altina bir basamak EKLER. 0 = kapali.
 MERD_ESIK=float(os.environ.get("MERD_ESIK","0"))
 MERD_PAY=float(os.environ.get("MERD_PAY","0.5"))
+MERDS_PAY=float(os.environ.get("MERDS_PAY","-1"))   # MADDE 639: short kademe payi ayri (<0 = MERD_PAY, parite)
 # MADDE 476: ERKEN (IKINCI) KADEME. Ana kademeden ONCE MERD0_ESIK (long) / MERDS0_ESIK (short) seviyesinde
 # pozisyonun MERD0_PAY'i kapanir; kalan icin ana kademe (MERD_PAY) ve son TP aynen gecerli. 0 = kapali (parite).
 MERD0_ESIK=float(os.environ.get("MERD0_ESIK","0")); MERDS0_ESIK=float(os.environ.get("MERDS0_ESIK","0"))
@@ -982,7 +983,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         _mq = MERD_ESIK if uzun else MERDS_ESIK
                         if _mq>0 and not merd_yapildi[k] and _mq<_tp:
                             _sq=e*(1+_mq) if uzun else e*(1-_mq)
-                            br[k]=MERD_PAY*(_dol(_sq,uzun,i,k)/cv[i,k]-1)+(1-MERD_PAY)*br[k]; _MSQ[0]+=1
+                            _mp=MERD_PAY if (uzun or MERDS_PAY<0) else MERDS_PAY
+                            br[k]=_mp*(_dol(_sq,uzun,i,k)/cv[i,k]-1)+(1-_mp)*br[k]; _MSQ[0]+=1
                     if YARIM: yaridan[k]=True; tp_yapildi[k]=True
                     else: cik[k]=True; _tur[k]='TP'
                     continue
@@ -1010,7 +1012,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 elif _hm:
                     br[k]=_dol(_sm,uzun,i,k)/cv[i,k]-1
                     if KOSUCU>0 or KOSUCU_S>0: zirve[k]=_sm
-                    mpay[k]=MERD_PAY; merd[k]=True; merd_yapildi[k]=True; say_t[1]+=1; _tur[k]='KAD'
+                    mpay[k]=MERD_PAY if (uzun or MERDS_PAY<0) else MERDS_PAY; merd[k]=True; merd_yapildi[k]=True; say_t[1]+=1; _tur[k]='KAD'
                     if _m0>0: merd0_yapildi[k]=True   # erken kademe ana kademeden sonra anlamsiz
                 elif _h0:
                     br[k]=_dol(_s0,uzun,i,k)/cv[i,k]-1
