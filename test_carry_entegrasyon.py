@@ -1253,6 +1253,34 @@ kontrol("seviyenin altında bulunan long piyasa emriyle kapatıldı (SELL)",
         any(k[0] == _l1 and k[1] == "SELL" for k in _kapatilan), f"({_kapatilan[:3]})")
 kontrol("kapatılan long tüm dilimlerden çıkarıldı",
         all(_l1 not in h for h in _d.get("dilimler", {}).values()))
+# MADDE 622-623: PİYASAYA KOŞULLU 24 SA STOP (CARRY_LONG_24S_PIYASA)
+temiz_ortam(); _lp0 = cb.LONG_24S_PIYASA; cb.LONG_24S_PIYASA = 0.03
+c = SahteClient(); cb.bir_tur(c, dry_run=False)
+c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
+cb.bir_tur(c, dry_run=False)
+fe = {v[0]: v for k, v in c.client.felaket_emirleri.items() if c.client.felaket_durumu[k] == "NEW"}
+_lng = [p["symbol"] for p in c.get_open_positions() if float(p["positionAmt"]) > 0]
+kontrol("koşullu stop: long'lara borsada 24 sa STOP_MARKET KONMADI", not any(s_ in fe for s_ in _lng), f"({len(_lng)} long)")
+_l1 = _lng[0]; _eski_kl = c.client.futures_klines
+def _kl(dus_coin, dus_piy):
+    def f(symbol, interval, limit):
+        d = dus_coin if symbol == _l1 else dus_piy
+        out = []
+        for i in range(limit):
+            kap = f"{(1.0 + d) if i >= limit - 2 else 1.0:.6f}"
+            out.append([0, kap, kap, kap, kap, "1", 0, "1000000", 0, "250000", "500000", 0])
+        return out
+    return f
+for ad, dc, dp, bek in (("piyasa sakin, coin −%50 -> TUTULUR", -0.50, 0.0, False),
+                        ("piyasa −%10, coin −%50 -> KAPANIR", -0.50, -0.10, True),
+                        ("piyasa −%10, coin −%20 (seviye üstü) -> TUTULUR", -0.20, -0.10, False)):
+    _kapatilan = []
+    c.close_position = lambda sem, yon, adet, verify_fill=True: _kapatilan.append((sem, yon, adet))
+    c.client.futures_klines = _kl(dc, dp); cb._PIY24_ONBELLEK.clear()
+    cb.kar_al_kur(c, cb.dilim_durum_oku())
+    kontrol("koşullu stop: " + ad, any(k[0] == _l1 and k[1] == "SELL" for k in _kapatilan) == bek, f"({_kapatilan[:2]})")
+c.client.futures_klines = _eski_kl; cb.LONG_24S_PIYASA = _lp0; cb._PIY24_ONBELLEK.clear()
+kontrol("CARRY_LONG_24S_PIYASA varsayılanı 0 (kapalı)", cb.LONG_24S_PIYASA == 0.0)
 # MADDE 465: LONG MERDİVEN KÂR ALMA
 temiz_ortam(); _em = (cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT)
 cb.MERDIVEN, cb.MERDIVEN_PAY, cb.LONG_24S, cb.MERDIVEN_SHORT = 0.45, 0.5, 0.0, 0.0

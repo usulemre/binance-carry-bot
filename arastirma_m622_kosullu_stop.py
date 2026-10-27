@@ -16,7 +16,7 @@ import arastirma_tabanlar as TB, arastirma_m346_prim as M
 G = {**TB.T1, "MERD_SIRA": "1", "TEK_GIRIS": "1", "KOM": "0.0005"}
 T4 = {**G, "S_REB": "10", "CAP_ORTAK": "0.08", "CAP_TARAF": "short", "MERD_PAY": "0.80", "HACIM_MIN_EVREN": "30", "SK_DOSYA_S": "/tmp/sk_bar96.pkl", "BRUT_PRIM": "1", "BRUT_ALT": "0.7", "BRUT_UST": "1.0"}   # = T7K
 D = "/tmp/m622"; os.makedirs(D, exist_ok=True)
-KOL = {"P5": {"SLL24_KAP": "1", "SLL24_PIY": "0.05"}, "P3": {"SLL24_KAP": "1", "SLL24_PIY": "0.03"}, "P5S35": {"SLL24_KAP": "1", "SLL24_PIY": "0.05", "SLL24": "0.35"}, "S0": {"SLL24": "0"}}
+KOL = {"P3T2": {"SLL24_KAP": "1", "SLL24_PIY": "0.03", "SLL24_KAP_TAZE": "2"}, "P5": {"SLL24_KAP": "1", "SLL24_PIY": "0.05"}, "P3": {"SLL24_KAP": "1", "SLL24_PIY": "0.03"}, "P5S35": {"SLL24_KAP": "1", "SLL24_PIY": "0.05", "SLL24": "0.35"}, "S0": {"SLL24": "0"}}
 
 
 def kos(a):

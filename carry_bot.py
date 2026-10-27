@@ -1873,6 +1873,15 @@ seviye 8 sa'te bir yenilenerek - madde 452):
 3.500 $'da da aynı (−%8,6 → −%5,5, 5 puan). Girişten stop'la (CARRY_LONG_STOP)
 BİRLİKTE kullanmak daha kötü (madde 452: 15 puan, en kötü gün −%5,9)."""
 
+LONG_24S_PIYASA = float(os.getenv("CARRY_LONG_24S_PIYASA", "0"))
+"""PİYASAYA KOŞULLU 24 SA STOP (madde 621-623). 0 = KAPALI (varsayılan; eski borsa STOP_MARKET'i). x > 0 iken 24 sa stop
+borsada BEKLEMEZ; her turda son KAPANMIŞ 4 sa mumuna bakılır: coin kapanışı 24 sa önceki kapanıştan −LONG_24S düşmüş VE evrenin
+medyan 24 sa getirisi ≤ −x ise long piyasa emriyle kapanır. Tek coin çöküşünde (piyasa sakin) stop YOK — çıkış otopsisi
+(madde 621): o çıkışlar dipte satıyordu, coin 3 g'de dönüyordu. Piyasa çapında çöküşte stop aynen çalışır (stopsuz kitap dd −19).
+Backtest (gerçekçi model, eşit risk, madde 622-623), x = 0,03: T7K 2.000 $ +303 → +318 · 3.500 $ +272 → +286 ·
+TAM T6 1,10x +355 → +374 · TAM T7K +288 → +303; Sharpe iki dönemde de ↑; bedel −%5 altı gün +1..+2.
+Girişten felaket stop'u (CARRY_LONG_STOP) açıksa o borsada beklemeye devam eder."""
+
 MERDIVEN = float(os.getenv("CARRY_MERDIVEN", "0.45"))
 """LONG MERDİVEN KÂR ALMA (madde 462-465). Long pozisyonun MERDIVEN_PAY'i
 girişten +%MERDIVEN'de, kalanı CARRY_KAR_AL'da (+%60) satılır. 0 = kapalı.
@@ -3475,6 +3484,35 @@ def long_24s_referans(client: ExchangeClient, sem: str) -> float | None:
     return None
 
 
+_PIY24_ONBELLEK: dict = {}
+_SON_EVREN: list = []
+
+
+def _kapanis_24s(client: ExchangeClient, sem: str) -> float | None:
+    """Son KAPANMIŞ 4 sa mumunun 24 sa (6 mum) getirisi: k[-2] / k[-8] − 1 (motor cv[i+1] / cv[i−5]). Okunamazsa None."""
+    try:
+        k = client.client.futures_klines(symbol=sem, interval="4h", limit=9)
+        if len(k) >= 8:
+            a, b = float(k[-2][4]), float(k[-8][4])
+            return a / b - 1 if a > 0 and b > 0 else None
+    except Exception as ex:
+        logger.warning("24 sa kapanış getirisi okunamadı %s: %s", sem, ex)
+    return None
+
+
+def piyasa_24s(client: ExchangeClient) -> float | None:
+    """Evrenin (son tur evren_sec) medyan 24 sa kapanış getirisi; saat başına bir kez ölçülür (madde 622, motor _P24)."""
+    anah = int(time.time() // 3600)
+    if anah in _PIY24_ONBELLEK:
+        return _PIY24_ONBELLEK[anah]
+    ger = [g for g in (_kapanis_24s(client, s) for s in _SON_EVREN) if g is not None]
+    v = float(np.median(ger)) if len(ger) >= 10 else None
+    _PIY24_ONBELLEK.clear(); _PIY24_ONBELLEK[anah] = v
+    if v is None:
+        logger.warning("piyasa 24 sa medyanı ölçülemedi (%d coin) - koşullu 24 sa stop bu tur KOŞULSUZ uygulanır", len(ger))
+    return v
+
+
 def felaket_simdi_kapat(client: ExchangeClient, durum: dict, sem: str, adet: float) -> None:
     """Fiyat stop seviyesini turlar arasında geçmişse long'u hemen kapatır ve
     sembolü dilimlerden çıkarır (yeniden açılmasın)."""
@@ -3623,7 +3661,19 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                 _adaylar = []
                 if LONG_FELAKET > 0:
                     _adaylar.append(giris * (1 - LONG_FELAKET))
-                if LONG_24S > 0:
+                if LONG_24S > 0 and LONG_24S_PIYASA > 0:
+                    # MADDE 622: koşullu stop borsada beklemez; kapanmış mumla şimdi karar verilir.
+                    _g = _kapanis_24s(client, sem)
+                    if _g is not None and _g <= -LONG_24S:
+                        _p = piyasa_24s(client)
+                        if _p is None or _p <= -LONG_24S_PIYASA:
+                            logger.warning("KOŞULLU 24 SA STOP: %s 24 sa %+.1f%%, piyasa %s -> kapatılıyor", sem, _g * 100,
+                                           "ölçülemedi" if _p is None else f"{_p * 100:+.1f}%")
+                            felaket_simdi_kapat(client, durum, sem, adet)
+                            return
+                        logger.info("KOŞULLU 24 SA STOP: %s 24 sa %+.1f%% ama piyasa %+.1f%% (eşik −%.0f%%) -> tutuluyor",
+                                    sem, _g * 100, _p * 100, LONG_24S_PIYASA * 100)
+                elif LONG_24S > 0:
                     _ref = long_24s_referans(client, sem)
                     if _ref:
                         _adaylar.append(_ref * (1 - LONG_24S))
@@ -4034,6 +4084,7 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
                     "(birkaç dakika sonra tekrar denenmeli)")
         return {"atlandi": "olay_kilidi"}
     semboller = evren_sec(client)
+    _SON_EVREN[:] = list(semboller)   # madde 622: koşullu 24 sa stop'un piyasa medyanı bu evrenden
     if not semboller:
         logger.error("evren boş - tur atlanıyor")
         return {}

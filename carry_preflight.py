@@ -121,6 +121,15 @@ def kontrol_ayarlar() -> None:
             kontrol("profil", TAMAM, "T60 = eski varsayılan T1 (madde 442; madde 534'ten beri varsayılan T4)")
     else:
         kontrol("profil", HATA, f"CARRY_PROFIL={profil} tanımsız (BUGUN | T60 | T3 | T4 | T6 | T7K)")
+    # MADDE 623: piyasaya koşullu 24 sa stop (CARRY_LONG_24S_PIYASA). Ölçülen değerler 0,03 / 0,05; başkası ölçülmedi.
+    _lp = getattr(cb, "LONG_24S_PIYASA", 0.0)
+    if _lp > 0:
+        if not any(abs(_lp - x) < 1e-9 for x in (0.03, 0.05)):
+            kontrol("koşullu 24 sa stop", HATA, f"CARRY_LONG_24S_PIYASA={_lp} ölçülmedi (ölçülen: 0,03 / 0,05; madde 622-623)")
+        elif getattr(cb, "LONG_24S", 0) <= 0:
+            kontrol("koşullu 24 sa stop", HATA, "CARRY_LONG_24S_PIYASA açık ama CARRY_LONG_24S=0: seviye yok")
+        else:
+            kontrol("koşullu 24 sa stop", TAMAM, f"piyasa ≤ −%{_lp*100:.0f} iken, kapanışla, turda (madde 622-623)")
     if getattr(cb, "MIN_LISTELEME_GUN", 90) < 60:
         kontrol("yaş eşiği", HATA, f"CARRY_MIN_LISTING_DAYS={cb.MIN_LISTELEME_GUN} < 60: "
                 "madde 427'de yaş 45 short sıkışmalarıyla hesabı sıfırladı")

@@ -3514,6 +3514,21 @@ kontrol("madde 596: T4 1,15 (T7K dışı, ölçülmedi) -> HATA",
 kontrol("madde 596: T7K 1,20 (ölçülmedi) -> HATA",
         "HATA" in _doz596({"CARRY_PROFIL": "T7K", "CARRY_GROSS": "1.2", "CARRY_DOZ_ONAY": "1.2"}))
 
+# MADDE 623: koşullu 24 sa stop yalnız ölçülen eşiklerle (0,03 / 0,05) geçer.
+def _k623(ortam):
+    kod = ("import carry_preflight as p; p.kontrol_ayarlar(); "
+           "print('SONUC', [b for a, b, c in p._satirlar if a == 'koşullu 24 sa stop'])")
+    env = {k: v for k, v in os.environ.items() if not k.startswith("CARRY_")}
+    env.update(ortam)
+    o = _sp596.run([sys.executable, "-c", kod], env=env, capture_output=True, text=True).stdout
+    return [l for l in o.splitlines() if l.startswith("SONUC")][-1]
+kontrol("madde 623: koşullu stop 0,03 -> TAMAM", "TAMAM" in _k623({"CARRY_LONG_24S_PIYASA": "0.03"}))
+kontrol("madde 623: koşullu stop 0,05 -> TAMAM", "TAMAM" in _k623({"CARRY_LONG_24S_PIYASA": "0.05"}))
+kontrol("madde 623: koşullu stop 0,10 (ölçülmedi) -> HATA", "HATA" in _k623({"CARRY_LONG_24S_PIYASA": "0.10"}))
+kontrol("madde 623: koşullu stop açık ama 24 sa stop kapalı -> HATA",
+        "HATA" in _k623({"CARRY_LONG_24S_PIYASA": "0.03", "CARRY_LONG_24S": "0"}))
+kontrol("madde 623: varsayılan kapalı (satır yok)", _k623({}) == "SONUC []")
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:
