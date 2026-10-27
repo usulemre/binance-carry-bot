@@ -7086,3 +7086,10 @@ Q 2025-09'da listelendi, Eylül sonunda 70M eşiğini yalnız kısa aşıyordu (
 Giriş defterinden (madde 627) ardışık yarıyıllarda coin başı kitap P&L'i Spearman korelasyonu: long 0,024 · short 0,011 · ikisi 0,025
 (12 çift); önceki yarıyılın en kötü %20 coini sonraki yarıyılda diğerleriyle aynı (0,099 vs 0,107). Coin kara listesi / uzun hafıza
 (madde 611'in 180 g'lük sürümü) koşulmadan elendi.
+
+## Madde 633 — Piyasa rallisinde long kâr al / kademe ertele (MERD_PIY_L): RED — ralli dönüşünde kademe kalkanı gidiyor
+Taban P3T2 (+247,5 · dd −13,3 · en kötü −7,41 · eşit risk +315,2). Ham · dd · en kötü · −%5 · Sh ≤24 / 25+ → eşit risk:
+≥ +%5 +239,5 · −15,6 · −11,13 · 6 · 4,05 / 4,03 → +220,1 — ≥ +%3 +242,4 · −16,3 · −12,15 · 6 → +204,2 — ≥ +%8 +244,9 · −13,4 · −7,41 · 4 →
++288,2. Otopsideki "tutsaydık" pozitifliği ortalamaydı; ertelenen kademe rallinin TERSİNE döndüğü günlerde (2025+) kuyruğu derinleştiriyor
+(en kötü gün −7,4 → −11..−12). Kademe bir kâr hedefi değil RİSK KALKANI (madde 608 ile aynı). Çıkış koşullama ekseni: yalnız 24 sa stop'ta
+(622) kazanç var, kâr al / kademede yok.
