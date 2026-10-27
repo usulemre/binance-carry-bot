@@ -147,7 +147,10 @@ def kontrol_ayarlar() -> None:
     # MADDE 596: T7K yalnız BU profil için 1,10 / 1,15x ölçüldü (T4 1,0x'in dd / en kötü gün / 1y p1'ini aşmadan; 3.500 $'da
     # 1,10 bağlayıcı). Başka profilde bu dozlar ölçülmüş SAYILMAZ.
     _t7k_doz = profil == "T7K" and any(abs(_doz - x) < 1e-9 for x in (1.10, 1.15))
-    _olculmus = _olculmus or _t7k_doz
+    # MADDE 629: T6 1,10x yalnız TAM evrende (bakiye ≳ 12.500 $, kullanıcının 20-100 bin $'ı) ölçüldü (madde 601 / 618 / 623:
+    # TAM T4 1,0x'in dd / en kötü gün / 1y p1'ini aşmadan; koşullu stop'la +374/yıl). Küçük bakiyede (D8/D2) ölçülmedi.
+    _t6_doz = profil == "T6" and abs(_doz - 1.10) < 1e-9
+    _olculmus = _olculmus or _t7k_doz or _t6_doz
     if abs(_doz - 1.0) > 1e-9:
         if 1.5 - 1e-9 <= _doz < 1.55 - 1e-9:
             kontrol("doz", HATA,
@@ -158,7 +161,9 @@ def kontrol_ayarlar() -> None:
             kontrol("doz", TAMAM,
                     f"CARRY_GROSS={_doz} ölçülmüş doz, onaylı " + (
                         "(madde 596: T7K, T4 1,0x ile aynı maks düşüş; 1,15 yalnız < 3.500 $ — üstünde 1,10)"
-                        if _t7k_doz else "(madde 368/369; beklenti CANLIYA_CIKIS.md §7 madde 372 tablosunda)"))
+                        if _t7k_doz else
+                        "(madde 601/629: T6 1,10x YALNIZ ≳ 12.500 $ bakiyede (TAM evren) ölçüldü; küçük bakiyede kullanmayın)"
+                        if _t6_doz else "(madde 368/369; beklenti CANLIYA_CIKIS.md §7 madde 372 tablosunda)"))
         elif _olculmus:
             kontrol("doz", HATA,
                     f"CARRY_GROSS={_doz} ölçülmüş bir doz ama ONAY yok: bilerek "

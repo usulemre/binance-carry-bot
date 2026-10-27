@@ -7057,3 +7057,8 @@ T6 1,10x + KS'nin −%4 altı 33 günü: çoğu short tarafında GENİŞ piyasa 
 (IOTX 2021-11-10 −9,5, XLM 2020-11-24 −6,8, 1000SATS, SAND, BTW, POPCAT); long tarafında tek coin çöküşü (REEF 2024-10-15 −7,2, SIREN,
 LUNA/FTX). Tek coin sıkışmasını kesmek ortalamada zarar (tutuş tablosu), tavan T7K'da var (getiri ↔ kötü gün takası, madde 600-601).
 Otopsi ailesi (621-628) kapandı: tek büyük sızıntı 24 sa stop'tu.
+
+## Madde 629 — T6 1,10x preflight'a ölçülmüş doz olarak eklendi (yalnız TAM bakiye) + KURULUM_BUYUK_BAKIYE.md
+`carry_preflight.py`: `CARRY_PROFIL=T6` iken `CARRY_GROSS=1,10` + `CARRY_DOZ_ONAY=1,10` TAMAM (mesaj: yalnız ≳ 12.500 $ bakiyede ölçüldü);
+onaysız HATA; T6 1,15 HATA (+3 test, hepsi geçti). Varsayılanlar DEĞİŞMEDİ (T4, 1,0x, koşullu stop kapalı). Kurulum belgesi: T6 1,10x +
+CARRY_LONG_24S_PIYASA=0,03 (TAM eşit risk +374 vs T4 +232), sıra: Ekim OOS → 1x demo → 1,10x.

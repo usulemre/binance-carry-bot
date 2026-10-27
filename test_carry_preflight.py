@@ -3514,6 +3514,11 @@ kontrol("madde 596: T4 1,15 (T7K dışı, ölçülmedi) -> HATA",
 kontrol("madde 596: T7K 1,20 (ölçülmedi) -> HATA",
         "HATA" in _doz596({"CARRY_PROFIL": "T7K", "CARRY_GROSS": "1.2", "CARRY_DOZ_ONAY": "1.2"}))
 
+kontrol("madde 629: T6 1,10 + onay -> TAMAM",
+        "HATA" not in _doz596({"CARRY_PROFIL": "T6", "CARRY_GROSS": "1.10", "CARRY_DOZ_ONAY": "1.10"}))
+kontrol("madde 629: T6 1,10 onaysız -> HATA", "HATA" in _doz596({"CARRY_PROFIL": "T6", "CARRY_GROSS": "1.10"}))
+kontrol("madde 629: T6 1,15 (ölçülmedi) -> HATA",
+        "HATA" in _doz596({"CARRY_PROFIL": "T6", "CARRY_GROSS": "1.15", "CARRY_DOZ_ONAY": "1.15"}))
 # MADDE 623: koşullu 24 sa stop yalnız ölçülen eşiklerle (0,03 / 0,05) geçer.
 def _k623(ortam):
     kod = ("import carry_preflight as p; p.kontrol_ayarlar(); "
