@@ -6970,3 +6970,9 @@ Ana blok T7K'nın 1,15x serisini de yazar. Geçiş şartı: (1) T7K vs T4 hükm�
 %10 yüzdeliği üstünde), (2) Ekim'de T7K 1,15x'in en kötü günü T4'ünkünden derin değil. Tutarsa öneri: T7K 1,15x (önce demo).
 Tek ay istatistiksel kanıt değil; "örnek dışında ters sinyal yok" kontrolü. Kuru koşu (AY=2026-09, örnek içi): 2.000 $ T7K×1,15 +8,35 /
 T4 +4,54, en kötü −3,65 / −4,43 → şart 1 Y · 2 Y; 3.500 $ +8,85 / +7,94, −3,58 / −4,07 → Y · Y.
+
+## Madde 618 — TAM evrende (20-100 bin $) T7 = T6 + prim çarpanı: RED — T6 1,10x yerinde
+Madde 601 koşulu (canlı gibi giriş + 5 bp, TAM, iki hiza; eşit-risk = TAM T4 1,0x). Ham · Sh · dd · en kötü | eşit-risk k → yıllık · −%5:
+T6 +298,8 · 4,18 · −15,1 · −10,95 | 1,10 → **+354,9** · 10 — T7 +249,7 · 4,15 · −14,5 · −7,65 | 1,15 → +318,3 · 12 — T7K 1,15 → +288,4 · 6.
+T7 en kötü günü sığlaştırıyor (−10,9 → −7,7) ama ham getiriyi 49 puan kesiyor; bağlayıcı ölçü dd, ek kaldıraç yalnız 0,05 → −36,6 (bar
++8 değil, negatif). −%5 altı gün de azalmıyor (10 → 12). TAM bakiyede en çok kâr T6 1,10x, en sığ kötü gün T7K 1,15x.
