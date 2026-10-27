@@ -6976,3 +6976,10 @@ Madde 601 koşulu (canlı gibi giriş + 5 bp, TAM, iki hiza; eşit-risk = TAM T4
 T6 +298,8 · 4,18 · −15,1 · −10,95 | 1,10 → **+354,9** · 10 — T7 +249,7 · 4,15 · −14,5 · −7,65 | 1,15 → +318,3 · 12 — T7K 1,15 → +288,4 · 6.
 T7 en kötü günü sığlaştırıyor (−10,9 → −7,7) ama ham getiriyi 49 puan kesiyor; bağlayıcı ölçü dd, ek kaldıraç yalnız 0,05 → −36,6 (bar
 +8 değil, negatif). −%5 altı gün de azalmıyor (10 → 12). TAM bakiyede en çok kâr T6 1,10x, en sığ kötü gün T7K 1,15x.
+
+## Madde 619 — T6 komşuluğu TAM evrende (kullanıcının 20-100 bin $ bakiyesi): T6 YERİNDE
+Madde 601 koşulu. Ham yıllık · dd · en kötü | eşit-risk k → yıllık · −%5 altı (T6 +298,8 · −15,1 · −10,95 | 1,10 → +354,9 · 10):
+short tavan %12 +292,0 · −16,4 · −11,23 | 1,00 → +292,0 · 9 — short pencere 72 sa +299,4 · −16,8 | 0,95 → +273,8 · 5 —
+144 sa +295,2 · −15,0 · −11,38 | 1,10 → +350,4 · **6** — short 48 sa'te bir +288,7 · −14,8 | 1,10 → +342,3 · 9. Hepsi RED (−4..−81).
+Not (karar değil, kullanıcı tercihi): 144 sa penceresi aynı riskte neredeyse aynı getiri (−4,5) ile −%5 altı günü 10 → 6'ya indiriyor.
+Ön kayıt dışı gözlem — tek kol; benimsenmeden önce 120 / 192 sa ile plato ve D2'de doğrulama gerekir.
