@@ -7069,3 +7069,8 @@ T7K 1,15x + koşullu stop (bot ritmi) +302,8 · −15,9 · −8,03 · +334 — T
 −14,38 · +219. Sıralama 2.000 $ ile aynı; 1.000 $'da koşullu stop farkı +9 (2.000 $'da +12). PDF: Kazanc_Defteri_1000.pdf /
 Kazanc_Defteri_6_Yil_1000.pdf (SEVIYE=1000 python3 pdf_uret.py). Excel: Kazanc_2026_Gun_Hafta_Ay_{1000,2000}.xlsx ve TAM (T6 dahil),
 `SEVIYE=… python3 excel_2026_uret.py` (formüllü; başlangıç bakiyesi Varsayımlar!B3).
+
+## Madde 631 — Küçük bakiye defterlerine (1.000 / 2.000 $) bilgi amaçlı T6 1x + koşullu stop sütunu
+Gerçekçi model, bot ritmi (/tmp/m630/T6KS_{2000,1000}). 6 yıl yıllık · dd · en kötü · −%5 altı · 2026: 2.000 $ +328,8 · −16,5 · −7,40 · 7 · +391 —
+1.000 $ +317,3 · −17,0 · −6,95 · 9 · +357. Ham getiri T7K 1,15x + KS'den yüksek ama dd T4'ten 1-1,5 puan derin → T4 riskinde ~0,9x;
+küçük bakiyede önerilen kitap değil (bilgi). PDF'ler (4) ve 2026 Excel'leri (1.000 / 2.000) beş sütunla yeniden üretildi.

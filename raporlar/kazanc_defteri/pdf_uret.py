@@ -10,6 +10,8 @@ D[["t1", "t2"]] = D[["t2", "t1"]].values
 ILK_YIL = int(D.index[0].year)
 BAS = float(SEV)
 S = [("t1", "Şu anki bot", "l-t1", "sw-t1"), ("t2", "2. aday (T2)", "l-t2", "sw-t2"), ("sr", "Short ara dengeli", "l-sr", "sw-sr"), ("bot", "Eski bot", "l-eski", "sw-eski")]
+T6V = "t6" in D.columns      # madde 631: bilgi amaçlı T6 1x + koşullu stop sütunu (küçük bakiyede ölçülmüş doz DEĞİL)
+if T6V: S.append(("t6", "§T6§", "l-t6", "sw-t6"))
 for c, *_ in S:
     D[c + "_b"] = BAS * (1 + D[c]).cumprod()
 AYLAR = ["Ocak", "Şubat", "Mart", "Nisan", "Mayıs", "Haziran", "Temmuz", "Ağustos", "Eylül", "Ekim", "Kasım", "Aralık"]
@@ -27,7 +29,7 @@ cagr = lambda s: (1 + s).prod() ** (365.25 / len(s)) - 1
 sharpe = lambda s: s.mean() / s.std() * math.sqrt(365.25)
 def lej(): return "".join(f'<i class="sw {sw}"></i>{ad} ' for _, ad, _, sw in S)
 
-def egri_svg(w=680, h=240):
+def egri_svg(w=680, h=(200 if "t6" in D.columns else 240)):
     pad_l, pad_r, pad_t, pad_b = 54, 14, 12, 26
     ys = np.log10(np.r_[tuple(D[c + "_b"].values for c, *_ in S)])
     lo, hi = math.floor(ys.min() * 2) / 2, math.ceil(ys.max() * 2) / 2
@@ -79,9 +81,10 @@ def ay_tablo(M):
         rows.append(f'<tr class="{"hs" if d.weekday() >= 5 else ""}"><td class="dt">{d.day:02d}.{d.month:02d}.{d.year}</td><td class="gn">{GUNLER[d.weekday()]}</td>'
                     f'<td class="{sinif(r.t1)} num strong">{yuzde(r.t1)}</td><td class="num">{para(r.t1_b)}</td>'
                     f'<td class="{sinif(r.t2)} num strong">{yuzde(r.t2)}</td><td class="num">{para(r.t2_b)}</td>'
-                    f'<td class="{sinif(r.sr)} num">{yuzde(r.sr)}</td><td class="num muted">{para(r.sr_b)}</td></tr>')
+                    f'<td class="{sinif(r.sr)} num">{yuzde(r.sr)}</td><td class="num muted">{para(r.sr_b)}</td>'
+                    + (f'<td class="{sinif(r.t6)} num">{yuzde(r.t6)}</td>' if T6V else '') + '</tr>')
     return ('<table class="gunluk"><thead><tr><th>Tarih</th><th>Gün</th><th>Şu anki bot</th><th>Bakiye</th>'
-            '<th>2. aday T2</th><th>T2 bakiye</th><th>Short ara dengeli</th><th>SAD bakiye</th></tr></thead><tbody>'
+            '<th>2. aday T2</th><th>T2 bakiye</th><th>Short ara dengeli</th><th>SAD bakiye</th>' + ('<th>§T6K§</th>' if T6V else '') + '</tr></thead><tbody>'
             + "".join(rows) + "</tbody></table>")
 
 def donem_getiri(Y_, c):
@@ -120,6 +123,7 @@ for y in sorted(set(D.index.year)):
     yil_rows.append(f'<tr><td class="yl">{et}</td><td class="num {sinif(g["t1"])} strong">{yuzde(g["t1"],0)}</td><td class="num">{para(Y_.t1_b.iloc[-1])}</td>'
                     f'<td class="num {sinif(g["t2"])} strong">{yuzde(g["t2"],0)}</td><td class="num">{para(Y_.t2_b.iloc[-1])}</td>'
                     f'<td class="num {sinif(g["sr"])} strong">{yuzde(g["sr"],0)}</td><td class="num {sinif(g["bot"])}">{yuzde(g["bot"],0)}</td>'
+                    + (f'<td class="num {sinif(g["t6"])}">{yuzde(g["t6"],0)}</td>' if T6V else '') +
                     f'<td class="num neg">{yuzde(Y_.t1.min())}</td><td class="num neg">{yuzde(Y_.t2.min())}</td></tr>')
 
 def isi(col, baslik):
@@ -151,13 +155,13 @@ kapak = f'''
     <div class="k-t1"><span>Şu anki bot · 30 Eylül 2026</span><b>{para(D.t1_b.iloc[-1])}</b><em>yıllık ort. {yuzde(cagr(D.t1),0)} · en kötü düşüş {yuzde(dd(D.t1),1)}</em></div>
     <div class="k-t2"><span>2. aday T2</span><b>{para(D.t2_b.iloc[-1])}</b><em>yıllık ort. {yuzde(cagr(D.t2),0)} · en kötü düşüş {yuzde(dd(D.t2),1)}</em></div>
     <div class="k-sr"><span>Short ara dengeli</span><b>{para(D.sr_b.iloc[-1])}</b><em>yıllık ort. {yuzde(cagr(D.sr),0)} · en kötü düşüş {yuzde(dd(D.sr),1)}</em></div>
-    <div class="k-eski"><span>Eski bot (referans)</span><b>{para(D.bot_b.iloc[-1])}</b><em>yıllık ort. {yuzde(cagr(D.bot),0)} · en kötü düşüş {yuzde(dd(D.bot),1)}</em></div>
+    <div class="k-eski"><span>Eski bot (referans)</span><b>{para(D.bot_b.iloc[-1])}</b><em>yıllık ort. {yuzde(cagr(D.bot),0)} · en kötü düşüş {yuzde(dd(D.bot),1)}</em></div>{('<div class="k-t6"><span>§T6§</span><b>' + para(D.t6_b.iloc[-1]) + '</b><em>yıllık ort. ' + yuzde(cagr(D.t6),0) + ' · en kötü düşüş ' + yuzde(dd(D.t6),1) + '</em></div>') if T6V else ''}
   </div>
   <h3>Bakiye (logaritmik ölçek)</h3>
   <div class="lej">{lej()}</div>
   {egri_svg()}
   <h3>Yıl yıl</h3>
-  <table class="yillik"><thead><tr><th>Yıl</th><th>Şu anki bot</th><th>Yıl sonu</th><th>2. aday T2</th><th>T2 yıl sonu</th><th>Short ara dengeli</th><th>Eski bot</th><th>En kötü gün</th><th>T2 en kötü gün</th></tr></thead>
+  <table class="yillik"><thead><tr><th>Yıl</th><th>Şu anki bot</th><th>Yıl sonu</th><th>2. aday T2</th><th>T2 yıl sonu</th><th>Short ara dengeli</th><th>Eski bot</th>{"<th>§T6K§</th>" if T6V else ""}<th>En kötü gün</th><th>T2 en kötü gün</th></tr></thead>
   <tbody>{"".join(yil_rows)}</tbody></table>
   <p class="dipnot">Kaynak: binance-carry-bot backtest motoru (g33.py), gerçekçi ağırlık kayması modeli, 2.000 $ seviyesi (D8 evreni), iki dilim hizasının ortalaması.
   Şu anki bot = canlı varsayılan (T60 + 24 saatlik düşüş stop'u + iki taraflı merdiven; madde 469). 2. aday T2 = şu anki bot + merdiven payı 0,80 + short coin tavanı %8 + 4 long / 3 short
@@ -170,7 +174,7 @@ kapak = f'''
   <h2>Şu anki bot ve adaylar</h2>
   <p class="alt">Aynı dönem, aynı başlangıç. T2'nin farkı getiriden çok kötü günlerde.</p>
   <table class="yillik"><thead><tr><th>Ayar</th><th>Yıllık ort.</th><th>Sharpe</th><th>En kötü düşüş</th><th>En kötü gün</th><th>−%5'ten kötü gün</th><th>−%3'ten kötü gün</th><th>30.09.2026 bakiye</th></tr></thead>
-  <tbody>{ozet_satir("t1", "Şu anki bot")}{ozet_satir("t2", "2. aday T2")}{ozet_satir("sr", "Short ara dengeli")}{ozet_satir("bot", "Eski bot")}</tbody></table>
+  <tbody>{ozet_satir("t1", "Şu anki bot")}{ozet_satir("t2", "2. aday T2")}{ozet_satir("sr", "Short ara dengeli")}{ozet_satir("bot", "Eski bot")}{ozet_satir("t6", "§T6§") if T6V else ""}</tbody></table>
   <h3>Ay ay getiri</h3>
   <p class="alt">Her hücre o ayın getirisi (%). Yeşil kazanç, kırmızı kayıp; renk ne kadar koyuysa ay o kadar güçlü.</p>
   {isi("t1", "Şu anki bot")}
@@ -181,6 +185,7 @@ kapak = f'''
   <h2>Short ara dengeli · eski bot</h2>
   {isi("sr", "Short ara dengeli (şu anki bot + short her gün yeniden seçilir)")}
   {isi("bot", "Eski bot (referans)")}
+  {isi("t6", "§T6§ — bilgi amaçlı (küçük bakiyede önerilen kitap değil)") if T6V else ""}
 </section>'''
 
 css = open("stil.css").read()
@@ -213,8 +218,13 @@ if True:   # madde 612/624: görünen t1 = T4 (asıl bot), t2 = T7K 1,15x + koş
   Çıkış otopsisi (madde 621, ~12 bin çıkış): kâr al ve kademe doğru zamanda; erken satış YALNIZ 24 sa stop'ta ve yalnız piyasa sakinken
   (tek coin çöküşü 3 günde dönüyor). Koşullu stop (madde 622-623: stop yalnız piyasa medyanı ≤ −%3 iken) aynı riskte yılda +12..+19 puan,
   dört bakiye/kitap hücresinin dördünde de; Sharpe iki dönemde de ↑.</p>"""
+    if T6V:
+        oto = """<h3>En kötü gün otopsisi (madde 609–611, 621–623)</h3>
+  <p class="alt">19 Mayıs 2021 (T4 −13,3%): piyasa çöküşü; short'lar çöküş ortasında kâr aldı, 24 sa stop iğnede dipte doldu. Çıkış otopsisi:
+  erken satış yalnız 24 sa stop'ta ve yalnız piyasa sakinken → koşullu stop (piyasa ≤ −%3 iken) aynı riskte yılda +12..+19 puan.</p>"""
     k = html_.index("</section>", html_.index("T7K 1,15x (eski stop) · eski bot T1</h2>"))
     html_ = html_[:k] + oto + html_[k:]
 html_ = html_.replace("§BAS§", para(BAS))
+html_ = html_.replace("§T6K§", "T6 1x+KS").replace("§T6§", "T6 1x + koşullu stop")
 open("defter.html", "w").write(html_)
 print("sayfa", 3 + len(sayfalar))

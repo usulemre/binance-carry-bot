@@ -13,6 +13,7 @@ else:
     D = pd.read_pickle(os.path.join(os.path.dirname(os.path.abspath(__file__)), "..", f"gunluk_uzun{_ek}.pkl"))
     S = D[D.index >= "2026-01-01"].rename(columns={"t2": "T4", "t1": "T7KKS", "sr": "T7K", "bot": "T1"})
     K = [("T4", "T4 (şimdiki)"), ("T7KKS", "T7K 1,15x + koşullu stop"), ("T7K", "T7K 1,15x eski stop"), ("T1", "Eski bot T1")]
+    if "t6" in D.columns: S = S.rename(columns={"t6": "T6"}); K.append(("T6", "T6 1x + koşullu stop (bilgi)"))
     BAS0, CIKTI = int(SEV), f"Kazanc_2026_Gun_Hafta_Ay_{SEV}.xlsx"
 NK = len(K)
 F = "Arial"; mavi = Font(name=F, color="0000FF"); siyah = Font(name=F); kalin = Font(name=F, bold=True)

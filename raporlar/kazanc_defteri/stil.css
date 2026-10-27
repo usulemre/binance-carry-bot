@@ -1,7 +1,7 @@
 /* Ledger: printed trading-journal pages — ink navy, ledger green/red, warm paper */
 :root{
   --kagit:#ffffff; --murekkep:#1d2433; --ikincil:#5b6474; --cizgi:#e3e0d8; --zemin2:#f4f2ed;
-  --t60:#1f5f8b; --t1:#1f5f8b; --t2:#7a4fa3; --sr:#2a8a8a; --eski:#b0894a; --pos:#1d7a4c; --neg:#b3392f;
+  --t60:#1f5f8b; --t1:#1f5f8b; --t2:#7a4fa3; --sr:#2a8a8a; --t6:#c0504d; --eski:#b0894a; --pos:#1d7a4c; --neg:#b3392f;
   --serif:"Lora", "DejaVu Serif", serif; --sans:"Inter", "DejaVu Sans", sans-serif;
 }
 @page{size:A4; margin:13mm 13mm 15mm 13mm}
@@ -17,11 +17,11 @@ h3{font-family:var(--serif); font-weight:600; font-size:12pt; margin:16pt 0 4pt}
 .num{text-align:right; font-variant-numeric:tabular-nums; white-space:nowrap}
 .pos{color:var(--pos)} .neg{color:var(--neg)} .flat{color:var(--ikincil)}
 .strong{font-weight:600} .muted{color:var(--ikincil)}
-.kpi-buyuk{display:grid; grid-template-columns:repeat(4,1fr); gap:10pt; margin:14pt 0 4pt}
+.kpi-buyuk{display:grid; grid-template-columns:repeat(auto-fit,minmax(0,1fr)); gap:10pt; margin:14pt 0 4pt}
 .kpi-buyuk div{border-top:2.5pt solid var(--murekkep); padding-top:6pt}
-.kpi-buyuk .k-t1{border-color:var(--t1)} .kpi-buyuk .k-t2{border-color:var(--t2)} .kpi-buyuk .k-eski{border-color:var(--eski)} .kpi-buyuk .k-sr{border-color:var(--sr)}
+.kpi-buyuk .k-t1{border-color:var(--t1)} .kpi-buyuk .k-t2{border-color:var(--t2)} .kpi-buyuk .k-eski{border-color:var(--eski)} .kpi-buyuk .k-sr{border-color:var(--sr)} .kpi-buyuk .k-t6{border-color:var(--t6)}
 .kpi-buyuk span{display:block; font-size:7.8pt; color:var(--ikincil); text-transform:uppercase; letter-spacing:.08em}
-.kpi-buyuk b{display:block; font-family:var(--serif); font-size:16pt; font-weight:600; margin:3pt 0 2pt; font-variant-numeric:tabular-nums}
+.kpi-buyuk b{display:block; font-family:var(--serif); font-size:14pt; font-weight:600; margin:3pt 0 2pt; font-variant-numeric:tabular-nums}
 .kpi-buyuk em{font-style:normal; font-size:8pt; color:var(--ikincil)}
 .chart{width:100%; height:auto; display:block}
 .chart .grid{stroke:var(--cizgi); stroke-width:.7}
@@ -34,19 +34,20 @@ h3{font-family:var(--serif); font-weight:600; font-size:12pt; margin:16pt 0 4pt}
 .l-t1{fill:none; stroke:var(--t1); stroke-width:1.6}
 .l-t2{fill:none; stroke:var(--t2); stroke-width:1.4}
 .l-t2-ince{fill:none; stroke:var(--t2); stroke-width:1; stroke-dasharray:2 1.5}
-.d-t1{fill:var(--t1)} .d-t2{fill:var(--t2)} .d-sr{fill:var(--sr)}
+.d-t1{fill:var(--t1)} .d-t2{fill:var(--t2)} .d-sr{fill:var(--sr)} .d-t6{fill:var(--t6)}
+.l-t6{fill:none; stroke:var(--t6); stroke-width:1.1; stroke-dasharray:3 1.5}
 .l-sr{fill:none; stroke:var(--sr); stroke-width:1.3}
 .b-pos{fill:var(--pos); opacity:.85} .b-neg{fill:var(--neg); opacity:.85}
 .lej{font-size:7.8pt; color:var(--ikincil); display:inline-flex; gap:5pt; align-items:center}
 .sw{display:inline-block; width:12pt; height:3pt; margin-left:6pt; vertical-align:middle}
-.sw-t60{background:var(--t60)} .sw-eski{background:var(--eski)} .sw-t1{background:var(--t1)} .sw-t2{background:var(--t2)} .sw-sr{background:var(--sr)}
+.sw-t60{background:var(--t60)} .sw-eski{background:var(--eski)} .sw-t1{background:var(--t1)} .sw-t2{background:var(--t2)} .sw-sr{background:var(--sr)} .sw-t6{background:var(--t6)}
 table{border-collapse:collapse; width:100%}
 th{font-weight:600; font-size:7.6pt; color:var(--ikincil); text-transform:uppercase; letter-spacing:.06em; text-align:right; padding:4pt 5pt; border-bottom:1pt solid var(--murekkep)}
 th:first-child{text-align:left}
 .yillik td{padding:5pt; border-bottom:.6pt solid var(--cizgi); font-size:9.4pt}
 .yillik td.yl{font-family:var(--serif); font-weight:600}
 .yillik small{font-family:var(--sans); font-weight:400; color:var(--ikincil); font-size:7.4pt}
-.dipnot{font-size:7.2pt; color:var(--ikincil); line-height:1.5; margin-top:14pt; max-width:100%}
+.dipnot{font-size:6.9pt; color:var(--ikincil); line-height:1.4; margin-top:8pt; max-width:100%}
 .isi{margin:6pt 0 14pt; table-layout:fixed}
 .isi caption{caption-side:top; text-align:left; font-family:var(--serif); font-weight:600; font-size:12pt; padding-bottom:4pt}
 .isi th{text-align:center; padding:3pt 0}
