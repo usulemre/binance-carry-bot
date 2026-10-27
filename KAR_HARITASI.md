@@ -6944,3 +6944,10 @@ T7K +238,6 · −13,3 · −7,93 · −7,93 · 4,02 / 4,33 · 1,15 → +303,2 �
 +302,0 — kapanış −%45 +239,3 · −13,3 · −7,39 · −4,36 · 4,05 / 4,24 · 1,15 → +304,2. Eşit-risk farkı −1,2 / +1,0 (bar +8) → RED.
 Düşüşü (−13,3) yine başka dönem bağlıyor; kalkan bedava ama kâr değil. Kitap tarafında stop / ekleme / hafıza ekseni (609-613) kapandı.
 Ek ön eleme (koşusuz): profil harmanları eşit riskte T7K'nın altında (½T6+½T7K +275,8, ½T4+½T7K +262,7; günlük korelasyon 0,94-0,97).
+
+## Madde 614 — T7K çıkış ayarları eşit riskte (TPS / MERDS_ESIK / TPL): YERİNDE — tepe T7K'nın kendi ayarı
+T7K gerçekçi 2.000 $ (ham yıllık · dd · en kötü · eşit-risk k → yıllık; T7K +238,6 · −13,3 · −7,93 · 1,15 → +303,2):
+short TP %15 +239,8 · −13,3 · −8,15 · +304,9 — %25 +236,2 · −13,3 · −7,60 · +299,9 — short kademe %12 +241,4 · **−14,4** · −8,80 · 1,05 →
++262,1 — %18 +238,7 · −13,3 · −7,54 · +303,2 — long TP %50 +234,0 · −13,1 · −7,93 · +297,0 — %70 +238,9 · −13,2 · −7,93 · +303,6.
+Fark −41..+1,7 (bar +8): hepsi RED, plato düz ve T7K ortasında. Short kademesini sıklaştırmak düşüşü derinleştirip kaldıraç kapasitesini
+yiyor. T7K'nın çıkış ayarları T4'ten devralındığı gibi doğru.
