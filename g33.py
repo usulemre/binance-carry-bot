@@ -432,6 +432,8 @@ BRUT_PRIM=float(os.environ.get("BRUT_PRIM","0"))   # 0=kapali; >0 = duyarlilik u
 BRUT_ALT=float(os.environ.get("BRUT_ALT","0.5"))   # carpanin tabani
 BRUT_UST=float(os.environ.get("BRUT_UST","1.5"))   # carpanin tavani
 BRUT_REF=int(os.environ.get("BRUT_REF","180"))     # gun: YEREL referans penceresi
+# MADDE 616: NET_KIRP=x -> bar sonunda dilimin (L-S)/(L+S) orani |x|'i asarsa agir taraf kucultulur. 0 = parite.
+NET_KIRP=float(os.environ.get("NET_KIRP","0")); _NKS=[0,0]
 BRUT_OLC=int(os.environ.get("BRUT_OLC","30")); BRUT_TARAF=os.environ.get("BRUT_TARAF","iki").strip()      # gun: prim olcum penceresi
 _PCARP=None
 if BRUT_PRIM>0:
@@ -1077,6 +1079,19 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         k2=liste.pop(0)
                         if poz[k2]==0 and U[i+1,k2] and np.isfinite(cv[i+1,k2]):
                             poz[k2]=yk*w_; giris[k2]=cv[i+1,k2]; eq[-1]*=1-w_*KOM; say_d[0]+=1; break
+        if NET_KIRP>0 and i+1<len(C)-1:
+            # MADDE 616: ARA NOTRLUK. Kar al / kademe / stop / agirlik kaymasi bir tarafi eritince dilim net yonlu kalir
+            # (2021-05-19: short'lar cokus ortasinda kar aldi, kitap net long). Bar sonunda (L-S)/(L+S) > NET_KIRP ise AGIR
+            # taraf orantili KUCULTULUR (yalniz satis, ekleme yok) -> oran NET_KIRP'e iner. Bos kalan pay dengelemeye kadar nakit.
+            _L=float(np.sum(np.where(poz>0,poz,0.0))); _S=float(np.sum(np.where(poz<0,-poz,0.0)))
+            if _L+_S>0:
+                _q=(_L-_S)/(_L+_S)
+                if _q>NET_KIRP and _L>0:
+                    _f=(_S*(1+NET_KIRP)/(1-NET_KIRP))/_L
+                    eq[-1]*=1-_L*(1-_f)*KOM; poz=np.where(poz>0,poz*_f,poz); _NKS[0]+=1
+                elif _q<-NET_KIRP and _S>0:
+                    _f=(_L*(1+NET_KIRP)/(1-NET_KIRP))/_S
+                    eq[-1]*=1-_S*(1-_f)*KOM; poz=np.where(poz<0,poz*_f,poz); _NKS[1]+=1
         if EK_ESIK>0:
             # MADDE 250: ALEYHTE giden ve TP'si dolmamis bacaklara ekle
             for k in np.flatnonzero(poz!=0):
@@ -1245,6 +1260,7 @@ def calis2(ad,n,olcut):
     if _BRT[1]>0:
         print(f'BRUT: fiili ortalama carpan {_BRT[0]/_BRT[1]:.4f} '
               f'({_BRT[1]} kurulum)',flush=True)
+    if NET_KIRP>0: print(f"# NET_KIRP={NET_KIRP}: long kirpma {_NKS[0]} · short kirpma {_NKS[1]} (dilim-bar)", flush=True)
     if KAYIP_HAF>0: print(f"# KAYIP_HAF={KAYIP_HAF} PEN={KAYIP_PEN}: elenen aday (coin-dengeleme) {_ZES[0]}", flush=True)
     if ZARAR_EK>0: print(f"# ZARAR_EK={ZARAR_EK} {ZARAR_EK_TARAF}: elenen aday (coin-dengeleme) short {_ZES[0]} long {_ZES[1]}", flush=True)
     if MERD_SIRA: print(f"# MERD_SIRA: ayni barda kademe+TP duzeltmesi {_MSQ[0]} olay", flush=True)
