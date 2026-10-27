@@ -6957,3 +6957,10 @@ T7K gerçekçi 2.000 $ (ham yıllık · dd · en kötü · Sh ≤24 / 25+ · eş
 yalnız short +249,6 · −17,0 · −14,39 · 3,83 / 4,04 · 0,90 → +210,1 — yalnız long +246,4 · −15,3 · −7,12 · 3,96 / 4,45 · 0,95 → +226,3.
 Ham getiri +8..+11 artıyor ama tek taraf küçülünce kitap net yönlü kalıyor ve düşüş 2-4 puan derinleşiyor → eşit riskte −77 / −77.
 Yalnız short küçültmek net LONG bırakıyor: 2021-05-19 −14,4 (T4'ten de kötü). T7K'nın kazancı küçültmeden değil, NÖTR küçültmeden.
+
+## Madde 616 — Ara nötrlük (NET_KIRP: bar sonunda dilim net yönlüyse ağır tarafı küçült): RED — 19 May'ı siliyor, kârı daha çok
+T7K gerçekçi 2.000 $ (ham yıllık · dd · en kötü · 2021-05-19 · −%5 · Sh ≤24 / 25+ · eşit-risk k → yıllık; T7K +238,6 · −13,3 · −7,93 ·
+−7,93 · 3 · 4,02 / 4,33 · 1,15 → +303,2): x 0,25 +199,5 · −14,1 · −6,44 · **−0,98** · 3 · 3,83 / 4,28 · 1,05 → +215,7 —
+x 0,40 +212,4 · −13,2 · −6,49 · −1,52 · 2 · 3,86 / 4,31 · 1,15 → +267,7. Kırpma ~5-14 bin dilim-bar.
+Mekanizma DOĞRULANDI: 2021-05-19 −7,9 → −1,0 (zarar kâr al sonrası açık kalan net long'dan). Ama dengesizlik ortalamada KÂRLI: kâr al /
+kademe sonrası kalan taraf çoğunlukla toparlanıyor (madde 539 ile aynı: dibe satmak). Ham −26..−39, eşit riskte −36..−88 → RED.
