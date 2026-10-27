@@ -6983,3 +6983,13 @@ short tavan %12 +292,0 · −16,4 · −11,23 | 1,00 → +292,0 · 9 — short p
 144 sa +295,2 · −15,0 · −11,38 | 1,10 → +350,4 · **6** — short 48 sa'te bir +288,7 · −14,8 | 1,10 → +342,3 · 9. Hepsi RED (−4..−81).
 Not (karar değil, kullanıcı tercihi): 144 sa penceresi aynı riskte neredeyse aynı getiri (−4,5) ile −%5 altı günü 10 → 6'ya indiriyor.
 Ön kayıt dışı gözlem — tek kol; benimsenmeden önce 120 / 192 sa ile plato ve D2'de doğrulama gerekir.
+
+## Madde 620 — FARKLI YAKLAŞIM: profil seçici (her ay son N g'de en iyi Sharpe'lı kitaba geç) + düşüşe bağlı doz: RED
+Araç `arastirma_m620_profil_secici.py` (ön kayıt başlıkta; hazır gerçekçi seriler, motor koşusu yok). Havuz {T4, T6, T7K}, geçiş 0,10 %.
+2.000 $ (en iyi sabit T7K 1,15x +303,2): N 90 ham +258,5 → eşit risk +217,2 (−86,0) · N 180 +266,8 → +223,7 (−79,4).
+TAM (en iyi sabit T6 1,10x +354,9): N 90 +244,8 → +288,0 (−66,9) · N 180 +243,3 → +286,1 (−68,8). Hepsi RED.
+Profillerin göreli başarısı KALICI DEĞİL (geçmiş kazanan sonraki ay geri kalıyor; seçici sabit T6'dan bile kötü): kitap seçimi
+6 yıllık eşit-risk ölçümüyle bir kez yapılmalı, döneme göre değiştirilmemeli.
+Ek ön eleme (T7K, nedensel 1 g gecikme, doz değişimi 0,10 %): düşüşte (kitap dd ≤ −%5) doz ×1,3 → eşit risk +262,0 (−41); ×1,5 →
++232,9; ×0,7 → +287,4 (−16); dd ≤ −%8 ×1,3 → +266,2. İki yönde de RED — madde 555 (yalnız azaltır) ile birlikte kitap düzeyi doz
+zamanlaması ekseni kapandı: sabit doz en iyisi.
