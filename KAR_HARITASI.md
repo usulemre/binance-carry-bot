@@ -6993,3 +6993,16 @@ Profillerin göreli başarısı KALICI DEĞİL (geçmiş kazanan sonraki ay geri
 Ek ön eleme (T7K, nedensel 1 g gecikme, doz değişimi 0,10 %): düşüşte (kitap dd ≤ −%5) doz ×1,3 → eşit risk +262,0 (−41); ×1,5 →
 +232,9; ×0,7 → +287,4 (−16); dd ≤ −%8 ×1,3 → +266,2. İki yönde de RED — madde 555 (yalnız azaltır) ile birlikte kitap düzeyi doz
 zamanlaması ekseni kapandı: sabit doz en iyisi.
+
+## Madde 621 — ÇIKIŞ OTOPSİSİ (kullanıcı: "nerede erken satıyor"): kâr al / kademe DOĞRU, 24 sa stop tek coin çöküşünde ERKEN
+g33'e CIKIS_DEFTER (varsayılan boş; parite 0,0). T7K gerçekçi 2.000 $, ~12 bin çıkış. "Tutsaydık" (fiyat, yön işaretli, kitap puanı/yıl,
+1 / 3 / 7 g): short TP −6,5 / −6,6 / −4,3 · long TP −2,2 / −5,9 / −4,7 · short kademe −4,8 / −2,4 / −2,2 · long kademe −5,5 / −7,1 / −8,7
+(çıkışlar doğru, sonrasında fiyat dönüyor) · **long 24 sa stop +7,6 / +13,3 / +6,1** — piyasa sakinken +8,0 / +15,3 / +6,8 (tek coin
+dipten dönüyor), piyasa ≤ −%5 iken −0,8 / −2,4 / −1,1 (stop doğru); 2025+ +15,6, ≤2024 −2,3 (3 g). Araç `arastirma_m621_cikis_otopsi.py`.
+
+## Madde 622 — PİYASAYA KOŞULLU 24 SA STOP (SLL24_PIY, kapanışla): **ADAY** (ön kayıt şartları: eşit-risk ≥ +8, iki dönem Sharpe ≥ T7K)
+T7K gerçekçi 2.000 $ (ham · dd · en kötü · −%5 · Sh ≤24 / 25+ · eşit-risk k → yıllık; T7K +238,6 · −13,3 · −7,93 · 3 · 4,02 / 4,33 · 1,15 → +303,2):
+piyasa ≤ −%5 iken +247,1 · −13,3 · −7,41 · 4 · 4,04 / 4,38 · 1,15 → **+314,7 (+11,5)** — ≤ −%3 +249,3 · −13,3 · −7,41 · 4 · 4,04 / 4,47 ·
+1,15 → **+317,8 (+14,6)** — ≤ −%5, seviye −%35 +245,9 · −13,3 · −7,41 · 4 · 4,03 / 4,42 · 1,15 → **+313,2 (+10,0)** — stop yok +242,6 ·
+**−19,2** · −7,41 · 4 · 3,94 / 4,39 (stop piyasa çöküşünde ŞART). Üç komşu kol da +10..+15 → plato. Bedel: −%5 altı gün 3 → 4.
+2021-05-19 −7,9 → −4,4. Sonraki adım (madde 623): 3.500 $ D2 ve TAM evrende (T6 / T7K) doğrulama, sonra bot.
