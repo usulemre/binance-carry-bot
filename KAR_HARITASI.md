@@ -6937,3 +6937,10 @@ yerel optimumda; anlamlı iyileştirme T7K 1,15x (madde 596, Ekim OOS bekliyor).
 `raporlar/kazanc_defteri/Kazanc_Defteri.pdf` (2022-07 → 2026-09, 54 s.) ve `Kazanc_Defteri_6_Yil.pdf` (2020-07 → 2026-09, 78 s.):
 sütunlar Asıl bot T4 · Aday T7K 1,15x · T6 aday · Eski bot T1, hepsi gerçekçi model (madde 587 serisi). 6 yıl yıllık · dd · en kötü gün:
 T4 +244 · −15,3 · −13,32 — T7K 1,15x +303 · −15,2 · −9,12 — T6 +316 · −16,5 · −10,83 — T1 +193 · −18,0 · −14,54. Otopsi notu (609-611) 3. sayfada.
+
+## Madde 613 — T7K + kapanışla 24 sa stop (madde 609 kalkanı aday kitapta): RED — en kötü gün yarıya iniyor, kaldıraç kapasitesi aynı
+T7K gerçekçi 2.000 $ (ham yıllık · dd · en kötü · 2021-05-19 · Sh ≤24 / 25+ · eşit-risk k → yıllık):
+T7K +238,6 · −13,3 · −7,93 · −7,93 · 4,02 / 4,33 · 1,15 → +303,2 — kapanış −%35 +237,7 · −13,3 · −6,48 · −4,11 · 4,06 / 4,34 · 1,15 →
++302,0 — kapanış −%45 +239,3 · −13,3 · −7,39 · −4,36 · 4,05 / 4,24 · 1,15 → +304,2. Eşit-risk farkı −1,2 / +1,0 (bar +8) → RED.
+Düşüşü (−13,3) yine başka dönem bağlıyor; kalkan bedava ama kâr değil. Kitap tarafında stop / ekleme / hafıza ekseni (609-613) kapandı.
+Ek ön eleme (koşusuz): profil harmanları eşit riskte T7K'nın altında (½T6+½T7K +275,8, ½T4+½T7K +262,7; günlük korelasyon 0,94-0,97).

@@ -73,7 +73,7 @@ def analiz():
     print("\nkötü 5 gün (T4 → kollar):")
     for g in S["T4"].nsmallest(5).index:
         print(f"  {g.date()} T4 {S['T4'][g]*100:+6.2f} | " + " ".join(f"{ad} {S[ad].get(g, np.nan)*100:+6.2f}" for ad in KOL))
-    for ad in ("K45", "K45T2", "K35"):
+    for ad in KOL:
         d = S[ad]; ham = _olc(d)
         sh = (_sh(d[d.index < "2025-01-01"]), _sh(d[d.index >= "2025-01-01"]))
         a = S[ad + "_er"] - S["T7K_er"] >= 8; b = ham["ek"] > ref["ek"]; c = ham["g5"] <= ref["g5"]
