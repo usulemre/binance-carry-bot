@@ -7093,3 +7093,11 @@ Taban P3T2 (+247,5 · dd −13,3 · en kötü −7,41 · eşit risk +315,2). Ham
 +288,2. Otopsideki "tutsaydık" pozitifliği ortalamaydı; ertelenen kademe rallinin TERSİNE döndüğü günlerde (2025+) kuyruğu derinleştiriyor
 (en kötü gün −7,4 → −11..−12). Kademe bir kâr hedefi değil RİSK KALKANI (madde 608 ile aynı). Çıkış koşullama ekseni: yalnız 24 sa stop'ta
 (622) kazanç var, kâr al / kademede yok.
+
+## Madde 634 — İCRA ZAMANLAMASI 5 dk veriyle (kitabın kendi dengeleme işlemleri, 2024-01 → 2026-08, 100 likit sembol): KENAR YOK
+Araç `arastirma_m634_icra_5dk.py` (T7K 1,15x + KS POZ_CIKTI; işlem = göreli ağırlık değişimi ≥ %25; icra anı = motorun 4 sa kapanışı).
+Ham tabloda işlemden sonra fiyat TERSİNE dönüyor görünüyordu (60 dk −8,9 bp, 4 sa −34,5 bp) — ama bu, kâr al / kademe / stop dolumlarının
+(bar içi limit, kapanışta değil) karışmasıydı (çıkışa yakın olaylar 60 dk −130..−210 bp). Çıkışlar ayıklanınca SAF dengeleme işlemleri:
+alış 5 / 15 / 30 / 60 / 120 / 240 dk +0,6 / −0,1 / +0,8 / +0,3 / +0,3 / −1,9 bp · satış −0,2 / −0,9 / −2,9 / −4,4 / −10,3 / −16,6 bp
+(satıştan sonra fiyat hafif yükseliyor). Kitap etkisi 60 dk'da −1,5 puan/yıl; yıl bazında 2024 −4,4, 2025 −0,3, 2026 −0,8 bp (sönüyor).
+Dengeleme emrini birkaç dakika/saat kaydırmanın değeri yok; bot'un kapanışta maker (GTX) emri doğru. İcra zamanlaması ekseni kapandı.
