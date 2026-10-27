@@ -6880,3 +6880,10 @@ BTC long/short, pencere dışı düz; 24 başlangıç × 7 uzunluk × 2 yön × 
 - IS↔OOS Sharpe sıra korelasyonu +0,13; OOS'ta 4 bp net Sh ≥ 1 olan kol 1/672 (şansla beklenen ~54).
 Gün içi saat kalıbı kalıcı değil (madde 353-C'nin haftalık sonucunun saatlik hâli). Her gün kapanan bir kitap, gece taşımayınca carry'nin
 tek gelir kaynağını (kalabalık funding + TP hasadı, 5 g tutma) da kaybediyor. Günlük gelir için doğru yol madde 605'in kâr çekmesi.
+
+## Madde 607 — "GÜNLÜK KİTAP" 2: saatlik piyasa kaskadı sonrası tepki (çöküşte al / sıçramada sat / devam): RED
+Araç `arastirma_m607_saatlik_kaskad.py` (ön kayıt başlıkta; madde 606 saat paneli). Olay: sepetin 1 sa getirisi ≤ −X / ≥ +X (X %2/3/4);
+tepki sonraki H (1/4/12/24) sa ters ya da devam; 10 bp; gün kümesi t. 48 kol, IS 2024 / OOS 2025-26.
+IS birincisi "sıçrama %4 → 24 sa devam" (IS +%3,78/olay, t 2,04, n 10) OOS'ta −%0,54 (t −0,26, n 11) → RED. IS'te t ≥ 2 olan 6 kolun
+hiçbiri OOS'ta t ≥ 1 değil; IS↔OOS sıra korelasyonu +0,30 ama olay sayısı küçük (saatlik %3-4 kaskad yılda 10-50). Madde 354/418'in
+günlük sonucu saatlik ölçekte de geçerli: kaskad sonrası tepki beta ve gürültü, işlenebilir kenar değil.
