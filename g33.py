@@ -168,6 +168,9 @@ SLLK=float(os.environ.get("SLLK","0")); SLLK_PEN=int(os.environ.get("SLLK_PEN","
 ZARAR_EK=float(os.environ.get("ZARAR_EK","0")); ZARAR_EK_TARAF=os.environ.get("ZARAR_EK_TARAF","short").strip(); _ZES=[0,0]
 # MADDE 611: KAYIP_HAF=y -> coinin short katkisi son KAYIP_PEN barda <= -y (ozkaynak) ise short adayi olmaz. 0 = parite.
 KAYIP_HAF=float(os.environ.get("KAYIP_HAF","0")); KAYIP_PEN=int(os.environ.get("KAYIP_PEN","180")); _KH=[None]
+# MADDE 622: SLL24_PIY=x (SLL24_KAP=1 ile) -> kapanis stop'u yalniz evrenin medyan 24 sa getirisi (ayni kapanis) <= -x iken
+# tetiklenir: tek coin cokusunde (piyasa sakin) stop yok, piyasa capinda cokuste var (madde 621 cikis otopsisi). 0 = kosulsuz.
+SLL24_PIY=float(os.environ.get("SLL24_PIY","0"))
 SLL24_KAP=int(os.environ.get("SLL24_KAP","0")); SLL24_KAP_TAZE=int(os.environ.get("SLL24_KAP_TAZE","1"))
 # MADDE 450: SHORT 24 SA YUKSELIS STOP'U (SLL24'un aynasi). 0 = kapali (parite).
 SLS24=float(os.environ.get("SLS24","0"))
@@ -292,6 +295,11 @@ if S_REB_DUR>0:
     _PIY=np.nanmedian(np.where(U,_rp,np.nan),axis=1)
 else:
     _PIY=None
+if SLL24_PIY>0:
+    _r24=np.full_like(cv,np.nan); _r24[6:]=cv[6:]/np.where(cv[:-6]>0,cv[:-6],np.nan)-1
+    _P24=np.nanmedian(np.where(U,_r24,np.nan),axis=1)
+else:
+    _P24=None
 # MADDE 538: PIYASA FRENI. PFREN=x -> evrenin (U) medyan PFREN_PEN bar getirisi bar i kapanisinda <= -x ise
 # BUTUN long bacaklar bar i+1 ACILISINDA kapanir (nedensel: yalniz i kapanisina kadar bilgi). Short'lar dokunulmaz.
 # Kapanan long bir sonraki dengelemeye kadar bos kalir (diger stop'lar gibi). 0 = kapali (parite).
@@ -477,6 +485,7 @@ GUN={}
 # MADDE 414: GUNLUK_KATKI=<yol> -> (gun, sembol) basina fiyat/funding katkisi ve
 # pozisyon yonu, butun fazlarin TOPLAMI (sonra faz sayisina bolunur). Bos -> kapali.
 _GK_YOL=os.environ.get('GUNLUK_KATKI','').strip()
+_CL_YOL=os.environ.get('CIKIS_DEFTER','').strip(); _CL=[]   # MADDE 621
 _GK={}
 _GK_BAS=pd.Timestamp(os.environ.get('GK_BAS','2026-01-01'))
 YIL={}   # yil -> [Lf,Lp,Ltp,Sf,Sp,Stp]
@@ -824,7 +833,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     merd_yapildi[_k]=False; merd0_yapildi[_k]=False; eq[-1]*=1-abs(_w)*KOM; _PFG[0]+=1
         gec=np.isfinite(cv[i])&np.isfinite(cv[i+1])
         br=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0); br=np.nan_to_num(br)
-        cik=np.zeros(nk,bool); yaridan=np.zeros(nk,bool)
+        cik=np.zeros(nk,bool); yaridan=np.zeros(nk,bool); _tur=np.full(nk,'',dtype=object)
         merd=np.zeros(nk,bool); mpay=np.zeros(nk); _gx=np.zeros(nk); _gw=np.zeros(nk)
         if TEK_GIRIS:
             _REG[bas]=(poz,giris)
@@ -868,7 +877,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     if _vur:
                         _op = OV[i+1,k]
                         _ff = (min(_ss,_op) if uzun else max(_ss,_op)) if np.isfinite(_op) else _ss
-                        br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='SL'
                         continue
                 _i24 = i - (i % SLL24_TAZE) if SLL24_TAZE > 1 else i
                 _s24 = -1.0
@@ -877,21 +886,22 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if SLLK > 0 and uzun and _i24 >= SLLK_PEN and np.isfinite(cv[_i24-SLLK_PEN,k]) and cv[_i24-SLLK_PEN,k] > 0:
                     _s24 = max(_s24, cv[_i24-SLLK_PEN,k]*(1-SLLK))
                 if _s24 > 0 and SLL24_KAP:
-                    if ((i+1) % SLL24_KAP_TAZE == 0) and np.isfinite(cv[i+1,k]) and cv[i+1,k] <= _s24:
-                        br[k] = cv[i+1,k]/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                    if ((i+1) % SLL24_KAP_TAZE == 0) and np.isfinite(cv[i+1,k]) and cv[i+1,k] <= _s24 and (
+                        SLL24_PIY <= 0 or (np.isfinite(_P24[i+1]) and _P24[i+1] <= -SLL24_PIY)):
+                        br[k] = cv[i+1,k]/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='S24K'
                         continue
                 elif _s24 > 0:
                     if LV[i+1,k] <= _s24:
                         _op = OV[i+1,k]
                         _ff = min(_s24,_op) if np.isfinite(_op) else _s24
-                        br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='S24'
                         continue
                 if SLS24 > 0 and (not uzun) and i >= 5 and np.isfinite(cv[i-5,k]) and cv[i-5,k] > 0:
                     _s24s = cv[i-5,k]*(1+SLS24)
                     if HV[i+1,k] >= _s24s:
                         _op = OV[i+1,k]
                         _ff = max(_s24s,_op) if np.isfinite(_op) else _s24s
-                        br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='SLS24'
                         continue
                 if MERD_GERI and merd_yapildi[k] and not merd0_yapildi[k] and (MERD_GERI_TARAF=='iki' or (MERD_GERI_TARAF=='long')==uzun):
                     # MADDE 491: KADEME GERI ALIMI. Kademe sattiktan sonra fiyat girise donerse satilan pay girisle
@@ -919,7 +929,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _st=_pz*(1-KOSUCU)
                     if LV[i+1,k]<=_st:
                         _op=OV[i+1,k]; _ff=min(_st,_op) if np.isfinite(_op) else _st
-                        br[k]=_ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        br[k]=_ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='BE'
                         continue
                     zirve[k]=max(_pz,HV[i+1,k])
                     continue
@@ -928,7 +938,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _st=_pz*(1+KOSUCU_S)
                     if HV[i+1,k]>=_st:
                         _op=OV[i+1,k]; _ff=max(_st,_op) if np.isfinite(_op) else _st
-                        br[k]=_ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1
+                        br[k]=_ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='KOS'
                         continue
                     zirve[k]=min(_pz,LV[i+1,k])
                     continue
@@ -954,7 +964,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                             _sq=e*(1+_mq) if uzun else e*(1-_mq)
                             br[k]=MERD_PAY*(_dol(_sq,uzun,i,k)/cv[i,k]-1)+(1-MERD_PAY)*br[k]; _MSQ[0]+=1
                     if YARIM: yaridan[k]=True; tp_yapildi[k]=True
-                    else: cik[k]=True
+                    else: cik[k]=True; _tur[k]='TP'
                     continue
                 # MADDE 235: ALT RUNG. Ust TP vurmadiysa bakilir (ayni
                 # barda ust rung varsa o kazanir - daha iyi fiyat).
@@ -976,15 +986,15 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if _h0 and _hm:      # ayni barda iki kademe: once erken, sonra ana (kalanin MERD_PAY'i)
                     f0=MERD0_PAY; f1=(1-MERD0_PAY)*MERD_PAY
                     br[k]=(f0*(_dol(_s0,uzun,i,k)/cv[i,k]-1)+f1*(_dol(_sm,uzun,i,k)/cv[i,k]-1))/(f0+f1)
-                    mpay[k]=f0+f1; merd[k]=True; merd0_yapildi[k]=True; merd_yapildi[k]=True; say_t[1]+=1
+                    mpay[k]=f0+f1; merd[k]=True; merd0_yapildi[k]=True; merd_yapildi[k]=True; say_t[1]+=1; _tur[k]='KAD'
                 elif _hm:
                     br[k]=_dol(_sm,uzun,i,k)/cv[i,k]-1
                     if KOSUCU>0 or KOSUCU_S>0: zirve[k]=_sm
-                    mpay[k]=MERD_PAY; merd[k]=True; merd_yapildi[k]=True; say_t[1]+=1
+                    mpay[k]=MERD_PAY; merd[k]=True; merd_yapildi[k]=True; say_t[1]+=1; _tur[k]='KAD'
                     if _m0>0: merd0_yapildi[k]=True   # erken kademe ana kademeden sonra anlamsiz
                 elif _h0:
                     br[k]=_dol(_s0,uzun,i,k)/cv[i,k]-1
-                    mpay[k]=MERD0_PAY; merd[k]=True; merd0_yapildi[k]=True; say_t[1]+=1
+                    mpay[k]=MERD0_PAY; merd[k]=True; merd0_yapildi[k]=True; say_t[1]+=1; _tur[k]='KAD'
         # MADDE 215: taraf bazli maks tutma suresi. TP/stop kontrolunden
         # SONRA bakilir: ayni barda TP varsa TP kazanir (daha iyi fiyat).
         if YAS_L or YAS_S:
@@ -1021,6 +1031,12 @@ def _bt2g(bas,n,olcut=None,tp=None):
         AY['Lf']+=np.nansum(fu[L_]); AY['Sf']+=np.nansum(fu[S_])
         AY['Lp']+=np.nansum(pr[L_&~cik]); AY['Sp']+=np.nansum(pr[S_&~cik])
         AY['Ltp']+=np.nansum(pr[L_&cik]); AY['Stp']+=np.nansum(pr[S_&cik])
+        if _CL_YOL:
+            # MADDE 621: CIKIS DEFTERI. Her cikis olayi (tam: cik, kismi: kademe) -> zaman, coin, yon, tur, satilan agirlik, cikis fiyati.
+            for _k in np.flatnonzero((cik|merd)&(poz!=0)):
+                _CL.append((C.index[i+1],C.columns[_k],int(np.sign(poz[_k])),_tur[_k] or ('KAD' if merd[_k] else 'TP'),
+                            float(abs(poz[_k])*(mpay[_k] if merd[_k] else 1.0)),float(cv[i,_k]*(1+br[_k])),
+                            float(giris[_k]) if np.isfinite(giris[_k]) else np.nan))
         if merd.any():
             kapanis=cv[i+1]/np.where(cv[i]==0,np.nan,cv[i])-1
             br=np.where(merd,mpay*br+(1-mpay)*np.nan_to_num(kapanis),br)
@@ -1240,6 +1256,8 @@ def calis2(ad,n,olcut):
         _tg=np.isfinite(_PF)&(_PF<=-PFREN)
         print(f"# PFREN={PFREN} PEN={PFREN_PEN} GERI={PFREN_GERI}: tetik bar {int(_tg.sum())} · kapanan long bacak {_PFS[0]} · geri acilan {_PFG[0]} · tetik gunleri "
               f"{sorted(set(str(C.index[j].date()) for j in np.flatnonzero(_tg)))[:40]}", flush=True)
+    if _CL_YOL:
+        pd.DataFrame(_CL,columns=['zaman','sembol','yon','tur','w','fiyat','giris']).to_pickle(_CL_YOL)
     if _GK_YOL:
         _df=pd.DataFrame([(d,C.columns[k],v[0]/NF,v[1]/NF,v[2]/max(v[3],1),v[3]/NF) for (d,k),v in _GK.items()],
                          columns=['gun','sembol','fiyat','funding','ort_poz','bar'])
