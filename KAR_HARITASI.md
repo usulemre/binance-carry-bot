@@ -6910,3 +6910,12 @@ bir +247,7 · −15,3 · −8,20 · 5 · +227,6 — kapanış −%35 +246,3 · �
 gün kaldıraca dönüşmüyor → RED. Not: kapanış −%35 bedava kalkan — en kötü gün −13,3 → −7,8, iki dönem Sharpe ↑, getiri +2; yalnız
 −%5 altı gün 3 → 4 ve 2024-10-15 −6,4 → −6,1. Kullanıcı "en kötü gün" önceliği verirse bota alınabilir (bot 4 sa'te bir kapanış
 kontrolü ister; şimdiki borsa STOP_MARKET'i mark fiyatıyla iğnede tetikler). g33: SLL24_KAP / SLL24_KAP_TAZE (varsayılan 0, parite).
+
+## Madde 610 — Bağlayıcı düşüş otopsisi + zarardaki pozisyona dilim ekleme yok (ZARAR_EK): RED (etkisiz)
+T4'ün en büyük 6 düşüşü −13,3..−15,3 (düz küme; tek olayı kesmek dd'yi oynatmaz): 2022-06-23..09-04 −15,3 (73 g; short fiyat −13,0,
+UNFI short TEK BAŞINA −7,9: coin 4,7 → 12,6 $, kitap her dengelemede yeniden short'ladı) · 2022-04/05 LUNA −14,4 (long −36,8) ·
+2023-02/03 −14,0 (long −21,7) · 2026-08 −13,8 (BTW short −6,0 + long −14,5) · 2020-11 −13,7 (short −13,2, XLM) · 2021-05-19 −13,3.
+ZARAR_EK (hesaptaki ağırlıklı giriş +x aleyhteyse aday olmaz), T4 gerçekçi 2.000 $: short %20 +241,8 · dd −15,3 · eşit-risk −2,3 —
+short %35 +244,8 · −15,6 · +0,4 — iki %20 +243,8 · −15,4 · −0,5. Hepsi RED. Neden: short dilimleri 48 sa'te bir yenilenince ortalama
+giriş fiyatın peşinden gidiyor; UNFI'de hiçbir an "girişin +%20 üstü" olmadı, kayıp çok sayıda küçük dilime yayıldı → madde 611:
+girişe değil kitabın coin başına BİRİKMİŞ kaybına bak (KAYIP_HAF).

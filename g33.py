@@ -166,6 +166,8 @@ SLLK=float(os.environ.get("SLLK","0")); SLLK_PEN=int(os.environ.get("SLLK_PEN","
 # n barda bir kontrol (bot turu 8 sa = 2). 0 = eski (igne, parite).
 # MADDE 610: ZARAR_EK=x -> hesapta girisin x aleyhindeki pozisyona dengelemede yeni dilim eklenmez (TEK_GIRIS=1 gerekir). 0 = parite.
 ZARAR_EK=float(os.environ.get("ZARAR_EK","0")); ZARAR_EK_TARAF=os.environ.get("ZARAR_EK_TARAF","short").strip(); _ZES=[0,0]
+# MADDE 611: KAYIP_HAF=y -> coinin short katkisi son KAYIP_PEN barda <= -y (ozkaynak) ise short adayi olmaz. 0 = parite.
+KAYIP_HAF=float(os.environ.get("KAYIP_HAF","0")); KAYIP_PEN=int(os.environ.get("KAYIP_PEN","180")); _KH=[None]
 SLL24_KAP=int(os.environ.get("SLL24_KAP","0")); SLL24_KAP_TAZE=int(os.environ.get("SLL24_KAP_TAZE","1"))
 # MADDE 450: SHORT 24 SA YUKSELIS STOP'U (SLL24'un aynasi). 0 = kapali (parite).
 SLS24=float(os.environ.get("SLS24","0"))
@@ -620,6 +622,11 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _sr5=np.where(g,S[i],np.nan)
                     _md5=np.nanmedian(_sr5) if np.isfinite(_sr5).any() else 0.0
                     g=g&~(_ARV[i]&(_sr5>_md5))       # yalniz SHORT tarafi adaylarindan (sinyal medyan ustu) cikar
+            if KAYIP_HAF>0 and _KH[0] is not None:
+                # MADDE 611: KITABIN KENDI KAYIP HAFIZASI. Coinin SHORT bacaklarinin son KAYIP_PEN bardaki fiyat katkisi
+                # (tum dilimler toplami / dilim sayisi, ozkaynak orani) <= -KAYIP_HAF ise coin bu dengelemede aday olmaz.
+                _kh=_KH[0][max(0,i-KAYIP_PEN+1):i+1].sum(axis=0)/max(len(_REG),1)
+                _kb=_kh<=-KAYIP_HAF; g=g&~_kb; _ZES[0]+=int(_kb.sum())
             if ZARAR_EK>0 and _REG:
                 # MADDE 610: ZARARDAKI POZISYONA EKLEME YOK. Hesaptaki (tum dilimler, Binance entryPrice gibi agirlikli
                 # ortalama giris) short'u girisin +ZARAR_EK ustundeyse (long'u -ZARAR_EK altindaysa) coin bu dengelemede
@@ -1021,6 +1028,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
         r=np.nansum(poz*br)+np.nansum(np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1])))
         if MERD_GERI and _gw.any():
             r+=float(np.nansum(_gx)-np.nansum(_gw*np.nan_to_num(fv[i+1])))
+        if KAYIP_HAF>0:
+            if _KH[0] is None: _KH[0]=np.zeros((len(C.index),nk))
+            _KH[0][i+1]+=np.where(poz<0,np.nan_to_num(poz*br),0.0)
         if _GK_YOL and C.index[i+1]>=_GK_BAS:
             _gd=C.index[i+1].normalize()
             _fu=np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1]))
@@ -1234,6 +1244,7 @@ def calis2(ad,n,olcut):
     if _BRT[1]>0:
         print(f'BRUT: fiili ortalama carpan {_BRT[0]/_BRT[1]:.4f} '
               f'({_BRT[1]} kurulum)',flush=True)
+    if KAYIP_HAF>0: print(f"# KAYIP_HAF={KAYIP_HAF} PEN={KAYIP_PEN}: elenen aday (coin-dengeleme) {_ZES[0]}", flush=True)
     if ZARAR_EK>0: print(f"# ZARAR_EK={ZARAR_EK} {ZARAR_EK_TARAF}: elenen aday (coin-dengeleme) short {_ZES[0]} long {_ZES[1]}", flush=True)
     if MERD_SIRA: print(f"# MERD_SIRA: ayni barda kademe+TP duzeltmesi {_MSQ[0]} olay", flush=True)
     if BOSLUK and bos[1]>0:
