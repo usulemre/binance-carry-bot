@@ -20,7 +20,7 @@ yil = (C.index[-1] - pd.Timestamp("2020-07-19")).days / 365.25
 
 K = pd.concat([pd.read_pickle(f"/tmp/katki_{h}.pkl").assign(h=h) for h in (0, 1)], ignore_index=True)
 K = K[K.w != 0].copy()
-ii = C.index.get_indexer(K.t); jj = C.columns.get_indexer(K.sem)
+ii = C.index.get_indexer(K.t); jj = C.columns.get_indexer(K["sem"])
 cv = C.values
 
 

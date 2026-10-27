@@ -7039,3 +7039,12 @@ Taban T7K 1,15x + koşullu stop (P3T2: ham +247,5 · dd −13,3 · en kötü −
 long −%20 +%50 ek (2,3 bin ekleme) +258,4 · −15,9 · −8,31 · 5 · 3,99 / 4,25 → +237,1 (−78) — short +%35 +251,9 · −13,5 · −9,05 · 4 · 3,97 / 4,57 →
 +296,9 (−18) — ikisi +262,7 · −16,4 · −8,95 · 5 → +220,5 (−95). Ortalamaya dönüş GERÇEK (ham ↑) ama ekleme kuyruğu kalınlaştırıyor (dönmeyen
 sert hareketler LUNA tipi) → eşit riskte zarar. Doğru kullanım TUTMAK (madde 622-625), eklemek değil. Pozisyon boyutu ekseni (250, 626) kapalı.
+
+## Madde 627 — GİRİŞ OTOPSİSİ (taban T7K 1,15x + koşullu stop; KATKI bacak defteri, ~306 bin bacak kaydı): BÜYÜK SIZINTI YOK
+Araç `arastirma_m627_giris_otopsi.py`. Girişteki özelliğe göre bacak başı getiri, beşte birlik, ≤2024 / 2025+ ayrı. Desenler U şeklinde:
+uçlar (oynaklık Q5, 7-30 g getiri Q1/Q5, funding uçları) kârın kaynağı — madde 251/257/542 "yoğunluk ve uç = kâr" bulgusuyla aynı.
+İki dönemde birden negatif olan tek hücreler küçük: funding'i NEGATİF olan short'lar (−%10..0 yıllık: −17 / −23 bp, −176 / −56 bp) toplam
+**−1,8 puan/yıl**; funding'i −%20..−%5 olan long'lar (−9 / −41, −85 / −7 bp) **−3,3 puan/yıl** (kitap ham toplamı ~+141). Elemek en fazla
+~+5 puan/yıl (bar +8 altında) → kural yazılmadı. Not: long'ların bir kısmı funding'i POZİTİFken seçiliyor (kalabalık ölçütü) ve
+kârlı (+%10..+%50 yıllık funding'li long'lar 2025+ +130..+977 bp) — seçimin değeri funding'den çok kalabalıkta.
+Otopsi üçlüsü (621 çıkış · 625 tutuş · 627 giriş) tamam: tek büyük sızıntı 24 sa stop'tu (madde 622-623, giderildi).
