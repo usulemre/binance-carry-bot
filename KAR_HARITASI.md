@@ -7116,3 +7116,9 @@ eskiyen kalabalık sinyalinin kaybını karşılamıyor. Doz-yanıt düzenli →
 Taban P3T2 (eşit risk +315,2). Ceza 0,15: ham +233,7 · dd −13,9 · Sh 3,95 / 4,28 → +274,4 (−41) · ceza 0,30: +201,7 · −13,0 · 3,74 / 4,10 →
 +253,2 (−62). 636 ile birlikte: HIST −0,30 / −0,15 / 0 / +0,15 / +0,30 / +0,60 → +253 / +274 / **+315** / +282 / +264 / +232 — saf
 kalabalık sırası (sıfır) tek tepe; seçim hem devir hem tazelik açısından optimumda. Seçim histerezisi ekseni kapandı.
+
+## Madde 638 — Koşullu stop T4'te (kod varsayılanı): getiri +9,7, eşit risk +8,7, AMA −%5 altı gün 3 → 7 → varsayılan YAPILMADI
+T4 gerçekçi 2.000 $ (ham · dd · en kötü · −%5 · Sh ≤24 / 25+ → eşit risk): T4 +244,3 · −15,3 · −13,32 · 3 · 3,74 / 4,08 → +224,6 —
+T4 + KS (bot ritmi) +254,0 · −15,4 · −8,20 · 7 · 3,77 / 4,16 → +233,3. Ön kayıt: eşit-risk ≥ +8 ✓, Sharpe iki dönem ✓, dd T4'ten derin
+değil ✗ (−15,4 vs −15,3, sınırda) → resmi RED. T7K'da (madde 622) −%5 günü 3 → 4 iken T4'te 3 → 7: T4'te short tavanı / prim çarpanı
+olmadığından tutulan çöküşler daha sık −%5'e taşıyor. Koşullu stop T7K / T6 ile ÖNERİLİR, T4'te isteğe bağlı kalır (CARRY_LONG_24S_PIYASA).
