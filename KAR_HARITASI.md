@@ -7101,3 +7101,8 @@ Ham tabloda işlemden sonra fiyat TERSİNE dönüyor görünüyordu (60 dk −8,
 alış 5 / 15 / 30 / 60 / 120 / 240 dk +0,6 / −0,1 / +0,8 / +0,3 / +0,3 / −1,9 bp · satış −0,2 / −0,9 / −2,9 / −4,4 / −10,3 / −16,6 bp
 (satıştan sonra fiyat hafif yükseliyor). Kitap etkisi 60 dk'da −1,5 puan/yıl; yıl bazında 2024 −4,4, 2025 −0,3, 2026 −0,8 bp (sönüyor).
 Dengeleme emrini birkaç dakika/saat kaydırmanın değeri yok; bot'un kapanışta maker (GTX) emri doğru. İcra zamanlaması ekseni kapandı.
+
+## Madde 635 — Yaş eşiği 45 / 30 g yeni kitapta (T7K 1,15x + KS): KESİN RED — korumalar genç coin kuyruğunu taşımıyor
+Taban P3T2 (+247,5 · dd −13,3 · en kötü −7,41 · −%5 4 · Sh 4,03 / 4,42 · eşit risk +315,2). Yaş 45: +208,1 · −15,8 · −13,19 · 10 · 3,86 / 3,13 →
++192,0 (−123) · yaş 30: +197,1 · **−35,3** · −16,79 · 16 · 3,77 / 2,72 → eşit risk kurulamıyor. 2025+ Sharpe 4,42 → 2,7-3,1: kârın kaynağı
+"genç coin" değil, 60 g'yi geçmiş ve kalabalığı oturmuş coinler. Yaş 60 yerinde (madde 397/427/518 ile tutarlı, yeni kitapta da).
