@@ -6897,3 +6897,16 @@ Araç `arastirma_m608_merdiven_esit_risk.py` (madde 603 yöntemi); T7K, 2.000 $,
 Merdivensiz T7K ham olarak +5,5 puan fazla kazanıyor ama tam dönem dd 1,0x'te zaten T4'e değiyor → kaldıraç taşıyamıyor. Merdivenin
 "−19 puanlık savunma bedeli" (madde 528) eşit riskte +59 puanlık kapasiteye dönüşüyor: kaldıraçlı kullanımda merdiven KÂR aracı.
 Short merdiveni katkısız (madde 531 ile tutarlı): sadeleştirme seçeneği (daha az emir), ayar değişmedi.
+
+## Madde 609 — PDF'in en kötü günü (2021-05-19, T4 −%12,77) otopsisi + 24 sa stop KAPANIŞLA tetik (SLL24_KAP): RED (kalkan iyi, kâr yok)
+Otopsi (GUNLUK_KATKI + POZ_CIKTI): tutulan 15 long'un HEPSİ −%25..−%40 (DOGE, YFI, IOTA, MKR, SRM, ZEC …; evren ort. −%36) → seçim
+değil piyasa çöküşü; long −21,2 / short +8,4. Saat saat net maruziyet: 00:00 long 0,40 / short 0,30 → 08:00 0,36 / 0,05 (short kâr al
+%20 + kademe −%15 hedge'i çöküşün ORTASINDA hasat etti, kitap net +0,31 long) → 16:00 long 0,03 (24 sa stop −%45 bar içi İĞNEDE doldu)
+→ ertesi gün coinler dipten %10-15 döndü. Diğer kötü günler çoğunlukla tek coin short sıkışması (2025-03-02 SOL/ONDO, 2020-11-24 XLM).
+Kol (T4 gerçekçi, 2.000 $ D8, iki hiza): ham yıllık · dd · en kötü · −%5 altı · Sh ≤24 / 25+ · eşit-risk (T4 k 0,95 → +224,6):
+T4 +244,3 · −15,3 · −13,32 · 3 · 3,74 / 4,08 — kapanış −%45 +246,6 · −15,3 · −8,20 · 5 · 3,79 / 4,02 · +226,6 — kapanış −%45, 8 sa'te
+bir +247,7 · −15,3 · −8,20 · 5 · +227,6 — kapanış −%35 +246,3 · −15,6 · **−7,84** · 4 · 3,81 / **4,14** · +226,3 — stop yok +248,8 ·
+−21,3 · −8,20 · 7. Ön kayıt (a) eşit-risk ≥ +8 hiçbirinde yok (+2..+3): bağlayıcı ölçü tam dönem dd (−15,3, 19 May değil), sığ en kötü
+gün kaldıraca dönüşmüyor → RED. Not: kapanış −%35 bedava kalkan — en kötü gün −13,3 → −7,8, iki dönem Sharpe ↑, getiri +2; yalnız
+−%5 altı gün 3 → 4 ve 2024-10-15 −6,4 → −6,1. Kullanıcı "en kötü gün" önceliği verirse bota alınabilir (bot 4 sa'te bir kapanış
+kontrolü ister; şimdiki borsa STOP_MARKET'i mark fiyatıyla iğnede tetikler). g33: SLL24_KAP / SLL24_KAP_TAZE (varsayılan 0, parite).
