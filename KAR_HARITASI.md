@@ -7241,3 +7241,10 @@ Girişe göre kümülatif kayıp stop'u: −%35 +227,3 · Sh 3,94 / 4,30 → eş
 eriyen long'ların çoğu (SIREN −%78 → +%231, POWER, ARIA, LAB) sonra toparlanıp kâr al'a ulaşıyor; KAITO tipi kalıcı çöküş azınlık.
 Vaka → hipotez eşlemesi (hepsi daha önce ya da şimdi sınandı): pompada short'u kes (450, 503, 646) · listeden düşünce çıkma (mevcut,
 doğru) · uç funding'de long TP'yi büyüt (595) · oynaklığa göre TP (462 civarı) · pompaya short önceliği (645) · yavaş erime stop'u (651).
+
+## Madde 652 — Yaş kuralını kaldırmak (kullanıcı, BSB vakasından): KESİN RED — kural ne kadar gevşerse kuyruk o kadar büyüyor
+Araç `arastirma_m652_yas_yok.py` (635 kolları + Y14, Y3 ≈ kural yok). Taban P3T2 yaş 60: +247,5 · dd −13,3 · en kötü −7,41 · −%5 4 ·
+Sh 4,03 / 4,42 → eşit risk +315,2. Yaş 45 +208,1 · −15,8 · −13,19 · 10 · 3,86 / 3,13 → +192,0 — 30 +197,1 · −35,3 · −16,79 · 16 · 2,72 —
+14 +192,4 · **−42,8** · −16,88 · 16 · 2,36 — 3 g (kural yok) +184,3 · **−54,3** · −19,02 · 18 · 2,15 (30 ve altında eşit risk kurulamıyor).
+Monoton: yaş düştükçe getiri −63 puan, maks düşüş 4 kat, −%5 günü 4 → 18, 2025+ Sharpe yarıya. Genç coinler BSB gibi pompa ORTASINDA
+listeye girip short'u sıkıştırıyor (BTW tipi, ama koruma yok). Yaş 60 yerinde; eksen kapalı (397 / 427 / 518 / 635 / 652).
