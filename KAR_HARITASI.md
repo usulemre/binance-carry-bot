@@ -7255,3 +7255,10 @@ dilim yeni giriş yapmaz (elindekini tutar); _ZARAR = yalnız hesaptaki toplam p
 +174,0 (−141) · zararda 6: +199,7 · 3,82 / 4,08 → +199,7 (−116) · her zaman 3: +58,9 · dd −12,1 · 3,10 / 2,15 → +77,5 · her zaman 8:
 +153,7 · 3,46 / 3,93 → +165,2. Zarardaki coine dilim eklemeyi kesmek getirinin yarısını götürüyor: zarardaki kalabalık coin sonra dönüyor
 (ortalama düşürme carry'nin kârının parçası; tutuş otopsisi 625 ile aynı yön). Yoğunluk (dilimler aynı coinde) kâr kaynağı (542-543, 653).
+
+## Madde 654 — Maliyet duyarlılığı (canlıya hazırlık): önerilen ayarın T4'e üstünlüğü 10 bp'de de korunuyor
+Araç `arastirma_m654_maliyet.py` (2.000 $, iki hiza, işlem maliyeti KOM her alış / satışta). Yıllık · dd · Sh:
+5 bp T4 +244,3 · −15,3 · 3,84 | T7K+KS 1x +247,5 · −13,3 · 4,14 | ×1,15 +315,2 · −15,2 → fark +70,9 —
+8 bp T4 +227,5 · −16,0 | 1x +232,2 · −13,8 · 4,00 | ×1,15 +294,4 · −15,8 → +66,9 — 10 bp T4 +216,8 · −16,5 | 1x +222,5 · 3,90 | ×1,15 +281,1 ·
+−16,2 → +64,3. 1 bp ek maliyet ≈ −5,6 puan/yıl (T4) / −5,1 (T7K+KS 1x); ×1,15'in T4 ile aynı dd'yi taşıması 10 bp'de de bozulmuyor.
+Demo kontrolü: gerçek komisyon + kayma toplamı (komisyon / hacim) 10 bp'nin altındaysa önerilen ayarın beklentisi ≥ +%280 / yıl (2.000 $).
