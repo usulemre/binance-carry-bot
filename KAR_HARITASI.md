@@ -7232,3 +7232,12 @@ de tutarsa "T4'e geri dön"; birinde tutarsa "UYARI, Kasım'da tekrar"; hiçbiri
 vermez): 2.000 $ T7KKS×1,15 +8,38 vs T4 +4,54 (fark +3,84, %10 eşiği −2,72), en kötü −3,68 vs −4,43 · 3.500 $ ×1,10 +8,54 vs +7,94 →
 DEVAM. Engel: bu konteynerde ham veri klasörleri (data_genis vb.) yok, yalnız türetilmiş pkl'ler var ve data.binance.vision ağ izninde
 kapalı → Ekim için ya alan adı izni (claude.ai ayarları) ya da kullanıcının sunucusundan veri yüklemesi gerekiyor.
+
+## Madde 651 — Vaka incelemelerinden (KAITO / SOON / H / MYX: long'da yavaş erime) giriş stop'u SLL: RED
+Kullanıcı coin coin vakalara bakıp "bunlardan iyileştirme çıkmaz mı" dedi. Vakaların tek denenmemiş dersi: koşullu 24 sa stop piyasa sakinken
+tetiklenmediği için long YAVAŞ eriyince (KAITO −%72 / 19 g) tutuluyor. Araç `arastirma_m651_giris_stop.py`; taban P3T2 (+315,2).
+Girişe göre kümülatif kayıp stop'u: −%35 +227,3 · Sh 3,94 / 4,30 → eşit risk +287,8 (−27) · −%50 +235,2 · 3,98 / 4,22 → +298,5 (−17)
+(2021-05-19'u −4,4'ten −9,0'a DERİNLEŞTİRİYOR) · −%65 +236,3 · dd −13,8 → k 1,10 → +277,6 (−38). Yavaş erimede kesmek de kaybettiriyor:
+eriyen long'ların çoğu (SIREN −%78 → +%231, POWER, ARIA, LAB) sonra toparlanıp kâr al'a ulaşıyor; KAITO tipi kalıcı çöküş azınlık.
+Vaka → hipotez eşlemesi (hepsi daha önce ya da şimdi sınandı): pompada short'u kes (450, 503, 646) · listeden düşünce çıkma (mevcut,
+doğru) · uç funding'de long TP'yi büyüt (595) · oynaklığa göre TP (462 civarı) · pompaya short önceliği (645) · yavaş erime stop'u (651).
