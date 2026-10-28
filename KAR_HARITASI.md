@@ -7154,3 +7154,13 @@ Madde 601 koşulu (eşit risk = TAM T4 1,0x). Ham · Sh · dd · en kötü | eş
 1,10 → **+372,4** · 12 — 5+5 +255,0 · 4,19 · −15,2 | 1,10 → +300,7 · 6 — 6+6 +210,3 · 4,06 · −16,4 | 1,00 → +210,3 — 8+8 +155,6 · 3,80 ·
 −14,4 | 1,15 → +192,5. Ek bacaklar sıralamada daha zayıf adaylar (kâr kaynağı en uçtaki 4) ve düşüş piyasa çapında (bacak sayısıyla
 azalmıyor) → Sharpe düşüyor. Madde 641 (az bacak) ile birlikte: 4+4 iki yönde de tepe, bakiye seviyesinden bağımsız. Bacak ekseni kapandı.
+
+## Madde 644 — Kullanıcının "Reversal Deneyi" botu (kâğıt üstü, 2026-07-10 → 10-27: 2.000 $ → 9.838 $, +%392) bizim zeminde
+Kural (ekrandan): 24 sa ±%30 hareket eden likit coin → yükseleni SHORT, düşeni LONG; slot %25, sert stop %25. Araç
+`arastirma_m644_reversal.py` (4 sa bar, 853 sembol delist dahil, 2020-07 → 2026-09, funding dahil, 5 bp kayma, 4 slot, aynı coine yeniden
+giriş 1 g soğuma). Sonuç: slot %25'te HER kol hesabı sıfırlıyor (dd −%99; 2020-21 −45, 2022-24 −71 yıllık); slot %10 dd −%90,6 (26/07+
+penceresi +%17). Taraf ayrımı: SHORT (yükseleni sat) işlem başı −%1,04..−%1,21, 2.117 işlem — kayıp kaynağı; LONG (düşeni al) +%0,57..+%2,7,
+slot %10'da yıllık +8,9 · dd −%63. Madde 381 ile aynı yasa (yükseleni short'lamak her ufukta negatif; pompa devam eder). Kullanıcının 109
+günlük kâğıt sonucu: (1) 2026 yaz-sonbaharı tek rejim (bizim 26/07+ penceresinde de kısa vadede pozitif), (2) kâğıt dolum — +%120 pompalanmış
+ince coinlerde gerçek kayma / likidasyon yok, (3) 6 yılın hiçbir alt döneminde tutarlı değil. Öneri: gerçek parayla AÇMAYIN; carry kitabına
+eklenecek bir kenar yok.
