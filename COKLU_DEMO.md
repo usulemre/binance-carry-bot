@@ -13,7 +13,11 @@ Demo hesaplar genelde büyük sanal bakiye verir. Bot, kitabı bakiyeye göre ku
 denemek için: `CARRY_SERMAYE_OLCEK = 2000 / demo özkaynağı` (ör. 10.000 USDT → 0.2). Bot özkaynağın yalnız bu kadarını kullanır,
 bileşik büyüme korunur; rapor getiriyi bu kullanılan sermayeye göre hesaplar. Gerçek hesapta 1,0 dışı değer preflight'ta HATA.
 
-## Önerilen dört bot (bugünkü kanıta göre; KAR_HARITASI 596, 622-623, 629, 638)
+## Madde 656: hepsi önerilende
+Kullanıcı kararı (2026-10-29): bütün botlar önerilen ayarda — `sudo ./deploy/onerilen_kur.sh --hepsi` ya da yeni bot için
+`sudo ./deploy/coklu_demo_kur.sh AD ONERILEN "" "" <ölçek>`. Aşağıdaki tablo profiller arası KARŞILAŞTIRMA isteğe bağlı kalırsa geçerlidir.
+
+## Önerilen dört bot (karşılaştırma için) (bugünkü kanıta göre; KAR_HARITASI 596, 622-623, 629, 638)
 | AD | komut | ne | backtest beklentisi (2.000 $, yıllık) |
 |---|---|---|---|
 | T4 | `sudo ./deploy/coklu_demo_kur.sh T4 T4 1.0 0 <ölçek>` | kod varsayılanı | +%244 |

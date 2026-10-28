@@ -7268,3 +7268,13 @@ Yıllık % (Sharpe · yıl içi en derin düşüş) — T7K+KS ×1,15: 2020 (Tem
 2023 +402 (4,7 · −9,9) · 2024 +144 (3,0 · −11,4) · 2025 +342 (4,0 · −14,2) · 2026 (Oca-Eyl) +364 (4,9 · −14,3). T4: +87 · +519 · +51 · +322 ·
 +132 · +224 · +284. Her yıl önerilen ayar ≥ T4 (2024'te eşit). En kötü 90 gün −%9,8 (2022-09, T4 −10,9); 90 günlük pencerelerin yalnız
 %1,9'u negatif (T4 %2,3). 2025-26 Sharpe 4,0-4,9 → son dönemde aşınma işareti yok. Beklenti dili: "kötü yıl ≈ +%75, olağan yıl +%150-400".
+
+## Madde 656 — KULLANICI KARARI (2026-10-29): test, demo ve canlı HEPSİ önerilen ayarda → otomatik önerilen mod (`onerilen.py`)
+`.env`'de CARRY_PROFIL yoksa ya da ONERILEN ise carry_bot.main() ve carry_preflight.main() açılışta kitabı (özkaynak × CARRY_SERMAYE_OLCEK)
+okur, ölçülmüş ayarı seçer (< 3.500 $ T7K 1,15x · 3.500-12.500 $ T7K 1,10x · ≥ 12.500 $ T6 1,10x; koşullu stop 0,03; T7K'da prim tohumu
+kopyalanır), ortamı ayarlayıp os.execv ile aynı argümanlarla yeniden başlar (systemd PID'i aynı). Bakiye okunamazsa T7K 1,0x + KS
+(kaldıraçsız). .env'de AÇIK CARRY_GROSS / CARRY_LONG_24S_PIYASA korunur; açık CARRY_PROFIL (T4, T6 …) dokunulmaz; CARRY_ONERILEN=0 kapatır.
+Modül düzeyi (testler, araştırma motoru) değişmedi: çözümlenmemiş ONERILEN = T4. `deploy/onerilen_kur.sh --hepsi` bütün kurulumları
+(/opt/carry + /opt/carry-*) CARRY_PROFIL=ONERILEN'e çevirir (yedek + preflight + HATA'da geri dönüş); coklu_demo_kur.sh PROFIL=ONERILEN alır.
+Testler: test_onerilen.py 22/22 (eşikler, açık değerler, döngüsüzlük, preflight uçtan uca, main() yeniden başlatma), test_carry_preflight /
+short_ara / gunluk_defter / entegrasyon geçti. Ekim OOS geri dönüş kuralı (madde 650) bu ayara uygulanacak.

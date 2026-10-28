@@ -1,6 +1,6 @@
 #!/usr/bin/env bash
 # ÇOKLU DEMO KURULUMU (COKLU_DEMO.md). Kullanım: sudo ./deploy/coklu_demo_kur.sh AD PROFIL [GROSS] [KOSULLU] [OLCEK]
-#   AD       klasör / servis adı (ör. T7KKS)        PROFIL  T4 | T6 | T7K | T60
+#   AD       klasör / servis adı (ör. T7KKS)        PROFIL  ONERILEN (madde 656: bakiyeye göre otomatik) | T4 | T6 | T7K | T60
 #   GROSS    kaldıraç (varsayılan 1.0; T7K 1.15, T6 1.10 yalnız ≳12.500 $ kitapta)
 #   KOSULLU  koşullu 24 sa stop eşiği (0 = kapalı, 0.03 önerilen)
 #   OLCEK    CARRY_SERMAYE_OLCEK (kitap $ / demo özkaynak; varsayılan 1.0)
@@ -16,9 +16,9 @@ BINANCE_MODE=demo
 BINANCE_API_KEY=BURAYA
 BINANCE_API_SECRET=BURAYA
 CARRY_PROFIL=$PROFIL
-CARRY_GROSS=$GROSS
-$( [ "$GROSS" != "1.0" ] && echo "CARRY_DOZ_ONAY=$GROSS" )
-CARRY_LONG_24S_PIYASA=$KS
+$( [ "$PROFIL" != "ONERILEN" ] && echo "CARRY_GROSS=$GROSS" )
+$( [ "$PROFIL" != "ONERILEN" ] && [ "$GROSS" != "1.0" ] && echo "CARRY_DOZ_ONAY=$GROSS" )
+$( [ "$PROFIL" != "ONERILEN" ] && echo "CARRY_LONG_24S_PIYASA=$KS" )
 CARRY_SERMAYE_OLCEK=$OLCEK
 ENV
   echo ">> $HEDEF/.env yazıldı — API anahtarlarını doldurun"

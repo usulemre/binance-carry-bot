@@ -506,7 +506,7 @@ Madde 216'nın takvimi bittikten sonra tek satırla açılır:
 
 Araçlar: `arastirma_prim_doz.py`."""
 
-_PROFIL_ERKEN = os.getenv("CARRY_PROFIL", "").strip().upper() or "T4"
+_PROFIL_ERKEN = os.getenv("CARRY_PROFIL", "").strip().upper().replace("ONERILEN", "") or "T4"
 """Profil adı, modül başında okunur (madde 575/585: T6/T7K varsayılanları aşağıdaki sabitlerden önce gerekir)."""
 _T7K = _PROFIL_ERKEN == "T7K"
 """MADDE 585: CARRY_PROFIL=T7K (İSTEĞE BAĞLI). T7K = T6'nın short ayarları + short tavanı %8 + prim çarpanı YALNIZ AZALTIR
@@ -1897,7 +1897,7 @@ plato %35-%50 (madde 463), protokol madde 464."""
 # CARRY_PROFIL=T60 yazılır.
 # T4 = T60 + short 2 g'de bir + short tavan %8 + kademe payı 0,80 + evren tabanı 30 (madde 497-522; kullanıcı kararı:
 # demo hesapta canlı çalışma, 2026-10-25).
-_PROFIL_AD = os.getenv("CARRY_PROFIL", "").strip().upper() or "T4"
+_PROFIL_AD = os.getenv("CARRY_PROFIL", "").strip().upper().replace("ONERILEN", "") or "T4"
 """Etkin profil adı (madde 534: boş = T4; madde 575: T6 isteğe bağlı)."""
 _PROFIL_T6 = _PROFIL_AD in ("T6", "T7K")   # T7K short ayarlarını T6'dan alır (madde 585)
 """MADDE 575: CARRY_PROFIL=T6 (İSTEĞE BAĞLI, varsayılan DEĞİL). T6 = T4 + short coin tavanı YOK + short 40 sa'te bir +
@@ -4643,6 +4643,16 @@ def main():
 
     client = ExchangeClient(config.API_KEY, config.API_SECRET,
                             mode=getattr(config, "MODE", "demo"))
+    # MADDE 656: CARRY_PROFIL boş / ONERILEN -> bakiyeye göre önerilen ayar, sonra yeni ortamla yeniden başla
+    import onerilen
+    if onerilen.gerekli():
+        _o = onerilen.cozumle(lambda: sermaye_oku(client))
+        logger.info("ÖNERİLEN AYAR (madde 656): kitap %s $ -> %s %sx + koşullu stop %s; yeniden başlatılıyor",
+                    os.environ.get("CARRY_ONERILEN_KITAP"), _o["profil"], _o["gross"], _o["ks"])
+        onerilen.yeniden_baslat()
+    if os.getenv("CARRY_ONERILEN_KITAP"):
+        logger.info("önerilen ayar etkin: profil %s · gross %.2fx · koşullu stop %s (kitap %s $)", _PROFIL_AD,
+                    GROSS_EXPOSURE, os.getenv("CARRY_LONG_24S_PIYASA"), os.getenv("CARRY_ONERILEN_KITAP"))
     logger.info("carry_bot başladı | mod=%s | %d+%d bacak | %d dilim | "
                 "her dilim %.0fsa'te bir (tur: %.0fsa) | gross %.1fx | "
                 "akış %.0f%% | risk: %s (vol hedefi %.0f%%)",

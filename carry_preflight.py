@@ -61,7 +61,7 @@ def kontrol_ayarlar() -> None:
     # BUGUN (eski kitap): CARRY_PROFIL=BUGUN + eski değerler .env'de açıkça.
     # Yaş 90'ın altı short felaket stop'u OLMADAN çalıştırılamaz (madde 427).
     # Not: `bekle` sözlüğünün temel değerleri BUGUN kitabınındır; T60 bunları ezer.
-    profil = os.getenv("CARRY_PROFIL", "").strip().upper() or "T4"   # madde 534: varsayılan T4 (önce T60, madde 442)
+    profil = os.getenv("CARRY_PROFIL", "").strip().upper().replace("ONERILEN", "") or "T4"   # madde 534: varsayılan T4 (önce T60, madde 442)
     if profil == "BUGUN":
         bekle.update({
             "MIN_DAILY_VOLUME_USD": (cb.MIN_DAILY_VOLUME_USD, 1e8, "madde 401"),
@@ -404,6 +404,20 @@ def main() -> int:
     ap.add_argument("--yerel", action="store_true",
                     help="borsaya HİÇ bağlanma, sadece yerel kontroller")
     a = ap.parse_args()
+    # MADDE 656: profil boş / ONERILEN -> botla AYNI çözümleme (bakiyeye göre önerilen ayar), sonra yeni ortamla yeniden başla
+    import config   # .env'yi yükler (load_dotenv): .env'deki CARRY_PROFIL çözümlemeden ÖNCE görünmeli
+    import onerilen
+    if onerilen.gerekli():
+        def _kitap():
+            if a.yerel or not (config.API_KEY and config.API_SECRET):
+                return None
+            import carry_bot as cb
+            from exchange_client import ExchangeClient
+            return cb.sermaye_oku(ExchangeClient(config.API_KEY, config.API_SECRET, mode=getattr(config, "MODE", "demo")))
+        _o = onerilen.cozumle(_kitap)
+        print(f"ÖNERİLEN AYAR (madde 656): kitap {os.environ.get('CARRY_ONERILEN_KITAP')} $ -> {_o['profil']} {_o['gross']}x + "
+              f"koşullu stop {_o['ks']}")
+        onerilen.yeniden_baslat()
     print("=" * 70)
     print("CARRY BOT PREFLIGHT (madde 217) — hiçbir emir gönderilmez")
     print("=" * 70)
