@@ -7177,3 +7177,8 @@ Bileşik: 6 yıl yalnız short slot %25 −%15 (dd −89) · slot %10 +%44 (dd �
 — istikrarlı yükselen bir rejim kenarı. Carry ile korelasyon −0,03 (bağımsız) ama Sharpe 0,34 (6 yıl): T7K+KS'ye %10 harman yıllık +315 → +271,
 Sh 4,14 → 4,13 (dd −15,2 → −14,2) — eşit riskte kazanç YOK (madde 353 yasası: korelasyonsuz olmak bedava değil). Ayrı kâğıt botu olarak
 izlenmeye değer (2025+ Sharpe ~1); slot %10 önerilir.
+Madde 644 eki 3 — kullanıcı botunun 109 gününü yeniden üretim (veri 09-30'a kadar, ilk 82 gün): başlangıç 2026-07-10 16:00 UTC, 2.000 $, 2 slot
+%25, karar 03:00 TR, 1 g tut, stop %25, hacim 5M → 30 Eylül **4.748 $ (+%137)**, en düşük 1.344 $ (−%33, kullanıcının grafiğindeki 0,74x dibiyle
+uyumlu), en kötü gün −%12,6, 158 işlem, kazanan %52. Karar saatine AŞIRI duyarlı: aynı dönem 07:00 TR 1.657 $, 11:00 1.044 $, 15:00 327 $,
+19:00 557 $, 23:00 947 $ (4 slot 03:00: 2.639 $). Altı saatten yalnız biri kâr → sonuç saat seçimine (şansa) bağlı. Rapor:
+raporlar/reversal/Reversal_Deneyi_Yeniden.pdf (gün gün coin, yön, giriş → çıkış, kâr $).

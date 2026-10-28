@@ -56,7 +56,7 @@ def kos(esik=0.30, hacim=2e7, tut=6, tp=0.0, stop=0.25, slot=0.25, nslot=4, kaym
             p["son"] = fiyat_son
             if cikis is not None:
                 pnl_bar -= p["w"] * kayma; kapat.append(k)
-                islem.append((C.index[i + 1], C.columns[k], yon, giris, cikis, neden, yon * (cikis / giris - 1)))
+                islem.append((C.index[i + 1], C.columns[k], yon, giris, cikis, neden, yon * (cikis / giris - 1), C.index[t0], p["w0"]))
         eq += pnl_bar
         for k in kapat:
             acik.pop(k); son_cikis[k] = i + 1
@@ -69,14 +69,14 @@ def kos(esik=0.30, hacim=2e7, tut=6, tp=0.0, stop=0.25, slot=0.25, nslot=4, kaym
             ad.sort(key=lambda k: -abs(x[k]))
             for k in ad[: nslot - len(acik)]:
                 w = slot * eq
-                acik[k] = {"yon": -1 if x[k] > 0 else 1, "giris": cv[j, k], "son": cv[j, k], "w": w, "t0": j}
+                acik[k] = {"yon": -1 if x[k] > 0 else 1, "giris": cv[j, k], "son": cv[j, k], "w": w, "t0": j, "w0": w}
                 eq -= w * kayma
         # 3) özkaynak: eq nakit + açık pozisyonların birikmiş kârı zaten eq'ye işlendi (MTM)
         seri[j] = eq
         if eq <= 0.01:
             seri[j:] = eq; break
     s = pd.Series(seri[bas:], index=C.index[bas:])
-    return s, pd.DataFrame(islem, columns=["zaman", "sembol", "yon", "giris", "cikis", "neden", "getiri"])
+    return s, pd.DataFrame(islem, columns=["zaman", "sembol", "yon", "giris", "cikis", "neden", "getiri", "giris_zaman", "tutar"])
 
 
 def ozet(s, ad):
