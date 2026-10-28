@@ -7148,3 +7148,9 @@ Tek dilim, her gün 1 long + 1 short (en kalabalık aday), T7K + KS seçim / ç�
 (coin başı %45) bir günde −%104 → hesap sıfır. Coin başı %25'e ölçekli (günlük getiri × 0,556): yıllık +92 · max düşüş −%92,5 · en kötü gün
 −%57,6 · −%5 altı 85 gün · yıllar 2021 +578 / 2023 +499 ama **2025 −75**. Coin başı %10: +41 · −%58 · en kötü −%23. Tek coin tek gün
 kitabın yarısını götürebiliyor (pompa / sıkışma); funding kârı bu oynaklığın yanında küçük. Çeşitlendirilmiş kitap (8 bacak × 15 dilim) yerinde.
+
+## Madde 643 — Büyük bakiyede (TAM) daha çok bacak, T6 + KS: RED — çeşitlendirme düşüşü azaltmıyor, kârı sulandırıyor
+Madde 601 koşulu (eşit risk = TAM T4 1,0x). Ham · Sh · dd · en kötü | eşit-risk k → yıllık · −%5: 4+4 (T6KS) +312,8 · 4,23 · −15,1 · −6,99 |
+1,10 → **+372,4** · 12 — 5+5 +255,0 · 4,19 · −15,2 | 1,10 → +300,7 · 6 — 6+6 +210,3 · 4,06 · −16,4 | 1,00 → +210,3 — 8+8 +155,6 · 3,80 ·
+−14,4 | 1,15 → +192,5. Ek bacaklar sıralamada daha zayıf adaylar (kâr kaynağı en uçtaki 4) ve düşüş piyasa çapında (bacak sayısıyla
+azalmıyor) → Sharpe düşüyor. Madde 641 (az bacak) ile birlikte: 4+4 iki yönde de tepe, bakiye seviyesinden bağımsız. Bacak ekseni kapandı.
