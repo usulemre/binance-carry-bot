@@ -7276,5 +7276,5 @@ kopyalanır), ortamı ayarlayıp os.execv ile aynı argümanlarla yeniden başla
 (kaldıraçsız). .env'de AÇIK CARRY_GROSS / CARRY_LONG_24S_PIYASA korunur; açık CARRY_PROFIL (T4, T6 …) dokunulmaz; CARRY_ONERILEN=0 kapatır.
 Modül düzeyi (testler, araştırma motoru) değişmedi: çözümlenmemiş ONERILEN = T4. `deploy/onerilen_kur.sh --hepsi` bütün kurulumları
 (/opt/carry + /opt/carry-*) CARRY_PROFIL=ONERILEN'e çevirir (yedek + preflight + HATA'da geri dönüş); coklu_demo_kur.sh PROFIL=ONERILEN alır.
-Testler: test_onerilen.py 22/22 (eşikler, açık değerler, döngüsüzlük, preflight uçtan uca, main() yeniden başlatma), test_carry_preflight /
+Testler: test_onerilen.py 21/21 (eşikler, açık değerler, döngüsüzlük, preflight uçtan uca, main() yeniden başlatma), test_carry_preflight /
 short_ara / gunluk_defter / entegrasyon geçti. Ekim OOS geri dönüş kuralı (madde 650) bu ayara uygulanacak.
