@@ -7164,3 +7164,9 @@ slot %10'da yıllık +8,9 · dd −%63. Madde 381 ile aynı yasa (yükseleni sho
 günlük kâğıt sonucu: (1) 2026 yaz-sonbaharı tek rejim (bizim 26/07+ penceresinde de kısa vadede pozitif), (2) kâğıt dolum — +%120 pompalanmış
 ince coinlerde gerçek kayma / likidasyon yok, (3) 6 yılın hiçbir alt döneminde tutarlı değil. Öneri: gerçek parayla AÇMAYIN; carry kitabına
 eklenecek bir kenar yok.
+Madde 644 eki (kullanıcı: "en çok yükselen ilk kez alınıyor, hacim 5M yeter"): hacim 5M, 2 slot, işlem başı (slot %1, iflas yok) yıl yıl
+SHORT ort: 2020 −1,0 · 2021 −1,3 · 2022 −0,9 · 2023 +0,2 · 2024 −0,5 · **2025 +1,3 · 2026 +0,9 · 2026-07+ +3,6%** (kazanan %55-62, en kötü −25).
+LONG 2025-26 −3,0..−3,2. Yani "pompayı short'la" 2025'ten beri işlem başına POZİTİF (rejim değişti), önce negatifti. Ama slot %25 ile
+bileşik: 2025-01'den başlasa yalnız short 2 slot −%53 (dd −91), 4 slot −%99; kullanıcının penceresinden (2026-07-10) başlasa 2 slot +%102..+%125
+(dd −47..−51) — kâğıt sonucuyla uyumlu, ama aynı kural 2025 başından çalışsaydı hesap yarıya inerdi. Slot %10 yalnız short: 2025+ +%11 (dd −47),
+2026-07+ +%50 (dd −23). Kenar küçük ve rejime bağlı; slot %25 oynaklığı taşımıyor.
