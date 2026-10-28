@@ -7195,3 +7195,13 @@ Short coin 24 sa ≥ +%30 VE evren medyanı 24 sa ≥ +%3 → kapanışla kes: +
 +%30 / piyasa +%5: +239,8 · 4,32 → +304,8 (−10,4) — +%50 / +%3: +245,4 · 4,38 → +312,5 (−2,7). Kötü günlere etkisi yok (en kötü −7,41
 long tarafı, 2024-10-15 REEF). Ralli içinde bile sıkışan short'u TUTMAK doğru — long'da işleyen asimetri short'ta yok (çöküşler devam
 ediyor, rallilerde tek coin geri dönüyor). Short stop ailesi (450, 503, 646) kapandı.
+
+## Madde 647 — FUNDING ÖDEME ANI ETRAFINDA FİYAT (5 dk veri, 100 likit sembol, 2024-01 → 2026-08, 324 bin ödeme olayı): KAPANDI (TANI)
+Araç `arastirma_m647_odeme_ani.py`. Yön = funding ALAN taraf (carry'nin tuttuğu taraf). Ödeme oranına göre (aynı ödemenin oranı, nedensel
+değil) güçlü desen: |f| ≥ %0,10, 2025+: ödemeden önce 60 / 120 dk +39 / +79 bp alan tarafın lehine, ödemeden SONRA 5 / 60 dk −25 / −37 bp
+(ort. f 35 bp) — "temettü düşüşü": ödemeden sonra fiyat yaklaşık ödenen funding kadar alan tarafın aleyhine kayıyor. NEDENSEL seçimde
+(önceki ödemenin oranı) ödeme öncesi koşu küçülüyor: f < 0 coinler 2025+ önce120 +21 (medyan +5), fon +28, sonra5 −23 bp; "T−120 dk gir,
+ödemeyi al, T+5 dk çık" ayrı kitabı ort. +27 / medyan +9 / kırpık +14 bp, 2024'te f < 0 için NEGATİF (−7) → iki yön × 10 bp komisyon + uç
+coin kayması sonrası ~0 → RED. Carry icrası için: ödemeden hemen önce girip funding'i almak ile hemen sonra (düşüşten sonra) girmek
+yaklaşık EŞİT (f ≈ düşüş); çıkış için de aynı → icra saatinin ödeme anına göre hizası serbest, kural yok. Motorun "T kapanışında gir +
+T ödemesini al" varsayımı bu ölçümle tutarlı (iyimser değil).
