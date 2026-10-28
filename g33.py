@@ -378,6 +378,7 @@ def _yay(poz,bos,uygun,eq,giris=None,f=None):
 AYNI=int(os.environ.get("AYNI","0"))            # kar al sonrasi AYNI yonde yeniden gir
 say_r=[0]
 REZ_RAST=int(os.environ.get("REZ_RAST","0"))
+POMPA_ONC=float(os.environ.get("POMPA_ONC","0")); POMPA_ESIK=float(os.environ.get("POMPA_ESIK","0.30"))   # MADDE 645
 HIST=float(os.environ.get("HIST","0"))   # MADDE 636: elde tutulan coine secimde sira bonusu (0 = parite; <0 = ceza, madde 637)
 TOL=float(os.environ.get("TOL","0"))   # hedefin bu oraninden az sapan bacaga dokunma
 KAP=float(os.environ.get("KAP","0"))   # coin basina EK agirlik ust siniri
@@ -697,6 +698,11 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         p=np.where(np.isfinite(p),pd.Series(p).rank(pct=True).values,np.nan)
                         yedek=sira_skor
                         p=np.where(np.isfinite(p),p,yedek)
+                        if POMPA_ONC>0 and taraf<0 and i>=6:
+                            # MADDE 645: POMPA ÖNCELİĞİ (kullanıcının reversal botundan: 2025+ pompalar 1 g içinde sönüyor). Short havuzunda
+                            # 24 sa getirisi >= POMPA_ESIK olan adaya kalabalik sirasinda +POMPA_ONC bonus.
+                            _r=cv[i,ad]/np.where(cv[i-6,ad]>0,cv[i-6,ad],np.nan)-1
+                            p=p+POMPA_ONC*(np.nan_to_num(_r,nan=0.0)>=POMPA_ESIK)
                         if HIST!=0:
                             # MADDE 636: SECIM HISTEREZISI. Bu dilimin ELDE tuttugu (ayni yonde) coin havuzdaysa kalabalik sirasina +HIST
                             # bonus: sinir coinler gereksiz yere degismez -> devir (5 bp/islem) azalir. Havuz disina dusen coin yine cikar.
