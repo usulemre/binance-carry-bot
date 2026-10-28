@@ -7136,3 +7136,9 @@ yiyor (madde 608: kademe = kalkan). Hepsi RED.
   bakiyesinde 2.000 $ kitabı denemek için); preflight: demo'da UYARI, gerçek hesapta HATA.
 - `deploy/`: `carry@.service` (WorkingDirectory=/opt/carry-%i), `carry-defter@.timer` (00:05 UTC), `carry-rapor.timer` (00:15 UTC),
   `coklu_demo_kur.sh AD PROFIL GROSS KOSULLU OLCEK`. Belge: COKLU_DEMO.md (ŞART: her bot ayrı demo hesabı / API anahtarı).
+
+## Madde 641 — Kullanıcı sorusu "her gün yalnız 2 coin alsa": ham getiri ↑ ama risk 2-4 kat → aynı riskte açık ara KÖTÜ
+T7K 1,15x + KS tabanında (ham · dd · en kötü · −%5 altı · Sh ≤24 / 25+): taban +247,5 · −13,3 · −7,41 · 4 · 4,03 / 4,42 (eşit risk 1,15x → +315) —
+dilim başı 1+1 +301,2 · −48,1 · −21,63 · 52 · 2,90 / 2,26 — 2+2 +309,2 · −23,7 · −12,92 · 19 · 3,60 / 3,47 (eşit risk 0,60x → +138) —
+günde tek dilim 1+1 (tam "günde 2 coin") +297,4 · −43,2 · −18,31 · 49 · 2,91 / 2,19 (T4 riskine inmek için < 0,3x). Madde 484/222 yasası:
+bacak sayısı bir kaldıraç düğmesidir; az bacak = kılık değiştirmiş kaldıraç, Sharpe düşer. 4+4 yerinde.
