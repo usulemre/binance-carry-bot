@@ -165,6 +165,9 @@ SLLK=float(os.environ.get("SLLK","0")); SLLK_PEN=int(os.environ.get("SLLK_PEN","
 # cikar (19 May 2021: long'lar igne dibinde satilip ertesi gunun %10-15 donusu kacti). SLL24_KAP_TAZE=n: yalniz
 # n barda bir kontrol (bot turu 8 sa = 2). 0 = eski (igne, parite).
 # MADDE 610: ZARAR_EK=x -> hesapta girisin x aleyhindeki pozisyona dengelemede yeni dilim eklenmez (TEK_GIRIS=1 gerekir). 0 = parite.
+# MADDE 653: DILIM_MAX=N -> bir coini (bu dilim disinda) zaten N dilim tutuyorsa bu dilim YENI giris yapmaz (elindekini tutar);
+# DILIM_MAX_ZARAR=1 ise yalniz hesaptaki toplam pozisyon (agirlikli giris) ZARARDAYKEN. TEK_GIRIS=1 gerekir. 0 = parite.
+DILIM_MAX=int(os.environ.get("DILIM_MAX","0")); DILIM_MAX_ZARAR=int(os.environ.get("DILIM_MAX_ZARAR","0")); _DMS=[0]
 ZARAR_EK=float(os.environ.get("ZARAR_EK","0")); ZARAR_EK_TARAF=os.environ.get("ZARAR_EK_TARAF","short").strip(); _ZES=[0,0]
 # MADDE 611: KAYIP_HAF=y -> coinin short katkisi son KAYIP_PEN barda <= -y (ozkaynak) ise short adayi olmaz. 0 = parite.
 KAYIP_HAF=float(os.environ.get("KAYIP_HAF","0")); KAYIP_PEN=int(os.environ.get("KAYIP_PEN","180")); _KH=[None]
@@ -664,6 +667,17 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if ZARAR_EK_TARAF in ("short","iki"): g=g&~_zs
                 if ZARAR_EK_TARAF in ("long","iki"): g=g&~_zl
                 _ZES[0]+=int(_zs.sum()); _ZES[1]+=int(_zl.sum())
+            if DILIM_MAX>0 and _REG:
+                _ds=np.zeros(nk,int); _dw=np.zeros(nk); _de=np.zeros(nk)
+                for _b,(_pq,_gq) in _REG.items():
+                    _ok=np.isfinite(_gq)&(_pq!=0); _dw[_ok]+=_pq[_ok]; _de[_ok]+=_pq[_ok]*_gq[_ok]
+                    if _b!=bas: _ds+=(_pq!=0)
+                _db=(_ds>=DILIM_MAX)&(poz==0)
+                if DILIM_MAX_ZARAR:
+                    _dg=np.where(_dw!=0,_de/np.where(_dw==0,1,_dw),np.nan); _c=cv[i]
+                    _zr=np.isfinite(_dg)&np.isfinite(_c)&(((_dw>0)&(_c<_dg))|((_dw<0)&(_c>_dg)))
+                    _db=_db&_zr
+                g=g&~_db; _DMS[0]+=int(_db.sum())
             if MERD_DEVIR==2:
                 # MADDE 474: kademesi dolmus coin bu dengelemede aday OLMAZ (pompa sonrasi yeniden alma yok)
                 g=g&~(merd_yapildi&(poz!=0))

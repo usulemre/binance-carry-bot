@@ -7248,3 +7248,10 @@ Sh 4,03 / 4,42 → eşit risk +315,2. Yaş 45 +208,1 · −15,8 · −13,19 · 1
 14 +192,4 · **−42,8** · −16,88 · 16 · 2,36 — 3 g (kural yok) +184,3 · **−54,3** · −19,02 · 18 · 2,15 (30 ve altında eşit risk kurulamıyor).
 Monoton: yaş düştükçe getiri −63 puan, maks düşüş 4 kat, −%5 günü 4 → 18, 2025+ Sharpe yarıya. Genç coinler BSB gibi pompa ORTASINDA
 listeye girip short'u sıkıştırıyor (BTW tipi, ama koruma yok). Yaş 60 yerinde; eksen kapalı (397 / 427 / 518 / 635 / 652).
+
+## Madde 653 — Aynı coine dilim sayısı sınırı (kullanıcı: "zarardayken 3'te kesseydi"; DILIM_MAX / DILIM_MAX_ZARAR, varsayılan kapalı): KESİN RED
+Araç `arastirma_m653_dilim_siniri.py`. Taban P3T2 (+247,5 · dd −13,3 · Sh 4,03 / 4,42 → eşit risk +315,2). Coini başka N dilim tutuyorsa bu
+dilim yeni giriş yapmaz (elindekini tutar); _ZARAR = yalnız hesaptaki toplam pozisyon zarardayken. Zararda 3: +174,0 · −15,0 · 3,69 / 3,94 →
++174,0 (−141) · zararda 6: +199,7 · 3,82 / 4,08 → +199,7 (−116) · her zaman 3: +58,9 · dd −12,1 · 3,10 / 2,15 → +77,5 · her zaman 8:
++153,7 · 3,46 / 3,93 → +165,2. Zarardaki coine dilim eklemeyi kesmek getirinin yarısını götürüyor: zarardaki kalabalık coin sonra dönüyor
+(ortalama düşürme carry'nin kârının parçası; tutuş otopsisi 625 ile aynı yön). Yoğunluk (dilimler aynı coinde) kâr kaynağı (542-543, 653).
