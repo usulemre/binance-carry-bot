@@ -7188,3 +7188,10 @@ Taban P3T2 (+247,5 · dd −13,3 · Sh 4,03 / 4,42 · eşit risk +315,2). Bonus 
 bonus 1,0: +215,9 · **−31,1** · en kötü −13,9 · 4,01 / **2,99** — bonus 1,0 eşik %50: +227,5 · −24,4 · 4,02 / 3,44. Reversal kenarı 1 GÜNLÜK
 (madde 644); carry short'u 40 sa+ tutuluyor ve pompanın ikinci dalgasına yakalanıyor (Q / AIN tipi). Pompayı short'lamak yalnız çok kısa
 tutuşta işliyor; carry kitabına taşınamıyor.
+
+## Madde 646 — Piyasaya koşullu SHORT 24 sa stop (koşullu long stop'un aynası; SLS24_KAP / SLS24_PIY, varsayılan kapalı): RED
+Araç `arastirma_m646_kosullu_short_stop.py` (ön kayıt başlıkta). Taban P3T2 (+247,5 · dd −13,3 · Sh 4,03 / 4,42 · eşit risk +315,2).
+Short coin 24 sa ≥ +%30 VE evren medyanı 24 sa ≥ +%3 → kapanışla kes: +239,3 · −13,2 · 4,03 / **4,25** → +304,1 (−11,1) —
++%30 / piyasa +%5: +239,8 · 4,32 → +304,8 (−10,4) — +%50 / +%3: +245,4 · 4,38 → +312,5 (−2,7). Kötü günlere etkisi yok (en kötü −7,41
+long tarafı, 2024-10-15 REEF). Ralli içinde bile sıkışan short'u TUTMAK doğru — long'da işleyen asimetri short'ta yok (çöküşler devam
+ediyor, rallilerde tek coin geri dönüyor). Short stop ailesi (450, 503, 646) kapandı.

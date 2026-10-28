@@ -175,6 +175,9 @@ MERD_PIY_L=float(os.environ.get("MERD_PIY_L","0"))   # MADDE 633: >0 -> piyasa 2
 SLL24_KAP=int(os.environ.get("SLL24_KAP","0")); SLL24_KAP_TAZE=int(os.environ.get("SLL24_KAP_TAZE","1"))
 # MADDE 450: SHORT 24 SA YUKSELIS STOP'U (SLL24'un aynasi). 0 = kapali (parite).
 SLS24=float(os.environ.get("SLS24","0"))
+# MADDE 646: SLS24_KAP=1 -> short 24 sa stop'u 4 sa KAPANISLA (SLL24_KAP_TAZE ritmi) ve SLS24_PIY=x>0 ise yalniz evrenin medyan
+# 24 sa getirisi >= +x iken (genis piyasa rallisi; madde 628: T6'nin kotu gunleri) tetiklenir. 0 = eski (igne, kosulsuz; parite).
+SLS24_KAP=int(os.environ.get("SLS24_KAP","0")); SLS24_PIY=float(os.environ.get("SLS24_PIY","0"))
 # MADDE 417: KAR HEDEFI SIFIRLAMA. Bacak girisinden aleyhe TP_SIFIRLA kadar gidince
 # kar-al referansi o anki kapanisa tasinir (islem YOK, yalniz TP seviyesi). Cokus
 # sonrasi toparlanmada eski dilimler de hasat eder (madde 414: H). 0 = kapali.
@@ -297,7 +300,7 @@ if S_REB_DUR>0:
     _PIY=np.nanmedian(np.where(U,_rp,np.nan),axis=1)
 else:
     _PIY=None
-if SLL24_PIY>0 or MERD_PIY_L>0 or float(os.environ.get("EK24_L","0"))>0 or float(os.environ.get("EK24_S","0"))>0:
+if SLL24_PIY>0 or SLS24_PIY>0 or MERD_PIY_L>0 or float(os.environ.get("EK24_L","0"))>0 or float(os.environ.get("EK24_S","0"))>0:
     _r24=np.full_like(cv,np.nan); _r24[6:]=cv[6:]/np.where(cv[:-6]>0,cv[:-6],np.nan)-1
     _P24=np.nanmedian(np.where(U,_r24,np.nan),axis=1)
 else:
@@ -923,7 +926,12 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         continue
                 if SLS24 > 0 and (not uzun) and i >= 5 and np.isfinite(cv[i-5,k]) and cv[i-5,k] > 0:
                     _s24s = cv[i-5,k]*(1+SLS24)
-                    if HV[i+1,k] >= _s24s:
+                    if SLS24_KAP:
+                        if ((i+1) % SLL24_KAP_TAZE == 0) and np.isfinite(cv[i+1,k]) and cv[i+1,k] >= cv[i-5,k]*(1+SLS24) and (
+                            SLS24_PIY <= 0 or (np.isfinite(_P24[i+1]) and _P24[i+1] >= SLS24_PIY)):
+                            br[k] = cv[i+1,k]/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='SLS24K'
+                            continue
+                    elif HV[i+1,k] >= _s24s:
                         _op = OV[i+1,k]
                         _ff = max(_s24s,_op) if np.isfinite(_op) else _s24s
                         br[k] = _ff/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='SLS24'
