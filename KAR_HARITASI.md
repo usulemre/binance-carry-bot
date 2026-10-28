@@ -7142,3 +7142,9 @@ T7K 1,15x + KS tabanında (ham · dd · en kötü · −%5 altı · Sh ≤24 / 2
 dilim başı 1+1 +301,2 · −48,1 · −21,63 · 52 · 2,90 / 2,26 — 2+2 +309,2 · −23,7 · −12,92 · 19 · 3,60 / 3,47 (eşit risk 0,60x → +138) —
 günde tek dilim 1+1 (tam "günde 2 coin") +297,4 · −43,2 · −18,31 · 49 · 2,91 / 2,19 (T4 riskine inmek için < 0,3x). Madde 484/222 yasası:
 bacak sayısı bir kaldıraç düğmesidir; az bacak = kılık değiştirmiş kaldıraç, Sharpe düşer. 4+4 yerinde.
+
+## Madde 642 — Kullanıcı sorusu: "günde 2 coin, her birine bakiyenin %25'i, bileşik": İFLAS RİSKİ — yıllık +92 ama dd −%92,5
+Tek dilim, her gün 1 long + 1 short (en kalabalık aday), T7K + KS seçim / çıkış kuralları, short tavanı yok (tek dilim), 5 bp. Ham kitap
+(coin başı %45) bir günde −%104 → hesap sıfır. Coin başı %25'e ölçekli (günlük getiri × 0,556): yıllık +92 · max düşüş −%92,5 · en kötü gün
+−%57,6 · −%5 altı 85 gün · yıllar 2021 +578 / 2023 +499 ama **2025 −75**. Coin başı %10: +41 · −%58 · en kötü −%23. Tek coin tek gün
+kitabın yarısını götürebiliyor (pompa / sıkışma); funding kârı bu oynaklığın yanında küçük. Çeşitlendirilmiş kitap (8 bacak × 15 dilim) yerinde.
