@@ -7182,3 +7182,9 @@ Madde 644 eki 3 — kullanıcı botunun 109 gününü yeniden üretim (veri 09-3
 uyumlu), en kötü gün −%12,6, 158 işlem, kazanan %52. Karar saatine AŞIRI duyarlı: aynı dönem 07:00 TR 1.657 $, 11:00 1.044 $, 15:00 327 $,
 19:00 557 $, 23:00 947 $ (4 slot 03:00: 2.639 $). Altı saatten yalnız biri kâr → sonuç saat seçimine (şansa) bağlı. Rapor:
 raporlar/reversal/Reversal_Deneyi_Yeniden.pdf (gün gün coin, yön, giriş → çıkış, kâr $).
+
+## Madde 645 — Carry short'unda pompa önceliği (kullanıcının reversal kenarı carry'ye): RED — 2025+'da bile ZARAR
+Taban P3T2 (+247,5 · dd −13,3 · Sh 4,03 / 4,42 · eşit risk +315,2). Bonus 0,3 (eşik %30): +249,1 · −13,3 · 4,02 / 4,40 → +317,5 (+2,3) —
+bonus 1,0: +215,9 · **−31,1** · en kötü −13,9 · 4,01 / **2,99** — bonus 1,0 eşik %50: +227,5 · −24,4 · 4,02 / 3,44. Reversal kenarı 1 GÜNLÜK
+(madde 644); carry short'u 40 sa+ tutuluyor ve pompanın ikinci dalgasına yakalanıyor (Q / AIN tipi). Pompayı short'lamak yalnız çok kısa
+tutuşta işliyor; carry kitabına taşınamıyor.
