@@ -7278,3 +7278,10 @@ Modül düzeyi (testler, araştırma motoru) değişmedi: çözümlenmemiş ONER
 (/opt/carry + /opt/carry-*) CARRY_PROFIL=ONERILEN'e çevirir (yedek + preflight + HATA'da geri dönüş); coklu_demo_kur.sh PROFIL=ONERILEN alır.
 Testler: test_onerilen.py 21/21 (eşikler, açık değerler, döngüsüzlük, preflight uçtan uca, main() yeniden başlatma), test_carry_preflight /
 short_ara / gunluk_defter / entegrasyon geçti. Ekim OOS geri dönüş kuralı (madde 650) bu ayara uygulanacak.
+
+## Madde 657 — Önerilen mod çalışırken bakiye eşiği geçerse otomatik yeniden seçim
+Kullanıcı: "bot kârla 3.500'ü geçerse ne yapacak". Önceden yalnız açılışta seçiyordu (1,15x 3.500 $ üstünde de sürerdi — orada ölçülmüş
+doz 1,10). Artık her turdan (8 sa) sonra kitap yeniden okunur; eşik %3 payla geçildiyse (≈ 3.610 / 3.400 $, 12.890 / 12.130 $; eşik
+çevresinde sürekli gidip gelmesin) otomatik atanmış değerler silinip süreç yeniden başlar ve yeni ayarı seçer. Açık pozisyon ve dilim
+defteri korunur (yeniden başlatma botun olağan işlemi). Açılışta bakiye okunamayıp 1,0x'te kalan süreç, bakiye okununca doğru doza geçer.
+.env'de açık CARRY_GROSS varsa yalnız profil eşiği (12.500 $, T7K ↔ T6) izlenir. test_onerilen.py 33/33.

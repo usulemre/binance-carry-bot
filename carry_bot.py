@@ -4670,6 +4670,15 @@ def main():
             logger.exception("tur başarısız: %s", e)
         if args.once:
             break
+        # MADDE 657: önerilen modda kitap doz eşiğini (%3 payla) geçtiyse yeni ayarla yeniden başla
+        try:
+            _k = sermaye_oku(client)
+            if onerilen.esik_gecti(_k):
+                logger.info("ÖNERİLEN AYAR: kitap %.0f $ eşiği geçti (şu an %s %s) -> yeniden seçim için yeniden başlatılıyor",
+                            _k, _PROFIL_AD, os.getenv("CARRY_GROSS"))
+                onerilen.sifirla(); onerilen.yeniden_baslat()
+        except Exception as e:
+            logger.warning("önerilen ayar eşik kontrolü atlandı: %s", e)
         # Her dilim REBALANCE_HOURS'ta bir yenilenir; N dilim varsa
         # bot bunun 1/N'i kadar sıklıkta çalışır.
         time.sleep(REBALANCE_HOURS * 3600 / max(1, N_DILIM))

@@ -11,7 +11,7 @@
 | bakiye okunamazsa | T7K 1,0x + koşullu stop (kaldıraçsız) | — |
 
 Log'da açılışta `ÖNERİLEN AYAR (madde 656): kitap … $ -> T7K 1.15x …` ve sonra `önerilen ayar etkin: …` satırı görünür.
-Bakiye 3.500 $ / 12.500 $ eşiğini geçerse yeni doz bir sonraki yeniden başlatmada uygulanır (`sudo systemctl restart carry`).
+Bot her turdan (8 sa) sonra bakiyeyi yeniden okur; eşik %3 payla geçilince (≈ 3.610 $ üstü / 3.400 $ altı, 12.890 / 12.130 $) yeni ayarı seçmek için kendini yeniden başlatır (madde 657). Açık pozisyonlar olduğu gibi kalır; yeni dengelemeler yeni dozla yapılır.
 `.env`'de açıkça verilen `CARRY_GROSS` / `CARRY_LONG_24S_PIYASA` korunur. Kapatmak: `CARRY_ONERILEN=0` ya da `CARRY_PROFIL=T4` vb.
 
 ## Geçiş (sunucuda, bir kez)

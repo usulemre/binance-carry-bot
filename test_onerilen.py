@@ -46,6 +46,25 @@ kontrol("bakiye okuma hatası -> T7K 1.0, onay yok", os.environ["CARRY_PROFIL"] 
         and "CARRY_DOZ_ONAY" not in os.environ)
 shutil.rmtree(k)
 
+print("6) çalışırken eşik geçişi (madde 657)")
+def kur(k, **ek):
+    temiz(**ek); O.cozumle(lambda: k, kok=tempfile.mkdtemp())
+kur(2000.0); kontrol("2.000 -> 3.400: değişmez", not O.esik_gecti(3400.0))
+kontrol("2.000 -> 3.550: %3 payın içinde, değişmez", not O.esik_gecti(3550.0))
+kontrol("2.000 -> 3.650: yeniden seçim", O.esik_gecti(3650.0))
+kur(3650.0); kontrol("3.650 (1,10) -> 3.450: pay içinde, değişmez", not O.esik_gecti(3450.0))
+kontrol("3.650 (1,10) -> 3.300: yeniden seçim (1,15'e dön)", O.esik_gecti(3300.0))
+kontrol("3.650 -> 13.500: T6'ya geçiş", O.esik_gecti(13500.0))
+kur(None); kontrol("bakiye okunamamıştı (1,0) -> 2.000 okununca yeniden seçim", O.esik_gecti(2000.0))
+kur(2000.0, CARRY_GROSS="1.0"); kontrol("açık GROSS: 3.650'de profil aynı -> yeniden başlatma yok", not O.esik_gecti(3650.0))
+kontrol("açık GROSS: 13.500'de profil T6'ya -> yeniden seçim", O.esik_gecti(13500.0))
+kur(3650.0); O.sifirla()
+kontrol("sifirla: otomatik değerler ve işaret silindi", all(k not in os.environ for k in ("CARRY_PROFIL", "CARRY_GROSS", "CARRY_DOZ_ONAY",
+        "CARRY_LONG_24S_PIYASA", O._ISARET)) and O.gerekli())
+kur(2000.0, CARRY_LONG_24S_PIYASA="0.05"); O.sifirla()
+kontrol("sifirla: açık koşullu stop korunur", os.environ.get("CARRY_LONG_24S_PIYASA") == "0.05")
+temiz(CARRY_PROFIL="T4"); kontrol("açık profil: eşik kontrolü hiç devreye girmez", not O.esik_gecti(50000.0))
+
 print("4) preflight uçtan uca (alt süreç, --yerel: bakiye yok -> T7K 1,0 + KS)")
 e = {kk: v for kk, v in os.environ.items() if not kk.startswith("CARRY_") and kk != O._ISARET}
 r = subprocess.run([sys.executable, "carry_preflight.py", "--yerel"], capture_output=True, text=True, env=e,
