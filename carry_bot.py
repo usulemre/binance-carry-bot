@@ -3920,8 +3920,19 @@ def emirleri_hesapla(hedef: dict[str, float], mevcut: dict[str, float],
 
 
 # ----------------------------------------------------------------- ÇALIŞTIR
+SERMAYE_OLCEK = float(os.getenv("CARRY_SERMAYE_OLCEK", "1.0"))
+"""ÇOKLU DEMO (madde 640, COKLU_DEMO.md): bot hesabın özkaynağının yalnız bu oranını kitap sermayesi sayar (1,0 = tamamı, varsayılan).
+Örn. demo hesap 10.000 USDT ve 2.000 $'lık kitap denemek için 0,2. Bileşik büyüme korunur (oran sabit, özkaynak büyür).
+Gerçek hesapta 1,0 dışı değer preflight'ta UYARI verir."""
+
+
 def sermaye_oku(client: ExchangeClient) -> float | None:
-    """Botun sermayesi. None = güvenli değil, tur atlanmalı (madde 141)."""
+    """Botun sermayesi. None = güvenli değil, tur atlanmalı (madde 141). CARRY_SERMAYE_OLCEK ile çarpılır."""
+    s = _sermaye_oku_ham(client)
+    return None if s is None else s * SERMAYE_OLCEK
+
+
+def _sermaye_oku_ham(client: ExchangeClient) -> float | None:
     usdt = client.get_account_balance_usdt()
     if TEMINAT_MODU == "coklu":
         return client.get_account_equity_usd()

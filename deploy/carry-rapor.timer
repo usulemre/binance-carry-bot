@@ -1,0 +1,9 @@
+[Unit]
+Description=Carry çoklu demo raporu — her gün 00:15 UTC
+
+[Timer]
+OnCalendar=*-*-* 00:15:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

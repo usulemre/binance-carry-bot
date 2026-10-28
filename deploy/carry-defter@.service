@@ -1,0 +1,8 @@
+[Unit]
+Description=Carry günlük defter (%i)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/carry-%i
+EnvironmentFile=/opt/carry-%i/.env
+ExecStart=/usr/bin/python3 carry_gunluk_defter.py topla

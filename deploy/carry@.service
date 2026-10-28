@@ -1,0 +1,15 @@
+# ÇOKLU DEMO: her profil ayrı klasörde (/opt/carry-<AD>) ve ayrı demo hesabında. COKLU_DEMO.md
+[Unit]
+Description=Carry bot (%i)
+After=network-online.target
+
+[Service]
+Type=simple
+WorkingDirectory=/opt/carry-%i
+EnvironmentFile=/opt/carry-%i/.env
+ExecStart=/usr/bin/python3 carry_bot.py
+Restart=always
+RestartSec=60
+
+[Install]
+WantedBy=multi-user.target

@@ -121,6 +121,9 @@ def kontrol_ayarlar() -> None:
             kontrol("profil", TAMAM, "T60 = eski varsayılan T1 (madde 442; madde 534'ten beri varsayılan T4)")
     else:
         kontrol("profil", HATA, f"CARRY_PROFIL={profil} tanımsız (BUGUN | T60 | T3 | T4 | T6 | T7K)")
+    if abs(getattr(cb, "SERMAYE_OLCEK", 1.0) - 1.0) > 1e-9:
+        kontrol("sermaye ölçeği", UYARI if os.getenv("BINANCE_MODE", "demo").lower() == "demo" else HATA,
+                f"CARRY_SERMAYE_OLCEK={cb.SERMAYE_OLCEK}: bot özkaynağın yalnız bu oranını kullanıyor (çoklu demo, COKLU_DEMO.md)")
     # MADDE 623: piyasaya koşullu 24 sa stop (CARRY_LONG_24S_PIYASA). Ölçülen değerler 0,03 / 0,05; başkası ölçülmedi.
     _lp = getattr(cb, "LONG_24S_PIYASA", 0.0)
     if _lp > 0:

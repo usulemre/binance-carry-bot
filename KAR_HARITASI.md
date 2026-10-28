@@ -7127,3 +7127,12 @@ olmadığından tutulan çöküşler daha sık −%5'e taşıyor. Koşullu stop 
 Taban P3T2 (+315,2). Eşit risk (Sh ≤24 / 25+): short pay 0,60 +313,2 (4,01 / 4,42) · short 1,0 +317,2 (+2,0; 4,05 / 4,40) · long 0,60 +268,4
 (−47; dd −14,1 → k 1,05) · long 0,95 +312,3 (4,04 / 4,45). Short payı 0,6-1,0 arasında düz (±2); long payını düşürmek kaldıraç kapasitesini
 yiyor (madde 608: kademe = kalkan). Hepsi RED.
+
+## Madde 640 — ÇOKLU DEMO altyapısı (kullanıcı: "profilleri aynı anda ayrı ayrı çalıştır, gün gün ne aldı % kaç kazandı göster")
+- `carry_gunluk_defter.py`: `topla` (her bot klasöründe, günde bir: kitap sermayesi, gün getirisi, açık pozisyonlar, 24 sa funding /
+  gerçekleşen / komisyon, açılan / kapanan / büyüyen / küçülen) → `defter/gunluk.jsonl`; `rapor` (bütün klasörler → HTML + PDF:
+  özet, gün gün yan yana getiri, her bot için gün gün sayfa). Test: `test_carry_gunluk_defter.py` (sahte istemci, iki bot, üç gün).
+- `carry_bot.py`: `CARRY_SERMAYE_OLCEK` (varsayılan 1,0 = parite): bot özkaynağın yalnız bu oranını kitap sayar (büyük sanal demo
+  bakiyesinde 2.000 $ kitabı denemek için); preflight: demo'da UYARI, gerçek hesapta HATA.
+- `deploy/`: `carry@.service` (WorkingDirectory=/opt/carry-%i), `carry-defter@.timer` (00:05 UTC), `carry-rapor.timer` (00:15 UTC),
+  `coklu_demo_kur.sh AD PROFIL GROSS KOSULLU OLCEK`. Belge: COKLU_DEMO.md (ŞART: her bot ayrı demo hesabı / API anahtarı).

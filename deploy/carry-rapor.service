@@ -1,0 +1,7 @@
+[Unit]
+Description=Carry çoklu demo raporu (bütün /opt/carry-* klasörleri)
+
+[Service]
+Type=oneshot
+WorkingDirectory=/opt/carry-rapor
+ExecStart=/bin/sh -c 'cd /opt/carry-rapor && /usr/bin/python3 /opt/carry/carry_gunluk_defter.py rapor $(for d in /opt/carry-*/; do [ -f "$d/carry_bot.py" ] && printf -- "--klasor %%s " "$d"; done) --cikti /opt/carry-rapor/demo_defteri.html --pdf'
