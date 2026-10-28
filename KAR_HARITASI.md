@@ -7223,3 +7223,12 @@ değeri kalabalıkta") makinesiz hali. Kârın tamamı LONG bacağında (+59..+6
 Sh 1,85 → 1,25, 20 gün → 0,79; 10 bp'de 1,33 / 1,54, 15 bp'de 0,94. Carry (T7K + KS) ile harman 2022-06+: %10 Sh 3,80 → 3,97, aynı dd /
 en kötü günde +214,9 → +219,9 (+5, bar +8 altı), %20-30'da düşüyor. Tek başına kitap carry'nin yarısı Sharpe'ında (1,8 vs 3,8) → aynı para
 carry'de daha çok kazanır. Carry'den bağımsız yeni kesitsel kitap ekseni (411, 579, 649) kapandı.
+
+## Madde 650 — Ekim OOS betiğine ÖNERİLEN AYAR kolları + GERİ DÖNÜŞ KURALI (Ekim verisi gelmeden ön kayıt)
+`izleme_ekim_oos.py` ana bloğuna EK_T7KKS (T7K + koşullu stop, bot ritmi) ve EK_T6KS eklendi. Kullanıcı 2026-10-28'de önerilen ayara
+geçti (madde 648); Ekim kontrolü artık "geçilsin mi" değil "GERİ dönülsün mü". Kural (seviye dozuyla: 2.000 $ ×1,15 · 3.500 $ ×1,10):
+(1) Ekim farkı (T7KKS×doz − T4) geçmiş aylık farkların %10 yüzdeliğinin altında VE (2) Ekim en kötü günü T4'ünkünden derin → iki seviyede
+de tutarsa "T4'e geri dön"; birinde tutarsa "UYARI, Kasım'da tekrar"; hiçbirinde → "devam". Eylül kuru koşusu (örnek İÇİ, karar
+vermez): 2.000 $ T7KKS×1,15 +8,38 vs T4 +4,54 (fark +3,84, %10 eşiği −2,72), en kötü −3,68 vs −4,43 · 3.500 $ ×1,10 +8,54 vs +7,94 →
+DEVAM. Engel: bu konteynerde ham veri klasörleri (data_genis vb.) yok, yalnız türetilmiş pkl'ler var ve data.binance.vision ağ izninde
+kapalı → Ekim için ya alan adı izni (claude.ai ayarları) ya da kullanıcının sunucusundan veri yüklemesi gerekiyor.

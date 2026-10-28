@@ -74,7 +74,14 @@ _T4 = {**G, "S_REB": "12", "CAP_ORTAK": "0.08", "CAP_TARAF": "short", "MERD_PAY"
 _T6 = {**_T4, "S_REB": "10", "SK_DOSYA_S": "/tmp/sk_bar96.pkl", "CAP_ORTAK": "1.0"}
 _T7K = {**_T4, "S_REB": "10", "SK_DOSYA_S": "/tmp/sk_bar96.pkl", "BRUT_PRIM": "1", "BRUT_ALT": "0.7", "BRUT_UST": "1.0"}
 EV = {2000: M.D8, 3500: M.D2}
-ANA = {"EK_T1": (G, 4, EV), "EK_T4": (_T4, 4, EV), "EK_T6": (_T6, 4, EV), "EK_T7K": (_T7K, 4, EV)}
+_KS = {"SLL24_KAP": "1", "SLL24_PIY": "0.03", "SLL24_KAP_TAZE": "2"}   # madde 622-623 koşullu stop, bot ritmi
+ANA = {"EK_T1": (G, 4, EV), "EK_T4": (_T4, 4, EV), "EK_T6": (_T6, 4, EV), "EK_T7K": (_T7K, 4, EV),
+       "EK_T7KKS": ({**_T7K, **_KS}, 4, EV), "EK_T6KS": ({**_T6, **_KS}, 4, EV)}
+# MADDE 650: kullanıcı 2026-10-28'de önerilen ayara geçti (madde 648: < 3.500 $ T7K 1,15x + KS, 3.500-12.500 $ T7K 1,10x + KS).
+# GERİ DÖNÜŞ KURALI (Ekim verisi GELMEDEN yazıldı): seviye dozuyla T7KKS serisi için
+#   (1) Ekim farkı (T7KKS×doz − T4) geçmiş aylık farkların %10 yüzdeliğinin ALTINDA, VE (2) Ekim'in en kötü günü T4'ünkünden derin
+#   → iki seviyede de tutarsa "T4'e GERİ DÖN" önerilir; biri tutarsa "UYARI, Kasım'da tekrar"; hiçbiri → "devam".
+DOZ_KS = {2000: 1.15, 3500: 1.10}
 
 
 def kos():
@@ -122,6 +129,8 @@ def analiz():
 
 
 def analiz_ana():
+    global _GERI
+    _GERI = []
     print(f"ANA BLOK [{AY}] — canlı gibi giriş + 5 bp + MERD_SIRA=1, iki hiza ortalaması")
     print(f"{'kol':8s} {'bakiye':>6s} {'ay %':>7s} {'Sh':>6s} {'en kötü':>8s} {'-%3':>4s} {'gün':>4s} | "
           f"{'T4 farkı':>8s} {'geçmiş %10':>10s} {'yüzdelik':>8s}  hüküm")
@@ -139,6 +148,14 @@ def analiz_ana():
         _ok1 = (top["EK_T7K"] - top["EK_T4"]) >= np.percentile(_g, 10); _ok2 = _e15 >= _e4
         print(f"T7K×1,15 {sev:6d} {_t15:+7.2f} | en kötü {_e15:+.2f} (T4 {_e4:+.2f}) → madde 617 şart 1 {'Y' if _ok1 else 'X'} · "
               f"şart 2 {'Y' if _ok2 else 'X'}")
+        _dz = DOZ_KS[sev]; _ks = [g * _dz for g in ay["EK_T7KKS"]]
+        _tks = np.mean([((1 + g).prod() - 1) * 100 for g in _ks]); _eks = min(g.min() for g in _ks) * 100
+        _dk = sum(_aylik(seri["EK_T7KKS"][h] * _dz) - _aylik(seri["EK_T4"][h]) for h in (0, 1)) / 2 * 100
+        _gk = _dk[[str(p) < AY for p in _dk.index]].dropna().values
+        _r1 = (_tks - top["EK_T4"]) < np.percentile(_gk, 10); _r2 = _eks < _e4
+        _GERI.append(_r1 and _r2)
+        print(f"T7KKS×{_dz:.2f} {sev:6d} {_tks:+7.2f} | fark {_tks - top['EK_T4']:+.2f} (geçmiş %10 {np.percentile(_gk, 10):+.2f}) · "
+              f"en kötü {_eks:+.2f} (T4 {_e4:+.2f}) → madde 650 geri dönüş şartı 1 {'TUTTU' if _r1 else '-'} · şart 2 {'TUTTU' if _r2 else '-'}")
         for k in ANA:
             sh = np.mean([g.mean() / g.std() * np.sqrt(365.25) if len(g) > 5 else np.nan for g in ay[k]])
             ek = min(g.min() for g in ay[k]) * 100
@@ -156,6 +173,10 @@ def analiz_ana():
                 print(sat + f" {fark:+8.2f} {p10:+10.2f} {yuz:7.0f}%  T4−T1 {-fark:+.2f} → {huk}")
             else:
                 print(sat + f" {fark:+8.2f} {p10:+10.2f} {yuz:7.0f}%  " + ("UYARI" if fark < p10 else "olağan"))
+    if _GERI:
+        n = sum(_GERI)
+        print("\nMADDE 650 (önerilen ayar T7K + koşullu stop): " + ("T4'e GERİ DÖN önerilir (iki seviyede de iki şart tuttu)" if n == len(_GERI)
+              else "UYARI — bir seviyede tuttu, Kasım'da tekrar" if n else "DEVAM — örnek dışında ters sinyal yok"))
 
 
 if __name__ == "__main__":
