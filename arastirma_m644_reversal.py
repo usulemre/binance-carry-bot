@@ -26,7 +26,7 @@ r24 = np.full_like(cv, np.nan); r24[6:] = cv[6:] / cv[:-6] - 1
 T = len(C.index); bas = int(C.index.searchsorted(pd.Timestamp("2020-07-19")))
 
 
-def kos(esik=0.30, hacim=2e7, tut=6, tp=0.0, stop=0.25, slot=0.25, nslot=4, kayma=0.0005, soguma=6):
+def kos(esik=0.30, hacim=2e7, tut=6, tp=0.0, stop=0.25, slot=0.25, nslot=4, kayma=0.0005, soguma=6, karar_saat=None):
     eq = 1.0; acik = {}; seri = np.ones(T); islem = []; son_cikis = {}
     for i in range(bas, T - 1):
         # 1) açık pozisyonlar: bar i+1 içinde stop / TP / süre
@@ -62,7 +62,7 @@ def kos(esik=0.30, hacim=2e7, tut=6, tp=0.0, stop=0.25, slot=0.25, nslot=4, kaym
             acik.pop(k); son_cikis[k] = i + 1
         # 2) yeni sinyaller (bar i+1 kapanışında; aynı bar içi çıkışlardan sonra)
         j = i + 1
-        if len(acik) < nslot:
+        if len(acik) < nslot and (karar_saat is None or (C.index[j] + pd.Timedelta(hours=4)).hour == karar_saat):
             x = r24[j]
             m = np.isfinite(x) & (np.abs(x) >= esik) & (hac[j] >= hacim) & (j - ilk >= 180)
             ad = [k for k in np.flatnonzero(m) if k not in acik and j - son_cikis.get(k, -10**9) >= soguma]

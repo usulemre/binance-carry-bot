@@ -7170,3 +7170,10 @@ LONG 2025-26 −3,0..−3,2. Yani "pompayı short'la" 2025'ten beri işlem baş�
 bileşik: 2025-01'den başlasa yalnız short 2 slot −%53 (dd −91), 4 slot −%99; kullanıcının penceresinden (2026-07-10) başlasa 2 slot +%102..+%125
 (dd −47..−51) — kâğıt sonucuyla uyumlu, ama aynı kural 2025 başından çalışsaydı hesap yarıya inerdi. Slot %10 yalnız short: 2025+ +%11 (dd −47),
 2026-07+ +%50 (dd −23). Kenar küçük ve rejime bağlı; slot %25 oynaklığı taşımıyor.
+Madde 644 eki 2 (kullanıcı: "günde bir, 1 g hareket, 1 g tut"; karar 00:00 UTC = 03:00 TR, soğuma yok, hacim 5M, 2 slot): işlem başı
+6 yılda POZİTİF (+%0,86 iki taraf · +%1,08 yalnız short) — 4 sa'lik sürümden belirgin iyi (pompanın ortasında değil, günlük kapanışta giriyor).
+Bileşik: 6 yıl yalnız short slot %25 −%15 (dd −89) · slot %10 +%44 (dd −54); 2025-01'den slot %25 +%210 (dd −64) · %10 +%113 (dd −32);
+2026-07-10'dan iki taraf %25 +%137 (dd −46). Yıllık Sharpe (short, %10): 2021 −1,08 · 2022 −0,58 · 2023 0,07 · 2024 0,65 · 2025 1,00 · 2026 1,29
+— istikrarlı yükselen bir rejim kenarı. Carry ile korelasyon −0,03 (bağımsız) ama Sharpe 0,34 (6 yıl): T7K+KS'ye %10 harman yıllık +315 → +271,
+Sh 4,14 → 4,13 (dd −15,2 → −14,2) — eşit riskte kazanç YOK (madde 353 yasası: korelasyonsuz olmak bedava değil). Ayrı kâğıt botu olarak
+izlenmeye değer (2025+ Sharpe ~1); slot %10 önerilir.
