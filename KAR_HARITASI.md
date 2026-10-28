@@ -7262,3 +7262,9 @@ Araç `arastirma_m654_maliyet.py` (2.000 $, iki hiza, işlem maliyeti KOM her al
 8 bp T4 +227,5 · −16,0 | 1x +232,2 · −13,8 · 4,00 | ×1,15 +294,4 · −15,8 → +66,9 — 10 bp T4 +216,8 · −16,5 | 1x +222,5 · 3,90 | ×1,15 +281,1 ·
 −16,2 → +64,3. 1 bp ek maliyet ≈ −5,6 puan/yıl (T4) / −5,1 (T7K+KS 1x); ×1,15'in T4 ile aynı dd'yi taşıması 10 bp'de de bozulmuyor.
 Demo kontrolü: gerçek komisyon + kayma toplamı (komisyon / hacim) 10 bp'nin altındaysa önerilen ayarın beklentisi ≥ +%280 / yıl (2.000 $).
+
+## Madde 655 — Yıl yıl dayanıklılık (önerilen ayar vs T4, 2.000 $, 5 bp): kenar ZAYIFLAMIYOR, en kötü yıl 2022
+Yıllık % (Sharpe · yıl içi en derin düşüş) — T7K+KS ×1,15: 2020 (Tem-Ara) +112 (5,2 · −13,2) · 2021 +637 (6,1 · −8,3) · 2022 +75 (1,8 · −15,2) ·
+2023 +402 (4,7 · −9,9) · 2024 +144 (3,0 · −11,4) · 2025 +342 (4,0 · −14,2) · 2026 (Oca-Eyl) +364 (4,9 · −14,3). T4: +87 · +519 · +51 · +322 ·
++132 · +224 · +284. Her yıl önerilen ayar ≥ T4 (2024'te eşit). En kötü 90 gün −%9,8 (2022-09, T4 −10,9); 90 günlük pencerelerin yalnız
+%1,9'u negatif (T4 %2,3). 2025-26 Sharpe 4,0-4,9 → son dönemde aşınma işareti yok. Beklenti dili: "kötü yıl ≈ +%75, olağan yıl +%150-400".
