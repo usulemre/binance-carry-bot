@@ -7212,3 +7212,14 @@ Kod varsayılanı T4 KALDI (testler / parite); geçiş `.env` ile. Betik bakiyey
 yeniden başlatır. Üç kol preflight --yerel'de 0 HATA; betik sahte bakiye (2.000 / 5.000 / 30.000 $) ile denendi. Not: madde 617'nin
 Ekim OOS kuralı geçişten ÖNCE bekleniyordu; kullanıcı beklemeden geçmeyi seçti — Ekim kontrolü Kasım başında yine koşulacak, "olağan
 dışı" çıkarsa geri dönüş önerilecek.
+
+## Madde 649 — YENİ KİTAP TARAMASI (kullanıcı: "farklı bir kitap, sen seç"): 60 kol, tek geçen aile = KALABALIK (carry'nin kendi sinyali) → RED
+Araçlar `arastirma_m649_yeni_kitap_tarama.py` (ön kayıt başlıkta), `_dogrula.py`, `_harman.py`. Piyasa-nötr beşte birlik L/S, 00 UTC, gerçek
+funding + 5 bp, 2022-06 → 2026-09 (metrik verisi). OI 7 g / 1 g, OI − fiyat, taker oranı 1 / 7 g, anormal hacim, Amihud, funding oynaklığı:
+HEPSİ elekten kaldı (çoğu bir dönemde negatif; OI7 "yüksek long" OOS 1,7 ama IS 0,5). GEÇEN: top-trader hesap long/short oranı yüksek
+SHORT / düşük LONG (TOP) — H1 IS 1,72 / OOS 1,77 · +69 · dd −28 · her yıl pozitif · carry rho +0,05; H2 1,84 / 2,03 · +78 · dd −24.
+Doğrulama: TOP ile genel long/short oranının kesitsel sıra korelasyonu **0,96** → bu, carry'nin kalabalık ölçütünün (madde 627: "seçimin
+değeri kalabalıkta") makinesiz hali. Kârın tamamı LONG bacağında (+59..+63; short bacağı −8..0), kuyruğa bağlı: en iyi 10 gün atılınca
+Sh 1,85 → 1,25, 20 gün → 0,79; 10 bp'de 1,33 / 1,54, 15 bp'de 0,94. Carry (T7K + KS) ile harman 2022-06+: %10 Sh 3,80 → 3,97, aynı dd /
+en kötü günde +214,9 → +219,9 (+5, bar +8 altı), %20-30'da düşüyor. Tek başına kitap carry'nin yarısı Sharpe'ında (1,8 vs 3,8) → aynı para
+carry'de daha çok kazanır. Carry'den bağımsız yeni kesitsel kitap ekseni (411, 579, 649) kapandı.
