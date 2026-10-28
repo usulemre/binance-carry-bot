@@ -7205,3 +7205,10 @@ değil) güçlü desen: |f| ≥ %0,10, 2025+: ödemeden önce 60 / 120 dk +39 / 
 coin kayması sonrası ~0 → RED. Carry icrası için: ödemeden hemen önce girip funding'i almak ile hemen sonra (düşüşten sonra) girmek
 yaklaşık EŞİT (f ≈ düşüş); çıkış için de aynı → icra saatinin ödeme anına göre hizası serbest, kural yok. Motorun "T kapanışında gir +
 T ödemesini al" varsayımı bu ölçümle tutarlı (iyimser değil).
+
+## Madde 648 — KULLANICI KARARI (2026-10-28): ÖNERİLEN AYAR UYGULANSIN → `deploy/onerilen_kur.sh` + ONERILEN.md
+Kod varsayılanı T4 KALDI (testler / parite); geçiş `.env` ile. Betik bakiyeyi borsadan okur, ölçülmüş dozu seçer (< 3.500 $ T7K 1,15x ·
+3.500-12.500 $ T7K 1,10x · ≥ 12.500 $ T6 1,10x; hepsi koşullu stop 0,03), `.env`'i yedekler, preflight HATA'da geri döner, yoksa servisi
+yeniden başlatır. Üç kol preflight --yerel'de 0 HATA; betik sahte bakiye (2.000 / 5.000 / 30.000 $) ile denendi. Not: madde 617'nin
+Ekim OOS kuralı geçişten ÖNCE bekleniyordu; kullanıcı beklemeden geçmeyi seçti — Ekim kontrolü Kasım başında yine koşulacak, "olağan
+dışı" çıkarsa geri dönüş önerilecek.
