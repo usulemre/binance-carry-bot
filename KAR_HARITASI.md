@@ -7317,3 +7317,13 @@ en ince coinde bile işlem 4 sa hacmin %0,5'inin altında (maker emir kuyruğu /
 etki başlar; ~5 M $ üstünde hacme göre bacak tavanı ya da ince coin elemesi gerekir. Ayrıca Binance sembol başına pozisyon / kaldıraç
 kademesi sınırları büyük bakiyede ince coinlerde bağlayıcı olabilir (2x borsa kaldıracında genelde geniş). Not: hacmi ~0 olan veri
 satırları yüzünden her seviyede ~%0,2 sabit bir "4 sa hacmin %2'sini aşan işlem" payı görünüyor (veri artığı).
+
+## Madde 661 — Delist koruması: delist'e 48 sa kala açık pozisyon kapatılır (kullanıcı kararı 2026-10-29)
+Önceden (madde 146): delisti duyurulan coin (deliveryDate 30 g içinde ya da status ≠ TRADING) YENİ seçime girmiyordu; açık pozisyon
+zorla kapatılmıyordu (duyuru anında kapatmak, bildirim döneminde funding toplayan long'ları kestiği için Sharpe'ı düşürmüştü). Dilimler
+yenilendikçe (~5 g) pozisyon kendiliğinden eriyordu, ama son saatlerde yenilenmemiş dilimler kalabiliyordu. Ölçüm (6 yıl, 31 delist coin,
+kitabın son 10 günde pozisyon tuttuğu 9'u; 2.000 $ T7K+KS / TAM T6+KS aynı): kitabın son 7 / 3 / 1 gündeki katkısı −%12,7 (LUNA −7,9) /
+−%2,0 / −%0,4 kitap — son 3 günün %78'i, son günün %89'u negatif. Yeni: `delist_kapat` her turda açık pozisyonları exchange_info'ya
+bakar; deliveryDate'e < CARRY_DELIST_KAPAT_SAAT (48) kaldıysa ya da status TRADING değilse açık emirleri iptal eder, pozisyonu piyasa
+emriyle kapatır, dilimlerden çıkarır (kuru çalışmada yalnız yazar; 0 = kapalı). Bildirim döneminin büyük kısmı (funding) korunur, son
+2 günün likiditesi kuruyan / uzlaşma fiyatı belirsiz penceresi kesilir. test_delist.py 10/10; preflight / bot / entegrasyon geçti.

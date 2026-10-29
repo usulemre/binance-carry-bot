@@ -3122,6 +3122,67 @@ def tradfi_mi(sembol: str, bilgi: dict | None) -> bool:
 DELIST_UFUK_GUN = float(os.getenv("CARRY_DELIST_UFUK_GUN", "30"))
 
 
+DELIST_KAPAT_SAAT = float(os.getenv("CARRY_DELIST_KAPAT_SAAT", "48"))
+"""MADDE 661: delist zamanına (deliveryDate) bu kadar SAAT kalmış ya da status TRADING dışına çıkmış semboldeki AÇIK pozisyon
+piyasa emriyle kapatılır ve dilimlerden çıkarılır (kullanıcı kararı 2026-10-29). Madde 146 duyuru ANINDA kapatmayı reddetmişti
+(bildirim döneminde long funding topluyor); burada yalnız son 2 gün kapatılır: 6 yılda delist coinlerinde kitabın son 3 / 1 gün katkısı
+−%2,0 / −%0,4 (vakaların %78 / %89'u negatif) — son saatler likiditesi kuruyan, uzlaşma fiyatı belirsiz pencere. 0 = kapalı."""
+
+
+def delist_yakin_mi(bilgi: dict | None, saat: float, simdi_ms: float = None) -> bool:
+    """MADDE 661: sembol kapanmış / kapanmak üzere mi (status TRADING değil ya da deliveryDate'e < saat kaldı)."""
+    if not bilgi or saat <= 0:
+        return False
+    if str(bilgi.get("status", "TRADING") or "TRADING").upper() != "TRADING":
+        return True
+    dd = bilgi.get("deliveryDate")
+    if dd and str(bilgi.get("contractType", "PERPETUAL")).upper() in ("PERPETUAL", "TRADIFI_PERPETUAL"):
+        try:
+            dd = float(dd)
+        except (TypeError, ValueError):
+            return False
+        simdi_ms = time.time() * 1000.0 if simdi_ms is None else simdi_ms
+        return dd - simdi_ms < saat * 3600000.0
+    return False
+
+
+def delist_kapat(client: ExchangeClient, durum: dict, dry_run: bool = False) -> list[str]:
+    """MADDE 661: delist'e DELIST_KAPAT_SAAT kalan semboldeki açık pozisyonu kapatır, açık emirlerini iptal eder, dilimlerden çıkarır."""
+    if DELIST_KAPAT_SAAT <= 0:
+        return []
+    try:
+        pozlar = [p for p in client.get_open_positions() if float(p.get("positionAmt", 0) or 0) != 0]
+    except Exception as e:
+        logger.warning("delist kontrolü: pozisyonlar alınamadı (%s)", e)
+        return []
+    if not pozlar:
+        return []
+    bilgi = sembol_bilgisi(client)
+    kapanan = []
+    for p in pozlar:
+        sem = p["symbol"]; adet = float(p["positionAmt"])
+        if not delist_yakin_mi(bilgi.get(sem), DELIST_KAPAT_SAAT):
+            continue
+        dd = (bilgi.get(sem) or {}).get("deliveryDate")
+        if dry_run:
+            logger.info("  [DRY] DELİST: %s kapatılırdı (adet %s, deliveryDate %s)", sem, adet, dd)
+            kapanan.append(sem); continue
+        try:
+            try:
+                client.client.futures_cancel_all_open_orders(symbol=sem)
+            except Exception as e:
+                logger.warning("DELİST: %s açık emirleri iptal edilemedi (%s) - kapatmaya devam", sem, e)
+            client.close_position(sem, "SELL" if adet > 0 else "BUY", abs(adet))
+            for hedef in durum.get("dilimler", {}).values():
+                hedef.pop(sem, None)
+            kapanan.append(sem)
+            logger.error("DELİST: %s listeden çıkıyor (deliveryDate %s, status %s) - %s pozisyon piyasa emriyle KAPATILDI, "
+                         "dilimlerden çıkarıldı", sem, dd, (bilgi.get(sem) or {}).get("status"), "long" if adet > 0 else "short")
+        except Exception as e:
+            logger.error("DELİST: %s kapanmalı ama KAPATILAMADI (%s) - elle kontrol edin", sem, e)
+    return kapanan
+
+
 def delist_mi(bilgi: dict | None, simdi_ms: float = None) -> bool:
     """exchange_info satırına göre sembol kapanıyor/kapanacak mı?
     Bilgi yoksa False (veri eksikliği cezalandırılmaz)."""
@@ -4266,6 +4327,8 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     # kitabın ~%93'ü bu turda tasfiye edilirdi.
     if not durum.get("dilimler"):
         durum_kurtar(durum, mevcut_portfoy(client), bakiye)
+    # MADDE 661: delist'e 48 sa kalan semboldeki pozisyonu kapat (kuru çalışmada yalnız yazar)
+    delist_kapat(client, durum, dry_run=dry_run)
     # Kâr al dolanları, YENİ dilim yazılmadan ÖNCE eski dilimlerden çıkar
     # (kuru çalışmada durum değiştirilmez).
     if not dry_run and koruma_acik():
