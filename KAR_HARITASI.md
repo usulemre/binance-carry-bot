@@ -7307,3 +7307,13 @@ dahil gerçekçi toplam ≈ 2,5-3,5 bp → model ~2 bp İHTİYATLI (madde 654: 1
 (2) ince coinlerde piyasa emri kayması 10-30 bp olabilir (stoplar çöküşte), (3) demo defter derinliği canlıdan farklı. Ölçüm demo
 raporundan: komisyon toplamı / işlem hacmi (carry_gunluk_defter COMMISSION) ve TP dolum oranı. Eşik: toplam ≤ 10 bp iken önerilen ayar
 ≥ +%280 / yıl (madde 654).
+
+## Madde 660 — KAPASİTE (kullanıcı: "bu sistem hangi bakiyeye kadar sorunsuz"): ~1 M $'a kadar piyasa etkisi ihmal edilebilir
+TAM evren T6 1,10x + KS pozisyon defteri (2025-01 → 2026-09) × coinin 24 sa işlem hacmi (panel HAC). Pozisyonların tutulduğu coinlerin
+24 sa hacmi medyan 109 M $, en ince %5 12 M $. Pozisyon / 24 sa hacim (medyan · %95 · %99) ve tek işlem / 4 sa hacim %99:
+50 bin $ 0,001 · 0,009 · 0,020 % | 0,03 % — 250 bin $ 0,007 · 0,046 · 0,098 % | 0,14 % — 1 M $ 0,028 · 0,18 · 0,39 % | 0,55 % —
+2 M $ 0,055 · 0,37 · 0,78 % | 1,1 % — 5 M $ 0,14 · 0,92 · 1,95 % | 2,8 % — 10 M $ 0,28 · 1,8 · 3,9 % | 5,5 %. Pratik eşik: ~1 M $'a kadar
+en ince coinde bile işlem 4 sa hacmin %0,5'inin altında (maker emir kuyruğu / kayma etkisi küçük); 2-5 M $ arası ince coinlerde
+etki başlar; ~5 M $ üstünde hacme göre bacak tavanı ya da ince coin elemesi gerekir. Ayrıca Binance sembol başına pozisyon / kaldıraç
+kademesi sınırları büyük bakiyede ince coinlerde bağlayıcı olabilir (2x borsa kaldıracında genelde geniş). Not: hacmi ~0 olan veri
+satırları yüzünden her seviyede ~%0,2 sabit bir "4 sa hacmin %2'sini aşan işlem" payı görünüyor (veri artığı).
