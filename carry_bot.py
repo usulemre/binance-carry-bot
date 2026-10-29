@@ -2045,11 +2045,44 @@ def funding_topla(client: ExchangeClient, semboller: list[str],
     return pd.Series(out, dtype=float)
 
 
+_TRANSFER_KUM: list = [None]
+"""MADDE 658: o tura kadarki NET transfer toplamı (yatırma +, çekme −; kitap ölçeğinde). carry_equity.csv'nin 4. sütunu."""
+
+
+def transfer_kumulatif(client, yol: str = None) -> float | None:
+    """MADDE 658: kullanıcı kâr ÇEKİNCE bakiye düşer; rapor (carry_rapor / carry_sapma) bunu zarar / düşüş sanmasın diye her turda
+    son kayıttan bu yana Binance gelir geçmişindeki TRANSFER toplamı birikimli olarak yazılır. Geçmiş yoksa 0'dan başlar; API
+    okunamazsa son bilinen değer korunur (o tur çekim varsa bir sonraki başarılı okumada yakalanır)."""
+    yol = yol or VOL_GECMIS_DOSYA
+    son_z, son_t = None, 0.0
+    try:
+        if os.path.exists(yol):
+            with open(yol, encoding="utf-8") as fh:
+                for satir in fh:
+                    p = satir.strip().split(",")
+                    if len(p) >= 2:
+                        try:
+                            son_z = float(p[0]); son_t = float(p[3]) if len(p) >= 4 else son_t
+                        except ValueError:
+                            continue
+    except OSError:
+        return None
+    if son_z is None:
+        return 0.0
+    try:
+        r = client.client.futures_income_history(incomeType="TRANSFER", startTime=int(son_z * 1000) + 1, limit=1000)
+        return son_t + sum(float(x.get("income") or 0) for x in (r or [])) * SERMAYE_OLCEK
+    except Exception as e:
+        logger.warning("transfer geçmişi okunamadı (rapor çekimi düşüş sanabilir): %s", e)
+        return son_t
+
+
 def _bakiye_yaz(yol: str, bakiye: float, olcek: float) -> None:
-    """Bakiye geçmişine bir satır: zaman, bakiye, o turda uygulanan ölçek."""
+    """Bakiye geçmişine bir satır: zaman, bakiye, o turda uygulanan ölçek[, birikimli net transfer (madde 658)]."""
     try:
         with open(yol, "a", encoding="utf-8") as fh:
-            fh.write(f"{time.time():.0f},{bakiye:.4f},{olcek:.6f}\n")
+            _t = "" if _TRANSFER_KUM[0] is None else f",{_TRANSFER_KUM[0]:.4f}"
+            fh.write(f"{time.time():.0f},{bakiye:.4f},{olcek:.6f}{_t}\n")
     except OSError as e:
         logger.warning("bakiye geçmişi yazılamadı: %s", e)
 
@@ -4214,6 +4247,8 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
         return {"atlandi": "teminat"}
     # Kuru çalışma bakiye geçmişine YAZMAZ - yoksa test çalıştırmaları
     # oynaklık tahminini (ve dolayısıyla kaldıracı) bozardı.
+    if not dry_run:
+        _TRANSFER_KUM[0] = transfer_kumulatif(client)
     olcek = vol_olcek(bakiye, olcme_yap=not dry_run)
     # MADDE 288: prim-ölçekli brüt. Çarpan ÖNCE okunur (bugünün ölçümü
     # henüz yazılmadığı için 1 tur gecikme doğal - motorun .shift(1)'i),

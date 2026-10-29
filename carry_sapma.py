@@ -42,7 +42,7 @@ def bakiye_oku(dosya: str = None) -> pd.DataFrame:
     """carry_equity.csv -> zaman, bakiye, ölçek. Bozuk satırlar atlanır."""
     yol = dosya or EQUITY
     if not os.path.exists(yol):
-        return pd.DataFrame(columns=["zaman", "bakiye", "olcek"])
+        return pd.DataFrame(columns=["zaman", "bakiye", "olcek", "transfer"])
     satirlar = []
     with open(yol, encoding="utf-8") as fh:
         for s in fh:
@@ -52,11 +52,14 @@ def bakiye_oku(dosya: str = None) -> pd.DataFrame:
             try:
                 z, b = float(p[0]), float(p[1])
                 o = float(p[2]) if len(p) >= 3 else 1.0
+                t = float(p[3]) if len(p) >= 4 else float("nan")
             except ValueError:
                 continue
             if b > 0 and o > 0:
-                satirlar.append((z, b, o))
-    d = pd.DataFrame(satirlar, columns=["zaman", "bakiye", "olcek"]).sort_values("zaman")
+                satirlar.append((z, b, o, t))
+    d = pd.DataFrame(satirlar, columns=["zaman", "bakiye", "olcek", "transfer"]).sort_values("zaman")
+    # MADDE 658: birikimli net transfer (yatırma +, çekme −). Eski satırlarda yok -> son bilinen / 0.
+    d["transfer"] = d["transfer"].ffill().fillna(0.0)
     d["tarih"] = pd.to_datetime(d.zaman, unit="s")
     return d
 
@@ -71,7 +74,9 @@ def gunluk_getiri(d: pd.DataFrame) -> pd.Series:
     if len(d) < 2:
         return pd.Series(dtype=float)
     g = d.set_index("tarih").resample("1D").last().dropna(subset=["bakiye"])
-    ham = g.bakiye.pct_change()
+    # MADDE 658: çekim / yatırma getiri DEĞİLDİR: (bakiye − o günkü net transfer) / dünkü bakiye − 1
+    _tr = g["transfer"].diff().fillna(0.0) if "transfer" in g else 0.0
+    ham = (g.bakiye - _tr) / g.bakiye.shift(1) - 1
     olcek = g.olcek.shift(1).where(lambda x: x > 0, 1.0)
     return (ham / olcek).dropna()
 

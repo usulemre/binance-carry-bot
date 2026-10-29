@@ -7285,3 +7285,13 @@ doz 1,10). Artık her turdan (8 sa) sonra kitap yeniden okunur; eşik %3 payla g
 çevresinde sürekli gidip gelmesin) otomatik atanmış değerler silinip süreç yeniden başlar ve yeni ayarı seçer. Açık pozisyon ve dilim
 defteri korunur (yeniden başlatma botun olağan işlemi). Açılışta bakiye okunamayıp 1,0x'te kalan süreç, bakiye okununca doğru doza geçer.
 .env'de açık CARRY_GROSS varsa yalnız profil eşiği (12.500 $, T7K ↔ T6) izlenir. test_onerilen.py 33/33.
+
+## Madde 658 — Kâr çekimi raporlarda düşüş sayılmasın (kullanıcı: "çekimi düşüş sanar mı")
+Bot'un kararları (seçim, doz, stop, sağlık kapısı) çekimden etkilenmiyordu: dozu her turda güncel bakiyeden alıyor, bakiye zirvesine bakan
+bir durdurucu yok, sağlık kapısı funding metriklerine bakıyor; yeni günlük defter (carry_gunluk_defter, madde 640) TRANSFER'i zaten
+ayıklıyordu. AÇIK OLAN: eski günlük rapor (carry_rapor "KARAR: DEVAM / İNCELE / DURDUR") ve carry_sapma getiriyi carry_equity.csv'nin ham
+bakiyesinden alıyordu → 600 $ çekim o gün −%28 ve "DURDUR" önerisi olarak görünürdü. Düzeltme: bot her turda son kayıttan bu yana Binance
+gelir geçmişindeki TRANSFER toplamını birikimli olarak carry_equity.csv'ye 4. sütun yazar (transfer_kumulatif; API hatasında son değer
+korunur, aynı çekim iki kez sayılmaz); carry_sapma.gunluk_getiri = (bakiye − o günkü net transfer) / dünkü bakiye − 1. Eski 3 sütunlu
+dosyalar okunmaya devam eder. Oynaklık hedefi (VOL_HEDEF, varsayılan KAPALI) ham bakiyeyi okumaya devam ediyor. test_transfer.py 8/8;
+test_carry_bot / rapor / sapma / preflight / parite / entegrasyon geçti.
