@@ -7327,3 +7327,19 @@ kitabın son 10 günde pozisyon tuttuğu 9'u; 2.000 $ T7K+KS / TAM T6+KS aynı):
 bakar; deliveryDate'e < CARRY_DELIST_KAPAT_SAAT (48) kaldıysa ya da status TRADING değilse açık emirleri iptal eder, pozisyonu piyasa
 emriyle kapatır, dilimlerden çıkarır (kuru çalışmada yalnız yazar; 0 = kapalı). Bildirim döneminin büyük kısmı (funding) korunur, son
 2 günün likiditesi kuruyan / uzlaşma fiyatı belirsiz penceresi kesilir. test_delist.py 10/10; preflight / bot / entegrasyon geçti.
+
+## Madde 662 — Sunucuya hazırlık: tek komutluk kurulum + güvenlik sertleştirmesi + bulunan kurulum hataları düzeltildi
+Kullanıcı: proje hiç sunucuya alınmamış; "olası hataları düzelt, kârı koruyarak" (strateji DEĞİŞMEDİ, yalnız çalıştırma altyapısı).
+BULUNAN HATALAR: (1) servisler root olarak çalışıyordu; (2) ana kurulum (/opt/carry) için günlük defter servisi yoktu — önerilen
+`carry-defter@carry.timer` /opt/carry-carry'yi arardı (çalışmazdı); (3) günlük rapor yalnız /opt/carry-* klasörlerini tarıyordu, ana
+botu hiç görmüyordu; rapor komutu systemd'nin $ değişken kaçışında bozulabilirdi; (4) ana bot için servis dosyası yoktu (belgede
+anahtarlar servis dosyasına düz yazılıyordu); (5) Ubuntu 24.04'te sistem pip'i kapalı → kurulum talimatı çalışmazdı; (6) PDF için
+Chromium kurulumu yoktu; (7) root'un carry'ye ait depoda git pull'u "dubious ownership" ile reddedilirdi.
+DÜZELTME: `deploy/sunucu_kur.sh` (Ubuntu 22.04/24.04; paketler, giriş kabuğu olmayan `carry` kullanıcısı, /opt/carry + .venv,
+Playwright Chromium, .env şablonu izin 600, servisler, ufw yalnız SSH, fail2ban, otomatik güvenlik güncellemeleri, SSH anahtarı VARSA
+şifreyle girişi kapatma, isteğe bağlı Tailscale; tekrar çalıştırılabilir). Yeni `carry.service`, `carry-defter.service/.timer`
+(ana), `deploy/rapor.sh`; bütün servisler User=carry + NoNewPrivileges / ProtectSystem=strict / ProtectHome / PrivateTmp, yazma yalnız
+kendi klasörüne; ExecStart /opt/carry/.venv/bin/python. onerilen_kur.sh / coklu_demo_kur.sh carry kullanıcısı + venv ile. Belge:
+KURULUM_SUNUCU.md. Doğrulama: bu konteynerde (Ubuntu 24.04) sistem araçları taklit edilerek uçtan uca kuruldu — kullanıcı, venv,
+paketler, .env 600, servisler; `systemd-analyze verify` temiz; carry kullanıcısıyla preflight --yerel 0 HATA; onerilen_kur.sh'nin
+HATA'da geri dönüşü çalıştı. Chromium indirmesi burada ağ engelinden yapılamadı (betik tolere ediyor; HTML rapor yine çıkar).
