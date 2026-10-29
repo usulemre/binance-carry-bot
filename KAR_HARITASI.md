@@ -7295,3 +7295,15 @@ gelir geçmişindeki TRANSFER toplamını birikimli olarak carry_equity.csv'ye 4
 korunur, aynı çekim iki kez sayılmaz); carry_sapma.gunluk_getiri = (bakiye − o günkü net transfer) / dünkü bakiye − 1. Eski 3 sütunlu
 dosyalar okunmaya devam eder. Oynaklık hedefi (VOL_HEDEF, varsayılan KAPALI) ham bakiyeyi okumaya devam ediyor. test_transfer.py 8/8;
 test_carry_bot / rapor / sapma / preflight / parite / entegrasyon geçti.
+
+## Madde 659 — Maliyet modelinin doğruluğu (kullanıcı: "komisyonları araştır, bot ne kadar doğru")
+Binance USDⓈ-M (VIP 0): maker %0,02 · taker %0,05; ücret BNB ile ödenirse %10 indirim (0,018 / 0,045). Motor HER işlemi 5 bp (taker
+düzeyi) sayıyor (KOM=0,0005). Botun gerçek emir karışımı: girişler ve dengeleme GTX post-only (maker; dolmayan ~%2,4 piyasaya düşer,
+madde 213), kâr al ve kademe borsada bekleyen LIMIT reduceOnly (maker; seviye piyasanın içinde kalırsa anında dolar = taker),
+koşullu stop ve felaket stop piyasa / STOP_MARKET (taker; çıkışların ~%3'ü: KAD %54-56 · TP %42-43 · SL %2 · S24K %1). Devir: yılda
+~168 × sermaye (1x). Ağırlıklı ücret ≈ 2,1-2,2 bp (BNB'li ≈ 1,9-2,0); taker kısmının kayması ve maker ters seçilimi (madde 213: nötr)
+dahil gerçekçi toplam ≈ 2,5-3,5 bp → model ~2 bp İHTİYATLI (madde 654: 1 bp ≈ 5 puan/yıl → canlıda ~+10 puan pay). Modelin
+İYİMSER olabileceği yerler: (1) kâr al bar içi tepeye TAM değdiğinde dolu sayılıyor (gerçekte kuyruk sırası; dolmayabilir),
+(2) ince coinlerde piyasa emri kayması 10-30 bp olabilir (stoplar çöküşte), (3) demo defter derinliği canlıdan farklı. Ölçüm demo
+raporundan: komisyon toplamı / işlem hacmi (carry_gunluk_defter COMMISSION) ve TP dolum oranı. Eşik: toplam ≤ 10 bp iken önerilen ayar
+≥ +%280 / yıl (madde 654).
