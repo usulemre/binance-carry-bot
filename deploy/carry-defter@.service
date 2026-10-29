@@ -3,6 +3,16 @@ Description=Carry günlük defter (%i)
 
 [Service]
 Type=oneshot
+User=carry
+Group=carry
 WorkingDirectory=/opt/carry-%i
 EnvironmentFile=/opt/carry-%i/.env
-ExecStart=/usr/bin/python3 carry_gunluk_defter.py topla
+ExecStart=/opt/carry/.venv/bin/python carry_gunluk_defter.py topla
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry-%i

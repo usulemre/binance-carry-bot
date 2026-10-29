@@ -1,0 +1,19 @@
+# MADDE 662: ANA BOTUN günlük defteri (/opt/carry/defter/gunluk.jsonl). Çoklu demo için carry-defter@AD.
+[Unit]
+Description=Carry günlük defter (ana)
+
+[Service]
+Type=oneshot
+User=carry
+Group=carry
+WorkingDirectory=/opt/carry
+EnvironmentFile=/opt/carry/.env
+ExecStart=/opt/carry/.venv/bin/python carry_gunluk_defter.py topla
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry

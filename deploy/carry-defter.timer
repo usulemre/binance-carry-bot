@@ -1,0 +1,9 @@
+[Unit]
+Description=Carry günlük defter zamanlayıcısı (ana) — her gün 00:05 UTC (03:05 TR)
+
+[Timer]
+OnCalendar=*-*-* 00:05:00 UTC
+Persistent=true
+
+[Install]
+WantedBy=timers.target

@@ -1,15 +1,27 @@
 # ÇOKLU DEMO: her profil ayrı klasörde (/opt/carry-<AD>) ve ayrı demo hesabında. COKLU_DEMO.md
+# MADDE 662: 'carry' kullanıcısıyla, ana kurulumun sanal ortamıyla (/opt/carry/.venv), sistem salt okunur.
 [Unit]
 Description=Carry bot (%i)
 After=network-online.target
+Wants=network-online.target
 
 [Service]
 Type=simple
+User=carry
+Group=carry
 WorkingDirectory=/opt/carry-%i
 EnvironmentFile=/opt/carry-%i/.env
-ExecStart=/usr/bin/python3 carry_bot.py
+ExecStart=/opt/carry/.venv/bin/python carry_bot.py
 Restart=always
 RestartSec=60
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry-%i
 
 [Install]
 WantedBy=multi-user.target

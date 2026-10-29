@@ -1,0 +1,26 @@
+# MADDE 662: ANA BOT (/opt/carry). Ayrı, yetkisiz 'carry' kullanıcısıyla; sistemin geri kalanı salt okunur (KURULUM_SUNUCU.md).
+[Unit]
+Description=Carry bot (ana)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=carry
+Group=carry
+WorkingDirectory=/opt/carry
+EnvironmentFile=/opt/carry/.env
+ExecStart=/opt/carry/.venv/bin/python carry_bot.py
+Restart=always
+RestartSec=60
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry
+
+[Install]
+WantedBy=multi-user.target

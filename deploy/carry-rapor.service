@@ -1,7 +1,19 @@
+# MADDE 662: ana bot (/opt/carry) DA rapora girer (önce yalnız /opt/carry-* vardı); 'carry' kullanıcısıyla.
 [Unit]
-Description=Carry çoklu demo raporu (bütün /opt/carry-* klasörleri)
+Description=Carry günlük rapor (ana + bütün /opt/carry-* klasörleri)
 
 [Service]
 Type=oneshot
+User=carry
+Group=carry
 WorkingDirectory=/opt/carry-rapor
-ExecStart=/bin/sh -c 'cd /opt/carry-rapor && /usr/bin/python3 /opt/carry/carry_gunluk_defter.py rapor $(for d in /opt/carry-*/; do [ -f "$d/carry_bot.py" ] && printf -- "--klasor %%s " "$d"; done) --cikti /opt/carry-rapor/demo_defteri.html --pdf'
+Environment=PLAYWRIGHT_BROWSERS_PATH=/opt/carry/.pw
+ExecStart=/opt/carry/deploy/rapor.sh
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry-rapor

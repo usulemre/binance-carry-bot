@@ -31,7 +31,7 @@ Büyük bakiye (≳ 12.500 $ kitap) denemek isterseniz T6 için GROSS 1.10 (KURU
 cd /opt/carry && git pull
 sudo ./deploy/coklu_demo_kur.sh T7KKS T7K 1.15 0.03 0.2     # her bot için bir kez (yukarıdaki tablo)
 sudo nano /opt/carry-T7KKS/.env                              # O hesabın BINANCE_API_KEY / SECRET'ı
-(cd /opt/carry-T7KKS && python3 carry_preflight.py)          # HATA 0 (ölçek satırı UYARI olarak görünür — normal)
+(cd /opt/carry-T7KKS && sudo -u carry /opt/carry/.venv/bin/python carry_preflight.py)   # HATA 0 (ölçek satırı UYARI olarak görünür — normal)
 sudo systemctl enable --now carry@T7KKS carry-defter@T7KKS.timer carry-rapor.timer
 journalctl -u carry@T7KKS -f
 ```
