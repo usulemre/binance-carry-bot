@@ -7343,3 +7343,16 @@ kendi klasörüne; ExecStart /opt/carry/.venv/bin/python. onerilen_kur.sh / cokl
 KURULUM_SUNUCU.md. Doğrulama: bu konteynerde (Ubuntu 24.04) sistem araçları taklit edilerek uçtan uca kuruldu — kullanıcı, venv,
 paketler, .env 600, servisler; `systemd-analyze verify` temiz; carry kullanıcısıyla preflight --yerel 0 HATA; onerilen_kur.sh'nin
 HATA'da geri dönüşü çalıştı. Chromium indirmesi burada ağ engelinden yapılamadı (betik tolere ediyor; HTML rapor yine çıkar).
+
+## Madde 663 — Saldırı / arıza sertleştirmesi (kullanıcı: "devam, olası hatalar, saldırılar")
+(1) Preflight API anahtarı izinlerini okur (Binance apiRestrictions): canlıda PARA ÇEKME izni açık anahtar HATA (bot çekime hiç ihtiyaç
+duymaz; anahtar çalınırsa hesap boşaltılabilir), demoda UYARI; IP kısıtlaması yoksa UYARI; Futures izni kapalıysa HATA; okunamazsa UYARI
+(test_api_izin.py 6/6). (2) Tedarik zinciri: requirements.lock — bütün paketler Python 3.12 (Ubuntu 24.04) için SABİT sürüm + SHA256
+özetiyle, 2026-09-30'dan yeni sürüm yok (uv --exclude-newer; kötü niyetli / bozuk yeni sürüm sessizce giremez). sunucu_kur.sh
+3.12'de --require-hashes ile kurar, değilse uyarıyla requirements.txt'ye düşer. Kilitli ortamda (3.12, pandas 3.0.6, numpy 2.5.3)
+onerilen / transfer / delist / api_izin / carry_bot / short_ara / preflight / entegrasyon testleri geçti. (3) Saat senkronu
+(timedatectl set-ntp; Binance imzalı istekleri saat kayınca −1021 ile reddeder), log döndürme (/etc/logrotate.d/carry, haftalık, 12
+hafta), SSH MaxAuthTries 3 / X11 kapalı. (4) `acil_kapat.py`: servis çalışıyorsa reddeder; varsayılan yalnız listeler; --evet ile
+kayıtlı kâr al / kademe / felaket (algo) emirlerini ve pozisyonlu + açık emirli bütün sembollerin emirlerini iptal eder, pozisyonları
+reduceOnly piyasa emriyle kapatır, dilim defterini boşaltır (test_acil_kapat.py 6/6). (5) KURULUM_SUNUCU.md: acil durdurma sırası
+(önce Binance'te anahtarı SİL) ve güvenlik kontrol listesi (GitHub 2FA dahil: sunucu kodu GitHub'dan çeker).

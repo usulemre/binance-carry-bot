@@ -259,6 +259,29 @@ def kontrol_defterler() -> None:
 
 
 # ---------------------------------------------------------- 5) BORSA (API)
+def kontrol_api_izinleri(client) -> None:
+    """MADDE 663: Binance /sapi/v1/account/apiRestrictions -> enableWithdrawals, ipRestrict, enableFutures."""
+    canli = str(getattr(client, "mode", "")).lower() == "live"
+    try:
+        iz = client.client.get_account_api_permissions()
+    except Exception as e:
+        kontrol("API izinleri (madde 663)", UYARI, f"okunamadı ({str(e)[:80]}) — Binance'te elle kontrol edin: "
+                "yalnız Futures, para çekme KAPALI, IP kısıtlaması AÇIK")
+        return
+    if iz.get("enableWithdrawals"):
+        kontrol("API izinleri (madde 663)", HATA if canli else UYARI,
+                "anahtarda PARA ÇEKME izni AÇIK — bot buna hiç ihtiyaç duymaz; anahtar çalınırsa hesap boşaltılabilir. Kapatın.")
+    else:
+        kontrol("API izinleri (madde 663)", TAMAM, "para çekme izni kapalı")
+    if not iz.get("ipRestrict"):
+        kontrol("API IP kısıtlaması (madde 663)", UYARI,
+                "anahtar her IP'den çalışıyor — Binance'te yalnız bu sunucunun IP'sine kısıtlayın")
+    else:
+        kontrol("API IP kısıtlaması (madde 663)", TAMAM, "yalnız izinli IP'lerden")
+    if iz.get("enableFutures") is False:
+        kontrol("API vadeli işlem izni (madde 663)", HATA, "anahtarda Futures izni KAPALI — bot emir veremez")
+
+
 def kontrol_borsa() -> None:
     print("\n5) BORSA — hesap durumu (sadece OKUR)")
     try:
@@ -284,6 +307,10 @@ def kontrol_borsa() -> None:
         kontrol("mod", UYARI, f"{client.mode} — gerçek para DEĞİL")
     else:
         kontrol("mod", TAMAM, "live (gerçek para)")
+
+    # MADDE 663: API ANAHTARI İZİNLERİ. Anahtar çalınırsa zararı sınırlayan iki ayar: para çekme izni KAPALI ve IP kısıtlaması AÇIK.
+    # Canlıda çekim izni açık anahtar HATA (bot çekime hiç ihtiyaç duymaz); IP kısıtlaması yoksa UYARI. Demo / okunamazsa UYARI.
+    kontrol_api_izinleri(client)
 
     # MADDE 211: pozisyon modu
     try:

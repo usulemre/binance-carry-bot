@@ -15,7 +15,7 @@ KOK=/opt/carry
 echo ">> 1/7 paketler"
 export DEBIAN_FRONTEND=noninteractive
 apt-get update -qq
-apt-get install -y -qq git python3 python3-venv python3-pip ufw fail2ban unattended-upgrades curl ca-certificates >/dev/null
+apt-get install -y -qq git python3 python3-venv python3-pip ufw fail2ban unattended-upgrades curl ca-certificates logrotate >/dev/null
 
 echo ">> 2/7 kullanıcı 'carry' (giriş kabuğu yok)"
 id carry >/dev/null 2>&1 || useradd --system --create-home --home-dir /var/lib/carry --shell /usr/sbin/nologin carry
@@ -30,7 +30,14 @@ chmod +x "$KOK"/deploy/*.sh
 echo ">> 4/7 Python sanal ortamı + bağımlılıklar + PDF için Chromium"
 [ -x "$KOK/.venv/bin/python" ] || sudo -u carry python3 -m venv "$KOK/.venv"
 sudo -u carry "$KOK/.venv/bin/pip" install -q --upgrade pip
-sudo -u carry "$KOK/.venv/bin/pip" install -q -r "$KOK/requirements.txt" playwright
+# MADDE 663: SABİTLENMİŞ sürümler + özet (hash) doğrulaması (requirements.lock; Python 3.12 = Ubuntu 24.04). Bir paketin kötü niyetli /
+# bozuk yeni sürümü sunucuya sessizce giremez. Başka Python'da (22.04 = 3.10) sabitsiz requirements.txt'ye düşülür (uyarıyla).
+if [ "$("$KOK/.venv/bin/python" -c 'import sys;print("%d.%d"%sys.version_info[:2])')" = "3.12" ] && [ -f "$KOK/requirements.lock" ]; then
+  sudo -u carry "$KOK/.venv/bin/pip" install -q --require-hashes -r "$KOK/requirements.lock"
+else
+  echo "!! Python 3.12 değil (Ubuntu 24.04 önerilir): sabitlenmemiş requirements.txt kuruluyor"
+  sudo -u carry "$KOK/.venv/bin/pip" install -q -r "$KOK/requirements.txt" playwright
+fi
 "$KOK/.venv/bin/python" -m playwright install-deps chromium >/dev/null 2>&1 || echo "!! chromium sistem kütüphaneleri kurulamadı (PDF olmayabilir, HTML rapor yine çıkar)"
 sudo -u carry env PLAYWRIGHT_BROWSERS_PATH="$KOK/.pw" "$KOK/.venv/bin/python" -m playwright install chromium >/dev/null 2>&1 \
   || echo "!! chromium indirilemedi (PDF olmayabilir, HTML rapor yine çıkar)"
@@ -59,13 +66,26 @@ systemctl enable --now carry-defter.timer carry-rapor.timer >/dev/null
 systemctl enable carry >/dev/null   # anahtarlar girilince: sudo systemctl start carry
 
 echo ">> 7/7 güvenlik"
+# MADDE 663: saat senkronu (Binance imzalı istekler saat kayarsa -1021 ile reddedilir) ve log döndürme (disk dolmasın)
+timedatectl set-ntp true 2>/dev/null || true
+cat > /etc/logrotate.d/carry <<'LR'
+/opt/carry/carry_bot.log /opt/carry-*/carry_bot.log {
+    weekly
+    rotate 12
+    compress
+    missingok
+    notifempty
+    copytruncate
+    su carry carry
+}
+LR
 ufw allow OpenSSH >/dev/null; ufw --force enable >/dev/null
 systemctl enable --now fail2ban >/dev/null
 dpkg-reconfigure -f noninteractive unattended-upgrades >/dev/null 2>&1 || true
 # SSH: şifreyle girişi YALNIZ en az bir yetkili anahtar varsa kapat (yoksa kendinizi dışarıda bırakırsınız)
 if ls /root/.ssh/authorized_keys /home/*/.ssh/authorized_keys 2>/dev/null | xargs -r grep -l "ssh-" >/dev/null 2>&1; then
   mkdir -p /etc/ssh/sshd_config.d
-  printf "PasswordAuthentication no\nKbdInteractiveAuthentication no\nPermitRootLogin prohibit-password\n" > /etc/ssh/sshd_config.d/90-carry.conf
+  printf "PasswordAuthentication no\nKbdInteractiveAuthentication no\nPermitRootLogin prohibit-password\nMaxAuthTries 3\nX11Forwarding no\n" > /etc/ssh/sshd_config.d/90-carry.conf
   systemctl reload ssh 2>/dev/null || systemctl reload sshd 2>/dev/null || true
   echo "   SSH: şifreyle giriş kapatıldı (yalnız anahtar)"
 else
