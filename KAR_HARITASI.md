@@ -7356,3 +7356,11 @@ hafta), SSH MaxAuthTries 3 / X11 kapalı. (4) `acil_kapat.py`: servis çalışı
 kayıtlı kâr al / kademe / felaket (algo) emirlerini ve pozisyonlu + açık emirli bütün sembollerin emirlerini iptal eder, pozisyonları
 reduceOnly piyasa emriyle kapatır, dilim defterini boşaltır (test_acil_kapat.py 6/6). (5) KURULUM_SUNUCU.md: acil durdurma sırası
 (önce Binance'te anahtarı SİL) ve güvenlik kontrol listesi (GitHub 2FA dahil: sunucu kodu GitHub'dan çeker).
+
+## Madde 664 — Yaş eşiği taraf başına (YAS_S_GUN; varsayılan kapalı): iki yönde de RED — 60 g her iki tarafa YERİNDE
+Araçlar `arastirma_m664_genc_long.py`, `arastirma_m664b_yasli_short.py` (ön kayıt başlıkta). Taban P3T2 (yaş 60 iki taraf; +247,5 ·
+Sh 4,03 / 4,42 → eşit risk +315,2). (a) Genç coin YALNIZ long'da (short 60 g şartını korur): long yaşı 45 +235,2 · dd −15,0 · 3,88 / 4,33
+→ +235,2 · 30 +230,2 · −15,6 · 3,80 / 4,27 → +211,8 · 14 +223,7 · 3,75 / 4,17 → +206,0 — genç coinin LONG'u da kaybettiriyor (yalnız short'u
+değil). (b) Short için daha yaşlı coin şartı (long 60): 90 g → +285.3 · 120 g +203,2 · Sh 3,60 / 4,08 → +203,2 · 180 g +183,8 · dd −19,5.
+Short havuzunu daraltmak en kalabalık genç-orta yaş coinleri dışarıda bırakıyor (kârın kaynağı). 60 g iki taraf için de tepe; yaş
+ekseni (397 / 427 / 518 / 635 / 652 / 664) kapandı.

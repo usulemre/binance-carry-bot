@@ -88,6 +88,14 @@ if _HES != 1e8 or _DON != 0.10 or _YAS_GUN != 90 or _HSIRA > 0 or _HMIN > 0:
         print(f"# HACIM_MIN_EVREN={_HMIN}: tamamlanan bar payi {float(_az.mean()):.3f}, ortalama uygun {float(_uy.sum(axis=1).mean()):.1f}", flush=True)
     U = _uy.reindex(index=C.index, columns=C.columns).fillna(False).values
 
+# MADDE 664: YAS_S_GUN=g (> YAS_GUN) -> evren YAS_GUN'e kadar gencleri alir ama SHORT adayi olmak icin coin g gunden yasli olmali
+# (genc coin yalniz LONG tarafinda; madde 652: genc coinin riski short'ta sikisma). 0 -> parite.
+_YAS_S = float(os.environ.get("YAS_S_GUN", "0")); YASLI_S = None
+if _YAS_S > 0:
+    import pickle as _pk2
+    _PY = _pk2.load(open('/tmp/panel.pkl', 'rb'))['YAS'].reindex(index=C.index, columns=C.columns)
+    YASLI_S = (_PY >= _YAS_S * 6).fillna(False).values
+
 # MADDE 461: GENC COIN YARIM AGIRLIK. GENC_GUN>0 -> evren yasi GENC_GUN'e iner, ama
 # YAS_GUN'den genc coinlerin hedef agirligi GENC_PAY ile carpilir. 0 -> kapali (parite).
 _GENC = float(os.environ.get("GENC_GUN", "0")); GENC_PAY = float(os.environ.get("GENC_PAY", "0.5"))
@@ -701,6 +709,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         _ss=(1-AKW)*_ss+AKW*(-a).rank(pct=True).fillna(0.5).values
                     _lav=set(int(x) for x in ix[o[:max(_mml,_nl)]])
                     _ss=np.where(np.array([int(x) in _lav for x in ix]),-1.0,_ss)   # long havuzu short olamaz
+                    if YASLI_S is not None: _ss=np.where(YASLI_S[i,ix],_ss,-2.0)        # madde 664: genc coin short olamaz
                     o_s=np.argsort(_ss)
                 else:
                     o_s=o
