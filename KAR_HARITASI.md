@@ -7370,3 +7370,9 @@ Araç `arastirma_m665_ks_soguma.py`. Taban P3T2 (+247,5 · dd −13,3 · −%5 4
 → k 1,10 → +288,3 · 5 g +244,8 → +288,1 · 10 g +242,3 · 3,99 / 4,36 → +285,0. Çöküşte satılan coini dipten yeniden almak kârlı (madde 539
 ile aynı yön): soğuma ham getiriyi düşürüp dd'yi derinleştiriyor, dozu 1,15 → 1,10'a indiriyor. Stop'un işi kuyruğu kesmek; yeniden
 girişi engellemek değil.
+
+## Madde 666 — Geniş short koşucu (kademe sonrası kalan short payı dipten +%x geri çekilince kapanır): RED — sabit −%20 yerinde
+Araç `arastirma_m666_short_kosucu.py` (vaka incelemelerinden: BTW / LAB / BSB çöküşlerinin devamı kaçıyor mu). Taban P3T2 (+247,5 ·
+Sh 4,03 / 4,42 → +315,2). +%20 +245,0 · dd −13,5 · 4,03 / 4,36 → k 1,10 → +288,4 · +%35 +244,6 · 4,37 → +311,3 · +%50 +244,3 → +311,0.
+Kalan pay kademede zaten %20'ye inmiş; çöküşün devamını yakalamak (BTW, LAB) aynı sayıda geri dönüşte verdiğini geri alıyor. 483'ün
+eski motordaki sonucu yeni kitapta da geçerli; koşucu ekseni (long + short) kapandı.
