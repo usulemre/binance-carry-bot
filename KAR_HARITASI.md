@@ -7384,3 +7384,13 @@ Araç `arastirma_m667_cesitlilik.py`. Seçilmiş bir bacakla son 30 g 4 sa korel
 benzemeyen coinlerden seçmek = sepetin ortak hareketini (piyasa yükselince birlikte yükselen ama ayrı ayrı sönen kalabalık long'lar)
 bozup TEK COİN sıkışma riskini artırmak: short sepetinin korelasyonu bir hedge, kusur değil (madde 604 SH_KOR'un tersi de kaybetmişti).
 Long'da etkisiz. Çeşitlendirme ekseni kapandı.
+
+## Madde 668 — Çoklu deneme düzeltmesi (Deflated Sharpe): kenarın kendisi şans DEĞİL; T4'e göre iyileştirmenin bir kısmı olabilir
+Kullanıcı: "fark azsa neden canlıda yarısını düşün diyorsun" → ölçülemeyen kalemin (seçim / şans) sayısallaştırılması. Araç
+`arastirma_m668_sisirilmis_sharpe.py`. Önerilen ayar (P3T2, 2.000 $, 2.265 gün): yıllık Sharpe 4,14 · çarpıklık +0,80 · basıklık 6,3.
+DSR (gerçek Sharpe'ın N denemenin şansla beklenen en büyüğünü aşma olasılığı): N 700 · V 1,0 → şansla en iyi 3,15 → DSR **0,995**;
+N 300 · V 1,0 → 0,9995; V 0,5 her N'de 1,000. Yalnız deneme Sharpe'ları sıfır etrafında ±1,5 yayılıyorsa (gerçekçi değil: kolların
+hepsi aynı stratejinin türevi, 3,5-4,4 arası) N 300 → 0,30, N 700 → 0,06. Örneğin iki yarısı 4,19 / 4,11 (kararlı). SONUÇ: carry
+kenarının şans olma ihtimali ihmal edilebilir; belirsizlik "kenar var mı"da değil, T4 → önerilen iyileştirmesinin (Sharpe 3,84 → 4,14,
+eşit risk +71 puan) ne kadarının seçim etkisi olduğunda — kol yayılımı ~0,2-0,3 Sharpe olduğu için iyileştirmenin bir kısmı şans
+olabilir. Beklenti dili güncellendi: "yarısı" kaba bir tampondu; daha savunulabilir alt sınır T4 düzeyi (yıllık ~+%220-245, 2.000 $).
