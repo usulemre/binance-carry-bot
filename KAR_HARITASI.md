@@ -7459,3 +7459,6 @@ yarım indirme silinir), Telegram'a "paket hazır" (yalnız TELEGRAM_* okunur). 
 (yalnız `paket_YYYY-MM.zip` adı; yol gezintisi yok; panel yine yalnız Tailscale). Testler test_panel.py (+4), test_ek_ay_paket.py (+2).
 Sınır (ileride): paket yalnız zemindeki 822 sembolü içerir; Eylül sonrası listelenen coinler 60 g yaş kuralı yüzünden Kasım'dan itibaren
 aday olabilir — o aydan önce paket yeni sembollerin tüm geçmişini de almalı (henüz yapılmadı; Ekim kontrolünü etkilemez).
+Madde 673 eki (kuru koşu): yeniden kurulan zeminle `AY=2026-09 izleme_ekim_oos.py kos_ana / analiz_ana` baştan koşuldu; analiz
+çıktısı eski zeminle yapılan kuru koşuyla SATIR SATIR AYNI (önerilen ayar 2.000 $: T7KKS×1,15 Eylül +%8,38, T4 +%4,54, en kötü gün −3,68
+vs −4,43 → "DEVAM"). Ekim paketi gelince zincir hazır.
