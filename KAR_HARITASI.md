@@ -7422,3 +7422,20 @@ X-Frame-Options DENY, no-store). Varsayılan 127.0.0.1:8050 (internete kapalı);
 şifresiz açılmayı reddeder; isteğe bağlı CARRY_PANEL_SIFRE (sabit zamanlı karşılaştırma). `--disa-aktar` tek dosyalık anlık görüntü.
 `deploy/carry-panel.service` (carry kullanıcısı, /opt salt okunur, anahtar yüklenmez) sunucu_kur.sh ile kurulur; requirements'a
 waitress (lock yalnız +waitress 3.0.2). Örnek görüntü backtest 2026 Ocak–Eylül (2.000 → 9.281 $) ile üretildi. Test `test_panel.py` (19).
+
+## Madde 672 — Kâr çekme politikası (kullanıcı: "ay sonu kârı çekmek istiyorum"): her ay çekmek bileşiği ~%40 kesiyor
+Önerilen ayarın günlük serisi (T7K 1,15x + KS, 2.000 $; bileşikte kitap 3.500 $'ı geçince doz 1,10'a düşer, bu yüzden bileşik satırı
+~%3-5 iyimser). Yıl başı 2.000 $; "toplam" = yıl sonu kitap + yıl içinde çekilen.
+| yıl | bileşik | her ay kârın tamamı (taban 2.000) | o ayın kârının %25'i | %50'si | taban 3.000'e kadar biriktir, sonra hepsi |
+|---|---|---|---|---|---|
+| 2022 | 3.490 | 3.213 | 3.408 | 3.331 | 3.468 |
+| 2023 | 10.035 | 5.723 | 8.527 | 7.301 | 7.241 |
+| 2024 | 4.878 | 3.941 | 4.580 | 4.313 | 4.604 |
+| 2025 | 8.842 | 5.331 | 7.702 | 6.757 | 6.671 |
+| 2026 (9 ay) | 9.281 | 5.485 (3.318 çekildi) | 8.052 (1.384) | 7.029 (2.334) | 6.768 (3.518) |
+Her çekilen dolar kalan aylarda ~%15/ay bileşiği kaybeder; kayıp iyi yıllarda büyük (2023: 10.035 → 5.723), kötü yılda küçük. En az
+maliyetli "düzenli gelir": o ayın kârının %25'i (bileşiğin %87-98'i korunur). Çekim raporlarda düşüş sayılmaz (madde 658); önerilen
+mod kitap 3.500 $ altına inerse dozu yeniden 1,15'e çıkarır (madde 657). Karar kullanıcının (gelir ihtiyacı vs büyüme); strateji değişmedi.
+Not (teminat getirisi): boştaki teminatı Binance'in getirili teminat varlıklarıyla (BFUSD, LDUSDT; çoklu varlık modu gerekir)
+tutmak ek bir gelir kalemi olabilir, ama güncel APY doğrulanamadı (LDUSDT 2025-04'te ~%1,5 ≈ 2.000 $'da yılda ~30 $), demo hesapta
+yok, bot özkaynağı / tasfiye hesabı çoklu varlık modunda değişir → şimdilik UYGULANMADI.
