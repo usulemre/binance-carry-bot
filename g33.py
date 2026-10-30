@@ -275,6 +275,10 @@ FAZ=int(os.environ.get("FAZ","5"))
 GEC=int(os.environ.get("GEC","1"))
 REZERV=float(os.environ.get("REZERV","0"))      # ucta firsat cikinca devreye giren sermaye payi
 SH_KOR=float(os.environ.get("SH_KOR","0")); SH_KOR_PEN=int(os.environ.get("SH_KOR_PEN","180"))
+# MADDE 667: CESIT_KOR=r -> ayni taraftaki secimde, zaten secilmis bir bacakla son CESIT_PEN bar 4 sa getiri korelasyonu > r olan aday
+# atlanir, siradaki alinir (ayni anlatinin / ikiz coinlerin iki bacak birden olmasi engellenir). Aday yetmezse kalan siradan doldurulur.
+# CESIT_TARAF: iki | long | short. 0 = parite.
+CESIT_KOR=float(os.environ.get("CESIT_KOR","0")); CESIT_PEN=int(os.environ.get("CESIT_PEN","180")); CESIT_TARAF=os.environ.get("CESIT_TARAF","iki")
 REZ_ESIK=float(os.environ.get("REZ_ESIK","1.0")); REZ_TARAF=os.environ.get("REZ_TARAF","long").strip(); REZ_ESIK_S=float(os.environ.get("REZ_ESIK_S",os.environ.get("REZ_ESIK","1.0")))# yillik funding esigi (|S| >= bu ise "uc firsat")
 YARIM=int(os.environ.get("YARIM","0"))          # kar alda pozisyonun YARISI kapanir
 # MADDE 235: MERDIVEN. Alt rung MERD_ESIK'te pozisyonun MERD_PAY'ini
@@ -742,6 +746,22 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         return ad[np.argsort(-p)]
                     uc_l=np.linspace(1,0,_mml); uc_s=np.linspace(0,1,_mms)
                     lo_s=sec(la,+1,uc_l); sh_s=sec(sa,-1,uc_s); lo=lo_s[:_nl]; sh=sh_s[:_ns]
+                    if CESIT_KOR>0 and i>=CESIT_PEN:
+                        def _cesit(sira,n):
+                            _w=_LRT[i-CESIT_PEN+1:i+1]; sec_=[]
+                            for k in sira:
+                                if len(sec_)>=n: break
+                                ok=True
+                                for j in sec_:
+                                    a=_w[:,k]; b=_w[:,j]; m=np.isfinite(a)&np.isfinite(b)
+                                    if m.sum()>=CESIT_PEN//2 and np.corrcoef(a[m],b[m])[0,1]>CESIT_KOR: ok=False; break
+                                if ok: sec_.append(k)
+                            for k in sira:   # yetmezse siradan doldur
+                                if len(sec_)>=n: break
+                                if k not in sec_: sec_.append(k)
+                            return np.array(sec_,dtype=int)
+                        if CESIT_TARAF in ("iki","long"): lo=_cesit(lo_s,_nl)
+                        if CESIT_TARAF in ("iki","short"): sh=_cesit(sh_s,_ns)
                     if SH_KOR>0 and len(sh_s)>_ns and i>=SH_KOR_PEN:
                         # MADDE 604: short'u long sepetine HEDGE KALITESIYLE sec. Kalabalik sirasi (sh_s) ile son SH_KOR_PEN bar
                         # 4 sa getirisinde long sepetiyle korelasyonun sirasi harmanlanir; yuksek korelasyon = iyi hedge.

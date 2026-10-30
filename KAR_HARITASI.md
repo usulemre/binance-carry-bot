@@ -7376,3 +7376,11 @@ Araç `arastirma_m666_short_kosucu.py` (vaka incelemelerinden: BTW / LAB / BSB �
 Sh 4,03 / 4,42 → +315,2). +%20 +245,0 · dd −13,5 · 4,03 / 4,36 → k 1,10 → +288,4 · +%35 +244,6 · 4,37 → +311,3 · +%50 +244,3 → +311,0.
 Kalan pay kademede zaten %20'ye inmiş; çöküşün devamını yakalamak (BTW, LAB) aynı sayıda geri dönüşte verdiğini geri alıyor. 483'ün
 eski motordaki sonucu yeni kitapta da geçerli; koşucu ekseni (long + short) kapandı.
+
+## Madde 667 — Korelasyonla çeşitlendirilmiş seçim (CESIT_KOR; varsayılan kapalı): RED — SHORT'ta felaket
+Araç `arastirma_m667_cesitlilik.py`. Seçilmiş bir bacakla son 30 g 4 sa korelasyonu > r olan aday atlanır. Taban P3T2 (+247,5 · dd −13,3 ·
+−%5 4 · Sh 4,03 / 4,42 → +315,2). İki taraf r 0,7: +205,8 · **dd −24,1** · en kötü −12,98 · −%5 13 · Sh 2025+ **2,97** · r 0,5: +168,0 · **dd −45,1**
+· −18,32 · 17 · 2,24 (eşit risk kurulamıyor) · yalnız long r 0,7: +244,3 · dd −14,2 · 4,00 / 4,41 → k 1,05 → +265,3. Short'ları birbirine
+benzemeyen coinlerden seçmek = sepetin ortak hareketini (piyasa yükselince birlikte yükselen ama ayrı ayrı sönen kalabalık long'lar)
+bozup TEK COİN sıkışma riskini artırmak: short sepetinin korelasyonu bir hedge, kusur değil (madde 604 SH_KOR'un tersi de kaybetmişti).
+Long'da etkisiz. Çeşitlendirme ekseni kapandı.
