@@ -44,7 +44,7 @@ def eslesme(binance: list, mexc: set) -> dict:
 def bir(ikili):
     s, m = ikili
     yol = os.path.join(D, f"{s}.csv")
-    if os.path.exists(yol):
+    if os.path.exists(yol) and not os.getenv("M676_TAZELE"):    # M676_TAZELE=1: yeni ayları almak için baştan indir
         return s, -1
     rows, p = [], 1
     while True:
@@ -104,7 +104,9 @@ def panel(pen: float):
     var = M.notna()
     onay = B.where(~var | (np.sign(M) == np.sign(B)) | (B == 0), 0.0)        # V1
     harman = B.where(~var, 0.5 * B + 0.5 * M)                                   # V2
+    ozel = B.where(~var, B + 0.5 * (B - M))                                     # V3 (madde 677 ön kayıt): yalnız-Binance primi büyütülür
     pickle.dump(onay, open(f"/tmp/sk_{ad}_onay.pkl", "wb")); pickle.dump(harman, open(f"/tmp/sk_{ad}_harman.pkl", "wb"))
+    pickle.dump(ozel, open(f"/tmp/sk_{ad}_ozel.pkl", "wb"))
     son = C.index >= "2025-06-01"
     kor = []
     for i in np.where(son)[0][::30]:

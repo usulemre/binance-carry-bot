@@ -12,6 +12,7 @@ T4 = {**G, "S_REB": "10", "CAP_ORTAK": "0.08", "CAP_TARAF": "short", "MERD_PAY":
 D = "/tmp/m676"; os.makedirs(D, exist_ok=True)
 KOL = {"V1": {"SK_DOSYA": "/tmp/sk_bar60_onay.pkl", "SK_DOSYA_S": "/tmp/sk_bar96_onay.pkl"},
        "V2": {"SK_DOSYA": "/tmp/sk_bar60_harman.pkl", "SK_DOSYA_S": "/tmp/sk_bar96_harman.pkl"},
+       "V3": {"SK_DOSYA": "/tmp/sk_bar60_ozel.pkl", "SK_DOSYA_S": "/tmp/sk_bar96_ozel.pkl"},   # madde 677 ön kayıt (yalnız 2026-10+ ile karar)
        "P3T2": {}}   # taban yeniden (aynı zemin; /tmp/m622 ile birebir olmalı -> parite kontrolü)
 
 

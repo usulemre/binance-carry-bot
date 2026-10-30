@@ -7495,3 +7495,11 @@ sıfırlıyor. Pencere 2025-06 → 2026-09 (taban yeniden koşuldu, /tmp/m622 il
 (yalnız Binance'te kalabalık) adayları atmak kârı DÜŞÜRÜYOR — bu adaylar zararlı değil, kârlı. Ters yön ("yalnız Binance primine
 ağırlık") bu veride sonradan görüldüğü için TEST EDİLMEDİ; ileride yeni veriyle ön kayıtlı denenebilir. Borsalar arası funding ekseni
 kapandı. Araç: arastirma_m676_mexc_funding.py (indir / panel), arastirma_m676_mexc_kollar.py.
+
+## Madde 677 ÖN KAYIT (2026-10-31, Ekim verisi GELMEDEN) — "Yalnız Binance primi" (676'nın ters yönü), yalnız YENİ veriyle
+676'da MEXC'te onaylanmayan adayları atmak kârı düşürdü; ters yön o veride görüldüğü için orada test EDİLMEZ. Kol V3 ÖZEL: sinyal =
+Binance + 0,5 × (Binance − MEXC) (MEXC verisi olan hücrelerde; yalnız Binance'te olan kalabalık öne çıkar), long 60 sa + short 96 sa.
+Taban P3T2, 2.000 $, gerçekçi model, iki hiza. Ölçüm YALNIZ 2026-10'dan sonraki aylar. KARAR ancak 3 ay birikince (Ekim-Aralık):
+3 aylık getiri ≥ taban VE günlük Sharpe ≥ taban VE en kötü gün tabandan derin değil → ADAY (sonra 676'nın 16 aylık penceresiyle
+çelişmediği raporlanır). Tek ay yalnız bilgi. Araç: arastirma_m676_mexc_funding.py (M676_TAZELE=1 indir; panel 60 / 96 → *_ozel.pkl),
+arastirma_m676_mexc_kollar.py (V3).
