@@ -7488,3 +7488,10 @@ Kollar (yalnız 2, sinyal panelinden; motor değişmez; hem long 60 sa hem short
 Taban: önerilen ayar P3T2 (T7K 1,15x + koşullu stop), 2.000 $, gerçekçi model, iki hiza. Ölçüm penceresi: MEXC verisinin olduğu
 2025-06 → 2026-09, iki yarı (2025-06..12 / 2026-01..09). ADAY şartı: iki yarıda da Sharpe ≥ taban, toplam getiri ≥ taban, en kötü gün
 tabandan derin değil. Pencere kısa (16 ay) olduğu için ADAY bile yalnız "izleme"dir; 6 yıllık kanıt olmadan ayar değişmez.
+Madde 676 SONUÇ: RED (iki kol da). MEXC verisi 545 / 822 aktif sembolde, 2025-05-09'dan beri (MEXC API sınırı). MEXC ve Binance
+sinyallerinin kesitsel sıra korelasyonu +0,93 (60 sa) / +0,94 (96 sa) — iki borsada kalabalık büyük ölçüde AYNI; V1 hücrelerin %4'ünü
+sıfırlıyor. Pencere 2025-06 → 2026-09 (taban yeniden koşuldu, /tmp/m622 ile birebir): P3T2 +%793 · dd −12,5 · en kötü −5,25 · Sh 4,83 /
+4,90 | V1 ONAY +%714 · −12,6 · −5,24 · 4,84 / 4,58 | V2 HARMAN +%752 · −12,9 · −5,33 · 4,73 / 4,55. Yorum: MEXC'te onaylanmayan
+(yalnız Binance'te kalabalık) adayları atmak kârı DÜŞÜRÜYOR — bu adaylar zararlı değil, kârlı. Ters yön ("yalnız Binance primine
+ağırlık") bu veride sonradan görüldüğü için TEST EDİLMEDİ; ileride yeni veriyle ön kayıtlı denenebilir. Borsalar arası funding ekseni
+kapandı. Araç: arastirma_m676_mexc_funding.py (indir / panel), arastirma_m676_mexc_kollar.py.
