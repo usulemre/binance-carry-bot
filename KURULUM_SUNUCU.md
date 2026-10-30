@@ -52,6 +52,9 @@ internetten **erişilemez**. Telefondan / bilgisayardan açmak için (bir kez):
 2. Sunucuda: `sudo TAILSCALE=1 ./deploy/sunucu_kur.sh` (ya da `curl -fsSL https://tailscale.com/install.sh | sh`) → `sudo tailscale up`
 3. `sudo tailscale serve --bg 8050` → verdiği `https://<sunucu>.<tailnet>.ts.net` adresini telefonda açın (yalnız sizin cihazlarınız görür).
 Ek şifre isterseniz: `sudo systemctl edit carry-panel` → `[Service]` altına `Environment=CARRY_PANEL_SIFRE=...` (kullanıcı adı `carry`).
+**Aylık veri paketi (madde 674):** sunucu her ayın 2-6'sında geçen ayın araştırma verisini kendisi indirir (`carry-paket.timer`); hazır
+olunca Telegram'a haber gelir ve panelin altında "Aylık veri paketleri" bölümünde indirme bağlantısı çıkar. İndirip araştırma
+sohbetine yükleyin (Ekim / Kasım ... örnek dışı kontrolleri için). Elle: `cd /opt/carry-rapor/paket && sudo -u carry /opt/carry/.venv/bin/python /opt/carry/ekim_paket_indir.py`.
 Panel sunucuda değilken (ör. bilgisayarınızda) tek dosyalık görüntü: `.venv/bin/python panel.py --disa-aktar panel.html --klasor /opt/carry`.
 
 ### Telegram: telefona bildirim (madde 670, isteğe bağlı)

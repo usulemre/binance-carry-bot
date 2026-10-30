@@ -26,7 +26,7 @@ if [ -d "$KOK/.git" ]; then
   sudo -u carry git -C "$KOK" config remote.origin.fetch +refs/heads/main:refs/remotes/origin/main
   sudo -u carry git -C "$KOK" pull --quiet || echo "!! git pull başarısız — mevcut kodla devam"
 else git clone --quiet --single-branch --branch main "$DEPO" "$KOK"; fi
-mkdir -p /opt/carry-rapor
+mkdir -p /opt/carry-rapor/paket
 chown -R carry:carry "$KOK" /opt/carry-rapor
 chmod +x "$KOK"/deploy/*.sh
 
@@ -66,9 +66,10 @@ chown carry:carry "$KOK/.env"; chmod 600 "$KOK/.env"
 echo ">> 6/7 servisler"
 cp "$KOK"/deploy/carry.service "$KOK"/deploy/carry@.service "$KOK"/deploy/carry-defter.service "$KOK"/deploy/carry-defter.timer \
    "$KOK"/deploy/carry-defter@.service "$KOK"/deploy/carry-defter@.timer "$KOK"/deploy/carry-rapor.service "$KOK"/deploy/carry-rapor.timer \
-   "$KOK"/deploy/carry-nabiz.service "$KOK"/deploy/carry-nabiz.timer "$KOK"/deploy/carry-panel.service /etc/systemd/system/
+   "$KOK"/deploy/carry-nabiz.service "$KOK"/deploy/carry-nabiz.timer "$KOK"/deploy/carry-panel.service \
+   "$KOK"/deploy/carry-paket.service "$KOK"/deploy/carry-paket.timer /etc/systemd/system/
 systemctl daemon-reload
-systemctl enable --now carry-defter.timer carry-rapor.timer carry-nabiz.timer carry-panel >/dev/null
+systemctl enable --now carry-defter.timer carry-rapor.timer carry-nabiz.timer carry-paket.timer carry-panel >/dev/null
 systemctl enable carry >/dev/null   # anahtarlar girilince: sudo systemctl start carry
 
 echo ">> 7/7 güvenlik"

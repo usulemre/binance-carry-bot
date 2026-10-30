@@ -1,0 +1,21 @@
+# MADDE 674: geçen ayın araştırma veri paketi (ekim_paket_indir.py). Sunucu Binance'e erişebildiği için ayı o indirir; panelde
+# "Aylık veri paketleri" altında görünür, oradan indirip araştırma sohbetine yüklenir. Anahtar YÜKLENMEZ.
+[Unit]
+Description=Carry aylık araştırma veri paketi
+After=network-online.target
+
+[Service]
+Type=oneshot
+User=carry
+Group=carry
+WorkingDirectory=/opt/carry-rapor/paket
+ExecStart=/opt/carry/.venv/bin/python /opt/carry/ekim_paket_indir.py --bildir
+SuccessExitStatus=1
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry-rapor

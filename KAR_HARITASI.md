@@ -7451,3 +7451,11 @@ ay yayınlanmamışsa (BTC aylık funding dosyası yok) durur. (3) `indir_ek_ay.
 okur; yalnız son tarihten sonraki satırlar, ikinci çalıştırma tekrar eklemez). izleme_ekim_oos.py adımları güncellendi. Test
 `test_ek_ay_paket.py` (13). (4) Kurulum hatası: sunucu_kur.sh depoyu TÜM dallarla klonluyordu → ~1,9 GB veri dalı sunucuya inerdi;
 artık `--single-branch --branch main` (34 MB) ve var olan kurulumda fetch yalnız main.
+
+## Madde 674 — Sunucu her ay araştırma veri paketini kendisi indirir (panelden indirilir)
+Araştırma ortamı Binance'e erişemediği için her ay elle paket gerekiyordu. Sunucu (Binance'e erişir) `carry-paket.timer` ile ayın 2-6'sı
+her gün dener: geçen ay yayınlandıysa `ekim_paket_indir.py --bildir` paketi `/opt/carry-rapor/paket/` altına yazar (bir kez; varsa atlar,
+yarım indirme silinir), Telegram'a "paket hazır" (yalnız TELEGRAM_* okunur). Panelde "Aylık veri paketleri" bölümü + `/paket/<ad>` indirme
+(yalnız `paket_YYYY-MM.zip` adı; yol gezintisi yok; panel yine yalnız Tailscale). Testler test_panel.py (+4), test_ek_ay_paket.py (+2).
+Sınır (ileride): paket yalnız zemindeki 822 sembolü içerir; Eylül sonrası listelenen coinler 60 g yaş kuralı yüzünden Kasım'dan itibaren
+aday olabilir — o aydan önce paket yeni sembollerin tüm geçmişini de almalı (henüz yapılmadı; Ekim kontrolünü etkilemez).

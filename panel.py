@@ -128,6 +128,20 @@ def ozet(defter: list[dict]) -> dict:
             "funding_top": sum(s["funding"] or 0 for s in seri), "komisyon_top": sum(s["komisyon"] or 0 for s in seri)}
 
 
+PAKET_DIR = os.getenv("CARRY_PAKET_DIR", "/opt/carry-rapor/paket")
+_PAKET_AD = re.compile(r"^paket_\d{4}-\d{2}\.zip$")
+
+
+def paketler(dizin: str | None = None) -> list[dict]:
+    """MADDE 674: sunucunun aylık indirdiği veri paketleri (araştırma için; panelden indirilip sohbete yüklenir)."""
+    dizin = dizin or PAKET_DIR
+    try:
+        adlar = sorted((f for f in os.listdir(dizin) if _PAKET_AD.match(f)), reverse=True)
+    except OSError:
+        return []
+    return [{"ad": f, "mb": round(os.path.getsize(os.path.join(dizin, f)) / 1e6, 1)} for f in adlar]
+
+
 def veri(klasorler: list[str], servis: bool = True) -> dict:
     out = []
     for kl in klasorler:
@@ -137,7 +151,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         o.update({"ad": ad, "mod": e.get("BINANCE_MODE", "demo"), "servis": servis_durumu(kl) if servis else "—",
                   "olaylar": olaylar(kl)})
         out.append(o)
-    return {"kurulumlar": out, "uretim": dt.datetime.now().strftime("%Y-%m-%d %H:%M")}
+    return {"kurulumlar": out, "paketler": paketler(), "uretim": dt.datetime.now().strftime("%Y-%m-%d %H:%M")}
 
 
 SAYFA = r"""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -207,7 +221,8 @@ function ciz(){
     <div class="kart"><h2>Pozisyonlar (${L.length} long / ${S.length} short)</h2><div class="tablo"><table>
       <tr><th class="l">Long</th><th>$</th><th>kâr</th><th class="l">Short</th><th>$</th><th>kâr</th></tr>${poz || "<tr><td colspan=6 class='bos'>açık pozisyon yok</td></tr>"}</table></div></div>
     <div class="kart"><h2>Olaylar</h2>${(k.olaylar||[]).map(o=>`<div class="olay"><span class="rozet r-${o.tur}">${o.tur}</span><div><div>${o.metin.replace(/</g,"&lt;")}</div><div class="z">${o.zaman}</div></div></div>`).join("") || "<div class='bos'>olay yok</div>"}</div>
-  </div>`;
+  </div>
+  ${(VERI.paketler||[]).length && !VERI_GOMULU ? `<div class="kart"><h2>Aylık veri paketleri (araştırma: indirip sohbete yükleyin)</h2>${VERI.paketler.map(p=>`<div class="olay"><a href="paket/${p.ad}" style="color:var(--vurgu)">${p.ad}</a><span class="z">${p.mb} MB</span></div>`).join("")}</div>` : ""}`;
   grafikler.forEach(g=>g.destroy()); grafikler = [];
   if (!window.Chart) return;
   const x = k.seri.map(s=>s.tarih), izg = css("--cizgi"), sol = css("--soluk");
@@ -262,6 +277,13 @@ def uygulama(klasorler: list[str]):
     @app.get("/api/veri")
     def api():
         return jsonify(veri(klasorler))
+
+    @app.get("/paket/<ad>")
+    def paket(ad):
+        from flask import abort, send_from_directory
+        if not _PAKET_AD.match(ad):          # yalnız paket_YYYY-MM.zip; yol gezintisi yok
+            abort(404)
+        return send_from_directory(PAKET_DIR, ad, as_attachment=True)
 
     return app
 

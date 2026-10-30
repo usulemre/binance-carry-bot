@@ -61,15 +61,23 @@ def isler(semboller: list[str], ay: str, metrikli: set | None = None) -> list[tu
 
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else argv
+    argv = list(argv); bayrak = [a for a in argv if a.startswith("--")]; argv = [a for a in argv if not a.startswith("--")]
     ay = argv[0] if argv else gecen_ay()
+    argv = bayrak
     satir = [l.split() for l in open(os.path.join(R, "oos_semboller.txt"), encoding="utf-8") if l.strip()]
     semboller = [x[0] for x in satir]; metrikli = {x[0] for x in satir if x[1:] == ["m"]}
+    cikti = os.path.join(os.getcwd(), f"paket_{ay}.zip")
+    if os.path.exists(cikti):                 # madde 674: sunucu zamanlayıcısı her gün dener; hazırsa dokunma
+        try:
+            if "MANIFEST.txt" in zipfile.ZipFile(cikti).namelist():
+                print(f"{os.path.basename(cikti)} zaten var"); return 0
+        except zipfile.BadZipFile:
+            pass
     # yayın kontrolü: BTC'nin aylık funding dosyası yoksa ay henüz yayınlanmamış
     if indir(f"{B}/monthly/fundingRate/BTCUSDT/BTCUSDT-fundingRate-{ay}.zip") is None:
         print(f"!! {ay} aylık dosyaları henüz yayınlanmamış (Binance genelde ayın 1-3'ünde yayınlar). Yarın tekrar deneyin.")
         return 1
     ii = isler(semboller, ay, metrikli)
-    cikti = os.path.join(os.getcwd(), f"paket_{ay}.zip")
     print(f"{ay}: {len(semboller)} sembol, {len(ii)} dosya indiriliyor -> {cikti}")
     sayac = {"k": 0, "f": 0, "m": 0, "yok": 0}
     with zipfile.ZipFile(cikti, "w", zipfile.ZIP_STORED) as zf, ThreadPoolExecutor(16) as ex:
@@ -81,10 +89,22 @@ def main(argv=None) -> int:
             if n % 2000 == 0:
                 print(f"  {n}/{len(ii)}  {sayac}", flush=True)
         zf.writestr("MANIFEST.txt", f"ay={ay}\nsembol={len(semboller)}\n{sayac}\nzaman={dt.datetime.now().isoformat()}\n")
-    print(f"BİTTİ: {sayac} — '{os.path.basename(cikti)}' dosyasını sohbete yükleyin.")
     if sayac["f"] < 100:
-        print("!! funding dosyası çok az: internet / Binance erişimini kontrol edin")
+        print(f"!! funding dosyası çok az ({sayac}): internet / Binance erişimini kontrol edin")
+        os.remove(cikti)
         return 1
+    print(f"BİTTİ: {sayac} — '{os.path.basename(cikti)}' dosyasını sohbete yükleyin.")
+    if "--bildir" in argv:                    # madde 674: sunucuda Telegram'a haber
+        try:
+            sys.path.insert(0, R); import bildirim
+            for l in open(os.path.join(R, ".env"), encoding="utf-8"):      # YALNIZ TELEGRAM_* (anahtarlar okunmaz)
+                k, _, v = l.strip().partition("=")
+                if k in ("TELEGRAM_TOKEN", "TELEGRAM_CHAT_ID") and v and not os.getenv(k):
+                    os.environ[k] = v.split("#")[0].strip()
+            os.environ.setdefault("CARRY_BILDIRIM_AD", "veri")
+            bildirim.gonder(f"📦 {ay} veri paketi hazır ({os.path.getsize(cikti) / 1e6:.0f} MB) — panelden indirip araştırma sohbetine yükleyin")
+        except Exception:
+            pass
     return 0
 
 

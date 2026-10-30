@@ -72,8 +72,15 @@ kontrol("adlar indir_ek_ay ile uyumlu", ii[1][1] == "AAAUSDT/f2026-10.zip")
 E.indir = lambda url, deneme=3: None
 eski = os.getcwd(); os.chdir(T)
 kontrol("ay yayınlanmamışsa 1 döner, dosya yazmaz", E.main(["2026-11"]) == 1 and not os.path.exists(os.path.join(T, "paket_2026-11.zip")))
+os.remove(os.path.join(T, "paket_2026-10.zip"))   # yukarıdaki elle kurulan paket
 E.indir = lambda url, deneme=3: b"PK-sahte"
 kontrol("indirme: paket yazılır (metrik yalnız metrikli sembollere)", E.main(["2026-10"]) == 0 and zipfile.ZipFile(os.path.join(T, "paket_2026-10.zip")).read("BTCUSDT/f2026-10.zip") == b"PK-sahte")
+sayac = []
+E.indir = lambda url, deneme=3: sayac.append(url) or b"x"
+kontrol("paket zaten varsa yeniden indirmez", E.main(["2026-10"]) == 0 and not sayac)
+os.remove(os.path.join(T, "paket_2026-10.zip"))
+E.indir = lambda url, deneme=3: b"x" if "BTCUSDT-fundingRate" in url else None
+kontrol("funding çok azsa yarım paket SİLİNİR, 1 döner", E.main(["2026-10"]) == 1 and not os.path.exists(os.path.join(T, "paket_2026-10.zip")))
 os.chdir(eski)
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

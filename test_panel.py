@@ -58,5 +58,17 @@ kontrol("dış arayüz şifresiz REDDEDİLİR", panel.main(["--klasor", kl, "--h
 out = os.path.join(tmp, "p.html")
 kontrol("--disa-aktar", panel.main(["--klasor", kl, "--disa-aktar", out]) == 0 and os.path.getsize(out) > 5000)
 
+# madde 674: aylık veri paketleri
+pd_ = os.path.join(tmp, "paket"); os.makedirs(pd_)
+open(os.path.join(pd_, "paket_2026-10.zip"), "wb").write(b"PK" + b"0" * 1000)
+open(os.path.join(pd_, "gizli.env"), "w").write("BINANCE_API_KEY=X")
+panel.PAKET_DIR = pd_
+kontrol("paket listesi yalnız paket_YYYY-MM.zip", [p["ad"] for p in panel.paketler()] == ["paket_2026-10.zip"])
+app = panel.uygulama([kl]).test_client()
+r = app.get("/paket/paket_2026-10.zip")
+kontrol("paket indirilir", r.status_code == 200 and r.data.startswith(b"PK") and "attachment" in r.headers.get("Content-Disposition", ""))
+kontrol("başka dosya / yol gezintisi 404", app.get("/paket/gizli.env").status_code == 404
+        and app.get("/paket/..%2F.env").status_code == 404 and app.get("/paket/paket_2026-11.zip").status_code == 404)
+kontrol("api'de paketler", app.get("/api/veri").get_json()["paketler"][0]["ad"] == "paket_2026-10.zip")
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
