@@ -7478,3 +7478,13 @@ açar ve geçmişi yazar, oos_semboller.txt'ye ekler; exchangeInfo'daki TradFi'l
 katar; bot canlıda zaten underlyingType ile eler). Gerçek veriyle doğrulama: TAO "yeni" sayılıp 31 aylık dosyadan sıfırdan kuruldu →
 fiyat / funding / taker arşivle BİREBİR (5.415 bar); metrikte paket arşivden 11 bar FAZLA (arşivde 2026-08-30 civarı eksik günler
 vardı). Test test_ek_ay_paket.py (+4).
+
+## Madde 676 ÖN KAYIT (sonuç görülmeden yazıldı, 2026-10-31) — Borsalar arası funding onayı (MEXC)
+Yeni veri: MEXC USDT perp funding geçmişi (~2025-05'ten beri; Gate 180 g, OKX 3 ay sınırlı; Bybit ülke engeli). Hipotez: Binance'teki
+kalabalık başka borsada da varsa (geniş kalabalık) prim daha kalıcı; yalnız Binance'teki prim arbitrajla daha hızlı söner.
+Kollar (yalnız 2, sinyal panelinden; motor değişmez; hem long 60 sa hem short 96 sa sinyaline):
+  V1 ONAY: MEXC aynı pencere ortalaması ters işaretliyse Binance sinyali 0'a çekilir (o coin uç adaydan düşer).
+  V2 HARMAN: sinyal = 0,5 × Binance + 0,5 × MEXC (MEXC verisi olan hücrelerde).
+Taban: önerilen ayar P3T2 (T7K 1,15x + koşullu stop), 2.000 $, gerçekçi model, iki hiza. Ölçüm penceresi: MEXC verisinin olduğu
+2025-06 → 2026-09, iki yarı (2025-06..12 / 2026-01..09). ADAY şartı: iki yarıda da Sharpe ≥ taban, toplam getiri ≥ taban, en kötü gün
+tabandan derin değil. Pencere kısa (16 ay) olduğu için ADAY bile yalnız "izleme"dir; 6 yıllık kanıt olmadan ayar değişmez.
