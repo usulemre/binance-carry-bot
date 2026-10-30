@@ -7503,3 +7503,12 @@ Taban P3T2, 2.000 $, gerçekçi model, iki hiza. Ölçüm YALNIZ 2026-10'dan son
 3 aylık getiri ≥ taban VE günlük Sharpe ≥ taban VE en kötü gün tabandan derin değil → ADAY (sonra 676'nın 16 aylık penceresiyle
 çelişmediği raporlanır). Tek ay yalnız bilgi. Araç: arastirma_m676_mexc_funding.py (M676_TAZELE=1 indir; panel 60 / 96 → *_ozel.pkl),
 arastirma_m676_mexc_kollar.py (V3).
+
+## Madde 678 — Risk raporu (kullanıcı isteği): önerilen ayar, 2.000 $, günlük seri 2020-07 → 2026-09 (gunluk_uzun t1)
+En büyük düşüş −%15,2 (2022-06-23 → 08-15; T4 −%15,3); en uzun su altı 132 gün (2022 yazı). En kötü 5 düşüş −15,2 / −15,0 / −14,3
+(2026-08) / −14,2 / −13,2. En kötü gün −%8,52 (2024-10-15), hafta −%9,5, ay −%7,6 (2022-05). Zararlı ay 11 / 75, hafta %31, gün %44;
+en uzun ardışık zarar 11 gün; −%5 altı gün 7, −%3 altı 58. Herhangi bir günde başlayan için: 30 g sonra zarar olasılığı %14,4 (en kötü
+−%11,0), 90 g %2,0 (en kötü −%9,8), 180 g %0,1 (en kötü −%1,8), 365 g %0 (en kötü +%54). 1 yıl içinde başlangıç bakiyesinin altına
+en çok iniş: en kötü −%15,2, %5 yüzdelik −%8,2; hiç inmeme %26. Blok bootstrap 1 yıl (5.000 yol): son değer %1 3.526 $ · %5 4.430 $ ·
+medyan 8.130 $; maks düşüş %1 −%23,2 · %5 −%19,3 · medyan −%13,0. Kenar senaryosu: getiri ortalaması yarıya inerse yıllık ~%97, dd
+−%33; kenar sıfırsa yıllık −%6, dd −%89 (6 yılda) → asıl risk kenarın ölmesi; sağlık kapısı (madde 139) bunun için var.
