@@ -7,6 +7,8 @@ Kullanım: python3 indir_ek_ay.py 2026-09 [2026-10 ...]
   * data_funding_genis/<S>.csv : aylık fundingRate (date, funding, interval_h)
   * data_metrik/<S>.csv : günlük metrics (4 sa bara son değer)
 Yalnız mevcut son tarihten SONRAKİ satırlar eklenir; yeni sembol eklenmez.
+MADDE 673: VERI_EK=uzun -> data_genis_uzun / data_taker_uzun / data_funding_uzun (2020+ zemini; VERI.md).
+  --paket paket_2026-10.zip : internetten indirmek yerine ekim_paket_indir.py'nin (başka bilgisayarda) ürettiği paketten okur.
 """
 import io
 import os
@@ -21,12 +23,25 @@ import pandas as pd
 
 R = os.path.dirname(os.path.abspath(__file__))
 B = "https://data.binance.vision/data/futures/um"
+_EK = os.environ.get("VERI_EK", "")
+D_FIYAT = "data_genis_" + _EK if _EK else "data_genis"
+D_TAKER = "data_taker_" + _EK if _EK else "data_taker_genis"
+D_FUND = "data_funding_" + _EK if _EK else "data_funding_genis"
+PAKET = None   # zipfile.ZipFile (--paket)
 KOL = ["sum_open_interest_value", "count_toptrader_long_short_ratio",
        "sum_toptrader_long_short_ratio", "count_long_short_ratio",
        "sum_taker_long_short_vol_ratio"]
 
 
-def cek(isler, gec):
+def cek(isler, gec, s=None):
+    if PAKET is not None:   # madde 673: paketten (ad: <SEMBOL>/<dosya>)
+        for url, ad in isler:
+            try:
+                with open(os.path.join(gec, ad), "wb") as fh:
+                    fh.write(PAKET.read(f"{s}/{ad}"))
+            except KeyError:
+                pass
+        return
     liste = os.path.join(gec, "u.txt")
     with open(liste, "w") as fh:
         for url, ad in isler:
@@ -86,7 +101,7 @@ def bir(s, aylar):
         isler += [(f"{B}/monthly/fundingRate/{s}/{s}-fundingRate-{a}.zip", f"f{a}.zip") for a in aylar]
         if os.path.exists(os.path.join(R, "data_metrik", f"{s}.csv")):
             isler += [(f"{B}/daily/metrics/{s}/{s}-metrics-{g}.zip", f"m{g}.zip") for g in gunler]
-        cek(isler, gec)
+        cek(isler, gec, s)
         # klines -> fiyat + taker
         ks = [oku(os.path.join(gec, f"k{a}.zip")) for a in aylar]
         ks = [k for k in ks if k is not None]
@@ -98,19 +113,19 @@ def bir(s, aylar):
             for c in ["open", "high", "low", "close", "volume", "quote_volume"]:
                 df[c] = pd.to_numeric(df[c], errors="coerce")
             df = df.dropna(subset=["date", "close"]).drop_duplicates("date").sort_values("date")
-            out["fiyat"] = ekle(os.path.join(R, "data_genis", f"{s}_4h.csv"), df, "date")
+            out["fiyat"] = ekle(os.path.join(R, D_FIYAT, f"{s}_4h.csv"), df, "date")
             dt = ham.iloc[:, [0, 7, 10]].copy(); dt.columns = ["t", "quote_volume", "tb_quote"]
             dt["date"] = zaman(dt.t)
             for c in ["quote_volume", "tb_quote"]:
                 dt[c] = pd.to_numeric(dt[c], errors="coerce")
             dt = dt.dropna(subset=["date"]).drop_duplicates("date").sort_values("date")
             dt["tb_oran"] = dt.tb_quote / dt.quote_volume.replace(0, float("nan"))
-            pt = os.path.join(R, "data_taker_genis", f"{s}.csv")
+            pt = os.path.join(R, D_TAKER, f"{s}.csv")
             if os.path.exists(pt):
                 out["taker"] = ekle(pt, dt, "date")
         fs = [oku(os.path.join(gec, f"f{a}.zip")) for a in aylar]
         fs = [f for f in fs if f is not None]
-        pf = os.path.join(R, "data_funding_genis", f"{s}.csv")
+        pf = os.path.join(R, D_FUND, f"{s}.csv")
         if fs and os.path.exists(pf):
             d = pd.concat(fs).iloc[:, [0, 2, 1]].copy(); d.columns = ["t", "funding", "interval_h"]
             d["date"] = zaman(d.t)
@@ -145,8 +160,14 @@ def bir(s, aylar):
 
 
 if __name__ == "__main__":
-    aylar = sys.argv[1:] or ["2026-09"]
-    syms = sorted(f[:-7] for f in os.listdir(os.path.join(R, "data_genis")) if f.endswith("_4h.csv"))
+    args = sys.argv[1:]
+    if "--paket" in args:
+        i = args.index("--paket"); PAKET = zipfile.ZipFile(args[i + 1]); del args[i:i + 2]
+        if not args:
+            m = PAKET.read("MANIFEST.txt").decode().split("\n")[0]
+            args = [m.split("=", 1)[1]]
+    aylar = args or ["2026-09"]
+    syms = sorted(f[:-7] for f in os.listdir(os.path.join(R, D_FIYAT)) if f.endswith("_4h.csv"))
     top = {"fiyat": 0, "taker": 0, "funding": 0, "metrik": 0}
     with ThreadPoolExecutor(6) as ex:
         for i, (s, o) in enumerate(ex.map(lambda x: bir(x, aylar), syms)):

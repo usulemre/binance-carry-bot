@@ -32,9 +32,12 @@ MADDE 617 EKİ (2026-10-27, Ekim verisi GELMEDEN yazıldı — geçiş kararın�
   İkisi tutarsa → kullanıcıya "T7K 1,15x'e geç" önerilir (önce demo, sonra canlı). Tutmazsa T4 kalır, Kasım'da tekrar bakılır.
   Tek ay İSTATİSTİKSEL kanıt değildir; kural yalnız "örnek dışında ters sinyal yok" kontrolüdür (asıl kanıt 6 yıllık eşit-risk ölçümü).
 
-ADIMLAR (Kasım başı, funding verisi yayınlanınca):
-  1) python3 indir_ek_ay.py 2026-10 && python3 yeniden_kur.py   (zemin + paneller)
-  2) sinyal panelleri: PEN=60 AD=bar60 python3 canli_sinyal_kur.py && PEN=96 AD=bar96 python3 canli_sinyal_kur.py
+ADIMLAR (Kasım başı, funding verisi yayınlanınca) — MADDE 673: zemin 2020+ ("uzun"); ham veri `veri` dalında (VERI.md).
+  0) Binance'e erişilemeyen ortamda: kullanıcı kendi bilgisayarında `python ekim_paket_indir.py 2026-10` -> paket_2026-10.zip yükler;
+     ham veri: veri dalından ham_uzun_2020_2026 arşivini bot klasörüne aç (VERI.md).
+  1) VERI_EK=uzun python3 indir_ek_ay.py --paket paket_2026-10.zip     (erişim varsa: VERI_EK=uzun python3 indir_ek_ay.py 2026-10)
+     VERI_EK=uzun BAS_YIL=2020 python3 yeniden_kur.py                   (zemin + paneller; 2026-10-30'da ham → zemin BİREBİR doğrulandı)
+  2) sinyal panelleri: VERI_EK=uzun PEN=60 AD=bar60 python3 canli_sinyal_kur.py && VERI_EK=uzun PEN=96 AD=bar96 python3 canli_sinyal_kur.py
      (T1/T4 60 sa, T6/T7K short tarafı 96 sa ister) ; metrik paneli: python3 indir_metrik_surdurulebilir.py panel
   3) defter paneli için: python3 indir_bookdepth.py <ekim aday listesi> ... (DR50 kolu için; yoksa o kol atlanır)
   4) python3 izleme_ekim_oos.py kos_ana && python3 izleme_ekim_oos.py analiz_ana     (ana blok: T1 / T4 / T6 / T7K)

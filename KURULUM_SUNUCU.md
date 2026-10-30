@@ -14,7 +14,7 @@ Bot 7/24 açık bir Linux sunucuda çalışır. En küçük paket yeter: 1-2 çe
 curl -fsSL https://raw.githubusercontent.com/usulemre/binance-carry-bot/main/deploy/sunucu_kur.sh | sudo bash
 # Tailscale (panel için özel ağ) da kurulsun:  ... | sudo TAILSCALE=1 bash
 ```
-(Depo özelse önce `git clone https://github.com/usulemre/binance-carry-bot.git /opt/carry` ve `sudo /opt/carry/deploy/sunucu_kur.sh`.)
+(Depo özelse önce `git clone --single-branch --branch main https://github.com/usulemre/binance-carry-bot.git /opt/carry` ve `sudo /opt/carry/deploy/sunucu_kur.sh`.)
 
 Betik şunları yapar ve tekrar çalıştırmak güvenlidir:
 - **Güvenlik:** ayrı, giriş yetkisi olmayan `carry` kullanıcısı; güvenlik duvarı (yalnız SSH açık); fail2ban; otomatik güvenlik

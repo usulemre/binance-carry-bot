@@ -7439,3 +7439,15 @@ mod kitap 3.500 $ altına inerse dozu yeniden 1,15'e çıkarır (madde 657). Kar
 Not (teminat getirisi): boştaki teminatı Binance'in getirili teminat varlıklarıyla (BFUSD, LDUSDT; çoklu varlık modu gerekir)
 tutmak ek bir gelir kalemi olabilir, ama güncel APY doğrulanamadı (LDUSDT 2025-04'te ~%1,5 ≈ 2.000 $'da yılda ~30 $), demo hesapta
 yok, bot özkaynağı / tasfiye hesabı çoklu varlık modunda değişir → şimdilik UYGULANMADI.
+
+## Madde 673 — Ekim OOS için veri yolu hazır: ham → zemin BİREBİR yeniden kuruluyor; Ekim verisi kullanıcının bilgisayarından paketle
+Sorun: araştırma ortamı data.binance.vision / fapi'ye erişemiyor (451 / bağlantı reddi) ve motor zemini (~2,3 GB) yalnız /tmp'de
+duruyordu. (1) Ham veri `veri` dalından (VERI.md, ham_uzun_2020_2026, SHA256 tuttu) açıldı ve `VERI_EK=uzun BAS_YIL=2020
+yeniden_kur.py` + sinyal panelleri (36 / 48 / 60 / 96 sa) + metrik paneli yeniden kuruldu: zemin, panel, hlo, sinyaller ve metrik
+paneli yedekle HÜCRE HÜCRE AYNI (NaN farkı 0, en büyük fark 0; g.py bayt bayt aynı) → Ekim ayı eklenince motor güvenle yeniden
+kurulabilir. (2) `ekim_paket_indir.py` (yalnız Python, ek paket yok): Binance'e erişilen herhangi bir bilgisayarda ayın aylık 4 sa
+mumlarını + funding'ini (822 sembol, `oos_semboller.txt`) ve günlük metriklerini (metrik geçmişi olan 570 sembol) tek zip'e toplar;
+ay yayınlanmamışsa (BTC aylık funding dosyası yok) durur. (3) `indir_ek_ay.py`: `VERI_EK=uzun` (2020+ dizinleri) ve `--paket` (zip'ten
+okur; yalnız son tarihten sonraki satırlar, ikinci çalıştırma tekrar eklemez). izleme_ekim_oos.py adımları güncellendi. Test
+`test_ek_ay_paket.py` (13). (4) Kurulum hatası: sunucu_kur.sh depoyu TÜM dallarla klonluyordu → ~1,9 GB veri dalı sunucuya inerdi;
+artık `--single-branch --branch main` (34 MB) ve var olan kurulumda fetch yalnız main.

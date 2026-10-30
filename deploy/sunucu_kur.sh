@@ -21,8 +21,11 @@ echo ">> 2/7 kullanıcı 'carry' (giriş kabuğu yok)"
 id carry >/dev/null 2>&1 || useradd --system --create-home --home-dir /var/lib/carry --shell /usr/sbin/nologin carry
 
 echo ">> 3/7 kod: $KOK"
-if [ -d "$KOK/.git" ]; then sudo -u carry git -C "$KOK" pull --quiet || echo "!! git pull başarısız — mevcut kodla devam"
-else git clone --quiet "$DEPO" "$KOK"; fi
+# MADDE 673: YALNIZ main dalı — depoda ~1,9 GB'lık araştırma verisi dalı ('veri', VERI.md) var; sunucuya inmesin.
+if [ -d "$KOK/.git" ]; then
+  sudo -u carry git -C "$KOK" config remote.origin.fetch +refs/heads/main:refs/remotes/origin/main
+  sudo -u carry git -C "$KOK" pull --quiet || echo "!! git pull başarısız — mevcut kodla devam"
+else git clone --quiet --single-branch --branch main "$DEPO" "$KOK"; fi
 mkdir -p /opt/carry-rapor
 chown -R carry:carry "$KOK" /opt/carry-rapor
 chmod +x "$KOK"/deploy/*.sh
