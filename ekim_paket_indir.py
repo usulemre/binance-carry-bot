@@ -14,6 +14,7 @@ oranları), oos_semboller.txt'deki ~820 sembol için. Yalnız herkese açık piy
 from __future__ import annotations
 
 import calendar
+import json
 import datetime as dt
 import os
 import sys
@@ -24,6 +25,10 @@ import zipfile
 from concurrent.futures import ThreadPoolExecutor
 
 B = "https://data.binance.vision/data/futures/um"
+S3 = "https://s3-ap-northeast-1.amazonaws.com/data.binance.vision"
+FAPI = "https://fapi.binance.com/fapi/v1/exchangeInfo"
+YENI_METRIK_GUN = 120          # yeni sembolde günlük metrik geçmişi (kalabalık sinyali için yeter)
+_TRADFI_TIP = {"EQUITY", "CN_EQUITY", "KR_EQUITY", "HK_EQUITY", "JP_EQUITY", "COMMODITY", "INDEX", "FOREX", "ETF", "BOND", "PREMARKET"}
 R = os.path.dirname(os.path.abspath(__file__))
 
 
@@ -59,6 +64,53 @@ def isler(semboller: list[str], ay: str, metrikli: set | None = None) -> list[tu
     return out
 
 
+def s3_liste(prefix: str) -> list[str]:
+    """data.binance.vision S3 dizin listesi (alt önekler ve dosyalar, önek kırpılmış)."""
+    import re
+    out, marker = [], ""
+    while True:
+        x = indir(f"{S3}?delimiter=/&prefix={prefix}&marker={marker}")
+        if x is None:
+            return out
+        x = x.decode("utf-8", "replace")
+        out += [p[len(prefix):].strip("/") for p in re.findall(r"<Prefix>([^<]+)</Prefix>", x)[1:]]
+        out += [k[len(prefix):] for k in re.findall(r"<Key>([^<]+)</Key>", x)]
+        if "<IsTruncated>true" not in x:
+            return out
+        marker = re.search(r"<NextMarker>([^<]+)", x).group(1)
+
+
+def yeni_semboller(eski: set, bilgi: dict | None) -> tuple[list[str], list[str]]:
+    """MADDE 675: zeminde olmayan USDT perp'ler -> (kripto, tradfi), exchangeInfo'nun underlyingType'ına göre. exchangeInfo YOKSA
+    (Binance API'sine erişilemeyen ortam) yeni sembol EKLENMEZ: yeni hisse / emtia perp'leri kripto sanılıp zemine girmesin."""
+    if bilgi and bilgi.get("symbols"):
+        ss = [x for x in bilgi["symbols"] if x.get("contractType") == "PERPETUAL" and x.get("quoteAsset") == "USDT"
+              and x["symbol"] not in eski]
+        kr = sorted(x["symbol"] for x in ss if str(x.get("underlyingType", "COIN")).upper() not in _TRADFI_TIP)
+        tf = sorted(x["symbol"] for x in ss if str(x.get("underlyingType", "COIN")).upper() in _TRADFI_TIP)
+        return kr, tf
+    return [], []
+
+
+def yeni_isler(s: str, ay: str) -> list[tuple[str, str]]:
+    """Yeni sembolün listelendiği aydan `ay`a kadar aylık mum + funding; son YENI_METRIK_GUN günün metrikleri."""
+    aylar = sorted({f[len(s) + 4:len(s) + 11] for f in s3_liste(f"data/futures/um/monthly/klines/{s}/4h/")
+                    if f.endswith(".zip") and not f.endswith("CHECKSUM")})
+    aylar = [a for a in aylar if a <= ay]
+    out = []
+    for a in aylar:
+        out.append((f"{B}/monthly/klines/{s}/4h/{s}-4h-{a}.zip", f"{s}/k{a}.zip"))
+        out.append((f"{B}/monthly/fundingRate/{s}/{s}-fundingRate-{a}.zip", f"{s}/f{a}.zip"))
+    if aylar:
+        y, m = map(int, ay.split("-"))
+        son = dt.date(y, m, calendar.monthrange(y, m)[1])
+        bas = max(dt.date.fromisoformat(aylar[0] + "-01"), son - dt.timedelta(days=YENI_METRIK_GUN - 1))
+        g = bas
+        while g <= son:
+            out.append((f"{B}/daily/metrics/{s}/{s}-metrics-{g}.zip", f"{s}/m{g}.zip")); g += dt.timedelta(days=1)
+    return out
+
+
 def main(argv=None) -> int:
     argv = sys.argv[1:] if argv is None else argv
     argv = list(argv); bayrak = [a for a in argv if a.startswith("--")]; argv = [a for a in argv if not a.startswith("--")]
@@ -78,6 +130,20 @@ def main(argv=None) -> int:
         print(f"!! {ay} aylık dosyaları henüz yayınlanmamış (Binance genelde ayın 1-3'ünde yayınlar). Yarın tekrar deneyin.")
         return 1
     ii = isler(semboller, ay, metrikli)
+    # MADDE 675: Binance API'sine erişilebiliyorsa sembol bilgisi (yeni listelemelerin TradFi olup olmadığı) pakete girer
+    bilgi_ham = indir(FAPI, deneme=2)
+    try:
+        bilgi = json.loads(bilgi_ham) if bilgi_ham else None
+    except ValueError:
+        bilgi = None
+    yeni, yeni_tf = ([], [])
+    if "--yeni-yok" not in argv:
+        yeni, yeni_tf = yeni_semboller(set(semboller), bilgi)
+        for s_ in yeni:
+            ii += yeni_isler(s_, ay)
+        if bilgi is None:
+            print("not: Binance API'sine (exchangeInfo) erişilemedi -> yeni listelenen coinler bu pakete girmedi (mevcut coinler tam)")
+        print(f"yeni sembol: {len(yeni)} kripto ({', '.join(yeni[:12])}{' ...' if len(yeni) > 12 else ''}) · {len(yeni_tf)} TradFi (atlandı)")
     print(f"{ay}: {len(semboller)} sembol, {len(ii)} dosya indiriliyor -> {cikti}")
     sayac = {"k": 0, "f": 0, "m": 0, "yok": 0}
     with zipfile.ZipFile(cikti, "w", zipfile.ZIP_STORED) as zf, ThreadPoolExecutor(16) as ex:
@@ -88,7 +154,10 @@ def main(argv=None) -> int:
                 zf.writestr(ad, veri); sayac[ad.split("/")[1][0]] += 1
             if n % 2000 == 0:
                 print(f"  {n}/{len(ii)}  {sayac}", flush=True)
-        zf.writestr("MANIFEST.txt", f"ay={ay}\nsembol={len(semboller)}\n{sayac}\nzaman={dt.datetime.now().isoformat()}\n")
+        if bilgi:
+            zf.writestr("exchangeInfo.json", bilgi_ham)
+        zf.writestr("MANIFEST.txt", f"ay={ay}\nsembol={len(semboller)}\n{sayac}\nzaman={dt.datetime.now().isoformat()}\n"
+                                    f"yeni={','.join(yeni)}\ntradfi_yeni={','.join(yeni_tf)}\n")
     if sayac["f"] < min(100, len(semboller) // 2):
         print(f"!! funding dosyası çok az ({sayac}): internet / Binance erişimini kontrol edin")
         os.remove(cikti)

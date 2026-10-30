@@ -64,6 +64,26 @@ r2 = subprocess.run([sys.executable, "indir_ek_ay.py", "--paket", pk], cwd=T, ca
                     env={**os.environ, "VERI_EK": "uzun"}, timeout=120)
 kontrol("ikinci kez çalıştırmak tekrar EKLEMEZ", len(pd.read_csv(f"{T}/data_genis_uzun/{S}_4h.csv")) == 5)
 
+# madde 675: paketteki YENİ sembol (tüm geçmiş) + exchangeInfo'dan TradFi eki
+open(f"{T}/oos_semboller.txt", "w").write(f"{S} m\n")
+pk2 = os.path.join(T, "paket_yeni.zip")
+import json as _j
+k2 = "open_time,open,high,low,close,volume,close_time,quote_volume,count,taker_buy_volume,taker_buy_quote_volume,ignore\n"
+k2 += f"{ms('2026-09-15 00:00')},2,2,2,2,1,0,4,1,1,2,0\n"
+k3 = k2.splitlines()[0] + "\n" + f"{ms('2026-10-02 00:00')},3,3,3,3,1,0,6,1,1,3,0\n"
+with zipfile.ZipFile(pk2, "w") as z:
+    z.writestr("YENUSDT/k2026-09.zip", zipcsv("k.csv", k2)); z.writestr("YENUSDT/k2026-10.zip", zipcsv("k.csv", k3))
+    z.writestr("YENUSDT/f2026-10.zip", zipcsv("f.csv", "calc_time,funding_interval_hours,last_funding_rate\n" + f"{ms('2026-10-02 00:00')},4,0.001\n"))
+    z.writestr("exchangeInfo.json", _j.dumps({"symbols": [{"symbol": "AAPLUSDT", "underlyingType": "EQUITY"}, {"symbol": "YENUSDT", "underlyingType": "COIN"}]}))
+    z.writestr("MANIFEST.txt", "ay=2026-10\nyeni=YENUSDT\ntradfi_yeni=AAPLUSDT\n")
+r = subprocess.run([sys.executable, "indir_ek_ay.py", "--paket", pk2], cwd=T, capture_output=True, text=True,
+                   env={**os.environ, "VERI_EK": "uzun"}, timeout=120)
+Y = pd.read_csv(f"{T}/data_genis_uzun/YENUSDT_4h.csv") if os.path.exists(f"{T}/data_genis_uzun/YENUSDT_4h.csv") else None
+kontrol("yeni sembol: dosya açıldı, iki ayın barları", r.returncode == 0 and Y is not None and len(Y) == 2 and list(Y.columns)[0] == "date", r.stderr[-300:])
+kontrol("yeni sembol: funding + taker", len(pd.read_csv(f"{T}/data_funding_uzun/YENUSDT.csv")) == 1 and len(pd.read_csv(f"{T}/data_taker_uzun/YENUSDT.csv")) == 2)
+kontrol("yeni sembol oos listesine eklendi", "YENUSDT m" in open(f"{T}/oos_semboller.txt").read())
+kontrol("exchangeInfo TradFi -> tradfi_ek.txt", open(f"{T}/tradfi_ek.txt").read().split() == ["AAPLUSDT"])
+
 # paket indirici: dosya adları ve yayınlanmamış ay
 import ekim_paket_indir as E
 ii = E.isler(["AAAUSDT"], "2026-10")

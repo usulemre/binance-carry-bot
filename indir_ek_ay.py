@@ -78,8 +78,9 @@ def ekle(yol, yeni, tarih_kol):
     if yeni is None or yeni.empty:
         return 0
     eski = pd.read_csv(yol)
-    son = pd.to_datetime(eski[tarih_kol]).max()
-    yeni = yeni[pd.to_datetime(yeni[tarih_kol]) > son]
+    if len(eski):                               # madde 675: yeni sembolün dosyası yalnız başlıktan ibaret olabilir
+        son = pd.to_datetime(eski[tarih_kol]).max()
+        yeni = yeni[pd.to_datetime(yeni[tarih_kol]) > son]
     if yeni.empty:
         return 0
     yeni = yeni[eski.columns].copy()
@@ -90,6 +91,46 @@ def ekle(yol, yeni, tarih_kol):
         yeni[tarih_kol] = pd.to_datetime(yeni[tarih_kol]).dt.strftime("%Y-%m-%d %H:%M:%S")
     yeni.to_csv(yol, mode="a", header=False, index=False)
     return len(yeni)
+
+
+BASLIK = {"fiyat": "date,open,high,low,close,volume,quote_volume", "taker": "date,quote_volume,tb_quote,tb_oran",
+          "funding": "date,funding", "metrik": "bar," + ",".join(KOL)}
+
+
+def yeni_hazirla(paket, syms) -> list:
+    """MADDE 675: paketteki YENİ sembollere boş (başlıklı) dosyalar açar; [(sembol, aylar)] döndürür. Paket exchangeInfo içeriyorsa
+    TradFi sembolleri tradfi_ek.txt'ye (araştırma elemesi) eklenir; yeni kripto semboller oos_semboller.txt'ye (sonraki paketler için)."""
+    satir = dict(l.split("=", 1) for l in paket.read("MANIFEST.txt").decode().splitlines() if "=" in l)
+    yeni = [x for x in satir.get("yeni", "").split(",") if x and x not in syms]
+    adlar = paket.namelist()
+    out = []
+    for s in yeni:
+        aylar = sorted({a.split("/")[1][1:8] for a in adlar if a.startswith(s + "/k")})
+        if not aylar:
+            continue
+        for tur, yol in (("fiyat", os.path.join(R, D_FIYAT, f"{s}_4h.csv")), ("taker", os.path.join(R, D_TAKER, f"{s}.csv")),
+                         ("funding", os.path.join(R, D_FUND, f"{s}.csv")), ("metrik", os.path.join(R, "data_metrik", f"{s}.csv"))):
+            if not os.path.exists(yol):
+                with open(yol, "w") as fh:
+                    fh.write(BASLIK[tur] + "\n")
+        out.append((s, aylar))
+    if "exchangeInfo.json" in adlar:
+        import json
+        tip = {"EQUITY", "CN_EQUITY", "KR_EQUITY", "HK_EQUITY", "JP_EQUITY", "COMMODITY", "INDEX", "FOREX", "ETF", "BOND", "PREMARKET"}
+        tf = {x["symbol"] for x in json.loads(paket.read("exchangeInfo.json")).get("symbols", [])
+              if str(x.get("underlyingType", "COIN")).upper() in tip}
+        yol = os.path.join(R, "tradfi_ek.txt")
+        eski = set(open(yol).read().split()) if os.path.exists(yol) else set()
+        open(yol, "w").write("\n".join(sorted(eski | tf)) + "\n")
+    yol = os.path.join(R, "oos_semboller.txt")
+    if out and os.path.exists(yol):
+        var = {l.split()[0] for l in open(yol) if l.strip()}
+        with open(yol, "a") as fh:
+            for s, _ in out:
+                if s not in var:
+                    fh.write(f"{s} m\n")
+    print(f"yeni sembol: {len(out)} ({', '.join(s for s, _ in out)})", flush=True)
+    return out
 
 
 def bir(s, aylar):
@@ -168,9 +209,13 @@ if __name__ == "__main__":
             args = [m.split("=", 1)[1]]
     aylar = args or ["2026-09"]
     syms = sorted(f[:-7] for f in os.listdir(os.path.join(R, D_FIYAT)) if f.endswith("_4h.csv"))
+    yeni_is = []
+    if PAKET is not None:
+        yeni_is = yeni_hazirla(PAKET, syms)
     top = {"fiyat": 0, "taker": 0, "funding": 0, "metrik": 0}
+    isler_ = [(x, aylar) for x in syms] + yeni_is
     with ThreadPoolExecutor(6) as ex:
-        for i, (s, o) in enumerate(ex.map(lambda x: bir(x, aylar), syms)):
+        for i, (s, o) in enumerate(ex.map(lambda x: bir(x[0], x[1]), isler_)):
             for k, v in o.items():
                 top[k] += v
             if i % 100 == 0:

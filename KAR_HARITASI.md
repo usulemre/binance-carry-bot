@@ -7467,3 +7467,14 @@ doğrulama: 5 sembolün (BTC, ETH, DOGE, TAO, 1000PEPE) arşivi 31 Ağustos'ta k
 fiyat, funding, taker ve metrik dosyaları arşivdeki Eylül satırlarıyla BİREBİR (tarihler aynı, göreli fark ≤ 3e-16, NaN farkı 0).
 Ekim aylık dosyaları henüz yok (404; Binance 1-3 Kasım'da yayınlar). Paket indiricinin "çok az funding" eşiği küçük listeler için
 göreli yapıldı (min(100, sembol/2)).
+
+## Madde 675 — Yeni listelenen coinler araştırma zeminine girer (Aralık OOS'tan itibaren gerekli)
+Zemin Eylül sonundaki 853 sembolle sabitti; Ekim'den beri listelenen kripto perp'ler (S3 listesinde 70 yeni USDT sembolü, çoğu hisse /
+emtia perp'i) 60 g yaş kuralıyla Aralık'ta aday olabilir. `ekim_paket_indir.py`: Binance API'sine erişilebiliyorsa (kullanıcının
+bilgisayarı / sunucu) exchangeInfo pakete girer; zeminde olmayan USDT perp'lerden underlyingType'ı kripto olanların listelendiği aydan
+itibaren TÜM aylık mum + funding'i ve son 120 günün metrikleri indirilir; TradFi olanlar atlanır. exchangeInfo yoksa (bu araştırma
+ortamı: fapi 451) yeni sembol eklenmez — hisse perp'i kripto sanılmasın. `indir_ek_ay.py --paket`: yeni semboller için başlıklı dosya
+açar ve geçmişi yazar, oos_semboller.txt'ye ekler; exchangeInfo'daki TradFi'ler `tradfi_ek.txt`'ye (tradfi_liste.py araştırma elemesine
+katar; bot canlıda zaten underlyingType ile eler). Gerçek veriyle doğrulama: TAO "yeni" sayılıp 31 aylık dosyadan sıfırdan kuruldu →
+fiyat / funding / taker arşivle BİREBİR (5.415 bar); metrikte paket arşivden 11 bar FAZLA (arşivde 2026-08-30 civarı eksik günler
+vardı). Test test_ek_ay_paket.py (+4).

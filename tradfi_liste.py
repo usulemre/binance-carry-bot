@@ -12,6 +12,11 @@ tek bilgi kaynağı (geri testte exchange_info yoktur).
 """
 from carry_bot import _TRADFI_YEDEK as _Y
 
+import os as _os
 TRADFI: set[str] = set(_Y)
+# MADDE 675: araştırma eki — aylık veri paketinin exchangeInfo'sundan çıkan yeni TradFi perp'ler (bot bunları canlıda underlyingType ile eler)
+_EK = _os.path.join(_os.path.dirname(_os.path.abspath(__file__)), "tradfi_ek.txt")
+if _os.path.exists(_EK):
+    TRADFI |= set(open(_EK, encoding="utf-8").read().split())
 TRADFI_YER_TUTUCU = False
 KAYNAK = "carry_bot._TRADFI_YEDEK (tek kaynak, kopya YOK)"
