@@ -89,7 +89,7 @@ def main(argv=None) -> int:
             if n % 2000 == 0:
                 print(f"  {n}/{len(ii)}  {sayac}", flush=True)
         zf.writestr("MANIFEST.txt", f"ay={ay}\nsembol={len(semboller)}\n{sayac}\nzaman={dt.datetime.now().isoformat()}\n")
-    if sayac["f"] < 100:
+    if sayac["f"] < min(100, len(semboller) // 2):
         print(f"!! funding dosyası çok az ({sayac}): internet / Binance erişimini kontrol edin")
         os.remove(cikti)
         return 1

@@ -7462,3 +7462,8 @@ aday olabilir — o aydan önce paket yeni sembollerin tüm geçmişini de almal
 Madde 673 eki (kuru koşu): yeniden kurulan zeminle `AY=2026-09 izleme_ekim_oos.py kos_ana / analiz_ana` baştan koşuldu; analiz
 çıktısı eski zeminle yapılan kuru koşuyla SATIR SATIR AYNI (önerilen ayar 2.000 $: T7KKS×1,15 Eylül +%8,38, T4 +%4,54, en kötü gün −3,68
 vs −4,43 → "DEVAM"). Ekim paketi gelince zincir hazır.
+Madde 673 eki 2 (2026-10-30): kullanıcı ağ iznini açtı → data.binance.vision erişilebilir (fapi hâlâ 451). GERÇEK Binance dosyalarıyla
+doğrulama: 5 sembolün (BTC, ETH, DOGE, TAO, 1000PEPE) arşivi 31 Ağustos'ta kesilip Eylül paketi indirildi ve `--paket` ile eklendi →
+fiyat, funding, taker ve metrik dosyaları arşivdeki Eylül satırlarıyla BİREBİR (tarihler aynı, göreli fark ≤ 3e-16, NaN farkı 0).
+Ekim aylık dosyaları henüz yok (404; Binance 1-3 Kasım'da yayınlar). Paket indiricinin "çok az funding" eşiği küçük listeler için
+göreli yapıldı (min(100, sembol/2)).
