@@ -746,7 +746,7 @@ def _bt2g(bas,n,olcut=None,tp=None):
                         return ad[np.argsort(-p)]
                     uc_l=np.linspace(1,0,_mml); uc_s=np.linspace(0,1,_mms)
                     lo_s=sec(la,+1,uc_l); sh_s=sec(sa,-1,uc_s); lo=lo_s[:_nl]; sh=sh_s[:_ns]
-                    if CESIT_KOR>0 and i>=CESIT_PEN:
+                    if CESIT_KOR!=0 and i>=CESIT_PEN:
                         def _cesit(sira,n):
                             _w=_LRT[i-CESIT_PEN+1:i+1]; sec_=[]
                             for k in sira:
@@ -754,7 +754,10 @@ def _bt2g(bas,n,olcut=None,tp=None):
                                 ok=True
                                 for j in sec_:
                                     a=_w[:,k]; b=_w[:,j]; m=np.isfinite(a)&np.isfinite(b)
-                                    if m.sum()>=CESIT_PEN//2 and np.corrcoef(a[m],b[m])[0,1]>CESIT_KOR: ok=False; break
+                                    if m.sum()>=CESIT_PEN//2:
+                                        _r=np.corrcoef(a[m],b[m])[0,1]
+                                        # madde 668 eki: CESIT_KOR<0 -> TERS: secilmislere benzemeyen (kor < |r|) aday atlanir (uyumlu sepet)
+                                        if (CESIT_KOR>0 and _r>CESIT_KOR) or (CESIT_KOR<0 and _r<-CESIT_KOR): ok=False; break
                                 if ok: sec_.append(k)
                             for k in sira:   # yetmezse siradan doldur
                                 if len(sec_)>=n: break

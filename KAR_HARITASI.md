@@ -7394,3 +7394,10 @@ hepsi aynı stratejinin türevi, 3,5-4,4 arası) N 300 → 0,30, N 700 → 0,06.
 kenarının şans olma ihtimali ihmal edilebilir; belirsizlik "kenar var mı"da değil, T4 → önerilen iyileştirmesinin (Sharpe 3,84 → 4,14,
 eşit risk +71 puan) ne kadarının seçim etkisi olduğunda — kol yayılımı ~0,2-0,3 Sharpe olduğu için iyileştirmenin bir kısmı şans
 olabilir. Beklenti dili güncellendi: "yarısı" kaba bir tampondu; daha savunulabilir alt sınır T4 düzeyi (yıllık ~+%220-245, 2.000 $).
+
+## Madde 669 — Uyumlu sepet (667'nin tersi: seçilmişlere BENZEMEYEN aday atlanır; CESIT_KOR<0): RED — getiri düşüyor, kuyruk inceliyor
+Araç `arastirma_m669_uyumlu_sepet.py`. Taban P3T2 (+247,5 · dd −13,3 · en kötü −7,41 · −%5 4 · Sh 4,03 / 4,42 → +315,2). Yalnız short r 0,3:
++221,1 · −13,2 · −7,41 · 4 · 3,95 / 3,90 → +279,3 · short r 0,5: +208,5 · 3,77 / 3,78 → +262,2 · iki taraf r 0,3: +201,4 · dd −12,8 · en kötü
+**−5,88** · −%5 **2** · 4,06 / 4,06 (2024-10-15 −7,41 → −1,00) → eşit risk +253,1. Uyumlu sepet tek coin kazasını inceltiyor ama en
+kalabalık (en kârlı) adayları atlıyor; 2025+ Sharpe 4,42 → 3,8-4,1. Seçimin değeri kalabalık sırasında, korelasyon yapısında değil
+(604, 667, 669): seçim kuralı olarak korelasyon ekseni kapandı. Not: iki taraf r 0,3 "en sığ kötü gün" isteyen biri için bilgi olarak dursun.
