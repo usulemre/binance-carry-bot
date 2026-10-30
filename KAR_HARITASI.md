@@ -7364,3 +7364,9 @@ Sh 4,03 / 4,42 → eşit risk +315,2). (a) Genç coin YALNIZ long'da (short 60 g
 değil). (b) Short için daha yaşlı coin şartı (long 60): 90 g → +285.3 · 120 g +203,2 · Sh 3,60 / 4,08 → +203,2 · 180 g +183,8 · dd −19,5.
 Short havuzunu daraltmak en kalabalık genç-orta yaş coinleri dışarıda bırakıyor (kârın kaynağı). 60 g iki taraf için de tepe; yaş
 ekseni (397 / 427 / 518 / 635 / 652 / 664) kapandı.
+
+## Madde 665 — Koşullu stop sonrası soğuma (KS_SOGUMA: stop olan coin g gün yeniden aday olmaz; varsayılan kapalı): RED
+Araç `arastirma_m665_ks_soguma.py`. Taban P3T2 (+247,5 · dd −13,3 · −%5 4 · Sh 4,03 / 4,42 → +315,2). 2 g +245,0 · dd −13,6 · 3 · 4,00 / 4,40
+→ k 1,10 → +288,3 · 5 g +244,8 → +288,1 · 10 g +242,3 · 3,99 / 4,36 → +285,0. Çöküşte satılan coini dipten yeniden almak kârlı (madde 539
+ile aynı yön): soğuma ham getiriyi düşürüp dd'yi derinleştiriyor, dozu 1,15 → 1,10'a indiriyor. Stop'un işi kuyruğu kesmek; yeniden
+girişi engellemek değil.

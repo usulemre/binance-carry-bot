@@ -88,6 +88,10 @@ if _HES != 1e8 or _DON != 0.10 or _YAS_GUN != 90 or _HSIRA > 0 or _HMIN > 0:
         print(f"# HACIM_MIN_EVREN={_HMIN}: tamamlanan bar payi {float(_az.mean()):.3f}, ortalama uygun {float(_uy.sum(axis=1).mean()):.1f}", flush=True)
     U = _uy.reindex(index=C.index, columns=C.columns).fillna(False).values
 
+# MADDE 665: KS_SOGUMA=g -> kosullu 24 sa stop'u (S24K) tetiklenen coin g gun boyunca HICBIR dilimde yeniden aday olmaz
+# (cokuste satilan coinin ertesi turda dipten yeniden alinmasi). 0 -> parite.
+KS_SOGUMA=float(os.environ.get("KS_SOGUMA","0")); _KSB=[None]
+
 # MADDE 664: YAS_S_GUN=g (> YAS_GUN) -> evren YAS_GUN'e kadar gencleri alir ama SHORT adayi olmak icin coin g gunden yasli olmali
 # (genc coin yalniz LONG tarafinda; madde 652: genc coinin riski short'ta sikisma). 0 -> parite.
 _YAS_S = float(os.environ.get("YAS_S_GUN", "0")); YASLI_S = None
@@ -686,6 +690,8 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     _zr=np.isfinite(_dg)&np.isfinite(_c)&(((_dw>0)&(_c<_dg))|((_dw<0)&(_c>_dg)))
                     _db=_db&_zr
                 g=g&~_db; _DMS[0]+=int(_db.sum())
+            if KS_SOGUMA>0 and _KSB[0] is not None:
+                g=g&~(_KSB[0]>i)   # madde 665
             if MERD_DEVIR==2:
                 # MADDE 474: kademesi dolmus coin bu dengelemede aday OLMAZ (pompa sonrasi yeniden alma yok)
                 g=g&~(merd_yapildi&(poz!=0))
@@ -940,6 +946,9 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     if ((i+1) % SLL24_KAP_TAZE == 0) and np.isfinite(cv[i+1,k]) and cv[i+1,k] <= _s24 and (
                         SLL24_PIY <= 0 or (np.isfinite(_P24[i+1]) and _P24[i+1] <= -SLL24_PIY)):
                         br[k] = cv[i+1,k]/cv[i,k]-1; cik[k]=True; say_t[1]+=1; _tur[k]='S24K'
+                        if KS_SOGUMA>0:
+                            if _KSB[0] is None: _KSB[0]=np.full(nk,-1)
+                            _KSB[0][k]=max(_KSB[0][k], i+1+int(KS_SOGUMA*6))
                         continue
                 elif _s24 > 0:
                     if LV[i+1,k] <= _s24:
