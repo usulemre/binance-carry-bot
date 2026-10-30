@@ -267,14 +267,38 @@ def rapor(klasorler: list, cikti: str = "demo_defteri.html", pdf: bool = False) 
     return cikti
 
 
+def rapor_gonder(klasorler: list, cikti: str) -> bool:
+    """MADDE 670: raporu (PDF yoksa HTML) Telegram'a gönderir. Ayar ortamda yoksa ana kurulumun .env'inden YALNIZ
+    TELEGRAM_* okunur (rapor servisi Binance anahtarlarını yüklemez)."""
+    import bildirim
+    for k in ("TELEGRAM_TOKEN", "TELEGRAM_CHAT_ID"):
+        if not os.getenv(k):
+            for kl in klasorler:
+                v = _env_oku(kl).get(k)
+                if v:
+                    os.environ[k] = v; break
+    os.environ.setdefault("CARRY_BILDIRIM_AD", "rapor")
+    pdf = os.path.splitext(cikti)[0] + ".pdf"
+    dosya = pdf if os.path.exists(pdf) and os.path.getmtime(pdf) >= os.path.getmtime(cikti) - 60 else cikti
+    return bildirim.gonder(f"📄 günlük demo raporu ({len(klasorler)} kurulum)", dosya=dosya)
+
+
 if __name__ == "__main__":
     ap = argparse.ArgumentParser(description=__doc__, formatter_class=argparse.RawDescriptionHelpFormatter)
     alt = ap.add_subparsers(dest="komut", required=True)
     alt.add_parser("topla")
     r = alt.add_parser("rapor"); r.add_argument("--klasor", action="append", required=True)
     r.add_argument("--cikti", default="demo_defteri.html"); r.add_argument("--pdf", action="store_true")
+    r.add_argument("--telegram", action="store_true", help="raporu Telegram'a da gönder (madde 670; ayarsızsa sessizce atlanır)")
     a = ap.parse_args()
     if a.komut == "topla":
-        topla()
+        _k = topla()
+        try:                                   # MADDE 670: günlük özet telefona (ayarsızsa hiçbir şey yapmaz)
+            import bildirim
+            bildirim.gonder(bildirim.gunluk_ozet_metni(_k), anahtar=f"gunluk_{_k['tarih']}", kisma_sn=20 * 3600)
+        except Exception:
+            pass
     else:
         rapor(a.klasor, a.cikti, a.pdf)
+        if a.telegram:
+            rapor_gonder(a.klasor, a.cikti)

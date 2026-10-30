@@ -35,3 +35,5 @@ data_genis_uzun/
 data_funding_uzun/
 data_taker_uzun/
 .pw/
+bildirim_durum.json
+nabiz_durum.json

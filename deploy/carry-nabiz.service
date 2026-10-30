@@ -1,0 +1,18 @@
+# MADDE 670: nabız — bot çöktü / takıldıysa Telegram'a uyarı (nabiz.py). Telegram ayarsızsa yalnız kontrol eder.
+[Unit]
+Description=Carry nabız kontrolü (bot çalışıyor mu)
+
+[Service]
+Type=oneshot
+User=carry
+Group=carry
+WorkingDirectory=/opt/carry
+ExecStart=/opt/carry/.venv/bin/python /opt/carry/nabiz.py
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt

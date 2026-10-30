@@ -59,6 +59,15 @@ import carry_saglik
 import config
 from exchange_client import ExchangeClient
 
+
+def _bildir(metin: str, **kw) -> None:
+    """MADDE 670: Telegram bildirimi (ayarsızsa hiçbir şey yapmaz, asla hata fırlatmaz)."""
+    try:
+        import bildirim
+        bildirim.gonder(metin, **kw)
+    except Exception:
+        pass
+
 logger = logging.getLogger("carry_bot")
 
 # ----------------------------------------------------------------- AYARLAR
@@ -3178,8 +3187,11 @@ def delist_kapat(client: ExchangeClient, durum: dict, dry_run: bool = False) -> 
             kapanan.append(sem)
             logger.error("DELİST: %s listeden çıkıyor (deliveryDate %s, status %s) - %s pozisyon piyasa emriyle KAPATILDI, "
                          "dilimlerden çıkarıldı", sem, dd, (bilgi.get(sem) or {}).get("status"), "long" if adet > 0 else "short")
+            _bildir(f"📤 DELİST: {sem} listeden çıkıyor — {'long' if adet > 0 else 'short'} pozisyon kapatıldı")
         except Exception as e:
             logger.error("DELİST: %s kapanmalı ama KAPATILAMADI (%s) - elle kontrol edin", sem, e)
+            _bildir(f"DELİST: {sem} kapatılmalıydı ama KAPATILAMADI ({type(e).__name__}) — Binance'te elle kapatın",
+                    acil=True, anahtar=f"delist_hata_{sem}", kisma_sn=3600)
     return kapanan
 
 
@@ -3616,8 +3628,11 @@ def felaket_simdi_kapat(client: ExchangeClient, durum: dict, sem: str, adet: flo
             hedef.pop(sem, None)
         logger.error("24 SA DÜŞÜŞ STOP'U: %s seviyenin altında bulundu - long piyasa "
                      "emriyle kapatıldı, dilimlerden çıkarıldı", sem)
+        _bildir(f"🛑 STOP: {sem} long piyasa emriyle kapatıldı (24 sa düşüş stop'u)")
     except Exception as ex:
         logger.error("24 SA DÜŞÜŞ STOP'U: %s seviyenin altında ama KAPATILAMADI (%s)", sem, ex)
+        _bildir(f"STOP: {sem} kapatılmalıydı ama KAPATILAMADI ({type(ex).__name__}) — Binance'te elle kontrol edin",
+                acil=True, anahtar=f"stop_hata_{sem}", kisma_sn=3600)
 
 
 def felaket_tetiklendi_mi(e: dict) -> bool:
@@ -4201,6 +4216,9 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     if SAGLIK_MODU == "durdur" and not kapi_acik:
         logger.warning("SAĞLIK KAPISI KAPALI (%s) - tüm pozisyonlar "
                        "kapatılıyor, dilimler sıfırlanıyor", s_gerekce)
+        if not dry_run:
+            _bildir(f"⚠️ SAĞLIK KAPISI KAPALI ({s_gerekce}) — funding edge'i zayıfladı, bütün pozisyonlar kapatılıyor",
+                    acil=True, anahtar="saglik_kapali", kisma_sn=24 * 3600)
         durum = dilim_durum_oku()
         durum["dilimler"] = {}
         if not dry_run:
@@ -4221,6 +4239,9 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     if SAGLIK_MODU == "uyar" and not kapi_acik:
         logger.warning("SAĞLIK KAPISI KAPALI ama mod=uyar - işlem akışı "
                        "DEĞİŞTİRİLMEDİ (%s)", s_gerekce)
+        if not dry_run:
+            _bildir(f"⚠️ SAĞLIK UYARISI ({s_gerekce}) — funding edge'i zayıflıyor (işlem değişmedi)",
+                    anahtar="saglik_uyar", kisma_sn=24 * 3600)
 
     # Bakiyeye göre bacak sayısını ve işlem yapılabilir evreni belirle
     # (madde 130). Bu, emir aşamasında sessizce atlanan bacakları önler.
@@ -4751,6 +4772,10 @@ def main():
     if os.getenv("CARRY_ONERILEN_KITAP"):
         logger.info("önerilen ayar etkin: profil %s · gross %.2fx · koşullu stop %s (kitap %s $)", _PROFIL_AD,
                     GROSS_EXPOSURE, os.getenv("CARRY_LONG_24S_PIYASA"), os.getenv("CARRY_ONERILEN_KITAP"))
+    if not args.dry_run:
+        _bildir(f"▶️ bot başladı · mod {client.mode} · ayar {_PROFIL_AD} {GROSS_EXPOSURE:.2f}x"
+                + (f" · kitap {os.getenv('CARRY_ONERILEN_KITAP')} $" if os.getenv("CARRY_ONERILEN_KITAP") else ""),
+                anahtar="basladi", kisma_sn=600)
     logger.info("carry_bot başladı | mod=%s | %d+%d bacak | %d dilim | "
                 "her dilim %.0fsa'te bir (tur: %.0fsa) | gross %.1fx | "
                 "akış %.0f%% | risk: %s (vol hedefi %.0f%%)",
@@ -4758,14 +4783,23 @@ def main():
                 REBALANCE_HOURS / max(1, N_DILIM), GROSS_EXPOSURE,
                 AKIS_AGIRLIK * 100, RISK_PROFILI, VOL_HEDEF * 100)
 
+    _hata_ust = 0
     while True:
         try:
             bir_tur(client, dry_run=args.dry_run)
+            if _hata_ust >= 2 and not args.dry_run:
+                _bildir(f"✅ tur yeniden başarılı ({_hata_ust} başarısız turdan sonra)")
+            _hata_ust = 0
         except KeyboardInterrupt:
             logger.info("durduruldu")
             break
         except Exception as e:
             logger.exception("tur başarısız: %s", e)
+            _hata_ust += 1
+            # MADDE 670: tek hata çoğu zaman geçici ağ hatası -> üst üste 2. hatada haber ver (6 sa'te bir)
+            if _hata_ust >= 2 and not args.dry_run:
+                _bildir(f"tur üst üste {_hata_ust} kez başarısız: {type(e).__name__}: {str(e)[:200]}",
+                        acil=True, anahtar="tur_hata", kisma_sn=6 * 3600)
         if args.once:
             break
         # MADDE 657: önerilen modda kitap doz eşiğini (%3 payla) geçtiyse yeni ayarla yeniden başla
@@ -4774,6 +4808,7 @@ def main():
             if onerilen.esik_gecti(_k):
                 logger.info("ÖNERİLEN AYAR: kitap %.0f $ eşiği geçti (şu an %s %s) -> yeniden seçim için yeniden başlatılıyor",
                             _k, _PROFIL_AD, os.getenv("CARRY_GROSS"))
+                _bildir(f"🔁 kitap {_k:,.0f} $ doz eşiğini geçti (şu an {_PROFIL_AD} {os.getenv('CARRY_GROSS')}x) — yeni ayarla yeniden başlıyor")
                 onerilen.sifirla(); onerilen.yeniden_baslat()
         except Exception as e:
             logger.warning("önerilen ayar eşik kontrolü atlandı: %s", e)

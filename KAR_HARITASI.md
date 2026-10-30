@@ -7401,3 +7401,24 @@ Araç `arastirma_m669_uyumlu_sepet.py`. Taban P3T2 (+247,5 · dd −13,3 · en k
 **−5,88** · −%5 **2** · 4,06 / 4,06 (2024-10-15 −7,41 → −1,00) → eşit risk +253,1. Uyumlu sepet tek coin kazasını inceltiyor ama en
 kalabalık (en kârlı) adayları atlıyor; 2025+ Sharpe 4,42 → 3,8-4,1. Seçimin değeri kalabalık sırasında, korelasyon yapısında değil
 (604, 667, 669): seçim kuralı olarak korelasyon ekseni kapandı. Not: iki taraf r 0,3 "en sığ kötü gün" isteyen biri için bilgi olarak dursun.
+
+## Madde 670 — Telegram bildirimleri + nabız (izleme; strateji DEĞİŞMEDİ)
+Kullanıcı: "ben nasıl izlicem" → sunucuda ekrana bakmadan haber almak. `bildirim.py` (Telegram Bot API, yalnız DIŞARI mesaj — bot
+komut ALMAZ; ayarsızsa hiçbir şey yapmaz; hiçbir hata işlemi durdurmaz; token loga yazılmaz; aynı olay için kısma). Kancalar: bot
+başladı · önerilen ayar eşiği geçildi · stop kapanışı / KAPATILAMADI (acil) · delist kapanışı / KAPATILAMADI (acil) · sağlık kapısı
+(24 sa'te bir) · üst üste 2+ başarısız tur (acil, 6 sa'te bir) ve geri dönüş · günlük özet (`carry_gunluk_defter topla`: kitap, gün %,
+funding, gerçekleşen, komisyon, L/S sayısı, transfer ayrı) · günlük PDF rapor (`rapor --telegram`; rapor servisi .env'den YALNIZ
+TELEGRAM_* okur). `nabiz.py` + `carry-nabiz.timer` (saatlik): her kurulum için servis etkin ama çalışmıyor ya da 12 sa (bot 8 sa'te bir
+tur atar) tur yoksa acil uyarı (12 sa'te bir), düzelince "düzeldi"; disk ≥ %90; devre dışı servis ve anahtarsız kurulum atlanır.
+Kurulum KURULUM_SUNUCU.md "Telegram" (@BotFather → token → `bildirim.py --chat-id-bul` → `--dene`). sunucu_kur.sh nabız zamanlayıcısını
+kurar. Test `test_bildirim.py` (30). Getiri / backtest etkisi yok.
+
+## Madde 671 — Panel: tarayıcıdan salt okunur izleme (strateji DEĞİŞMEDİ)
+Kullanıcı: "detayları arayüz istersem nasıl olcak" → `panel.py` (Flask + waitress, tek sayfa, Chart.js). Her kurulum ayrı sekme: kitap,
+son gün / 7 g / 30 g / başlangıçtan getiri, en büyük düşüş, kitap grafiği, günlük getiri çubukları, aylık tablo, açık long/short
+pozisyonlar, log'dan olaylar (stop, delist, sağlık, hata, ayar, başlama; anahtar / imza / token maskeli). SALT OKUNUR: emir göndermez,
+.env'den yalnız BINANCE_MODE / CARRY_PROFIL / CARRY_BILDIRIM_AD okunur (anahtarlar hiç okunmaz), POST yok, güvenlik başlıkları (CSP,
+X-Frame-Options DENY, no-store). Varsayılan 127.0.0.1:8050 (internete kapalı); telefondan `tailscale serve --bg 8050`; dış arayüze
+şifresiz açılmayı reddeder; isteğe bağlı CARRY_PANEL_SIFRE (sabit zamanlı karşılaştırma). `--disa-aktar` tek dosyalık anlık görüntü.
+`deploy/carry-panel.service` (carry kullanıcısı, /opt salt okunur, anahtar yüklenmez) sunucu_kur.sh ile kurulur; requirements'a
+waitress (lock yalnız +waitress 3.0.2). Örnek görüntü backtest 2026 Ocak–Eylül (2.000 → 9.281 $) ile üretildi. Test `test_panel.py` (19).

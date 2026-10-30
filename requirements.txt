@@ -4,4 +4,5 @@ numpy>=1.24.0     # 12 dosyada dogrudan kullaniliyor (pandas dolayli getiriyor
                   # ama acik bagimlilik olmali - pandas surumu degisirse kirilmasin)
 python-dotenv>=1.0.0
 flask>=3.0.0
+waitress>=3.0.0
 requests>=2.31.0

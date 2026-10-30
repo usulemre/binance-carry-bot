@@ -44,6 +44,30 @@ journalctl -u carry -f              # "önerilen ayar etkin: profil T7K · gross
 - Güncelleme: `cd /opt/carry && sudo -u carry git pull && sudo systemctl restart carry`.
 - Durdurma: `sudo systemctl stop carry` (açık pozisyonlar borsada kalır; kâr al / stop emirleri borsada bekler).
 
+### Panel: tarayıcıdan izleme (madde 671)
+Kitap grafiği, günlük / aylık getiri, açık pozisyonlar, son olaylar (stop, delist, hata) — her kurulum ayrı sekmede, dakikada bir yenilenir.
+**Salt okunur**: emir göndermez, API anahtarlarını yüklemez. Kurulumla gelir ve yalnız sunucunun içinde (`127.0.0.1:8050`) çalışır —
+internetten **erişilemez**. Telefondan / bilgisayardan açmak için (bir kez):
+1. Telefonunuza ve bilgisayarınıza Tailscale uygulamasını kurun, aynı hesapla girin.
+2. Sunucuda: `sudo TAILSCALE=1 ./deploy/sunucu_kur.sh` (ya da `curl -fsSL https://tailscale.com/install.sh | sh`) → `sudo tailscale up`
+3. `sudo tailscale serve --bg 8050` → verdiği `https://<sunucu>.<tailnet>.ts.net` adresini telefonda açın (yalnız sizin cihazlarınız görür).
+Ek şifre isterseniz: `sudo systemctl edit carry-panel` → `[Service]` altına `Environment=CARRY_PANEL_SIFRE=...` (kullanıcı adı `carry`).
+Panel sunucuda değilken (ör. bilgisayarınızda) tek dosyalık görüntü: `.venv/bin/python panel.py --disa-aktar panel.html --klasor /opt/carry`.
+
+### Telegram: telefona bildirim (madde 670, isteğe bağlı)
+Kurulursa şunlar telefona gelir: bot başladı · stop / delist kapanışı (ya da kapatılamadı) · sağlık kapısı · üst üste başarısız
+tur · her gün özet (kitap, gün %, funding, komisyon) + PDF rapor · **nabız**: bot çöktü ya da 12 saattir tur atmıyorsa (saatlik kontrol).
+1. Telegram'da **@BotFather** → `/newbot` → bir ad verin → verdiği **token**'ı kopyalayın.
+2. Yeni botunuza Telegram'dan bir mesaj atın (ör. "merhaba").
+3. `.env`'e ekleyin: `sudo nano /opt/carry/.env` → `TELEGRAM_TOKEN=...`
+4. Chat id: `cd /opt/carry && sudo -u carry .venv/bin/python bildirim.py --chat-id-bul` → çıkan `TELEGRAM_CHAT_ID=...` satırını `.env`'e ekleyin.
+5. Deneme: `sudo -u carry .venv/bin/python bildirim.py --dene` → telefona mesaj gelmeli.
+6. `sudo systemctl restart carry`.
+
+Bot Telegram'dan **komut almaz** (yalnız mesaj gönderir): telefonunuz ya da Telegram hesabınız ele geçse bile bot yönetilemez.
+Çoklu demo: her `/opt/carry-AD/.env`'e aynı iki satır (mesajlar `[AD]` önekiyle gelir). Botu bilerek durduracaksanız
+`sudo systemctl disable --now carry` (devre dışı servis için nabız uyarısı gelmez).
+
 ## 6) Gerçek hesaba geçiş (demo 2-4 hafta sonra)
 `.env`'de `BINANCE_MODE=live`, gerçek hesabın anahtarı (aynı kurallar: yalnız Futures, çekim kapalı, IP kısıtlı), `CARRY_SERMAYE_OLCEK`
 satırını silin → preflight → `sudo systemctl restart carry`. Küçük tutarla başlayın.

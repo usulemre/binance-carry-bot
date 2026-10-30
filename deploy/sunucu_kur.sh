@@ -53,6 +53,9 @@ BINANCE_API_SECRET=BURAYA
 CARRY_PROFIL=ONERILEN
 # Demo bakiyesinin yalnız bir kısmını kullanmak için: denenecek tutar / demo bakiyesi (ör. 2000 / 5000 = 0.4). Gerçek hesapta SİLİN.
 # CARRY_SERMAYE_OLCEK=0.4
+# Telegram bildirimleri (madde 670; isteğe bağlı — KURULUM_SUNUCU.md "Telegram"):
+# TELEGRAM_TOKEN=
+# TELEGRAM_CHAT_ID=
 ENV
 fi
 chown carry:carry "$KOK/.env"; chmod 600 "$KOK/.env"
@@ -60,9 +63,9 @@ chown carry:carry "$KOK/.env"; chmod 600 "$KOK/.env"
 echo ">> 6/7 servisler"
 cp "$KOK"/deploy/carry.service "$KOK"/deploy/carry@.service "$KOK"/deploy/carry-defter.service "$KOK"/deploy/carry-defter.timer \
    "$KOK"/deploy/carry-defter@.service "$KOK"/deploy/carry-defter@.timer "$KOK"/deploy/carry-rapor.service "$KOK"/deploy/carry-rapor.timer \
-   /etc/systemd/system/
+   "$KOK"/deploy/carry-nabiz.service "$KOK"/deploy/carry-nabiz.timer "$KOK"/deploy/carry-panel.service /etc/systemd/system/
 systemctl daemon-reload
-systemctl enable --now carry-defter.timer carry-rapor.timer >/dev/null
+systemctl enable --now carry-defter.timer carry-rapor.timer carry-nabiz.timer carry-panel >/dev/null
 systemctl enable carry >/dev/null   # anahtarlar girilince: sudo systemctl start carry
 
 echo ">> 7/7 güvenlik"
@@ -93,7 +96,7 @@ else
 fi
 if [ "${TAILSCALE:-0}" = 1 ]; then
   command -v tailscale >/dev/null || curl -fsSL https://tailscale.com/install.sh | sh
-  echo "   Tailscale: 'sudo tailscale up' ile bu sunucuyu hesabınıza bağlayın"
+  echo "   Tailscale: 'sudo tailscale up' ile bu sunucuyu hesabınıza bağlayın; panel için: sudo tailscale serve --bg 8050"
 fi
 
 cat <<SON
@@ -104,4 +107,6 @@ KURULUM TAMAM. Sıradaki adımlar:
   3) Başlat:              sudo systemctl start carry
   4) İzle:                journalctl -u carry -f
 Rapor her gün 03:15 (TR): /opt/carry-rapor/demo_defteri.pdf
+Panel (yalnız bu sunucuda 127.0.0.1:8050; telefondan Tailscale ile): KURULUM_SUNUCU.md, "Panel" bölümü
+Telefona bildirim (isteğe bağlı): KURULUM_SUNUCU.md, "Telegram" bölümü
 SON
