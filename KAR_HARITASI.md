@@ -7512,3 +7512,8 @@ en uzun ardışık zarar 11 gün; −%5 altı gün 7, −%3 altı 58. Herhangi b
 en çok iniş: en kötü −%15,2, %5 yüzdelik −%8,2; hiç inmeme %26. Blok bootstrap 1 yıl (5.000 yol): son değer %1 3.526 $ · %5 4.430 $ ·
 medyan 8.130 $; maks düşüş %1 −%23,2 · %5 −%19,3 · medyan −%13,0. Kenar senaryosu: getiri ortalaması yarıya inerse yıllık ~%97, dd
 −%33; kenar sıfırsa yıllık −%6, dd −%89 (6 yılda) → asıl risk kenarın ölmesi; sağlık kapısı (madde 139) bunun için var.
+
+## Madde 679 ÖN KAYIT (kullanıcı: "dilim / tutma en iyisi mi — et") — Dilim sayısı ve long tutma süresi ÖNERİLEN AYARIN kendisinde
+533 (dilim) ve 522 (tutma) T4'te yapılmıştı. Taban P3T2 (T7K 1,15x + koşullu stop), 2.000 $, gerçekçi model, iki hiza. Kollar: F10 / F30
+(FAZ = dilim sayısı 10 / 30), R4 / R6 (REB_GUN = long tutma 4 / 6 g; short S_REB değişmez). ADAY: eşit-risk (madde 596, T4 1,0x
+riskine) ≥ +8 VE Sharpe ≤2024 ve 2025+ düşmüyor. Araç arastirma_m679_dilim_tutma.py.
