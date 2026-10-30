@@ -7517,3 +7517,8 @@ medyan 8.130 $; maks düşüş %1 −%23,2 · %5 −%19,3 · medyan −%13,0. Ke
 533 (dilim) ve 522 (tutma) T4'te yapılmıştı. Taban P3T2 (T7K 1,15x + koşullu stop), 2.000 $, gerçekçi model, iki hiza. Kollar: F10 / F30
 (FAZ = dilim sayısı 10 / 30), R4 / R6 (REB_GUN = long tutma 4 / 6 g; short S_REB değişmez). ADAY: eşit-risk (madde 596, T4 1,0x
 riskine) ≥ +8 VE Sharpe ≤2024 ve 2025+ düşmüyor. Araç arastirma_m679_dilim_tutma.py.
+Madde 679 SONUÇ: HEPSİ RED — 15 dilim ve 5 g tutma önerilen ayarda da YERİNDE. (1,0x ham · dd · en kötü gün · −%5 günü · Sh ≤24 / 25+ →
+eşit-risk): P3T2 +247,5 · −13,3 · −7,41 · 4 · 4,03 / 4,42 → **+315,2** | F10 +245,3 · −14,0 · −7,12 · 3 · 3,99 / 4,42 → +266,4 | F30 +244,1 ·
+−13,3 · −7,46 · 4 · 3,99 / 4,35 → +310,6 | R4 +266,9 · −15,5 · −7,68 · 5 · 3,89 / 4,36 → +244,7 | R6 +226,3 · −13,3 · −5,52 · 2 · 4,00 / 4,56 →
++286,6. Dilim: 10 kötü, 15-30 plato (533 ile aynı). Tutma: yine doz gibi — 4 g ham kârı +19 artırıyor ama riski daha çok; 6 g kuyruğu
+inceltiyor (en kötü gün −5,52, 2025+ Sh 4,56) ama eşit riskte −29. Ayar değişmedi.
