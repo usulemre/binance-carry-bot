@@ -7673,3 +7673,16 @@ oranı, kısmi dolum, bekleme ölçülemedi; madde 267 dakika verisi referans). 
 zararlı; ilk 1 / 3 / 5 TP coini evrenden çıkınca CAGR 247,6 / 210,8 / 200,5, Sharpe 4,16 / 3,87 / 3,75, hiçbir yıl negatif değil (2023
 %310 → %166, TRB). Başarısızlık: düşük TP ile zarar AYNI ayda (zarar ayı %21'e karşı %9); sonraki ay farkı yok (%11'e karşı %13,
 permütasyon p 0,73) → TP düşüşü erken uyarı değil. Rapor: ARASTIRMA_691.md.
+
+## Madde 692 — Sıçrama fırsatı kaybı ve pozisyon taşıma dayanıklılığı (kod, strateji, parametre değişmedi; canlıya bağlanan gösterge yok)
+Araç arastirma_m692_sicrama.py (motor kopyası; düğmeler kapalıyken iki hizada E bayt bayt aynı; 14 koşu tamam, bellek sonlanması yok).
+HİPOTEZ KISMEN YANLIŞLANDI: TP / kademe tamamen kapalıyken CAGR %247 → %203 (Sharpe 4,14 → 2,53, maks DD −13 → −23) → madde 690'daki
+"TP bileşeni"nin çoğunu tutan kitap da kazanıyor; TP'nin katkısı kazancı kilitleyip riski yarıya indirmek. Ama fitil kırpılınca (yalnız TP
+kontrolünde) %50 → %170, fitil yok → %135: TP'siz durumdan KÖTÜ → TP'nin değeri bar içi sıçrayıp-dönen fitillerden; fitilsiz trendlerde TP
+zararlı (hipotez). Gecikme: gerçekleşen TP'nin %91'i ilk 7, %97'si ilk 14 günde; TP 3 / 7 / 14 gün gecikmeli → %223 / %209 / %198 (≈ TP'siz).
+16.619 pozisyon: %85'i TP'siz, sermayenin %78'ini bağlıyor, net −486 puan (fiyat −628, funding +142 → funding kaybın %23'ünü telafi);
+TP'li %15 net +1.358. Düşük kitap oynaklığı: TP −%65, getiri yarıya, zararlı 30 g pencere %16,5'e karşı %7,5, ama tutuş pozitif ve günlük
+risk daha hafif → tehlikeli değil, verimsiz. Yıldızlar (walk-forward, gelecek bilgisi yok): geçmiş TP ilk 10'u sonraki ayın TP'sini rastgeleden
+fazla vermiyor (sıra kor. +0,15); 2024-26'da TP'nin %61-69'u 1 yaşından genç coinlerden; her ay şu anki ilk 5 / 10 çıkarılınca CAGR %229 →
+%182 / %176 (rastgele çıkarma medyan %218 / %205). Erken uyarı (kronolojik eğitim / test): yalnız açık pozisyon yaşı anlamlı (test AUC 0,69,
+p < 0,001) ama işaret ters (genç kitap → zarar), lift 1,4, yanlış alarm %84, alarm sonrası 30 g yine +%9 → kapı önerilmez. Rapor: ARASTIRMA_692.md.
