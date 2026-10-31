@@ -77,7 +77,7 @@ def senaryolar():
 def _kos1(ad, ek, h):
     out = f"{D}/E_{ad}_{h}.pkl"
     if os.path.exists(out): return "var"
-    env = dict(os.environ, **ENV, **ek, FAZ_KAY=str(h), E_CIKTI=out)
+    env = dict(os.environ, **{**ENV, **ek}, FAZ_KAY=str(h), E_CIKTI=out)
     with open(out.replace(".pkl", ".txt"), "w") as f:
         return subprocess.run([sys.executable, "/tmp/g33_m691.py", "ls", "4"], env=env, cwd=R, stdout=f, stderr=subprocess.STDOUT).returncode
 
