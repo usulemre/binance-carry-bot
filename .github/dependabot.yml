@@ -1,13 +1,14 @@
-# MADDE 680: bağımlılık güvenlik uyarıları ve güncelleme önerileri (ücretsiz). Dependabot PR açar; testler (testler.yml) koşar,
-# geçerse elle birleştirilir. requirements.lock hash'li olduğu için güncelleme önerisi geldiğinde lock yeniden üretilmelidir
-# (uv pip compile ... --generate-hashes; KAR_HARITASI madde 663).
+# MADDE 680 / 682: Python paketlerinde YALNIZ GÜVENLİK güncellemeleri (open-pull-requests-limit: 0 = sürüm yükseltme PR'ı açılmaz;
+# güvenlik PR'ları yine açılır — depo ayarlarında "Dependabot security updates" açık olmalı). Sebep: bot requirements.lock ile
+# BİREBİR sabit sürümlerle kurulur; requirements.txt'deki alt sınırı yükseltmek hiçbir şey değiştirmez, sürüm yükseltmek ise canlı
+# öncesi gereksiz risk. Güvenlik PR'ı gelince lock yeniden üretilir (uv pip compile ... --generate-hashes; madde 663) ve testler koşar.
 version: 2
 updates:
   - package-ecosystem: pip
     directory: "/"
     schedule:
       interval: weekly
-    open-pull-requests-limit: 5
+    open-pull-requests-limit: 0
   - package-ecosystem: github-actions
     directory: "/"
     schedule:
