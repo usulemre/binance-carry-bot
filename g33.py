@@ -4,6 +4,27 @@ import sys; sys.path.insert(0,'/tmp')
 from g import *
 OV=pickle.load(open('/tmp/hlo.pkl','rb'))['O'].values
 import os
+# MADDE 681: HIZLANDIRMA (sonuç BİREBİR aynı). Bar döngüsündeki skaler np.nan_to_num / küçük dizi np.nansum çağrıları Python
+# katmanında ~%40 zaman yiyordu. Aynı sonucu veren hızlı karşılıklar: _nz (skaler nan_to_num: NaN->0, ±inf->±float max),
+# _nsum (nansum ile aynı diziyi aynı add.reduce ile toplar), FVN (funding matrisinin nan_to_num'u bir kez).
+_FMAX=float(np.finfo(np.float64).max); _INF=float('inf')
+def _nz(x):
+    x=float(x)
+    if x!=x: return 0.0
+    if x==_INF: return _FMAX
+    if x==-_INF: return -_FMAX
+    return x
+def _nsum(a):
+    a=np.asarray(a,dtype=float)
+    return np.add.reduce(np.where(a!=a,0.0,a),axis=None)
+FVN=np.nan_to_num(fv)
+def _nzv(a):   # dizi nan_to_num'u ile aynı: NaN->0, ±inf->±float max
+    return np.clip(np.where(a!=a,0.0,a),-_FMAX,_FMAX)
+# bar getirileri ve geçerlilik maskesi bir kez (döngüde her bar aynı formül yeniden hesaplanıyordu)
+_GEC=np.isfinite(cv[:-1])&np.isfinite(cv[1:])
+with np.errstate(divide='ignore',invalid='ignore'):
+    _BRM=np.nan_to_num(np.where(_GEC,(cv[1:]-cv[:-1])/np.where(cv[:-1]==0,np.nan,cv[:-1]),0.0))
+_YILLAR=[int(y) for y in C.index.year]
 HAVUZ=float(os.environ.get("HAVUZ","2"))
 _HL=float(os.environ.get("HAVUZ_L","0")); _HS=float(os.environ.get("HAVUZ_S","0"))   # madde 364
 _fz=int(os.environ.get('FAZ_KAY','0'))
@@ -911,16 +932,16 @@ def _bt2g(bas,n,olcut=None,tp=None):
                 if poz[_k]==0 and U[i,_k] and np.isfinite(cv[i,_k]) and cv[i,_k]>0:
                     poz[_k]=_w; giris[_k]=cv[i,_k]; zirve[_k]=cv[i,_k]; tp_yapildi[_k]=False
                     merd_yapildi[_k]=False; merd0_yapildi[_k]=False; eq[-1]*=1-abs(_w)*KOM; _PFG[0]+=1
-        gec=np.isfinite(cv[i])&np.isfinite(cv[i+1])
-        br=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0); br=np.nan_to_num(br)
+        gec=_GEC[i]
+        br=_BRM[i].copy()   # kopya: aşağıda br[k]=... ile yerinde değişiyor
         cik=np.zeros(nk,bool); yaridan=np.zeros(nk,bool); _tur=np.full(nk,'',dtype=object)
         merd=np.zeros(nk,bool); mpay=np.zeros(nk); _gx=np.zeros(nk); _gw=np.zeros(nk)
         if TEK_GIRIS:
             _REG[bas]=(poz,giris)
             _Pw=np.zeros(nk); _Pe=np.zeros(nk)
-            for _pq,_gq in _REG.values():
-                _ok=np.isfinite(_gq)&(_pq!=0)
-                _Pw[_ok]+=_pq[_ok]; _Pe[_ok]+=_pq[_ok]*_gq[_ok]
+            for _pq,_gq in _REG.values():   # madde 681: yalnız açık pozisyonların indisleri (seyrek; eski maskeli toplamla birebir)
+                _ix=np.flatnonzero(_pq); _ix=_ix[np.isfinite(_gq[_ix])]
+                _Pw[_ix]+=_pq[_ix]; _Pe[_ix]+=_pq[_ix]*_gq[_ix]
         if tp>0 or TAKIP_BAS>0:
             for k in np.flatnonzero(poz!=0):
                 e=giris[k]
@@ -1096,32 +1117,32 @@ def _bt2g(bas,n,olcut=None,tp=None):
                     say_y[0 if poz[_k]>0 else 1]+=1
         if BOSLUK:
             bos[0]+=float(np.abs(poz).sum()); bos[1]+=float(hedef_brut[0]); bos[2]+=1
-        fu=np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1])); pr=poz*br
+        fu=np.where(cik,0.0,-poz*FVN[i+1]); pr=poz*br
         if KATKI:
             for _k, _d in list(_acik.items()):
                 if poz[_k]==0: continue
-                _d['fon']+=float(np.nan_to_num(fu[_k])); _d['fiy']+=float(np.nan_to_num(pr[_k]))
+                _d['fon']+=_nz(fu[_k]); _d['fiy']+=_nz(pr[_k])
                 _d['pnl']+=float(np.nan_to_num(fu[_k])+np.nan_to_num(pr[_k])); _d['bar']+=1
         if FON_OLC:
-            _f=float(np.nansum(fu)); fon[0]+=_f; fon[1]+=1
+            _f=float(_nsum(fu)); fon[0]+=_f; fon[1]+=1
             fon_seri.append((C.index[i],_f))
         L_=poz>0; S_=poz<0
         for _k in np.flatnonzero(poz!=0):
             _g=int(min(5,(_yas[_k])//6))
             _t='L' if poz[_k]>0 else 'S'
             _c=GUN.setdefault((_t,_g),[0.0,0.0,0.0,0])
-            _c[0]+=float(np.nan_to_num(fu[_k]))
-            if cik[_k]: _c[2]+=float(poz[_k]*np.nan_to_num(br[_k]))
-            else:       _c[1]+=float(poz[_k]*np.nan_to_num(br[_k]))
+            _c[0]+=_nz(fu[_k])
+            if cik[_k]: _c[2]+=float(poz[_k]*_nz(br[_k]))
+            else:       _c[1]+=float(poz[_k]*_nz(br[_k]))
             _c[3]+=1
         _yas=np.where(poz!=0,_yas+1,0)
-        _yy=C.index[i+1].year; _yc=YIL.setdefault(_yy,[0.0]*6)
-        _yc[0]+=float(np.nansum(fu[L_])); _yc[3]+=float(np.nansum(fu[S_]))
-        _yc[1]+=float(np.nansum(pr[L_&~cik])); _yc[4]+=float(np.nansum(pr[S_&~cik]))
-        _yc[2]+=float(np.nansum(pr[L_&cik])); _yc[5]+=float(np.nansum(pr[S_&cik]))
-        AY['Lf']+=np.nansum(fu[L_]); AY['Sf']+=np.nansum(fu[S_])
-        AY['Lp']+=np.nansum(pr[L_&~cik]); AY['Sp']+=np.nansum(pr[S_&~cik])
-        AY['Ltp']+=np.nansum(pr[L_&cik]); AY['Stp']+=np.nansum(pr[S_&cik])
+        _yy=_YILLAR[i+1]; _yc=YIL.setdefault(_yy,[0.0]*6)
+        _yc[0]+=float(_nsum(fu[L_])); _yc[3]+=float(_nsum(fu[S_]))
+        _yc[1]+=float(_nsum(pr[L_&~cik])); _yc[4]+=float(_nsum(pr[S_&~cik]))
+        _yc[2]+=float(_nsum(pr[L_&cik])); _yc[5]+=float(_nsum(pr[S_&cik]))
+        AY['Lf']+=_nsum(fu[L_]); AY['Sf']+=_nsum(fu[S_])
+        AY['Lp']+=_nsum(pr[L_&~cik]); AY['Sp']+=_nsum(pr[S_&~cik])
+        AY['Ltp']+=_nsum(pr[L_&cik]); AY['Stp']+=_nsum(pr[S_&cik])
         if _CL_YOL:
             # MADDE 621: CIKIS DEFTERI. Her cikis olayi (tam: cik, kismi: kademe) -> zaman, coin, yon, tur, satilan agirlik, cikis fiyati.
             for _k in np.flatnonzero((cik|merd)&(poz!=0)):
@@ -1135,21 +1156,21 @@ def _bt2g(bas,n,olcut=None,tp=None):
             # yarisi TP seviyesinden cikar, yarisi barin kapanisiyla devam eder
             kapanis=np.where(gec,(cv[i+1]-cv[i])/np.where(cv[i]==0,np.nan,cv[i]),0.0)
             br=np.where(yaridan,0.5*br+0.5*np.nan_to_num(kapanis),br)
-        r=np.nansum(poz*br)+np.nansum(np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1])))
+        r=_nsum(poz*br)+_nsum(np.where(cik,0.0,-poz*FVN[i+1]))
         if MERD_GERI and _gw.any():
-            r+=float(np.nansum(_gx)-np.nansum(_gw*np.nan_to_num(fv[i+1])))
+            r+=float(_nsum(_gx)-_nsum(_gw*FVN[i+1]))
         if KAYIP_HAF>0:
             if _KH[0] is None: _KH[0]=np.zeros((len(C.index),nk))
             _KH[0][i+1]+=np.where(poz<0,np.nan_to_num(poz*br),0.0)
         if _GK_YOL and C.index[i+1]>=_GK_BAS:
             _gd=C.index[i+1].normalize()
-            _fu=np.where(cik,0.0,-poz*np.nan_to_num(fv[i+1]))
+            _fu=np.where(cik,0.0,-poz*FVN[i+1])
             for _k in np.flatnonzero(poz!=0):
                 _e=_GK.setdefault((_gd,_k),[0.0,0.0,0.0,0])
-                _e[0]+=float(np.nan_to_num(poz[_k]*br[_k])); _e[1]+=float(_fu[_k]); _e[2]+=float(poz[_k]); _e[3]+=1
+                _e[0]+=_nz(poz[_k]*br[_k]); _e[1]+=float(_fu[_k]); _e[2]+=float(poz[_k]); _e[3]+=1
         eq.append(eq[-1]*(1+r))
         if AGIRLIK_KAYMA:
-            poz=poz*(1.0+np.nan_to_num(br))/(1.0+r)
+            poz=poz*(1.0+_nzv(br))/(1.0+r)
         if MERD_GERI and _gw.any():
             poz=poz+_gw; eq[-1]*=1-np.abs(_gw).sum()*KOM
         if merd.any():

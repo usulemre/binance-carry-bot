@@ -7538,3 +7538,15 @@ defter_db.py — günlük defter defter/carry.db'ye de (SQLite, ek paket yok); o
 bağlı, Ubuntu 24.04): deploy/anahtar_sifrele.sh Binance satırlarını systemd-creds ile şifreler; servisler ImportCredential ile çözer
 (yoksa sessizce atlanır); config.py $CREDENTIALS_DIRECTORY'den okur; carry_calistir.sh elle komutları servis ortamında koşar;
 onerilen_kur.sh ve nabız şifreli kurulumu tanır. Testler: test_ed25519.py (12), test_defter_db.py (6), test_bildirim (+5), test_panel (+5).
+
+## Madde 681 — Backtest motoru hızlandırıldı: 3 dk 12 sn → 1 dk 55 sn (×1,67), sonuçlar BAYT BAYT AYNI
+Ölçüm (cProfile + line_profiler, P3T2 2.000 $ tek koşu): zamanın ~%40'ı bar döngüsündeki skaler `np.nan_to_num` (3,8 M çağrı) ve küçük
+dizi `np.nansum` (2,9 M çağrı) Python katmanında; ~%15'i dilimler arası ortalama giriş toplamı (15 dilim × her bar, 853'lük maskeli
+diziler); her barda aynı bar getirisi formülü yeniden hesaplanıyordu. Değişiklikler (g33.py): `_nz` (skaler nan_to_num eşdeğeri: NaN→0,
+±inf→±float max), `_nsum` (nansum'la aynı diziyi aynı add.reduce ile), `FVN` (funding matrisinin nan_to_num'u bir kez), `_GEC` / `_BRM`
+(geçerlilik maskesi + bar getirileri bir kez; satır kopyalanır çünkü br[k]= ile yerinde değişiyor), `_YILLAR` (yıl listesi), `_nzv`
+(dizi nan_to_num eşdeğeri), dilim toplamı yalnız açık pozisyon indislerinde. PARİTE: 22 yapılandırma (Ekim izleme ana bloğu: T1 / T4 /
+T6 / T7K / T6KS × 2.000 / 3.500 $ × iki hiza + P3T2 iki hiza) ve KATKI defterli koşu eski motorla BAYT BAYT aynı (E pickle'ları cmp;
+metin çıktısı aynı). Kalan zaman: seçim adımı (pandas rank, %17; scipy rankdata eşit ama daha YAVAŞ çıktı → dokunulmadı) ve konum
+başına teşhis döngüleri. Canlı bot hızına dokunulmadı: tur 8 saatte bir, süresi API gecikmesiyle sınırlı, hız kâra etki etmez;
+entegrasyon testinin ~25 dk'sı aynı bir_tur'un 17+ kez koşmasından (canlı kod yolunu yalnız CI süresi için değiştirmek riske değmez).
