@@ -25,9 +25,11 @@ os.environ["BINANCE_PRIVATE_KEY_PATH"] = F
 c = X.ExchangeClient("K", "", mode="demo")
 kontrol("Ed25519 etkin, secret gerekmez", c.imza == "ed25519")
 sig = urllib.parse.unquote(c.client._generate_signature({"symbol": "BTCUSDT", "timestamp": 1}))
-from cryptography.hazmat.primitives.serialization import load_pem_public_key
+# doğrulama pycryptodome ile (python-binance'in kendi bağımlılığı; ek paket gerekmez — CI'da 'cryptography' yok)
+from Crypto.PublicKey import ECC
+from Crypto.Signature import eddsa
 try:
-    load_pem_public_key(acik.encode()).verify(base64.b64decode(sig), b"symbol=BTCUSDT&timestamp=1"); ok = True
+    eddsa.new(ECC.import_key(acik), "rfc8032").verify(b"symbol=BTCUSDT&timestamp=1", base64.b64decode(sig)); ok = True
 except Exception:
     ok = False
 kontrol("imza açık anahtarla doğrulanıyor", ok)
