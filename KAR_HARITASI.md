@@ -7661,3 +7661,15 @@ Kötü aylar = TP çok düşük + tutuş fiyatı negatif (2022-05 LUNA long −2
 taban %13,2): mevcut funding kuralı F 6 yılda HİÇ alarm vermedi; fiyat / long / short / TP / toplam göstergeleri lift 0,5-1,1, alarm sonrası
 30 g getiri yine +%7-11 → kapı iyi dönemleri kapatırdı (fiyat kapısı ~450 puan). Hipotez: yalnız funding 90 g VE TP 90 g birlikte tarihsel
 alt dilimde = "kenar zayıflıyor" uyarısı (kapı değil; yalnız 2022 2. yarı). Rapor: ARASTIRMA_690.md.
+
+## Madde 691 — TP motoru dayanıklılık ve kırılganlık (kod, strateji, parametre değişmedi; canlıya bağlanan gösterge yok)
+Araç arastirma_m691_tp_motoru.py (motor kopyaları; düğmeler kapalıyken E bayt bayt aynı). Madde 690'ın TP bileşeni doğrulandı: motorun
+kaydettiği limit seviyesiyle bakınca TP / kademe etiketli bütün çıkışların seviyesi var (seviyesiz 'TP' çıkışı 0). Oynaklık: aylık TP ↔
+kitabın tuttuğu coinlerin 30 g oynaklığı r +0,69 (evren +0,18, BTC +0,11); esneklik +1,89 (oynaklık −%10 → TP −%18); oynaklık TP SAYISINI
+belirliyor, işlem başı katkı tercillerde sabit (~7,5 bp, işlem getirisi ~%27); en düşük oynaklık çeyreğinde TP −%30 ama toplam getiri
+aynı (tutuş daha az kaybettiriyor). İcra: delme medyanı 290 bp, < 20 bp geçen olay %4,7; ek 5 / 10 / 15 / 20 bp → CAGR %247,5 → 246,0 /
+244,5 / 243,0 / 241,7; 5 / 10 / 20 bp delinmeden dolmaz → 245,9 / 244,7 / 243,3 (toplam kârın ≤ %1,3'ü). Gerçek dolum verisi YOK (maker
+oranı, kısmi dolum, bekleme ölçülemedi; madde 267 dakika verisi referans). Yoğunlaşma: TP etkin 151 coin; en büyük TP coini BTW net
+zararlı; ilk 1 / 3 / 5 TP coini evrenden çıkınca CAGR 247,6 / 210,8 / 200,5, Sharpe 4,16 / 3,87 / 3,75, hiçbir yıl negatif değil (2023
+%310 → %166, TRB). Başarısızlık: düşük TP ile zarar AYNI ayda (zarar ayı %21'e karşı %9); sonraki ay farkı yok (%11'e karşı %13,
+permütasyon p 0,73) → TP düşüşü erken uyarı değil. Rapor: ARASTIRMA_691.md.
