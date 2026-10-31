@@ -7550,3 +7550,10 @@ T6 / T7K / T6KS × 2.000 / 3.500 $ × iki hiza + P3T2 iki hiza) ve KATKI defterl
 metin çıktısı aynı). Kalan zaman: seçim adımı (pandas rank, %17; scipy rankdata eşit ama daha YAVAŞ çıktı → dokunulmadı) ve konum
 başına teşhis döngüleri. Canlı bot hızına dokunulmadı: tur 8 saatte bir, süresi API gecikmesiyle sınırlı, hız kâra etki etmez;
 entegrasyon testinin ~25 dk'sı aynı bir_tur'un 17+ kez koşmasından (canlı kod yolunu yalnız CI süresi için değiştirmek riske değmez).
+
+## Madde 682 — Dependabot düzeni: GitHub Actions v7, Python paketlerinde yalnız güvenlik güncellemesi
+Dependabot ilk gün 6 PR açtı (checkout 4→7, setup-python 5→7, numpy / requests / flask / dotenv alt sınır yükseltmeleri). Action
+sürümleri main'de elle güncellendi (Node 20 kullanımdan kalkma uyarısı gider; CI hızlı işi v7 ile geçti). pip için
+open-pull-requests-limit: 0 → sürüm yükseltme PR'ı açılmaz, güvenlik PR'ları açılır (bot requirements.lock ile birebir sabit kurulduğu
+için alt sınır yükseltmek hiçbir şey değiştirmez; canlı öncesi sürüm değiştirmek gereksiz risk). Açık 6 PR kullanıcı tarafından
+kapatılmalı (oturumdan dış sistemde PR kapatma izni yok); action PR'larını Dependabot genelde kendisi kapatır.
