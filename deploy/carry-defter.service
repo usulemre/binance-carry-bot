@@ -8,6 +8,8 @@ User=carry
 Group=carry
 WorkingDirectory=/opt/carry
 EnvironmentFile=/opt/carry/.env
+# MADDE 680: şifreli anahtarlar varsa (deploy/anahtar_sifrele.sh) — yoksa sessizce atlanır (systemd ≥ 254)
+ImportCredential=carry.env
 ExecStart=/opt/carry/.venv/bin/python carry_gunluk_defter.py topla
 NoNewPrivileges=true
 PrivateTmp=true

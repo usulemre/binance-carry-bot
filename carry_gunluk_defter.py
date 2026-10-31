@@ -293,6 +293,11 @@ if __name__ == "__main__":
     a = ap.parse_args()
     if a.komut == "topla":
         _k = topla()
+        try:                                   # MADDE 680: aynı kayıt SQLite'a da (defter/carry.db; sorgu: defter_db.py)
+            import defter_db
+            defter_db.yaz(_k, os.path.join(os.path.dirname(DEFTER_DOSYA), "carry.db"))
+        except Exception as e:
+            print(f"veritabanına yazılamadı ({e}) — jsonl defter etkilenmedi")
         try:                                   # MADDE 670: günlük özet telefona (ayarsızsa hiçbir şey yapmaz)
             import bildirim
             bildirim.gonder(bildirim.gunluk_ozet_metni(_k), anahtar=f"gunluk_{_k['tarih']}", kisma_sn=20 * 3600)

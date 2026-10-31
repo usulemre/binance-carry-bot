@@ -1,0 +1,14 @@
+# MADDE 680: bağımlılık güvenlik uyarıları ve güncelleme önerileri (ücretsiz). Dependabot PR açar; testler (testler.yml) koşar,
+# geçerse elle birleştirilir. requirements.lock hash'li olduğu için güncelleme önerisi geldiğinde lock yeniden üretilmelidir
+# (uv pip compile ... --generate-hashes; KAR_HARITASI madde 663).
+version: 2
+updates:
+  - package-ecosystem: pip
+    directory: "/"
+    schedule:
+      interval: weekly
+    open-pull-requests-limit: 5
+  - package-ecosystem: github-actions
+    directory: "/"
+    schedule:
+      interval: monthly

@@ -11,6 +11,13 @@ from typing import List
 from dotenv import load_dotenv
 
 load_dotenv()  # proje kökündeki .env dosyasını otomatik yükler
+# MADDE 680: ŞİFRELİ ANAHTARLAR (isteğe bağlı; deploy/anahtar_sifrele.sh). systemd, /etc/credstore.encrypted/'daki şifreli dosyayı
+# servis başlarken çözüp yalnız bu sürecin görebildiği geçici bir dizine koyar ($CREDENTIALS_DIRECTORY). Diskte düz metin anahtar kalmaz.
+_kd = os.getenv("CREDENTIALS_DIRECTORY", "")
+if _kd:
+    for _ad in ("carry.env", *[f for f in (os.listdir(_kd) if os.path.isdir(_kd) else []) if f.startswith("carry-") and f.endswith(".env")]):
+        if os.path.exists(os.path.join(_kd, _ad)):
+            load_dotenv(os.path.join(_kd, _ad), override=True)
 
 # ---------------------------------------------------------------------------
 # API Anahtarları (.env dosyasından okunur, ASLA kod içine yazmayın)

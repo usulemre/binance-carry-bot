@@ -70,5 +70,14 @@ kontrol("paket indirilir", r.status_code == 200 and r.data.startswith(b"PK") and
 kontrol("başka dosya / yol gezintisi 404", app.get("/paket/gizli.env").status_code == 404
         and app.get("/paket/..%2F.env").status_code == 404 and app.get("/paket/paket_2026-11.zip").status_code == 404)
 kontrol("api'de paketler", app.get("/api/veri").get_json()["paketler"][0]["ad"] == "paket_2026-10.zip")
+# madde 680: PWA
+r = app.get("/manifest.webmanifest"); m = r.get_json(force=True)
+kontrol("PWA manifest", r.status_code == 200 and m["display"] == "standalone" and len(m["icons"]) == 2)
+kontrol("PWA simgeler PNG", app.get("/ikon-192.png").data[:4] == b"\x89PNG" and app.get("/ikon-512.png").status_code == 200
+        and app.get("/ikon-64.png").status_code == 404)
+sw = app.get("/sw.js").data.decode()
+kontrol("service worker veri / paket önbelleğe ALMAZ", "/api/" in sw and "/paket/" in sw and app.get("/sw.js").mimetype == "application/javascript")
+kontrol("sayfada manifest bağlantısı", b'rel="manifest"' in app.get("/").data)
+kontrol("CSP worker / manifest izni", "worker-src 'self'" in app.get("/").headers["Content-Security-Policy"])
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

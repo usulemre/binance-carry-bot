@@ -1,0 +1,7 @@
+# MADDE 680: commit öncesi denetim (isteğe bağlı, geliştirici bilgisayarında): pip install pre-commit && pre-commit install
+repos:
+  - repo: https://github.com/astral-sh/ruff-pre-commit
+    rev: v0.16.9
+    hooks:
+      - id: ruff
+        files: ^(carry_.*|onerilen|bildirim|nabiz|panel|acil_kapat|exchange_client|config|ekim_paket_indir|indir_ek_ay)\.py$

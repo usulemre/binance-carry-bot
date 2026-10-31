@@ -156,6 +156,9 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
 
 SAYFA = r"""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
 <title>Carry Panel</title>
+<link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#0f1115">
+<link rel="icon" href="ikon-192.png"><link rel="apple-touch-icon" href="ikon-192.png">
+<meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Carry">
 <script src="https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.4.1/chart.umd.min.js"></script>
 <style>
 :root{--bg:#f6f7f9;--kart:#fff;--yazi:#16181d;--soluk:#6b7280;--cizgi:#e5e7eb;--art:#0f9d58;--eks:#d93025;--vurgu:#2563eb;--uyari:#b45309}
@@ -240,8 +243,20 @@ async function yukle(){
   try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = await r.json(); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
 }
 yukle(); if(!VERI_GOMULU) setInterval(yukle, 60000);
+if(!VERI_GOMULU && "serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>VERI && ciz());
 </script></body></html>"""
+
+
+SW_JS = """const K="carry-kabuk-v1";
+self.addEventListener("install",e=>{e.waitUntil(caches.open(K).then(c=>c.addAll(["./","ikon-192.png","ikon-512.png"])));self.skipWaiting();});
+self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(a=>Promise.all(a.filter(x=>x!==K).map(x=>caches.delete(x)))));self.clients.claim();});
+self.addEventListener("fetch",e=>{const u=new URL(e.request.url);
+  if(e.request.method!=="GET"||u.pathname.includes("/api/")||u.pathname.includes("/paket/"))return;   // veri ve paket önbelleğe ALINMAZ
+  e.respondWith(fetch(e.request).then(r=>{const k=r.clone();caches.open(K).then(c=>c.put(e.request,k));return r;}).catch(()=>caches.match(e.request)));});
+"""
+IKON_192 = "iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAADUElEQVR42u3dsW0UQRTHYYwuRwTIogCaoAoaQBc7pwzyiy0aoAqaoAB0XRBYcnLIXnZmZ9689/0ihJCxuE//2ZWP27t37z+8kfb21j+BABJAAkgASQAJIAEkgCSABJAAEkASQAJIAAkgCSABJIAEkACSABJAAkgASQAJIAEkgCSABJAAEkASQAJIATr5J8jap59fb3/z95cfff+WO5/SWoTOQYwcYeX0bPwzANEzwhBAFfV0NARQUT29DAFUV08XQwDJAgkgzTqDGr8CQLJAAkgAaULny3XuN+Cn8ehYoNp6Pv/53vjVWn44D5DtcYSh4whTi56WU6zxzWUAJdmefYba35roLa2pjq1fH7+N1GOBsl30bN+hXm+LBijbJfMWQx3fVO8uLNvd1uPD/dMv/LceevbrGZYFSkJnih6ADI+LaHrm6bFAji2ADM/UHGH0WCB0LBA9K+qxQK6XATI8jjB6FtVjgRxbABkeRxg9i+oBiB5HWKLWomOBYs3PinosUAg9i9KxQI4tgBafn9X1OMKm6UlAxwI5tgBacH4y6QGIHoAEkPkBiJ6KegASQOYHIHoAkiNM5gcgegASQOanxvwARA9AAsj8AERPRT0ACSDzAxA9AMkRJvMDED2DO+V4dSu/hHNb73FPLwxDR0bmJyegja9r44tKT85roO2v6/lyDfiIdQu0hp7GnTA/CQF1mZMtrzc9Ce/Ceh1Gz1/Ha19lgQ69jrllZH5SARp2FfykgZ5UR9jIeyj3a9lu4yO/ouYnOiB6AHKauAZaRM/zJAyQZ35C34V1+YTl4xjRE3qBen0+98hBUpQFOu7T3XsxMj9BAQ17Lkmdp3cVugsb+VSbx4d7DlIt0NxnIvmpxdqAgjxR69Vvg56IgAI+j+2f3xI9EQFFfprf+XKFJjSgas+CLNIpph503MbTAxA9mniEueixQPRoBiB6AKJHMwDRA1BT/6uBHoD2m6AnQUf9KOPlswwdC7R/XegBaNxFkuoCurVCD0D7DdED0H5D9LgLkwJcRAsgCSABJIAEkACSABJAAkgASQAJIAEkgCSABJAAEkASQAJIAAkgCSABJIAEkACSABJAAkgASQAJIAEkgCSABJAAEkASQAJIAAkg1e0vEmVbz2lwGEEAAAAASUVORK5CYII="
+IKON_512 = "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"
 
 
 def statik_html(v: dict) -> str:
@@ -267,8 +282,30 @@ def uygulama(klasorler: list[str]):
         r.headers["Referrer-Policy"] = "no-referrer"
         r.headers["Cache-Control"] = "no-store"
         r.headers["Content-Security-Policy"] = ("default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
-                                                "style-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:")
+                                                "style-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; manifest-src 'self'; worker-src 'self'")
         return r
+
+    # MADDE 680: PWA — telefonda "Ana ekrana ekle" ile uygulama gibi açılır (Tailscale HTTPS adresinde). Önbellek YALNIZ kabuk
+    # (sayfa + simgeler); veri (/api/veri) hiçbir zaman önbelleğe alınmaz -> çevrimdışıyken eski rakam gösterilmez.
+    @app.get("/manifest.webmanifest")
+    def manifest():
+        m = {"name": "Carry Panel", "short_name": "Carry", "start_url": "./", "scope": "./", "display": "standalone",
+             "background_color": "#0f1115", "theme_color": "#0f1115",
+             "icons": [{"src": "ikon-192.png", "sizes": "192x192", "type": "image/png"},
+                       {"src": "ikon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]}
+        return Response(json.dumps(m), mimetype="application/manifest+json")
+
+    @app.get("/ikon-<int:n>.png")
+    def ikon(n):
+        import base64
+        from flask import abort
+        if n not in (192, 512):
+            abort(404)
+        return Response(base64.b64decode(IKON_192 if n == 192 else IKON_512), mimetype="image/png")
+
+    @app.get("/sw.js")
+    def sw():
+        return Response(SW_JS, mimetype="application/javascript", headers={"Service-Worker-Allowed": "./"})
 
     @app.get("/")
     def ana():

@@ -56,6 +56,10 @@ BINANCE_API_SECRET=BURAYA
 CARRY_PROFIL=ONERILEN
 # Demo bakiyesinin yalnız bir kısmını kullanmak için: denenecek tutar / demo bakiyesi (ör. 2000 / 5000 = 0.4). Gerçek hesapta SİLİN.
 # CARRY_SERMAYE_OLCEK=0.4
+# Ed25519 anahtar (madde 680, önerilen): sudo /opt/carry/deploy/ed25519_anahtar.sh -> açık anahtarı Binance'e; sonra SECRET yerine:
+# BINANCE_PRIVATE_KEY_PATH=/opt/carry/keys/binance_ed25519.pem
+# Dış nabız (madde 680; healthchecks.io ping adresi, sunucu çökerse haber):
+# CARRY_HC_URL=
 # Telegram bildirimleri (madde 670; isteğe bağlı — KURULUM_SUNUCU.md "Telegram"):
 # TELEGRAM_TOKEN=
 # TELEGRAM_CHAT_ID=

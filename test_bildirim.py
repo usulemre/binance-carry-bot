@@ -138,5 +138,20 @@ nabiz._telegram(os.path.join(kok, "carry"), "y", True)
 kontrol("nabız: kurulum adı önek", cag[0][1] == "d1" and cag[1][1] == "demo", cag)
 kontrol("nabız: Binance anahtarı ortama girmez", "BINANCE_API_KEY" not in os.environ)
 
+# madde 680: dış nabız
+class Rq:
+    def __init__(s): s.url = []
+    def post(s, url, data=None, timeout=None): s.url.append(url); return R(200)
+os.environ.pop("CARRY_HC_URL", None)
+rq = Rq(); kontrol("dış nabız ayarsız: istek yok", bildirim.dis_nabiz(_requests=rq) is False and not rq.url)
+os.environ["CARRY_HC_URL"] = "http://hc-ping.com/abc"
+kontrol("dış nabız: https olmayan adres reddedilir", bildirim.dis_nabiz(_requests=rq) is False and not rq.url)
+os.environ["CARRY_HC_URL"] = "https://hc-ping.com/abc/"
+kontrol("dış nabız: başarılı tur ping", bildirim.dis_nabiz(_requests=rq) and rq.url[-1] == "https://hc-ping.com/abc")
+bildirim.dis_nabiz(True, "hata", _requests=rq); kontrol("dış nabız: başarısız tur /fail", rq.url[-1] == "https://hc-ping.com/abc/fail")
+class Rb:
+    def post(s, *a, **k): raise ConnectionError("yok")
+kontrol("dış nabız: ağ hatası yutulur", bildirim.dis_nabiz(_requests=Rb()) is False)
+os.environ.pop("CARRY_HC_URL")
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

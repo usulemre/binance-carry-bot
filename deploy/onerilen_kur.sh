@@ -25,7 +25,15 @@ tek() {
 CARRY_PROFIL=ONERILEN
 ENV
   [ -n "$K" ] && chown carry:carry .env && chmod 600 .env
-  set +e; $K "$PY" carry_preflight.py; local RC=$?; set -e
+  # MADDE 680: anahtarlar şifreliyse preflight servis ortamında (carry_calistir.sh) koşar
+  local AD_=""; [ "$KLASOR" != /opt/carry ] && AD_=${KLASOR#/opt/carry-}
+  set +e
+  if ls /etc/credstore.encrypted/carry*.env >/dev/null 2>&1 && [ -x /opt/carry/deploy/carry_calistir.sh ]; then
+    KL="$KLASOR" AD="$AD_" /opt/carry/deploy/carry_calistir.sh carry_preflight.py
+  else
+    $K "$PY" carry_preflight.py
+  fi
+  local RC=$?; set -e
   if [ $RC -ne 0 ]; then
     cp "$YEDEK" .env
     echo "!! preflight HATA verdi — .env eski haline döndü ($YEDEK). Servis değişmedi."

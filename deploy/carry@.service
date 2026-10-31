@@ -11,6 +11,8 @@ User=carry
 Group=carry
 WorkingDirectory=/opt/carry-%i
 EnvironmentFile=/opt/carry-%i/.env
+# MADDE 680: şifreli anahtarlar varsa (deploy/anahtar_sifrele.sh) — yoksa sessizce atlanır (systemd ≥ 254)
+ImportCredential=carry-%i.env
 ExecStart=/opt/carry/.venv/bin/python carry_bot.py
 Restart=always
 RestartSec=60

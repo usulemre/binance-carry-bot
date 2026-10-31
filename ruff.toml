@@ -1,0 +1,8 @@
+# MADDE 680: kod denetimi (ruff). Yalnız GERÇEK HATA sınıfları: tanımsız ad, sözdizimi, yanlış karşılaştırma, gölgelenmiş tanım.
+# Canlı bot dosyalarında sıfır bulgu bekleniyor (CI'da zorunlu). Araştırma betikleri (arastirma_*, g*.py) denetlenmez.
+target-version = "py312"
+line-length = 140
+extend-exclude = ["arastirma_*.py", "g[0-9]*.py", "eski/", "data_*"]
+
+[lint]
+select = ["E9", "F63", "F7", "F82", "F811", "F841"]

@@ -1,6 +1,7 @@
 """Binance Futures (Testnet) için ince bir wrapper (python-binance kullanır)."""
 
 import logging
+import os
 import time
 import pandas as pd
 from binance.client import Client
@@ -79,6 +80,19 @@ def _call_with_retry(func, *args, max_retries: int = 3, base_delay: float = 2.0,
     return func(*args, **kwargs)  # son deneme, hata varsa doğrudan yukarı fırlatılır
 
 
+def ozel_anahtar_oku():
+    """MADDE 680: BINANCE_PRIVATE_KEY_PATH (PEM, Ed25519) -> (metin, parola) ya da None. Dosya yoksa / okunamıyorsa HATA verir
+    (sessizce HMAC'a düşmek yanlış anahtarla çalışmak demektir)."""
+    yol = os.getenv("BINANCE_PRIVATE_KEY_PATH", "").strip()
+    if not yol:
+        return None
+    with open(os.path.expanduser(yol), encoding="utf-8") as f:
+        metin = f.read()
+    if "PRIVATE KEY" not in metin:
+        raise ValueError(f"BINANCE_PRIVATE_KEY_PATH bir PEM özel anahtarı değil: {yol}")
+    return metin, (os.getenv("BINANCE_PRIVATE_KEY_PASS") or None)
+
+
 class ExchangeClient:
     def __init__(self, api_key: str, api_secret: str, mode: str = "demo"):
         """
@@ -107,12 +121,20 @@ class ExchangeClient:
         # Bizim ilgilendiğimiz tek şey futures endpoint'leri.
         """
         self.mode = mode
+        # MADDE 680: Ed25519 anahtarı (önerilen). BINANCE_PRIVATE_KEY_PATH verilirse istekler sunucuda üretilmiş özel anahtarla
+        # imzalanır; Binance'e yalnız AÇIK anahtar verilir (gizli anahtar hiçbir zaman Binance'te / ekranda görünmez). O zaman
+        # BINANCE_API_SECRET gerekmez. Yoksa eski HMAC (API_KEY + API_SECRET) yolu, değişmeden.
+        ozel = ozel_anahtar_oku()
+        kw = {"private_key": ozel[0], "private_key_pass": ozel[1]} if ozel else {}
+        if ozel:
+            api_secret = None
+        self.imza = "ed25519" if ozel else "hmac"
         if mode == "demo":
-            self.client = Client(api_key, api_secret, demo=True, ping=False)
+            self.client = Client(api_key, api_secret, demo=True, ping=False, **kw)
         elif mode == "legacy_testnet":
-            self.client = Client(api_key, api_secret, testnet=True, ping=False)
+            self.client = Client(api_key, api_secret, testnet=True, ping=False, **kw)
         else:
-            self.client = Client(api_key, api_secret, ping=False)
+            self.client = Client(api_key, api_secret, ping=False, **kw)
         self.testnet = mode in ("demo", "legacy_testnet")
 
     # ---------------------------------------------------------------- market data

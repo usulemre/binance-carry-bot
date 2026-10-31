@@ -7522,3 +7522,19 @@ eşit-risk): P3T2 +247,5 · −13,3 · −7,41 · 4 · 4,03 / 4,42 → **+315,2*
 −13,3 · −7,46 · 4 · 3,99 / 4,35 → +310,6 | R4 +266,9 · −15,5 · −7,68 · 5 · 3,89 / 4,36 → +244,7 | R6 +226,3 · −13,3 · −5,52 · 2 · 4,00 / 4,56 →
 +286,6. Dilim: 10 kötü, 15-30 plato (533 ile aynı). Tutma: yine doz gibi — 4 g ham kârı +19 artırıyor ama riski daha çok; 6 g kuyruğu
 inceltiyor (en kötü gün −5,52, 2025+ Sh 4,56) ama eşit riskte −29. Ayar değişmedi.
+
+## Madde 680 — Ücretsiz altyapı iyileştirmeleri (kullanıcı: "ücretsiz olanları yapalım"; strateji DEĞİŞMEDİ)
+(1) DIŞ NABIZ: bot her başarılı turdan sonra CARRY_HC_URL'ye (healthchecks.io, ücretsiz) ping, başarısız turda /fail — sunucu tümden
+çökerse / kapanırsa / internet giderse sunucu içi nabız uyaramaz, dış servis uyarır. Yalnız https; ayarsızsa hiçbir şey; hata yutulur.
+(2) OTOMATİK TEST: .github/workflows/testler.yml — her push / PR'da Python 3.12 + requirements.lock (hash) ile ruff denetimi ve 23 hızlı
+test paketi + ayrı işte uçtan uca entegrasyon. Temiz klonda BOŞ /tmp ile (veri yok) 23 paket geçti. test_core_modules eski bota ait,
+taban sürümde de kırık → listede yok. Dependabot (pip haftalık, actions aylık). (3) Ed25519 API ANAHTARI: BINANCE_PRIVATE_KEY_PATH ile
+istekler sunucuda üretilmiş özel anahtarla imzalanır, Binance'e yalnız açık anahtar; secret gerekmez. Kütüphanenin (python-binance
+1.0.37) imzası açık anahtarla doğrulandı; dosya yok / PEM değil → HATA (HMAC'a sessiz düşmez); preflight imza türünü ve dosya iznini
+denetler; deploy/ed25519_anahtar.sh üretir (izin 600, özel anahtarı ekrana basmaz). (4) KOD DENETİMİ: ruff.toml (yalnız gerçek hata
+sınıfları) — canlı dosyalarda tek bulgu (kullanılmayan `bacak_usd`) silindi, şimdi sıfır; .pre-commit-config.yaml. (5) PANEL PWA:
+manifest + simgeler + service worker (yalnız kabuk önbelleği; /api/ ve /paket/ ASLA önbelleğe alınmaz). (6) İŞLEM VERİTABANI:
+defter_db.py — günlük defter defter/carry.db'ye de (SQLite, ek paket yok); ozet / coin / sql / aktar. (7) ŞİFRELİ ANAHTAR (isteğe
+bağlı, Ubuntu 24.04): deploy/anahtar_sifrele.sh Binance satırlarını systemd-creds ile şifreler; servisler ImportCredential ile çözer
+(yoksa sessizce atlanır); config.py $CREDENTIALS_DIRECTORY'den okur; carry_calistir.sh elle komutları servis ortamında koşar;
+onerilen_kur.sh ve nabız şifreli kurulumu tanır. Testler: test_ed25519.py (12), test_defter_db.py (6), test_bildirim (+5), test_panel (+5).

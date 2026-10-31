@@ -1,0 +1,48 @@
+# MADDE 680: her push / PR'da otomatik test (GitHub Actions, herkese açık depoda ücretsiz).
+# Bozuk bir değişiklik sunucuya gitmeden burada yakalanır. Testler veri gerektirmez (sahte borsa istemcisiyle çalışır).
+name: testler
+on:
+  push:
+    branches: [main]
+  pull_request:
+  workflow_dispatch:
+permissions:
+  contents: read
+jobs:
+  hizli:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 30
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - name: Bağımlılıklar (sabit sürüm + özet doğrulaması)
+        run: |
+          python -m pip install --upgrade pip
+          pip install --require-hashes -r requirements.lock
+          pip install ruff==0.16.9
+      - name: Kod denetimi (ruff, canlı dosyalar)
+        run: ruff check carry_bot.py carry_preflight.py carry_gunluk_defter.py carry_sapma.py carry_saglik.py onerilen.py bildirim.py nabiz.py panel.py acil_kapat.py exchange_client.py config.py ekim_paket_indir.py indir_ek_ay.py
+      - name: Testler
+        run: |
+          set -e
+          for t in test_carry_bot test_carry_gunluk_defter test_onerilen test_carry_preflight test_log_kirliligi test_acil_kapat \
+                   test_transfer test_api_izin test_failure_modes test_delist test_bildirim test_panel test_ek_ay_paket test_ed25519 test_defter_db \
+                   test_carry_sapma test_carry_rapor test_carry_short_ara test_carry_saglik test_carry_olay test_carry_izleme \
+                   test_carry_defter test_exchange_client; do
+            echo "::group::$t"; python "$t.py"; echo "::endgroup::"
+          done
+  entegrasyon:
+    runs-on: ubuntu-24.04
+    timeout-minutes: 60
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-python@v5
+        with:
+          python-version: "3.12"
+      - run: |
+          python -m pip install --upgrade pip
+          pip install --require-hashes -r requirements.lock
+      - name: Uçtan uca bot turu (sahte borsa)
+        run: python test_carry_entegrasyon.py

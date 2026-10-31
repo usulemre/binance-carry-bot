@@ -64,7 +64,12 @@ def son_tur_saat(klasor: str, simdi: float | None = None) -> float | None:
 def kontrol(klasor: str, servis: str, systemctl=_systemctl, simdi: float | None = None) -> list[str]:
     """Sorun listesi (boş = sağlıklı). Atlanacak kurulumda None değil [] döner."""
     e = env_oku(klasor)
-    if e.get("BINANCE_API_KEY", "BURAYA") in ("", "BURAYA"):
+    sifreli = False
+    try:   # madde 680: anahtar_sifrele.sh gizli satırları .env'den silip bu işareti bırakır
+        sifreli = "gizli satırlar şifrelendi" in open(os.path.join(klasor, ".env"), encoding="utf-8").read()
+    except OSError:
+        pass
+    if e.get("BINANCE_API_KEY", "BURAYA") in ("", "BURAYA") and not sifreli:
         return []
     if systemctl("is-enabled", servis) not in ("enabled", "enabled-runtime"):
         return []

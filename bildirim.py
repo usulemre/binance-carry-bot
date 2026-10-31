@@ -114,6 +114,23 @@ def gonder(metin: str, dosya: str | None = None, anahtar: str | None = None, kis
         return False
 
 
+def dis_nabiz(basarisiz: bool = False, mesaj: str = "", _requests=None) -> bool:
+    """MADDE 680: DIŞ NABIZ (healthchecks.io ya da uyumlu servis). Bot her turdan sonra CARRY_HC_URL'ye ping atar; servis belirlenen
+    sürede ping görmezse (sunucu çöktü / kapandı / internet gitti / bot takıldı) SİZE kendisi haber verir — sunucu içindeki nabız
+    sunucu ölünce uyarı gönderemez, bu gönderir. Başarısız turda <url>/fail. Ayarsızsa hiçbir şey yapmaz; asla hata fırlatmaz."""
+    try:
+        url = os.getenv("CARRY_HC_URL", "").strip().rstrip("/")
+        if not url.startswith("https://"):
+            return False
+        req = _requests
+        if req is None:
+            import requests as req
+        r = req.post(url + ("/fail" if basarisiz else ""), data=mesaj[:1000].encode("utf-8"), timeout=10)
+        return getattr(r, "status_code", 0) == 200
+    except Exception:
+        return False
+
+
 def gunluk_ozet_metni(k: dict) -> str:
     """carry_gunluk_defter.topla() kaydından kısa günlük özet."""
     g = k.get("gun_getiri")

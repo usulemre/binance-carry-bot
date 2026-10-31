@@ -60,6 +60,15 @@ import config
 from exchange_client import ExchangeClient
 
 
+def _dis_nabiz(basarisiz: bool, mesaj: str = "") -> None:
+    """MADDE 680: dış nabız ping'i (CARRY_HC_URL; ayarsızsa hiçbir şey yapmaz)."""
+    try:
+        import bildirim
+        bildirim.dis_nabiz(basarisiz, mesaj)
+    except Exception:
+        pass
+
+
 def _bildir(metin: str, **kw) -> None:
     """MADDE 670: Telegram bildirimi (ayarsızsa hiçbir şey yapmaz, asla hata fırlatmaz)."""
     try:
@@ -3370,7 +3379,6 @@ def hedef_portfoy(funding: pd.Series, bakiye: float,
                        "düşürüldü (portföy daha yoğun, risk daha yüksek)",
                        len(f), n)
     sirali = f.sort_values()
-    bacak_usd = (bakiye * GROSS_EXPOSURE / 2) / n
     if kalabalik is not None and KALABALIK_HAVUZ > 1 and len(kalabalik) > 0:
         # madde 148: aday havuzundan kalabalık olanları seç
         la, sa = kalabalik_adaylar(f, n, skor_s=funding_s)
@@ -4790,12 +4798,16 @@ def main():
             if _hata_ust >= 2 and not args.dry_run:
                 _bildir(f"✅ tur yeniden başarılı ({_hata_ust} başarısız turdan sonra)")
             _hata_ust = 0
+            if not args.dry_run:
+                _dis_nabiz(False, f"tur tamam · {_PROFIL_AD} {GROSS_EXPOSURE:.2f}x")
         except KeyboardInterrupt:
             logger.info("durduruldu")
             break
         except Exception as e:
             logger.exception("tur başarısız: %s", e)
             _hata_ust += 1
+            if not args.dry_run:
+                _dis_nabiz(True, f"{type(e).__name__}: {str(e)[:300]}")
             # MADDE 670: tek hata çoğu zaman geçici ağ hatası -> üst üste 2. hatada haber ver (6 sa'te bir)
             if _hata_ust >= 2 and not args.dry_run:
                 _bildir(f"tur üst üste {_hata_ust} kez başarısız: {type(e).__name__}: {str(e)[:200]}",

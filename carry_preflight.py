@@ -291,12 +291,22 @@ def kontrol_borsa() -> None:
     except Exception as e:
         kontrol("modüller", HATA, str(e))
         return
-    if not (getattr(config, "API_KEY", "") and getattr(config, "API_SECRET", "")):
+    # MADDE 680: Ed25519 (BINANCE_PRIVATE_KEY_PATH) varsa API_SECRET gerekmez
+    _ozel = os.getenv("BINANCE_PRIVATE_KEY_PATH", "").strip()
+    if _ozel:
+        _y = os.path.expanduser(_ozel)
+        if not os.path.exists(_y):
+            kontrol("Ed25519 özel anahtar", HATA, f"dosya yok: {_y}")
+            return
+        _izin = os.stat(_y).st_mode & 0o077
+        kontrol("Ed25519 özel anahtar", UYARI if _izin else TAMAM,
+                f"{_y}" + (" — izinler geniş: chmod 600 yapın" if _izin else " (izin 600)"))
+    if not (getattr(config, "API_KEY", "") and (getattr(config, "API_SECRET", "") or _ozel)):
         kontrol("API anahtarı", HATA,
-                "BINANCE_API_KEY / BINANCE_API_SECRET ortam değişkeni YOK. "
+                "BINANCE_API_KEY ve (BINANCE_API_SECRET ya da BINANCE_PRIVATE_KEY_PATH) YOK. "
                 "Anahtar dosyaya YAZILMAZ - `export` ile verin.")
         return
-    kontrol("API anahtarı", TAMAM, "ortam değişkeninden okundu (dosyada değil)")
+    kontrol("API anahtarı", TAMAM, "ortam değişkeninden okundu (dosyada değil) · imza " + ("Ed25519" if _ozel else "HMAC"))
     try:
         client = ExchangeClient(config.API_KEY, config.API_SECRET,
                                 mode=getattr(config, "MODE", "demo"))
@@ -436,7 +446,7 @@ def main() -> int:
     import onerilen
     if onerilen.gerekli():
         def _kitap():
-            if a.yerel or not (config.API_KEY and config.API_SECRET):
+            if a.yerel or not (config.API_KEY and (config.API_SECRET or os.getenv("BINANCE_PRIVATE_KEY_PATH"))):
                 return None
             import carry_bot as cb
             from exchange_client import ExchangeClient

@@ -30,6 +30,14 @@ Betik şunları yapar ve tekrar çalıştırmak güvenlidir:
 - **IP kısıtlaması:** sunucunun IP'si (anahtar başka yerden çalışmaz).
 Binance hesabınızda 2FA, oltalama karşıtı kod ve çekim adresi beyaz listesi açık olsun.
 
+**Önerilen: Ed25519 anahtar (madde 680).** Gizli anahtarı sunucu üretir, Binance'e yalnız AÇIK anahtar verilir — gizli anahtar
+hiçbir zaman Binance'te, e-postada ya da ekranda görünmez:
+1. Sunucuda: `sudo /opt/carry/deploy/ed25519_anahtar.sh` → ekrana basılan `-----BEGIN PUBLIC KEY-----` bloğunu kopyalayın.
+2. Binance → API Management → Create API → **Self-generated** → açık anahtarı yapıştırın (aynı izin / IP kuralları).
+3. `.env`: `BINANCE_API_KEY=<Binance'in verdiği key>`, `BINANCE_PRIVATE_KEY_PATH=/opt/carry/keys/binance_ed25519.pem`
+   (`BINANCE_API_SECRET` satırı gerekmez). Preflight "imza Ed25519" yazar.
+Binance demo bu anahtar türünü kabul etmezse klasik anahtarla (API key + secret) devam edin; bot ikisini de destekler.
+
 ## 4) Anahtarları girin, kontrol edin, başlatın
 ```bash
 sudo nano /opt/carry/.env          # BINANCE_API_KEY / SECRET; demo bakiyesinin bir kısmıyla denemek için CARRY_SERMAYE_OLCEK
@@ -37,6 +45,9 @@ cd /opt/carry && sudo -u carry .venv/bin/python carry_preflight.py     # sonda "
 sudo systemctl start carry
 journalctl -u carry -f              # "önerilen ayar etkin: profil T7K · gross 1.15x" ve "mod=demo"
 ```
+**İsteğe bağlı — anahtarları şifrele (madde 680, Ubuntu 24.04):** `sudo /opt/carry/deploy/anahtar_sifrele.sh` Binance anahtar
+satırlarını systemd ile şifreler ve `.env`'den siler; servis başlarken yalnız bot süreci çözer. Diskte / yedekte düz metin anahtar kalmaz.
+Sonrasında preflight ve acil kapatma şöyle çalıştırılır: `sudo /opt/carry/deploy/carry_calistir.sh carry_preflight.py`.
 
 ## 5) Günlük
 - Pozisyonlar / emirler: Binance (demo) uygulaması → Futures.
@@ -56,6 +67,19 @@ Ek şifre isterseniz: `sudo systemctl edit carry-panel` → `[Service]` altına 
 olunca Telegram'a haber gelir ve panelin altında "Aylık veri paketleri" bölümünde indirme bağlantısı çıkar. İndirip araştırma
 sohbetine yükleyin (Ekim / Kasım ... örnek dışı kontrolleri için). Elle: `cd /opt/carry-rapor/paket && sudo -u carry /opt/carry/.venv/bin/python /opt/carry/ekim_paket_indir.py`.
 Panel sunucuda değilken (ör. bilgisayarınızda) tek dosyalık görüntü: `.venv/bin/python panel.py --disa-aktar panel.html --klasor /opt/carry`.
+
+### Dış nabız: sunucu tümden çökerse bile haber (madde 680, ücretsiz, önerilir)
+Sunucu içindeki nabız, sunucu kapanınca uyarı gönderemez. Dış servis bunu yapar: bot her turdan (8 sa) sonra "yaşıyorum" der; ses
+gelmezse servis size kendisi haber verir.
+1. **healthchecks.io**'ya ücretsiz üye olun → **Add Check** → Period **8 hours**, Grace **4 hours** → ping adresini kopyalayın.
+2. `.env`'e `CARRY_HC_URL=https://hc-ping.com/...` → `sudo systemctl restart carry`.
+3. healthchecks.io → Integrations → Telegram ya da e-posta (uyarının geleceği yer).
+Başarısız turda da haber verir (`/fail`). Botu bilerek durduracaksanız check'i orada "Pause" yapın.
+
+### Panel uygulama gibi (PWA) ve işlem veritabanı (madde 680)
+- Telefonda panel adresini (Tailscale) açın → Safari: Paylaş → **Ana Ekrana Ekle** / Chrome: ⋮ → **Uygulamayı yükle**. Tam ekran açılır.
+- Günlük kayıtlar `defter/carry.db`'ye de yazılır: `cd /opt/carry && sudo -u carry .venv/bin/python defter_db.py ozet` (aylık),
+  `... defter_db.py coin 30` (son 30 günde coin bazında kâr). Eski kayıtları aktarmak: `... defter_db.py aktar`.
 
 ### Telegram: telefona bildirim (madde 670, isteğe bağlı)
 Kurulursa şunlar telefona gelir: bot başladı · stop / delist kapanışı (ya da kapatılamadı) · sağlık kapısı · üst üste başarısız
