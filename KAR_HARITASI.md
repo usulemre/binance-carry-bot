@@ -7588,3 +7588,26 @@ temiz). P3T2 1,0x günlük serisi × k (iki hiza ort.; doğrusal ölçek — mad
 Uyarılar: geçmiş kuyruk gelecekten sığ olabilir (borsa olayı, ADL); madde 668: iyileştirmenin bir kısmı seçim etkisi olabilir → gerçek
 kenar T4 düzeyinde ise her satırın getirisi ~%10-15 düşük, riski aynı. Preflight yalnız ölçülmüş dozları kabul eder (madde 599: T7K 1,15 /
 1,10; 602: bootstrap ölçütüyle 2.000 $'da 1,25 savunulabilir). Öneri: demo 1,15'te; demo maliyetleri modele uyarsa 1,25 kullanıcı kararı.
+
+## Madde 685 ÖN KAYIT (kullanıcı: "bunları araştır, belki buluruz") — DİNAMİK DOZ yeniden, önerilen ayarın (P3T2) kendisinde
+555 / 597 / 620 T4 ya da başka tabanlardaydı. Kitap düzeyi (P3T2 1,0x günlük serisi × ölçek), NEDENSEL (t günü ölçeği t−1'e kadarki
+veriyle), ölçek değişimi maliyeti 10 bp × |Δölçek| (iki taraf 5'er bp), ölçek ancak |Δ| ≥ 0,05 ise değişir. Kollar (7):
+  V20 / V60  oynaklık hedefi iki yönlü: ölçek = hedef / son 20 (60) g gerçekleşen oynaklık, hedef = tüm dönem medyanı (sabit, önceden), [0,7 ; 1,6]
+  MOM       kitap momentumu ("fırsat zengin"): z = (son 30 g getiri − son 1 yılın 30 g ortalaması) / sd; ölçek = 1 + 0,25 z, [0,7 ; 1,3]
+  DDA       düşüşte AZALT: zirveden −%5 altı 0,75, −%10 altı 0,5
+  DDA2      düşüşte azalt, yumuşak: ölçek = max(0,5 ; 1 + 3 × dd)  (dd ≤ 0)
+  DDB       düşüşte ARTIR (tersi): −%5 altı 1,25, −%10 altı 1,5
+  PRIM      bu kitapta zaten var (BRUT_PRIM 0,7-1,0) — referans olarak değil, ayrı kol yok.
+Değerlendirme madde 596 eşit risk: her kolun serisi k ile ölçeklenir, T4 1,0x'in maks DD, en kötü gün ve 1 yıl bootstrap p1 düşüşünü
+aşmayan en büyük k. ADAY: eşit-risk yıllık ≥ P3T2 (+315,2) + 8 VE Sharpe ≤2024 ve 2025+ tabandan (4,03 / 4,42) düşük değil.
+7 kol çoklu deneme: ADAY çıkarsa bile Ekim+ verisiyle doğrulanmadan bota girmez.
+Madde 685 SONUÇ: HEPSİ RED (ön kayıt şartı: eşit-risk ≥ +8 VE iki dönemde Sharpe düşmüyor). (ham · dd · en kötü · Sh ≤24 / 25+ → eşit-risk):
+P3T2 +247,5 · −13,3 · −7,41 · 4,03 / 4,42 → +315,2 | V20 +232,9 · −15,2 · −9,51 · 3,95 / 4,26 → +232,9 | V60 +238,0 · −12,2 · −9,70 · 3,95 / 4,40 →
+**+351,3** | MOM +249,3 · −14,6 · −9,63 · 3,95 / 4,18 → +270,8 | DDA +217,5 · −12,1 · −7,41 · 3,97 / 4,24 → +317,9 | DDA2 +214,1 · −11,8 · −7,16 ·
+4,00 / 4,30 → **+335,5** | DDB (düşüşte artır) +268,8 · −15,4 · −7,41 · 4,06 / 4,46 → +246,4. İki kol eşit riskte kâr gösterdi ama Sharpe şartını
+kaçırdı. Dönem dönem (eşit-risk dozuyla; 2020-22 | 2023-24 | 2025+): P3T2 ×1,15 +284 | +250 | +464 · V60 ×1,25 +344 | +317 | **+405** (son
+dönemde KÖTÜ → eski yıllarda kazanıyor, şimdi değil) · DDA2 ×1,30 +306 | +266 | +485 (üç dönemde de +16..+22, dd benzer). Yorum: oynaklık
+hedefi kitabın düşüşünü inceltiyor ama 2025+'ta kârı kesiyor (555'in bulgusuyla aynı). Yumuşak düşüş freni (DDA2: zirveden her %1 düşüşte
+dozu %3 azalt, taban 0,5) en tutarlı aday ama Sharpe şartını kaçırdı ve 7 kollu denemenin en iyisi (seçim etkisi). Karar: bota GİRMEZ;
+DDA2 ×1,30 ileriye dönük İZLEME listesine (madde 677 gibi, Ekim-Aralık verisiyle; 3 ay sonunda P3T2 ×1,15'e göre eşit-risk getirisi ve
+en kötü gün raporlanır).
