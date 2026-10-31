@@ -7573,3 +7573,18 @@ iyimser 8 bp ile %22,9 (%27). Eğilim AŞAĞI: 2025 98,8 bp → 2026 48,9 bp. Fi
 yok sayıldı → gerçek sonuç daha kötü. Seçimin büyük kısmı birkaç ince coin (RED, PUFFER, RLS, 1000LUNC...). İkinci borsa hesabı, teminat
 bölünmesi, borsa riski ve önerilen ayarın ~%250'si yanında anlamsız → izlenmez. Ara bulgu: MEXC verisi carry için ek bilgi taşımıyor
 (676) ve borsalar arası farkın kendisi de küçük, sönen bir kenar.
+
+## Madde 684 — "Daha çok kâr" = daha çok doz: önerilen ayarın kaldıraç menüsü (bilgi; ayar DEĞİŞMEDİ)
+Strateji ekseninde yeni kenar kalmadığından kâr artışının tek ölçülmüş yolu doz (madde 596 / 597: sabit kaldıraç, gizli kaldıraçtan
+temiz). P3T2 1,0x günlük serisi × k (iki hiza ort.; doğrusal ölçek — madde 596 yöntemi), 1 yıllık blok bootstrap 4.000 yol, 2.000 $:
+| k | yıllık | maks DD | en kötü gün | −%10 altı gün | 1 yıl DD %5 / %1 | yıl sonu %5 / medyan | DD<−%40 |
+| 1,00 | +247 | −13,3 | −7,4 | 0 | −17,0 / −20,4 | 3.995 / 6.902 | 0 |
+| **1,15** | +315 | −15,2 | −8,5 | 0 | −19,3 / −23,1 | 4.397 / 8.239 | 0 |
+| 1,25 | +367 | −16,5 | −9,3 | 0 | −20,9 / −24,9 | 4.682 / 9.263 | 0 |
+| 1,35 | +425 | −17,7 | −10,0 | 1 | −22,4 / −26,7 | 4.986 / 10.396 | 0 |
+| 1,50 | +524 | −19,6 | −11,1 | 1 | −24,7 / −29,3 | 5.466 / 12.351 | 0 |
+| 1,75 | +729 | −22,6 | −13,0 | 2 | −28,4 / −33,5 | 6.348 / 16.350 | 0 |
+| 2,00 | +994 | −25,6 | −14,8 | 4 | −31,9 / −37,5 | 7.332 / 21.481 | %0,4 |
+Uyarılar: geçmiş kuyruk gelecekten sığ olabilir (borsa olayı, ADL); madde 668: iyileştirmenin bir kısmı seçim etkisi olabilir → gerçek
+kenar T4 düzeyinde ise her satırın getirisi ~%10-15 düşük, riski aynı. Preflight yalnız ölçülmüş dozları kabul eder (madde 599: T7K 1,15 /
+1,10; 602: bootstrap ölçütüyle 2.000 $'da 1,25 savunulabilir). Öneri: demo 1,15'te; demo maliyetleri modele uyarsa 1,25 kullanıcı kararı.
