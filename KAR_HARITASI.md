@@ -7686,3 +7686,14 @@ risk daha hafif → tehlikeli değil, verimsiz. Yıldızlar (walk-forward, gelec
 fazla vermiyor (sıra kor. +0,15); 2024-26'da TP'nin %61-69'u 1 yaşından genç coinlerden; her ay şu anki ilk 5 / 10 çıkarılınca CAGR %229 →
 %182 / %176 (rastgele çıkarma medyan %218 / %205). Erken uyarı (kronolojik eğitim / test): yalnız açık pozisyon yaşı anlamlı (test AUC 0,69,
 p < 0,001) ama işaret ters (genç kitap → zarar), lift 1,4, yanlış alarm %84, alarm sonrası 30 g yine +%9 → kapı önerilmez. Rapor: ARASTIRMA_692.md.
+
+## Madde 693 — Piyasa yolu, fitil avantajı ve rejim dayanıklılığı (kod, strateji, parametre değişmedi; kapı yok)
+Araç arastirma_m693_rejim.py (g33 kopyası iki hizada bayt bayt aynı; 6 koşu tamam). Nedensel rejimler (d etiketi → d+1 getirisi, genişleyen
+eşikler): en iyi = tutulan coinlerde KALICI tek yön (CAGR %456, TP değeri +176), evren güçlü yükseliş %433, yüksek oynaklık %397-448; en zayıf =
+long sepeti yatay %115, düşük kitap oynaklığı %134, tutulan coinlerde sık geri dönüş %152; hiçbir rejim negatif değil → "kalıcı trend zayıf
+nokta" hipotezi YANLIŞLANDI. Fitil gerçek bir mekanizma (TP barlarının %71'i seviyenin gerisinde kapanıyor; MFE ≥ %20 olup kazancın yarısını geri
+veren: TP'li %32, TP'siz %65; yüksek fitilli aylarda TP +2,8, düşük fitilli aylarda −1,4 puan / ay) ama aylık getiriyi az açıklıyor (fitil R²
+0,05, fitil + ER + oynaklık 0,22; TP katma değeri R² ≤ 0,05). TP açık − kapalı: ayların %73'ünde TP kazandırıyor; tek ay 2025-04 (ALPACA) −59
+puan; o ay hariç ort. +1,5 puan / ay. Yeni coin: 2024-26'da 1 yaşından genç coinler net kârın %78'i (maruziyetin %37'si); 2 yaş üstü %4; motor
+karşı-olgusu (evrene asgari yaş 365 g, stres senaryosu) CAGR %247 → %73, 2024-26 %248 → %51, 2025 %18,5. Gerçek zamanlı tespit zayıf: en kötü
+etiketlerde sonraki 30 g zarar olasılığı %16-17 (taban %13,5), getiri yine +%8-10 → kapı önerilmez. Rapor: ARASTIRMA_693.md.
