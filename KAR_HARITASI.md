@@ -7633,3 +7633,20 @@ Yeni ölçümler: (1) look-ahead yok (sinyal bar açılışına kadar, icra 4 sa
 fiyat dönüşü + kâr al; (6) beta 0,01 ama BTC çöküş günlerinin çoğunda kitap negatif; (7) tek long brütün medyan %11,8'i, en çok %34'ü (long
 tavanı yok), koşullu stop coine özgü çöküşte çalışmaz. Hüküm: GO yalnız demo; gerçek sermaye için şartlar (demo dolum / kayma ölçümü, Ekim
 OOS, tek coin stres testi, yazılı durdurma kuralı).
+
+## Madde 688 — Funding iyimserliği ölçüldü (denetim ek testi 2; kod değişmedi, motor KOPYASINDA): küçük, sonucu değiştirmiyor
+Araç arastirma_m688_funding_notr.py (/tmp/g33_m688.py kopyası, FUND_MOD). A (mevcut; parite BAYT BAYT aynı) / B (giriş anı ödemesi
+çıkarılmış) / C (zaman damgası doğru). Tüm dönem P3T2 1,0x: A +247,5 · Sh 4,14 · DD −13,3 | B +240,3 · 4,07 · −13,4 | C +241,2 · 4,08 · −13,4;
+T4: A +244,3 / B +236,8 / C +238,2 → P3T2−T4 farkı +3,1 / +3,5 / +3,0 (değişmiyor). Funding katkısı toplamı −%4,9 (B). Her yıl −%1-5 göreli.
+B / C bir ödemeyi eksik sayar (çıkıştan önceki son ödeme), A uç giriş ödemesini sayar → gerçek ikisi arasında; canlı bot tur sonrası sabit
+8 sa bekler (carry_bot.py:4829) → tur anı kayar, girişler gün içine dağılır. Ayrıştırma: 2021 fiyat %66 / tp %25 / funding %9; 2026 fiyat
+~%4, tp ~%44, funding ~%52. Yan bulgu: hızlandırılmış motor tepe belleği 3.078 MB (eski 2.872); 7 GB ortamda iki P3T2 eşzamanlı → −9
+(bellek); madde 681 parite koşusundaki eksik T7KKS bundandı → Ekim kontrolü TEK işçiyle koşulmalı.
+
+## Madde 689 — Tek coin kuyruk riski (denetim ek testi 1; kod değişmedi)
+Araç arastirma_m689_tek_coin_stres.py. Gerçek defter (27.173 durum, ×1,15): en büyük long özkaynağın medyan %9,8, %99 %16,4, maks %21,4.
+Gerçekleşen en kötü tek coin 24 sa (gerçek ağırlıklarla): IOTX −%12,3, REEF −%8,7, AIOT −%8,1, BTW −%7,6, SIREN −%7,5; tutulan long'larda
+≥ %50 / 24 sa düşüş 289 kez, 34 coin; çoğu piyasa yatayken (koşullu stop tetiklenmez). POWER (−%86) öncesinde kademe %80'i sattı → kitap
+o gün +%8-9. Senaryolar (7 durum): coin −%50 / −%80 / −%95 piyasa yatay −4,9..10,7 / −7,9..17,1 / −9,3..20,3; BTC çöküşüyle (gerçek alt
+medyanı −%21) −5,3..19,8; ikinci long da −%50: −10,9..23,2; ayrışma (longlar −%30, shortlar 0, coin −%95) −18,1..31,0. Bakım teminatı
+/ özkaynak en çok %3 → hiçbir senaryoda tasfiye yok. Rapor: DENETIM_EK_2026-10-31.md.
