@@ -7624,3 +7624,12 @@ Madde 686 SONUÇ: RED. Trend kolu tek başına yıllık %19,4 · Sh 0,99; carry 
 iyileşiyor ama bağlayıcı risk ölçütü (maks DD / bootstrap p1) neredeyse yerinden oynamıyor: carry'nin derin düşüşleri haftalara yayılan
 tek-coin / alt çöküşleri, BTC-ETH trendinin yakaladığı türden değil → seyrelen getiri eşit riskte geri kazanılamıyor. Carry için en iyi
 "çeşitlendirme" yine carry'nin kendi dengesi (604 / 667 / 669 ile aynı ders).
+
+## Madde 687 — Bağımsız denetim (kullanıcı isteği; kod değişmedi): DENETIM_2026-10-31.md
+Yeni ölçümler: (1) look-ahead yok (sinyal bar açılışına kadar, icra 4 sa sonra kapanışta); (2) funding SINIR ETKİSİ: giriş anında damgalı
+ödeme pozisyona yazılıyor, çıkış anındaki yazılmıyor → seçim gereği uç ödeme; giriş 3,7-7,2 bp vs çıkış 1,3-2,7 bp, ~3,6 bp / bacak girişi
+≈ yılda %2-4 iyimser; (3) survivorship yok (S3 listesi delist dahil); (4) funding verisi %99,7 tam (CETUS / ICP / TLM / BNX boşlukları);
+(5) KÂR AYRIŞTIRMASI: funding payı 2020 %13 · 2021 %9 · 2022 %30 · 2023 %28 · 2024 %17 · 2025 %48 · 2026 %55 — kalanı kalabalık coinlerin
+fiyat dönüşü + kâr al; (6) beta 0,01 ama BTC çöküş günlerinin çoğunda kitap negatif; (7) tek long brütün medyan %11,8'i, en çok %34'ü (long
+tavanı yok), koşullu stop coine özgü çöküşte çalışmaz. Hüküm: GO yalnız demo; gerçek sermaye için şartlar (demo dolum / kayma ölçümü, Ekim
+OOS, tek coin stres testi, yazılı durdurma kuralı).
