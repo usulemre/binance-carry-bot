@@ -7611,3 +7611,16 @@ hedefi kitabın düşüşünü inceltiyor ama 2025+'ta kârı kesiyor (555'in bu
 dozu %3 azalt, taban 0,5) en tutarlı aday ama Sharpe şartını kaçırdı ve 7 kollu denemenin en iyisi (seçim etkisi). Karar: bota GİRMEZ;
 DDA2 ×1,30 ileriye dönük İZLEME listesine (madde 677 gibi, Ekim-Aralık verisiyle; 3 ay sonunda P3T2 ×1,15'e göre eşit-risk getirisi ve
 en kötü gün raporlanır).
+
+## Madde 686 ÖN KAYIT (2026-10-31) — YENİ AİLE: carry + BTC/ETH TREND kolu (çeşitlendirme)
+Fikir: carry'nin kötü günleri piyasa çöküşleri; ayı piyasasında short tutan bir trend kolu bu günlerde kazanabilir. Kol: BTC ve ETH, her biri
+günlük kapanışta son 60 g getirinin işareti yönünde (long / short), 30 g oynaklıkla yıllık %20 oynaklığa ölçeklenmiş, eşit ağırlık; 5 bp
+maliyet × pozisyon değişimi; nedensel (t günü pozisyonu t−1 kapanışına göre). Harman: carry (P3T2 1,0x) × (1−w) + trend × w,
+w ∈ {0,1 ; 0,2}. Değerlendirme madde 596 eşit risk. ADAY: eşit-risk ≥ P3T2 + 8 VE Sharpe iki dönemde düşmüyor. Ek bilgi: carry ile
+trendin günlük korelasyonu ve carry'nin en kötü 20 gününde trendin ortalama getirisi.
+Madde 686 SONUÇ: RED. Trend kolu tek başına yıllık %19,4 · Sh 0,99; carry ile korelasyon −0,06; carry'nin en kötü 20 gününde trend ort
++%0,66 (carry −%4,41) → gerçekten bir hedge. Harman (ham · dd · en kötü · Sh ≤24 / 25+ → eşit-risk): w 0 +247,5 · −13,3 · −7,41 · 4,03 / 4,42 →
++315,2 | w 0,1 +214,3 · −12,6 · −6,65 · **4,13 / 4,47** → +291,4 | w 0,2 +183,9 · −12,4 · −5,89 · **4,21 / 4,51** → +247,1. Sharpe ve en kötü gün
+iyileşiyor ama bağlayıcı risk ölçütü (maks DD / bootstrap p1) neredeyse yerinden oynamıyor: carry'nin derin düşüşleri haftalara yayılan
+tek-coin / alt çöküşleri, BTC-ETH trendinin yakaladığı türden değil → seyrelen getiri eşit riskte geri kazanılamıyor. Carry için en iyi
+"çeşitlendirme" yine carry'nin kendi dengesi (604 / 667 / 669 ile aynı ders).
