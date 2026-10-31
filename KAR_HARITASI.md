@@ -7557,3 +7557,19 @@ sürümleri main'de elle güncellendi (Node 20 kullanımdan kalkma uyarısı gid
 open-pull-requests-limit: 0 → sürüm yükseltme PR'ı açılmaz, güvenlik PR'ları açılır (bot requirements.lock ile birebir sabit kurulduğu
 için alt sınır yükseltmek hiçbir şey değiştirmez; canlı öncesi sürüm değiştirmek gereksiz risk). Açık 6 PR kullanıcı tarafından
 kapatılmalı (oturumdan dış sistemde PR kapatma izni yok); action PR'larını Dependabot genelde kendisi kapatır.
+
+## Madde 683 ÖN KAYIT (2026-10-31) — YENİ AİLE: borsalar arası funding arbitrajı (Binance ↔ MEXC), ön eleme
+Fikir: aynı coinde iki borsanın funding'i farklıysa yüksek olanda short, düşük olanda long (fiyat riski karşılıklı söner, kalan =
+funding farkı). Veri: 676'nın MEXC funding'i (2025-05 → 2026-10, 545 sembol) + Binance funding. Ön eleme (motor yok, yalnız funding):
+her 8 sa'te sinyal = son 60 sa günlük ortalama fark (Binance − MEXC); |sinyal| en büyük 10 coin, fark yönünde 5 g tutulur; getiri =
+gerçekleşen fark (yön işaretli) − maliyet. Maliyet: 4 bacak × 5 bp (giriş + çıkış, iki borsa) = 20 bp / tur (gerçekçi), 4 bacak × 2 bp
+maker = 8 bp (iyimser). Sermaye: iki borsada teminat, kaldıraçsız brüt = 2 × bacak. EŞİK: iyimser maliyette bile yıllık net getiri
+< %20 ise RED (önerilen ayarın ~%250'sinin yanında ikinci hesap / borsa riski değmez). Fiyat bazı (iki borsa fiyat farkı) yok sayılıyor
+→ sonuç iyimser tarafta.
+Madde 683 SONUÇ: DEĞMEZ (ön kayıt eşiğinin sınırında; asıl kitaba aday değil). İlk hesap HATALIYDI (Binance funding'i tüm geçmişin
+medyan aralığıyla günlüğe çevrilmişti; aralığı 8 → 4 / 1 sa'e inen coinlerde sahte fark → tur başına 233 bp). Düzeltilmiş (iki borsada
+gerçek ÖDEME TOPLAMLARI, kümülatif): tur başına brüt 70,6 bp (medyan 27,7); gerçekçi 20 bp maliyetle yıllık net %18,5 (zararlı tur %42),
+iyimser 8 bp ile %22,9 (%27). Eğilim AŞAĞI: 2025 98,8 bp → 2026 48,9 bp. Fiyat bazı riski (yüksek funding'li borsada perp primi açılabilir)
+yok sayıldı → gerçek sonuç daha kötü. Seçimin büyük kısmı birkaç ince coin (RED, PUFFER, RLS, 1000LUNC...). İkinci borsa hesabı, teminat
+bölünmesi, borsa riski ve önerilen ayarın ~%250'si yanında anlamsız → izlenmez. Ara bulgu: MEXC verisi carry için ek bilgi taşımıyor
+(676) ve borsalar arası farkın kendisi de küçük, sönen bir kenar.
