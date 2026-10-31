@@ -7650,3 +7650,14 @@ Gerçekleşen en kötü tek coin 24 sa (gerçek ağırlıklarla): IOTX −%12,3,
 o gün +%8-9. Senaryolar (7 durum): coin −%50 / −%80 / −%95 piyasa yatay −4,9..10,7 / −7,9..17,1 / −9,3..20,3; BTC çöküşüyle (gerçek alt
 medyanı −%21) −5,3..19,8; ikinci long da −%50: −10,9..23,2; ayrışma (longlar −%30, shortlar 0, coin −%95) −18,1..31,0. Bakım teminatı
 / özkaynak en çok %3 → hiçbir senaryoda tasfiye yok. Rapor: DENETIM_EK_2026-10-31.md.
+
+## Madde 690 — Kâr kaynağı sürdürülebilirliği (kod, strateji, parametre değişmedi; canlıya bağlanan gösterge yok)
+Araç arastirma_m690_kar_kaynagi.py (motor kopyası /tmp/g33_m690.py; E dosyaları g33.py ile bayt bayt aynı; bileşen toplamı ↔ motor günlük
+getirisi korelasyon 0,998). Kademe kâr almaları TP'ye konunca (g33 yıllık tablosu bunları "fiyat"a yazıyordu → madde 687 / 688'deki
+"fiyat payı" ifadesi düzeltilir): kârın ana motoru her yıl TP / kademe (2021 135,6 · 2022 71,8 · 2024 92,9 · 2025 142,6 · 2026 166,7 puan),
+funding ikinci (17-44 → 2025-26'da 71-81), tutuş fiyatı long + short net 2022 −27 · 2024 −19 · 2025 −62 · 2026 −99. 30 g pencerelerde
+funding ve TP hiç negatif değil; long / short fiyat ~%50-55 negatif. Aylık otokorelasyon funding 0,67 · TP 0,39 · long 0,25 · short 0,07.
+Kötü aylar = TP çok düşük + tutuş fiyatı negatif (2022-05 LUNA long −25,6; 2022-07 TP 1,1; 2023-02 TP 2,5). Erken uyarı (sonraki 30 g < 0,
+taban %13,2): mevcut funding kuralı F 6 yılda HİÇ alarm vermedi; fiyat / long / short / TP / toplam göstergeleri lift 0,5-1,1, alarm sonrası
+30 g getiri yine +%7-11 → kapı iyi dönemleri kapatırdı (fiyat kapısı ~450 puan). Hipotez: yalnız funding 90 g VE TP 90 g birlikte tarihsel
+alt dilimde = "kenar zayıflıyor" uyarısı (kapı değil; yalnız 2022 2. yarı). Rapor: ARASTIRMA_690.md.
