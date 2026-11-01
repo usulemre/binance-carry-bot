@@ -7782,3 +7782,16 @@ düşükken yalnız ESKİ coin × 0,5, genç tam → @6 BAZ 238 (−4), kuraklı
 BAZ 208, kuraklık DD min −13,4; tüm kitap × 0,5 (T50) benzer koruma ama BAZ'da 14 / 57 puan genç kazancı kaçırıyor (dönüşte genç katkı
 +19 / +25 puan / 90 g). Y365K'nın en kötü 365 g'si hiçbir kolda pozitif değil. Öneri: E50'yi Ekim-Aralık verisiyle ön kayıtlı ileriye dönük
 izleme (kullanıcı kararı); canlı değişiklik ayrıca onay + geri dönüş kuralı ister. Rapor: ARASTIRMA_697.md.
+
+## Madde 698 ÖN KAYIT (2026-11-01, sonuçlar görülmeden; kullanıcı: "kâr aramaya devam") — YAŞ EĞİMİ: seçilen genç bacaklara daha çok ağırlık
+Gerekçe (ölçüm, 694 / 697): 2024-26'da genç (< 365 g) coinler sermayenin %37'siyle kârın %78'i, maruziyet başı %375 vs eski %62; dünyalar arası
+ay sabit etkili: genç brüt payı +10 puan → aylık +1,7 puan. Daha önce denenmeyen eksen: SEÇİM DEĞİŞMEDEN, seçilmiş bacaklar içinde ağırlığı
+yaşa göre eğmek (461 YAS_GUN altını kısmi ağırlıkla denedi; ağırlık ekseninde vol / büyüklük / kalabalık denendi, yaş denenmedi). Uygulama
+motor KOPYASINDA (/tmp/g33_m698.py; g33.py değişmez): dengelemede eşit ağırlık hesaplandıktan sonra, bir tarafta hem genç hem eski bacak
+varsa genç bacakların ağırlığı × a, taraf toplamı korunacak şekilde yeniden ölçeklenir (brüt ve dolar nötrlüğü aynı; KAP / rezerv / prim
+sonradan aynen uygulanır). Genç = yaş < g gün (o barda bilinen panel yaşı). Düğme kapalıyken iki hizada bayt bayt parite şart.
+Kollar (5): A15 a=1,5 iki taraf g=365 · A20 a=2 iki taraf g=365 · L20 a=2 yalnız long · S20 a=2 yalnız short · A20G a=2 iki taraf g=180.
+Değerlendirme madde 685 / 596 ile aynı: eşit risk (T4 1,0x'in maks DD, en kötü gün, 1 yıl blok bootstrap p1'ini aşmayan en büyük k);
+ADAY: eşit-risk yıllık ≥ P3T2 + 8 VE Sharpe ≤2024 ve 2025+ tabandan düşük değil. Ek rapor (karar dışı): yıllık, en kötü gün, genç short
+kuyruğu (697 T4: genç short'ta +%100 sıçrama ~10×), L75_a kuraklık dünyasında aynı kol (genç az iken etkisi). 5 kol çoklu deneme: ADAY
+çıksa bile Ekim+ verisiyle doğrulanmadan bota girmez.
