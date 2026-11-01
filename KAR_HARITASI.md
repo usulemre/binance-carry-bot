@@ -7741,3 +7741,13 @@ Dünyalar: normal = BAZ; kuraklık = Y365K, L50_a, L50_b, L75_a, L75_b, DUR24, D
 (yalnız rapor). ADAY şartı (hepsi): (1) her kuraklık dünyasında en kötü 365 g ≥ 0 VE maks DD ≥ −%15 VE 1 yıl blok bootstrap (blok 10 g,
 2.000 sim.) zarar olasılığı ≤ %1; (2) BAZ dünyasında CAGR ≥ bazın %90'ı VE maks DD bazdan kötü değil. Dört kol çoklu deneme; ADAY çıksa bile
 kuraklık dünyaları karşı-olgu ve örtü yaklaşık → bota girmez, kullanıcı kararı + Ekim+ verisi gerekir.
+Madde 696 SONUÇ: ön kayıtlı dört kol RED (araç arastirma_m696_kuraklik.py; yeni motor koşusu yok, 694 / 695 dünyaları; kitap düzeyi örtü).
+Teşhis: baz yedi kuraklık dünyasında takvim yılı bazında zarar etmiyor (en kötü yıl +%18,5), risk derinlikte: DD −%16..−22, su altı ≤306 g,
+Y365K en kötü 365 g −%9,7. Kollar (kuraklık DD min · 365 g ≥ 0 · BAZ CAGR): K1 KURAK −20,1 · 6 / 7 · 238 (en ucuz; Y365K DD −21 → −11; Sharpe
+L-dünyalarda +0,1..0,2; gösterge kuraklığa 6-12 ay gecikiyor, 2025 yazı düşüşünü kaçırıyor) | K2 DDA2 −17,3 · 5 / 7 · 210 (Y365K en kötü 365 g'yi
+−15'e KÖTÜLEŞTİRİYOR) | K3 V60K −21,4 · 6 / 7 · 193 | K4 −16,6 · 5 / 7 · 207. Yapısal sınır: doz derinliği küçültür, işareti değiştirmez — Y365K
+zarar olasılığı her dozda ~%1,4-1,9, en kötü 365 g her dozda < 0. Sonradan (HİPOTEZ, seçim değil): K1 eşiği 10 → kuraklık DD 7 / 7 ≥ −%15,
+BAZ CAGR 206 (−%15); aynı DD'yi sabit dozla almak 0,6x ister (BAZ 112, −%54) → göstergeye bağlı doz ~3-4× verimli sigorta, ama sonradan
+seçildi, bota girmez; ileriye dönük izleme kullanıcı kararı. Gerçek dünya göstergesi n30 (evrende 60-365 g coin sayısı) 2026-09 sonu 5,1 —
+2022'den beri en düşük (2024-25: 15-27); demo izleme metriği olarak eklenmeli (kapı değil). Yapısal çözüm: eski coin kitabının kenarı (2024-26
+eski coin long'u fiyatta kaybediyor) — ayrı araştırma. Rapor: ARASTIRMA_696.md.
