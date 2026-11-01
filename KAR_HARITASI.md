@@ -7709,3 +7709,16 @@ sayısından; yeni coinlerin ilk yıl fiyatı medyan −%40 → −%79, funding 
 maruziyet başı getiri %187 → %97, 2024+ %189 → %71). Risk: genç coinlerde 24 sa çöküş / sıçrama 4-15×, funding aşırılığı 2-6×, delist %3,5;
 spread ölçülemedi. Gerçek zamanlı: genç coin sayısı getiriyle aynı yönde (test ρ 0,41-0,67) ama zaman eğilimi çıkarılınca −0,04..0,31 → öngörü
 kanıtlanmadı. Rapor: ARASTIRMA_694.md.
+
+## Madde 695 — Strateji dayanıklılığı ve başarısızlık analizi (kod, strateji, parametre değişmedi; kapı yok)
+Araç arastirma_m695_dayaniklilik.py (g33 kopyası + TP_DOLUM_P düğmesi; kapalıyken iki hizada bayt bayt aynı; 66 koşu tamam; 2 saat sınırında
+kesilen 1 koşu sayılmadı, baştan koşuldu). Sınıflar: A listeleme kuraklığı FRAGILE (2025-01'den 30 / 90 / 180 g duruş → 2025 %267 → 177 / 117 /
+80, sermaye boşta kalmıyor, eski coinlere kayıp daha az kazanıyor); B bootstrap ROBUST geçmiş içinde (1 yıl CAGR p5 %90-105, zarar ~%0; ama
+2022 tipi yıl medyan %62, genç coin yoksa p5 −%2); C walk-forward UNKNOWN (geçmişe göre komşu seçimi bazı yenemiyor 198 / 187 vs 207; bağımsız
+OOS değil, ilk gerçek OOS 2026-10); D yaş: genç coin primi her BTC rejiminde ve oynaklıkta (60-90 g 31 bp vs > 2 yıl 4 bp; sermayenin %36'sı
+> 2 yılda yıllık ~%80); E icra: dolum %97 / %90 −3,8 / −4,6 ROBUST, %80 / %70 −17 / −29 ve en kötü gün −7,4 → −14,5 WEAK, kısmi dolum / ters
+seçilim UNKNOWN; F BTC korelasyonu +0,02, gerçek 10 sert çöküş gününde kitap en kötü −%5,3, tasfiye yok; varsayımsal 3 short +%100 tek gün
+−%21-26, funding 30 g tersine −%35 uç (WEAK); G yoğunlaşma WEAK (TRB çıkınca −22, 2023 %310 → 166; ilk 10 çıkınca %135 Sharpe 2,97; en iyi
+10 ay çıkınca %133); H plato ROBUST (20 komşunun 19'u ±%20, Sharpe hep ≥ 3), YAS_GUN 30'da uçurum (DD −%35, en kötü ay −%20,5) → eşik tek
+taraflı kırılgan. Demo metrikleri: TP dolum / kısmi dolum / süre, kayma, genç coin spread'i, aylık listeleme sayısı, genç coin kâr payı, ilk
+1 / 3 coin payı, brüt / net / BTC betası, en büyük 3 short ağırlığı, backtest replay takip farkı, teminat oranı. Rapor: ARASTIRMA_695.md.
