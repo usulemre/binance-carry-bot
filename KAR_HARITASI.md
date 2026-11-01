@@ -7801,3 +7801,15 @@ Madde 698 SONUÇ: HEPSİ RED (14 koşu; parite bayt bayt; düğme her kolda etki
 A20 / A15 getiri şartını geçti ama ≤2024 Sharpe düştü: eğim son rejimi büyütüyor (A20 yıllık fark 2021 −54, 2022 −11 / 2025 +69, 2026
 +77). Kuraklık dünyasında (L75_a) A20 CAGR 126 → 127 ama Sharpe 3,11 → 2,93, DD −16,9 → −18,1, en kötü gün −5,6 → −7,3 → azalan kaynağa
 (2026 listeleme ~−%60) daha çok yaslanıyor. Bota girmez, izleme önerisi yok. Rapor: ARASTIRMA_698.md.
+
+## Madde 699 ÖN KAYIT (2026-11-01; kullanıcı "devam": TP'ye ulaşamayan pozisyonlar) — TP'siz uzun short'u kes (STP_GUN)
+Önceden denenenler: tutma süresi bir DOZ düğmesi (215 / 264 / 522 / 679: 5 g yerinde); kayıp veren short'u eleme (611 KAYIP_HAF) ve stop
+sonrası soğuma (665) RED — "sıkışan short'a devam etmek ortalamada doğru". Yeni eksen: KAYBA göre değil, TP / kademe OLMADAN geçen SÜREYE göre.
+Teşhis (ÖLÇÜM, bu veriden; aynı veride test edilecek → veri madenciliği riski açıkça kabul): baz coin-gün defterinde bir dilimde kesintisiz
+tutulan bacaklar için, o ana kadar TP / kademe olmamışken d. günden SONRAKİ katkı: SHORT 7 g sonrası maruziyetin %25'i, maruziyet başı
+yıllık %19 · 10 g sonrası %17'si, %4,5 · 15 g sonrası %11'i, −%10 (short ortalaması %149). LONG'da aynı durum %75-150 (ortalama %203) →
+long'a dokunulmaz. Kural (motor KOPYASI /tmp/g33_m699.py, g33.py değişmez): dilim başına sayaç; coin bu dilimde short iken her bar +1,
+pozisyon kapanınca ya da TP / kademe olunca sıfır. Dengelemede sayaç ≥ d gün olan coin aday listesinden çıkar (pozisyon kapanır) ve 5 g
+(30 bar) o dilimde aday olmaz. Kollar: d = 7 / 10 / 14. Düğme kapalıyken iki hizada bayt bayt parite şart. Değerlendirme 685 / 596:
+ADAY = eşit-risk ≥ P3T2 + 8 VE Sharpe ≤2024 ve 2025+ düşmüyor. Üç kol çoklu deneme + aynı veride teşhis → ADAY bile bota girmez,
+Ekim+ verisiyle ileriye dönük doğrulama gerekir.
