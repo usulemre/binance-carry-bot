@@ -60,6 +60,44 @@ def kos():
         for h in (0, 1): print(ad, h, _kos1(ad, ek, h), flush=True)
 
 
+def analiz():
+    import arastirma_m695_dayaniklilik as T, arastirma_m685_dinamik_doz as Z
+    eks = [ad for ad in ["P0", *KOLLAR, "L75a_A20"] for h in (0, 1) if not os.path.exists(f"{D}/E_{ad}_{h}.pkl")]
+    print(f"[KONTROL] eksik koşu: {eks or 'yok'}")
+    if eks: sys.exit(1)
+    ok = all(open(f"{D}/E_P0_{h}.pkl", "rb").read() == open(REF.format(h=h), "rb").read() for h in (0, 1))
+    print(f"[KONTROL] parite (düğme kapalı) iki hiza: {'bayt bayt aynı' if ok else 'FARKLI!'}")
+    for ad in KOLLAR:
+        fark = any(open(f"{D}/E_{ad}_{h}.pkl", "rb").read() != open(REF.format(h=h), "rb").read() for h in (0, 1))
+        print(f"[KONTROL] {ad}: tabandan {'farklı (düğme etkili)' if fark else 'AYNI — düğme etkisiz!'}")
+    P = Z.P
+    S = {"P3T2": P}
+    for ad in KOLLAR: S[ad] = T.seri(ad, D).reindex(P.index)
+    rows = []; Y = {}
+    base = None
+    for ad, d in S.items():
+        d = d.dropna(); o = Z.olc(d); k, er = Z.esit(d)
+        s1, s2 = Z.sh(d[d.index < "2025-01-01"]), Z.sh(d[d.index >= "2025-01-01"])
+        e = (1 + d).cumprod(); r365 = e / e.shift(365) - 1
+        row = dict(kol=ad, ham=o["yil"], dd=o["dd"], en_kotu=o["ek"], gun_5_alti=int((d < -0.05).sum()), sh_le24=s1, sh_25=s2,
+                   sh_tum=Z.sh(d), p1=Z.p1(d), k=k, esit_risk=er)
+        if ad == "P3T2": base = row; row["karar"] = "—"
+        else:
+            row["karar"] = "ADAY" if (er >= base["esit_risk"] + 8 and s1 >= base["sh_le24"] and s2 >= base["sh_25"]) else "RED"
+        rows.append(row); Y[ad] = T.yillik(d)
+    R = pd.DataFrame(rows); R.to_csv(f"{D}/sonuc.csv", index=False)
+    print("\n[ÖLÇÜM] P3T2 ve yaş eğimi kolları (2.000 $, 1,0x; eşit risk = T4 1,0x riskine k ile ölçek):")
+    print(R.round(2).to_string(index=False))
+    print("\n  yıllık %:\n" + pd.DataFrame(Y).T.round(1).to_string())
+    YD = pd.DataFrame(Y).T; print("\n  yıllık fark (kol − P3T2, puan):\n" + (YD - YD.loc["P3T2"]).drop("P3T2").round(1).to_string())
+    # kuraklık dünyası
+    l0 = T.seri("L75_a", "/tmp/m694"); l1 = T.seri("L75a_A20", D)
+    for ad, d in (("L75_a baz", l0), ("L75_a + A20", l1)):
+        d = d[d.index >= "2021-01-01"]; o = T.olc(d)
+        print(f"  [EK] {ad}: CAGR {o['cagr']:.1f} · Sharpe {o['sharpe']:.2f} · DD {o['maks_dd']:.1f} · en kötü gün {o['en_kotu_gun']:.2f}")
+    print("\nÇIKTI KONTROLÜ:", "hepsi var" if os.path.exists(f"{D}/sonuc.csv") else "EKSİK")
+
+
 if __name__ == "__main__":
     if len(sys.argv) > 1 and sys.argv[1] == "kos": kos()
     elif len(sys.argv) > 1 and sys.argv[1] == "analiz": analiz()
