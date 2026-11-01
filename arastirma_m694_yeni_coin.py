@@ -377,8 +377,16 @@ def analiz():
                 s = rng.integers(w + 15, n - w - 15); nul.append(np.corrcoef(xv, pd.Series(np.roll(yv, s)).rank().values)[0, 1])
             nul = np.abs(np.array(nul))
             # eğitimdeki işaretle tahmin: test korelasyonu aynı işaretli mi
+            # ortak zaman eğilimi kontrolü: testte iki seri de tarihe göre doğrusal eğilimden arındırılır
+            tt = np.arange(n)
+            rx = te[k].values - np.polyval(np.polyfit(tt, te[k].values, 1), tt); ry = yv - np.polyval(np.polyfit(tt, yv, 1), tt)
+            rho_eg = np.corrcoef(rx, ry)[0, 1]
+            # zarar ayrımı: testte sonraki ufuk getirisi < 0 olan günleri ayırt ediyor mu (AUC; eğitim işaretiyle)
+            from sklearn.metrics import roc_auc_score
+            yz = (yv < 0).astype(int)
+            auc = roc_auc_score(yz, -np.sign(rho_tr) * te[k].values) if 0 < yz.sum() < n else np.nan
             RT.append(dict(ufuk=w, ozellik=k, rho_egitim=rho_tr, rho_test=rho_te, ayni_isaret=np.sign(rho_tr) == np.sign(rho_te), p_dairesel=(nul >= abs(rho_te)).mean(),
-                           test_n=n, bagimsiz_blok=n // w))
+                           rho_test_egilimsiz=rho_eg, zarar_auc=auc, zarar_orani=yz.mean() * 100, test_n=n, bagimsiz_blok=n // w))
     RT = pd.DataFrame(RT); print(RT.round(3).to_string(index=False)); RT.to_csv(f"{D}/akis_ongoru.csv", index=False)
     print(f"  eğitim 2021-01 – {sinir.date()} (ufuk kadar ambargo) · test 2024-01 – sonu · çoklu test: {len(RT)} test, Bonferroni eşiği {0.05/len(RT):.4f}")
 
