@@ -251,7 +251,6 @@ def analiz():
                                                p01=("net", lambda v: v.quantile(0.001) * 100), en_kotu=("net", lambda v: v.min() * 100),
                                                kayip_1=("net", lambda v: (v < -0.01).sum()), kayip_2=("net", lambda v: (v < -0.02).sum()))
     t4["brut_pay"] = t4.brut_pay / t4.brut_pay.sum() * 100; t4["net_puan"] = t4.pop("net") * 100
-    t4["kayip_1_per_1000_bw_gun"] = t4.kayip_1 / (sh.groupby("grup", observed=True).bw.sum()) / 1000
     print("  [ÖLÇÜM] short coin-gün (kitap %): p0,1 / en kötü / −%1 ve −%2'den kötü gün sayısı:\n" + t4.round(3).to_string()); t4.to_csv(f"{D}/T4_short.csv")
     en = sh.nsmallest(10, "net")[["gun", "sembol", "yas", "net"]].assign(net=lambda x: x.net * 100)
     print("  en kötü 10 short coin-günü (kitap %):\n" + en.round(2).to_string(index=False))

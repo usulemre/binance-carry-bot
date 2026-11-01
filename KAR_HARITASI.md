@@ -7769,3 +7769,16 @@ sayısı (30 g ort., 1 g gecikmeli; madde 696). Ölçümler:
      (fırsat dönünce kaçırma yok). Karşılaştırma: aynı durumda TÜM kitap × m (genç dahil). Geçiş maliyeti 10 bp × eski (ya da tüm) brüt ×
      |Δm|. Duyarlılık n30 < 10 (696'da sonradan görülen eşik; etiketli). Ölçütler: CAGR, Sharpe, maks DD, en kötü 365 g, su altı.
 Hiçbir sonuç bota girmez; karar kullanıcıya bırakılır.
+Madde 697 SONUÇ (ölçüm; strateji değişmedi, otomatik değişiklik yok): 16 koşu tamam, baz iki hizada ana motorla, 7 kuraklık dünyası 694
+çıktılarıyla bayt bayt aynı; coin-gün defteri ↔ kitap korelasyon 0,9999. T1: kripto listeleme çeyrek başı 2025 52-71 → 2026 26 / 22 / 18
+(~−%60; Eylül 2026 panelde yok, madde 675) → kuraklık GERÇEK; ama L30 / 60 / 90 eğilimden arındırılınca sonraki 30 / 90 g getiriyi
+öngörmüyor (ρ −0,02..0,16), etki yavaş (kohort ~1 yıl genç). T2: 2024-26 genç sermayenin %37'si, kârın %78'i (maruziyet başı %375 vs eski
+%62); dünyalar arası ay sabit etkili: genç payı +10 puan → aylık +1,7 puan (%90 +1,0..+2,5); gerçek dünyada zamanlama sinyali zayıf (ρ 0,06).
+T3: n30 < 6 iken eski coin kolu her dünyada pozitif (maruziyet başı yıllık %48-92, Sharpe 1,3-2,4) → nakitten iyi. T4: 60-180 g short'larda
++%100 aleyhte hareket %0,96 (> 2 yıl %0,09), en kötü coin-gün −%8,65 (IOTX), genç short bacağı en kötü gün −%6,7; ama short sermayesinin
+%18'iyle +141 puan (en kârlı grup) → yeni kısıt yok (664 ile tutarlı). T5: n30 < 4 iken aylık −2,0..−2,6 puan (ay etkisine göre), 4-10 nötr,
+10-15 +3,0; brüt sabit 0,70-0,75 (sermaye eski coine kayıyor). T6 (örtü): tam nakit en kötü (Sharpe ↓, E0 @10 L75_a DD −%23,8); E50 = n30
+düşükken yalnız ESKİ coin × 0,5, genç tam → @6 BAZ 238 (−4), kuraklık DD min −22,3 → −16,6, Sharpe ↑, kaçan genç 0; @10 (sonradan, HİPOTEZ)
+BAZ 208, kuraklık DD min −13,4; tüm kitap × 0,5 (T50) benzer koruma ama BAZ'da 14 / 57 puan genç kazancı kaçırıyor (dönüşte genç katkı
++19 / +25 puan / 90 g). Y365K'nın en kötü 365 g'si hiçbir kolda pozitif değil. Öneri: E50'yi Ekim-Aralık verisiyle ön kayıtlı ileriye dönük
+izleme (kullanıcı kararı); canlı değişiklik ayrıca onay + geri dönüş kuralı ister. Rapor: ARASTIRMA_697.md.
