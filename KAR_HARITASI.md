@@ -7841,3 +7841,12 @@ red → piyasa), kilit, eşleme, kısmi, dokunma, özet hesapları; 24 test pake
 bot PARTIALLY_FILLED TP'yi tam dolmuş sayıp coini hedeften çıkarıyor, kalan miktar sonraki turda normal emirle kapanıyor (backtest'te TP
 hep tam dolar) — davranış değiştirilmedi, sıklığı artık ölçülecek. Sunucuda: `cd /opt/carry && sudo -u carry git pull && sudo systemctl
 restart carry carry-panel`.
+
+## Madde 702 — KULLANICI KARARI (2026-11-02): bot YALNIZ kullanıcının kendi hesabında; aile / arkadaşlara açılmaz
+Soru: eş, aile, arkadaşlar da kullanabilir mi; ücret alınmazsa suç mu? Araştırma (hukuki görüş değil): SPK'ya göre izin şartı faaliyetin
+"düzenli uğraşı, ticari veya mesleki" olmasına bağlı, ücret tek başına belirleyici değil; kripto tarafında SPK III-35/B.2 (13.03.2025)
+danışmanlığı yalnız izinli platformlara bırakıyor, hesabın vekaleten / sözlü yetkiyle yönetimi yasak, kripto portföy yöneticiliği izinli
+hizmet listesinde yok; izinsiz kripto varlık hizmet sağlayıcılığı SPKn 109/A (3-5 yıl hapis + adli para cezası). Başkasının anahtarını
+kendi sunucunda kendi stratejinle çalıştırmak "başkası adına yönetime" fazla yakın. KARAR: yalnız kendi kullanım (SPK lisansı olmadan
+başkasına sunulmaz — önceki güvenlik kısıtıyla aynı). Çoklu kurulum altyapısı (carry@, panel sekmeleri) yalnız kullanıcının KENDİ
+hesapları / demo karşılaştırmaları için. İleride değişirse önce sermaye piyasası avukatı.
