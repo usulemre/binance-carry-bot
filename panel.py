@@ -184,6 +184,18 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .r-stop,.r-hata{color:var(--eks)}.r-delist,.r-saglik{color:var(--uyari)}.r-ayar,.r-basla{color:var(--vurgu)}
 .durum{font-size:12px;padding:2px 8px;border-radius:999px;border:1px solid var(--cizgi)}.durum.ok{color:var(--art);border-color:var(--art)}.durum.yok{color:var(--eks);border-color:var(--eks)}
 .bos{color:var(--soluk);padding:20px 0;text-align:center}
+.takvim{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
+.takvim .bas{font-size:11px;color:var(--soluk);text-align:center;padding-bottom:2px}
+.takvim .g{border-radius:8px;padding:5px 4px 6px;min-height:50px;border:1px solid var(--cizgi);font-variant-numeric:tabular-nums;text-align:center;overflow:hidden}
+.takvim .g .n{font-size:11px;color:var(--soluk);text-align:left;line-height:1}
+.takvim .g .v{font-size:13px;font-weight:650;margin-top:4px;white-space:nowrap}
+.takvim .g.bosg{border:none}.takvim .g.yok{opacity:.45}
+.takvim .g.hp,.ayt td.hp{background:color-mix(in srgb,var(--art) var(--p),transparent);border-color:transparent}
+.takvim .g.hn,.ayt td.hn{background:color-mix(in srgb,var(--eks) var(--p),transparent);border-color:transparent}
+@media(max-width:520px){.takvim .g{min-height:42px;padding:4px 2px}.takvim .g .v{font-size:11px}}
+.aygez{display:flex;align-items:center;justify-content:space-between;gap:8px;margin-bottom:8px}
+.aygez button{border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);border-radius:8px;padding:2px 10px;cursor:pointer;font:inherit}
+.aygez button:disabled{opacity:.35;cursor:default}.aygez b{font-size:14px}
 </style></head><body><div class="kap">
 <header><div><h1>Carry Panel</h1><div class="k" id="alt"></div></div><div class="k">salt okunur · emir göndermez</div></header>
 <div class="sekme" id="sekme"></div><div id="icerik"></div></div>
@@ -194,7 +206,39 @@ const yz = (v, d=2) => v==null ? "—" : (v>=0?"+":"") + (v*100).toFixed(d) + "%
 const para = v => v==null ? "—" : v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2}) + " $";
 const sinif = v => v==null ? "" : (v>=0 ? "art" : "eks");
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
-let VERI, secili = 0, grafikler = [];
+let VERI, secili = 0, grafikler = [], ayIdx = {};
+const AYAD = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
+// PDF'teki gibi: kazanç yeşil, kayıp kırmızı; ton koyuluğu büyüklükle (gün: |%3| ve üstü tam ton, ay: |%30|)
+const ton = (v, tam) => Math.round(14 + 56 * Math.min(1, Math.abs(v) / tam)) + "%";
+const isiS = v => v==null || Math.abs(v) < 0.0005 ? "" : (v>0 ? "hp" : "hn");
+const isi = (v, tam, ek="") => { const c = isiS(v); return c ? `class="${ek} ${c}" style="--p:${ton(v,tam)}"` : `class="${ek}"`; };
+function takvim(k){
+  const S = k.seri || []; const G = S.map((s,j)=>({...s, j})).filter(s=>s.gun!=null && s.tarih);
+  if (!G.length) return "<div class='bos'>henüz günlük getiri yok</div>";
+  const aylar = [...new Set(G.map(s=>s.tarih.slice(0,7)))].sort();
+  let i = ayIdx[secili]; if (i==null || i<0 || i>=aylar.length) i = aylar.length - 1;
+  const a = aylar[i], [y, m] = a.split("-").map(Number), M = G.filter(s=>s.tarih.startsWith(a));
+  const gun = {}; M.forEach(s=>{ gun[+s.tarih.slice(8,10)] = s; });
+  const bas = (new Date(y, m-1, 1).getDay() + 6) % 7, n = new Date(y, m, 0).getDate();
+  let h = ["Pzt","Sal","Çar","Per","Cum","Cmt","Paz"].map(d=>`<div class="bas">${d}</div>`).join("");
+  for (let b=0; b<bas; b++) h += `<div class="g bosg"></div>`;
+  for (let d=1; d<=n; d++){
+    const s = gun[d];
+    if (!s){ h += `<div class="g yok"><div class="n">${d}</div><div class="v">·</div></div>`; continue; }
+    const onc = s.j>0 ? S[s.j-1].kitap : null, usd = onc!=null ? onc * s.gun : null;
+    const ipucu = `${s.tarih}  ${yz(s.gun)}` + (usd!=null ? `  (${usd>=0?"+":""}${para(usd)})` : "");
+    h += `<div ${isi(s.gun,0.03,"g")} title="${ipucu}"><div class="n">${d}</div><div class="v">${yz(s.gun,1)}</div></div>`;
+  }
+  const g = M.map(s=>s.gun), art_ = g.filter(v=>v>0).length, eks_ = g.filter(v=>v<0).length;
+  const eniyi = M.reduce((p,c)=>c.gun>p.gun?c:p), enkotu = M.reduce((p,c)=>c.gun<p.gun?c:p);
+  const ayg = (k.aylik||{})[a];
+  return `<div class="aygez"><button ${i<=0?"disabled":""} onclick="ayIdx[secili]=${i-1};ciz()" aria-label="önceki ay">‹</button>
+    <b>${AYAD[m-1]} ${y} · <span class="${sinif(ayg)}">${yz(ayg,1)}</span></b>
+    <button ${i>=aylar.length-1?"disabled":""} onclick="ayIdx[secili]=${i+1};ciz()" aria-label="sonraki ay">›</button></div>
+    <div class="takvim">${h}</div>
+    <div class="k" style="margin-top:8px">kazanç günü <b class="art">${art_}</b> · kayıp günü <b class="eks">${eks_}</b> / ${g.length} ·
+    en iyi ${+eniyi.tarih.slice(8,10)} ${AYAD[m-1]} <span class="art">${yz(eniyi.gun,2)}</span> · en kötü ${+enkotu.tarih.slice(8,10)} ${AYAD[m-1]} <span class="${sinif(enkotu.gun)}">${yz(enkotu.gun,2)}</span></div>`;
+}
 function ciz(){
   const K = VERI.kurulumlar; $("#alt").textContent = "güncellendi " + VERI.uretim;
   $("#sekme").innerHTML = K.map((k,i)=>`<button class="${i==secili?'on':''}" onclick="secili=${i};ciz()">${k.ad} · ${k.mod}</button>`).join("");
@@ -215,10 +259,11 @@ function ciz(){
   </div>
   <div class="iki">
     <div class="kart"><h2>Kitap ($) · ayar ${k.profil||"—"} ${k.doz||""}x</h2><div class="grafik"><canvas id="g1"></canvas></div></div>
-    <div class="kart"><h2>Aylık getiri</h2><div class="tablo"><table><tr><th class="l">Ay</th><th>Getiri</th></tr>
-      ${ay.map(a=>`<tr><td class="l">${a[0]}</td><td class="${sinif(a[1])}">${yz(a[1],1)}</td></tr>`).join("") || "<tr><td class='l bos' colspan=2>—</td></tr>"}</table></div>
+    <div class="kart"><h2>Aylık getiri</h2><div class="tablo"><table class="ayt"><tr><th class="l">Ay</th><th>Getiri</th></tr>
+      ${ay.map(a=>`<tr><td class="l">${a[0]}</td><td ${isi(a[1],0.30)}><b>${yz(a[1],1)}</b></td></tr>`).join("") || "<tr><td class='l bos' colspan=2>—</td></tr>"}</table></div>
       ${(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:8px">Toplam funding ${para(k.funding_top)} · komisyon ${para(k.komisyon_top)}</div>`:""}</div>
   </div>
+  <div class="kart" style="margin-bottom:12px"><h2>Günlük takvim · kazanç yeşil, kayıp kırmızı (ton koyuluğu = büyüklük)</h2>${takvim(k)}</div>
   <div class="kart" style="margin-bottom:12px"><h2>Günlük getiri</h2><div class="grafik" style="height:180px"><canvas id="g2"></canvas></div></div>
   <div class="iki">
     <div class="kart"><h2>Pozisyonlar (${L.length} long / ${S.length} short)</h2><div class="tablo"><table>

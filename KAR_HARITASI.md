@@ -7818,3 +7818,10 @@ Madde 699 SONUÇ: HEPSİ RED (8 koşu; parite bayt bayt; kural etkili: D7 ~1.500
 4,01 / 4,42 → 313,1 | D14 247,3 · −13,4 · −7,41 · 4,03 / 4,43 → 291,3. Teşhisteki düşük kalan getiri (10 g sonrası %4,5) serbest kalan sermayeye
 dönüşmüyor: yerine gelen short'lar daha iyisini yapmıyor, uzun short hedge işi görüyor. 611 / 665 ile tutarlı (kayba da süreye de göre
 kesmek kazandırmıyor). Ders: koşullu getiri teşhisi alternatif getiri ölçülmeden aday sayılmamalı. Rapor: ARASTIRMA_699.md.
+
+## Madde 700 — Panel: günlük takvim, kazanç yeşil / kayıp kırmızı (kullanıcı: "PDF'teki gibi"; strateji DEĞİŞMEDİ)
+panel.py'ye "Günlük takvim" kartı: ay ay gezilebilen (‹ ›) Pzt-Paz takvim; her gün o günün getirisi, kazanç yeşil / kayıp kırmızı, ton
+koyuluğu büyüklükle (|%3| ve üstü tam ton); üzerine gelince tarih, % ve $ (önceki gün kitabı × getiri). Altında ayın kazanç / kayıp gün
+sayısı, en iyi ve en kötü gün. Aylık getiri tablosu da PDF ısı tablosu gibi renkli (|%30| tam ton). Açık / koyu tema, telefon genişliğinde
+taşma yok; yalnız defterdeki gun_getiri kullanılır (yeni veri okunmaz, salt okunur yapı aynı). Test test_panel.py (+1). Sunucuda
+güncelleme: `cd /opt/carry && sudo -u carry git pull && sudo systemctl restart carry-panel`.

@@ -55,6 +55,7 @@ dogru = {"Authorization": "Basic " + base64.b64encode(b"carry:s3cret").decode()}
 kontrol("şifre: yanlış 401, doğru 200", app.get("/", headers=yanlis).status_code == 401 and app.get("/", headers=dogru).status_code == 200)
 os.environ.pop("CARRY_PANEL_SIFRE")
 kontrol("dış arayüz şifresiz REDDEDİLİR", panel.main(["--klasor", kl, "--host", "0.0.0.0"]) == 2)
+kontrol("günlük takvim (yeşil / kırmızı) sayfada", "function takvim(" in panel.SAYFA and "Günlük takvim" in panel.SAYFA and ".hp" in panel.SAYFA)
 out = os.path.join(tmp, "p.html")
 kontrol("--disa-aktar", panel.main(["--klasor", kl, "--disa-aktar", out]) == 0 and os.path.getsize(out) > 5000)
 
