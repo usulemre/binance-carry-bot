@@ -7722,3 +7722,22 @@ seçilim UNKNOWN; F BTC korelasyonu +0,02, gerçek 10 sert çöküş gününde k
 10 ay çıkınca %133); H plato ROBUST (20 komşunun 19'u ±%20, Sharpe hep ≥ 3), YAS_GUN 30'da uçurum (DD −%35, en kötü ay −%20,5) → eşik tek
 taraflı kırılgan. Demo metrikleri: TP dolum / kısmi dolum / süre, kayma, genç coin spread'i, aylık listeleme sayısı, genç coin kâr payı, ilk
 1 / 3 coin payı, brüt / net / BTC betası, en büyük 3 short ağırlığı, backtest replay takip farkı, teminat oranı. Rapor: ARASTIRMA_695.md.
+
+## Madde 696 ÖN KAYIT (2026-11-01, savunma sonuçları GÖRÜLMEDEN) — Listeleme kuraklığında sermaye koruma (kullanıcı: "listeleme hızının düştüğü bir yılda da sermayeyi koruyabilen sistem")
+Kod / strateji / parametre / canlı DEĞİŞMEZ; yalnız ayrı betik (arastirma_m696_kuraklik.py). Teşhis [ÖLÇÜM, mevcut 694 / 695 motor koşuları,
+2021-01 → 2026-09]: kuraklık dünyalarında baz takvim yılı bazında hiç zarar etmiyor (en kötü yıl Y365K 2025 +%18,5) ama risk büyüyor: maks DD
+−%13 (baz) → −%16..−22 (L50 / L75 / DUR25 / Y365K), en uzun su altı 131 → 306 g, en kötü 365 g Y365K'da −%9,7 (pencerelerin %1,7'si zararda),
+en kötü ay −%11..−12. Kaynak: genç coin yokken LONG fiyat bacağı (eski coinlerde) 2025 −41 / 2026 −38 puan, funding kısmen kapatıyor; short
+pozitif. Eski coin long'u 2021-23'te ise +100 puan (fiyat +62, funding +39) → "eski coinde long kapat" geçmişin bir yarısına uyar, yapısal
+değil; KOŞULMAYACAK (sonuç ayrıştırmadan belli: 2021-23'te ~−100, 2024-26'da ~+5 puan). Gösterge [ÖLÇÜM]: evrende (70M hacim, 60 g yaş, TradFi /
+D8 hariç) 60-365 g yaşında coin sayısı n; baz dünyada 30 g ort 2021-23 %10'luğu 5,8, medyan 9,2; 2026-Q3 ort 5,4 (2022 düzeyi).
+Kollar (kitap düzeyi örtü, günlük seri × ölçek s; s yalnız t−1'e kadarki veriyle; değişim maliyeti 10 bp × |Δs|, |Δs| ≥ 0,05 değilse
+değişmez; boşalan sermaye %0 getiri [VARSAYIM], duyarlılık %5):
+  K1 KURAK  s = clip(n30 / 6, 0,5, 1)  (n30: genç coin sayısının 30 g ortalaması, o dünyanın evreninde; 6 ≈ baz 2021-23 %10'luğu)
+  K2 DDA2   s = max(0,5 ; 1 + 3 × dd)  (dd: alttaki kitabın zirveden düşüşü; madde 685 kolu)
+  K3 V60K   s = clip(σ* / σ60, 0,5, 1)  (σ*: baz dünya 60 g oynaklık medyanı, sabit; yalnız azaltır)
+  K4 K1 × K2 (çarpım, taban 0,25)
+Dünyalar: normal = BAZ; kuraklık = Y365K, L50_a, L50_b, L75_a, L75_b, DUR24, DUR25 (A_DUR180 = DUR25, bayt değil seri aynı); hafif = L25_a/b
+(yalnız rapor). ADAY şartı (hepsi): (1) her kuraklık dünyasında en kötü 365 g ≥ 0 VE maks DD ≥ −%15 VE 1 yıl blok bootstrap (blok 10 g,
+2.000 sim.) zarar olasılığı ≤ %1; (2) BAZ dünyasında CAGR ≥ bazın %90'ı VE maks DD bazdan kötü değil. Dört kol çoklu deneme; ADAY çıksa bile
+kuraklık dünyaları karşı-olgu ve örtü yaklaşık → bota girmez, kullanıcı kararı + Ekim+ verisi gerekir.
