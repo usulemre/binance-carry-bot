@@ -149,6 +149,14 @@ def topla(client=None, simdi: float | None = None, dosya: str = DEFTER_DOSYA) ->
         for l in satirlar:
             f.write(l + "\n")
         f.write(json.dumps(kayit, ensure_ascii=False) + "\n")
+    try:                                   # MADDE 701: emir defteri — kalan dolumları eşle, TP'lerin fiyata değip değmediğini işaretle
+        import defter_db
+        _db = os.path.join(os.path.dirname(dosya) or ".", "carry.db")
+        if os.path.exists(_db):
+            defter_db.emir_esle(client, en_cok=200, db=_db, simdi=simdi)
+            defter_db.tp_dokunma(client, db=_db, simdi=simdi)
+    except Exception:
+        pass
     _g = "—" if kayit["gun_getiri"] is None else f"{kayit['gun_getiri'] * 100:+.2f}%"
     print(f"{tarih} {kayit['profil']}: özkaynak {oz:,.2f} $ · gün {_g} · {len(poz)} pozisyon · funding {ozet['FUNDING_FEE']:+.2f} $")
     return kayit

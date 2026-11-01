@@ -142,6 +142,15 @@ def paketler(dizin: str | None = None) -> list[dict]:
     return [{"ad": f, "mb": round(os.path.getsize(os.path.join(dizin, f)) / 1e6, 1)} for f in adlar]
 
 
+def icra(klasor: str) -> dict | None:
+    """MADDE 701: emir defterinden (defter/carry.db, SALT OKUNUR) son 30 günün icra metrikleri. Yoksa None."""
+    try:
+        import defter_db
+        return defter_db.icra_ozet(db=os.path.join(klasor, "defter", "carry.db"))
+    except Exception:
+        return None
+
+
 def veri(klasorler: list[str], servis: bool = True) -> dict:
     out = []
     for kl in klasorler:
@@ -149,7 +158,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         ad = e.get("CARRY_BILDIRIM_AD") or (b[len("carry-"):] if b.startswith("carry-") else "ana")
         o = ozet(defter_oku(kl))
         o.update({"ad": ad, "mod": e.get("BINANCE_MODE", "demo"), "servis": servis_durumu(kl) if servis else "—",
-                  "olaylar": olaylar(kl)})
+                  "olaylar": olaylar(kl), "icra": icra(kl)})
         out.append(o)
     return {"kurulumlar": out, "paketler": paketler(), "uretim": dt.datetime.now().strftime("%Y-%m-%d %H:%M")}
 
@@ -239,6 +248,25 @@ function takvim(k){
     <div class="k" style="margin-top:8px">kazanç günü <b class="art">${art_}</b> · kayıp günü <b class="eks">${eks_}</b> / ${g.length} ·
     en iyi ${+eniyi.tarih.slice(8,10)} ${AYAD[m-1]} <span class="art">${yz(eniyi.gun,2)}</span> · en kötü ${+enkotu.tarih.slice(8,10)} ${AYAD[m-1]} <span class="${sinif(enkotu.gun)}">${yz(enkotu.gun,2)}</span></div>`;
 }
+function icraKart(k){
+  const I = k.icra;
+  if (!I) return `<div class="k">Henüz emir kaydı yok. Bot emir gönderdikçe dolar.</div>`;
+  const T = I.tp || {}, G = I.giris || {};
+  const yzd = v => v==null ? "—" : (v*100).toFixed(0) + "%";
+  const bp = v => v==null ? "—" : (v>=0?"+":"") + v.toFixed(1) + " bp";
+  const dr = T.dolum_orani, drc = dr==null ? "" : (dr>=0.9 ? "art" : dr<=0.8 ? "eks" : "");
+  const satir = (a, b, c="") => `<tr><td class="l">${a}</td><td class="${c}">${b}</td></tr>`;
+  return `<div class="tablo"><table>
+    ${satir("TP dolum oranı (fiyat değince dolan)", `${yzd(dr)} <span class="k">(${T.dokunan||0} dokunan / ${T.olculen||0} ölçülen)</span>`, drc)}
+    ${satir("TP / kademe emri", `${T.konan||0} konan · ${T.tam||0} tam · ${T.kismi||0} kısmi`)}
+    ${satir("Kısmi dolum payı", yzd(T.kismi_pay))}
+    ${satir("Giriş: maker payı", yzd(G.maker_pay))}
+    ${satir("Giriş: kayma (gönderim fiyatına göre)", bp(G.kayma_bp), G.kayma_bp==null?"":(G.kayma_bp>5?"eks":""))}
+    ${satir("Gerçek komisyon (model 5 bp)", bp(G.komisyon_bp), G.komisyon_bp==null?"":(G.komisyon_bp>6?"eks":""))}
+    ${satir("GTX ilk deneme · kovalama · piyasaya düşen", `${G.gtx_ilk||0} · ${G.kovala||0} · ${G.piyasa_yedek||0}`, (G.piyasa_yedek||0)>0?"eks":"")}
+  </table></div><div class="k" style="margin-top:6px">Referans (madde 695): TP dolum ≥ %90 güvenli, ≤ %80 alarm; dolum %70'te yıllık −29 puan.
+  Kayma eksi = gönderim anındaki fiyattan daha iyi doldu. Yalnız kayıt; bot kararlarını etkilemez.</div>`;
+}
 function ciz(){
   const K = VERI.kurulumlar; $("#alt").textContent = "güncellendi " + VERI.uretim;
   $("#sekme").innerHTML = K.map((k,i)=>`<button class="${i==secili?'on':''}" onclick="secili=${i};ciz()">${k.ad} · ${k.mod}</button>`).join("");
@@ -264,6 +292,7 @@ function ciz(){
       ${(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:8px">Toplam funding ${para(k.funding_top)} · komisyon ${para(k.komisyon_top)}</div>`:""}</div>
   </div>
   <div class="kart" style="margin-bottom:12px"><h2>Günlük takvim · kazanç yeşil, kayıp kırmızı (ton koyuluğu = büyüklük)</h2>${takvim(k)}</div>
+  <div class="kart" style="margin-bottom:12px"><h2>İcra · son 30 gün (emir defteri)</h2>${icraKart(k)}</div>
   <div class="kart" style="margin-bottom:12px"><h2>Günlük getiri</h2><div class="grafik" style="height:180px"><canvas id="g2"></canvas></div></div>
   <div class="iki">
     <div class="kart"><h2>Pozisyonlar (${L.length} long / ${S.length} short)</h2><div class="tablo"><table>

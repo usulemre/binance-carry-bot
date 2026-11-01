@@ -58,6 +58,10 @@ import pandas as pd
 import carry_saglik
 import config
 from exchange_client import ExchangeClient
+try:                                   # MADDE 701: emir defteri (yalnız kayıt; yoksa bot aynen çalışır)
+    import defter_db as _ED
+except Exception:                      # pragma: no cover
+    _ED = None
 
 
 def _dis_nabiz(basarisiz: bool, mesaj: str = "") -> None:
@@ -3406,6 +3410,27 @@ def hedef_portfoy(funding: pd.Series, bakiye: float,
     return hedef
 
 
+EMIR_DEFTER = os.getenv("CARRY_EMIR_DEFTER", "1") not in ("0", "false", "False")
+"""MADDE 701: her emir defter/carry.db'nin `emir` tablosuna yazılır, dolumu tur sonunda borsadan OKUNUR (defter_db.py).
+YALNIZ KAYIT: emirlerin fiyatı / miktarı / zamanı / sırası değişmez; yazma ya da okuma hatası sessizce atlanır.
+0 = kapalı."""
+EMIR_DB = os.getenv("CARRY_EMIR_DB", os.path.join(os.path.dirname(os.path.abspath(__file__)), "defter", "carry.db"))
+"""MADDE 701: emir defterinin dosyası (altyapı; strateji parametresi değil). Günlük defterle aynı carry.db."""
+
+
+def _oid(o) -> str | None:
+    return str(o.get("orderId")) if isinstance(o, dict) and o.get("orderId") is not None else None
+
+
+def _emir_kaydet(tur: str, sembol: str, yon: str, adet, **k) -> None:
+    """MADDE 701: emir defterine yaz (hata fırlatmaz, akışı değiştirmez)."""
+    if EMIR_DEFTER and _ED is not None:
+        try:
+            _ED.emir_kaydet(tur, sembol, yon, adet, db=EMIR_DB, **k)
+        except Exception:
+            pass
+
+
 TP_DEFTER_DOSYA = os.getenv("CARRY_TP_DEFTER",
                             os.path.join(os.path.dirname(os.path.abspath(__file__)),
                                          "carry_tp.csv"))
@@ -3582,6 +3607,7 @@ def felaket_emri_gonder(client: ExchangeClient, sem: str, adet: float, tetik: st
     e = f(algoType="CONDITIONAL", symbol=sem, side=yon, type="STOP_MARKET",
           triggerPrice=tetik, quantity=adet, reduceOnly="true",
           workingType="MARK_PRICE")
+    _emir_kaydet("FELAKET", sem, yon, adet, limit=tetik, oid=e.get("algoId") if isinstance(e, dict) else None)
     return e.get("algoId")
 
 
@@ -3694,6 +3720,8 @@ def kar_al_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
         except Exception as ex:
             logger.warning("kâr al durumu alınamadı %s: %s", sem, ex)
             continue
+        if EMIR_DEFTER and _ED is not None:
+            _ED.emir_durum(sem, oid, e, db=EMIR_DB)
         if str(e.get("status", "")).upper() in ("FILLED", "PARTIALLY_FILLED"):
             dolan.append(sem)
             _tp_kaydet(sem, str(e.get("side", "")).upper())
@@ -3859,12 +3887,14 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                             symbol=sem, side=yon, type="LIMIT", timeInForce="GTC",
                             quantity=_q1, price=f"{_m_fiyat:.{_pp}f}", reduceOnly=True)
                         durum.setdefault("merdiven", {})[sem] = {"oid": e1.get("orderId"), "giris": giris}
+                        _emir_kaydet("KADEME", sem, yon, _q1, limit=_m_fiyat, oid=_oid(e1), giris=giris)
                     adet = _q2
             e = client.client.futures_create_order(
                 symbol=sem, side=yon, type="LIMIT", timeInForce="GTC",
                 quantity=adet, price=f"{fiyat:.{_pp}f}",
                 reduceOnly=True)
             durum.setdefault("kar_al", {})[sem] = e.get("orderId")
+            _emir_kaydet("TP", sem, yon, adet, limit=fiyat, oid=_oid(e), giris=giris)
             return (sem, True, "")
         except Exception as ex:
             return (sem, False, str(ex)[:80])
@@ -4460,6 +4490,12 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
                          "yeniden denenecek.", e)
         else:
             dilim_durum_yaz(durum)   # kâr al emir kimlikleri de kalıcı olsun
+    if EMIR_DEFTER and _ED is not None:
+        # MADDE 701: tur SONUNDA, bütün emirler gönderildikten sonra; yalnız OKUMA (en çok 40 emir), hata sessiz.
+        try:
+            _ED.emir_esle(client, db=EMIR_DB)
+        except Exception:
+            pass
     return {"bakiye": bakiye, "emir": len(emirler), "basarili": basarili,
             "dilim": sira, "saglik": s_durum}
 
@@ -4612,7 +4648,8 @@ def dolumu_kovala(client: ExchangeClient, bekleyen: list[dict]) -> int:
                 if miktar <= 0 or miktar * fiyat < MIN_NOTIONAL_USD:
                     continue
                 if son and PIYASA_YEDEK:
-                    client.open_market_position(b["sembol"], b["yon"], miktar)
+                    _o = client.open_market_position(b["sembol"], b["yon"], miktar)
+                    _emir_kaydet("PIYASA_YEDEK", b["sembol"], b["yon"], miktar, ref=fiyat, oid=_oid(_o))
                     tamamlanan += 1
                 else:
                     carpan = GTX_DENEME_CARPANLARI[
@@ -4626,6 +4663,7 @@ def dolumu_kovala(client: ExchangeClient, bekleyen: list[dict]) -> int:
                     if e and e.get("orderId") is not None:
                         yeni_bekleyen.append(dict(b, miktar=miktar,
                                                   id=e.get("orderId")))
+                    _emir_kaydet("KOVALA", b["sembol"], b["yon"], miktar, limit=limit, ref=fiyat, oid=_oid(e), deneme=tur + 1)
                     tamamlanan += 1
             except Exception as ex:
                 logger.error("%s dolum kovalama başarısız: %s", b["sembol"], ex)
@@ -4690,7 +4728,8 @@ def _emirleri_gonder(client: ExchangeClient, emirler: list,
                 kucuk.append(s)
                 continue
             if not LIMIT_EMIR:
-                client.open_market_position(s, yon, miktar)
+                _o = client.open_market_position(s, yon, miktar)
+                _emir_kaydet("PIYASA", s, yon, miktar, ref=fiyat, oid=_oid(_o))
                 basarili += 1
                 time.sleep(0.2)
                 continue
@@ -4709,6 +4748,7 @@ def _emirleri_gonder(client: ExchangeClient, emirler: list,
                         bekleyen.append({"sembol": s, "yon": yon,
                                          "miktar": miktar,
                                          "id": _e.get("orderId")})
+                    _emir_kaydet("GIRIS", s, yon, miktar, limit=limit, ref=fiyat, oid=_oid(_e), deneme=deneme)
                     if deneme:
                         logger.info("%s %s: GTX %d. denemede geçti (ofset x%.0f)",
                                     s, yon, deneme + 1, carpan)
@@ -4720,7 +4760,8 @@ def _emirleri_gonder(client: ExchangeClient, emirler: list,
             if son_hata is not None:
                 if PIYASA_YEDEK:
                     try:
-                        client.open_market_position(s, yon, miktar)
+                        _o = client.open_market_position(s, yon, miktar)
+                        _emir_kaydet("PIYASA_YEDEK", s, yon, miktar, ref=fiyat, oid=_oid(_o))
                         logger.warning("%s %s: limit emir geçmedi (%s) - PİYASA "
                                        "emriyle açıldı (+4bp)", s, yon, son_hata)
                         basarili += 1

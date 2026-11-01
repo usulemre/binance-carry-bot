@@ -7825,3 +7825,19 @@ koyuluğu büyüklükle (|%3| ve üstü tam ton); üzerine gelince tarih, % ve $
 sayısı, en iyi ve en kötü gün. Aylık getiri tablosu da PDF ısı tablosu gibi renkli (|%30| tam ton). Açık / koyu tema, telefon genişliğinde
 taşma yok; yalnız defterdeki gun_getiri kullanılır (yeni veri okunmaz, salt okunur yapı aynı). Test test_panel.py (+1). Sunucuda
 güncelleme: `cd /opt/carry && sudo -u carry git pull && sudo systemctl restart carry-panel`.
+
+## Madde 701 — Emir defteri (SQLite) + panelde "İcra" kartı: demo metrikleri gerçek veriyle (kullanıcı onayı; strateji DEĞİŞMEDİ)
+Neden: madde 695'in açık kalan soruları (TP fiyata değince dolma oranı, kısmi dolum, kayma, maker payı, gerçek komisyon) ancak emir bazında
+kayıtla ölçülür; eskiden yalnız log satırı + carry_tp.csv (zaman / coin / taraf) vardı. defter_db.py'ye `emir` tablosu (aynı defter/carry.db):
+bot her emri gönderdikten SONRA yazar (GIRIS / KOVALA / PIYASA / PIYASA_YEDEK / TP / KADEME / FELAKET; limit, gönderim anı fiyatı, emir
+kimliği); kar_al_kontrol zaten okuduğu TP durumunu işler (ek çağrı yok); tur SONUNDA emir_esle en çok 40 emrin durumunu ve gerçekleşen
+işlemlerini OKUR (maker / taker, komisyon); günlük defter işi (00:05 UTC) kalanları eşler ve tp_dokunma ile dolmadan iptal olan TP'lerin
+açık kaldığı süredeki 5 dk mumlarda fiyatın limite değip değmediğini işaretler. Panel `İcra · son 30 gün` kartı: TP dolum oranı (dokunan /
+dolan), kısmi pay, maker payı, kayma (bp), gerçek komisyon (model 5 bp), GTX ilk deneme / kovalama / piyasaya düşen. GÜVENCE: emirlerin
+fiyatı, miktarı, sırası DEĞİŞMEDİ (bot diff'inde silinen satırlar yalnız open_market_position dönüşünün yakalanması); bütün defter
+çağrıları hata yutar; bağlantı kısa ömürlü, kilit 0,5 sn'de çözülmezse kayıt atlanır (bot beklemez); panel salt okunur (mode=ro);
+CARRY_EMIR_DEFTER=0 kapatır. Test test_emir_defteri.py (23): emir listesi kayıt kapalı / açık / bozuk iken BİREBİR aynı (GTX geçer ve
+red → piyasa), kilit, eşleme, kısmi, dokunma, özet hesapları; 24 test paketi + preflight + entegrasyon geçti. İlk bulgu (kod incelemesi):
+bot PARTIALLY_FILLED TP'yi tam dolmuş sayıp coini hedeften çıkarıyor, kalan miktar sonraki turda normal emirle kapanıyor (backtest'te TP
+hep tam dolar) — davranış değiştirilmedi, sıklığı artık ölçülecek. Sunucuda: `cd /opt/carry && sudo -u carry git pull && sudo systemctl
+restart carry carry-panel`.
