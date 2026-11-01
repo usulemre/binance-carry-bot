@@ -7795,3 +7795,9 @@ Değerlendirme madde 685 / 596 ile aynı: eşit risk (T4 1,0x'in maks DD, en kö
 ADAY: eşit-risk yıllık ≥ P3T2 + 8 VE Sharpe ≤2024 ve 2025+ tabandan düşük değil. Ek rapor (karar dışı): yıllık, en kötü gün, genç short
 kuyruğu (697 T4: genç short'ta +%100 sıçrama ~10×), L75_a kuraklık dünyasında aynı kol (genç az iken etkisi). 5 kol çoklu deneme: ADAY
 çıksa bile Ekim+ verisiyle doğrulanmadan bota girmez.
+Madde 698 SONUÇ: HEPSİ RED (14 koşu; parite bayt bayt; düğme her kolda etkili). (ham · dd · en kötü · Sh ≤24 / 25+ → eşit-risk): P3T2 247,4 ·
+−13,3 · −7,41 · 4,03 / 4,42 → 315,2 | A15 254,7 · −13,0 · −7,58 · 3,94 / 4,57 → 325,1 | A20 262,1 · −13,1 · −6,88 · 3,92 / **4,62** → **335,2** | L20
+258,7 · −13,5 · −6,94 · 3,95 / 4,51 → 305,2 | S20 249,8 · −13,7 · −7,40 · 3,98 / 4,52 → 294,2 | A20G 265,4 · −14,8 · −7,48 · 4,03 / 4,53 → 265,4.
+A20 / A15 getiri şartını geçti ama ≤2024 Sharpe düştü: eğim son rejimi büyütüyor (A20 yıllık fark 2021 −54, 2022 −11 / 2025 +69, 2026
++77). Kuraklık dünyasında (L75_a) A20 CAGR 126 → 127 ama Sharpe 3,11 → 2,93, DD −16,9 → −18,1, en kötü gün −5,6 → −7,3 → azalan kaynağa
+(2026 listeleme ~−%60) daha çok yaslanıyor. Bota girmez, izleme önerisi yok. Rapor: ARASTIRMA_698.md.
