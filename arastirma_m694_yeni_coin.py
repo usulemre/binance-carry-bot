@@ -271,7 +271,8 @@ def analiz():
         gy = pd.concat([pd.read_pickle(f"{D}/gk_Y365K_{h}.pkl").assign(h=h) for h in (0, 1)]); gy["gun"] = pd.to_datetime(gy.gun)
         gy["bw"] = gy.ort_poz.abs() * gy.bar / 6
         def ozet(g_, ad):
-            g_ = g_[g_.gun >= "2021-01-01"]
+            g_ = g_[g_.gun >= "2021-01-01"].copy()
+            if "fiyat" not in g_.columns: g_["fiyat"] = g_.fiyat_top      # madde 690 kopyasının sütun adı (toplam fiyat katkısı)
             d = g_.groupby("gun").agg(brut=("bw", "sum"), coin=("sembol", "nunique")); d.brut /= 2
             net = (g_.fiyat + g_.funding).sum() / 2 * 100
             return dict(senaryo=ad, brut_ort=d.brut.mean(), coin_gun_ort=d.coin.mean() / 2, fiyat_puan=g_.fiyat.sum() / 2 * 100,

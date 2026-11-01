@@ -7697,3 +7697,15 @@ veren: TP'li %32, TP'siz %65; yüksek fitilli aylarda TP +2,8, düşük fitilli 
 puan; o ay hariç ort. +1,5 puan / ay. Yeni coin: 2024-26'da 1 yaşından genç coinler net kârın %78'i (maruziyetin %37'si); 2 yaş üstü %4; motor
 karşı-olgusu (evrene asgari yaş 365 g, stres senaryosu) CAGR %247 → %73, 2024-26 %248 → %51, 2025 %18,5. Gerçek zamanlı tespit zayıf: en kötü
 etiketlerde sonraki 30 g zarar olasılığı %16-17 (taban %13,5), getiri yine +%8-10 → kapı önerilmez. Rapor: ARASTIRMA_693.md.
+
+## Madde 694 — Yeni listelenen coin avantajı ve evren sürdürülebilirliği (kod, strateji, parametre değişmedi; kapı yok)
+Araç arastirma_m694_yeni_coin.py (g33 kopyası iki hizada bayt bayt aynı; 20 koşu tamam; ilk deneme eşzamanlı analiz yüzünden bellekten öldü,
+sayılmadı, baştan koşuldu). Kaynak: genç coinlerde TP oranı %21-31 (yaşlı %8) ve tutuş kaybı yok; yaşlı coinlerde TP'yi long fiyat kaybı yiyor
+(> 2 yıl 2024-26: TP +61, long −66, net +14); aynı oynaklık / funding / hacim tercillerinde genç coin 18 / 18 tabakada daha iyi, regresyonda yaş
+katsayısı kontrollerle long'da değişmiyor → ölçülen özelliklerle açıklanmıyor. Bot ilk 60 günde işlem yapmıyor; ilk yıl katkısının %63'ü ilk
+180 günde; maruziyet başı yıllık ~%440 (60-180 g) → %16 (> 2 yıl). Kohort: coin başı ilk yıl katkı 2021-23 0,62 / 2024-26 0,57 puan; artış coin
+sayısından; yeni coinlerin ilk yıl fiyatı medyan −%40 → −%79, funding %10,5 → %2,7. Motor karşı-olgusu (2024-26 CAGR %248): listeleme −%25 →
+%141-186, −%50 → %104-107, −%75 → %65-69, 2025-H1 duruşu sonraki 18 ayı %425 → %168; eski coinler yeri dolduramıyor (aynı brüt maruziyet 0,72,
+maruziyet başı getiri %187 → %97, 2024+ %189 → %71). Risk: genç coinlerde 24 sa çöküş / sıçrama 4-15×, funding aşırılığı 2-6×, delist %3,5;
+spread ölçülemedi. Gerçek zamanlı: genç coin sayısı getiriyle aynı yönde (test ρ 0,41-0,67) ama zaman eğilimi çıkarılınca −0,04..0,31 → öngörü
+kanıtlanmadı. Rapor: ARASTIRMA_694.md.
