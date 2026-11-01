@@ -7751,3 +7751,21 @@ BAZ CAGR 206 (−%15); aynı DD'yi sabit dozla almak 0,6x ister (BAZ 112, −%54
 seçildi, bota girmez; ileriye dönük izleme kullanıcı kararı. Gerçek dünya göstergesi n30 (evrende 60-365 g coin sayısı) 2026-09 sonu 5,1 —
 2022'den beri en düşük (2024-25: 15-27); demo izleme metriği olarak eklenmeli (kapı değil). Yapısal çözüm: eski coin kitabının kenarı (2024-26
 eski coin long'u fiyatta kaybediyor) — ayrı araştırma. Rapor: ARASTIRMA_696.md.
+
+## Madde 697 ÖN KAYIT (2026-11-01, sonuçlar görülmeden) — Fırsat azlığında sermaye koruma, fırsat dönünce kaçırmama (kullanıcı)
+Kural: otomatik strateji değişikliği YOK; alternatifler yalnız geçmişte ölçülür. Araç arastirma_m697_firsat.py. Motor kopyası /tmp/g33_m690.py
+(coin-gün defterinde tp / stop / komisyon; E bayt bayt aynı). Dünyalar: BAZ + 694 kuraklık dünyaları (Y365K, L50_a/b, L75_a/b, DUR24,
+DUR25), ayrıntılı defterle yeniden koşulur ve E'leri 694 çıktılarıyla bayt bayt karşılaştırılır. Genç = < 365 g. n30 = evrende 60-365 g coin
+sayısı (30 g ort., 1 g gecikmeli; madde 696). Ölçümler:
+  T1 listeleme akışı: ham listeleme sayısı son 30 / 60 / 90 g (TradFi / D8 hariç) → n30'a öncülük ve sonraki 30 / 90 g kitap getirisi;
+     eğilimden arındırılmış (son 365 g ortalamasına oran); örtüşmeyen aylık örnekler.
+  T2 genç coin sermayesi: genç brüt payı ↔ getiri (eşzamanlı ve bir sonraki ay); dünyalar arası AY SABİT ETKİLİ eğim (aynı ay, farklı genç
+     coin sayısı → piyasa rejimi sabit).
+  T3 eski coin alternatifi: eski coin pozisyonlarının maruziyet başı net getirisi (komisyon dahil) n30 durumuna göre (< 6 / 6-12 / > 12).
+  T4 genç short kuyruğu: bacak defteri (madde 690) + coin-gün defteri; genç vs eski short kayıp dağılımı, en kötüler, aynı gün kümelenme;
+     693 epizotlarından aleyhte hareket olasılığı (+%50 / +%100).
+  T5 fırsat yoğunluğu: aylık getiri ~ n30 kovaları, dünyalar arası ay sabit etkili.
+  T6 nakit mi eski coin mi (örtü, coin-gün düzeyinde): n30 < 6 iken ESKİ coin net katkısı × m, m ∈ {1, 0,5, 0}; genç coinlere dokunulmaz
+     (fırsat dönünce kaçırma yok). Karşılaştırma: aynı durumda TÜM kitap × m (genç dahil). Geçiş maliyeti 10 bp × eski (ya da tüm) brüt ×
+     |Δm|. Duyarlılık n30 < 10 (696'da sonradan görülen eşik; etiketli). Ölçütler: CAGR, Sharpe, maks DD, en kötü 365 g, su altı.
+Hiçbir sonuç bota girmez; karar kullanıcıya bırakılır.
