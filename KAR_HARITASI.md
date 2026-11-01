@@ -7813,3 +7813,8 @@ pozisyon kapanınca ya da TP / kademe olunca sıfır. Dengelemede sayaç ≥ d g
 (30 bar) o dilimde aday olmaz. Kollar: d = 7 / 10 / 14. Düğme kapalıyken iki hizada bayt bayt parite şart. Değerlendirme 685 / 596:
 ADAY = eşit-risk ≥ P3T2 + 8 VE Sharpe ≤2024 ve 2025+ düşmüyor. Üç kol çoklu deneme + aynı veride teşhis → ADAY bile bota girmez,
 Ekim+ verisiyle ileriye dönük doğrulama gerekir.
+Madde 699 SONUÇ: HEPSİ RED (8 koşu; parite bayt bayt; kural etkili: D7 ~1.500, D10 ~400, D14 ~130 kesme / hiza). (ham · dd · en kötü · Sh ≤24 /
+25+ → eşit-risk): P3T2 247,4 · −13,3 · −7,41 · 4,03 / 4,42 → 315,2 | D7 245,1 · −14,2 · −7,46 · 4,00 / 4,42 → 266,1 | D10 245,9 · −13,3 · −7,47 ·
+4,01 / 4,42 → 313,1 | D14 247,3 · −13,4 · −7,41 · 4,03 / 4,43 → 291,3. Teşhisteki düşük kalan getiri (10 g sonrası %4,5) serbest kalan sermayeye
+dönüşmüyor: yerine gelen short'lar daha iyisini yapmıyor, uzun short hedge işi görüyor. 611 / 665 ile tutarlı (kayba da süreye de göre
+kesmek kazandırmıyor). Ders: koşullu getiri teşhisi alternatif getiri ölçülmeden aday sayılmamalı. Rapor: ARASTIRMA_699.md.
