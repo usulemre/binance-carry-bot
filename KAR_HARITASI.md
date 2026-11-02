@@ -7913,3 +7913,18 @@ günü; en iyi 19 Ekim +6,1, en kötü 30 Ekim −4,05. Piyasa: BTC −7,2, alt 
 fiyat −12,5 / funding +5,0 · SHORT fiyat +4,1 / funding +0,2; genç long −4,6 (BTW −2,65, SNXX −1,0), eski long −3,0; en kötü bacaklar
 BTW L, TIA S, ARIA S, APR S. Yorum [HİPOTEZ]: 696 / 697 teşhisiyle aynı — alt çöküşünde long fiyat bacağı, genç coin havuzu dar (n30 ~5).
 Kasım'da tekrar (madde 650 kuralı aylık).
+
+## Madde 708 ÖN KAYIT (2026-11-02, sonuçlar görülmeden; kullanıcı: "Ekim zararını önleme çalışmaları") — TARAF DEĞİŞİM SOĞUMASI (TARAF_SOG)
+Teşhis (madde 707 ayrıştırması, ÖLÇÜM): Ekim −3,2 puan (1,0x, komisyon hariç) = en kötü 5 coin −10,1 + kalan 116 coin +6,9. BTW (150 g, 24 sa
+hacim 58 M $) −3,7: Ekim başında SHORT iken coin 1,0 → 2,4 pompalandı (−1,1 / −0,9 puan günler), 15 Ekim'de funding dönünce LONG'a geçildi ve
+2,4 → 1,08 çöküşü long'da yaşandı (26 / 30 Ekim −2,3 / −2,6); TIA / ARIA / APR / 龙虾 short sıkışması (ARIA 20 Ekim +%41); Q long +%111
+pompadan sonra girildi, −%30'lar yedi. Koşullu stop tetiklenmedi (piyasa çökmeden tek coin hareketi — madde 622 tasarımı). Önceden denenen
+savunmalar: long tavanı 542 / 543 RED, uç hareket elemesi UCELE (GE2'de kapatmak +6), oynaklık ağırlığı 251 / 257 kapalı, short 24 sa stop
+646 RED, SLL 651 RED, stop sonrası soğuma 665 RED, kayıp hafızası 611 RED, DDA2 685 (izleme kolu; Ekim'de −5,9 vs taban −5,0). DENENMEMİŞ:
+aynı coinde taraf değiştirmeyi geciktirmek. Tarihsel teşhis (690 bacak defteri, aynı veri → madencilik riski kabul): son 14 g'de ters tarafta
+tutulmuş coine girilen long bacakların ortalaması 39 bp (diğer long'lar 103 bp) ama toplam katkıları yine artı (+13 puan; short +55) →
+önsel olasılık DÜŞÜK. Kural (motor KOPYASI /tmp/g33_m708.py): dilim başına son short / long barı tutulur; dengelemede son N gün içinde bu
+dilimde SHORT tutulmuş coin LONG adayı (sinyal medyan altı), LONG tutulmuş coin SHORT adayı (medyan üstü) olamaz (UCELE ile aynı eleme
+deseni; sıradaki aday girer). Kollar: N = 7 / 14 g. Düğme kapalıyken iki hizada, Ekim dahil yeni zeminde EK_T7KKS ile bayt bayt parite.
+Ölçüt: 2020-07 → 2026-09 üzerinde 685 / 596 eşit risk (ADAY = +8 VE Sharpe ≤2024 ve 2025+ düşmüyor); Ekim 2026 ayrıca raporlanır ama karara
+GİRMEZ (tek ay, kuralın ilham kaynağı). ADAY bile Kasım+ verisiyle doğrulanmadan bota girmez.
