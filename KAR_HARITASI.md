@@ -7934,3 +7934,13 @@ Madde 708 SONUÇ: İKİ KOL DA RED (6 koşu; Ekim dahil zeminde parite bayt bayt
 Ekim'de −5,93 (taban −4,99, eşit risk dozları). Teşhis: Ekim kaybı en kötü 5 coinde −10,1, kalan 116 coin +6,9 (BTW −3,7 iki yönde ters, TIA /
 ARIA / APR short sıkışması, Q pompa sonrası long). Ekim stratejinin bilinen kuyruğu; kuyruk kesen bütün kurallar kârı daha çok kesiyor;
 büyüklüğü kontrol etmenin ölçülmüş yolu doz (684). Rapor: ARASTIRMA_708.md.
+
+## Madde 709 ÖN KAYIT (2026-11-02, sonuçlar görülmeden; madde 704 H2, kullanıcı: "iyileştirme araştırmaları") — GENÇ SHORT SAYI SINIRI (GSS)
+Gerekçe (697 T4, ÖLÇÜM): 60-180 g short'larda +%100 aleyhte hareket olasılığı eski coinlerin ~10×'u, aynı gün ≥ 2 genç short'un birlikte kaybettiği
+55 gün; Ekim 2026'da ARIA / BTW short sıkışmaları (708). Önceki denemelerden farkı: 664 genç short'u TAMAMEN dışladı (RED), CAP_ORTAK coin
+başına tavan; SAYI sınırı denenmedi. Kural (motor KOPYASI /tmp/g33_m709.py): dengelemede short adayları (sinyal medyan üstü) içinde yaşı
+< 365 g olanlar sinyale göre sıralanır; en yüksek sinyalli k tanesi dışındaki genç short adayları elenir (UCELE deseni; sıradaki — eski —
+aday girer). Long tarafı değişmez. Kollar: k = 2 / 3. Zemin Ekim dahil; düğme kapalıyken iki hizada EK_T7KKS ile bayt bayt parite. Ölçüt
+2020-07 → 2026-09 685 / 596 eşit risk (ADAY = +8 VE Sharpe ≤2024 ve 2025+ düşmüyor) + mekanizma kontrolü (en kötü gün / 1 yıl p1 kötüleşmemeli);
+ADAY çıkarsa ek: en iyi yıl hariç ve en çok etkilenen 3 coin hariç fark artı kalmalı. Ekim 2026 yalnız bilgi. ADAY bile Kasım+ verisiyle
+doğrulanmadan bota girmez.
