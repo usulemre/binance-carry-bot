@@ -7944,3 +7944,7 @@ aday girer). Long tarafı değişmez. Kollar: k = 2 / 3. Zemin Ekim dahil; düğ
 2020-07 → 2026-09 685 / 596 eşit risk (ADAY = +8 VE Sharpe ≤2024 ve 2025+ düşmüyor) + mekanizma kontrolü (en kötü gün / 1 yıl p1 kötüleşmemeli);
 ADAY çıkarsa ek: en iyi yıl hariç ve en çok etkilenen 3 coin hariç fark artı kalmalı. Ekim 2026 yalnız bilgi. ADAY bile Kasım+ verisiyle
 doğrulanmadan bota girmez.
+Madde 709 SONUÇ: İKİ KOL DA RED (6 koşu; parite bayt bayt; K2 ~117 bin, K3 ~99 bin elenen genç short adayı / hiza). (ham · dd · en kötü · Sh ≤24 /
+25+ → eşit-risk · Ekim bilgi): P3T2 247,4 · −13,3 · −7,41 · 4,03 / 4,42 → 315,2 · −4,27 | K2 202,9 · −15,0 · −6,86 · 3,81 / 3,84 → 202,9 · −6,34 | K3
+227,2 · −15,1 · −6,81 · 4,05 / 4,07 → 227,2 · −4,46. En kötü gün biraz iyi ama maks DD derinleşiyor (genç short'un yerine giren eski short alt
+çöküşünde yeterince düşmüyor — HİPOTEZ), getiri ağır kesiliyor; 664 / 697 ile tutarlı. 704'ün H1 + H2'si RED. Rapor: ARASTIRMA_709.md.
