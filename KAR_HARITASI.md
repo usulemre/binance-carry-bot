@@ -7952,3 +7952,17 @@ Madde 677 — Ekim 2026 (3 aylık ön kayıtlı izlemenin 1. ayı; yalnız BİLG
 zaten yapılmıştı, tekrarlanmadı. MEXC'e bu ortamdan erişim var → M676_TAZELE=1 indir + panel 60 / 96 (*_ozel) + V3 motoru (iki hiza, rc 0;
 Ekim dahil zemin). Ekim (1,0x): V3 −3,65 · Sh −0,91 · en kötü gün −3,45 vs taban P3T2 −4,27 · −1,16 · −3,52 → üç şartın üçü de bu ay V3
 lehine; KARAR Aralık sonunda (Ekim-Aralık toplamı). Not: V3 Ekim öncesi serisi tabandan farklı (beklenen; sinyal değişik).
+
+## Madde 710 — 2026'DA EKİM NEDEN İLK ZARARLI AY? (yalnız TEŞHİS, strateji / parametre değişikliği YOK)
+Kullanıcı: "diğer aylarda yaşananlar bu ayda da yaşandı, neden kayıp". 690 kopya motoru Ekim dahil zeminde P3T2, iki hiza: EK_T7KKS ile
+BAYT BAYT AYNI. Ocak-Ekim 2026 aylık bileşenler (1,0x, % basit toplam; ÖLÇÜM; arastirma_m710_ekim_neden.py):
+TP+kademe 15,7 / 12,9 / 21,4 / 28,6 / 9,5 / 17,4 / 12,9 / 29,0 / 14,4 / **16,3** → Ekim hasadı NORMAL.
+Long fiyat (TP hariç) 0,9 / −8,6 / −26,2 / −6,5 / −1,8 / −15,2 / −20,1 / −10,0 / −1,1 / **−20,0** → Mart, Temmuz kadar; tek başına yeni değil.
+Long funding 14,7 / 10,6 / 11,0 / 8,3 / 1,2 / 11,9 / 7,8 / 6,0 / 5,3 / **5,0** (maruziyet başına 9,8 → 3,8) → yastık yarıya indi.
+Short fiyat 1,6 / 3,1 / 4,2 / 1,8 / 4,8 / 5,1 / 2,0 / −15,7 / −11,1 / **−4,7** → Ocak-Temmuz hep +, Ağu-Eki −; Ağu-Eyl alt rallisinde
+(alt medyan +29 / +32) anlaşılır, Ekim'de alt medyan −16'ya rağmen short kaybetti (TIA −2,3, ARIA −1,7, APR −1,4, 龙虾 −1,1 sıkışmaları).
+Eşi ay Haziran (BTC −20, alt −16,7; kitap +20,4) ile Ekim (−4,3) farkı ≈ 24,6 puan: short tarafının dönmesi ≈ −9,8, long funding düşüşü ≈ −6,9,
+long fiyat kaybı ≈ −4,8, TP ≈ −1,2. SONUÇ (ÖLÇÜM + yorum): Ekim'de yeni bir olay yok; daha önce AYRI AYRI görülen üç şey AYNI ayda üst üste
+geldi — (1) alt düşüşünde long fiyat kaybı, (2) genç coin azlığıyla (n30 14 → 5) zayıflamış funding yastığı, (3) düşen piyasada short
+sıkışmaları. Temmuz (+0,8) aynı yapının ilk uyarısıydı. Genç coin / funding yastığı Temmuz'dan beri ince (HİPOTEZ: 696-697 kuraklık hattı).
+Öneri yok; 708 / 709 bu deliği kapatamadı. Kasım OOS'ta izlenecek: long funding / maruziyet ve short fiyat bileşeni.
