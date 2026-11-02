@@ -42,3 +42,4 @@ keys/
 
 # madde 680 / 701: botun canli defteri (gunluk.jsonl, carry.db) - sunucuya ozel veri, islenmez
 defter/
+data_hl_funding/
