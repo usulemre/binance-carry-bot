@@ -8046,3 +8046,14 @@ sermaye ağırlıklı carry 82). Short: funding / sy ~20 sabit; net / sy yaş 0-
 sonunda kapat CAGR 239 → 85, Sh 4,05 → 2,36, eşit risk 315 → 70 (TP −230, funding −152); Kol B avantaj sönünce kapat CAGR 158, Sh 3,35, DD
 −20, eşit risk sağlanamıyor (TP −104); en büyük coin hariç işaret aynı, yalnız 2022 kol lehine. H713 RED · Kol A RED · Kol B RED. 5 g tutma
 bulgusu (215 / 264 / 522 / 679) güçlendi. Rapor: ARASTIRMA_713.md.
+
+## Madde 714 — SHORT POZİSYON YAŞI VE KÂRLILIK PROFİLİ: RED (yaş alfası değil) — YENİ TEST YOK (493-568 ile çakışma)
+Araç arastirma_m714_short_yas.py (rc 0; 711 defteri; motor yok; gruplama yalnız giriş anı özellikleriyle). Çakışma (içerik okundu): 493-501
+S_REB (short'u 1/2/3 g'de yeniden seç; kazanç short fiyat + TP'den, uzun zeminde 3 dönemde önde, düşüş derinleşir, CAP8 ile P %68-82 RED),
+511-513 / 545-546 (36-40 sa plato, 40 sa "doz farkı" RED), 553 / 568 paketlerde 40 sa; önerilen T7K'da S_REB=10 (40 sa) ZATEN VAR; 521 short
+kademesi şart (kapalı −40), 4+4 yerinde; 215 taraf bazlı tutma RED. ÖLÇÜM: short net / sy erken (0-2 g) 183 vs geç (≥ 3 g) 117; genç 321 / 224,
+eski 102 / 49; yıllar 2020 −92 · 2021 −116 · 2022 +49 · 2023 +107 · 2024 +49 · 2025 +129 · 2026 +226 (yalnız 2022-26). SEÇİLİM KONTROLÜ: ≥ 5 g
+tutulan 2.946 short'ta AYNI pozisyonlarda yaş 0-2 134 vs 3-4 153, 7 yılın 6'sında 3-4 daha iyi → yaşlanma değer düşürmüyor; toplam desen
+TP'ye değip KISA ömürlü kalan short'lardan (≤ 3 g sürenlerin yaş 0-2'si 296 vs ≥ 5 g 134; ömür sonradan bilinir) ve 2022-26 rejiminden.
+İlk 3 coin (GALA, CHZ, REN) hariç fark 65 → 52; ilk 10 payı %30. Ters hareket yaşla düzgün birikir (medyan −2,0 → −6,3; p10 −11 → −24).
+Sınıf: yaşa bağlı short alfası RED; eyleme dönük hâli (sık yenileme) test edilmiş ve üretimde → yeni kol açılmadı. Rapor: ARASTIRMA_714.md.
