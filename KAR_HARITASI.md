@@ -7876,3 +7876,14 @@ dışlama ve CAP_ORTAK coin tavanından farklı) · H3 kalabalık çözülme hı
 ertelendi) · H4 alt evren oynaklığıyla orantılı doz (691 esneklik 1,89; 685'in ters yönü) · H5 697 E50'nin motor doğrulaması. Puan
 (30 üzerinden): H2 24, H1 23, H4 20, H5 19, H3 18. Öneri: ilk test H1 (tek yeni veri boyutu, basit kural, 2 kol), sonra H2. Rapor:
 ARASTIRMA_704_HIPOTEZ.md. Ön kayıt kullanıcı onayından sonra yazılacak.
+
+## Madde 705 ÖN KAYIT (2026-11-02, sonuçlar görülmeden; madde 704 H1, kullanıcı onayı) — "GERÇEK YAŞ": yaş eşiği tokenin spot geçmişine göre
+Hipotez: 60 g yaş eşiği yeni tokenin fiyat keşfi kuyruğunu dışarıda tutuyor; perp'ten çok önce Binance spot'ta işlem gören token gerçekte
+yeni değil → erken alınabilir (A); hiç spotu olmayan perp-only token daha riskli → daha geç alınabilir (B). Veri data_spot_ilk_gun.json
+(850 sembol, delist dahil; yalnız Binance spot — başka borsalardaki geçmiş görülmez, VARSAYIM). Uygulama motor KOPYASINDA
+(/tmp/g33_m705.py; g33.py değişmez), evren U'nun hesabından sonra: A (GERCEK_YAS=A): spot ilk günü ≤ perp ilk günü − 365 g olan coinler
+14 g perp yaşından itibaren uygun (hacim / donuk / TradFi kuralları aynı) · B (GERCEK_YAS=B): o barda spotu olmayan coinler (spot ilk günü
+yok ya da o bardan sonra) 90 g perp yaşına kadar uygun DEĞİL. Tek eksen (yaşın tanımı), iki kol. Düğme kapalıyken iki hizada bayt bayt
+parite şart. Ölçüt (madde 704 §4): eşit-risk ≥ P3T2 + 8 VE Sharpe ≤2024 ve 2025+ düşmüyor VE maks DD / en kötü gün kabul edilebilir;
+ADAY çıkarsa ek doğrulama: etkilenen coinlerden net katkısı en büyük 3'ü çıkarılınca ve en iyi yıl çıkarılınca fark hâlâ artı olmalı.
+Ek rapor (karar dışı): etkilenen coin-gün sayısı, bu coinlerin brüt payı ve katkısı. ADAY bile Ekim+ verisiyle doğrulanmadan bota girmez.
