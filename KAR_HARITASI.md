@@ -8014,3 +8014,24 @@ durması: 2025 funding 70 → 46 ama getiri 267 → 80 (kayıp çoğu TP / fiyat
 Sınıf: H-A1 RED · H-A2 PROMISING (rejime bağlı) · H-B1 long RED / short ROBUST (geçmiş içinde, pozisyona koşullu) · H-B2 ROBUST · H-B3 RED ·
 H-C ROBUST (yıl pozitifliği) · H-D PROMISING. Öneri / kural YOK; yeni hipotezler raporda (520 / 603 / 690 / 694 / 697 ile çakışma kontrolü
 şartıyla). Rapor: ARASTIRMA_712.md.
+
+## Madde 713 ÖN KAYIT (2026-11-02, sonuçlar görülmeden; kullanıcı "ARAŞTIRMA 713 — FUNDING FIRSATININ ÖMRÜ VE POZİSYON GETİRİSİ")
+712'nin 4 fikri değerlendirildi (ARASTIRMA_713.md §1): seçilen = 1 (funding yarı ömrü 2-3 g ↔ long medyan tutuş 7 g). Çakışma kontrolü:
+tutma süresi 215 / 264 / 522 / 679'da "doz düğmesi" (5 g yerinde); 496 long ara dengeleme RED; 520 solan long'u kapatıp ağırlığı YENİ GİRENE
+devretmek RED (yoğunlaşma). DENENMEMİŞ olan: avantajı sönen TEK pozisyonu kapatıp sermayeyi NAKİTTE bırakmak ve pozisyon yaşına göre getiri
+ayrışımı. Strateji / parametre / canlı DEĞİŞMEZ.
+ÖLÇÜM (gerçekleşen, 711 defteri bayt bayt aynı; 712 pozisyon tanımı): taraf ayrı; pozisyon yaşı (0 = giriş günü) başına sermaye-gün,
+funding / TP / TP hariç fiyat / komisyon / net per sermaye-yıl, TP olan pozisyon payı; giriş carry'si ve +1 / 2 / 3 / 5 / 7 gün gerçekleşen
+funding; genç (≤ 365 g) / eski ve giriş carry'si en uç beşte birlik ayrı; long'da funding farkının sönme miktarı (gün −1 → +3) ile aynı
+pencerede ve sonraki fiyat getirisi Spearman (betimsel; aynı dönem).
+HİPOTEZ H713: long pozisyonun net getirisi / sermaye-gün, funding avantajı söndükten sonra (yaş ≥ 3 g) yaş 0-2 g'ye göre belirgin düşük
+ve nakitten (0) kötü değilse bile düşük.
+KARŞI-OLGU (muhasebe; motor YOK — 520 / 522 motor sonuçları zaten var; kapanan sermaye NAKİTTE, getirisi 0 = fırsat maliyeti; kapanış
+günü ek komisyon |ağırlık| × 5 bp; sonraki günlerin defter katkısı (TP / kademe dahil) çıkarılır; karar yalnız geçmiş bilgiyle):
+  Kol A (süre): long pozisyon yaş 3 günü sonunda kapanır.
+  Kol B (sönme): long pozisyon, bir ÖNCEKİ günün coin funding'i evren medyanına ulaşmışsa (giriş farkının tamamı sönmüş; oran ≤ 0) o gün
+  sonunda kapanır; yaş 0'da uygulanmaz.
+Ölçütler (T4 1,0x risk, 685 eşit risk): PROMISING = eşit risk ≥ taban + 8 VE Sharpe ≤2024 ve 2025+ düşmez VE tek coin / tek yıl değil
+(en çok katkı yapan coin çıkınca fark aynı işaret); muhasebe karşı-olgusu olduğu için en iyi sınıf PROMISING (ROBUST yalnız motorla, ayrı ön
+kayıt). Ölçütü tutmayan kol RED; veri yetersiz UNKNOWN. H713 ölçüm hipotezi: yaş ≥ 3 net / sy, yaş 0-2'nin yarısından az ve bu 6 tam yılın
+≥ 5'inde → ROBUST; 2025-26 + ≥ 4 yıl → PROMISING; çoğunda ters → RED.
