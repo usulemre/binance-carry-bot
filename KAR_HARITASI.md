@@ -7928,3 +7928,9 @@ dilimde SHORT tutulmuş coin LONG adayı (sinyal medyan altı), LONG tutulmuş c
 deseni; sıradaki aday girer). Kollar: N = 7 / 14 g. Düğme kapalıyken iki hizada, Ekim dahil yeni zeminde EK_T7KKS ile bayt bayt parite.
 Ölçüt: 2020-07 → 2026-09 üzerinde 685 / 596 eşit risk (ADAY = +8 VE Sharpe ≤2024 ve 2025+ düşmüyor); Ekim 2026 ayrıca raporlanır ama karara
 GİRMEZ (tek ay, kuralın ilham kaynağı). ADAY bile Kasım+ verisiyle doğrulanmadan bota girmez.
+Madde 708 SONUÇ: İKİ KOL DA RED (6 koşu; Ekim dahil zeminde parite bayt bayt; N7 ~47 bin, N14 ~82 bin elenen aday / hiza). (ham · dd · Sh ≤24 /
+25+ → eşit-risk · Ekim bilgi): P3T2 247,4 · −13,3 · 4,03 / 4,42 → 315,2 · −4,27 | N7 240,2 · −13,5 · 4,01 / 4,27 → 282,5 · −4,55 | N14 230,3 · −13,3 ·
+3,95 / 4,11 → 291,7 · −4,75. Kural ilham aldığı Ekim'i bile iyileştirmiyor; taraf değiştiren coinler ortalamada kârlı. DDA2 izleme kolu
+Ekim'de −5,93 (taban −4,99, eşit risk dozları). Teşhis: Ekim kaybı en kötü 5 coinde −10,1, kalan 116 coin +6,9 (BTW −3,7 iki yönde ters, TIA /
+ARIA / APR short sıkışması, Q pompa sonrası long). Ekim stratejinin bilinen kuyruğu; kuyruk kesen bütün kurallar kârı daha çok kesiyor;
+büyüklüğü kontrol etmenin ölçülmüş yolu doz (684). Rapor: ARASTIRMA_708.md.
