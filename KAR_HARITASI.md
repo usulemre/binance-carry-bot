@@ -7865,3 +7865,14 @@ P3T2 247,4 · −13,3 · −7,41 · 4,03 / 4,42 → 315,2 | G50 245,9 · −13,8
 G30 tam da yardım etmesi beklenen 2024-26'da kaybettiriyor (−35 / −46 / −84 puan). 697'deki "genç ~6×" ölçümü hacim eşiğini GEÇEN genç
 coinler içindi → hacim filtresi genç coin kenarının parçası (226 / 652 ile aynı yön); motorun sabit 5 bp'si düşük hacimde iyimser,
 gerçek sonuç daha kötü olur. 70 M $ eşiği genç coinlerde de yerinde. Rapor: ARASTIRMA_703.md.
+
+## Madde 704 — RESEARCH 699 HYPOTHESIS REPORT (kullanıcı "Alpha Discovery Program"; 699 numarası dolu → 704). Test YOK, strateji DEĞİŞMEDİ
+KAR_HARITASI taraması: kullanıcının 12 alanından 11'i daha önce ölçülmüş / kapanmış (yaş 652/664/698/703, funding eğimi 556/557, kalabalık
+627/649, momentum 237, oynaklık sıkışması 384, likidite 703/649, TP 475/476/491, tutma 679/699, dinamik doz 685/696/697, ortak davranış
+667/686, yeni veri 550/387/394/647). Beş yeni hipotez (yalnız veri yeterliliği kontrol edildi, getiriye bakılmadı): H1 "gerçek yaş" — perp
+yaş eşiği tokenin Binance spot geçmişine göre (spotu ≥ 365 g önce açılanlarda 60 → 14 g; spotsuzlarda 60 → 90 g; data_spot_ilk_gun.json
+850 sembol, delist dahil; 2021+ 622 perp'in 156'sı spot-önce, 226'sı spotsuz) · H2 genç short sayı sınırı (dilim başına k = 2 / 3; 664
+dışlama ve CAP_ORTAK coin tavanından farklı) · H3 kalabalık çözülme hızı (Δ long/short oranı; metrik kapsamı zayıf: 2022-02'den, 2023 %19 →
+ertelendi) · H4 alt evren oynaklığıyla orantılı doz (691 esneklik 1,89; 685'in ters yönü) · H5 697 E50'nin motor doğrulaması. Puan
+(30 üzerinden): H2 24, H1 23, H4 20, H5 19, H3 18. Öneri: ilk test H1 (tek yeni veri boyutu, basit kural, 2 kol), sonra H2. Rapor:
+ARASTIRMA_704_HIPOTEZ.md. Ön kayıt kullanıcı onayından sonra yazılacak.
