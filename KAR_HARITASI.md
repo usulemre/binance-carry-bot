@@ -7966,3 +7966,12 @@ long fiyat kaybı ≈ −4,8, TP ≈ −1,2. SONUÇ (ÖLÇÜM + yorum): Ekim'de 
 geldi — (1) alt düşüşünde long fiyat kaybı, (2) genç coin azlığıyla (n30 14 → 5) zayıflamış funding yastığı, (3) düşen piyasada short
 sıkışmaları. Temmuz (+0,8) aynı yapının ilk uyarısıydı. Genç coin / funding yastığı Temmuz'dan beri ince (HİPOTEZ: 696-697 kuraklık hattı).
 Öneri yok; 708 / 709 bu deliği kapatamadı. Kasım OOS'ta izlenecek: long funding / maruziyet ve short fiyat bileşeni.
+
+## Madde 711 — TÜM YILLAR AYLIK / YILLIK BİLEŞEN TABLOSU (yalnız TEŞHİS; strateji / parametre değişikliği YOK)
+690 kopya motoru, Ekim dahil zemin, P3T2, iki hiza, GK_BAS 2019-01-01: EK_T7KKS ile BAYT BAYT AYNI (ÖLÇÜM). Yıllık (1,0x, % basit toplam;
+kitap bileşik): 2020(6 ay) / 2021 / 2022 / 2023 / 2024 / 2025 / 2026(10 ay) — TP 36 / 134 / 70 / 70 / 89 / 138 / 178 · long fiyat 44 / 91 /
+−69 / 61 / 17 / −82 / −109 · long funding 3 / −2 / 16 / 40 / 9 / 68 / 82 · short fiyat −20 / −57 / 43 / −23 / −33 / 20 / −9 · kitap 92 /
+472 / 63 / 310 / 118 / 267 / 267 · zararlı ay 0 / 2 / 3 / 2 / 4 / 0 / 1. 76 ayda 12 zararlı ay; Ekim 2026 (−4,3) 3. en kötü (2022-05 −6,6,
+2023-02 −5,7). Yorum: 2025-26'da long funding ana gelir kalemi oldu (68 / 82), long fiyat kaybı da en derin yıllar; Ekim 2026'yı eski zararlı
+aylardan ayıran TP hasadının yüksek (16,3; eski zararlı aylar 1-14) ama funding + short'un zayıf olması (madde 710). Script:
+arastirma_m711_tum_yillar.py.
