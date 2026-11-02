@@ -25,7 +25,7 @@ if _GY in ("A", "B"):
     import json as _jgy, pickle as _pkgy, carry_denetim as _Dgy
     from tradfi_liste import TRADFI as _TFgy
     _Pgy = _pkgy.load(open('/tmp/panel.pkl', 'rb'))
-    _spj = _jgy.load(open(os.path.join(os.path.dirname(os.path.abspath(__file__)), 'data_spot_ilk_gun.json')))
+    _spj = _jgy.load(open('data_spot_ilk_gun.json'))
     _sp = pd.Series({c: (pd.Timestamp(_spj[c]) if _spj.get(c) else pd.NaT) for c in C.columns})
     _pf = _Pgy['C'].apply(lambda x: x.first_valid_index()).reindex(C.columns)
     _YASgy = _Pgy['YAS'].reindex(index=C.index, columns=C.columns)
