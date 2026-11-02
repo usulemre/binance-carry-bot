@@ -7975,3 +7975,25 @@ kitap bileşik): 2020(6 ay) / 2021 / 2022 / 2023 / 2024 / 2025 / 2026(10 ay) —
 2023-02 −5,7). Yorum: 2025-26'da long funding ana gelir kalemi oldu (68 / 82), long fiyat kaybı da en derin yıllar; Ekim 2026'yı eski zararlı
 aylardan ayıran TP hasadının yüksek (16,3; eski zararlı aylar 1-14) ama funding + short'un zayıf olması (madde 710). Script:
 arastirma_m711_tum_yillar.py.
+
+## Madde 712 ÖN KAYIT (2026-11-02, sonuçlar görülmeden; kullanıcı "ARAŞTIRMA 712 — FUNDING ALPHA KAYNAĞI VE YOĞUNLAŞMA") — yalnız ÖLÇÜM
+Strateji / parametre / filtre / canlı DEĞİŞMEZ. Önceki işlerin tekrarı yapılmaz: 692 (pozisyon net, funding kaybın %23'ü), 693-694 (yaş, genç
+coin net kâr payı, listeleme kesme), 695 G (TOPLAM nete göre ilk 1/3/5/10 çıkarma) referans alınır; 712 yalnız FUNDING eksenine bakar.
+Veri: madde 711 tam geçmiş defteri (/tmp/m711 gk, P3T2, iki hiza, EK_T7KKS ile BAYT BAYT AYNI); ham funding data_funding_uzun (gerçek ödeme
+zaman damgası + aralık; motorda ödeme bara searchsorted ile bir kez yazılır, madde 268 denetimi); panel YAS (bar/6 = gün), 31 delist sembol
+dahil. "Pozisyon" = aynı sembolde aynı yönde kesintisiz günler (günlük çözünürlük; gün içi kapat-aç birleşir — sınırlama). Giriş funding
+oranı = giriş gününden ÖNCE yayımlanmış son ödeme oranı, yıllık = oran × 24/aralık × 365 (gelecek bilgisi yok). Gerçekleşen = motorun
+pozisyon günlerindeki funding kalemi; teorik = giriş oranı × süre; ikisi ayrı raporlanır.
+Hipotezler ve ölçütler (önceden):
+ H-A1 long funding yoğun: 2020-26 ilk 10 coin payı > %50.  H-A2 2024-26 long funding'in çoğunluğu (> %50) < 365 g coinlerden.
+ H-B1 giriş funding'i en uç beşte birlik (long: en negatif) pozisyonlar sermaye-gün başına NET (fiyat+TP+funding−kom) en az uçtakinden yüksek.
+ H-B2 avantaj kısa ömürlü: tutulan long'ların funding oranı girişten sonraki 7 günde giriş-evren medyanı farkının > %50'sini kaybeder.
+ H-B3 yüksek funding = yüksek fiyat kaybı: coin düzeyinde funding / sermaye-gün ile TP hariç fiyat / sermaye-gün Spearman < −0,2.
+ H-C  funding'e göre ilk 3 / 5 / 10 coin evrenden çıkınca (motor, SEMBOL_HARIC; seçim TÜM dönem funding'ine göre = bilerek gelecek bilgili
+      stres) hiçbir takvim yılı negatif değil. Ek muhasebe karşı-olguları (motor yok, yeniden dağıtım yok, üst sınır niteliğinde): her yılın
+      ilk 3 / 5 funding coini o yıl çıkarılır; genç (< 365 g) coin funding'i %25 / %50 / %75 kesilir. Arz durması: 695 A_DUR180 kurgusu
+      (2025-01'den 180 g listelenenler çıkarılır) motorla funding defteriyle tekrar koşulur (695'te bileşen yoktu).
+ H-D  en yüksek funding beşte birlik coinlerin pozisyon başı kapanış bazlı en büyük ters hareketi (MAE) en düşük beşte birlikten derin.
+Sınıf: ROBUST = 6 tam yılın ≥ 5'inde ve hem 2025 hem 2026'da tutar, ilk 3 coin çıkınca ölçü < %25 değişir; PROMISING = 2025 ve 2026'da +
+≥ 4 yılda tutar ama birkaç coine / rejime bağlı; RED = yılların çoğunda ters ya da ilk 3 coin çıkınca kaybolur; UNKNOWN = kova < 30 pozisyon
+ya da < 3 yıl veri. Motor: tek işçi, seri; 8 koşu (3 çıkarma + 1 arz × 2 hiza); exit code + çıktı kontrolü; eksik koşu sayılmaz.
