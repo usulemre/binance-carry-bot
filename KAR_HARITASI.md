@@ -8057,3 +8057,13 @@ tutulan 2.946 short'ta AYNI pozisyonlarda yaş 0-2 134 vs 3-4 153, 7 yılın 6's
 TP'ye değip KISA ömürlü kalan short'lardan (≤ 3 g sürenlerin yaş 0-2'si 296 vs ≥ 5 g 134; ömür sonradan bilinir) ve 2022-26 rejiminden.
 İlk 3 coin (GALA, CHZ, REN) hariç fark 65 → 52; ilk 10 payı %30. Ters hareket yaşla düzgün birikir (medyan −2,0 → −6,3; p10 −11 → −24).
 Sınıf: yaşa bağlı short alfası RED; eyleme dönük hâli (sık yenileme) test edilmiş ve üretimde → yeni kol açılmadı. Rapor: ARASTIRMA_714.md.
+
+## Madde 715 — YENİ ALPHA KAYNAĞI KEŞFİ: NO NEW TEST (strateji / parametre / kod DEĞİŞMEDİ; motor yok)
+3 aday: A coinler arası liderlik / gecikmeli yayılım (proje içinde YENİ), B funding aşırılığının fiyata göre sırası (201 / 196 / 518 / 383 /
+556-557 / 712-713 → yeniden adlandırma), C ani oynaklık → TP / doz (691 / 693 / 685 V20-V60 / 704 H4 → tekrar). Elenen örnekler: eşzamanlı
+fırsat = BRUT_PRIM (239 / 581-583, üretimde); göreli güç = momentum (237 / 381-383 / 411, ML 389). A ön araştırma (arastirma_m715_on_arastirma.py,
+rc 0; ÖLÇÜM): BTC(t) → alt sepeti(t+1) korelasyonu 4 sa 2021-26 −0,10 / −0,01 / −0,05 / −0,07 / +0,01 / −0,00, 1 g −0,04..−0,10 (2026 −0,00);
+BTC yönünde alt sepeti t+1 maliyetsiz −7,6 bp (4 sa) / −19,9 bp (1 g) → devam yok, sönen hafif geri dönüş (yön zamanlaması, kesitsel değil);
+kitap(t+1) ~ BTC(t) +0,009. Entegrasyon yolu yok (yön sinyali carry'ye: 383; ayrı kol: 237 / 384 / 686); saat altı lead-lag 8 sa'lik botta
+uygulanamaz. Açık işler: Kasım OOS, 677 V3 kararı, 697 E50 / 696 K1 izleme, 701 icra verisi birikince 691 / 695 icra UNKNOWN'ları.
+Rapor: ARASTIRMA_715.md.
