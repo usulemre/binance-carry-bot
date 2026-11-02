@@ -8067,3 +8067,15 @@ BTC yönünde alt sepeti t+1 maliyetsiz −7,6 bp (4 sa) / −19,9 bp (1 g) → 
 kitap(t+1) ~ BTC(t) +0,009. Entegrasyon yolu yok (yön sinyali carry'ye: 383; ayrı kol: 237 / 384 / 686); saat altı lead-lag 8 sa'lik botta
 uygulanamaz. Açık işler: Kasım OOS, 677 V3 kararı, 697 E50 / 696 K1 izleme, 701 icra verisi birikince 691 / 695 icra UNKNOWN'ları.
 Rapor: ARASTIRMA_715.md.
+
+## Madde 716 — BEKLEYEN BULGULARIN TAKİBİ VE KANIT DENETİMİ: NO ACTION (strateji / kod / parametre DEĞİŞMEDİ; yeni test yok)
+Kasım OOS (madde 650 kuralı aynen): veri yok (bugün 2 Kasım; arşiv 1-3 Aralık) → 3-5 Aralık'ta koşulacak; Aralık için 675 yeni sembol paketi
+sunucudan gerekli; hesapta zamanlanmış görev YOK. MEXC V3 (677 kuralı aynen; karar Ekim-Aralık toplamıyla, Ocak 2027 başı): Ekim 1,0x V3 −3,65
+vs −4,27, Sh −0,91 vs −1,16, en kötü gün −3,45 vs −3,52 (bilgi); ÖLÇÜM (arastirma_m716_v3_katki.py): Ekim günlük kor 0,986, fark +2,2 bp / gün
+(sd 35), 58% gün → tabana çok yakın; 676 penceresinde (2025-06 → 2026-09, örnek içi) V3 +373 vs +793, en kötü gün −7,89 vs −5,25 → ADAY
+çıkarsa bile 677'nin "676 ile çelişmeme" raporu çelişki göstermek zorunda. 696 / 697: ileri izleme için ön kayıtlı protokol YOK (yalnız
+öneri) → karar koşulu tanımlı değil, eşik uydurulmadı; n30 Tem-Eki 5,3 / 5,8 / 5,1 / 5,1 (bilgi); KULLANICI KARARI bekliyor (izleme
+yapılacaksa yalnız K1@6 / E50@6 ile, Kasım-Ocak penceresi, sonuç görülmeden ön kayıt). Emir defteri (701): bu ortamda carry.db yok, birikme
+doğrulanamıyor; ölçülecek metrikler (TP dolum, kısmi, maker payı, bekleme süresi, model − gerçekleşen fiyat, kayma + gerçek komisyon) ve
+karşılaştırılacak mevcut model varsayımları (695 E, 691, 654, 519) ARASTIRMA_716.md'de; örneklem önerisi ≥ ~100 dokunan TP, ≥ ~200 dolan
+giriş. Veri bekleyen: Kasım OOS, V3, emir defteri; karar bekleyen: 696 / 697 izleme.
