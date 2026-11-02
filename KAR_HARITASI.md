@@ -7860,3 +7860,8 @@ Kollar: G50 (5e7), G30 (3e7). Düğme kapalıyken iki hizada bayt bayt parite ş
 VE Sharpe ≤2024 ve 2025+ düşmüyor. UYARI (karar dışı, raporlanacak): motor her işleme sabit 5 bp maliyet yazar; eklenen düşük hacimli
 coinlerde gerçek kayma daha yüksek olabilir → eklenen coinlerin maruziyet payı raporlanır, ADAY çıkarsa ayrıca maliyet stresi gerekir.
 İki kol çoklu deneme; ADAY bile Ekim+ verisiyle doğrulanmadan bota girmez.
+Madde 703 SONUÇ: İKİSİ DE RED (6 koşu; parite bayt bayt; G50 +%8, G30 +%23 evren hücresi). (ham · dd · en kötü · Sh ≤24 / 25+ → eşit-risk):
+P3T2 247,4 · −13,3 · −7,41 · 4,03 / 4,42 → 315,2 | G50 245,9 · −13,8 · −6,39 · 3,97 / 4,30 → 289,4 | G30 220,3 · −18,7 · −8,41 · 3,97 / 3,38 → 156,0.
+G30 tam da yardım etmesi beklenen 2024-26'da kaybettiriyor (−35 / −46 / −84 puan). 697'deki "genç ~6×" ölçümü hacim eşiğini GEÇEN genç
+coinler içindi → hacim filtresi genç coin kenarının parçası (226 / 652 ile aynı yön); motorun sabit 5 bp'si düşük hacimde iyimser,
+gerçek sonuç daha kötü olur. 70 M $ eşiği genç coinlerde de yerinde. Rapor: ARASTIRMA_703.md.
