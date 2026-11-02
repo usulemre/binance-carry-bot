@@ -8079,3 +8079,17 @@ yapılacaksa yalnız K1@6 / E50@6 ile, Kasım-Ocak penceresi, sonuç görülmede
 doğrulanamıyor; ölçülecek metrikler (TP dolum, kısmi, maker payı, bekleme süresi, model − gerçekleşen fiyat, kayma + gerçek komisyon) ve
 karşılaştırılacak mevcut model varsayımları (695 E, 691, 654, 519) ARASTIRMA_716.md'de; örneklem önerisi ≥ ~100 dokunan TP, ≥ ~200 dolan
 giriş. Veri bekleyen: Kasım OOS, V3, emir defteri; karar bekleyen: 696 / 697 izleme.
+
+## Madde 717 ÖN KAYIT (2026-11-03, HL verisi İNDİRİLMEDEN; kullanıcı seçimi "Hyperliquid ile V3 testi") — V3 kuralının BAĞIMSIZ borsa / dönem sınaması
+Soru: 677'nin V3 kuralı (sinyal = Binance + 0,5 × (Binance − DIŞ BORSA); yalnız Binance'te olan kalabalık öne çıkar) MEXC'e ve 676'nın
+2025-06 → 2026-09 penceresine özgü mü? 677'nin MEXC penceresi (2025-06+) V3 fikrinin doğduğu yer olduğundan bağımsız değil. Hyperliquid funding
+geçmişi 2023-05'ten → V3'ün hiç görülmemiş dönemi 2023-06 → 2025-05 ve ikinci, bağımsız bir dış borsa. Strateji / parametre / canlı DEĞİŞMEZ.
+Veri: api.hyperliquid.xyz info fundingHistory (saatlik ödeme, meta evreni 235 perp, 56'sı delist işaretli — dahil; HL'de hiç olmamış ya da
+meta'dan silinmiş coinlerde Binance sinyali AYNEN kalır, hayatta kalma yanlılığı yalnız kapsamı daraltır). Eşleme: AD → ADUSDT; kAD → 1000ADUSDT;
+eşleşmeyen raporlanır. Panel: 676 ile AYNI formül (ödeme × 24 / aralık, 60 / 96 sa pencere ortalaması, pencere dolmadan sinyal yok), HL aralığı 1 sa.
+Kol (TEK): V3H = B + 0,5 × (B − H) (H olan hücrelerde), long sk_bar60 / short sk_bar96; taban P3T2 (= 677 / 676 T4 sözlüğü, iki hiza, 2.000 $,
+D8 hariç, Ekim dahil zemin). Parite: H olmayan dönemde V3H serisi tabanla BİREBİR olmalı (677'de MEXC öncesi fark 0 doğrulandı).
+Karar penceresi (BİRİNCİL): 2023-06-01 → 2025-05-31. ÖLÇÜT (677'nin üç şartı aynen): pencere getirisi ≥ taban VE günlük Sharpe ≥ taban VE en kötü
+gün tabandan derin değil → "V3 DESTEKLENİR (bağımsız)"; biri tutmazsa "DESTEKLENMEZ". İkincil (bilgi, karara girmez): 2025-06 → 2026-09 (676
+penceresi), 2026-10 (677 OOS ayı), alt dönemler 2023-H2 / 2024 / 2025-H1 (tutarlılık), HL kapsamı (hücre payı, eşleşen coin). Sonuç 677'nin Aralık
+kuralını DEĞİŞTİRMEZ; yalnız ek kanıt olarak raporlanır. Motor tek işçi, 2 koşu, rc + dosya kontrolü; eksik koşu sayılmaz.
