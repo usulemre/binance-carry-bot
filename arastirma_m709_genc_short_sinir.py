@@ -58,11 +58,7 @@ def kos():
 
 
 def analiz():
-    B.D = D; B.KOLLAR = KOLLAR
-    import builtins
-    _o = builtins.open
-    B.analiz.__globals__["D"] = D; B.analiz.__globals__["KOLLAR"] = KOLLAR
-    # 708'in analizi aynı ölçütle; düğme satırı GENC_SHORT_K
+    # 708 ile aynı ölçüt; düğme satırı GENC_SHORT_K
     import arastirma_m695_dayaniklilik as T, arastirma_m685_dinamik_doz as Z
     eks = [f"{ad}_{h}" for ad in ["P0", *KOLLAR] for h in (0, 1) if not os.path.exists(f"{D}/E_{ad}_{h}.pkl")]
     print(f"[KONTROL] eksik koşu: {eks or 'yok'}")
