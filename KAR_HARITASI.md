@@ -7948,3 +7948,7 @@ Madde 709 SONUÇ: İKİ KOL DA RED (6 koşu; parite bayt bayt; K2 ~117 bin, K3 ~
 25+ → eşit-risk · Ekim bilgi): P3T2 247,4 · −13,3 · −7,41 · 4,03 / 4,42 → 315,2 · −4,27 | K2 202,9 · −15,0 · −6,86 · 3,81 / 3,84 → 202,9 · −6,34 | K3
 227,2 · −15,1 · −6,81 · 4,05 / 4,07 → 227,2 · −4,46. En kötü gün biraz iyi ama maks DD derinleşiyor (genç short'un yerine giren eski short alt
 çöküşünde yeterince düşmüyor — HİPOTEZ), getiri ağır kesiliyor; 664 / 697 ile tutarlı. 704'ün H1 + H2'si RED. Rapor: ARASTIRMA_709.md.
+Madde 677 — Ekim 2026 (3 aylık ön kayıtlı izlemenin 1. ayı; yalnız BİLGİ): zamanlanmış Ekim görevi 15:18'de çalıştı; ana ölçüm madde 707'de
+zaten yapılmıştı, tekrarlanmadı. MEXC'e bu ortamdan erişim var → M676_TAZELE=1 indir + panel 60 / 96 (*_ozel) + V3 motoru (iki hiza, rc 0;
+Ekim dahil zemin). Ekim (1,0x): V3 −3,65 · Sh −0,91 · en kötü gün −3,45 vs taban P3T2 −4,27 · −1,16 · −3,52 → üç şartın üçü de bu ay V3
+lehine; KARAR Aralık sonunda (Ekim-Aralık toplamı). Not: V3 Ekim öncesi serisi tabandan farklı (beklenen; sinyal değişik).
