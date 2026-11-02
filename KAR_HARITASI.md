@@ -8035,3 +8035,14 @@ günü ek komisyon |ağırlık| × 5 bp; sonraki günlerin defter katkısı (TP 
 (en çok katkı yapan coin çıkınca fark aynı işaret); muhasebe karşı-olgusu olduğu için en iyi sınıf PROMISING (ROBUST yalnız motorla, ayrı ön
 kayıt). Ölçütü tutmayan kol RED; veri yetersiz UNKNOWN. H713 ölçüm hipotezi: yaş ≥ 3 net / sy, yaş 0-2'nin yarısından az ve bu 6 tam yılın
 ≥ 5'inde → ROBUST; 2025-26 + ≥ 4 yıl → PROMISING; çoğunda ters → RED.
+
+## Madde 713 SONUÇ — FUNDING FIRSATININ ÖMRÜ VE POZİSYON GETİRİSİ: RED (strateji / parametre DEĞİŞMEDİ)
+Araç arastirma_m713_firsat_omru.py (rc 0; 711 defteri bayt bayt aynı; motor koşusu yok). 712 fikirleri değerlendirildi, 1 seçildi.
+ÖLÇÜM long, yaşa göre (/sy): funding 183 (yaş 0) → 145 → 89 → 72 → 62 (yaş 4), sonra ~90; net 222 / 94 / 114 / 313 / 159 / 169 / 347 / 121
+(7-9) / 332 (10-14) / 193 (15+); sermayenin %79-89'u yaş ≥ 3'te; yaş ≥ 3 net / sy yaş 0-2'den 7 yılın 6'sında YÜKSEK (yalnız 2024 düşük) →
+funding eriyor ama pozisyon değeri erimiyor (TP + sonraki fiyat). İlk 1 / 2 / 3 / 5 / 7 g funding / sy 183 / 155 / 122 / 92 / 88 (giriş
+sermaye ağırlıklı carry 82). Short: funding / sy ~20 sabit; net / sy yaş 0-2 > ≥ 3, 2022-26 her yıl (HİPOTEZ, ön kayıtsız; 493 / 521 kontrolü
+şart). Sönme ↔ fiyat Spearman 0→3 g −0,10, 3 g→çıkış +0,11 (yıllarda tutarsız, UNKNOWN). Muhasebe karşı-olgusu (nakit, +5 bp): Kol A yaş 3
+sonunda kapat CAGR 239 → 85, Sh 4,05 → 2,36, eşit risk 315 → 70 (TP −230, funding −152); Kol B avantaj sönünce kapat CAGR 158, Sh 3,35, DD
+−20, eşit risk sağlanamıyor (TP −104); en büyük coin hariç işaret aynı, yalnız 2022 kol lehine. H713 RED · Kol A RED · Kol B RED. 5 g tutma
+bulgusu (215 / 264 / 522 / 679) güçlendi. Rapor: ARASTIRMA_713.md.
