@@ -7894,3 +7894,22 @@ tokenlerin perp'e geliş dalgası), etkilenen ilk 3 coin hariç eşit-risk fark�
 3,73 → 275,7 RED: spotsuz genç coinlerin 60-90 g penceresi +60,6 puan taşıyor (2025 −96,6, 2026 −70,6) → "perp-only token riskli"
 varsayımı yanlış. Yaş eşiği spot geçmişine göre kişiselleştirilince tekrarlanabilir kâr yok; 60 g yerinde. Sıradaki: 704 H2. Rapor:
 ARASTIRMA_705.md.
+Madde 706 SONUÇ: 2026-10-28 arşivde YOK (aylık + günlük mum, bütün aralıklar, mark / endeks / prim; fapi 451); ham işlem dosyası (trades)
+VAR. eksik_gun_islemden.py: 4 sa mum ham işlemlerden; 2026-10-27'de BTC / SOL / TAO resmi mumla açılış, yüksek, düşük, kapanış, hacim,
+quote, taker alış quote ve işlem sayısı BİREBİR (fark 0). 28 Ekim: 687 sembol işlemden kuruldu, 129 sembol o ay hiç işlem görmemiş →
+Binance kuralıyla önceki kapanışta sıfır hacimli mum, 7 küçük sembol (Ekim toplam hacmi 16-260 M $ < günlük 70 M eşik; evrende değil)
+eksik bırakıldı (doldurma yok). Funding ve metrik o gün tam. Ham dizin yedeği alındı.
+
+## Madde 707 — EKİM 2026 GERÇEK-VERİ OOS (parametreler dondurulduktan sonraki ilk ay): DEVAM — ama ay ZARARLI
+Veri: indir_ek_ay (822 sembol) + madde 706 + yeniden_kur + sinyaller 36 / 48 / 60 / 96 + metrik paneli. Bütünlük: yeni zeminde T7KKS 2.000 $
+serisi 2020-07 → 2026-09-29 dondurulmuş P3T2 ile günlük BİREBİR (2.264 gün, fark 0); tek fark 30 Eylül (eski zeminde son kısmi gün,
+4e-5). Ana blok 24 koşu tek işçiyle (iki işçi bellek riski), hepsi rc 0; ayrıştırma koşusu EK_T7KKS ile bayt bayt aynı.
+Ekim (iki hiza ort., %): 2.000 $ — T7KKS×1,15 (önerilen) −4,96 · T7KKS 1,0x −4,24 · T4 −8,37 · T1 −4,47 · T6 −7,41 · T7K −7,10 · T6KS −3,36;
+3.500 $ — T7KKS×1,10 −1,88 · T4 −6,78. Madde 650: önerilen − T4 farkı +3,41 / +4,90 (geçmiş %10 yüzdeliği −2,70 / −3,12 → şart 1 TUTMADI);
+en kötü gün −4,52 / −3,85 vs T4 −4,29 / −3,41 (şart 2 tuttu) → iki şart birlikte hiçbir seviyede tutmadı → **DEVAM**. Madde 617: T7K×1,15
+2.000 $'da iki şart Y, 3.500 $'da şart 2 X (bilgi). Mutlak: önerilen ayar Ekim'de −%5,0 (×1,15) — 2020-07'den beri 76 ayın 3. en kötüsü (en
+kötüler 2022-05 −7,6, 2023-02 −6,6), zararlı ay sayısı 12; ay içi düşüş −10,7 (zirve 9 Ekim, ay sonunda hâlâ dipte); 11 kazanç / 20 kayıp
+günü; en iyi 19 Ekim +6,1, en kötü 30 Ekim −4,05. Piyasa: BTC −7,2, alt evren medyanı −16,2. Kaynak (1,0x, puan, komisyon hariç): LONG
+fiyat −12,5 / funding +5,0 · SHORT fiyat +4,1 / funding +0,2; genç long −4,6 (BTW −2,65, SNXX −1,0), eski long −3,0; en kötü bacaklar
+BTW L, TIA S, ARIA S, APR S. Yorum [HİPOTEZ]: 696 / 697 teşhisiyle aynı — alt çöküşünde long fiyat bacağı, genç coin havuzu dar (n30 ~5).
+Kasım'da tekrar (madde 650 kuralı aylık).
