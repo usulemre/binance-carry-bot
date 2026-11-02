@@ -7850,3 +7850,13 @@ hizmet listesinde yok; izinsiz kripto varlık hizmet sağlayıcılığı SPKn 10
 kendi sunucunda kendi stratejinle çalıştırmak "başkası adına yönetime" fazla yakın. KARAR: yalnız kendi kullanım (SPK lisansı olmadan
 başkasına sunulmaz — önceki güvenlik kısıtıyla aynı). Çoklu kurulum altyapısı (carry@, panel sekmeleri) yalnız kullanıcının KENDİ
 hesapları / demo karşılaştırmaları için. İleride değişirse önce sermaye piyasası avukatı.
+
+## Madde 703 ÖN KAYIT (2026-11-02, sonuçlar görülmeden; kullanıcı: "kâr aramaya devam") — GENÇ COİNE AYRI HACİM EŞİĞİ (GENC_HACIM)
+Gerekçe (697, ölçüm): 30 Eylül'de evrende yalnız 5 genç (60-365 g) coin var, 112 genç coin 70 M $ hacim eşiğinin ALTINDA kaldığı için
+dışarıda; genç coinler maruziyet başı ~6× kazanıyor. Genel eşik düşürmek denendi (GE3 50 M "fazla geniş", 695 H: 5e7 +3,6 CAGR ama DD
+−15,5); YALNIZ GENÇ coinlere düşük eşik denenmedi. Uygulama motor KOPYASINDA (/tmp/g33_m703.py, g33.py değişmez): evren U'ya ek olarak
+yaşı 60-365 g arası, donuk değil, TradFi / D8 değil ve 24 sa hacmi ≥ GENC_HACIM olan coinler (o barda bilinen değerlerle) girer.
+Kollar: G50 (5e7), G30 (3e7). Düğme kapalıyken iki hizada bayt bayt parite şart. Değerlendirme 685 / 596: ADAY = eşit-risk ≥ P3T2 + 8
+VE Sharpe ≤2024 ve 2025+ düşmüyor. UYARI (karar dışı, raporlanacak): motor her işleme sabit 5 bp maliyet yazar; eklenen düşük hacimli
+coinlerde gerçek kayma daha yüksek olabilir → eklenen coinlerin maruziyet payı raporlanır, ADAY çıkarsa ayrıca maliyet stresi gerekir.
+İki kol çoklu deneme; ADAY bile Ekim+ verisiyle doğrulanmadan bota girmez.
