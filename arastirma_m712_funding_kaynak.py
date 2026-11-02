@@ -359,3 +359,18 @@ def C_motor():
             g = pd.concat([pd.read_pickle(x) for x in y]); g["gun"] = pd.to_datetime(g.gun); g = g[g.gun <= SON]
             f = (g.funding / 2 * 100).groupby(g.gun.dt.year).sum()
             print(f"  {ad} funding (% puan): " + " · ".join(f"{k}: {v:.1f}" for k, v in f.items()))
+
+
+def analiz():
+    G = defter(); Pn, yas, son = panel(); G = yas_ekle(G, yas)
+    print(f"defter: {len(G)} satır, {G.sembol.nunique()} sembol, {G.gun.min().date()} → {G.gun.max().date()}; yaşı bulunmayan satır {int(G.yas_g.isna().sum())}")
+    A_dagilim(G, son)
+    P = pozisyonlar(G); FP = funding_paneli(sorted(set(G.sembol)))
+    P = B_sureklilik(G, P, FP); B_ek(P, FP); bulmacalar(G, P, FP)
+    C_muhasebe(G); C_motor()
+    P = D_risk(G, P, Pn); D_ek(P)
+
+
+if __name__ == "__main__" and sys.argv[1:] == ["analiz"]:
+    import warnings; warnings.filterwarnings("ignore")
+    analiz()

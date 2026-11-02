@@ -7997,3 +7997,20 @@ Hipotezler ve ölçütler (önceden):
 Sınıf: ROBUST = 6 tam yılın ≥ 5'inde ve hem 2025 hem 2026'da tutar, ilk 3 coin çıkınca ölçü < %25 değişir; PROMISING = 2025 ve 2026'da +
 ≥ 4 yılda tutar ama birkaç coine / rejime bağlı; RED = yılların çoğunda ters ya da ilk 3 coin çıkınca kaybolur; UNKNOWN = kova < 30 pozisyon
 ya da < 3 yıl veri. Motor: tek işçi, seri; 8 koşu (3 çıkarma + 1 arz × 2 hiza); exit code + çıktı kontrolü; eksik koşu sayılmaz.
+
+## Madde 712 SONUÇ — FUNDING ALPHA KAYNAĞI VE YOĞUNLAŞMA (yalnız ölçüm; strateji / parametre / filtre DEĞİŞMEDİ)
+Araç arastirma_m712_funding_kaynak.py (kos / analiz); 711 defteri EK_T7KKS ile bayt bayt aynı; 8 motor koşusu tek işçi seri, hepsi rc 0 TAMAM.
+ÖLÇÜM: funding 2020-26 259,7 puan (long 214,9, short 44,8). Long funding / sermaye-yıl 2021 −6 · 2023 104 · 2025 171 · 2026 291; kitap
+günlerin %36-41'inde öder ama ödenen küçük (−1,5 / −1,7), alınan 69 / 83 → gelir her ay aşırı negatif funding'li 1-3 coinden (2026 aylık
+ilk 3 payı %37-88; yıllık ilk 10 payı 2025 %39 / 2026 %44, 2021-24 %52-78). 2021 −2,1: evren medyan funding %45 (boğa), long'un "en ucuzu"
+bile ödüyordu. Mayıs 2026 +1,2: aşırı negatif funding coini yoktu (en çok ORCA 0,4); Haziran'da yalnız LAB 6,4. Yarı ömür: tutulan long'larda
+coin−evren farkı +1 g 0,91 · +3 g 0,27 · +7 g 0,16 (her yıl < 0,5); long medyan tutuş 7 g. Gerçekleşen 259,7 vs teorik (giriş oranı × süre)
+246,6; long en uç beşte birlikte 109 vs 194. Long: uç girişli pozisyon net / sy ≈ en az uçtaki (256 vs 249; ilk 3 hariç ters) → funding'i fiyat
+yiyor; short: uç pozitif funding'li Q5 net / sy 333 vs 4, 2022-26 her yıl, ilk 3 hariç −%12, ama kazanç TP'den (funding / sy 67). Coin düzeyi
+funding / sy ↔ TP hariç fiyat Spearman long −0,21 (yıllarda tutarsız); en yüksek funding beşte birlik coinler fiyatta en çok kaybeder, MAE daha
+derin (−13 vs −8,5) ama net en iyi (zararlı coin %28). Motor stresi (tüm dönem funding sırasıyla, bilerek gelecek bilgili): ilk 3 / 5 / 10 çıkınca
+CAGR 239 → 194 / 176 / 157, hiçbir yıl negatif değil; 2023 TRB'ye bağlı (310 → 123), 2026 ilk 5 çıkınca 267 → 143. 2025-01'den 180 g arz
+durması: 2025 funding 70 → 46 ama getiri 267 → 80 (kayıp çoğu TP / fiyat). Genç funding −%75 (muhasebe) 2025-26 net ~136 → ~99.
+Sınıf: H-A1 RED · H-A2 PROMISING (rejime bağlı) · H-B1 long RED / short ROBUST (geçmiş içinde, pozisyona koşullu) · H-B2 ROBUST · H-B3 RED ·
+H-C ROBUST (yıl pozitifliği) · H-D PROMISING. Öneri / kural YOK; yeni hipotezler raporda (520 / 603 / 690 / 694 / 697 ile çakışma kontrolü
+şartıyla). Rapor: ARASTIRMA_712.md.
