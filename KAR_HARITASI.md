@@ -7887,3 +7887,10 @@ yok ya da o bardan sonra) 90 g perp yaşına kadar uygun DEĞİL. Tek eksen (ya�
 parite şart. Ölçüt (madde 704 §4): eşit-risk ≥ P3T2 + 8 VE Sharpe ≤2024 ve 2025+ düşmüyor VE maks DD / en kötü gün kabul edilebilir;
 ADAY çıkarsa ek doğrulama: etkilenen coinlerden net katkısı en büyük 3'ü çıkarılınca ve en iyi yıl çıkarılınca fark hâlâ artı olmalı.
 Ek rapor (karar dışı): etkilenen coin-gün sayısı, bu coinlerin brüt payı ve katkısı. ADAY bile Ekim+ verisiyle doğrulanmadan bota girmez.
+Madde 705 SONUÇ: İKİ KOL DA RED (10 koşu; parite bayt bayt; ilk deneme dosya yolu hatasıyla çöktü, sayılmadı, baştan koşuldu). (ham · dd ·
+Sh ≤24 / 25+ → eşit-risk): P3T2 247,4 · −13,3 · 4,03 / 4,42 → 315,2 | A (spot-önce 14 g) 257,0 · −13,3 · 4,13 / 4,46 → 328,4 (ilk elek ADAY)
+ama ön kayıtlı ek kontrollerde düştü: 2021 hariç CAGR farkı −0,1 (kazancın tamamı 2021: +105,8 puan; DENT / BTT / HOT gibi eski spot
+tokenlerin perp'e geliş dalgası), etkilenen ilk 3 coin hariç eşit-risk farkı +4,7 (< 8) → RED | B (spotsuz 90 g) 218,4 · −13,3 · 4,02 /
+3,73 → 275,7 RED: spotsuz genç coinlerin 60-90 g penceresi +60,6 puan taşıyor (2025 −96,6, 2026 −70,6) → "perp-only token riskli"
+varsayımı yanlış. Yaş eşiği spot geçmişine göre kişiselleştirilince tekrarlanabilir kâr yok; 60 g yerinde. Sıradaki: 704 H2. Rapor:
+ARASTIRMA_705.md.
