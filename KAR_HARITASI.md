@@ -8112,3 +8112,12 @@ C spot-perp baz → 220 / 550-551 / 581-583 (baz = funding'le aynı prim) yenide
 ile uygulanamaz, funding farkı 676 / 677 / 717; E trend → 686 (Sh 0,99, kor −0,06, gerçek hedge ama eşit riskte harman RED) / 384 / 237 / 381 /
 411 tekrar. Eleme sorusu (686 dersi): ikinci motor ancak carry'nin kuyruk tipine (alt / tek coin çöküşü) karşı kazanıyorsa eşit riskte değer
 katar. Rapor: ARASTIRMA_718.md.
+
+## Madde 719 ÖN KAYIT (2026-11-03, sonuçlar görülmeden; kullanıcı: "36 / 37 / 38 sa için gereken turlarla test et") — short yenileme 36 sa, önerilen ayarda
+Kapsam: motor 4 sa barla çalışır → yalnız 4'ün katları ölçülebilir: 36 sa = S_REB 9 (TEST); 37 / 38 sa ÖLÇÜLEMEZ (saatlik zemin yok; kurgu
+yapılmaz). Botta uygulanabilirlik: tur = REBALANCE_HOURS / N_DILIM = 120 / 15 = 8 sa; 36 sa'in 8'in katı değil → gereken tur 4 sa (N_DILIM 30) ya
+da 12 sa (N_DILIM 10); ikisi de dilim yapısını değiştirir (madde 184: 15 dilim belirlilik), o değişiklik BU testin dışında (motor FAZ 15 sabit).
+Önceki kanıt: 511 / 545 (T4'te 36-40 sa plato, 36 sa +18,3 vs 40 sa +14,0), 513 / 546 (40 vs 48 protokol RED, "doz farkı"). Kol (TEK): P3T2 +
+S_REB 9 vs taban P3T2 (S_REB 10 = EK_T7KKS), iki hiza, 2.000 $, Ekim dahil zemin, 690 kopya motoru (düğme değişmeden parite zaten 711'de bayt
+bayt). Ölçüt (685 / 596): eşit risk ≥ taban (+315,2 ölçeğinde, aynı yöntem) + 8 VE Sharpe ≤2024 ve 2025+ tabandan düşük değil → ADAY (bota
+girmez: ayrıca dilim yapısı testi + kullanıcı kararı gerekir); değilse RED. Tek işçi, 2 koşu, rc + dosya kontrolü.
