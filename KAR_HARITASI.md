@@ -8121,3 +8121,10 @@ da 12 sa (N_DILIM 10); ikisi de dilim yapısını değiştirir (madde 184: 15 di
 S_REB 9 vs taban P3T2 (S_REB 10 = EK_T7KKS), iki hiza, 2.000 $, Ekim dahil zemin, 690 kopya motoru (düğme değişmeden parite zaten 711'de bayt
 bayt). Ölçüt (685 / 596): eşit risk ≥ taban (+315,2 ölçeğinde, aynı yöntem) + 8 VE Sharpe ≤2024 ve 2025+ tabandan düşük değil → ADAY (bota
 girmez: ayrıca dilim yapısı testi + kullanıcı kararı gerekir); değilse RED. Tek işçi, 2 koşu, rc + dosya kontrolü.
+
+## Madde 719 SONUÇ — short yenileme 36 sa (S_REB 9): RED (strateji / parametre / canlı DEĞİŞMEDİ)
+2 koşu rc 0. (yıllık · Sh · dd · en kötü gün · Sh ≤2024 / 2025+ → eşit risk): taban 40 sa 239,3 · 4,05 · −13,3 · −7,41 · 4,03 / 4,14 → 315,2 (doz 1,15) |
+36 sa 247,9 · 4,12 · −13,7 · −7,38 · 4,03 / 4,36 → 302,3 (doz 1,10). Ham getiri +8,6 ve 2025+ Sharpe ↑, ama maks DD 0,4 derin → aynı riske inen doz
+1,15 → 1,10, eşit risk −12,9 → şart (+8) TUTMADI → RED. Yıllar: 2021 489 / 472, 2023 297 / 309, 2024 113 / 118, 2025 300 / 267, 2026 301 / 267 (yine
+2025-26'ya yaslanan "doz farkı", 513 / 546 ile aynı desen). 37 / 38 sa 4 sa zeminde ölçülemez. 36 sa botta dilim yapısını (30 ya da 10 dilim) da
+değiştirmeyi gerektirirdi — gerek kalmadı. Short sıklığı ekseni (493-513, 545-546, 553, 568, 714, 719) KAPALI.
