@@ -8101,3 +8101,14 @@ BİRİNCİL (2023-06 → 2025-05): V3H %673 vs taban %780, Sh 3,40 vs 3,62, en k
 DESTEKLENMEZ; alt dönemlerin üçünde de geride (2023-H2 138 / 156, 2024 109 / 118, 2025-H1 55 / 58). Bilgi: 676 penceresinde HL-V3 %917 vs %793 (MEXC-V3
 %373) → aynı fikir dış borsaya göre ters sonuç veriyor = sağlam kenar değil [VARSAYIM]; Ekim −3,61 (MEXC −3,65, taban −4,27). 677 Aralık kuralı aynen;
 ADAY çıkarsa 716 + 717 aleyhte kanıtları raporlanır. Araç arastirma_m717_hyperliquid.py, rapor ARASTIRMA_717.md.
+
+## Madde 718 — BAĞIMSIZ ALPHA MOTORLARI (kullanıcı "Strateji Araştırması 717"; 717 dolu): NO NEW STRATEGY · likidasyon VERİ BEKLİYOR
+Test yok; kod / strateji / sermaye / canlı DEĞİŞMEDİ; yalnız veri envanteri (getiri ölçülmedi). Envanter: perp 4 sa + funding 2020+ (853 sembol,
+delist dahil); metrics (OI / ls / top trader / taker) 2022-02-23+ (ort. sembol 105 → 298); prim endeksi, spot mum, BTC/ETH çeyreklik VAR; USDⓈ-M
+likidasyon arşivi YOK (data.binance.vision um/liquidationSnapshot boş, yalnız COIN-M; fapi 451); MEXC funding 2025-06+, HL funding 2023-05+.
+Aileler: A likidasyon → yeni ama geçmiş veri yok (395 E10 vekili RED / rejim aracı) → VERİ BEKLİYOR (kullanıcı onaylarsa sunucuda botun dışında
+salt okunur !forceOrder@arr toplayıcı, ≥ 6-12 ay; RED kriteri taslağı raporda); B OI-fiyat uyumsuzluğu → 649 / 201 / 395 / 389 / 244 tekrar;
+C spot-perp baz → 220 / 550-551 / 581-583 (baz = funding'le aynı prim) yeniden adlandırma; D çapraz borsa fiyat → 8 sa bot / envanter / transfer
+ile uygulanamaz, funding farkı 676 / 677 / 717; E trend → 686 (Sh 0,99, kor −0,06, gerçek hedge ama eşit riskte harman RED) / 384 / 237 / 381 /
+411 tekrar. Eleme sorusu (686 dersi): ikinci motor ancak carry'nin kuyruk tipine (alt / tek coin çöküşü) karşı kazanıyorsa eşit riskte değer
+katar. Rapor: ARASTIRMA_718.md.
