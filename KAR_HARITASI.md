@@ -8093,3 +8093,11 @@ Karar penceresi (BİRİNCİL): 2023-06-01 → 2025-05-31. ÖLÇÜT (677'nin üç
 gün tabandan derin değil → "V3 DESTEKLENİR (bağımsız)"; biri tutmazsa "DESTEKLENMEZ". İkincil (bilgi, karara girmez): 2025-06 → 2026-09 (676
 penceresi), 2026-10 (677 OOS ayı), alt dönemler 2023-H2 / 2024 / 2025-H1 (tutarlılık), HL kapsamı (hücre payı, eşleşen coin). Sonuç 677'nin Aralık
 kuralını DEĞİŞTİRMEZ; yalnız ek kanıt olarak raporlanır. Motor tek işçi, 2 koşu, rc + dosya kontrolü; eksik koşu sayılmaz.
+
+## Madde 717 SONUÇ — V3 Hyperliquid ile bağımsız sınama: DESTEKLENMEZ (strateji / parametre / canlı DEĞİŞMEDİ)
+HL fundingHistory 215 / 235 perp Binance'le eşleşti (56 delist işaretli dahil); kapsam Binance sinyal hücrelerinin %36,6 (2023-06 → 2025-05) / %33,9
+(676 penceresi) / %27,7 (Ekim); kesitsel sıra kor. B ↔ HL +0,47 / +0,48 (MEXC +0,93). 2 koşu rc 0; parite: HL ilk barı 2023-05-14'ten önce fark 0.
+BİRİNCİL (2023-06 → 2025-05): V3H %673 vs taban %780, Sh 3,40 vs 3,62, en kötü gün −6,16 vs −7,41 → getiri X · Sharpe X · en kötü gün Y →
+DESTEKLENMEZ; alt dönemlerin üçünde de geride (2023-H2 138 / 156, 2024 109 / 118, 2025-H1 55 / 58). Bilgi: 676 penceresinde HL-V3 %917 vs %793 (MEXC-V3
+%373) → aynı fikir dış borsaya göre ters sonuç veriyor = sağlam kenar değil [VARSAYIM]; Ekim −3,61 (MEXC −3,65, taban −4,27). 677 Aralık kuralı aynen;
+ADAY çıkarsa 716 + 717 aleyhte kanıtları raporlanır. Araç arastirma_m717_hyperliquid.py, rapor ARASTIRMA_717.md.
