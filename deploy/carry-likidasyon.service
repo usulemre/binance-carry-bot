@@ -1,0 +1,28 @@
+# MADDE 723: likidasyon verisi toplayıcı (likidasyon_toplayici.py). API anahtarı KULLANMAZ, emir GÖNDERMEZ; botla bağı yok.
+# Varsayılan KAPALI. Açmak:  sudo install -d -o carry -g carry /opt/carry/veri_likidasyon &&
+#                             sudo cp /opt/carry/deploy/carry-likidasyon.service /etc/systemd/system/ &&
+#                             sudo systemctl daemon-reload && sudo systemctl enable --now carry-likidasyon
+[Unit]
+Description=Carry likidasyon verisi toplayıcı (!forceOrder@arr, salt okunur)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=carry
+Group=carry
+WorkingDirectory=/opt/carry
+ExecStart=/opt/carry/.venv/bin/python /opt/carry/likidasyon_toplayici.py --klasor /opt/carry/veri_likidasyon
+Restart=always
+RestartSec=30
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry/veri_likidasyon
+
+[Install]
+WantedBy=multi-user.target

@@ -8175,3 +8175,11 @@ spot ilk günü bilinen: 24 aday (LUNA 2022 yeniden listeleme, spot günü duyur
 GÜN açılıyor (duyuru 03-15 UTC, spot aynı gün) → ön kayıtlı kurala göre (giriş ≥ 4 sa gecikmeli ikinci 4 sa kapanış, spot günü girişten önceyse
 sayılmaz) ölçülebilir olay 0 → RED. 394'ün "duyuru genelde birkaç gün önce" varsayımı perp'i önce olan coinlerde YANLIŞ: pencere saatler, 8 sa'lik
 botla yakalanamaz (gerçek zamanlı ayrı bir altyapı gerekir; o da 23 olayla istatistik vermez). Araç arastirma_m722_listeleme_duyuru.py.
+
+## Madde 723 — Likidasyon verisi toplayıcı (madde 718 VERİ BEKLİYOR'un altyapısı; kullanıcı: "devam") — bot / strateji DEĞİŞMEDİ
+likidasyon_toplayici.py: Binance'in herkese açık !forceOrder@arr akışı → /opt/carry/veri_likidasyon/YYYY-MM-DD.jsonl (t, sembol, LONG_ / SHORT_TASFIYE,
+fiyat, ort_fiyat, adet, usd, durum). API anahtarı YOK, emir YOK, botla bağı YOK (ayrı süreç); kopmada artan bekleme ile yeniden bağlanır ve kopukluğu
+{"bosluk": [bas, bit]} satırıyla kaydeder (eksik dönem sıfır likidasyon sanılmasın). Sınır: akış sembol başına 1 sn'de yalnız son likidasyonu verir.
+Servis deploy/carry-likidasyon.service (ProtectSystem strict, yalnız veri klasörüne yazar) VARSAYILAN KAPALI; açmak kullanıcı kararı (komut servis
+dosyasının başında). Test test_likidasyon_toplayici.py (10; yerel sahte websocket sunucusuyla uçtan uca) + CI + ruff. Bu ortamdan Binance akışına
+erişim yok → canlı akış sunucuda doğrulanacak. 6-12 ay veri birikince 718'deki RED kriterleriyle ön kayıt yazılır.
