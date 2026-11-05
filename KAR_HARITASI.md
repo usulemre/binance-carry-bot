@@ -8158,3 +8158,13 @@ perp sembolü; panelde 85 olay ölçüldü (36 ayrı gün). ÖLÇÜM (short, gir
 ort > 0 Y · t ≥ 2 X · 2020-24 > 0 X · 2025+ > 0 Y · en iyi 3 hariç > 0 Y → RED. KUYRUK: PUMPBTC −%338 (fiyat 4,5×; short teminatı aşar = tasfiye),
 YALA −%122, SRM −%81, XEM −%40 → 7 g'lik delist short'u tek olayda hesap batırabilir. Long yönü −%7,35 (bilgi). Yorum [HİPOTEZ]: 2025+ delist
 dalgasında güçlü ama tek rejim ve az bağımsız gün; ileride (≥ 2027 sonu) yeniden bakılabilir, şimdi uygulanmaz. Araç arastirma_m721_delist_duyuru.py.
+
+## Madde 722 ÖN KAYIT (2026-11-05, duyurular İNDİRİLMEDEN; kullanıcı: "başka şeyler dene") — SPOT LİSTELEME DUYURUSU (perp önceden işlem görüyorken)
+394'ün kapattığı boşluk: "listeleme DUYURUSU veride yok — gerçek giriş anı odur". Duyuru zamanı artık bu ortamdan (cms 'New Cryptocurrency
+Listing' kataloğu 48) alınabiliyor. Ekonomik gerekçe: Binance spot listelemesi dikkat / talep getirir; perp'te duyurudan spot açılışına kadar
+sürüklenme olabilir (394 listeleme GÜNÜ long'u ort +%10,8 / medyan +%0,9, açık eksen). Olay: başlığı "Binance Will List" ile başlayan duyuru,
+parantezdeki sembol X için XUSDT perp duyurudan ≥ 14 g önce işlem görüyor (panel), TradFi / bStocks hariç, sembol başına ilk duyuru. Tek kural:
+LONG, giriş = releaseDate'ten sonraki İKİNCİ 4 sa kapanış (≥ 4 sa gecikme); çıkış = spot ilk işlem günü (data_spot_ilk_gun.json) 04:00 UTC kapanışı
+ya da giriş + 7 g, hangisi önceyse; spot günü girişten önceyse olay sayılmaz. Getiri = fiyat + long'un gerçek funding'i (− ödenen) − 2 × 5 bp.
+Ölçüt (721 ile aynı, hepsi): ort net > 0 VE gün kümeli t ≥ 2 VE 2022-2024 ve 2025+ ikisinde de ort > 0 VE en iyi 3 hariç ort > 0 → PROMISING;
+değilse RED. Ayrıca (karara girmez): short yönü, kuyruk (en kötü 5), olay sayısı. Gecikme / tutma taraması YOK.
