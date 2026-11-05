@@ -8168,3 +8168,10 @@ LONG, giriş = releaseDate'ten sonraki İKİNCİ 4 sa kapanış (≥ 4 sa gecikm
 ya da giriş + 7 g, hangisi önceyse; spot günü girişten önceyse olay sayılmaz. Getiri = fiyat + long'un gerçek funding'i (− ödenen) − 2 × 5 bp.
 Ölçüt (721 ile aynı, hepsi): ort net > 0 VE gün kümeli t ≥ 2 VE 2022-2024 ve 2025+ ikisinde de ort > 0 VE en iyi 3 hariç ort > 0 → PROMISING;
 değilse RED. Ayrıca (karara girmez): short yönü, kuyruk (en kötü 5), olay sayısı. Gecikme / tutma taraması YOK.
+
+## Madde 722 SONUÇ — spot listeleme duyurusu long'u: RED (uygulanamaz) — strateji DEĞİŞMEDİ
+Veri: cms 'New Cryptocurrency Listing' 2.292 makale (2017-07 → 2026-10). "Binance Will List (X)" + XUSDT perp duyurudan ≥ 14 g önce işlem görüyor +
+spot ilk günü bilinen: 24 aday (LUNA 2022 yeniden listeleme, spot günü duyurudan önce → dışı). ÖLÇÜM: 23 olayın 23'ünde spot işlem duyuruyla AYNI
+GÜN açılıyor (duyuru 03-15 UTC, spot aynı gün) → ön kayıtlı kurala göre (giriş ≥ 4 sa gecikmeli ikinci 4 sa kapanış, spot günü girişten önceyse
+sayılmaz) ölçülebilir olay 0 → RED. 394'ün "duyuru genelde birkaç gün önce" varsayımı perp'i önce olan coinlerde YANLIŞ: pencere saatler, 8 sa'lik
+botla yakalanamaz (gerçek zamanlı ayrı bir altyapı gerekir; o da 23 olayla istatistik vermez). Araç arastirma_m722_listeleme_duyuru.py.
