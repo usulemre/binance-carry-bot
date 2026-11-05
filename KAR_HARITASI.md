@@ -8149,3 +8149,12 @@ funding bedeli) → önsel olasılık DÜŞÜK. Bağımsız strateji olarak (car
 Ölçüt (hepsi): olay başı ortalama net > 0 VE gün kümelenmesine göre t ≥ 2 VE 2020-2024 ile 2025+ iki alt dönemde de ortalama > 0 VE en iyi 3 olay
 çıkınca ortalama > 0 → PROMISING (ileri doğrulama + kullanıcı kararı; botta yok). Herhangi biri tutmazsa RED. Ayrıca raporlanır (karara girmez):
 long yönü, fiyat ve funding bileşenleri ayrı, olay sayısı. Parametre (gecikme / tutma) taraması YOK.
+
+## Madde 721 SONUÇ — vadeli delist duyurusu short'u: RED (strateji / canlı DEĞİŞMEDİ)
+Veri: Binance cms Delisting kataloğu 446 makale (2022-02 → 2026-10; daha eskisi API'de yok), başlığı vadeli olan 78 makalenin gövdesinden 86 USDT
+perp sembolü; panelde 85 olay ölçüldü (36 ayrı gün). ÖLÇÜM (short, girişte ikinci 4 sa kapanış, 7 g, gerçek funding, 2 × 5 bp): ort net %+7,15
+(medyan +8,93; fiyat +6,48, funding +0,76 → short funding'i çoğunlukla ALDI, 146'nın "negatif funding" önseli tutmadı), kazanan %68, gün kümeli t
+1,87; 2022-2024 (25 olay, 9 gün) %−3,14 / t −1,08; 2025+ (60 olay, 27 gün) %+11,43 / t 2,47; en iyi 3 (RVV, NEIROETH, SKATE) hariç %+4,54. Ön kayıt:
+ort > 0 Y · t ≥ 2 X · 2020-24 > 0 X · 2025+ > 0 Y · en iyi 3 hariç > 0 Y → RED. KUYRUK: PUMPBTC −%338 (fiyat 4,5×; short teminatı aşar = tasfiye),
+YALA −%122, SRM −%81, XEM −%40 → 7 g'lik delist short'u tek olayda hesap batırabilir. Long yönü −%7,35 (bilgi). Yorum [HİPOTEZ]: 2025+ delist
+dalgasında güçlü ama tek rejim ve az bağımsız gün; ileride (≥ 2027 sonu) yeniden bakılabilir, şimdi uygulanmaz. Araç arastirma_m721_delist_duyuru.py.
