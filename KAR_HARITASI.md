@@ -8128,3 +8128,11 @@ girmez: ayrıca dilim yapısı testi + kullanıcı kararı gerekir); değilse RE
 1,15 → 1,10, eşit risk −12,9 → şart (+8) TUTMADI → RED. Yıllar: 2021 489 / 472, 2023 297 / 309, 2024 113 / 118, 2025 300 / 267, 2026 301 / 267 (yine
 2025-26'ya yaslanan "doz farkı", 513 / 546 ile aynı desen). 37 / 38 sa 4 sa zeminde ölçülemez. 36 sa botta dilim yapısını (30 ya da 10 dilim) da
 değiştirmeyi gerektirirdi — gerek kalmadı. Short sıklığı ekseni (493-513, 545-546, 553, 568, 714, 719) KAPALI.
+
+## Madde 720 — Kasım 1-4 (bilgi): Ekim'den devreden pozisyonların fiyat hareketi — karar değil
+Binance'in günlük funding arşivi yok (yalnız aylık, ay sonunda) → Kasım için seçim / kapanış / funding SİMÜLE EDİLEMEZ. Ölçülen yalnız: 31 Ekim
+20:00 kapanışındaki 34 açık pozisyon (simülasyon, iki hiza ort.) hiç kapanmadan tutulsaydı fiyat K/Z (günlük 4 sa arşiv, 34 / 34 coin; ×1,15;
+funding, TP / kademe dolumu ve dengeleme hariç). Gün sonu kümülatif: 1 Kas −0,69 · 2 Kas −3,42 · 3 Kas −2,06 · 4 Kas −1,37 (sermaye %). En
+kötüler INIT L −1,00 (−%23,5), SNXX L −0,40, XRP S −0,40, BTW L −0,35 (−%4,8 → ~1,03), UNI S −0,24; en iyiler APR S +0,64 (−%25,9), BLESS S +0,63,
+ZEC L +0,34. Gerçek motor bu pozisyonların bir kısmını dengelemede kapatır, yenilerini açar ve TP doldurur → bu sayı Kasım sonucu DEĞİL.
+Kasım'ın gerçek ölçümü Aralık başında (madde 650).
