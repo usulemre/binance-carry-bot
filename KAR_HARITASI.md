@@ -8136,3 +8136,16 @@ funding, TP / kademe dolumu ve dengeleme hariç). Gün sonu kümülatif: 1 Kas �
 kötüler INIT L −1,00 (−%23,5), SNXX L −0,40, XRP S −0,40, BTW L −0,35 (−%4,8 → ~1,03), UNI S −0,24; en iyiler APR S +0,64 (−%25,9), BLESS S +0,63,
 ZEC L +0,34. Gerçek motor bu pozisyonların bir kısmını dengelemede kapatır, yenilerini açar ve TP doldurur → bu sayı Kasım sonucu DEĞİL.
 Kasım'ın gerçek ölçümü Aralık başında (madde 650).
+
+## Madde 721 ÖN KAYIT (2026-11-05, duyuru verisi İNDİRİLMEDEN ölçülmeden; kullanıcı: "başka yaklaşımlar denemek lazım") — VADELİ DELİST DUYURUSU olayı
+Yeni veri boyutu: Binance duyuru API'si (bapi cms, "Delisting" kataloğu 161) bu ortamdan erişilebilir; duyuru ZAMANI (releaseDate) bugüne kadar
+veride yoktu (394: "duyuru veride yok"). Örtüşme: 146 / 661 botun kendi çıkışı (duyurulan coin yeni seçime girmez; duyuruda kapatmak, bildirim
+döneminde funding toplayan long'ları kestiği için Sharpe'ı düşürmüştü) → kalabalık short / negatif funding İMA ediyor; 201 yasası (olay fiyatı ≈
+funding bedeli) → önsel olasılık DÜŞÜK. Bağımsız strateji olarak (carry filtresi DEĞİL) tek kural:
+  Olay = başlığı USDⓈ-M perpetual delist duyurusu olan makale (vadeli; spot / marjin duyuruları hariç), başlık / içerikten sembol(ler).
+  Giriş = releaseDate'ten SONRAKİ ikinci 4 sa kapanış (≥ 4 sa gecikme, 8 sa'lik bot turu gerçekçiliği), SHORT, eşit ağırlık.
+  Çıkış = girişten 7 g sonra ya da sembolün son geçerli 4 sa kapanışı (delist), hangisi önceyse.
+  Getiri = −fiyat getirisi + short'un gerçek funding'i (data_funding_uzun, ödeme zamanı tutma aralığında) − 2 × 5 bp.
+Ölçüt (hepsi): olay başı ortalama net > 0 VE gün kümelenmesine göre t ≥ 2 VE 2020-2024 ile 2025+ iki alt dönemde de ortalama > 0 VE en iyi 3 olay
+çıkınca ortalama > 0 → PROMISING (ileri doğrulama + kullanıcı kararı; botta yok). Herhangi biri tutmazsa RED. Ayrıca raporlanır (karara girmez):
+long yönü, fiyat ve funding bileşenleri ayrı, olay sayısı. Parametre (gecikme / tutma) taraması YOK.
