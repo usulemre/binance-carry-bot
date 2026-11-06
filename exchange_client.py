@@ -9,6 +9,22 @@ from binance.exceptions import BinanceAPIException
 
 logger = logging.getLogger("bot")
 
+
+def _tick_ondalik(s: dict) -> int:
+    """Fiyat ondalığı PRICE_FILTER.tickSize'dan (madde 725).
+
+    Binance'in `pricePrecision` alanı geçerli fiyat adımı DEĞİL: 2026-11'de 760
+    USDT vadeli sembolün 685'inde tickSize ondalığından büyük (ör. BMTUSDT
+    pricePrecision 7, tickSize 0.00001). O ondalığa yuvarlanan limit / kâr al
+    fiyatları -4014 "Price not increased by tick size" ile reddediliyordu.
+    Bütün tickSize değerleri 10'un kuvveti, bu yüzden ondalık sayısı yeterli.
+    """
+    for f in s.get("filters", []):
+        if f.get("filterType") == "PRICE_FILTER" and f.get("tickSize"):
+            t = f["tickSize"].rstrip("0")
+            return len(t.split(".")[1]) if "." in t else 0
+    return s.get("pricePrecision", 2)
+
 # Binance'in rate-limit (429) ve IP ban (418) durumlarında dönebileceği kodlar.
 # Bu durumlarda hemen pes etmek yerine, borsanın istediği süre kadar bekleyip
 # yeniden denemek gerekir - aksi halde geçici bir yoğunluk, botun tamamen
@@ -216,7 +232,7 @@ class ExchangeClient:
             if s["symbol"] == symbol:
                 return {
                     "quantity_precision": s["quantityPrecision"],
-                    "price_precision": s["pricePrecision"],
+                    "price_precision": _tick_ondalik(s),
                 }
         return {"quantity_precision": 3, "price_precision": 2}
 

@@ -141,3 +141,14 @@ except AgHata:
 print(f"     hata firlatildi (bir sonraki turda yeniden denenecek): OK")
 
 print("\nAG HATASI AYRIMI TESTLERI GECTI")
+
+print("\n=== MADDE 725: fiyat ondaligi tickSize'dan (pricePrecision degil) ===")
+def _s(pp, tick):
+    return {"pricePrecision": pp, "filters": [{"filterType": "LOT_SIZE", "stepSize": "1"},
+                                              {"filterType": "PRICE_FILTER", "tickSize": tick}]}
+assert EC._tick_ondalik(_s(7, "0.0000100")) == 5   # BMTUSDT: -4014 reddi buradan geliyordu
+assert EC._tick_ondalik(_s(7, "0.0000010")) == 6
+assert EC._tick_ondalik(_s(2, "0.10")) == 1
+assert EC._tick_ondalik(_s(1, "1")) == 0
+assert EC._tick_ondalik({"pricePrecision": 4, "filters": []}) == 4   # filtre yoksa eski alan
+print("   tickSize ondaligi: OK")

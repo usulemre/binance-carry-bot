@@ -708,6 +708,22 @@ def gerekli_kaldirac() -> int:
 _KALDIRAC_AYARLI: set = set()
 
 
+def _zaten_capraz(client, sembol: str) -> bool:
+    """Sembol borsada ZATEN çapraz teminatta mı (madde 725)?
+
+    Binance, sembolde bekleyen emir (kâr al / felaket stop) varken teminat
+    değiştirme isteğini -4046 yerine -4067 ile reddediyor - sembol zaten
+    CROSSED olsa bile. `_KALDIRAC_AYARLI` süreç belleğinde tutulduğu için her
+    yeniden başlatmadan sonra (çökme, madde 657 eşik) açık pozisyonlu bütün
+    semboller "çapraza alınamadı" sayılıp o turda büyütülmüyordu. Borsanın
+    kendi kaydı (symbolConfig) okunur; okunamazsa eski davranış (False)."""
+    try:
+        r = client.client.futures_symbol_config(symbol=sembol)
+        return any(str(x.get("marginType", "")).upper() == "CROSSED" for x in (r or []))
+    except Exception:
+        return False
+
+
 def kaldirac_hazirla(client, sembol: str) -> bool:
     """Sembolü ÇAPRAZ teminata ve gerekli kaldıraca alır (süreç başına bir kez).
 
@@ -722,7 +738,7 @@ def kaldirac_hazirla(client, sembol: str) -> bool:
         client.client.futures_change_margin_type(symbol=sembol, marginType="CROSSED")
     except Exception as e:
         # -4046: zaten CROSSED (Binance "No need to change margin type")
-        if "4046" not in str(e) and "No need" not in str(e):
+        if "4046" not in str(e) and "No need" not in str(e) and not _zaten_capraz(client, sembol):
             capraz = False
             logger.error("%s ÇAPRAZ teminata alınamadı (%s) - kaldıraç "
                          "yükseltilmedi; izole teminat bu strateji için tehlikeli", sembol, e)

@@ -1023,6 +1023,38 @@ kontrol("mevcut verilmezse eski davranış (engelli) korunuyor",
         len(_c3.gonderilen) == 0, f"({_c3.gonderilen})")
 cb.DOLUM_BEKLEME_SN = _eski_db
 cb._KALDIRAC_AYARLI.clear()
+
+
+class _BekleyenEmirli:
+    """MADDE 725: bekleyen emir varken Binance -4067 veriyor; sembol zaten CROSSED olabilir."""
+
+    def __init__(self, tur):
+        self.kaldirac = []
+        _o = self
+
+        class _C:
+            @staticmethod
+            def futures_change_margin_type(symbol, marginType):
+                raise RuntimeError("APIError(code=-4067): Position side cannot be "
+                                   "changed if there exists open orders.")
+
+            @staticmethod
+            def futures_symbol_config(symbol):
+                return [{"symbol": symbol, "marginType": tur, "leverage": 2}]
+        self.client = _C()
+
+    def set_leverage(self, symbol, leverage):
+        self.kaldirac.append(symbol)
+
+
+_k1 = _BekleyenEmirli("CROSSED")
+kontrol("-4067 + borsada zaten CROSSED -> hazır sayılıyor (yeniden başlatma sonrası)",
+        cb.kaldirac_hazirla(_k1, "TACUSDT") and _k1.kaldirac == ["TACUSDT"])
+cb._KALDIRAC_AYARLI.clear()
+_k2 = _BekleyenEmirli("ISOLATED")
+kontrol("-4067 + borsada ISOLATED -> hâlâ ENGELLİ",
+        not cb.kaldirac_hazirla(_k2, "TACUSDT") and _k2.kaldirac == [])
+cb._KALDIRAC_AYARLI.clear()
 cb._KALDIRAC_AYARLI.update(_eski_cache)
 
 print("\n7k) KÂR AL DEFTERİ VE GÜÇ (madde 216)")
