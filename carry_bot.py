@@ -4863,10 +4863,19 @@ def main():
         _bildir(f"▶️ bot başladı · mod {client.mode} · ayar {_PROFIL_AD} {GROSS_EXPOSURE:.2f}x"
                 + (f" · kitap {os.getenv('CARRY_ONERILEN_KITAP')} $" if os.getenv("CARRY_ONERILEN_KITAP") else ""),
                 anahtar="basladi", kisma_sn=600)
-    logger.info("carry_bot başladı | mod=%s | %d+%d bacak | %d dilim | "
-                "her dilim %.0fsa'te bir (tur: %.0fsa) | gross %.1fx | "
+    # MADDE 727: başlangıç satırı GERÇEK bacak sayısını (turdaki hesapla aynı: bakiyeye göre) ve gross'u iki ondalıkla
+    # yazar. Eskiden N_LEGS (tavan) ve %.1f yazıyordu: 2.000 $'da "5+5 bacak · gross 1.1x" görünürken bot 4+4 · 1,15x
+    # çalışıyordu (panelde yanıltıcı).
+    try:
+        _bk = sermaye_oku(client)
+        _nb = uygun_bacak_sayisi(_bk, vol_olcek(_bk, olcme_yap=False)) if _bk else N_LEGS
+    except Exception:
+        _nb = N_LEGS
+    logger.info("carry_bot başladı | mod=%s | %d+%d bacak%s | %d dilim | "
+                "her dilim %.0fsa'te bir (tur: %.0fsa) | gross %.2fx | "
                 "akış %.0f%% | risk: %s (vol hedefi %.0f%%)",
-                client.mode, N_LEGS, N_LEGS, N_DILIM, REBALANCE_HOURS,
+                client.mode, _nb, _nb, f" (en çok {N_LEGS}+{N_LEGS})" if _nb < N_LEGS else "",
+                N_DILIM, REBALANCE_HOURS,
                 REBALANCE_HOURS / max(1, N_DILIM), GROSS_EXPOSURE,
                 AKIS_AGIRLIK * 100, RISK_PROFILI, VOL_HEDEF * 100)
 
