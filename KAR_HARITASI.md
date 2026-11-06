@@ -8183,3 +8183,11 @@ fiyat, ort_fiyat, adet, usd, durum). API anahtarı YOK, emir YOK, botla bağı Y
 Servis deploy/carry-likidasyon.service (ProtectSystem strict, yalnız veri klasörüne yazar) VARSAYILAN KAPALI; açmak kullanıcı kararı (komut servis
 dosyasının başında). Test test_likidasyon_toplayici.py (10; yerel sahte websocket sunucusuyla uçtan uca) + CI + ruff. Bu ortamdan Binance akışına
 erişim yok → canlı akış sunucuda doğrulanacak. 6-12 ay veri birikince 718'deki RED kriterleriyle ön kayıt yazılır.
+
+## Madde 724 — Kullanıcının Reversal botu (madde 644 eki 3'ün Ekim dahil güncellemesi; bilgi, carry DEĞİŞMEDİ)
+Kullanıcı: 118 g, kâğıt üstünde ~+%400. Aynı yeniden üretim (2026-07-10 16:00 UTC, 2.000 $, 2 slot %25, 1 g tut, stop %25, hacim 5M, soğuma yok),
+zemin Ekim dahil (HAC /tmp/panel.pkl). 31 Ekim bakiyesi karar saatine göre (TR): 03:00 **6.510 $ (+%226; Ekim +%37, 61 işlem, %57 kazanan, 19 stop;
+en düşük 1.344 $ = −%33)** · 07:00 2.140 $ · 11:00 1.318 $ · 15:00 439 $ (−%78) · 19:00 626 $ · 23:00 3.134 $ (Ekim +%231). Ekim'de altı saatin
+altısı da kârlı (alt çöküşünde pompa short'u işledi = 644'ün "2025+ rejim kenarı") ama 10 Temmuz'dan bu yana altı saatin dördü hâlâ başlangıcın
+altında → sonuç karar saatine (şansa) aşırı duyarlı. 644'ün uzun dönem bulguları geçerli: slot %25 ile 6 yılda hesap sıfırlanıyor, 2025-01'den
+başlasa yalnız short 2 slot −%53. Öneri değişmedi: gerçek parayla slot %25 AÇILMAMALI; izlenecekse slot %10, yalnız short (2025+ Sharpe ~1).
