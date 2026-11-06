@@ -57,6 +57,10 @@ Sonrasında preflight ve acil kapatma şöyle çalıştırılır: `sudo /opt/car
 
 ### Panel: tarayıcıdan izleme (madde 671)
 Kitap grafiği, günlük / aylık getiri, açık pozisyonlar, son olaylar (stop, delist, hata) — her kurulum ayrı sekmede, dakikada bir yenilenir.
+**Canlı pozisyon tablosu (madde 728):** `carry-anlik.timer` 5 dakikada bir açık pozisyonları ve işaret fiyatlarını
+`defter/anlik.json`'a yazar (salt okur, emir göndermez); panel bu dosya 15 dakikadan tazeyse kâr / zarar sütununu ondan gösterir,
+değilse günlük deftere (00:05 UTC) döner. Eski kurulumda bir kez: `sudo ./deploy/sunucu_kur.sh` (ya da servis dosyalarını kopyalayıp
+`sudo systemctl enable --now carry-anlik.timer`).
 **Salt okunur**: emir göndermez, API anahtarlarını yüklemez. Kurulumla gelir ve yalnız sunucunun içinde (`127.0.0.1:8050`) çalışır —
 internetten **erişilemez**. Telefondan / bilgisayardan açmak için (bir kez):
 1. Telefonunuza ve bilgisayarınıza Tailscale uygulamasını kurun, aynı hesapla girin.

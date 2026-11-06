@@ -80,5 +80,20 @@ sw = app.get("/sw.js").data.decode()
 kontrol("service worker veri / paket önbelleğe ALMAZ", "/api/" in sw and "/paket/" in sw and app.get("/sw.js").mimetype == "application/javascript")
 kontrol("sayfada manifest bağlantısı", b'rel="manifest"' in app.get("/").data)
 kontrol("CSP worker / manifest izni", "worker-src 'self'" in app.get("/").headers["Content-Security-Policy"])
+# MADDE 728: anlık pozisyon görüntüsü
+import time as _t
+kontrol("anlık dosya yoksa günlük defter", k["poz_kaynak"] == "günlük" and k["pozisyonlar"]["AUSDT"]["kar_yuzde"] == 1.5, k.get("poz_kaynak"))
+_an = os.path.join(kl, "defter", "anlik.json")
+json.dump({"zaman": int(_t.time()) - 60, "pozisyonlar": {"BUSDT": {"yon": "S", "usd": 50, "kar_yuzde": -2.25}},
+           "gerceklesmemis_top": -1.12}, open(_an, "w"))
+k2 = panel.veri([kl], servis=False)["kurulumlar"][0]
+kontrol("taze anlık dosya: canlı tablo", k2["poz_kaynak"] == "canlı" and list(k2["pozisyonlar"]) == ["BUSDT"] and k2["gerceklesmemis"] == -1.12, k2.get("pozisyonlar"))
+kontrol("canlı tablo getiri serisini DEĞİŞTİRMEZ", k2["seri"] == k["seri"] and k2["toplam"] == k["toplam"])
+json.dump({"zaman": int(_t.time()) - panel.ANLIK_TAZE_SN - 5, "pozisyonlar": {"BUSDT": {}}}, open(_an, "w"))
+kontrol("bayat anlık dosya: günlük deftere döner", panel.veri([kl], servis=False)["kurulumlar"][0]["poz_kaynak"] == "günlük")
+open(_an, "w").write("{yarim")
+kontrol("bozuk anlık dosya çökmez, günlük deftere döner", panel.veri([kl], servis=False)["kurulumlar"][0]["poz_kaynak"] == "günlük")
+os.remove(_an)
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

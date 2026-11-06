@@ -1,0 +1,21 @@
+# MADDE 728: ANLIK pozisyon görüntüsü (panel için; /opt/carry/defter/anlik.json). SALT OKUR — emir göndermez.
+[Unit]
+Description=Carry anlık pozisyon görüntüsü (ana, panel için)
+
+[Service]
+Type=oneshot
+User=carry
+Group=carry
+WorkingDirectory=/opt/carry
+EnvironmentFile=/opt/carry/.env
+# MADDE 680: şifreli anahtarlar varsa (deploy/anahtar_sifrele.sh) — yoksa sessizce atlanır (systemd ≥ 254)
+ImportCredential=carry.env
+ExecStart=/opt/carry/.venv/bin/python carry_anlik.py
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry

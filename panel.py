@@ -20,6 +20,7 @@ import os
 import re
 import subprocess
 import sys
+import time
 
 OLAY_DESENLERI = [
     ("stop", re.compile(r"(24 SA DÜŞÜŞ STOP'U|KOŞULLU 24 SA STOP: \S+ .*kapatılıyor)")),
@@ -151,6 +152,21 @@ def icra(klasor: str) -> dict | None:
         return None
 
 
+ANLIK_TAZE_SN = int(os.getenv("CARRY_PANEL_ANLIK_TAZE_SN", "900"))
+"""MADDE 728: defter/anlik.json (carry_anlik.py, 5 dk'da bir) bu kadar saniyeden tazeyse pozisyon tablosu ondan gösterilir."""
+
+
+def anlik_oku(klasor: str, simdi: float | None = None) -> dict | None:
+    """Taze anlık pozisyon görüntüsü ya da None (yok / bozuk / bayat) — madde 728."""
+    try:
+        with open(os.path.join(klasor, "defter", "anlik.json"), encoding="utf-8") as f:
+            a = json.load(f)
+        yas = (simdi or time.time()) - float(a["zaman"])
+        return a if 0 <= yas <= ANLIK_TAZE_SN and isinstance(a.get("pozisyonlar"), dict) else None
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
 def veri(klasorler: list[str], servis: bool = True) -> dict:
     out = []
     for kl in klasorler:
@@ -159,6 +175,13 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         o = ozet(defter_oku(kl))
         o.update({"ad": ad, "mod": e.get("BINANCE_MODE", "demo"), "servis": servis_durumu(kl) if servis else "—",
                   "olaylar": olaylar(kl), "icra": icra(kl)})
+        an = anlik_oku(kl)
+        if an is not None:   # madde 728: canlı pozisyon tablosu
+            o.update({"pozisyonlar": an["pozisyonlar"], "poz_kaynak": "canlı",
+                      "poz_zaman": dt.datetime.fromtimestamp(an["zaman"]).strftime("%H:%M"),
+                      "gerceklesmemis": an.get("gerceklesmemis_top")})
+        else:
+            o.update({"poz_kaynak": "günlük", "poz_zaman": o.get("son_tarih"), "gerceklesmemis": None})
         out.append(o)
     return {"kurulumlar": out, "paketler": paketler(), "uretim": dt.datetime.now().strftime("%Y-%m-%d %H:%M")}
 
@@ -295,7 +318,7 @@ function ciz(){
   <div class="kart" style="margin-bottom:12px"><h2>İcra · son 30 gün (emir defteri)</h2>${icraKart(k)}</div>
   <div class="kart" style="margin-bottom:12px"><h2>Günlük getiri</h2><div class="grafik" style="height:180px"><canvas id="g2"></canvas></div></div>
   <div class="iki">
-    <div class="kart"><h2>Pozisyonlar (${L.length} long / ${S.length} short)</h2><div class="tablo"><table>
+    <div class="kart"><h2>Pozisyonlar (${L.length} long / ${S.length} short) <span class="k">· ${k.poz_kaynak=="canlı"?"canlı "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")}${k.gerceklesmemis!=null?` · gerçekleşmemiş <b class="${sinif(k.gerceklesmemis)}">${para(k.gerceklesmemis)}</b>`:""}</span></h2><div class="tablo"><table>
       <tr><th class="l">Long</th><th>$</th><th>kâr</th><th class="l">Short</th><th>$</th><th>kâr</th></tr>${poz || "<tr><td colspan=6 class='bos'>açık pozisyon yok</td></tr>"}</table></div></div>
     <div class="kart"><h2>Olaylar</h2>${(k.olaylar||[]).map(o=>`<div class="olay"><span class="rozet r-${o.tur}">${o.tur}</span><div><div>${o.metin.replace(/</g,"&lt;")}</div><div class="z">${o.zaman}</div></div></div>`).join("") || "<div class='bos'>olay yok</div>"}</div>
   </div>

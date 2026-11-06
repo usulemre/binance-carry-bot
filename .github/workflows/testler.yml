@@ -23,14 +23,14 @@ jobs:
           pip install --require-hashes -r requirements.lock
           pip install ruff==0.16.9
       - name: Kod denetimi (ruff, canlı dosyalar)
-        run: ruff check carry_bot.py defter_db.py carry_preflight.py carry_gunluk_defter.py carry_sapma.py carry_saglik.py onerilen.py bildirim.py nabiz.py panel.py acil_kapat.py exchange_client.py config.py ekim_paket_indir.py indir_ek_ay.py likidasyon_toplayici.py
+        run: ruff check carry_bot.py defter_db.py carry_preflight.py carry_gunluk_defter.py carry_sapma.py carry_saglik.py onerilen.py bildirim.py nabiz.py panel.py acil_kapat.py exchange_client.py config.py ekim_paket_indir.py indir_ek_ay.py likidasyon_toplayici.py carry_anlik.py
       - name: Testler
         run: |
           set -e
           for t in test_carry_bot test_carry_gunluk_defter test_onerilen test_carry_preflight test_log_kirliligi test_acil_kapat \
                    test_transfer test_api_izin test_failure_modes test_delist test_bildirim test_panel test_ek_ay_paket test_ed25519 test_defter_db test_emir_defteri \
                    test_carry_sapma test_carry_rapor test_carry_short_ara test_carry_saglik test_carry_olay test_carry_izleme \
-                   test_carry_defter test_exchange_client test_likidasyon_toplayici; do
+                   test_carry_defter test_exchange_client test_likidasyon_toplayici test_carry_anlik; do
             echo "::group::$t"; python "$t.py"; echo "::endgroup::"
           done
   entegrasyon:

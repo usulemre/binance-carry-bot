@@ -71,9 +71,10 @@ echo ">> 6/7 servisler"
 cp "$KOK"/deploy/carry.service "$KOK"/deploy/carry@.service "$KOK"/deploy/carry-defter.service "$KOK"/deploy/carry-defter.timer \
    "$KOK"/deploy/carry-defter@.service "$KOK"/deploy/carry-defter@.timer "$KOK"/deploy/carry-rapor.service "$KOK"/deploy/carry-rapor.timer \
    "$KOK"/deploy/carry-nabiz.service "$KOK"/deploy/carry-nabiz.timer "$KOK"/deploy/carry-panel.service \
-   "$KOK"/deploy/carry-paket.service "$KOK"/deploy/carry-paket.timer /etc/systemd/system/
+   "$KOK"/deploy/carry-paket.service "$KOK"/deploy/carry-paket.timer \
+   "$KOK"/deploy/carry-anlik.service "$KOK"/deploy/carry-anlik.timer /etc/systemd/system/
 systemctl daemon-reload
-systemctl enable --now carry-defter.timer carry-rapor.timer carry-nabiz.timer carry-paket.timer carry-panel >/dev/null
+systemctl enable --now carry-defter.timer carry-rapor.timer carry-nabiz.timer carry-paket.timer carry-anlik.timer carry-panel >/dev/null
 systemctl enable carry >/dev/null   # anahtarlar girilince: sudo systemctl start carry
 
 echo ">> 7/7 güvenlik"

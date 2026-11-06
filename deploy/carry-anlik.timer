@@ -1,0 +1,10 @@
+[Unit]
+Description=Carry anlık pozisyon görüntüsü zamanlayıcısı (ana) — 5 dakikada bir (madde 728)
+
+[Timer]
+OnBootSec=2min
+OnUnitActiveSec=5min
+AccuracySec=30s
+
+[Install]
+WantedBy=timers.target
