@@ -8,6 +8,7 @@ def kontrol(ad, ok, ek=""):
     global _h
     print(("  OK  " if ok else "  XX  ") + ad + (f"  [{ek}]" if ek and not ok else "")); _h += 0 if ok else 1
 
+os.environ["TZ"] = "UTC"; __import__("time").tzset()   # madde 729: sunucu gibi UTC; panel Türkiye saatiyle (+3) gösterir
 import panel
 tmp = tempfile.mkdtemp(); kl = os.path.join(tmp, "carry-d1"); os.makedirs(os.path.join(kl, "defter"))
 open(os.path.join(kl, "carry_bot.py"), "w").write("")
@@ -33,7 +34,7 @@ kontrol("aylık", abs(k["aylik"]["2026-10"] - (1.10 * 0.95 * 1.02 - 1)) < 1e-9)
 kontrol("funding / komisyon toplamı", abs(k["funding_top"] - 4.0) < 1e-9 and abs(k["komisyon_top"] + 0.8) < 1e-9)
 tur = [o["tur"] for o in k["olaylar"]]
 kontrol("olaylar: stop ve hata var, tutulan stop / sıradan satır yok", tur == ["hata", "stop"], tur)
-kontrol("olay zamanı ve seviye ayıklandı", k["olaylar"][1]["zaman"] == "2026-10-02 08:00" and k["olaylar"][1]["metin"].startswith("KOŞULLU"), k["olaylar"][1])
+kontrol("olay zamanı ve seviye ayıklandı", k["olaylar"][1]["zaman"] == "2026-10-02 11:00" and k["olaylar"][1]["metin"].startswith("KOŞULLU"), k["olaylar"][1])
 js = json.dumps(v, ensure_ascii=False)
 kontrol("anahtar / token / imza SIZMAZ", not any(x in js for x in ("GIZLIANAHTAR", "GIZLISIR", "GIZLITOKEN", "abc123", "deadbeef")), js[:300])
 kontrol("boş klasör çökmez", panel.veri([os.path.join(tmp, "yok")], servis=False)["kurulumlar"][0]["toplam"] is None)
@@ -80,6 +81,11 @@ sw = app.get("/sw.js").data.decode()
 kontrol("service worker veri / paket önbelleğe ALMAZ", "/api/" in sw and "/paket/" in sw and app.get("/sw.js").mimetype == "application/javascript")
 kontrol("sayfada manifest bağlantısı", b'rel="manifest"' in app.get("/").data)
 kontrol("CSP worker / manifest izni", "worker-src 'self'" in app.get("/").headers["Content-Security-Policy"])
+# MADDE 729: Türkiye saati
+kontrol("log saati UTC -> Türkiye (+3)", panel._log_zamani("2026-11-06 21:33") == "2026-11-07 00:33", panel._log_zamani("2026-11-06 21:33"))
+kontrol("canlı saat Türkiye (+3)", panel._yerel(1_794_000_000).strftime("%H:%M") == "00:20", panel._yerel(1_794_000_000).strftime("%H:%M"))
+kontrol("okunamayan log saati olduğu gibi", panel._log_zamani("bozuk") == "bozuk")
+
 # MADDE 728: anlık pozisyon görüntüsü
 import time as _t
 kontrol("anlık dosya yoksa günlük defter", k["poz_kaynak"] == "günlük" and k["pozisyonlar"]["AUSDT"]["kar_yuzde"] == 1.5, k.get("poz_kaynak"))

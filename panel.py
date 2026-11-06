@@ -30,6 +30,26 @@ OLAY_DESENLERI = [
     ("ayar", re.compile(r"önerilen ayar etkin|ÖNERİLEN AYAR: kitap")),
     ("basla", re.compile(r"carry_bot başladı")),
 ]
+try:   # MADDE 729: panel saatleri Türkiye saatiyle (sunucu ve log UTC). Değiştirmek: CARRY_PANEL_TZ=Europe/Berlin vb.
+    from zoneinfo import ZoneInfo
+    PANEL_TZ = ZoneInfo(os.getenv("CARRY_PANEL_TZ", "Europe/Istanbul"))
+except Exception:      # tz verisi yoksa sunucu saatine düşülür
+    PANEL_TZ = None
+
+
+def _yerel(ts: float | None = None) -> dt.datetime:
+    """Epoch saniye (None = şimdi) -> panel saat dilimi."""
+    return dt.datetime.fromtimestamp(time.time() if ts is None else ts, PANEL_TZ)
+
+
+def _log_zamani(s: str) -> str:
+    """Log satırındaki 'YYYY-MM-DD HH:MM' (sunucunun yerel saati) -> panel saat dilimi; okunamazsa olduğu gibi."""
+    try:
+        return dt.datetime.strptime(s.replace("T", " "), "%Y-%m-%d %H:%M").astimezone(PANEL_TZ).strftime("%Y-%m-%d %H:%M")
+    except (ValueError, OSError, OverflowError):
+        return s
+
+
 _ZAMAN = re.compile(r"^(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}):\d{2}(?:[,.]\d+)?\s*(?:\[?(?:INFO|WARNING|ERROR|CRITICAL|DEBUG)\]?)?")
 _GIZLI = re.compile(r"(api[_-]?key|secret|signature|token)\S*", re.I)
 
@@ -84,7 +104,7 @@ def olaylar(klasor: str, en_cok: int = 40, son_bayt: int = 2_000_000) -> list[di
             if d.search(s):
                 m = _ZAMAN.match(s)
                 metin = s[m.end():].strip(" -|") if m else s
-                out.append({"zaman": m.group(1) if m else "", "tur": tur, "metin": _GIZLI.sub("***", metin)[:300]})
+                out.append({"zaman": _log_zamani(m.group(1)) if m else "", "tur": tur, "metin": _GIZLI.sub("***", metin)[:300]})
                 break
     return out[-en_cok:][::-1]
 
@@ -178,12 +198,12 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         an = anlik_oku(kl)
         if an is not None:   # madde 728: canlı pozisyon tablosu
             o.update({"pozisyonlar": an["pozisyonlar"], "poz_kaynak": "canlı",
-                      "poz_zaman": dt.datetime.fromtimestamp(an["zaman"]).strftime("%H:%M"),
+                      "poz_zaman": _yerel(an["zaman"]).strftime("%H:%M"),
                       "gerceklesmemis": an.get("gerceklesmemis_top")})
         else:
             o.update({"poz_kaynak": "günlük", "poz_zaman": o.get("son_tarih"), "gerceklesmemis": None})
         out.append(o)
-    return {"kurulumlar": out, "paketler": paketler(), "uretim": dt.datetime.now().strftime("%Y-%m-%d %H:%M")}
+    return {"kurulumlar": out, "paketler": paketler(), "uretim": _yerel().strftime("%Y-%m-%d %H:%M")}
 
 
 SAYFA = r"""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
