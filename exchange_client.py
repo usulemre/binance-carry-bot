@@ -152,6 +152,15 @@ class ExchangeClient:
         else:
             self.client = Client(api_key, api_secret, ping=False, **kw)
         self.testnet = mode in ("demo", "legacy_testnet")
+        # MADDE 726: demo borsasının HACİM ve FUNDING verisi kendine ait (2026-11-06: 70 M$ eşiğini gerçekte 78, demoda 477
+        # sembol geçiyor; BABYUSDT gerçek 3 M$ / demo 908 M$; BMT funding gerçek −%0,035 / demo −%0,128). Demo bot gerçekte
+        # hiç seçilmeyecek coinleri yanlış sinyalle seçiyordu. Demoda PİYASA VERİSİ (seçim / sinyal) gerçek Binance'in
+        # herkese açık uçlarından okunur (anahtarsız); emir, hesap, pozisyon ve emir fiyatı demoda kalır.
+        # Kapatmak: CARRY_DEMO_GERCEK_VERI=0. Canlıda zaten aynı istemci.
+        self.veri = self.client
+        if self.testnet and os.getenv("CARRY_DEMO_GERCEK_VERI", "1") not in ("0", "false", "False"):
+            self.veri = Client(None, None, ping=False)
+        self.veri_gercek = self.veri is not self.client
 
     # ---------------------------------------------------------------- market data
     def get_top_symbols(self, quote_asset: str, top_n: int, excluded: list) -> list:

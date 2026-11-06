@@ -1388,6 +1388,50 @@ kontrol("72sa pencerede uzun ortalama YİNE sinyali söndürüyor",
         < abs(cb.yillik_funding(_kay(120, 8, [0.0001] * 119 + [-0.01]), 72)),
         "(24 gun < 72sa)")
 
+print("\n7z) DEMODA PİYASA VERİSİ GERÇEK BORSADAN (madde 726)")
+class _Borsa:
+    def __init__(s, hacim, semboller, funding):
+        s.hacim, s.semboller, s.funding, s.cagri = hacim, semboller, funding, []
+    def futures_ticker(s):
+        s.cagri.append("ticker")
+        return [{"symbol": k, "quoteVolume": str(v), "priceChangePercent": "0"} for k, v in s.hacim.items()]
+    def futures_exchange_info(s):
+        s.cagri.append("info")
+        return {"symbols": [{"symbol": k, "status": "TRADING", "contractType": "PERPETUAL"} for k in s.semboller]}
+    def futures_funding_rate(s, symbol, **k):
+        s.cagri.append("funding")
+        return [{"fundingTime": 1_700_000_000_000 + i * 28_800_000, "fundingRate": str(s.funding[symbol])} for i in range(12)]
+
+# gerçek: BIGUSDT likit, BABYUSDT değil; demo: hacimler şişik, ONLYREALUSDT demoda yok
+_gercek = _Borsa({"BIGUSDT": 5e8, "MIDUSDT": 1e8, "BABYUSDT": 3e6, "ONLYREALUSDT": 2e8},
+                 ["BIGUSDT", "MIDUSDT", "BABYUSDT", "ONLYREALUSDT"],
+                 {"BIGUSDT": 0.0001, "MIDUSDT": 0.0002, "BABYUSDT": 0.0001, "ONLYREALUSDT": 0.0001})
+_demo = _Borsa({"BIGUSDT": 9e8, "MIDUSDT": 9e8, "BABYUSDT": 9e8}, ["BIGUSDT", "MIDUSDT", "BABYUSDT"],
+               {"BIGUSDT": -0.001, "MIDUSDT": -0.001, "BABYUSDT": -0.001})
+
+class _DemoGercekVeri:
+    client, veri, veri_gercek = _demo, _gercek, True
+
+class _YalnizDemo:          # canlı / eski davranış: veri_gercek yok
+    client = _demo
+
+_eski_yas, _eski_mg = cb.MIN_LISTELEME_GUN, cb.MIN_DAILY_VOLUME_USD
+cb.MIN_LISTELEME_GUN = 0; cb.MIN_DAILY_VOLUME_USD = 7e7
+_ev = cb.evren_sec(_DemoGercekVeri)
+kontrol("hacim GERÇEK borsadan: BABY (gerçek 3 M$) elendi", "BABYUSDT" not in _ev, f"({_ev})")
+kontrol("demoda olmayan sembol (ONLYREAL) elendi", "ONLYREALUSDT" not in _ev, f"({_ev})")
+kontrol("gerçek hacim sırası: BIG, MID", _ev == ["BIGUSDT", "MIDUSDT"], f"({_ev})")
+kontrol("ticker demodan ÇEKİLMEDİ", "ticker" not in _demo.cagri, f"({_demo.cagri})")
+_demo.cagri.clear()
+_ev2 = cb.evren_sec(_YalnizDemo)
+kontrol("veri_gercek yoksa eski davranış (demo hacmi: 3 sembol)", sorted(_ev2) == ["BABYUSDT", "BIGUSDT", "MIDUSDT"], f"({_ev2})")
+_f = cb.funding_topla(_DemoGercekVeri, ["BIGUSDT"], 72)
+if _f is not None:
+    kontrol("funding GERÇEK borsadan (pozitif, demo negatif)", float(_f.get("BIGUSDT", 0)) > 0, f"({dict(_f)})")
+kontrol("sahte istemcide (MagicMock benzeri) _veri client.client'a düşer",
+        cb._veri(type("M", (), {"client": _demo, "veri": object(), "veri_gercek": "evet"})) is _demo)
+cb.MIN_LISTELEME_GUN, cb.MIN_DAILY_VOLUME_USD = _eski_yas, _eski_mg
+
 print("\n" + "=" * 62)
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")

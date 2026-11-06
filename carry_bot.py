@@ -2072,7 +2072,7 @@ def funding_topla(client: ExchangeClient, semboller: list[str],
     out = {}
     for i, s in enumerate(semboller):
         try:
-            h = client.client.futures_funding_rate(symbol=s, limit=n)
+            h = _veri(client).futures_funding_rate(symbol=s, limit=n)
             y = yillik_funding(h, saat)
             if y is not None:
                 out[s] = y
@@ -2315,7 +2315,7 @@ def kalabalik_topla(client: ExchangeClient, semboller: list[str]) -> pd.Series:
     out = {}
     for i, s in enumerate(semboller):
         try:
-            r = client.client.futures_global_longshort_ratio(symbol=s, period="5m", limit=1)
+            r = _veri(client).futures_global_longshort_ratio(symbol=s, period="5m", limit=1)
             if r:
                 v = float(r[-1]["longShortRatio"])
                 if v > 0 and np.isfinite(v):
@@ -2588,7 +2588,7 @@ def akis_topla(client: ExchangeClient, semboller: list[str],
     out = {}
     for i, s in enumerate(semboller):
         try:
-            k = client.client.futures_klines(symbol=s, interval="4h",
+            k = _veri(client).futures_klines(symbol=s, interval="4h",
                                              limit=AKIS_UZUN_BAR + 5)
             if len(k) < AKIS_UZUN_BAR:
                 continue
@@ -3245,10 +3245,19 @@ def delist_mi(bilgi: dict | None, simdi_ms: float = None) -> bool:
     return False
 
 
-def sembol_bilgisi(client: ExchangeClient) -> dict[str, dict]:
-    """exchange_info'yu TEK sefer çekip sembol -> satır sözlüğü döner."""
+def _veri(client):
+    """PİYASA VERİSİ istemcisi (madde 726). Demoda gerçek Binance'in herkese açık uçları (hacim / funding / mum / long-short
+    sinyali gerçek piyasadan), canlıda ve testlerin sahte istemcilerinde `client.client`. Emir / hesap / emir fiyatı HER
+    ZAMAN `client.client`'tan."""
+    v = getattr(client, "veri", None)
+    return v if v is not None and getattr(client, "veri_gercek", False) is True else client.client
+
+
+def sembol_bilgisi(client: ExchangeClient, veri: bool = False) -> dict[str, dict]:
+    """exchange_info'yu TEK sefer çekip sembol -> satır sözlüğü döner.
+    veri=True: seçim için gerçek piyasanın kaydı (yaş, TradFi, delist duyurusu; madde 726). False: işlem yapılan borsa."""
     try:
-        bilgi = client.client.futures_exchange_info()
+        bilgi = (_veri(client) if veri else client.client).futures_exchange_info()
     except Exception as e:
         logger.warning("exchange_info alınamadı (%s) - yaş filtresi "
                        "UYGULANAMIYOR, TradFi tespiti YEDEK listeyle", e)
@@ -3264,7 +3273,7 @@ def listeleme_yaslari(client: ExchangeClient, bilgi: dict = None) -> dict[str, f
     kalır - bu bilinçli bir seçim: filtre uygulanamıyorsa botu
     durdurmak yerine eski davranışa düşer, ama uyarı yazar."""
     if bilgi is None:
-        bilgi = sembol_bilgisi(client)
+        bilgi = sembol_bilgisi(client, veri=True)
     simdi = time.time() * 1000.0
     out = {}
     for s in bilgi.values():
@@ -3299,12 +3308,21 @@ def evren_sec(client: ExchangeClient) -> list[str]:
     İki filtre de madde 133'te ölçüldü; tam evrende (delist edilmişler
     dahil) carry'yi eksiden artıya geçiren şey bu ikisidir."""
     try:
-        tickers = client.client.futures_ticker()
+        tickers = _veri(client).futures_ticker()
     except Exception as e:
         logger.error("ticker listesi alınamadı: %s", e)
         return []
-    bilgi = sembol_bilgisi(client)
+    bilgi = sembol_bilgisi(client, veri=True)
     yaslar = listeleme_yaslari(client, bilgi) if MIN_LISTELEME_GUN > 0 else {}
+    # MADDE 726: seçim gerçek piyasa verisiyle yapılıyorsa, işlem yapılan (demo) borsada TRADING olmayan sembol elenir.
+    islem_var = None
+    if _veri(client) is not client.client:
+        try:
+            islem_var = {x["symbol"] for x in client.client.futures_exchange_info().get("symbols", [])
+                         if x.get("status") == "TRADING"}
+        except Exception as e:
+            logger.warning("işlem borsası sembol listesi alınamadı (%s) - eşleştirme atlanıyor", e)
+    elenen_borsa = 0
     uygun = []
     yedek = []      # madde 508: hacim eşiğinin altında ama EVREN_TABAN_USD üstünde, diğer filtreleri geçen
     elenen_hacim = elenen_yas = elenen_tradfi = elenen_delist = 0
@@ -3336,6 +3354,9 @@ def evren_sec(client: ExchangeClient) -> list[str]:
         if MIN_LISTELEME_GUN > 0 and s in yaslar and yaslar[s] < MIN_LISTELEME_GUN:
             elenen_yas += 1
             continue
+        if islem_var is not None and s not in islem_var:     # madde 726: diğer filtrelerden SONRA (sayı anlamlı olsun)
+            elenen_borsa += 1
+            continue
         (yedek if dusuk else uygun).append((s, hacim))
     uygun.sort(key=lambda x: x[1], reverse=True)
     ek = []
@@ -3347,8 +3368,9 @@ def evren_sec(client: ExchangeClient) -> list[str]:
                        len(uygun), EVREN_MIN, len(ek), ek[-1][1] / 1e6)
         uygun += ek
     elenen_hacim += len(yedek) - len(ek)
-    logger.info("evren: %d sembol (hacim filtresi %d eledi, yaş %d, TradFi %d, delist %d)",
-                len(uygun), elenen_hacim, elenen_yas, elenen_tradfi, elenen_delist)
+    logger.info("evren: %d sembol (hacim filtresi %d eledi, yaş %d, TradFi %d, delist %d)%s",
+                len(uygun), elenen_hacim, elenen_yas, elenen_tradfi, elenen_delist,
+                f" · piyasa verisi GERÇEK Binance, işlem borsasında olmayan {elenen_borsa}" if islem_var is not None else "")
     if len(uygun) < 2 * MIN_LEGS:
         logger.warning("evren çok dar (%d sembol) - CARRY_MIN_VOLUME "
                        "düşürülmeli mi kontrol edin", len(uygun))
@@ -3631,7 +3653,7 @@ def long_24s_referans(client: ExchangeClient, sem: str) -> float | None:
     """24 sa önceki 4 sa kapanış (madde 453). Son kline açık bar; son kapanmış
     bar [-2]; motorun cv[i-5]'i ile aynı hiza için [-7]. Okunamazsa None."""
     try:
-        k = client.client.futures_klines(symbol=sem, interval="4h", limit=8)
+        k = _veri(client).futures_klines(symbol=sem, interval="4h", limit=8)
         if len(k) >= 7:
             v = float(k[-7][4])
             return v if v > 0 else None
@@ -3647,7 +3669,7 @@ _SON_EVREN: list = []
 def _kapanis_24s(client: ExchangeClient, sem: str) -> float | None:
     """Son KAPANMIŞ 4 sa mumunun 24 sa (6 mum) getirisi: k[-2] / k[-8] − 1 (motor cv[i+1] / cv[i−5]). Okunamazsa None."""
     try:
-        k = client.client.futures_klines(symbol=sem, interval="4h", limit=9)
+        k = _veri(client).futures_klines(symbol=sem, interval="4h", limit=9)
         if len(k) >= 8:
             a, b = float(k[-2][4]), float(k[-8][4])
             return a / b - 1 if a > 0 and b > 0 else None
@@ -4157,7 +4179,7 @@ def saglik_kontrol(client: ExchangeClient, semboller: list[str],
     gecmis = {}
     for i, s in enumerate(semboller):
         try:
-            h = client.client.futures_funding_rate(symbol=s, startTime=bas,
+            h = _veri(client).futures_funding_rate(symbol=s, startTime=bas,
                                                     endTime=simdi, limit=1000)
             gecmis[s] = [(int(k["fundingTime"]), float(k["fundingRate"]))
                          for k in h]

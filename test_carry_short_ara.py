@@ -75,7 +75,7 @@ class _C:
         def futures_ticker():
             return [{"symbol": f"C{i}USDT", "quoteVolume": str(v), "priceChangePercent": "0"}
                     for i, v in enumerate([9e7, 8e7, 5e7, 4e7, 3e7, 1e7])]
-cb.sembol_bilgisi = lambda c: {}; cb.listeleme_yaslari = lambda c, b=None: {}
+cb.sembol_bilgisi = lambda c, veri=False: {}; cb.listeleme_yaslari = lambda c, b=None: {}
 _mv, _ms = cb.MIN_DAILY_VOLUME_USD, cb.MIN_LEGS
 cb.MIN_DAILY_VOLUME_USD = 7e7
 kontrol("kapalıyken yalnız eşik üstü (2)", cb.evren_sec(_C) == ["C0USDT", "C1USDT"], cb.evren_sec(_C))
