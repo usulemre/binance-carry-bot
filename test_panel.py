@@ -162,7 +162,16 @@ _sy = app.get("/").data
 kontrol("sayfada ayar kartı, eski 'ayar ONERILEN' başlığı yok", b"ayarKart" in _sy and b"Kitap ($) \xc2\xb7 ayar" not in _sy)
 # MADDE 738: SW dış istekleri (Binance) yakalamaz; sürüm değişti (eski SW eski CSP ile Binance'i engelliyordu)
 _swj = app.get("/sw.js").data.decode()
-kontrol("SW dış kaynaklı isteğe karışmaz", "u.origin!==location.origin" in _swj and "carry-kabuk-v2" in _swj)
+kontrol("SW dış kaynaklı isteğe karışmaz", "u.origin!==location.origin" in _swj and "carry-kabuk-v3" in _swj)
+# MADDE 740: gömülü yazı tipi + dosyadan simge; CSP font-src 'self'; önbelleğe alınabilir
+_f = app.get("/font/inter-latin.woff2")
+kontrol("yazı tipi sunuluyor (woff2, önbelleklenir)", _f.status_code == 200 and _f.data[:4] == b"wOF2" and "no-store" not in _f.headers.get("Cache-Control", ""), _f.headers.get("Cache-Control"))
+kontrol("izin verilmeyen font yolu 404", app.get("/font/..%2Fpanel.py").status_code == 404 and app.get("/font/x.woff2").status_code == 404)
+kontrol("CSP font-src self", "font-src 'self'" in app.get("/").headers["Content-Security-Policy"])
+kontrol("sayfa hâlâ önbelleğe ALINMAZ", app.get("/").headers.get("Cache-Control") == "no-store")
+kontrol("SW yazı tipini kabuğa alır", "font/inter-latin.woff2" in _swj)
+_sy2 = app.get("/").data
+kontrol("sayfada ısı haritası, funding, yıllık takvim, tema", all(x in _sy2 for x in (b"isiHarita", b"fundSatir", b"yillik(", b"temaDegis", b"bugunEgri")))
 # MADDE 732: anlık fiyat (tarayıcı -> Binance herkese açık akış)
 _csp = app.get("/").headers["Content-Security-Policy"]
 kontrol("CSP yalnız Binance herkese açık akışı / REST", "connect-src 'self' wss://fstream.binance.com https://fapi.binance.com;" in _csp, _csp)
