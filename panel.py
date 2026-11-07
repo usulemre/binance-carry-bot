@@ -67,7 +67,8 @@ def _env(klasor: str) -> dict:
             l = l.strip()
             if l and not l.startswith("#") and "=" in l:
                 k, v = l.split("=", 1)
-                if k.strip() in ("BINANCE_MODE", "CARRY_PROFIL", "CARRY_BILDIRIM_AD", "CARRY_SERMAYE_OLCEK"):   # anahtarlar OKUNMAZ
+                if k.strip() in ("BINANCE_MODE", "CARRY_PROFIL", "CARRY_BILDIRIM_AD", "CARRY_SERMAYE_OLCEK",
+                                 "CARRY_REBALANCE_H", "CARRY_N_DILIM", "CARRY_DILIM_LOG"):   # anahtarlar OKUNMAZ
                     d[k.strip()] = v.split("#")[0].strip()
     except OSError:
         pass
@@ -187,15 +188,49 @@ def anlik_oku(klasor: str, simdi: float | None = None) -> dict | None:
         return None
 
 
+def sonraki_dilim(klasor: str, e: dict | None = None) -> dict | None:
+    """MADDE 730: sıradaki dilim turunun zamanı. Bot her turun sonunda dilim durumunu yazar, sonra
+    CARRY_REBALANCE_H / CARRY_N_DILIM saat uyur (carry_bot.main) -> dosyanın değişme zamanı + aralık. Yoksa None."""
+    e = e if e is not None else _env(klasor)
+    yol = e.get("CARRY_DILIM_LOG") or "carry_dilimler.json"
+    yol = yol if os.path.isabs(yol) else os.path.join(klasor, yol)
+    try:
+        n = max(1, int(float(e.get("CARRY_N_DILIM") or 15)))
+        aralik = float(e.get("CARRY_REBALANCE_H") or 120) * 3600.0 / n
+        son = os.path.getmtime(yol)
+        with open(yol, encoding="utf-8") as f:
+            d = json.load(f)
+        dolu = sum(1 for v in (d.get("dilimler") or {}).values() if v)
+    except (OSError, ValueError, TypeError, AttributeError):
+        return None
+    return {"son": int(son), "zaman": int(son + aralik), "saat": _yerel(son + aralik).strftime("%H:%M"),
+            "dolu": min(dolu, n), "n": n, "aralik_sa": round(aralik / 3600.0, 2)}
+
+
+def hesap_ozet(defter: list[dict], an: dict | None) -> dict:
+    """MADDE 730: hesap özkaynağı (canlıysa anlık, değilse son defter) ve başlangıçtan beri $ kâr/zarar (transferler hariç)."""
+    if not defter and an is None:
+        return {}
+    oz = an.get("ozkaynak") if an else defter[-1].get("ozkaynak")
+    kitap = an.get("kitap") if an else None
+    out = {"ozkaynak": oz, "kitap_canli": kitap}
+    if defter and oz is not None:
+        transfer = sum((k.get("gelir_24s") or {}).get("TRANSFER", 0) or 0 for k in defter[1:])
+        out["ozkaynak_bas"] = defter[0].get("ozkaynak")
+        out["kar_usd"] = round(oz - defter[0]["ozkaynak"] - transfer, 2) if defter[0].get("ozkaynak") is not None else None
+    return out
+
+
 def veri(klasorler: list[str], servis: bool = True) -> dict:
     out = []
     for kl in klasorler:
         e = _env(kl); b = os.path.basename(kl.rstrip("/"))
         ad = e.get("CARRY_BILDIRIM_AD") or (b[len("carry-"):] if b.startswith("carry-") else "ana")
-        o = ozet(defter_oku(kl))
+        df = defter_oku(kl); o = ozet(df)
         o.update({"ad": ad, "mod": e.get("BINANCE_MODE", "demo"), "servis": servis_durumu(kl) if servis else "—",
-                  "olaylar": olaylar(kl), "icra": icra(kl)})
+                  "olaylar": olaylar(kl), "icra": icra(kl), "dilim": sonraki_dilim(kl, e)})
         an = anlik_oku(kl)
+        o.update(hesap_ozet(df, an))
         if an is not None:   # madde 728: canlı pozisyon tablosu
             o.update({"pozisyonlar": an["pozisyonlar"], "poz_kaynak": "canlı",
                       "poz_zaman": _yerel(an["zaman"]).strftime("%H:%M"),
@@ -291,6 +326,12 @@ function takvim(k){
     <div class="k" style="margin-top:8px">kazanç günü <b class="art">${art_}</b> · kayıp günü <b class="eks">${eks_}</b> / ${g.length} ·
     en iyi ${+eniyi.tarih.slice(8,10)} ${AYAD[m-1]} <span class="art">${yz(eniyi.gun,2)}</span> · en kötü ${+enkotu.tarih.slice(8,10)} ${AYAD[m-1]} <span class="${sinif(enkotu.gun)}">${yz(enkotu.gun,2)}</span></div>`;
 }
+function dilimKart(D){
+  if (!D) return `<div class="d">—</div>`;
+  const kalan = D.zaman - Date.now()/1000;
+  const sure = kalan <= 0 ? (kalan > -1800 ? "şimdi" : "gecikti") : (kalan >= 3600 ? `${Math.floor(kalan/3600)} sa ${Math.floor(kalan%3600/60)} dk` : `${Math.ceil(kalan/60)} dk`);
+  return `<div class="d ${kalan<=-1800?'eks':''}">${sure}</div><div class="k">${D.saat} · ${D.dolu}/${D.n} dilim dolu · ${D.aralik_sa} sa'te bir</div>`;
+}
 function icraKart(k){
   const I = k.icra;
   if (!I) return `<div class="k">Henüz emir kaydı yok. Bot emir gönderdikçe dolar.</div>`;
@@ -321,7 +362,9 @@ function ciz(){
   const ay = Object.entries(k.aylik||{}).sort((a,b)=>b[0].localeCompare(a[0]));
   $("#icerik").innerHTML = `
   <div class="izgara">
-    <div class="kart"><div class="e">Kitap ${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div><div class="d">${para(k.kitap)}</div></div>
+    <div class="kart"><div class="e">Kitap ${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div><div class="d">${para(k.kitap_canli!=null?k.kitap_canli:k.kitap)}</div>
+      ${k.ozkaynak!=null?`<div class="k">hesap ${para(k.ozkaynak)}${k.kar_usd!=null?` · başlangıçtan <b class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)}</b>`:""}</div>`:""}</div>
+    <div class="kart"><div class="e">Sonraki dilim</div>${dilimKart(k.dilim)}</div>
     <div class="kart"><div class="e">Son gün (${k.son_tarih||"—"})</div><div class="d ${sinif(k.bugun)}">${yz(k.bugun)}</div></div>
     <div class="kart"><div class="e">Son 7 gün</div><div class="d ${sinif(k.g7)}">${yz(k.g7,1)}</div></div>
     <div class="kart"><div class="e">Son 30 gün</div><div class="d ${sinif(k.g30)}">${yz(k.g30,1)}</div></div>

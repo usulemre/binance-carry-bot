@@ -101,5 +101,26 @@ open(_an, "w").write("{yarim")
 kontrol("bozuk anlık dosya çökmez, günlük deftere döner", panel.veri([kl], servis=False)["kurulumlar"][0]["poz_kaynak"] == "günlük")
 os.remove(_an)
 
+# MADDE 730: hesap özkaynağı + sonraki dilim
+_df = [{"tarih": "2026-11-06", "ozkaynak": 4991.53}, {"tarih": "2026-11-07", "ozkaynak": 4988.82, "gelir_24s": {"TRANSFER": 0}}]
+_h1 = panel.hesap_ozet(_df, None)
+kontrol("özkaynak ve başlangıçtan $ (defter)", _h1["ozkaynak"] == 4988.82 and _h1["kar_usd"] == -2.71 and _h1["kitap_canli"] is None, _h1)
+_h2 = panel.hesap_ozet(_df, {"ozkaynak": 4988.76, "kitap": 1998.99})
+kontrol("canlı özkaynak / kitap anlık dosyadan", _h2["ozkaynak"] == 4988.76 and _h2["kitap_canli"] == 1998.99 and _h2["kar_usd"] == -2.77, _h2)
+_df[1]["gelir_24s"]["TRANSFER"] = 100.0; _df[1]["ozkaynak"] = 5088.82
+kontrol("transfer başlangıçtan kâra sayılmaz", panel.hesap_ozet(_df, None)["kar_usd"] == -2.71)
+kontrol("defter / anlık yoksa boş", panel.hesap_ozet([], None) == {})
+_dl = os.path.join(kl, "carry_dilimler.json")
+kontrol("dilim dosyası yoksa None", panel.sonraki_dilim(kl, {}) is None)
+json.dump({"sira": 2, "dilimler": {"0": {"A": 1}, "1": {"B": -1}, "2": {}}}, open(_dl, "w"))
+os.utime(_dl, (1_794_000_000, 1_794_000_000))
+_d = panel.sonraki_dilim(kl, {})
+kontrol("sonraki dilim = son yazım + 120/15 sa", _d["zaman"] == 1_794_000_000 + 8 * 3600 and _d["saat"] == "08:20" and _d["dolu"] == 2 and _d["n"] == 15, _d)
+_d = panel.sonraki_dilim(kl, {"CARRY_N_DILIM": "10", "CARRY_REBALANCE_H": "60"})
+kontrol(".env dilim ayarı uygulanır", _d["zaman"] == 1_794_000_000 + 6 * 3600 and _d["n"] == 10, _d)
+kontrol("panel verisinde dilim", panel.veri([kl], servis=False)["kurulumlar"][0]["dilim"]["dolu"] == 2)
+kontrol("sayfada sonraki dilim kartı", b"Sonraki dilim" in app.get("/").data)
+os.remove(_dl)
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
