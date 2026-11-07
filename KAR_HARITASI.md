@@ -8191,3 +8191,14 @@ en düşük 1.344 $ = −%33)** · 07:00 2.140 $ · 11:00 1.318 $ · 15:00 439 $
 altısı da kârlı (alt çöküşünde pompa short'u işledi = 644'ün "2025+ rejim kenarı") ama 10 Temmuz'dan bu yana altı saatin dördü hâlâ başlangıcın
 altında → sonuç karar saatine (şansa) aşırı duyarlı. 644'ün uzun dönem bulguları geçerli: slot %25 ile 6 yılda hesap sıfırlanıyor, 2025-01'den
 başlasa yalnız short 2 slot −%53. Öneri değişmedi: gerçek parayla slot %25 AÇILMAMALI; izlenecekse slot %10, yalnız short (2025+ Sharpe ~1).
+
+## Madde 741 ÖN KAYIT (2026-11-08, sonuçlar görülmeden; kullanıcı: "bir sonraki döngüde aldığı coinin hacmi filtreden geçemezse kapatır mı — bunu test eder misin") — evrenden düşen pozisyonu kapat
+Bugünkü davranış (bot = motor): hacim / yaş / donukluk filtresi yalnız YENİ seçimde uygulanır; tutulan bacak evrenden düşse de süresi (long 5 g,
+short 40 sa), TP, stop ya da delist (48 sa) ile kapanana kadar tutulur. HİPOTEZ: evrenden düşen coin (hacmi sönen pompa / ölen coin) kalan tutuşta
+kitaba zarar yazıyor; erken kapanış kuyruğu küçültür. Karşı görüş: ek devir + komisyon, funding'i hâlâ ödeyen bacak erken bırakılır (713: erken çıkış TP'yi
+kaçırdı, RED). Kol (TEK): HACIM_CIK=1 → her 4 sa bar kapanışında pozisyondaki coin U'dan (botun evreni: 24 sa hacim ≥ 70M, evren 30'dan azsa
+hacimde ilk 30'a tamamlama (taban 20M), yaş, donuk değil) düşmüşse bar kapanışından kapanır (komisyon 5 bp; boşalan pay sonraki dengelemeye kadar
+nakit). Taban: P3T2 (EK_T7KKS, /tmp/m_ekim). Motor: /tmp/g33_m741.py = g33.py + yalnız bu düğme; düğme kapalıyken taban ile bayt paritesi
+ÖNCE ölçülür (2 koşu), bozuksa test SAYILMAZ. İki hiza, 2.000 $, Ekim dahil zemin. Ölçüt (685 / 719 ile aynı): eşit risk ≥ taban + 8 VE Sharpe
+≤2024 ve 2025+ tabandan düşük değil → ADAY (bota girmez; kullanıcı kararı + ayrı canlı uygulanabilirlik incelemesi); değilse RED. Ek rapor
+(karar dışı): kapanan bacak sayısı / yıl, maks DD, en kötü gün, Ekim 2026. Tek işçi, 4 koşu, rc + dosya kontrolü.
