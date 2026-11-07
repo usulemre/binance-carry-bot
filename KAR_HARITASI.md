@@ -8202,3 +8202,12 @@ nakit). Taban: P3T2 (EK_T7KKS, /tmp/m_ekim). Motor: /tmp/g33_m741.py = g33.py + 
 ÖNCE ölçülür (2 koşu), bozuksa test SAYILMAZ. İki hiza, 2.000 $, Ekim dahil zemin. Ölçüt (685 / 719 ile aynı): eşit risk ≥ taban + 8 VE Sharpe
 ≤2024 ve 2025+ tabandan düşük değil → ADAY (bota girmez; kullanıcı kararı + ayrı canlı uygulanabilirlik incelemesi); değilse RED. Ek rapor
 (karar dışı): kapanan bacak sayısı / yıl, maks DD, en kötü gün, Ekim 2026. Tek işçi, 4 koşu, rc + dosya kontrolü.
+
+## Madde 741 SONUÇ — evrenden düşen pozisyonu kapat (HACIM_CIK): RED (strateji / parametre / canlı DEĞİŞMEDİ)
+4 koşu rc 0; düğme kapalıyken parite iki hizada BAYT BAYT AYNI (EK_T7KKS). [ÖLÇÜM] (yıllık · Sh · dd · en kötü gün · Sh ≤2024 / 2025+ → eşit risk):
+taban 239,3 · 4,05 · −13,3 · −7,41 · 4,03 / 4,14 → 315,2 (doz 1,15) | kapat 175,6 · 3,57 · −17,1 · −7,50 · 3,57 / 3,61 → 142,4 (doz 0,85). Üç şartın
+üçü de TUTMADI (eşit risk −172,8; iki alt dönem Sharpe'ı da düştü) → RED. Her yıl kötü: 2020 92/60 · 2021 472/393 · 2022 63/35 · 2023 309/256 ·
+2024 118/88 · 2025 267/224 · 2026 267/153; Ekim 2026 −4,27 / −4,36 (fark yok); maks DD 3,8 puan DERİN (kuyruğu küçültmedi, büyüttü). Kapanan bacak
+(15 faz toplamı, hiza 0/1): long 12.621 / 12.552, short 16.891 / 16.924 → dilim başına ~290 erken kapanış / yıl. [VARSAYIM] 24 sa hacim eşik
+çevresinde salınan coinler sürekli çıkıp giriyor; çıkış hem komisyon hem funding'i hâlâ ödeyen bacağın kaybı (713 ile aynı ders: erken çıkış
+kazananı kesiyor). Bugünkü davranış (filtre yalnız girişte) doğru; bot değişmedi.
