@@ -238,6 +238,12 @@ def hesap_ozet(defter: list[dict], an: dict | None) -> dict:
     out["kitap_bas"] = bas
     out["kar_usd"] = round(oz - defter[0]["ozkaynak"] - transfer, 2)
     out["kar_oran"] = round(out["kar_usd"] / bas, 6) if bas else None
+    g = (an or {}).get("gelir_bas") or {}
+    if g and g.get("bas") == defter[0].get("zaman"):   # madde 733: döküm (başlangıç aynı kayıttan olmalı)
+        out["dokum"] = {"gerceklesen": round(g.get("REALIZED_PNL", 0), 2), "funding": round(g.get("FUNDING_FEE", 0), 2),
+                        "komisyon": round(g.get("COMMISSION", 0), 2),
+                        "diger_gelir": round(sum(v for t, v in g.items() if t not in ("bas", "son", "REALIZED_PNL", "FUNDING_FEE",
+                                                                                      "COMMISSION", "TRANSFER")), 2)}
     return out
 
 
@@ -377,7 +383,16 @@ function canliBoya(){
   if (eg){ eg.textContent = para(top); eg.className = sinif(top); }
   if (ekd && k.kitap_canli!=null) ekd.textContent = para(k.kitap_canli + fark);
   if (eku && k.kar_usd!=null){ const ku = k.kar_usd + fark; eku.textContent = `${ku>=0?"+":""}${para(ku)} (${yz(k.kitap_bas ? ku/k.kitap_bas : null)})`; eku.className = sinif(ku); }
+  const ed = $("#dokum"); if (ed && k.kar_usd!=null) ed.innerHTML = dokumYaz(k, top, k.kar_usd + fark);
   if (ec) ec.textContent = Date.now() - wsZaman < 5000 ? "● anlık" : "";
+}
+// MADDE 733: başlangıçtan $ = pozisyonlar (gerçekleşmemiş) + gerçekleşen + funding + komisyon + diğer.
+// "diğer" = başlangıç anında açık pozisyonların o anki kârı (başlangıç rakamına zaten girmiş) + demo / gerçek fiyat farkı.
+function dokumYaz(k, poz, kar){
+  const D = k.dokum, ps = v => `<span class="${sinif(v)}">${v>=0?"+":""}${v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
+  const diger = kar - poz - D.gerceklesen - D.funding - D.komisyon;
+  return `pozisyonlar ${ps(poz)}` + (Math.abs(D.gerceklesen)>=0.005?` · gerçekleşen ${ps(D.gerceklesen)}`:"")
+    + ` · funding ${ps(D.funding)} · komisyon ${ps(D.komisyon)}` + (Math.abs(diger)>=0.005?` · diğer ${ps(diger)}`:"") + " $";
 }
 function dilimKart(D){
   if (!D) return `<div class="d">—</div>`;
@@ -416,7 +431,8 @@ function ciz(){
   $("#icerik").innerHTML = `
   <div class="izgara">
     <div class="kart"><div class="e">Kitap ${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div><div class="d" id="kitapd">${para(k.kitap_canli!=null?k.kitap_canli:k.kitap)}</div>
-      ${k.kar_usd!=null?`<div class="k">başlangıç ${para(k.kitap_bas)} · <b id="karusd" class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)} (${yz(k.kar_oran)})</b></div>`:""}</div>
+      ${k.kar_usd!=null?`<div class="k">başlangıç ${para(k.kitap_bas)} · <b id="karusd" class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)} (${yz(k.kar_oran)})</b></div>`:""}
+      ${k.dokum&&k.gerceklesmemis!=null?`<div class="k" id="dokum">${dokumYaz(k, k.gerceklesmemis, k.kar_usd)}</div>`:""}</div>
     <div class="kart"><div class="e">Sonraki dilim</div>${dilimKart(k.dilim)}</div>
     <div class="kart"><div class="e">Son gün (${k.son_tarih||"—"})</div><div class="d ${sinif(k.bugun)}">${yz(k.bugun)}</div></div>
     <div class="kart"><div class="e">Son 7 gün</div><div class="d ${sinif(k.g7)}">${yz(k.g7,1)}</div></div>

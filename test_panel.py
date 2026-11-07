@@ -132,6 +132,17 @@ kontrol(".env dilim ayarı uygulanır", _d["zaman"] == 1_794_000_000 + 6 * 3600 
 kontrol("panel verisinde dilim", panel.veri([kl], servis=False)["kurulumlar"][0]["dilim"]["dolu"] == 2)
 kontrol("sayfada sonraki dilim kartı", b"Sonraki dilim" in app.get("/").data)
 os.remove(_dl)
+# MADDE 733: döküm satırı
+_dk = [{"tarih": "2026-11-06", "zaman": 100, "ozkaynak": 4991.53, "kitap": 2000.11, "sermaye_olcek": 0.4007},
+       {"tarih": "2026-11-07", "zaman": 200, "ozkaynak": 4988.82, "kitap": 1999.02, "sermaye_olcek": 0.4007}]
+_an3 = {"ozkaynak": 4988.43, "kitap": 1998.8, "gelir_bas": {"bas": 100, "son": 300, "FUNDING_FEE": 0.0923, "COMMISSION": -0.0415,
+                                                             "TRANSFER": 50.0, "INSURANCE_CLEAR": -0.01}}
+_d3 = panel.hesap_ozet(_dk, _an3).get("dokum")
+kontrol("döküm: funding / komisyon / gerçekleşen, transfer hariç", _d3 == {"gerceklesen": 0, "funding": 0.09, "komisyon": -0.04, "diger_gelir": -0.01}, _d3)
+_an3["gelir_bas"]["bas"] = 99
+kontrol("başlangıç farklı kayıttansa döküm yok", "dokum" not in panel.hesap_ozet(_dk, _an3))
+kontrol("anlık yoksa döküm yok", "dokum" not in panel.hesap_ozet(_dk, None))
+kontrol("sayfada döküm satırı", b"dokumYaz" in app.get("/").data)
 # MADDE 732: anlık fiyat (tarayıcı -> Binance herkese açık akış)
 _csp = app.get("/").headers["Content-Security-Policy"]
 kontrol("CSP yalnız Binance herkese açık akışına izin verir", "connect-src 'self' wss://fstream.binance.com;" in _csp, _csp)
