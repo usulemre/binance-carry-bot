@@ -106,7 +106,18 @@ _df = [{"tarih": "2026-11-06", "ozkaynak": 4991.53}, {"tarih": "2026-11-07", "oz
 _h1 = panel.hesap_ozet(_df, None)
 kontrol("özkaynak ve başlangıçtan $ (defter)", _h1["ozkaynak"] == 4988.82 and _h1["kar_usd"] == -2.71 and _h1["kitap_canli"] is None, _h1)
 _h2 = panel.hesap_ozet(_df, {"ozkaynak": 4988.76, "kitap": 1998.99})
-kontrol("canlı özkaynak / kitap anlık dosyadan", _h2["ozkaynak"] == 4988.76 and _h2["kitap_canli"] == 1998.99 and _h2["kar_usd"] == -2.77, _h2)
+kontrol("canlı özkaynak anlık dosyadan", _h2["ozkaynak"] == 4988.76 and _h2["kar_usd"] == -2.77, _h2)
+# MADDE 731: kitap = 2.000 $ + kâr/zararın tamamı (ölçek 0,4 iken de)
+_dk = [{"tarih": "2026-11-06", "ozkaynak": 4991.53, "kitap": 2000.11, "sermaye_olcek": 0.4007},
+       {"tarih": "2026-11-07", "ozkaynak": 4988.82, "kitap": 1999.02, "sermaye_olcek": 0.4007, "gelir_24s": {"TRANSFER": 0}}]
+_h3 = panel.hesap_ozet(_dk, {"ozkaynak": 4988.37, "kitap": 1998.84})
+kontrol("canlı kitap = başlangıç + tüm kâr/zarar", abs(_h3["kitap_canli"] - (2000.11 - 3.16)) < 0.01 and _h3["kitap_bas"] == 2000.11
+        and _h3["kar_usd"] == -3.16 and abs(_h3["kar_oran"] + 0.00158) < 1e-5, _h3)
+_s3 = panel.ozet(_dk)["seri"]
+kontrol("kitap serisi tüm kâr/zararı taşır", _s3[0]["kitap"] == 2000.11 and abs(_s3[1]["kitap"] - 1997.40) < 0.01, _s3)
+_dk[1]["gelir_24s"]["TRANSFER"] = 1000.0; _dk[1]["ozkaynak"] += 1000.0
+kontrol("transfer kitaba ölçekli payıyla girer", abs(panel.ozet(_dk)["seri"][1]["kitap"] - (1997.40 + 400.7)) < 0.01)
+kontrol("ölçek 1: kitap = özkaynak", panel.ozet([{"ozkaynak": 100.0}, {"ozkaynak": 103.0, "gelir_24s": {"TRANSFER": 2}}])["seri"][1]["kitap"] == 103.0)
 _df[1]["gelir_24s"]["TRANSFER"] = 100.0; _df[1]["ozkaynak"] = 5088.82
 kontrol("transfer başlangıçtan kâra sayılmaz", panel.hesap_ozet(_df, None)["kar_usd"] == -2.71)
 kontrol("defter / anlık yoksa boş", panel.hesap_ozet([], None) == {})

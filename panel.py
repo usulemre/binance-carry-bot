@@ -119,14 +119,27 @@ def servis_durumu(klasor: str) -> str:
         return "?"
 
 
+def _kitap_ilerlet(kit: float | None, onc: dict | None, k: dict) -> float | None:
+    """MADDE 731: kitap = başlangıç kitabı + kâr/zararın TAMAMI (+ transferin ölçekli payı).
+    Defterdeki `kitap` özkaynak x CARRY_SERMAYE_OLCEK'tir; ölçek < 1 iken kâr/zararın yalnız o kadarını gösterir
+    (2.000 $ kitapta 3 $ zarar -> 1,2 $). Pozisyonlar kitaba göre açıldığı için kâr/zararın hepsi kitabındır."""
+    oz = k.get("ozkaynak")
+    if kit is None or onc is None or oz is None or onc.get("ozkaynak") is None:
+        return k.get("kitap", oz)
+    t = (k.get("gelir_24s") or {}).get("TRANSFER", 0) or 0
+    olcek = float(k.get("sermaye_olcek", 1.0) or 1.0)
+    return round(kit + (oz - onc["ozkaynak"] - t) + t * olcek, 4)
+
+
 def ozet(defter: list[dict]) -> dict:
     """Seri + göstergeler. Getiri zinciri günlük getiriden (transferler zaten ayıklanmış)."""
-    seri, deg = [], 1.0
+    seri, deg, kit, onc = [], 1.0, None, None
     for k in defter:
         g = k.get("gun_getiri")
         if g is not None:
             deg *= 1 + g
-        seri.append({"tarih": k.get("tarih"), "kitap": k.get("kitap", k.get("ozkaynak")), "gun": g, "deger": deg,
+        kit = _kitap_ilerlet(kit, onc, k); onc = k
+        seri.append({"tarih": k.get("tarih"), "kitap": kit, "gun": g, "deger": deg,
                      "funding": (k.get("gelir_24s") or {}).get("FUNDING_FEE", 0),
                      "komisyon": (k.get("gelir_24s") or {}).get("COMMISSION", 0)})
     zirve, dd = 1.0, 0.0
@@ -212,12 +225,19 @@ def hesap_ozet(defter: list[dict], an: dict | None) -> dict:
     if not defter and an is None:
         return {}
     oz = an.get("ozkaynak") if an else defter[-1].get("ozkaynak")
-    kitap = an.get("kitap") if an else None
-    out = {"ozkaynak": oz, "kitap_canli": kitap}
-    if defter and oz is not None:
-        transfer = sum((k.get("gelir_24s") or {}).get("TRANSFER", 0) or 0 for k in defter[1:])
-        out["ozkaynak_bas"] = defter[0].get("ozkaynak")
-        out["kar_usd"] = round(oz - defter[0]["ozkaynak"] - transfer, 2) if defter[0].get("ozkaynak") is not None else None
+    out = {"ozkaynak": oz, "kitap_canli": an.get("kitap") if an else None}
+    if not defter or oz is None or defter[0].get("ozkaynak") is None:
+        return out
+    transfer = sum((k.get("gelir_24s") or {}).get("TRANSFER", 0) or 0 for k in defter[1:])
+    kit = None
+    for i, k in enumerate(defter):
+        kit = _kitap_ilerlet(kit, defter[i - 1] if i else None, k)
+    bas = defter[0].get("kitap", defter[0]["ozkaynak"])
+    if an and kit is not None and defter[-1].get("ozkaynak") is not None:
+        out["kitap_canli"] = round(kit + oz - defter[-1]["ozkaynak"], 4)   # madde 731: son defter kitabı + o andan beri kâr/zarar
+    out["kitap_bas"] = bas
+    out["kar_usd"] = round(oz - defter[0]["ozkaynak"] - transfer, 2)
+    out["kar_oran"] = round(out["kar_usd"] / bas, 6) if bas else None
     return out
 
 
@@ -363,7 +383,7 @@ function ciz(){
   $("#icerik").innerHTML = `
   <div class="izgara">
     <div class="kart"><div class="e">Kitap ${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div><div class="d">${para(k.kitap_canli!=null?k.kitap_canli:k.kitap)}</div>
-      ${k.ozkaynak!=null?`<div class="k">hesap ${para(k.ozkaynak)}${k.kar_usd!=null?` · başlangıçtan <b class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)}</b>`:""}</div>`:""}</div>
+      ${k.kar_usd!=null?`<div class="k">başlangıç ${para(k.kitap_bas)} · <b class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)} (${yz(k.kar_oran)})</b></div>`:""}</div>
     <div class="kart"><div class="e">Sonraki dilim</div>${dilimKart(k.dilim)}</div>
     <div class="kart"><div class="e">Son gün (${k.son_tarih||"—"})</div><div class="d ${sinif(k.bugun)}">${yz(k.bugun)}</div></div>
     <div class="kart"><div class="e">Son 7 gün</div><div class="d ${sinif(k.g7)}">${yz(k.g7,1)}</div></div>
