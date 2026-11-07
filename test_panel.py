@@ -162,9 +162,9 @@ _sy = app.get("/").data
 kontrol("sayfada ayar kartı, eski 'ayar ONERILEN' başlığı yok", b"ayarKart" in _sy and b"Kitap ($) \xc2\xb7 ayar" not in _sy)
 # MADDE 732: anlık fiyat (tarayıcı -> Binance herkese açık akış)
 _csp = app.get("/").headers["Content-Security-Policy"]
-kontrol("CSP yalnız Binance herkese açık akışına izin verir", "connect-src 'self' wss://fstream.binance.com;" in _csp, _csp)
+kontrol("CSP yalnız Binance herkese açık akışı / REST", "connect-src 'self' wss://fstream.binance.com https://fapi.binance.com;" in _csp, _csp)
 _sy = app.get("/").data
-kontrol("sayfada markPrice akışı ve canlı hücre kimlikleri", b"@markPrice@1s" in _sy and b'id="k-${p[0]}"' in _sy and b'id="gerc"' in _sy)
+kontrol("sayfada markPrice akışı ve canlı hücre kimlikleri", b"@markPrice@1s" in _sy and b'id="t-${p[0]}"' in _sy and b"fapi/v1/klines" in _sy and b'id="gerc"' in _sy)
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

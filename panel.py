@@ -320,6 +320,13 @@ padding:6px 12px;border-radius:999px;cursor:pointer;font:inherit}.sekme button.o
 .iki{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}@media(max-width:820px){.iki{grid-template-columns:1fr}}
 .kart h2{font-size:13px;margin:0 0 8px;color:var(--soluk);font-weight:600}
 .grafik{position:relative;height:190px}
+.kutular{display:grid;grid-template-columns:repeat(auto-fill,minmax(150px,1fr));gap:8px;margin-bottom:10px}
+.kutu{border:1px solid var(--cizgi);border-radius:12px;padding:10px 10px 6px;min-width:0}
+.kutu .ad{font-weight:650;font-size:15px;display:flex;justify-content:space-between;align-items:baseline}
+.kutu .f{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px}.kutu .f small{font-size:11px;color:var(--soluk);font-weight:500}
+.kutu .y{font-size:15px;font-weight:650;font-variant-numeric:tabular-nums}.kutu .y small{font-size:11px;font-weight:500}
+.kutu svg{width:100%;height:52px;display:block;margin-top:4px;overflow:visible}
+.kutubas{font-size:12px;color:var(--soluk);font-weight:600;margin:4px 0 6px}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}td,th{padding:4px 6px;border-bottom:1px solid var(--cizgi);text-align:right;font-size:13px}
 th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-x:auto}
 .olay{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--cizgi);font-size:13px}.olay .z{color:var(--soluk);white-space:nowrap;font-size:12px}
@@ -396,17 +403,52 @@ function canliBagla(k){
   WS.onmessage = e => { try { const d = JSON.parse(e.data).data; if (d && d.s && +d.p>0){ FIYAT[d.s] = +d.p; wsZaman = Date.now(); } } catch(_){} };
   WS.onclose = () => { WS = null; WSK = ""; setTimeout(()=>canliBagla(VERI && VERI.kurulumlar[secili]), 5000); };
 }
+// MADDE 736: pozisyon kutuları (TradingView benzeri). Son 24 sa 15 dk mum kapanışları tarayıcıdan Binance'in herkese açık
+// REST'inden (anahtarsız, 15 dk'da bir), son nokta anlık işaret fiyatı. Kesikli çizgi = giriş fiyatı; renk = pozisyonun kârı.
+let MUM = {}, mumZaman = 0, mumAnahtar = "";
+async function mumYukle(k){
+  const S = Object.keys((k && k.pozisyonlar) || {}), a = S.slice().sort().join(",");
+  if (VERI_GOMULU || !S.length || (a===mumAnahtar && Date.now()-mumZaman < 15*60e3)) return;
+  mumAnahtar = a; mumZaman = Date.now();
+  await Promise.all(S.map(async s => { try {
+    const d = await (await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=15m&limit=96`)).json();
+    if (Array.isArray(d)) MUM[s] = d.map(x=>+x[4]).filter(v=>v>0);
+  } catch(_){} }));
+  canliBoya();
+}
+const fiyatYaz = v => v==null ? "—" : v.toLocaleString("tr-TR", v>=1000 ? {minimumFractionDigits:2,maximumFractionDigits:2} : {minimumSignificantDigits:5,maximumSignificantDigits:5});
+function kivilcim(s, p, f, renk){
+  const seri = (MUM[s]||[]).slice(); if (f){ if (seri.length) seri[seri.length-1] = f; else seri.push(f); }
+  if (seri.length < 2) return `<svg viewBox="0 0 160 52"></svg>`;
+  const W = 160, H = 52, hepsi = p.giris>0 ? seri.concat([p.giris]) : seri;
+  let lo = Math.min(...hepsi), hi = Math.max(...hepsi); if (hi-lo < hi*1e-6){ hi += hi*1e-3; lo -= lo*1e-3; }
+  const x = i => (i/(seri.length-1)) * (W-6), y = v => H-3 - (v-lo)/(hi-lo) * (H-6);
+  const yol = seri.map((v,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
+  const sx = x(seri.length-1), sy = y(seri[seri.length-1]);
+  return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
+    <path d="${yol}L${sx.toFixed(1)},${H}L0,${H}Z" fill="${renk}" opacity=".12"/>
+    ${p.giris>0?`<line x1="0" x2="${W}" y1="${y(p.giris).toFixed(1)}" y2="${y(p.giris).toFixed(1)}" stroke="${css("--soluk")}" stroke-dasharray="3 3" stroke-width="1" vector-effect="non-scaling-stroke"/>`:""}
+    <path d="${yol}" fill="none" stroke="${renk}" stroke-width="1.8" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+    <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="3" fill="${renk}"/></svg>`;
+}
+function kutuIc(s, p){
+  const f = FIYAT[s] || p.isaret, ok = f && p.giris>0 && p.miktar;
+  const ky = ok ? (f/p.giris - 1) * (p.miktar>0 ? 1 : -1) * 100 : p.kar_yuzde;
+  const g = ok ? p.miktar * (f - p.giris) : p.gerceklesmemis, usd = ok ? Math.abs(p.miktar) * f : p.usd;
+  const renk = css((ky||0) >= 0 ? "--art" : "--eks");
+  return `<div class="ad"><span>${s.replace(/USDT$/,"")}</span><span class="k">${para(usd)}</span></div>
+    <div class="f">${fiyatYaz(f)} <small>giriş ${fiyatYaz(p.giris)}</small></div>
+    <div class="y ${sinif(ky)}">${ky==null?"—":(ky>=0?"+":"")+ky.toFixed(2).replace(".",",")+"%"} <small>${g==null?"":(g>=0?"+":"")+para(g)}</small></div>
+    ${kivilcim(s, p, f, renk)}`;
+}
 function canliBoya(){
   const k = VERI && VERI.kurulumlar[secili]; if (!k || k.poz_kaynak!="canlı") return;
   let top = 0, n = 0;
   for (const [s,p] of Object.entries(k.pozisyonlar||{})){
     const f = FIYAT[s], ok = f && p.giris>0 && p.miktar;
     top += ok ? p.miktar * (f - p.giris) : (p.gerceklesmemis||0);
-    if (!ok) continue; n++;
-    const ky = (f/p.giris - 1) * (p.miktar>0 ? 1 : -1) * 100;
-    const eu = document.getElementById("u-"+s), ek = document.getElementById("k-"+s);
-    if (eu) eu.textContent = para(Math.abs(p.miktar) * f);
-    if (ek){ ek.textContent = (ky>=0?"+":"") + ky.toFixed(1) + "%"; ek.className = sinif(ky); }
+    const et = document.getElementById("t-"+s); if (et) et.innerHTML = kutuIc(s, p);
+    if (ok) n++;
   }
   if (!n) return;
   const fark = top - (k.gerceklesmemis||0), eg = $("#gerc"), ec = $("#canli"), ekd = $("#kitapd"), eku = $("#karusd");
@@ -470,8 +512,7 @@ function ciz(){
   const k = K[secili]; if(!k){ $("#icerik").innerHTML = "<div class='kart bos'>Henüz kurulum / defter yok.</div>"; return; }
   const sv = k.servis; const svc = sv=="active" ? "ok" : (sv=="—"||sv=="?" ? "" : "yok");
   const P = Object.entries(k.pozisyonlar||{}); const L = P.filter(p=>p[1].yon=="L").sort((a,b)=>b[1].usd-a[1].usd), S = P.filter(p=>p[1].yon=="S").sort((a,b)=>b[1].usd-a[1].usd);
-  const sat = (p) => p ? `<td class="l">${p[0].replace("USDT","")}</td><td id="u-${p[0]}">${para(p[1].usd)}</td><td id="k-${p[0]}" class="${p[1].kar_yuzde==null?'':sinif(p[1].kar_yuzde)}">${p[1].kar_yuzde==null?"—":(p[1].kar_yuzde>=0?"+":"")+p[1].kar_yuzde.toFixed(1)+"%"}</td>` : "<td></td><td></td><td></td>";
-  let poz = ""; for(let i=0;i<Math.max(L.length,S.length);i++) poz += `<tr>${sat(L[i])}${sat(S[i])}</tr>`;
+  const kutular = (A, ad) => A.length ? `<div class="kutubas">${ad} (${A.length})</div><div class="kutular">${A.map(p=>`<div class="kutu" id="t-${p[0]}">${kutuIc(p[0], p[1])}</div>`).join("")}</div>` : "";
   const ay = Object.entries(k.aylik||{}).sort((a,b)=>b[0].localeCompare(a[0]));
   const grafikVar = (k.seri||[]).length >= 3;   // madde 734: 1-2 noktalık çizgi bilgi vermez, yalnız yer kaplar
   $("#icerik").innerHTML = `
@@ -488,6 +529,9 @@ function ciz(){
     <div class="kart"><div class="e">En büyük düşüş</div><div class="d eks">${yz(k.dd,1)}</div></div>
   </div>
   ${k.dokum&&k.gerceklesmemis!=null?`<div class="kart" style="margin-bottom:12px"><h2>Kâr / zarar nereden geldi? · başlangıç ${para(k.kitap_bas)} → şimdi <span id="dokumkitap">${para(k.kitap_canli)}</span></h2><div class="tablo" id="dokum">${dokumYaz(k, k.gerceklesmemis, k.kar_usd)}</div></div>`:""}
+  <div class="kart" style="margin-bottom:12px"><h2>Pozisyonlar <span class="k">· ${k.poz_kaynak=="canlı"?"liste "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")}${k.gerceklesmemis!=null?` · gerçekleşmemiş <b id="gerc" class="${sinif(k.gerceklesmemis)}">${para(k.gerceklesmemis)}</b> <b id="canli" class="art"></b>`:""}</span></h2>
+    ${kutular(L, "LONG") + kutular(S, "SHORT") || "<div class='bos'>açık pozisyon yok</div>"}
+    <div class="k">grafik: son 24 saat (15 dk) · kesikli çizgi giriş fiyatı · renk pozisyonun kâr / zararı (short'ta fiyat düşerse yeşil)</div></div>
   <div class="${grafikVar?'iki':''}" style="margin-bottom:12px">
     ${grafikVar?`<div class="kart"><h2>Kitap ($)</h2><div class="grafik"><canvas id="g1"></canvas></div></div>`:""}
     <div class="kart"><h2>Aylık getiri</h2><div class="tablo"><table class="ayt"><tr><th class="l">Ay</th><th>Getiri</th></tr>
@@ -497,13 +541,9 @@ function ciz(){
   <div class="kart" style="margin-bottom:12px"><h2>Günlük takvim · kazanç yeşil, kayıp kırmızı (ton koyuluğu = büyüklük)</h2>${takvim(k)}</div>
   <div class="kart" style="margin-bottom:12px"><h2>İcra · son 30 gün (emir defteri)</h2>${icraKart(k)}</div>
   <div class="kart" style="margin-bottom:12px"><h2>Günlük getiri</h2><div class="grafik" style="height:180px"><canvas id="g2"></canvas></div></div>
-  <div class="iki">
-    <div class="kart"><h2>Pozisyonlar (${L.length} long / ${S.length} short) <span class="k">· ${k.poz_kaynak=="canlı"?"liste "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")}${k.gerceklesmemis!=null?` · gerçekleşmemiş <b id="gerc" class="${sinif(k.gerceklesmemis)}">${para(k.gerceklesmemis)}</b> <b id="canli" class="art"></b>`:""}</span></h2><div class="tablo"><table>
-      <tr><th class="l">Long</th><th>$</th><th>kâr</th><th class="l">Short</th><th>$</th><th>kâr</th></tr>${poz || "<tr><td colspan=6 class='bos'>açık pozisyon yok</td></tr>"}</table></div></div>
-    <div class="kart"><h2>Olaylar</h2>${(k.olaylar||[]).map(o=>`<div class="olay"><span class="rozet r-${o.tur}">${o.tur}</span><div><div>${o.metin.replace(/</g,"&lt;")}</div><div class="z">${o.zaman}</div></div></div>`).join("") || "<div class='bos'>olay yok</div>"}</div>
-  </div>
+  <div class="kart" style="margin-bottom:12px"><h2>Olaylar</h2>${(k.olaylar||[]).map(o=>`<div class="olay"><span class="rozet r-${o.tur}">${o.tur}</span><div><div>${o.metin.replace(/</g,"&lt;")}</div><div class="z">${o.zaman}</div></div></div>`).join("") || "<div class='bos'>olay yok</div>"}</div>
   ${(VERI.paketler||[]).length && !VERI_GOMULU ? `<div class="kart"><h2>Aylık veri paketleri (araştırma: indirip sohbete yükleyin)</h2>${VERI.paketler.map(p=>`<div class="olay"><a href="paket/${p.ad}" style="color:var(--vurgu)">${p.ad}</a><span class="z">${p.mb} MB</span></div>`).join("")}</div>` : ""}`;
-  canliBagla(k); canliBoya();
+  canliBagla(k); canliBoya(); mumYukle(k);
   grafikler.forEach(g=>g.destroy()); grafikler = [];
   if (!window.Chart) return;
   const x = k.seri.map(s=>s.tarih), izg = css("--cizgi"), sol = css("--soluk");
@@ -560,7 +600,7 @@ def uygulama(klasorler: list[str]):
         r.headers["Referrer-Policy"] = "no-referrer"
         r.headers["Cache-Control"] = "no-store"
         r.headers["Content-Security-Policy"] = ("default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
-                                                "style-src 'unsafe-inline'; connect-src 'self' wss://fstream.binance.com; img-src 'self' data:; manifest-src 'self'; worker-src 'self'")
+                                                "style-src 'unsafe-inline'; connect-src 'self' wss://fstream.binance.com https://fapi.binance.com; img-src 'self' data:; manifest-src 'self'; worker-src 'self'")
         return r
 
     # MADDE 680: PWA — telefonda "Ana ekrana ekle" ile uygulama gibi açılır (Tailscale HTTPS adresinde). Önbellek YALNIZ kabuk
