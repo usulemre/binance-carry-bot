@@ -461,26 +461,38 @@ function canliBagla(k){
 }
 // MADDE 736: pozisyon kutuları (TradingView benzeri). Son 24 sa 15 dk mum kapanışları tarayıcıdan Binance'in herkese açık
 // REST'inden (anahtarsız, 15 dk'da bir), son nokta anlık işaret fiyatı. Kesikli çizgi = giriş fiyatı; renk = pozisyonun kârı.
-let MUM = {}, mumZaman = 0, mumAnahtar = "";
+// MADDE 739: GÜNLÜK grafik (TradingView "bugün" gibi). Gün Binance gün başında (00:00 UTC = 03:00 TR) başlar; yatay eksen
+// tam gün (03:00 -> ertesi 03:00), çizgi gün ilerledikçe soldan sağa uzar. 15 dk mumlar her 15 dk sınırında yeniden alınır,
+// son nokta anlık fiyat. MUM[s] = {bas, nok: [[ms, fiyat], ...]}.
+const GUN_MS = 86400e3, MUM_MS = 900e3;
+let MUM = {}, mumDilim = -1, mumAnahtar = "", mumYukleniyor = false;
+const gunBasi = (t=Date.now()) => Math.floor(t / GUN_MS) * GUN_MS;
 async function mumYukle(k){
   const S = Object.keys((k && k.pozisyonlar) || {}), a = S.slice().sort().join(",");
-  if (VERI_GOMULU || !S.length || (a===mumAnahtar && Date.now()-mumZaman < 15*60e3)) return;
-  mumAnahtar = a; mumZaman = Date.now();
-  let gelen = 0;
+  const dilim = Math.floor((Date.now() - 5e3) / MUM_MS);   // mum kapandıktan 5 sn sonra
+  if (VERI_GOMULU || !S.length || mumYukleniyor || (a===mumAnahtar && dilim===mumDilim)) return;
+  mumYukleniyor = true; const bas = gunBasi(); let gelen = 0;
   await Promise.all(S.map(async s => { try {
-    const d = await (await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=15m&limit=96`, {cache:"no-store"})).json();
-    if (Array.isArray(d) && d.length){ MUM[s] = d.map(x=>+x[4]).filter(v=>v>0); gelen++; }
+    const d = await (await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=15m&startTime=${bas}&limit=96`, {cache:"no-store"})).json();
+    if (Array.isArray(d)){
+      const nok = d.length ? [[+d[0][0], +d[0][1]]].concat(d.map(x=>[Math.min(+x[6]+1, Date.now()), +x[4]])) : [];
+      MUM[s] = {bas, nok: nok.filter(n=>n[1]>0)}; gelen++;
+    }
   } catch(_){} }));
-  if (gelen < S.length) mumZaman = Date.now() - 14*60e3;   // madde 738: eksik geldiyse 1 dk sonra yeniden dene
+  mumYukleniyor = false;
+  if (gelen === S.length){ mumAnahtar = a; mumDilim = dilim; }   // eksikse bir sonraki saniyelik turda yeniden dener
+  else setTimeout(()=>{ mumAnahtar = ""; }, 60e3);
   canliBoya();
 }
 const fiyatYaz = v => v==null ? "—" : v.toLocaleString("tr-TR", v>=1000 ? {minimumFractionDigits:2,maximumFractionDigits:2} : {minimumSignificantDigits:5,maximumSignificantDigits:5});
-function cizgi(seri, W, H, renk, yatay, kimlik="c"){
-  // seri: sayılar; yatay: kesikli referans çizgisi (giriş fiyatı / başlangıç kitabı)
+function cizgi(seri, W, H, renk, yatay, kimlik="c", xs=null, yatayAralikta=false){
+  // seri: sayılar; xs: 0..1 yatay konumlar (yoksa eşit aralık); yatay: kesikli referans çizgisi (giriş fiyatı / başlangıç kitabı)
+  // yatayAralikta: referans y ölçeğini genişletmez, yalnız aralıktaysa çizilir (günlük grafik: giriş uzaksa çizgi ezilmesin)
   if (!seri || seri.length < 2) return `<svg viewBox="0 0 ${W} ${H}"></svg>`;
-  const hepsi = yatay!=null ? seri.concat([yatay]) : seri;
+  const hepsi = yatay!=null && !yatayAralikta ? seri.concat([yatay]) : seri;
   let lo = Math.min(...hepsi), hi = Math.max(...hepsi); if (hi-lo < Math.abs(hi)*1e-6 + 1e-12){ hi += Math.abs(hi)*1e-3 + 1e-9; lo -= Math.abs(lo)*1e-3 + 1e-9; }
-  const x = i => (i/(seri.length-1)) * (W-6), y = v => H-3 - (v-lo)/(hi-lo) * (H-6);
+  if (yatay!=null && yatayAralikta && (yatay < lo || yatay > hi)) yatay = null;
+  const x = i => (xs ? xs[i] : i/(seri.length-1)) * (W-6), y = v => H-3 - (v-lo)/(hi-lo) * (H-6);
   const yol = seri.map((v,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
   const sx = x(seri.length-1), sy = y(seri[seri.length-1]);
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
@@ -491,9 +503,12 @@ function cizgi(seri, W, H, renk, yatay, kimlik="c"){
     <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="3" fill="${renk}"/></svg>`;
 }
 function kivilcim(s, p, f, renk){
-  const seri = (MUM[s]||[]).slice(); if (f){ if (seri.length) seri[seri.length-1] = f; else seri.push(f); }
-  if (seri.length < 2) return `<div class="grbekle">grafik yükleniyor…</div>`;
-  return cizgi(seri, 160, 64, renk, p.giris>0 ? p.giris : null, s);
+  const M = MUM[s], simdi = Date.now();
+  if (!M || M.bas !== gunBasi(simdi)) return `<div class="grbekle">grafik yükleniyor…</div>`;
+  const nok = M.nok.filter(n => n[0] < simdi - 1e3);   // tamamlanan mumlar; son nokta anlık fiyat
+  if (f) nok.push([simdi, f]);
+  if (nok.length < 2) return `<div class="grbekle">gün yeni başladı (03:00)…</div>`;
+  return cizgi(nok.map(n=>n[1]), 160, 64, renk, p.giris>0 ? p.giris : null, s, nok.map(n=>Math.min(1, (n[0]-M.bas)/GUN_MS)), true);
 }
 // MADDE 737: kâr al hedefine ilerleme. Long: giriş -> giriş x (1 + kademe); short: giriş -> giriş x (1 − kademe).
 function hedefCubuk(k, p, f){
@@ -525,6 +540,7 @@ function canliBoya(){
   const on = canliDurum();
   const k = VERI && VERI.kurulumlar[secili]; if (!k) return;
   const ds = $("#dilimsure"); if (ds) ds.innerHTML = dilimKart(k.dilim);
+  if (sayfa=="poz") mumYukle(k);
   if (k.poz_kaynak!="canlı") return;
   let top = 0; const taraf = {L:[0,0], S:[0,0]};
   for (const [s,p] of Object.entries(k.pozisyonlar||{})){
@@ -610,7 +626,7 @@ function pozSayfa(k){
     <div class="kutular">${A.map(p=>`<div class="kutu ${y}" id="t-${p[0]}">${kutuIc(p[0], p[1], k)}</div>`).join("")}</div>` : "";
   return `<div class="kart"><h2>Pozisyonlar <span class="k">${k.poz_kaynak=="canlı"?"liste "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")}${k.gerceklesmemis!=null?` · gerçekleşmemiş <b id="gerc" class="${sinif(k.gerceklesmemis)}">${isaretli(k.gerceklesmemis)}</b>`:""}</span></h2>
     ${kutular(L, "L", "LONG") + kutular(S, "S", "SHORT") || "<div class='bos'>açık pozisyon yok</div>"}
-    <div class="k">grafik: son 24 saat (15 dk) · kesikli çizgi giriş fiyatı · renk pozisyonun kâr / zararı (short'ta fiyat düşerse yeşil) · alttaki çubuk kâr al hedefine kalan yol</div></div>`;
+    <div class="k">grafik: bugün 03:00'ten beri (15 dk, gün sonuna kadar uzar) · kesikli çizgi giriş fiyatı (grafik aralığındaysa) · renk pozisyonun kâr / zararı (short'ta fiyat düşerse yeşil) · alttaki çubuk kâr al hedefine kalan yol</div></div>`;
 }
 function gecmisSayfa(k){
   const grafikVar = (k.seri||[]).length >= 3;   // madde 734/737: 1-2 noktalık grafik bilgi vermez, yalnız yer kaplar
