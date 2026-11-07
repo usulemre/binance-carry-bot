@@ -24,12 +24,17 @@ import time
 
 OLAY_DESENLERI = [
     ("stop", re.compile(r"(24 SA DÜŞÜŞ STOP'U|KOŞULLU 24 SA STOP: \S+ .*kapatılıyor)")),
+    ("stop_tut", re.compile(r"KOŞULLU 24 SA STOP: \S+ .*tutuluyor")),   # madde 742: stop şartı coinde var, piyasada yok
     ("delist", re.compile(r"DELİST: \S+ (listeden çıkıyor|kapanmalı)")),
     ("saglik", re.compile(r"SAĞLIK KAPISI KAPALI")),
-    ("hata", re.compile(r"tur başarısız|KAPATILAMADI")),
+    ("hata", re.compile(r"\[(?:ERROR|CRITICAL)\]|tur başarısız|KAPATILAMADI")),   # madde 742: her ERROR satırı
+    ("tp", re.compile(r"(?:KÂR AL|MERDİVEN) doldu")),
+    ("uyari", re.compile(r"PİYASA emrine düşülüyor")),
+    ("tur", re.compile(r"\| dilim \d+/\d+ yenilendi \|")),
     ("ayar", re.compile(r"önerilen ayar etkin|ÖNERİLEN AYAR: kitap")),
     ("basla", re.compile(r"carry_bot başladı")),
 ]
+_STOP_TUT_SEM = re.compile(r"KOŞULLU 24 SA STOP: (\S+)")
 try:   # MADDE 729: panel saatleri Türkiye saatiyle (sunucu ve log UTC). Değiştirmek: CARRY_PANEL_TZ=Europe/Berlin vb.
     from zoneinfo import ZoneInfo
     PANEL_TZ = ZoneInfo(os.getenv("CARRY_PANEL_TZ", "Europe/Istanbul"))
@@ -96,7 +101,7 @@ def _env(klasor: str) -> dict:
             l = l.strip()
             if l and not l.startswith("#") and "=" in l:
                 k, v = l.split("=", 1)
-                if k.strip() in ("BINANCE_MODE", "CARRY_PROFIL", "CARRY_BILDIRIM_AD", "CARRY_SERMAYE_OLCEK",
+                if k.strip() in ("BINANCE_MODE", "CARRY_PROFIL", "CARRY_BILDIRIM_AD", "CARRY_SERMAYE_OLCEK", "CARRY_LONG_24S",
                                  "CARRY_REBALANCE_H", "CARRY_N_DILIM", "CARRY_DILIM_LOG",
                                  "CARRY_MERDIVEN", "CARRY_MERDIVEN_SHORT", "CARRY_KAR_AL", "CARRY_KAR_AL_SHORT"):   # anahtarlar OKUNMAZ
                     d[k.strip()] = v.split("#")[0].strip()
@@ -121,7 +126,7 @@ def defter_oku(klasor: str) -> list[dict]:
     return out
 
 
-def olaylar(klasor: str, en_cok: int = 40, son_bayt: int = 2_000_000) -> list[dict]:
+def olaylar(klasor: str, en_cok: int = 80, son_bayt: int = 2_000_000) -> list[dict]:
     yol = os.path.join(klasor, "carry_bot.log")
     try:
         with open(yol, "rb") as f:
@@ -129,13 +134,19 @@ def olaylar(klasor: str, en_cok: int = 40, son_bayt: int = 2_000_000) -> list[di
             satirlar = f.read().decode("utf-8", "replace").splitlines()
     except OSError:
         return []
-    out = []
+    out, tutulan = [], set()
     for s in satirlar:
         for tur, d in OLAY_DESENLERI:
             if d.search(s):
                 m = _ZAMAN.match(s)
+                zaman = _log_zamani(m.group(1)) if m else ""
+                if tur == "stop_tut":   # madde 742: aynı coinin "tutuluyor" kararı her turda / yeniden başlamada tekrarlanır: günde bir
+                    a = (zaman[:10], (_STOP_TUT_SEM.search(s) or [None, s])[1])
+                    if a in tutulan:
+                        break
+                    tutulan.add(a)
                 metin = s[m.end():].strip(" -|") if m else s
-                out.append({"zaman": _log_zamani(m.group(1)) if m else "", "tur": tur, "metin": _GIZLI.sub("***", metin)[:300]})
+                out.append({"zaman": zaman, "tur": tur, "metin": _GIZLI.sub("***", metin)[:300]})
                 break
     return out[-en_cok:][::-1]
 
@@ -161,33 +172,67 @@ def _kitap_ilerlet(kit: float | None, onc: dict | None, k: dict) -> float | None
     return round(kit + (oz - onc["ozkaynak"] - t) + t * olcek, 4)
 
 
+def gun_etiketi(k: dict) -> str | None:
+    """MADDE 742: bir defter satırındaki gun_getiri'nin AİT OLDUĞU gün. Defter 00:05 UTC'de yazılır ve `tarih`i yazıldığı
+    gündür, getirisi ise BİR ÖNCEKİ günü kapsar (7 Kas tarihli satır = 6 Kas'ın sonucu). Zaman varsa (zaman − 1 sa)'in
+    UTC günü, yoksa defter tarihi."""
+    z = k.get("zaman")
+    if z:
+        try:
+            return dt.datetime.fromtimestamp(int(z) - 3600, dt.timezone.utc).strftime("%Y-%m-%d")
+        except (ValueError, OSError, OverflowError, TypeError):
+            pass
+    return k.get("tarih")
+
+
+def _gelir_payi(onc: dict | None, k: dict) -> float:
+    """MADDE 742: gelir_24s her satırda SON 24 SAATİ kapsar. Satırlar 24 sa'ten sık yazılırsa (kurulum günü, elle çalıştırma)
+    pencereler üst üste biner ve toplam ÇİFT sayar. Satırın yalnız önceki satırdan bu yana geçen kısmı sayılır (oransal);
+    ilk satırın penceresi başlangıçtan ÖNCEdir, sayılmaz."""
+    if onc is None:
+        return 0.0
+    try:
+        return max(0.0, min(1.0, (float(k["zaman"]) - float(onc["zaman"])) / 86400.0))
+    except (KeyError, TypeError, ValueError):
+        return 1.0
+
+
 def ozet(defter: list[dict]) -> dict:
-    """Seri + göstergeler. Getiri zinciri günlük getiriden (transferler zaten ayıklanmış)."""
+    """Seri + göstergeler. Getiri zinciri günlük getiriden (transferler zaten ayıklanmış). `tarih` = getirinin ait olduğu
+    gün (madde 742); aynı güne düşen iki getiri (gün içi elle çalıştırma) tek günde birleşir."""
     seri, deg, kit, onc = [], 1.0, None, None
     for k in defter:
         g = k.get("gun_getiri")
         if g is not None:
             deg *= 1 + g
-        kit = _kitap_ilerlet(kit, onc, k); onc = k
-        seri.append({"tarih": k.get("tarih"), "kitap": kit, "gun": g, "deger": deg,
-                     "funding": (k.get("gelir_24s") or {}).get("FUNDING_FEE", 0),
-                     "komisyon": (k.get("gelir_24s") or {}).get("COMMISSION", 0)})
+        kit = _kitap_ilerlet(kit, onc, k)
+        pay = _gelir_payi(onc, k); onc = k
+        gel = k.get("gelir_24s") or {}
+        f, c = (gel.get("FUNDING_FEE") or 0) * pay, (gel.get("COMMISSION") or 0) * pay
+        et = gun_etiketi(k)
+        if g is not None and seri and seri[-1]["gun"] is not None and seri[-1]["tarih"] == et:
+            s0 = seri[-1]
+            s0.update(gun=(1 + s0["gun"]) * (1 + g) - 1, kitap=kit, deger=deg, funding=s0["funding"] + f, komisyon=s0["komisyon"] + c)
+            continue
+        seri.append({"tarih": et, "kitap": kit, "gun": g, "deger": deg, "funding": f, "komisyon": c})
     zirve, dd = 1.0, 0.0
     for s in seri:
         zirve = max(zirve, s["deger"]); dd = min(dd, s["deger"] / zirve - 1)
+    gunler = [s for s in seri if s["gun"] is not None]
 
     def _pencere(n):
-        if len(seri) < 2:
+        # madde 742: n günden az veri varken "7 gün / 30 gün" toplamla aynı sayıyı gösterip yanıltmasın
+        if len(gunler) < n:
             return None
         b = seri[max(0, len(seri) - 1 - n)]["deger"]
         return seri[-1]["deger"] / b - 1
     aylik = {}
-    for s in seri:
-        if s["gun"] is not None:
-            a = s["tarih"][:7]; aylik[a] = (1 + aylik.get(a, 0.0)) * (1 + s["gun"]) - 1
+    for s in gunler:
+        a = s["tarih"][:7]; aylik[a] = (1 + aylik.get(a, 0.0)) * (1 + s["gun"]) - 1
     son = defter[-1] if defter else {}
     return {"seri": seri, "toplam": seri[-1]["deger"] - 1 if seri else None, "dd": dd, "g7": _pencere(7), "g30": _pencere(30),
-            "bugun": seri[-1]["gun"] if seri else None, "kitap": seri[-1]["kitap"] if seri else None,
+            "bugun": gunler[-1]["gun"] if gunler else None, "son_gun_tarih": gunler[-1]["tarih"] if gunler else None,
+            "gun_sayisi": len(gunler), "kitap": seri[-1]["kitap"] if seri else None,
             "aylik": aylik, "pozisyonlar": son.get("pozisyonlar", {}), "son_tarih": son.get("tarih"),
             "profil": son.get("profil"), "doz": son.get("doz"),
             "funding_top": sum(s["funding"] or 0 for s in seri), "komisyon_top": sum(s["komisyon"] or 0 for s in seri)}
@@ -230,6 +275,25 @@ def anlik_oku(klasor: str, simdi: float | None = None) -> dict | None:
         return a if 0 <= yas <= ANLIK_TAZE_SN and isinstance(a.get("pozisyonlar"), dict) else None
     except (OSError, ValueError, KeyError, TypeError):
         return None
+
+
+def gun_egri(klasor: str, simdi: float | None = None) -> dict | None:
+    """MADDE 742: bugünün (00:00 UTC = 03:00 TR) kitap eğrisi — defter/anlik_gun.json (carry_anlik.py, 5 dk'da bir:
+    özkaynak − başlangıçtan beri transfer). Değerler günün ilk noktasına göre $ fark. Kapanan işlemler, funding ve komisyon
+    dahildir (eski eğri yalnız ŞU AN açık pozisyonları 03:00'ten beri tutulmuş sayıyordu: gün içinde açılanlar şişiyordu).
+    Dosya yok / bozuk / başka güne ait ise None."""
+    simdi = time.time() if simdi is None else simdi
+    bas = int(simdi) // 86400 * 86400
+    try:
+        with open(os.path.join(klasor, "defter", "anlik_gun.json"), encoding="utf-8") as f:
+            d = json.load(f)
+        nok = [(int(t), float(v)) for t, v in d["nok"] if int(t) >= bas]
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+    if d.get("gun") != dt.datetime.fromtimestamp(bas, dt.timezone.utc).strftime("%Y-%m-%d") or not nok:
+        return None
+    ref = nok[0][1]
+    return {"bas": bas, "ilk": nok[0][0], "nok": [[t, round(v - ref, 4)] for t, v in nok]}
 
 
 def sonraki_dilim(klasor: str, e: dict | None = None) -> dict | None:
@@ -299,7 +363,12 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         df = defter_oku(kl); o = ozet(df)
         o.update({"ad": ad, "mod": e.get("BINANCE_MODE", "demo"), "servis": servis_durumu(kl) if servis else "—",
                   "olaylar": olaylar(kl), "icra": icra(kl), "dilim": sonraki_dilim(kl, e),
-                  "ayar": etkin_ayar(kl), "hedef": kar_hedefleri(e)})
+                  "ayar": etkin_ayar(kl), "hedef": kar_hedefleri(e), "gun_egri": gun_egri(kl)})
+        if o["ayar"] is not None:   # madde 742: koşullu stopun coin eşiği (carry_bot CARRY_LONG_24S, varsayılan 0,45)
+            try:
+                o["ayar"]["coin_esik"] = float(e.get("CARRY_LONG_24S") or 0.45)
+            except ValueError:
+                o["ayar"]["coin_esik"] = 0.45
         an = anlik_oku(kl)
         o.update(hesap_ozet(df, an))
         if an is not None:   # madde 728: canlı pozisyon tablosu
@@ -348,6 +417,7 @@ nav.alt button{flex:1;border:0;background:none;color:var(--soluk);font:inherit;f
 nav.alt button.on{background:color-mix(in srgb,var(--vurgu) 16%,transparent);color:var(--vurgu)}
 @media(max-width:820px){nav.alt{position:fixed;left:10px;right:10px;bottom:calc(10px + env(safe-area-inset-bottom));margin:0;z-index:7;box-shadow:0 8px 30px rgba(0,0,0,.35);
   background:color-mix(in srgb,var(--kart) 88%,transparent);backdrop-filter:blur(14px);-webkit-backdrop-filter:blur(14px)}nav.alt button{padding:11px 4px}}
+@media(min-width:821px){nav.alt{position:sticky;top:58px;z-index:5}}
 #cek{height:0;overflow:hidden;display:flex;align-items:center;justify-content:center;color:var(--soluk);font-size:12px;transition:height .2s}
 #icerik{transition:opacity .15s}
 .kart{background:var(--kart);border:1px solid var(--cizgi);border-radius:16px;padding:14px;margin-bottom:12px}
@@ -417,7 +487,9 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .zo::before{content:"";position:absolute;left:12px;top:26px;bottom:0;width:2px;background:var(--cizgi)}.zo:last-child::before{display:none}
 .zo .i{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;z-index:1}
 .zo .m{font-size:13px;min-width:0;padding-top:3px}.zo .z{color:var(--soluk);font-size:11.5px;margin-top:1px}
-.i-stop,.i-hata{background:var(--eks)}.i-delist,.i-saglik{background:var(--uyari)}.i-ayar{background:var(--mor)}.i-basla{background:var(--vurgu)}
+.i-stop,.i-hata{background:var(--eks)}.i-delist,.i-saglik,.i-uyari{background:var(--uyari)}.i-ayar{background:var(--mor)}.i-basla{background:var(--vurgu)}
+.i-tp{background:var(--art)}.i-tur{background:var(--soluk)}.i-stop_tut{background:color-mix(in srgb,var(--eks) 40%,var(--kart2))}
+.zo.hata .m>div:first-child{color:var(--eks)}
 .bos{color:var(--soluk);padding:18px 0;text-align:center}
 .takvim{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
 .takvim .bas{font-size:11px;color:var(--soluk);text-align:center;padding-bottom:2px}
@@ -646,25 +718,33 @@ function isiHarita(k){
       <b>${r.s.replace(/USDT$/,"")}${kucuk?"":` <small>${r.yon=="L"?"long":"short"}</small>`}</b><span>${yz(r.ky)}</span></div>`;
   }).join("");
 }
-// MADDE 740: portföyün BUGÜNKÜ eğrisi: 03:00'ten beri Σ miktar × (fiyat(t) − fiyat(03:00)). Şu anki pozisyonlarla hesaplanır.
+// MADDE 742: canlı fiyatla açık pozisyonların şu anki kâr/zararı ile son anlık görüntüdeki (5 dk) farkı. Canlı değilse 0.
+function canliFark(k){
+  if (k.poz_kaynak!="canlı" || Date.now() - wsZaman >= 5000) return 0;
+  let top = 0;
+  for (const [s,p] of Object.entries(k.pozisyonlar||{})){
+    const f = FIYAT[s]; top += (f && p.giris>0 && p.miktar) ? p.miktar * (f - p.giris) : (p.gerceklesmemis||0);
+  }
+  return top - (k.gerceklesmemis||0);
+}
+// MADDE 742: portföyün BUGÜNKÜ eğrisi = KİTABIN gün başından beri değişimi (sunucu 5 dk'da bir kaydeder: anlik_gun.json) +
+// son kayıttan beri canlı fiyat farkı. Kapanan işlemler, funding ve komisyon dahil. (Madde 740'taki eski eğri şu an açık
+// pozisyonları 03:00'ten beri tutulmuş sayıyordu: gün içinde açılan coinin alınmadan önceki yükselişi kâra yazılıyordu.)
 function bugunEgri(k){
-  const P = Object.entries(k.pozisyonlar||{}).filter(([s,p])=>p.miktar && MUM[s] && MUM[s].bas===gunBasi() && MUM[s].nok.length);
-  if (!P.length) return null;
-  const simdi = Date.now(), bas = gunBasi(simdi), zt = new Set();
-  P.forEach(([s])=>MUM[s].nok.forEach(n=>{ if (n[0] < simdi-1e3) zt.add(n[0]); })); zt.add(simdi);
-  const Z = [...zt].sort((a,b)=>a-b), idx = {}, son = {};
-  P.forEach(([s])=>{ idx[s] = 0; son[s] = MUM[s].nok[0][1]; });
-  const seri = Z.map(t=>{ let top = 0;
-    for (const [s,p] of P){ const N = MUM[s].nok; while (idx[s] < N.length && N[idx[s]][0] <= t && N[idx[s]][0] < simdi-1e3){ son[s] = N[idx[s]][1]; idx[s]++; }
-      const f = t===simdi && FIYAT[s] ? FIYAT[s] : son[s]; top += p.miktar * (f - N[0][1]); }
-    return top; });
-  return {seri, xs: Z.map(t=>Math.min(1,(t-bas)/GUN_MS)), son: seri[seri.length-1]};
+  const G = k.gun_egri, bas = gunBasi(), simdi = Date.now();
+  if (!G || !G.nok || !G.nok.length || G.bas*1000 !== bas) return null;
+  const nok = G.nok.map(n=>[n[0]*1000, n[1]]), fark = canliFark(k);
+  if (fark || nok.length === 1) nok.push([simdi, nok[nok.length-1][1] + fark]);
+  const son = nok[nok.length-1][1], kit = k.kitap_canli!=null ? k.kitap_canli + fark : null;
+  return {seri: nok.map(n=>n[1]), xs: nok.map(n=>Math.min(1,(n[0]-bas)/GUN_MS)), son, ilk: G.ilk*1000, bas,
+          oran: kit!=null && kit - son > 0 ? son / (kit - son) : null};
 }
 function egriIc(k){
   if (egriMod=="bugun"){
     const E = bugunEgri(k);
-    if (!E || E.seri.length < 2) return `<div class="bl"><span>bugün 03:00'ten beri</span><span>—</span></div><div class="iskelet" style="height:70px;margin-top:4px"></div>`;
-    return `<div class="bl"><span>bugün 03:00'ten beri · açık pozisyonlar</span><b class="rz ${sinif(E.son)}">${isaretli(E.son)}</b></div>
+    if (!E || E.seri.length < 2) return `<div class="bl"><span>bugün 03:00'ten beri · kitap</span><span>—</span></div><div class="bekle" style="padding:20px 0">gün içi kitap kaydı bekleniyor (5 dakikada bir)</div>`;
+    const bsl = E.ilk - E.bas > 20*60e3 ? new Date(E.ilk).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}) + " kaydından beri" : "03:00'ten beri";
+    return `<div class="bl"><span>bugün ${bsl} · kitap</span><b class="rz ${sinif(E.son)}">${isaretli(E.son)}${E.oran!=null?" ("+yz(E.oran)+")":""}</b></div>
       ${cizgi(E.seri, 300, 70, css(E.son>=0?"--art":"--eks"), 0, "bugun", E.xs, true)}<div class="eksen"><span>03:00</span><span>09:00</span><span>15:00</span><span>21:00</span><span>03:00</span></div>`;
   }
   const kit = (k.seri||[]).map(s=>s.kitap).filter(v=>v!=null); if (k.kitap_canli!=null && kit.length) kit.push(k.kitap_canli);
@@ -745,7 +825,11 @@ function ayarKart(k){
   const A = k.ayar;
   if (!A) return `<div class="d">${k.profil||"—"}${k.doz?" · "+k.doz+"x":""}</div>`;
   const ad = A.profil || k.profil || "—";
-  return `<div class="d">${ad} · ${A.gross.toFixed(2).replace(".",",")}x</div><span class="k">${A.stop!=null?`koşullu stop %${(A.stop*100).toFixed(0)}`:"koşullu stop yok"}</span>`;
+  // madde 742: "koşullu stop %3" pozisyon %3 zararda kapanır sanılıyordu. Kural: coin 24 sa'te −%45 VE piyasa medyanı −%3.
+  const ce = A.coin_esik!=null ? A.coin_esik : 0.45;
+  const st = A.stop!=null ? `stop: coin −%${Math.round(ce*100)} ve piyasa −%${Math.round(A.stop*100)}` : "koşullu stop yok";
+  const ac = A.stop!=null ? `24 saatlik koşullu stop: long, coin 24 saatte −%${Math.round(ce*100)} düştüğünde VE piyasanın ortanca 24 sa getirisi −%${Math.round(A.stop*100)} ya da daha kötüyken kapanır. Tek coin çöküşünde (piyasa sakinken) kapanmaz.` : "";
+  return `<div class="d">${ad} · ${A.gross.toFixed(2).replace(".",",")}x</div><span class="k" title="${ac}">${st}</span>`;
 }
 function dilimKart(D){
   if (!D) return `<div class="d">—</div>`;
@@ -781,7 +865,7 @@ function ozetSayfa(k, svc, sv){
     ${k.kar_usd!=null?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="karusd" class="kar rz ${sinif(k.kar_usd)}">${ok_(k.kar_usd)} ${isaretli(k.kar_usd)} (${yz(k.kar_oran)})</span><span class="k">başlangıç ${para(k.kitap_bas)}</span></div>`:""}
     <div class="egri"><div style="display:flex;justify-content:flex-end"><div class="mod"><button data-m="bugun" class="${egriMod=="bugun"?"on":""}" onclick="egriSec('bugun')">Bugün</button><button data-m="tum" class="${egriMod=="tum"?"on":""}" onclick="egriSec('tum')">Başlangıçtan</button></div></div>
       <div id="egri">${egriIc(k)}</div></div>
-    <div class="cipler">${cip(`Son gün${k.son_tarih?" · "+k.son_tarih.slice(8,10)+" "+AYAD[+k.son_tarih.slice(5,7)-1].slice(0,3):""}`, yz(k.bugun), sinif(k.bugun))}${cip("7 gün", yz(k.g7), sinif(k.g7))}${cip("30 gün", yz(k.g30), sinif(k.g30))}${cip("En büyük düşüş", yz(k.dd), k.dd<0?"eks":"")}</div>
+    <div class="cipler">${cip(`Son gün${k.son_gun_tarih?" · "+(+k.son_gun_tarih.slice(8,10))+" "+AYAD[+k.son_gun_tarih.slice(5,7)-1].slice(0,3):""}`, yz(k.bugun), sinif(k.bugun))}${cip(k.g7==null&&k.gun_sayisi?`7 gün · ${k.gun_sayisi} gün veri`:"7 gün", yz(k.g7), sinif(k.g7))}${cip(k.g30==null&&k.gun_sayisi>=7?`30 gün · ${k.gun_sayisi} gün veri`:"30 gün", yz(k.g30), sinif(k.g30))}${cip("En büyük düşüş", yz(k.dd), k.dd<0?"eks":"")}</div>
     <div class="bilgi"><div class="cip"><div class="e">Ayar</div>${ayarKart(k)}</div><div class="cip"><div class="e">Sonraki dilim</div><div id="dilimsure">${dilimKart(k.dilim)}</div></div><div class="cip"><div class="e">Sonraki funding</div><div id="fundsure">${fundKart(k)}</div></div></div>
   </div>
   <div class="kart"><h2>Pozisyon haritası <span class="k">· kare boyu = büyüklük, renk = kâr / zarar</span></h2><div class="isi" id="isi">${isiHarita(k)}</div></div>
@@ -800,7 +884,9 @@ function pozSayfa(k){
 function gecmisSayfa(k){
   const grafikVar = (k.seri||[]).length >= 3;   // madde 734/737: 1-2 noktalık grafik bilgi vermez, yalnız yer kaplar
   return `<div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2>${takvim(k)}
-      ${(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:6px">Defter toplamı: funding ${isaretli(k.funding_top)} · komisyon ${isaretli(k.komisyon_top)}</div>`:""}</div>
+      ${k.dokum?`<div class="k" style="margin-top:6px">Başlangıçtan beri: funding ${isaretli(k.dokum.funding)} · komisyon ${isaretli(k.dokum.komisyon)}</div>`
+        :(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:6px">Defter toplamı (yaklaşık): funding ${isaretli(k.funding_top)} · komisyon ${isaretli(k.komisyon_top)}</div>`:""}
+      <div class="k" style="margin-top:4px">Her gün, Binance gününe (03:00 – 03:00) göre; bugünkü canlı sonuç Özet'te.</div></div>
     <div class="kart"><h2>Son 1 yıl</h2>${yillik(k)}</div>
     ${grafikVar?`<div class="iki"><div class="kart"><h2>Kitap ($)</h2><div class="grafik"><canvas id="g1"></canvas></div></div>
       <div class="kart"><h2>Günlük getiri</h2><div class="grafik"><canvas id="g2"></canvas></div></div></div>`
@@ -808,7 +894,9 @@ function gecmisSayfa(k){
     <div class="kart"><h2>İcra · son 30 gün <span class="k">(emir defteri)</span></h2>${icraKart(k)}</div>`;
 }
 // MADDE 740: olaylar zaman çizelgesi — gün gün (Bugün / Dün / tarih), türe göre simge
-const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", delist:"!", saglik:"♥", hata:"✕"};
+const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", stop_tut:"□", delist:"!", saglik:"♥", hata:"✕", tp:"✓", uyari:"⚠", tur:"↻"};
+const OLAY_AD = {basla:"başlama", ayar:"ayar", stop:"stop", stop_tut:"stop şartı: piyasa sakin, tutuldu", delist:"delist", saglik:"sağlık",
+                 hata:"hata", tp:"kâr al doldu", uyari:"piyasa emrine düşüldü", tur:"dilim turu"};
 function olaySayfa(k){
   const bugun = new Date(), t = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   const dun = new Date(bugun); dun.setDate(dun.getDate()-1);
@@ -816,7 +904,7 @@ function olaySayfa(k){
   let h = "", onc = null;
   for (const o of (k.olaylar||[])){
     const g = (o.zaman||"").slice(0,10); if (g!==onc){ h += `<div class="gun">${g?ad(g):"—"}</div>`; onc = g; }
-    h += `<div class="zo"><span class="i i-${o.tur}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="m"><div>${o.metin.replace(/</g,"&lt;").replace(/\s*\|\s*/g," · ")}</div><div class="z">${(o.zaman||"").slice(11)} · ${o.tur}</div></div></div>`;
+    h += `<div class="zo ${o.tur}"><span class="i i-${o.tur}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="m"><div>${o.metin.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\s*\|\s*/g," · ")}</div><div class="z">${(o.zaman||"").slice(11)} · ${OLAY_AD[o.tur]||o.tur}</div></div></div>`;
   }
   return `<div class="kart"><h2>Olaylar</h2>${h ? `<div class="zc">${h}</div>` : "<div class='bos'>olay yok</div>"}</div>
   ${(VERI.paketler||[]).length && !VERI_GOMULU ? `<div class="kart"><h2>Aylık veri paketleri <span class="k">(araştırma: indirip sohbete yükleyin)</span></h2>${VERI.paketler.map(p=>`<div class="zo"><span class="i i-basla">↓</span><div class="m"><a href="paket/${p.ad}" style="color:var(--vurgu)">${p.ad}</a><div class="z">${p.mb} MB</div></div></div>`).join("")}</div>` : ""}`;

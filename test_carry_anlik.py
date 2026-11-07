@@ -94,5 +94,28 @@ kontrol("anlık dosyada döküm (başlangıç = defterin ilk satırı)", k["geli
 k = carry_anlik.yaz(c, simdi=1003.0, dosya=dosya, defter_dosya=os.path.join(tmp, "yok.jsonl"))
 kontrol("defter yoksa döküm yok, anlık yine yazılır", "gelir_bas" not in k and k["pozisyonlar"])
 
+# MADDE 742: gün içi kitap noktaları (panelin "bugün" eğrisi)
+_gd = os.path.join(tmp, "defter", "anlik_gun.json")
+_gb = 1_794_009_600   # 2026-11-07 00:00 UTC
+carry_anlik.gun_egri_ekle(_gd, _gb - 200, 5000.0)                     # önceki günün son noktası (gün başına 200 sn)
+d = carry_anlik.gun_egri_ekle(_gd, _gb + 100, 5002.0)
+kontrol("gün değişince önceki günün son noktası açılış olur", d == {"gun": "2026-11-07", "nok": [[_gb, 5000.0], [_gb + 100, 5002.0]]}, d)
+d = carry_anlik.gun_egri_ekle(_gd, _gb + 400, 5003.25)
+kontrol("aynı gün nokta eklenir", d["nok"][-1] == [_gb + 400, 5003.25] and len(d["nok"]) == 3)
+d = carry_anlik.gun_egri_ekle(_gd, _gb + 86400 + 3 * 3600, 5010.0)   # bir sonraki gün, 3 sa sonra (sunucu kapalıydı)
+kontrol("eski nokta gün başından uzaksa açılış taşınmaz", d == {"gun": "2026-11-08", "nok": [[_gb + 86400 + 3 * 3600, 5010.0]]}, d)
+open(_gd, "w").write("{bozuk")
+kontrol("bozuk dosya: yeniden başlar", carry_anlik.gun_egri_ekle(_gd, _gb + 50, 1.0)["nok"] == [[_gb + 50, 1.0]])
+for i in range(500):
+    d = carry_anlik.gun_egri_ekle(_gd, _gb + 60 + i, 1.0)
+kontrol("nokta sayısı sınırlı", len(d["nok"]) == 400)
+os.remove(_gd)
+k = carry_anlik.yaz(_S2(), simdi=1003.0, dosya=dosya, defter_dosya=_df)
+_g1 = json.load(open(_gd))
+kontrol("yaz(): gün noktası = özkaynak − transfer", _g1["nok"][-1] == [1003, 5000.0], _g1)
+os.remove(_gd)
+k = carry_anlik.yaz(c, simdi=1004.0, dosya=dosya, defter_dosya=os.path.join(tmp, "yok.jsonl"))
+kontrol("transfer bilinmiyorsa (döküm yok) gün noktası YAZILMAZ", not os.path.exists(_gd))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

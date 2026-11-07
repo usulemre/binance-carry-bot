@@ -31,10 +31,10 @@ kontrol("bozuk defter satırı atlanır", len(k["seri"]) == 4)
 kontrol("toplam getiri zinciri", abs(k["toplam"] - (1.10 * 0.95 * 1.02 - 1)) < 1e-9, k["toplam"])
 kontrol("en büyük düşüş -5%", abs(k["dd"] + 0.05) < 1e-9, k["dd"])
 kontrol("aylık", abs(k["aylik"]["2026-10"] - (1.10 * 0.95 * 1.02 - 1)) < 1e-9)
-kontrol("funding / komisyon toplamı", abs(k["funding_top"] - 4.0) < 1e-9 and abs(k["komisyon_top"] + 0.8) < 1e-9)
+kontrol("funding / komisyon toplamı (ilk satırın penceresi başlangıç öncesi, sayılmaz — madde 742)", abs(k["funding_top"] - 3.0) < 1e-9 and abs(k["komisyon_top"] + 0.6) < 1e-9, (k["funding_top"], k["komisyon_top"]))
 tur = [o["tur"] for o in k["olaylar"]]
-kontrol("olaylar: stop ve hata var, tutulan stop / sıradan satır yok", tur == ["hata", "stop"], tur)
-kontrol("olay zamanı ve seviye ayıklandı", k["olaylar"][1]["zaman"] == "2026-10-02 11:00" and k["olaylar"][1]["metin"].startswith("KOŞULLU"), k["olaylar"][1])
+kontrol("olaylar: stop, tutulan stop (madde 742) ve hata var, sıradan satır yok", tur == ["hata", "stop_tut", "stop"], tur)
+kontrol("olay zamanı ve seviye ayıklandı", k["olaylar"][2]["zaman"] == "2026-10-02 11:00" and k["olaylar"][2]["metin"].startswith("KOŞULLU"), k["olaylar"][2])
 js = json.dumps(v, ensure_ascii=False)
 kontrol("anahtar / token / imza SIZMAZ", not any(x in js for x in ("GIZLIANAHTAR", "GIZLISIR", "GIZLITOKEN", "abc123", "deadbeef")), js[:300])
 kontrol("boş klasör çökmez", panel.veri([os.path.join(tmp, "yok")], servis=False)["kurulumlar"][0]["toplam"] is None)
@@ -177,6 +177,65 @@ _csp = app.get("/").headers["Content-Security-Policy"]
 kontrol("CSP yalnız Binance herkese açık akışı / REST", "connect-src 'self' wss://fstream.binance.com https://fapi.binance.com;" in _csp, _csp)
 _sy = app.get("/").data
 kontrol("sayfada markPrice akışı ve canlı hücre kimlikleri", b"@markPrice@1s" in _sy and b'id="t-${p[0]}"' in _sy and b"fapi/v1/klines" in _sy and b'id="gerc"' in _sy)
+
+# MADDE 742: panel düzeltmeleri
+# (a) getirinin ait olduğu gün: 00:05 UTC'de yazılan satır ÖNCEKİ günündür; kurulum satırı aynı gün, getirisiz
+_z = lambda s: int(__import__("calendar").timegm(__import__("time").strptime(s, "%Y-%m-%d %H:%M")))
+_d41 = [{"tarih": "2026-11-06", "zaman": _z("2026-11-06 20:22"), "ozkaynak": 1000.0, "gun_getiri": None,
+         "gelir_24s": {"FUNDING_FEE": 5.0, "COMMISSION": -9.0}},
+        {"tarih": "2026-11-07", "zaman": _z("2026-11-07 00:05"), "ozkaynak": 999.0, "gun_getiri": -0.001,
+         "gelir_24s": {"FUNDING_FEE": 6.0, "COMMISSION": -9.6}},
+        {"tarih": "2026-11-08", "zaman": _z("2026-11-08 00:05"), "ozkaynak": 1004.0, "gun_getiri": 0.005,
+         "gelir_24s": {"FUNDING_FEE": 2.4, "COMMISSION": -2.4}}]
+_o41 = panel.ozet(_d41)
+kontrol("gün etiketi: 7 Kas 00:05 satırı = 6 Kas, 8 Kas satırı = 7 Kas", [s["tarih"] for s in _o41["seri"]] == ["2026-11-06", "2026-11-06", "2026-11-07"], [s["tarih"] for s in _o41["seri"]])
+kontrol("son gün = 7 Kas +0,5%", _o41["son_gun_tarih"] == "2026-11-07" and _o41["bugun"] == 0.005 and _o41["gun_sayisi"] == 2, _o41)
+_pay = (_z("2026-11-07 00:05") - _z("2026-11-06 20:22")) / 86400
+kontrol("üst üste binen 24 sa pencereleri çift sayılmaz (oransal), ilk satır sayılmaz",
+        abs(_o41["funding_top"] - (6.0 * _pay + 2.4)) < 1e-9 and abs(_o41["komisyon_top"] - (-9.6 * _pay - 2.4)) < 1e-9, (_o41["funding_top"], _o41["komisyon_top"]))
+kontrol("7 / 30 gün: yeterli gün yoksa boş (yanıltmasın)", _o41["g7"] is None and _o41["g30"] is None and abs(_o41["dd"] + 0.001) < 1e-9)
+_d41.append({"tarih": "2026-11-08", "zaman": _z("2026-11-08 09:00"), "ozkaynak": 1006.0, "gun_getiri": 0.002})   # gün içi elle çalıştırma
+_o41 = panel.ozet(_d41)
+kontrol("aynı güne düşen iki getiri tek günde birleşir", len(_o41["seri"]) == 4 and _o41["seri"][-1]["tarih"] == "2026-11-08"
+        and abs(_o41["seri"][-2]["gun"] - 0.005) < 1e-12, [(s["tarih"], s["gun"]) for s in _o41["seri"]])
+_d42 = [{"tarih": f"2026-10-{i+1:02d}", "zaman": _z(f"2026-10-{i+1:02d} 00:05"), "ozkaynak": 100.0, "gun_getiri": None if i == 0 else 0.01} for i in range(9)]
+_o42 = panel.ozet(_d42)
+kontrol("7 gün: 8 günlük veride son 7 günün getirisi", abs(_o42["g7"] - (1.01 ** 7 - 1)) < 1e-9 and _o42["g30"] is None, _o42["g7"])
+# (b) gün içi kitap eğrisi
+_kl3 = tempfile.mkdtemp(); os.makedirs(os.path.join(_kl3, "defter"))
+_gb = 1_794_009_600   # 2026-11-07 00:00 UTC
+kontrol("gün eğrisi dosyası yoksa None", panel.gun_egri(_kl3, _gb + 3600) is None)
+json.dump({"gun": "2026-11-07", "nok": [[_gb, 5000.0], [_gb + 300, 5001.5], [_gb + 600, 4999.0]]}, open(os.path.join(_kl3, "defter", "anlik_gun.json"), "w"))
+_ge = panel.gun_egri(_kl3, _gb + 700)
+kontrol("gün eğrisi: gün başına göre $ fark", _ge == {"bas": _gb, "ilk": _gb, "nok": [[_gb, 0.0], [_gb + 300, 1.5], [_gb + 600, -1.0]]}, _ge)
+kontrol("başka günün dosyası kullanılmaz", panel.gun_egri(_kl3, _gb + 86400 + 60) is None)
+open(os.path.join(_kl3, "defter", "anlik_gun.json"), "w").write("{bozuk")
+kontrol("bozuk gün dosyası çökmez", panel.gun_egri(_kl3, _gb + 700) is None)
+_sy3 = app.get("/").data.decode()
+kontrol("bugün eğrisi kitaptan (gun_egri), açık pozisyonları 03:00'ten tutulmuş saymaz", "k.gun_egri" in _sy3 and "p.miktar * (f - N[0][1])" not in _sy3)
+# (c) olaylar: her ERROR, kâr al, piyasa emri, dilim turu; tutulan stop günde bir
+_kl4 = tempfile.mkdtemp()
+open(os.path.join(_kl4, "carry_bot.log"), "w", encoding="utf-8").write(
+    "2026-11-06 17:54:58,372 [ERROR] KÂR AL EMRİ KONULAMADI: 8/8 pozisyon KORUMASIZ (AUSDT)\n"
+    "2026-11-06 18:14:45,801 [ERROR] TACUSDT ÇAPRAZ teminata alınamadı (APIError(code=-4067))\n"
+    "2026-11-06 20:22:33,409 [INFO] KOŞULLU 24 SA STOP: AINUSDT 24 sa -60.2% ama piyasa +0.7% (eşik −3%) -> tutuluyor\n"
+    "2026-11-06 20:58:06,956 [INFO] KOŞULLU 24 SA STOP: AINUSDT 24 sa -60.2% ama piyasa +0.7% (eşik −3%) -> tutuluyor\n"
+    "2026-11-07 05:05:33,882 [WARNING] dolum kontrolü 2: 1 emir dolmadı - PİYASA emrine düşülüyor\n"
+    "2026-11-07 05:06:00,000 [INFO] bakiye 2001.00 USDT | dilim 3/15 yenilendi | 12 pozisyon | LONG funding ort %-5/yıl\n"
+    "2026-11-07 06:00:00,000 [INFO] KÂR AL doldu: AINUSDT - eski dilimlerden çıkarıldı\n"
+    "2026-11-07 06:00:01,000 [INFO] MERDİVEN doldu (%50'i kapandı; long +%45 / short −%15): AINUSDT - hedefler küçültüldü\n"
+    "2026-11-07 07:00:00,000 [INFO] evren: 30 sembol\n")
+_t4 = [o["tur"] for o in panel.olaylar(_kl4)]
+kontrol("olaylar: ERROR satırları, kâr al, piyasa emri, dilim turu; tutulan stop günde bir",
+        _t4 == ["tp", "tp", "tur", "uyari", "stop_tut", "hata", "hata"], _t4)
+# (d) ayar kartı: koşullu stopun coin eşiği
+open(os.path.join(kl, ".env"), "a").write("CARRY_LONG_24S=0.40\n")
+open(os.path.join(kl, "carry_bot.log"), "a").write(
+    "2026-11-06 20:50:17,342 [INFO] önerilen ayar etkin: profil T7K · gross 1.15x · koşullu stop 0.03 (kitap 2000.04 $)\n"
+    "2026-11-06 20:50:18,347 [INFO] carry_bot başladı | mod=demo | 4+4 bacak | 15 dilim | gross 1.15x | akış 20%\n")
+_ay = panel.veri([kl], servis=False)["kurulumlar"][0]["ayar"]
+kontrol("ayarda koşullu stopun coin eşiği (.env)", _ay["coin_esik"] == 0.40 and _ay["stop"] == 0.03, _ay)
+kontrol("ayar kartı stopu açık yazar ('koşullu stop %3' değil)", "stop: coin −%" in _sy3 and "koşullu stop %${" not in _sy3)
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

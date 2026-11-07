@@ -20,7 +20,29 @@ from carry_gunluk_defter import DEFTER_DOSYA, DEFTER_KLASOR, _pozisyonlar
 
 ANLIK_DOSYA = os.path.join(DEFTER_KLASOR, "anlik.json")
 BIRIKIM_DOSYA = os.path.join(DEFTER_KLASOR, "gelir_birikim.json")
+GUN_DOSYA = os.path.join(DEFTER_KLASOR, "anlik_gun.json")
 ORTUSME_MS = 10 * 60 * 1000   # geç düşen gelir kaydı kaçmasın: son 10 dk yeniden sorulur, tranId ile tekilleşir
+GUN_DEVIR_SN = 15 * 60        # önceki günün son noktası gün başına bu kadar yakınsa yeni günün açılış değeri olur
+
+
+def gun_egri_ekle(dosya: str, simdi: float, deger: float) -> dict:
+    """MADDE 742: panelin "bugün" eğrisi için gün içi kitap noktası. deger = özkaynak − başlangıçtan beri transfer
+    (yatırma / çekme eğride sıçrama yapmasın). Gün = UTC günü (00:00 UTC = 03:00 TR); gün değişince dosya sıfırlanır.
+    Önceki günün son noktası yeni günün başına GUN_DEVIR_SN'den yakınsa gün başı (açılış) değeri olarak taşınır."""
+    bas = int(simdi) // 86400 * 86400
+    gun = time.strftime("%Y-%m-%d", time.gmtime(bas))
+    try:
+        with open(dosya, encoding="utf-8") as f:
+            d = json.load(f)
+        nok = [[int(t), float(v)] for t, v in d.get("nok") or []]
+    except (OSError, ValueError, TypeError, AttributeError):
+        d, nok = {}, []
+    if d.get("gun") != gun:
+        nok = [[bas, nok[-1][1]]] if nok and bas - GUN_DEVIR_SN <= nok[-1][0] < bas else []
+    nok.append([int(simdi), round(float(deger), 4)])
+    d = {"gun": gun, "nok": nok[-400:]}
+    _atomik_yaz(dosya, d)
+    return d
 
 
 def _ilk_zaman(defter_dosya: str) -> int | None:
@@ -106,6 +128,12 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
         except Exception as ex:
             print(f"UYARI: gelir birikimi güncellenemedi: {ex}", file=sys.stderr)
     _atomik_yaz(dosya, kayit)
+    if "gelir_bas" in kayit:   # madde 742: transfer bilinmeden nokta yazılmaz (yatırma eğride kâr gibi görünmesin)
+        try:
+            gun_egri_ekle(os.path.join(os.path.dirname(dosya) or ".", "anlik_gun.json"), simdi,
+                          oz - float(kayit["gelir_bas"].get("TRANSFER", 0.0) or 0.0))
+        except Exception as ex:
+            print(f"UYARI: gün içi kitap noktası yazılamadı: {ex}", file=sys.stderr)
     return kayit
 
 
