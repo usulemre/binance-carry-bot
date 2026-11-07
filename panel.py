@@ -829,7 +829,7 @@ function ayarKart(k){
   const ce = A.coin_esik!=null ? A.coin_esik : 0.45;
   const st = A.stop!=null ? `stop: coin −%${Math.round(ce*100)} ve piyasa −%${Math.round(A.stop*100)}` : "koşullu stop yok";
   const ac = A.stop!=null ? `24 saatlik koşullu stop: long, coin 24 saatte −%${Math.round(ce*100)} düştüğünde VE piyasanın ortanca 24 sa getirisi −%${Math.round(A.stop*100)} ya da daha kötüyken kapanır. Tek coin çöküşünde (piyasa sakinken) kapanmaz.` : "";
-  return `<div class="d">${ad} · ${A.gross.toFixed(2).replace(".",",")}x</div><span class="k" title="${ac}">${st}</span>`;
+  return `<div class="d">${ad} · ${A.gross.toFixed(2).replace(".",",")}x</div><span class="k" style="white-space:normal" title="${ac}">${st}</span>`;
 }
 function dilimKart(D){
   if (!D) return `<div class="d">—</div>`;
