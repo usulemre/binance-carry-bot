@@ -369,7 +369,8 @@ nav.alt button.on{background:color-mix(in srgb,var(--vurgu) 14%,transparent);col
 .kutu .f{font-size:17px;font-weight:600;font-variant-numeric:tabular-nums;margin-top:2px;border-radius:5px;padding:0 3px;margin-left:-3px;display:inline-block}
 .kutu .gr{font-size:11px;color:var(--soluk);font-variant-numeric:tabular-nums}
 .kutu .y{font-size:15px;font-weight:700;font-variant-numeric:tabular-nums;margin-top:2px}.kutu .y small{font-size:11px;font-weight:500}
-.kutu svg{width:100%;height:46px;display:block;margin-top:6px;overflow:visible}
+.kutu svg{width:100%;height:64px;display:block;margin-top:8px;overflow:visible}
+.grbekle{height:64px;margin-top:8px;display:flex;align-items:center;justify-content:center;font-size:11px;color:var(--soluk);border-radius:8px;background:var(--kart2)}
 .hedef{margin-top:6px}.hedef .c{height:4px;border-radius:9px;background:var(--kart2);overflow:hidden}.hedef .c span{display:block;height:100%;background:var(--art);border-radius:9px}
 .hedef .t{font-size:10.5px;color:var(--soluk);margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .yukari{animation:yk .9s ease-out}.asagi{animation:as .9s ease-out}
@@ -465,14 +466,16 @@ async function mumYukle(k){
   const S = Object.keys((k && k.pozisyonlar) || {}), a = S.slice().sort().join(",");
   if (VERI_GOMULU || !S.length || (a===mumAnahtar && Date.now()-mumZaman < 15*60e3)) return;
   mumAnahtar = a; mumZaman = Date.now();
+  let gelen = 0;
   await Promise.all(S.map(async s => { try {
-    const d = await (await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=15m&limit=96`)).json();
-    if (Array.isArray(d)) MUM[s] = d.map(x=>+x[4]).filter(v=>v>0);
+    const d = await (await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=15m&limit=96`, {cache:"no-store"})).json();
+    if (Array.isArray(d) && d.length){ MUM[s] = d.map(x=>+x[4]).filter(v=>v>0); gelen++; }
   } catch(_){} }));
+  if (gelen < S.length) mumZaman = Date.now() - 14*60e3;   // madde 738: eksik geldiyse 1 dk sonra yeniden dene
   canliBoya();
 }
 const fiyatYaz = v => v==null ? "—" : v.toLocaleString("tr-TR", v>=1000 ? {minimumFractionDigits:2,maximumFractionDigits:2} : {minimumSignificantDigits:5,maximumSignificantDigits:5});
-function cizgi(seri, W, H, renk, yatay){
+function cizgi(seri, W, H, renk, yatay, kimlik="c"){
   // seri: sayılar; yatay: kesikli referans çizgisi (giriş fiyatı / başlangıç kitabı)
   if (!seri || seri.length < 2) return `<svg viewBox="0 0 ${W} ${H}"></svg>`;
   const hepsi = yatay!=null ? seri.concat([yatay]) : seri;
@@ -481,14 +484,16 @@ function cizgi(seri, W, H, renk, yatay){
   const yol = seri.map((v,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
   const sx = x(seri.length-1), sy = y(seri[seri.length-1]);
   return `<svg viewBox="0 0 ${W} ${H}" preserveAspectRatio="none">
-    <path d="${yol}L${sx.toFixed(1)},${H}L0,${H}Z" fill="${renk}" opacity=".12"/>
+    <defs><linearGradient id="gd-${kimlik}" x1="0" y1="0" x2="0" y2="1"><stop offset="0" stop-color="${renk}" stop-opacity=".38"/><stop offset="1" stop-color="${renk}" stop-opacity="0"/></linearGradient></defs>
+    <path d="${yol}L${sx.toFixed(1)},${H}L0,${H}Z" fill="url(#gd-${kimlik})"/>
     ${yatay!=null?`<line x1="0" x2="${W}" y1="${y(yatay).toFixed(1)}" y2="${y(yatay).toFixed(1)}" stroke="${css("--soluk")}" stroke-dasharray="3 3" stroke-width="1" vector-effect="non-scaling-stroke"/>`:""}
-    <path d="${yol}" fill="none" stroke="${renk}" stroke-width="1.8" vector-effect="non-scaling-stroke" stroke-linejoin="round"/>
+    <path d="${yol}" fill="none" stroke="${renk}" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>
     <circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="3" fill="${renk}"/></svg>`;
 }
 function kivilcim(s, p, f, renk){
   const seri = (MUM[s]||[]).slice(); if (f){ if (seri.length) seri[seri.length-1] = f; else seri.push(f); }
-  return cizgi(seri, 160, 46, renk, p.giris>0 ? p.giris : null);
+  if (seri.length < 2) return `<div class="grbekle">grafik yükleniyor…</div>`;
+  return cizgi(seri, 160, 64, renk, p.giris>0 ? p.giris : null, s);
 }
 // MADDE 737: kâr al hedefine ilerleme. Long: giriş -> giriş x (1 + kademe); short: giriş -> giriş x (1 − kademe).
 function hedefCubuk(k, p, f){
@@ -592,7 +597,7 @@ function ozetSayfa(k, svc, sv){
     <div class="ust"><span class="k">Kitap</span>${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div>
     <div class="buyuk" id="kitapd">${para(k.kitap_canli!=null?k.kitap_canli:k.kitap)}</div>
     ${k.kar_usd!=null?`<div><span id="karusd" class="kar ${sinif(k.kar_usd)}">${isaretli(k.kar_usd)} (${yz(k.kar_oran)})</span> <span class="k">başlangıç ${para(k.kitap_bas)}</span></div>`:""}
-    ${kit.length>=2?`<svg class="kitapc" viewBox="0 0 300 56" preserveAspectRatio="none">${cizgi(kit, 300, 56, css((kit[kit.length-1]-kit[0])>=0?"--art":"--eks"), kit[0]).replace(/^<svg[^>]*>|<\/svg>$/g,"")}</svg>`:""}
+    ${kit.length>=2?`<svg class="kitapc" viewBox="0 0 300 56" preserveAspectRatio="none">${cizgi(kit, 300, 56, css((kit[kit.length-1]-kit[0])>=0?"--art":"--eks"), kit[0], "kitap").replace(/^<svg[^>]*>|<\/svg>$/g,"")}</svg>`:""}
     <div class="cipler">${cip(`Son gün${k.son_tarih?" · "+k.son_tarih.slice(8,10)+" "+AYAD[+k.son_tarih.slice(5,7)-1].slice(0,3):""}`, yz(k.bugun), sinif(k.bugun))}${cip("7 gün", yz(k.g7), sinif(k.g7))}${cip("30 gün", yz(k.g30), sinif(k.g30))}${cip("En büyük düşüş", yz(k.dd), k.dd<0?"eks":"")}</div>
     <div class="bilgi"><div class="cip"><div class="e">Ayar</div>${ayarKart(k)}</div><div class="cip"><div class="e">Sonraki dilim</div><div id="dilimsure">${dilimKart(k.dilim)}</div></div></div>
   </div>
@@ -650,11 +655,11 @@ matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>VERI &
 </script></body></html>"""
 
 
-SW_JS = """const K="carry-kabuk-v1";
+SW_JS = """const K="carry-kabuk-v2";
 self.addEventListener("install",e=>{e.waitUntil(caches.open(K).then(c=>c.addAll(["./","ikon-192.png","ikon-512.png"])));self.skipWaiting();});
 self.addEventListener("activate",e=>{e.waitUntil(caches.keys().then(a=>Promise.all(a.filter(x=>x!==K).map(x=>caches.delete(x)))));self.clients.claim();});
 self.addEventListener("fetch",e=>{const u=new URL(e.request.url);
-  if(e.request.method!=="GET"||u.pathname.includes("/api/")||u.pathname.includes("/paket/"))return;   // veri ve paket önbelleğe ALINMAZ
+  if(u.origin!==location.origin||e.request.method!=="GET"||u.pathname.includes("/api/")||u.pathname.includes("/paket/"))return;   // madde 738: Binance vb. dış istekler SW'den GEÇMEZ   // veri ve paket önbelleğe ALINMAZ
   e.respondWith(fetch(e.request).then(r=>{const k=r.clone();caches.open(K).then(c=>c.put(e.request,k));return r;}).catch(()=>caches.match(e.request)));});
 """
 IKON_192 = "iVBORw0KGgoAAAANSUhEUgAAAMAAAADACAIAAADdvvtQAAADUElEQVR42u3dsW0UQRTHYYwuRwTIogCaoAoaQBc7pwzyiy0aoAqaoAB0XRBYcnLIXnZmZ9689/0ihJCxuE//2ZWP27t37z+8kfb21j+BABJAAkgASQAJIAEkgCSABJAAEkASQAJIAAkgCSABJIAEkACSABJAAkgASQAJIAEkgCSABJAAEkASQAJIATr5J8jap59fb3/z95cfff+WO5/SWoTOQYwcYeX0bPwzANEzwhBAFfV0NARQUT29DAFUV08XQwDJAgkgzTqDGr8CQLJAAkgAaULny3XuN+Cn8ehYoNp6Pv/53vjVWn44D5DtcYSh4whTi56WU6zxzWUAJdmefYba35roLa2pjq1fH7+N1GOBsl30bN+hXm+LBijbJfMWQx3fVO8uLNvd1uPD/dMv/LceevbrGZYFSkJnih6ADI+LaHrm6bFAji2ADM/UHGH0WCB0LBA9K+qxQK6XATI8jjB6FtVjgRxbABkeRxg9i+oBiB5HWKLWomOBYs3PinosUAg9i9KxQI4tgBafn9X1OMKm6UlAxwI5tgBacH4y6QGIHoAEkPkBiJ6KegASQOYHIHoAkiNM5gcgegASQOanxvwARA9AAsj8AERPRT0ACSDzAxA9AMkRJvMDED2DO+V4dSu/hHNb73FPLwxDR0bmJyegja9r44tKT85roO2v6/lyDfiIdQu0hp7GnTA/CQF1mZMtrzc9Ce/Ceh1Gz1/Ha19lgQ69jrllZH5SARp2FfykgZ5UR9jIeyj3a9lu4yO/ouYnOiB6AHKauAZaRM/zJAyQZ35C34V1+YTl4xjRE3qBen0+98hBUpQFOu7T3XsxMj9BAQ17Lkmdp3cVugsb+VSbx4d7DlIt0NxnIvmpxdqAgjxR69Vvg56IgAI+j+2f3xI9EQFFfprf+XKFJjSgas+CLNIpph503MbTAxA9mniEueixQPRoBiB6AKJHMwDRA1BT/6uBHoD2m6AnQUf9KOPlswwdC7R/XegBaNxFkuoCurVCD0D7DdED0H5D9LgLkwJcRAsgCSABJIAEkACSABJAAkgASQAJIAEkgCSABJAAEkASQAJIAAkgCSABJIAEkACSABJAAkgASQAJIAEkgCSABJAAEkASQAJIAAkg1e0vEmVbz2lwGEEAAAAASUVORK5CYII="

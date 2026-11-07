@@ -160,6 +160,9 @@ _a = panel.etkin_ayar(_kl2)
 kontrol("sabit profil: önceki önerilen satırı karışmaz", _a == {"profil": None, "gross": 1.3, "stop": None, "onerilen": False}, _a)
 _sy = app.get("/").data
 kontrol("sayfada ayar kartı, eski 'ayar ONERILEN' başlığı yok", b"ayarKart" in _sy and b"Kitap ($) \xc2\xb7 ayar" not in _sy)
+# MADDE 738: SW dış istekleri (Binance) yakalamaz; sürüm değişti (eski SW eski CSP ile Binance'i engelliyordu)
+_swj = app.get("/sw.js").data.decode()
+kontrol("SW dış kaynaklı isteğe karışmaz", "u.origin!==location.origin" in _swj and "carry-kabuk-v2" in _swj)
 # MADDE 732: anlık fiyat (tarayıcı -> Binance herkese açık akış)
 _csp = app.get("/").headers["Content-Security-Policy"]
 kontrol("CSP yalnız Binance herkese açık akışı / REST", "connect-src 'self' wss://fstream.binance.com https://fapi.binance.com;" in _csp, _csp)
