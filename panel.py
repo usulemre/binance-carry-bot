@@ -54,6 +54,35 @@ _ZAMAN = re.compile(r"^(\d{4}-\d{2}-\d{2}[ T]\d{2}:\d{2}):\d{2}(?:[,.]\d+)?\s*(?
 _GIZLI = re.compile(r"(api[_-]?key|secret|signature|token)\S*", re.I)
 
 
+_AYAR_ETKIN = re.compile(r"önerilen ayar etkin: profil (\S+) · gross ([\d.]+)x · koşullu stop ([\d.]+)")
+_BASLADI = re.compile(r"carry_bot başladı \|.*?\| gross ([\d.]+)x")
+
+
+def etkin_ayar(klasor: str, son_bayt: int = 5_000_000) -> dict | None:
+    """MADDE 734: botun SON başlangıçta GERÇEKTE kullandığı ayar (log'dan). Defterdeki profil / doz .env'deki
+    ham değerdir (ör. ONERILEN 1.0) — önerilen modda seçilen profil (T7K 1.15x + koşullu stop) orada görünmez."""
+    try:
+        with open(os.path.join(klasor, "carry_bot.log"), "rb") as f:
+            f.seek(0, 2); n = f.tell(); f.seek(max(0, n - son_bayt))
+            satirlar = f.read().decode("utf-8", "replace").splitlines()
+    except OSError:
+        return None
+    for i in range(len(satirlar) - 1, -1, -1):
+        m = _BASLADI.search(satirlar[i])
+        if not m:
+            continue
+        out = {"profil": None, "gross": float(m.group(1)), "stop": None, "onerilen": False}
+        for s in reversed(satirlar[max(0, i - 5):i]):   # önerilen mod: seçim satırı başlangıçtan hemen önce yazılır
+            if _BASLADI.search(s) or "ÖNERİLEN AYAR" in s:   # önceki başlangıç / yeniden başlatma: bu başlangıca ait değil
+                break
+            a = _AYAR_ETKIN.search(s)
+            if a:
+                out.update(profil=a.group(1), gross=float(a.group(2)), stop=float(a.group(3)), onerilen=True)
+                break
+        return out
+    return None
+
+
 def kurulumlar(kok: str = "/opt") -> list[str]:
     out = [os.path.join(kok, "carry")] if os.path.exists(os.path.join(kok, "carry", "carry_bot.py")) else []
     out += [d for d in sorted(glob.glob(os.path.join(kok, "carry-*"))) if os.path.exists(os.path.join(d, "carry_bot.py"))]
@@ -254,7 +283,8 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         ad = e.get("CARRY_BILDIRIM_AD") or (b[len("carry-"):] if b.startswith("carry-") else "ana")
         df = defter_oku(kl); o = ozet(df)
         o.update({"ad": ad, "mod": e.get("BINANCE_MODE", "demo"), "servis": servis_durumu(kl) if servis else "—",
-                  "olaylar": olaylar(kl), "icra": icra(kl), "dilim": sonraki_dilim(kl, e)})
+                  "olaylar": olaylar(kl), "icra": icra(kl), "dilim": sonraki_dilim(kl, e),
+                  "ayar": etkin_ayar(kl)})
         an = anlik_oku(kl)
         o.update(hesap_ozet(df, an))
         if an is not None:   # madde 728: canlı pozisyon tablosu
@@ -289,7 +319,7 @@ padding:6px 12px;border-radius:999px;cursor:pointer;font:inherit}.sekme button.o
 .art{color:var(--art)}.eks{color:var(--eks)}
 .iki{display:grid;grid-template-columns:2fr 1fr;gap:12px;margin-bottom:12px}@media(max-width:820px){.iki{grid-template-columns:1fr}}
 .kart h2{font-size:13px;margin:0 0 8px;color:var(--soluk);font-weight:600}
-.grafik{position:relative;height:260px}
+.grafik{position:relative;height:190px}
 table{width:100%;border-collapse:collapse;font-variant-numeric:tabular-nums}td,th{padding:4px 6px;border-bottom:1px solid var(--cizgi);text-align:right;font-size:13px}
 th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-x:auto}
 .olay{display:flex;gap:8px;align-items:flex-start;padding:6px 0;border-bottom:1px solid var(--cizgi);font-size:13px}.olay .z{color:var(--soluk);white-space:nowrap;font-size:12px}
@@ -394,6 +424,12 @@ function dokumYaz(k, poz, kar){
   return `pozisyonlar ${ps(poz)}` + (Math.abs(D.gerceklesen)>=0.005?` · gerçekleşen ${ps(D.gerceklesen)}`:"")
     + ` · funding ${ps(D.funding)} · komisyon ${ps(D.komisyon)}` + (Math.abs(diger)>=0.005?` · diğer ${ps(diger)}`:"") + " $";
 }
+function ayarKart(k){
+  const A = k.ayar;
+  if (!A) return `<div class="d">${k.profil||"—"}</div><div class="k">${k.doz?k.doz+"x":""}</div>`;
+  const ad = A.profil || k.profil || "—";
+  return `<div class="d">${ad} · ${A.gross.toFixed(2).replace(".",",")}x</div><div class="k">${A.stop!=null?`koşullu stop %${(A.stop*100).toFixed(0)}`:"koşullu stop yok"}${A.onerilen?" · önerilen ayar":""}</div>`;
+}
 function dilimKart(D){
   if (!D) return `<div class="d">—</div>`;
   const kalan = D.zaman - Date.now()/1000;
@@ -428,20 +464,22 @@ function ciz(){
   const sat = (p) => p ? `<td class="l">${p[0].replace("USDT","")}</td><td id="u-${p[0]}">${para(p[1].usd)}</td><td id="k-${p[0]}" class="${p[1].kar_yuzde==null?'':sinif(p[1].kar_yuzde)}">${p[1].kar_yuzde==null?"—":(p[1].kar_yuzde>=0?"+":"")+p[1].kar_yuzde.toFixed(1)+"%"}</td>` : "<td></td><td></td><td></td>";
   let poz = ""; for(let i=0;i<Math.max(L.length,S.length);i++) poz += `<tr>${sat(L[i])}${sat(S[i])}</tr>`;
   const ay = Object.entries(k.aylik||{}).sort((a,b)=>b[0].localeCompare(a[0]));
+  const grafikVar = (k.seri||[]).length >= 3;   // madde 734: 1-2 noktalık çizgi bilgi vermez, yalnız yer kaplar
   $("#icerik").innerHTML = `
   <div class="izgara">
     <div class="kart"><div class="e">Kitap ${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div><div class="d" id="kitapd">${para(k.kitap_canli!=null?k.kitap_canli:k.kitap)}</div>
       ${k.kar_usd!=null?`<div class="k">başlangıç ${para(k.kitap_bas)} · <b id="karusd" class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)} (${yz(k.kar_oran)})</b></div>`:""}
       ${k.dokum&&k.gerceklesmemis!=null?`<div class="k" id="dokum">${dokumYaz(k, k.gerceklesmemis, k.kar_usd)}</div>`:""}</div>
     <div class="kart"><div class="e">Sonraki dilim</div>${dilimKart(k.dilim)}</div>
+    <div class="kart"><div class="e">Ayar</div>${ayarKart(k)}</div>
     <div class="kart"><div class="e">Son gün (${k.son_tarih||"—"})</div><div class="d ${sinif(k.bugun)}">${yz(k.bugun)}</div></div>
     <div class="kart"><div class="e">Son 7 gün</div><div class="d ${sinif(k.g7)}">${yz(k.g7,1)}</div></div>
     <div class="kart"><div class="e">Son 30 gün</div><div class="d ${sinif(k.g30)}">${yz(k.g30,1)}</div></div>
     <div class="kart"><div class="e">Başlangıçtan</div><div class="d ${sinif(k.toplam)}">${yz(k.toplam,1)}</div></div>
     <div class="kart"><div class="e">En büyük düşüş</div><div class="d eks">${yz(k.dd,1)}</div></div>
   </div>
-  <div class="iki">
-    <div class="kart"><h2>Kitap ($) · ayar ${k.profil||"—"} ${k.doz||""}x</h2><div class="grafik"><canvas id="g1"></canvas></div></div>
+  <div class="${grafikVar?'iki':''}" style="margin-bottom:12px">
+    ${grafikVar?`<div class="kart"><h2>Kitap ($)</h2><div class="grafik"><canvas id="g1"></canvas></div></div>`:""}
     <div class="kart"><h2>Aylık getiri</h2><div class="tablo"><table class="ayt"><tr><th class="l">Ay</th><th>Getiri</th></tr>
       ${ay.map(a=>`<tr><td class="l">${a[0]}</td><td ${isi(a[1],0.30)}><b>${yz(a[1],1)}</b></td></tr>`).join("") || "<tr><td class='l bos' colspan=2>—</td></tr>"}</table></div>
       ${(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:8px">Toplam funding ${para(k.funding_top)} · komisyon ${para(k.komisyon_top)}</div>`:""}</div>
@@ -461,7 +499,7 @@ function ciz(){
   const x = k.seri.map(s=>s.tarih), izg = css("--cizgi"), sol = css("--soluk");
   const ortak = {responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},
     scales:{x:{ticks:{color:sol,maxTicksLimit:innerWidth<600?4:8,maxRotation:0,autoSkip:true},grid:{display:false}},y:{ticks:{color:sol},grid:{color:izg}}}};
-  grafikler.push(new Chart($("#g1"),{type:"line",data:{labels:x,datasets:[{data:k.seri.map(s=>s.kitap),borderColor:css("--vurgu"),borderWidth:2,pointRadius:0,fill:false,tension:.15}]},
+  if ($("#g1")) grafikler.push(new Chart($("#g1"),{type:"line",data:{labels:x,datasets:[{data:k.seri.map(s=>s.kitap),borderColor:css("--vurgu"),borderWidth:2,pointRadius:0,fill:false,tension:.15}]},
     options:{...ortak,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>para(c.parsed.y)}}}}}));
   grafikler.push(new Chart($("#g2"),{type:"bar",data:{labels:x,datasets:[{data:k.seri.map(s=>s.gun==null?null:s.gun*100),
     backgroundColor:k.seri.map(s=>(s.gun||0)>=0?css("--art"):css("--eks"))}]},

@@ -143,6 +143,23 @@ _an3["gelir_bas"]["bas"] = 99
 kontrol("başlangıç farklı kayıttansa döküm yok", "dokum" not in panel.hesap_ozet(_dk, _an3))
 kontrol("anlık yoksa döküm yok", "dokum" not in panel.hesap_ozet(_dk, None))
 kontrol("sayfada döküm satırı", b"dokumYaz" in app.get("/").data)
+# MADDE 734: etkin ayar log'dan
+_kl2 = tempfile.mkdtemp()
+kontrol("log yoksa etkin ayar None", panel.etkin_ayar(_kl2) is None)
+open(os.path.join(_kl2, "carry_bot.log"), "w", encoding="utf-8").write(
+    "2026-11-06 20:14:56,734 [INFO] önerilen ayar etkin: profil T5 · gross 1.00x · koşullu stop 0.05 (kitap 9000 $)\n"
+    "2026-11-06 20:14:56,737 [INFO] carry_bot başladı | mod=demo | 5+5 bacak | 15 dilim | gross 1.0x | akış 20%\n"
+    "2026-11-06 20:50:17,342 [INFO] önerilen ayar etkin: profil T7K · gross 1.15x · koşullu stop 0.03 (kitap 2000.04 $)\n"
+    "2026-11-06 20:50:18,347 [INFO] carry_bot başladı | mod=demo | 4+4 bacak (en çok 5+5) | 15 dilim | her dilim 120sa'te bir (tur: 8sa) | gross 1.15x | akış 20%\n"
+    "2026-11-06 20:51:10,177 [INFO] bakiye 2000.03 USDT | dilim 2/15 yenilendi\n")
+_a = panel.etkin_ayar(_kl2)
+kontrol("SON başlangıçtaki önerilen ayar", _a == {"profil": "T7K", "gross": 1.15, "stop": 0.03, "onerilen": True}, _a)
+open(os.path.join(_kl2, "carry_bot.log"), "a", encoding="utf-8").write(
+    "2026-11-07 10:00:00,000 [INFO] carry_bot başladı | mod=demo | 5+5 bacak | 15 dilim | gross 1.30x | akış 20%\n")
+_a = panel.etkin_ayar(_kl2)
+kontrol("sabit profil: önceki önerilen satırı karışmaz", _a == {"profil": None, "gross": 1.3, "stop": None, "onerilen": False}, _a)
+_sy = app.get("/").data
+kontrol("sayfada ayar kartı, eski 'ayar ONERILEN' başlığı yok", b"ayarKart" in _sy and b"Kitap ($) \xc2\xb7 ayar" not in _sy)
 # MADDE 732: anlık fiyat (tarayıcı -> Binance herkese açık akış)
 _csp = app.get("/").headers["Content-Security-Policy"]
 kontrol("CSP yalnız Binance herkese açık akışına izin verir", "connect-src 'self' wss://fstream.binance.com;" in _csp, _csp)
