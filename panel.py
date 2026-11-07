@@ -346,6 +346,39 @@ function takvim(k){
     <div class="k" style="margin-top:8px">kazanç günü <b class="art">${art_}</b> · kayıp günü <b class="eks">${eks_}</b> / ${g.length} ·
     en iyi ${+eniyi.tarih.slice(8,10)} ${AYAD[m-1]} <span class="art">${yz(eniyi.gun,2)}</span> · en kötü ${+enkotu.tarih.slice(8,10)} ${AYAD[m-1]} <span class="${sinif(enkotu.gun)}">${yz(enkotu.gun,2)}</span></div>`;
 }
+// MADDE 732: ANLIK FİYAT. Pozisyon listesi (miktar, giriş) sunucudan; işaret fiyatı tarayıcıdan Binance'in HERKESE AÇIK
+// akışından (wss://fstream.binance.com/market — eski /stream adresi bağlanıp veri göndermiyor; anahtarsız, saniyede bir). Panel yine emir veremez, anahtar görmez.
+let WS = null, WSK = "", FIYAT = {}, wsZaman = 0;
+function canliBagla(k){
+  if (VERI_GOMULU || !window.WebSocket) return;
+  const P = k && k.poz_kaynak=="canlı" ? Object.entries(k.pozisyonlar||{}).filter(p=>p[1].giris>0 && p[1].miktar) : [];
+  const anahtar = P.map(p=>p[0]).sort().join(",");
+  if (anahtar===WSK && WS && WS.readyState<=1) return;
+  if (WS){ WS.onclose = null; WS.close(); WS = null; }
+  WSK = anahtar; if (!anahtar) return;
+  WS = new WebSocket("wss://fstream.binance.com/market/stream?streams=" + P.map(p=>p[0].toLowerCase()+"@markPrice@1s").join("/"));
+  WS.onmessage = e => { try { const d = JSON.parse(e.data).data; if (d && d.s && +d.p>0){ FIYAT[d.s] = +d.p; wsZaman = Date.now(); } } catch(_){} };
+  WS.onclose = () => { WS = null; WSK = ""; setTimeout(()=>canliBagla(VERI && VERI.kurulumlar[secili]), 5000); };
+}
+function canliBoya(){
+  const k = VERI && VERI.kurulumlar[secili]; if (!k || k.poz_kaynak!="canlı") return;
+  let top = 0, n = 0;
+  for (const [s,p] of Object.entries(k.pozisyonlar||{})){
+    const f = FIYAT[s], ok = f && p.giris>0 && p.miktar;
+    top += ok ? p.miktar * (f - p.giris) : (p.gerceklesmemis||0);
+    if (!ok) continue; n++;
+    const ky = (f/p.giris - 1) * (p.miktar>0 ? 1 : -1) * 100;
+    const eu = document.getElementById("u-"+s), ek = document.getElementById("k-"+s);
+    if (eu) eu.textContent = para(Math.abs(p.miktar) * f);
+    if (ek){ ek.textContent = (ky>=0?"+":"") + ky.toFixed(1) + "%"; ek.className = sinif(ky); }
+  }
+  if (!n) return;
+  const fark = top - (k.gerceklesmemis||0), eg = $("#gerc"), ec = $("#canli"), ekd = $("#kitapd"), eku = $("#karusd");
+  if (eg){ eg.textContent = para(top); eg.className = sinif(top); }
+  if (ekd && k.kitap_canli!=null) ekd.textContent = para(k.kitap_canli + fark);
+  if (eku && k.kar_usd!=null){ const ku = k.kar_usd + fark; eku.textContent = `${ku>=0?"+":""}${para(ku)} (${yz(k.kitap_bas ? ku/k.kitap_bas : null)})`; eku.className = sinif(ku); }
+  if (ec) ec.textContent = Date.now() - wsZaman < 5000 ? "● anlık" : "";
+}
 function dilimKart(D){
   if (!D) return `<div class="d">—</div>`;
   const kalan = D.zaman - Date.now()/1000;
@@ -377,13 +410,13 @@ function ciz(){
   const k = K[secili]; if(!k){ $("#icerik").innerHTML = "<div class='kart bos'>Henüz kurulum / defter yok.</div>"; return; }
   const sv = k.servis; const svc = sv=="active" ? "ok" : (sv=="—"||sv=="?" ? "" : "yok");
   const P = Object.entries(k.pozisyonlar||{}); const L = P.filter(p=>p[1].yon=="L").sort((a,b)=>b[1].usd-a[1].usd), S = P.filter(p=>p[1].yon=="S").sort((a,b)=>b[1].usd-a[1].usd);
-  const sat = (p) => p ? `<td class="l">${p[0].replace("USDT","")}</td><td>${para(p[1].usd)}</td><td class="${p[1].kar_yuzde==null?'':sinif(p[1].kar_yuzde)}">${p[1].kar_yuzde==null?"—":(p[1].kar_yuzde>=0?"+":"")+p[1].kar_yuzde.toFixed(1)+"%"}</td>` : "<td></td><td></td><td></td>";
+  const sat = (p) => p ? `<td class="l">${p[0].replace("USDT","")}</td><td id="u-${p[0]}">${para(p[1].usd)}</td><td id="k-${p[0]}" class="${p[1].kar_yuzde==null?'':sinif(p[1].kar_yuzde)}">${p[1].kar_yuzde==null?"—":(p[1].kar_yuzde>=0?"+":"")+p[1].kar_yuzde.toFixed(1)+"%"}</td>` : "<td></td><td></td><td></td>";
   let poz = ""; for(let i=0;i<Math.max(L.length,S.length);i++) poz += `<tr>${sat(L[i])}${sat(S[i])}</tr>`;
   const ay = Object.entries(k.aylik||{}).sort((a,b)=>b[0].localeCompare(a[0]));
   $("#icerik").innerHTML = `
   <div class="izgara">
-    <div class="kart"><div class="e">Kitap ${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div><div class="d">${para(k.kitap_canli!=null?k.kitap_canli:k.kitap)}</div>
-      ${k.kar_usd!=null?`<div class="k">başlangıç ${para(k.kitap_bas)} · <b class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)} (${yz(k.kar_oran)})</b></div>`:""}</div>
+    <div class="kart"><div class="e">Kitap ${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div><div class="d" id="kitapd">${para(k.kitap_canli!=null?k.kitap_canli:k.kitap)}</div>
+      ${k.kar_usd!=null?`<div class="k">başlangıç ${para(k.kitap_bas)} · <b id="karusd" class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)} (${yz(k.kar_oran)})</b></div>`:""}</div>
     <div class="kart"><div class="e">Sonraki dilim</div>${dilimKart(k.dilim)}</div>
     <div class="kart"><div class="e">Son gün (${k.son_tarih||"—"})</div><div class="d ${sinif(k.bugun)}">${yz(k.bugun)}</div></div>
     <div class="kart"><div class="e">Son 7 gün</div><div class="d ${sinif(k.g7)}">${yz(k.g7,1)}</div></div>
@@ -401,11 +434,12 @@ function ciz(){
   <div class="kart" style="margin-bottom:12px"><h2>İcra · son 30 gün (emir defteri)</h2>${icraKart(k)}</div>
   <div class="kart" style="margin-bottom:12px"><h2>Günlük getiri</h2><div class="grafik" style="height:180px"><canvas id="g2"></canvas></div></div>
   <div class="iki">
-    <div class="kart"><h2>Pozisyonlar (${L.length} long / ${S.length} short) <span class="k">· ${k.poz_kaynak=="canlı"?"canlı "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")}${k.gerceklesmemis!=null?` · gerçekleşmemiş <b class="${sinif(k.gerceklesmemis)}">${para(k.gerceklesmemis)}</b>`:""}</span></h2><div class="tablo"><table>
+    <div class="kart"><h2>Pozisyonlar (${L.length} long / ${S.length} short) <span class="k">· ${k.poz_kaynak=="canlı"?"liste "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")}${k.gerceklesmemis!=null?` · gerçekleşmemiş <b id="gerc" class="${sinif(k.gerceklesmemis)}">${para(k.gerceklesmemis)}</b> <b id="canli" class="art"></b>`:""}</span></h2><div class="tablo"><table>
       <tr><th class="l">Long</th><th>$</th><th>kâr</th><th class="l">Short</th><th>$</th><th>kâr</th></tr>${poz || "<tr><td colspan=6 class='bos'>açık pozisyon yok</td></tr>"}</table></div></div>
     <div class="kart"><h2>Olaylar</h2>${(k.olaylar||[]).map(o=>`<div class="olay"><span class="rozet r-${o.tur}">${o.tur}</span><div><div>${o.metin.replace(/</g,"&lt;")}</div><div class="z">${o.zaman}</div></div></div>`).join("") || "<div class='bos'>olay yok</div>"}</div>
   </div>
   ${(VERI.paketler||[]).length && !VERI_GOMULU ? `<div class="kart"><h2>Aylık veri paketleri (araştırma: indirip sohbete yükleyin)</h2>${VERI.paketler.map(p=>`<div class="olay"><a href="paket/${p.ad}" style="color:var(--vurgu)">${p.ad}</a><span class="z">${p.mb} MB</span></div>`).join("")}</div>` : ""}`;
+  canliBagla(k); canliBoya();
   grafikler.forEach(g=>g.destroy()); grafikler = [];
   if (!window.Chart) return;
   const x = k.seri.map(s=>s.tarih), izg = css("--cizgi"), sol = css("--soluk");
@@ -422,7 +456,7 @@ async function yukle(){
   if (VERI_GOMULU){ VERI = VERI_GOMULU; ciz(); return; }
   try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = await r.json(); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
 }
-yukle(); if(!VERI_GOMULU) setInterval(yukle, 60000);
+yukle(); if(!VERI_GOMULU){ setInterval(yukle, 60000); setInterval(canliBoya, 1000); }
 if(!VERI_GOMULU && "serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }
 matchMedia("(prefers-color-scheme: dark)").addEventListener("change", ()=>VERI && ciz());
 </script></body></html>"""
@@ -462,7 +496,7 @@ def uygulama(klasorler: list[str]):
         r.headers["Referrer-Policy"] = "no-referrer"
         r.headers["Cache-Control"] = "no-store"
         r.headers["Content-Security-Policy"] = ("default-src 'none'; script-src 'self' 'unsafe-inline' https://cdnjs.cloudflare.com; "
-                                                "style-src 'unsafe-inline'; connect-src 'self'; img-src 'self' data:; manifest-src 'self'; worker-src 'self'")
+                                                "style-src 'unsafe-inline'; connect-src 'self' wss://fstream.binance.com; img-src 'self' data:; manifest-src 'self'; worker-src 'self'")
         return r
 
     # MADDE 680: PWA — telefonda "Ana ekrana ekle" ile uygulama gibi açılır (Tailscale HTTPS adresinde). Önbellek YALNIZ kabuk

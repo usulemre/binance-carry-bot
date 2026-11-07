@@ -132,6 +132,11 @@ kontrol(".env dilim ayarı uygulanır", _d["zaman"] == 1_794_000_000 + 6 * 3600 
 kontrol("panel verisinde dilim", panel.veri([kl], servis=False)["kurulumlar"][0]["dilim"]["dolu"] == 2)
 kontrol("sayfada sonraki dilim kartı", b"Sonraki dilim" in app.get("/").data)
 os.remove(_dl)
+# MADDE 732: anlık fiyat (tarayıcı -> Binance herkese açık akış)
+_csp = app.get("/").headers["Content-Security-Policy"]
+kontrol("CSP yalnız Binance herkese açık akışına izin verir", "connect-src 'self' wss://fstream.binance.com;" in _csp, _csp)
+_sy = app.get("/").data
+kontrol("sayfada markPrice akışı ve canlı hücre kimlikleri", b"@markPrice@1s" in _sy and b'id="k-${p[0]}"' in _sy and b'id="gerc"' in _sy)
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
