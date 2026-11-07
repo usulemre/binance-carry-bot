@@ -345,7 +345,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 <script>
 const VERI_GOMULU = /*VERI*/null;
 const $ = s => document.querySelector(s);
-const yz = (v, d=2) => v==null ? "—" : (v>=0?"+":"") + (v*100).toFixed(d) + "%";
+const yz = (v, d=2) => v==null ? "—" : (v>=0?"+":"") + (v*100).toFixed(d).replace(".",",") + "%";
 const para = v => v==null ? "—" : v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2}) + " $";
 const sinif = v => v==null ? "" : (v>=0 ? "art" : "eks");
 const css = n => getComputedStyle(document.documentElement).getPropertyValue(n).trim();
@@ -414,15 +414,24 @@ function canliBoya(){
   if (ekd && k.kitap_canli!=null) ekd.textContent = para(k.kitap_canli + fark);
   if (eku && k.kar_usd!=null){ const ku = k.kar_usd + fark; eku.textContent = `${ku>=0?"+":""}${para(ku)} (${yz(k.kitap_bas ? ku/k.kitap_bas : null)})`; eku.className = sinif(ku); }
   const ed = $("#dokum"); if (ed && k.kar_usd!=null) ed.innerHTML = dokumYaz(k, top, k.kar_usd + fark);
+  const edk = $("#dokumkitap"); if (edk && k.kitap_canli!=null) edk.textContent = para(k.kitap_canli + fark);
   if (ec) ec.textContent = Date.now() - wsZaman < 5000 ? "● anlık" : "";
 }
 // MADDE 733: başlangıçtan $ = pozisyonlar (gerçekleşmemiş) + gerçekleşen + funding + komisyon + diğer.
 // "diğer" = başlangıç anında açık pozisyonların o anki kârı (başlangıç rakamına zaten girmiş) + demo / gerçek fiyat farkı.
 function dokumYaz(k, poz, kar){
-  const D = k.dokum, ps = v => `<span class="${sinif(v)}">${v>=0?"+":""}${v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})}</span>`;
-  const diger = kar - poz - D.gerceklesen - D.funding - D.komisyon;
-  return `pozisyonlar ${ps(poz)}` + (Math.abs(D.gerceklesen)>=0.005?` · gerçekleşen ${ps(D.gerceklesen)}`:"")
-    + ` · funding ${ps(D.funding)} · komisyon ${ps(D.komisyon)}` + (Math.abs(diger)>=0.005?` · diğer ${ps(diger)}`:"") + " $";
+  const D = k.dokum, dg = D.diger_gelir||0, fark = kar - poz - D.gerceklesen - D.funding - D.komisyon - dg;
+  const ps = v => `${v>=0?"+":""}${v.toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})} $`;
+  const sat = (ad, v, acik, her=false) => (her || Math.abs(v)>=0.005)
+    ? `<tr><td class="l">${ad}<div class="k">${acik}</div></td><td class="${sinif(v)}"><b>${ps(v)}</b></td></tr>` : "";
+  return `<table>
+    ${sat("Açık pozisyonlar", poz, "şu an açık coinlerin fiyat hareketi; kapanınca kesinleşir", true)}
+    ${sat("Kapanan pozisyonlar", D.gerceklesen, "kapatılmış işlemlerin kesinleşmiş kâr / zararı")}
+    ${sat("Funding", D.funding, "pozisyon taşıdığı için 8 saatte bir alınan (+) / ödenen (−) ücret — stratejinin asıl geliri", true)}
+    ${sat("Komisyon", D.komisyon, "Binance işlem ücreti", true)}
+    ${sat("Diğer Binance kayıtları", dg, "sigorta fonu vb.")}
+    ${sat("Başlangıç farkı", fark, "başlangıç kaydı alınırken açık pozisyonların o anki kârı (başlangıç tutarına zaten dahil) ve demo / gerçek fiyat farkı; sabit kalır")}
+    <tr><td class="l"><b>Toplam (başlangıçtan beri)</b></td><td class="${sinif(kar)}"><b>${ps(kar)}</b></td></tr></table>`;
 }
 function ayarKart(k){
   const A = k.ayar;
@@ -469,7 +478,7 @@ function ciz(){
   <div class="izgara">
     <div class="kart"><div class="e">Kitap ${svc?`<span class="durum ${svc}">${sv=="active"?"çalışıyor":sv}</span>`:""}</div><div class="d" id="kitapd">${para(k.kitap_canli!=null?k.kitap_canli:k.kitap)}</div>
       ${k.kar_usd!=null?`<div class="k">başlangıç ${para(k.kitap_bas)} · <b id="karusd" class="${sinif(k.kar_usd)}">${k.kar_usd>=0?"+":""}${para(k.kar_usd)} (${yz(k.kar_oran)})</b></div>`:""}
-      ${k.dokum&&k.gerceklesmemis!=null?`<div class="k" id="dokum">${dokumYaz(k, k.gerceklesmemis, k.kar_usd)}</div>`:""}</div>
+</div>
     <div class="kart"><div class="e">Sonraki dilim</div>${dilimKart(k.dilim)}</div>
     <div class="kart"><div class="e">Ayar</div>${ayarKart(k)}</div>
     <div class="kart"><div class="e">Son gün (${k.son_tarih||"—"})</div><div class="d ${sinif(k.bugun)}">${yz(k.bugun)}</div></div>
@@ -478,6 +487,7 @@ function ciz(){
     <div class="kart"><div class="e">Başlangıçtan</div><div class="d ${sinif(k.toplam)}">${yz(k.toplam,1)}</div></div>
     <div class="kart"><div class="e">En büyük düşüş</div><div class="d eks">${yz(k.dd,1)}</div></div>
   </div>
+  ${k.dokum&&k.gerceklesmemis!=null?`<div class="kart" style="margin-bottom:12px"><h2>Kâr / zarar nereden geldi? · başlangıç ${para(k.kitap_bas)} → şimdi <span id="dokumkitap">${para(k.kitap_canli)}</span></h2><div class="tablo" id="dokum">${dokumYaz(k, k.gerceklesmemis, k.kar_usd)}</div></div>`:""}
   <div class="${grafikVar?'iki':''}" style="margin-bottom:12px">
     ${grafikVar?`<div class="kart"><h2>Kitap ($)</h2><div class="grafik"><canvas id="g1"></canvas></div></div>`:""}
     <div class="kart"><h2>Aylık getiri</h2><div class="tablo"><table class="ayt"><tr><th class="l">Ay</th><th>Getiri</th></tr>
