@@ -687,7 +687,8 @@ function kivilcim(s, p, f, renk){
   const nok = M.nok.filter(n => n[0] < simdi - 1e3);   // tamamlanan mumlar; son nokta anlık fiyat
   if (f) nok.push([simdi, f]);
   if (nok.length < 2) return `<div class="grbekle">gün yeni başladı (03:00)…</div>`;
-  return cizgi(nok.map(n=>n[1]), 160, 64, renk, p.giris>0 ? p.giris : null, s, nok.map(n=>Math.min(1, (n[0]-M.bas)/GUN_MS)), true);
+  // madde 743: en küçük dikey aralık fiyatın %1'i (gün başında 2-3 mumluk oynama duvar gibi görünmesin)
+  return cizgi(nok.map(n=>n[1]), 160, 64, renk, p.giris>0 ? p.giris : null, s, nok.map(n=>Math.min(1, (n[0]-M.bas)/GUN_MS)), true, 0.01 * (f || nok[nok.length-1][1]));
 }
 // MADDE 737: kâr al hedefine ilerleme. Long: giriş -> giriş x (1 + kademe); short: giriş -> giriş x (1 − kademe).
 function hedefCubuk(k, p, f){
