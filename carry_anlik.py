@@ -23,8 +23,47 @@ BIRIKIM_DOSYA = os.path.join(DEFTER_KLASOR, "gelir_birikim.json")
 GUN_DOSYA = os.path.join(DEFTER_KLASOR, "anlik_gun.json")
 ORTUSME_MS = 10 * 60 * 1000   # geç düşen gelir kaydı kaçmasın: son 10 dk yeniden sorulur, tranId ile tekilleşir
 GERCEK_DOSYA = os.path.join(DEFTER_KLASOR, "gercek_funding.json")
+POZ_GECMIS_DOSYA = os.path.join(DEFTER_KLASOR, "anlik_poz.json")
+POZ_GECMIS_GUN = 14
+EMIR_DB = os.getenv("CARRY_EMIR_DB", os.path.join(DEFTER_KLASOR, "carry.db"))
 TOHUM_PENCERE_MS = 8 * 3600 * 1000   # tohum: gerçek funding anına en yakın demo funding kaydı bu kadar yakınsa pozisyon vardı sayılır
 GUN_DEVIR_SN = 15 * 60        # önceki günün son noktası gün başına bu kadar yakınsa yeni günün açılış değeri olur
+
+
+def poz_gecmis_ekle(dosya: str, simdi: float, poz: dict, sakla_gun: float = POZ_GECMIS_GUN) -> dict:
+    """MADDE 745: panelin olaylar sayfası için pozisyon GEÇMİŞİ (coin başına [zaman, miktar, ortalama giriş]).
+    Yalnız DEĞİŞİNCE satır eklenir (5 dk'da bir okunur; dilim turu / kâr al / stop sonrası ortalama buradan gösterilir).
+    Kapanan coin [zaman, 0, 0] ile işaretlenir. sakla_gun'den eski satırlar atılır (her coinin son durumu korunur)."""
+    try:
+        with open(dosya, encoding="utf-8") as f:
+            d = json.load(f).get("s") or {}
+    except (OSError, ValueError, TypeError, AttributeError):
+        d = {}
+    t = int(simdi)
+    for sem in set(d) | set(poz):
+        m = float(poz[sem]["miktar"]) if sem in poz else 0.0
+        g = float(poz[sem]["giris"]) if sem in poz else 0.0
+        h = d.get(sem) or []
+        if h and abs(h[-1][1] - m) <= 1e-12 * max(1.0, abs(m)) and abs(h[-1][2] - g) <= 1e-12 * max(1.0, g):
+            continue
+        if not h and m == 0:
+            continue
+        h.append([t, m, g])
+        d[sem] = h
+    sinir = t - sakla_gun * 86400
+    for sem in list(d):
+        h = d[sem]
+        i = 0
+        while i < len(h) - 1 and h[i + 1][0] < sinir:
+            i += 1
+        h = h[i:]
+        if len(h) == 1 and h[0][1] == 0 and h[0][0] < sinir:
+            del d[sem]
+        else:
+            d[sem] = h
+    out = {"s": d}
+    _atomik_yaz(dosya, out)
+    return out
 
 
 def gun_egri_ekle(dosya: str, simdi: float, deger: float) -> dict:
@@ -172,7 +211,7 @@ def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GER
 
 
 def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
-        defter_dosya: str = DEFTER_DOSYA, birikim_dosya: str | None = None) -> dict:
+        defter_dosya: str = DEFTER_DOSYA, birikim_dosya: str | None = None, emir_db: str | None = EMIR_DB) -> dict:
     if client is None:
         import config
         from exchange_client import ExchangeClient
@@ -203,6 +242,17 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
         except Exception as ex:
             print(f"UYARI: gerçek oranlı funding güncellenemedi: {ex}", file=sys.stderr)
     _atomik_yaz(dosya, kayit)
+    try:   # madde 745: pozisyon geçmişi (olaylarda işlem sonrası ortalama)
+        poz_gecmis_ekle(os.path.join(os.path.dirname(dosya) or ".", "anlik_poz.json"), simdi, poz)
+    except Exception as ex:
+        print(f"UYARI: pozisyon geçmişi yazılamadı: {ex}", file=sys.stderr)
+    if emir_db:   # madde 745: emir dolumlarını 5 dk'da bir eşle (yalnız OKUMA; bot turu sonunu beklemesin)
+        try:
+            import defter_db
+            if os.path.exists(emir_db):
+                defter_db.emir_esle(client, db=emir_db, simdi=simdi, taze_sn=120, haric=("FELAKET", "TP", "KADEME"))
+        except Exception as ex:
+            print(f"UYARI: emir dolumları eşlenemedi: {ex}", file=sys.stderr)
     if "gelir_bas" in kayit:   # madde 742: transfer bilinmeden nokta yazılmaz (yatırma eğride kâr gibi görünmesin)
         try:
             gun_egri_ekle(os.path.join(os.path.dirname(dosya) or ".", "anlik_gun.json"), simdi,

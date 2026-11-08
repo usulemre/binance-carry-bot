@@ -287,6 +287,53 @@ def icra(klasor: str) -> dict | None:
         return None
 
 
+_TUR_AD = {"GIRIS": "limit", "KOVALA": "limit", "PIYASA": "piyasa", "PIYASA_YEDEK": "piyasa", "TP": "kâr al",
+           "KADEME": "kâr al kademe", "FELAKET": "felaket stop"}
+
+
+def islemler(klasor: str, gun: float = 7, simdi: float | None = None) -> dict:
+    """MADDE 745: son `gun` günün DOLAN emirleri (emir defteri, SALT OKUNUR) + her işlemden sonra coinin pozisyonu ve
+    ORTALAMA girişi (defter/anlik_poz.json: carry_anlik 5 dk'da bir, yalnız değişince yazar; ortalama Binance'in kendi
+    entryPrice'ı). Dolum bilgisi henüz eşlenmemiş emir sayısı `bekleyen`de (carry_anlik birkaç dk içinde eşler)."""
+    import bisect, sqlite3
+    simdi = simdi or time.time(); out = {"liste": [], "bekleyen": 0}
+    db = os.path.join(klasor, "defter", "carry.db")
+    if not os.path.exists(db):
+        return out
+    try:
+        with open(os.path.join(klasor, "defter", "anlik_poz.json"), encoding="utf-8") as f:
+            gec = json.load(f).get("s") or {}
+    except (OSError, ValueError, AttributeError):
+        gec = {}
+    try:
+        c = sqlite3.connect(f"file:{db}?mode=ro", uri=True, timeout=2)
+        try:
+            satir = c.execute("SELECT zaman, sembol, tur, yon, dolan, ort_fiyat, maker_adet, komisyon, kapanis, durum FROM emir "
+                              "WHERE zaman>? ORDER BY zaman", (simdi - gun * 86400,)).fetchall()
+        finally:
+            c.close()
+    except Exception:
+        return out
+    for z, sem, tur, yon, dolan, ort, maker, kom, kap, durum in satir:
+        if not dolan or not ort:
+            if durum is None and tur in ("GIRIS", "KOVALA", "PIYASA", "PIYASA_YEDEK") and simdi - z < 86400:
+                out["bekleyen"] += 1
+            continue
+        t = float(kap or z)
+        h = gec.get(sem) or []
+        i = bisect.bisect_left([x[0] for x in h], t - 1)
+        sonra = h[i] if i < len(h) else None
+        k = {"t": int(t), "zaman": _yerel(t).strftime("%Y-%m-%d %H:%M"), "sembol": str(sem).removesuffix("USDT"),
+             "tur": _TUR_AD.get(tur, tur), "yon": yon, "adet": float(dolan), "fiyat": float(ort),
+             "usd": round(float(dolan) * float(ort), 2), "kom": None if kom is None else round(float(kom), 4),
+             "maker": None if maker is None else bool(float(maker) >= 0.999 * float(dolan))}
+        if sonra is not None:
+            k.update({"poz_sonra": sonra[1], "ort_sonra": sonra[2] or None, "usd_sonra": round(abs(sonra[1]) * float(ort), 2)})
+        out["liste"].append(k)
+    out["liste"].reverse()
+    return out
+
+
 ANLIK_TAZE_SN = int(os.getenv("CARRY_PANEL_ANLIK_TAZE_SN", "900"))
 """MADDE 728: defter/anlik.json (carry_anlik.py, 5 dk'da bir) bu kadar saniyeden tazeyse pozisyon tablosu ondan gösterilir."""
 
@@ -390,7 +437,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         ad = e.get("CARRY_BILDIRIM_AD") or (b[len("carry-"):] if b.startswith("carry-") else "ana")
         df = defter_oku(kl); o = ozet(df)
         o.update({"ad": ad, "mod": e.get("BINANCE_MODE", "demo"), "servis": servis_durumu(kl) if servis else "—",
-                  "olaylar": olaylar(kl), "icra": icra(kl), "dilim": sonraki_dilim(kl, e),
+                  "olaylar": olaylar(kl), "islemler": islemler(kl), "icra": icra(kl), "dilim": sonraki_dilim(kl, e),
                   "ayar": etkin_ayar(kl), "hedef": kar_hedefleri(e), "gun_egri": gun_egri(kl)})
         if o["ayar"] is not None:   # madde 742: koşullu stopun coin eşiği (carry_bot CARRY_LONG_24S, varsayılan 0,45)
             try:
@@ -517,7 +564,11 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .zo .i{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;z-index:1}
 .zo .m{font-size:13px;min-width:0;padding-top:3px}.zo .z{color:var(--soluk);font-size:11.5px;margin-top:1px}
 .i-stop,.i-hata{background:var(--eks)}.i-delist,.i-saglik,.i-uyari{background:var(--uyari)}.i-ayar{background:var(--mor)}.i-basla{background:var(--vurgu)}
-.i-tp{background:var(--art)}.i-tur{background:var(--soluk)}.i-stop_tut{background:color-mix(in srgb,var(--eks) 40%,var(--kart2))}
+.i-tp{background:var(--art)}.i-tur{background:var(--soluk)}.i-islem{background:var(--vurgu)}
+.isl{margin-top:6px}.isl .ac{color:var(--vurgu);font-size:12px;cursor:pointer;user-select:none}
+.isl table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;font-variant-numeric:tabular-nums}
+.isl td{text-align:left;padding:4px 6px 4px 0;border-top:1px solid var(--cizgi);vertical-align:top}.isl td.r{text-align:right;white-space:nowrap}
+.isl .s{color:var(--soluk);font-size:11px}.i-stop_tut{background:color-mix(in srgb,var(--eks) 40%,var(--kart2))}
 .zo.hata .m>div:first-child{color:var(--eks)}
 .bos{color:var(--soluk);padding:18px 0;text-align:center}
 .takvim{display:grid;grid-template-columns:repeat(7,minmax(0,1fr));gap:4px}
@@ -928,18 +979,50 @@ function gecmisSayfa(k){
     <div class="kart"><h2>İcra · son 30 gün <span class="k">(emir defteri)</span></h2>${icraKart(k)}</div>`;
 }
 // MADDE 740: olaylar zaman çizelgesi — gün gün (Bugün / Dün / tarih), türe göre simge
-const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", stop_tut:"□", delist:"!", saglik:"♥", hata:"✕", tp:"✓", uyari:"⚠", tur:"↻"};
+const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", stop_tut:"□", delist:"!", saglik:"♥", hata:"✕", tp:"✓", uyari:"⚠", tur:"↻", islem:"⇄"};
 const OLAY_AD = {basla:"başlama", ayar:"ayar", stop:"stop", stop_tut:"stop şartı: piyasa sakin, tutuldu", delist:"delist", saglik:"sağlık",
-                 hata:"hata", tp:"kâr al doldu", uyari:"piyasa emrine düşüldü", tur:"dilim turu"};
+                 hata:"hata", tp:"kâr al doldu", uyari:"piyasa emrine düşüldü", tur:"dilim turu", islem:"işlem"};
+// MADDE 745: her dilim turunun altında o turun işlemleri (coin, yön, adet, dolum fiyatı, limit / piyasa) ve işlemden sonra
+// coinin pozisyonu ve ORTALAMA girişi (Binance entryPrice, 5 dk'lık görüntüden). Tura bağlanmayan dolumlar (kâr al vb.) ayrı olay.
+const dk_ = s => Date.UTC(+s.slice(0,4), +s.slice(5,7)-1, +s.slice(8,10), +s.slice(11,13), +s.slice(14,16)) / 60000;
+function olayIslem(k){
+  const L = ((k.islemler||{}).liste||[]).map(x=>({...x, m: dk_(x.zaman)})), kul = new Set(), out = [];
+  for (const o of (k.olaylar||[])){
+    if (o.tur==="tur" && o.zaman){ const m = dk_(o.zaman);
+      const b = L.filter((x,i)=>!kul.has(i) && x.m>=m-5 && x.m<=m+25 && kul.add(i)); out.push(b.length ? {...o, islem: b} : o);
+    } else out.push(o);
+  }
+  const kalan = L.filter((x,i)=>!kul.has(i)); let grup = null;
+  for (const x of kalan){   // liste yeniden eskiye; 10 dk içindekiler tek olay
+    if (grup && grup.m - x.m <= 10){ grup.islem.push(x); continue; }
+    grup = {zaman: x.zaman, tur: "islem", m: x.m, islem: [x]}; out.push(grup);
+  }
+  for (const g of out) if (g.tur==="islem") g.metin = g.islem.length==1 ? `${g.islem[0].sembol} · ${g.islem[0].tur}` : `${g.islem.length} işlem`;
+  return out.sort((a,b)=>(b.zaman||"").localeCompare(a.zaman||""));
+}
+function islemTablo(o){
+  if (!o.islem || !o.islem.length) return "";
+  const id = "isl" + o.zaman + o.tur, ac = ACIK.has(id);
+  const ad = x => { const art = x.yon==="BUY"; const ps = x.poz_sonra;
+    if (ps==null) return art ? "al" : "sat";
+    if (art) return ps>0 ? "long +" : "short −"; return ps<0 ? "short +" : "long −"; };
+  const sat = o.islem.map(x=>`<tr><td><b>${x.sembol}</b> <span class="s">${ad(x)}</span><div class="s">${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div></td>
+    <td class="r">${fiyatYaz(x.fiyat)}<div class="s">${x.adet.toLocaleString("tr-TR",{maximumFractionDigits:4})} adet · ${para(x.usd)}</div></td>
+    <td class="r">${x.ort_sonra!=null ? fiyatYaz(x.ort_sonra) : (x.poz_sonra===0 ? "kapandı" : "—")}<div class="s">${x.poz_sonra!=null && x.poz_sonra!==0 ? "poz " + para(x.usd_sonra) : (x.poz_sonra==null ? "birkaç dk içinde" : "")}</div></td></tr>`).join("");
+  return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} işlemler (${o.islem.length})</span>${ac ? `<table><tr class="s"><td>coin · yön</td><td class="r">dolum fiyatı</td><td class="r">sonra ortalama</td></tr>${sat}</table>` : ""}</div>`;
+}
+function olayAc(id){ ACIK.has(id) ? ACIK.delete(id) : ACIK.add(id); ciz(); }
 function olaySayfa(k){
   const bugun = new Date(), t = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   const dun = new Date(bugun); dun.setDate(dun.getDate()-1);
   const ad = g => g==t(bugun) ? "Bugün" : g==t(dun) ? "Dün" : `${+g.slice(8,10)} ${AYAD[+g.slice(5,7)-1]} ${g.slice(0,4)}`;
   let h = "", onc = null;
-  for (const o of (k.olaylar||[])){
+  for (const o of olayIslem(k)){
     const g = (o.zaman||"").slice(0,10); if (g!==onc){ h += `<div class="gun">${g?ad(g):"—"}</div>`; onc = g; }
-    h += `<div class="zo ${o.tur}"><span class="i i-${o.tur}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="m"><div>${o.metin.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\s*\|\s*/g," · ")}</div><div class="z">${(o.zaman||"").slice(11)} · ${OLAY_AD[o.tur]||o.tur}</div></div></div>`;
+    h += `<div class="zo ${o.tur}"><span class="i i-${o.tur}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="m"><div>${o.metin.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\s*\|\s*/g," · ")}</div><div class="z">${(o.zaman||"").slice(11)} · ${OLAY_AD[o.tur]||o.tur}</div>${islemTablo(o)}</div></div>`;
   }
+  const bek = (k.islemler||{}).bekleyen||0;
+  if (bek) h = `<div style="color:var(--soluk);font-size:12px;margin-bottom:8px">${bek} emrin dolum bilgisi henüz eşlenmedi (birkaç dakika içinde görünür)</div>` + h;
   return `<div class="kart"><h2>Olaylar</h2>${h ? `<div class="zc">${h}</div>` : "<div class='bos'>olay yok</div>"}</div>
   ${(VERI.paketler||[]).length && !VERI_GOMULU ? `<div class="kart"><h2>Aylık veri paketleri <span class="k">(araştırma: indirip sohbete yükleyin)</span></h2>${VERI.paketler.map(p=>`<div class="zo"><span class="i i-basla">↓</span><div class="m"><a href="paket/${p.ad}" style="color:var(--vurgu)">${p.ad}</a><div class="z">${p.mb} MB</div></div></div>`).join("")}</div>` : ""}`;
 }

@@ -171,5 +171,16 @@ kontrol("yaz(): anlık dosyada gerçek-oran funding (başlangıç = defterin ilk
 k = carry_anlik.yaz(c, simdi=1004.0, dosya=dosya, defter_dosya=_df)
 kontrol("yaz(): canlı istemcide gerçek-oran satırı yok", "gercek_funding" not in k)
 
+# MADDE 745: pozisyon geçmişi yalnız değişince yazılır, kapanan coin 0 ile işaretlenir, eski satırlar atılır
+_pg = os.path.join(tempfile.mkdtemp(), "anlik_poz.json")
+carry_anlik.poz_gecmis_ekle(_pg, 1000, {"AUSDT": {"miktar": 10.0, "giris": 1.0}})
+carry_anlik.poz_gecmis_ekle(_pg, 1300, {"AUSDT": {"miktar": 10.0, "giris": 1.0}})
+carry_anlik.poz_gecmis_ekle(_pg, 1600, {"AUSDT": {"miktar": 15.0, "giris": 0.9}, "BUSDT": {"miktar": -3.0, "giris": 2.0}})
+_g = carry_anlik.poz_gecmis_ekle(_pg, 1900, {"BUSDT": {"miktar": -3.0, "giris": 2.0}})["s"]
+kontrol("poz geçmişi: değişmeyen görüntü yazılmaz", [x[0] for x in _g["AUSDT"]] == [1000, 1600, 1900], _g)
+kontrol("poz geçmişi: kapanış [t, 0, 0]", _g["AUSDT"][-1] == [1900, 0.0, 0.0] and _g["BUSDT"] == [[1600, -3.0, 2.0]])
+_g = carry_anlik.poz_gecmis_ekle(_pg, 1900 + 15 * 86400, {"BUSDT": {"miktar": -3.0, "giris": 2.0}}, sakla_gun=14)["s"]
+kontrol("poz geçmişi: eski kapanmış coin atılır, açığın son durumu kalır", "AUSDT" not in _g and _g["BUSDT"] == [[1600, -3.0, 2.0]], _g)
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

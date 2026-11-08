@@ -266,5 +266,27 @@ _an7.pop("gercek_funding")
 kontrol("canlı hesapta (satır yok) döküm yine çalışır", "funding_gercek" not in panel.hesap_ozet(_dk7, _an7)["dokum"])
 kontrol("sayfada gerçek oran satırı, toplama girmez", "gerçek Binance oranlarıyla olsaydı" in app.get("/").data.decode() and "Toplama girmez" in app.get("/").data.decode())
 
+# MADDE 745: olaylarda işlemler (emir defteri + pozisyon geçmişi), salt okunur
+import defter_db as _DB, sqlite3 as _sq, time as _tm
+_k745 = os.path.join(tmp, "carry-i1"); os.makedirs(os.path.join(_k745, "defter")); _db745 = os.path.join(_k745, "defter", "carry.db")
+_t = _tm.time() - 3600
+_DB.emir_kaydet("GIRIS", "CYBERUSDT", "BUY", 55.8, db=_db745, simdi=_t, oid="1")
+_DB.emir_kaydet("PIYASA_YEDEK", "ONEUSDT", "SELL", 1500, db=_db745, simdi=_t + 60, oid="2")
+_DB.emir_kaydet("GIRIS", "HYPEUSDT", "SELL", 1, db=_db745, simdi=_tm.time() - 200, oid="3")
+_c = _sq.connect(_db745)
+_c.execute("UPDATE emir SET durum='FILLED', dolan=55.8, ort_fiyat=0.3103, maker_adet=55.8, komisyon=0.003 WHERE oid='1'")
+_c.execute("UPDATE emir SET durum='FILLED', dolan=1500, ort_fiyat=0.0115, maker_adet=0, komisyon=0.007 WHERE oid='2'"); _c.commit(); _c.close()
+json.dump({"s": {"CYBERUSDT": [[int(_t) - 86400, 159.1, 0.3458], [int(_t) + 300, 214.9, 0.3365]]}},
+          open(os.path.join(_k745, "defter", "anlik_poz.json"), "w"))
+_i = panel.islemler(_k745)
+_cy = [x for x in _i["liste"] if x["sembol"] == "CYBER"][0]; _on = [x for x in _i["liste"] if x["sembol"] == "ONE"][0]
+kontrol("işlem: dolum fiyatı / adet / maker", _cy["fiyat"] == 0.3103 and _cy["adet"] == 55.8 and _cy["maker"] is True and _on["maker"] is False)
+kontrol("işlem: SONRAKİ görüntüden ortalama ve pozisyon", _cy["ort_sonra"] == 0.3365 and _cy["poz_sonra"] == 214.9, _cy)
+kontrol("işlem: geçmişi olmayan coinde ortalama yok (hata yok)", "ort_sonra" not in _on)
+kontrol("işlem: eşlenmemiş emir 'bekleyen' sayılır, listede yok", _i["bekleyen"] == 1 and len(_i["liste"]) == 2, _i)
+kontrol("işlem: yeni → eski sıralı", _i["liste"][0]["sembol"] == "ONE")
+kontrol("işlem: veritabanı yoksa boş", panel.islemler(os.path.join(tmp, "yok")) == {"liste": [], "bekleyen": 0})
+kontrol("sayfada işlem tablosu", "islemTablo" in app.get("/").data.decode())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

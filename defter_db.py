@@ -101,16 +101,21 @@ def emir_durum(sembol: str, oid, e: dict, db: str = DB, simdi: float | None = No
         return False
 
 
-def emir_esle(client, en_cok: int = 40, db: str = DB, simdi: float | None = None) -> int:
+def emir_esle(client, en_cok: int = 40, db: str = DB, simdi: float | None = None, taze_sn: float = 600,
+              haric: tuple = ("FELAKET",)) -> int:
     """Dolumu henüz eşleşmemiş emirlerin durumunu ve gerçekleşen işlemlerini (maker/taker, komisyon) borsadan OKUR.
-    Tur sonunda çağrılır; en çok `en_cok` emir (API yükü sınırlı). Hata fırlatmaz; eşleşen emir sayısını döner."""
+    Tur sonunda çağrılır; en çok `en_cok` emir (API yükü sınırlı). Hata fırlatmaz; eşleşen emir sayısını döner.
+    MADDE 745: carry_anlik.py da 5 dk'da bir çağırır (taze_sn=120, kâr al / kademe hariç: açık bekleyen TP'ler 40'lık
+    kotayı doldurmasın; onlar bot turunda eşlenir)."""
     import time as _t
     simdi = simdi or _t.time(); n = 0
     try:
         with _emir_baglan(db) as c:
-            satir = c.execute("SELECT id, sembol, oid FROM emir WHERE eslendi=0 AND oid IS NOT NULL AND tur!='FELAKET' "
+            hr = tuple(haric) or ("FELAKET",)
+            satir = c.execute("SELECT id, sembol, oid FROM emir WHERE eslendi=0 AND oid IS NOT NULL "
+                              f"AND tur NOT IN ({','.join('?' * len(hr))}) "
                               "AND zaman>? AND (zaman<? OR durum IN ('FILLED','CANCELED','EXPIRED','REJECTED')) "
-                              "ORDER BY zaman LIMIT ?", (simdi - 3 * 86400, simdi - 600, int(en_cok))).fetchall()
+                              "ORDER BY zaman LIMIT ?", (*hr, simdi - 3 * 86400, simdi - taze_sn, int(en_cok))).fetchall()
     except Exception:
         return 0
     for rid, sem, oid in satir:

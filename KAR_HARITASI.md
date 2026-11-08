@@ -8211,3 +8211,16 @@ taban 239,3 · 4,05 · −13,3 · −7,41 · 4,03 / 4,14 → 315,2 (doz 1,15) | 
 (15 faz toplamı, hiza 0/1): long 12.621 / 12.552, short 16.891 / 16.924 → dilim başına ~290 erken kapanış / yıl. [VARSAYIM] 24 sa hacim eşik
 çevresinde salınan coinler sürekli çıkıp giriyor; çıkış hem komisyon hem funding'i hâlâ ödeyen bacağın kaybı (713 ile aynı ders: erken çıkış
 kazananı kesiyor). Bugünkü davranış (filtre yalnız girişte) doğru; bot değişmedi.
+
+## Madde 745 — panel olaylarında işlem ayrıntısı (kullanıcı: "hangi coini aldı, kaç fiyattan aldı, sonra ortalaması ne oldu yok")
+Yalnız İZLEME; bot kararı / emir akışı / strateji DEĞİŞMEDİ (carry_bot.py'ye dokunulmadı).
+- carry_anlik.py (5 dk, salt okur): `defter/anlik_poz.json` = coin başına [zaman, miktar, Binance entryPrice] yalnız DEĞİŞİNCE, 14 gün.
+  Ayrıca emir defterindeki dolumları eşler (defter_db.emir_esle, taze_sn=120; TP / kademe / felaket HARİÇ ki açık bekleyen TP'ler
+  40'lık kotayı doldurmasın — onlar eskisi gibi bot turunda eşlenir). Böylece dolum bilgisi 8 sa yerine birkaç dakikada görünür.
+- defter_db.emir_esle: `taze_sn` ve `haric` parametreleri (varsayılanlar eski davranış: 600 sn, FELAKET hariç).
+- panel.py `islemler()`: son 7 günün dolan emirleri (coin, al/sat, adet, dolum ortalama fiyatı, limit/piyasa, maker/taker) +
+  işlemden SONRAKİ ilk görüntüden pozisyon ve ortalama giriş. Olaylar sayfasında her "dilim turu"nun altında "işlemler (N)"
+  (tur satırından −5 / +25 dk); tura bağlanmayan dolumlar (kâr al vb.) ayrı "işlem" olayı. Eşlenmemiş emir sayısı üstte not.
+- Sınır: koşullu stop / delist kapanışları emir defterine yazılmıyor (carry_bot değiştirilmedi); bunlar olaylarda log satırıyla
+  görünmeye devam ediyor, pozisyon geçmişinde de kapanış olarak var.
+- Testler: test_panel (+7), test_carry_anlik (+3) — hepsi geçti.
