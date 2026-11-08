@@ -63,14 +63,43 @@ _AYAR_ETKIN = re.compile(r"önerilen ayar etkin: profil (\S+) · gross ([\d.]+)x
 _BASLADI = re.compile(r"carry_bot başladı \|.*?\| gross ([\d.]+)x")
 
 
+def log_satirlari(klasor: str, son_bayt: int) -> list[str] | None:
+    """MADDE 743: carry_bot.log'un son `son_bayt`'ı. logrotate (haftalık, copytruncate) pazar 00:00'da dosyayı
+    boşaltır; güncel dosya kısa kalırsa eksik kısım bir önceki dosyadan (carry_bot.log.1 ya da .1.gz) tamamlanır.
+    Yoksa panel rotasyondan sonra ayarı ve bütün olayları kaybediyordu. Hiçbiri okunamazsa None."""
+    yol = os.path.join(klasor, "carry_bot.log")
+    veri, okundu = b"", False
+    try:
+        with open(yol, "rb") as f:
+            f.seek(0, 2); n = f.tell(); f.seek(max(0, n - son_bayt)); veri = f.read(); okundu = True
+    except OSError:
+        pass
+    if len(veri) < son_bayt:
+        eski = b""
+        for ad, ac in (("carry_bot.log.1", open), ("carry_bot.log.1.gz", None)):
+            try:
+                if ac is None:
+                    import gzip
+                    with gzip.open(os.path.join(klasor, ad), "rb") as f:
+                        eski = f.read()
+                else:
+                    with open(os.path.join(klasor, ad), "rb") as f:
+                        eski = f.read()
+                okundu = True
+                break
+            except (OSError, EOFError):
+                continue
+        if eski:
+            eski = eski[-(son_bayt - len(veri)):]
+            veri = eski + (b"" if eski.endswith(b"\n") or not veri else b"\n") + veri
+    return veri.decode("utf-8", "replace").splitlines() if okundu else None
+
+
 def etkin_ayar(klasor: str, son_bayt: int = 5_000_000) -> dict | None:
     """MADDE 734: botun SON başlangıçta GERÇEKTE kullandığı ayar (log'dan). Defterdeki profil / doz .env'deki
     ham değerdir (ör. ONERILEN 1.0) — önerilen modda seçilen profil (T7K 1.15x + koşullu stop) orada görünmez."""
-    try:
-        with open(os.path.join(klasor, "carry_bot.log"), "rb") as f:
-            f.seek(0, 2); n = f.tell(); f.seek(max(0, n - son_bayt))
-            satirlar = f.read().decode("utf-8", "replace").splitlines()
-    except OSError:
+    satirlar = log_satirlari(klasor, son_bayt)
+    if satirlar is None:
         return None
     for i in range(len(satirlar) - 1, -1, -1):
         m = _BASLADI.search(satirlar[i])
@@ -127,12 +156,8 @@ def defter_oku(klasor: str) -> list[dict]:
 
 
 def olaylar(klasor: str, en_cok: int = 80, son_bayt: int = 2_000_000) -> list[dict]:
-    yol = os.path.join(klasor, "carry_bot.log")
-    try:
-        with open(yol, "rb") as f:
-            f.seek(0, 2); n = f.tell(); f.seek(max(0, n - son_bayt))
-            satirlar = f.read().decode("utf-8", "replace").splitlines()
-    except OSError:
+    satirlar = log_satirlari(klasor, son_bayt)
+    if satirlar is None:
         return []
     out, tutulan = [], set()
     for s in satirlar:
@@ -637,12 +662,14 @@ async function mumYukle(k){
   canliBoya();
 }
 const fiyatYaz = v => v==null ? "—" : v.toLocaleString("tr-TR", v>=1000 ? {minimumFractionDigits:2,maximumFractionDigits:2} : {minimumSignificantDigits:5,maximumSignificantDigits:5});
-function cizgi(seri, W, H, renk, yatay, kimlik="c", xs=null, yatayAralikta=false){
+function cizgi(seri, W, H, renk, yatay, kimlik="c", xs=null, yatayAralikta=false, minAralik=0){
   // seri: sayılar; xs: 0..1 yatay konumlar (yoksa eşit aralık); yatay: kesikli referans çizgisi (giriş fiyatı / başlangıç kitabı)
   // yatayAralikta: referans y ölçeğini genişletmez, yalnız aralıktaysa çizilir (günlük grafik: giriş uzaksa çizgi ezilmesin)
   if (!seri || seri.length < 2) return `<svg viewBox="0 0 ${W} ${H}"></svg>`;
   const hepsi = yatay!=null && !yatayAralikta ? seri.concat([yatay]) : seri;
   let lo = Math.min(...hepsi), hi = Math.max(...hepsi); if (hi-lo < Math.abs(hi)*1e-6 + 1e-12){ hi += Math.abs(hi)*1e-3 + 1e-9; lo -= Math.abs(lo)*1e-3 + 1e-9; }
+  // madde 743: en küçük dikey aralık — gün başında birkaç kuruşluk oynama tüm yüksekliğe yayılıp duvar gibi görünmesin
+  if (hi - lo < minAralik){ const m = (hi + lo) / 2; lo = m - minAralik/2; hi = m + minAralik/2; }
   if (yatay!=null && yatayAralikta && (yatay < lo || yatay > hi)) yatay = null;
   const x = i => (xs ? xs[i] : i/(seri.length-1)) * (W-6), y = v => H-3 - (v-lo)/(hi-lo) * (H-6);
   const yol = seri.map((v,i)=>`${i?"L":"M"}${x(i).toFixed(1)},${y(v).toFixed(1)}`).join("");
@@ -745,7 +772,7 @@ function egriIc(k){
     if (!E || E.seri.length < 2) return `<div class="bl"><span>bugün 03:00'ten beri · kitap</span><span>—</span></div><div class="bekle" style="padding:20px 0">gün içi kitap kaydı bekleniyor (5 dakikada bir)</div>`;
     const bsl = E.ilk - E.bas > 20*60e3 ? new Date(E.ilk).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}) + " kaydından beri" : "03:00'ten beri";
     return `<div class="bl"><span>bugün ${bsl} · kitap</span><b class="rz ${sinif(E.son)}">${isaretli(E.son)}${E.oran!=null?" ("+yz(E.oran)+")":""}</b></div>
-      ${cizgi(E.seri, 300, 70, css(E.son>=0?"--art":"--eks"), 0, "bugun", E.xs, true)}<div class="eksen"><span>03:00</span><span>09:00</span><span>15:00</span><span>21:00</span><span>03:00</span></div>`;
+      ${cizgi(E.seri, 300, 70, css(E.son>=0?"--art":"--eks"), 0, "bugun", E.xs, true, Math.max(4, 0.004 * (k.kitap_canli || k.kitap || 1000)))}<div class="eksen"><span>03:00</span><span>09:00</span><span>15:00</span><span>21:00</span><span>03:00</span></div>`;
   }
   const kit = (k.seri||[]).map(s=>s.kitap).filter(v=>v!=null); if (k.kitap_canli!=null && kit.length) kit.push(k.kitap_canli);
   if (kit.length < 2) return `<div class="bl"><span>kitap · başlangıçtan</span></div><div class="bekle" style="padding:20px 0">en az 2 gün gerekli</div>`;

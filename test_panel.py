@@ -237,5 +237,23 @@ _ay = panel.veri([kl], servis=False)["kurulumlar"][0]["ayar"]
 kontrol("ayarda koşullu stopun coin eşiği (.env)", _ay["coin_esik"] == 0.40 and _ay["stop"] == 0.03, _ay)
 kontrol("ayar kartı stopu açık yazar ('koşullu stop %3' değil)", "stop: coin −%" in _sy3 and "koşullu stop %${" not in _sy3)
 
+# MADDE 743: haftalık log rotasyonu (copytruncate) sonrası ayar ve olaylar kaybolmaz
+import gzip
+_kl5 = tempfile.mkdtemp()
+_eski = ("2026-11-06 20:50:17,342 [INFO] önerilen ayar etkin: profil T7K · gross 1.15x · koşullu stop 0.03 (kitap 2000.04 $)\n"
+         "2026-11-06 20:50:18,347 [INFO] carry_bot başladı | mod=demo | 4+4 bacak | 15 dilim | gross 1.15x | akış 20%\n"
+         "2026-11-07 21:18:00,000 [INFO] KÂR AL doldu: AUSDT - eski dilimlerden çıkarıldı\n")
+with gzip.open(os.path.join(_kl5, "carry_bot.log.1.gz"), "wt", encoding="utf-8") as f:
+    f.write(_eski)
+open(os.path.join(_kl5, "carry_bot.log"), "w").write("")   # rotasyon: güncel dosya boşaltıldı
+kontrol("rotasyon sonrası etkin ayar .1.gz'den", panel.etkin_ayar(_kl5) == {"profil": "T7K", "gross": 1.15, "stop": 0.03, "onerilen": True}, panel.etkin_ayar(_kl5))
+open(os.path.join(_kl5, "carry_bot.log"), "w").write("2026-11-08 00:05:00,000 [ERROR] tur başarısız: x\n")
+kontrol("rotasyon sonrası olaylar: eski + yeni dosya", [o["tur"] for o in panel.olaylar(_kl5)] == ["hata", "tp", "basla", "ayar"], [o["tur"] for o in panel.olaylar(_kl5)])
+os.remove(os.path.join(_kl5, "carry_bot.log.1.gz")); open(os.path.join(_kl5, "carry_bot.log.1"), "w").write(_eski)
+kontrol("sıkıştırılmamış .1 de okunur", panel.etkin_ayar(_kl5)["gross"] == 1.15)
+kontrol("son_bayt sınırı eski dosyaya da uygulanır", len("\n".join(panel.log_satirlari(_kl5, 120))) <= 121)
+kontrol("hiç log yoksa None", panel.log_satirlari(tempfile.mkdtemp(), 1000) is None)
+kontrol("bugün grafiğinde en küçük dikey aralık", "minAralik" in app.get("/").data.decode())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
