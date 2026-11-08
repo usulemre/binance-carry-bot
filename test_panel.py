@@ -255,5 +255,16 @@ kontrol("son_bayt sınırı eski dosyaya da uygulanır", len("\n".join(panel.log
 kontrol("hiç log yoksa None", panel.log_satirlari(tempfile.mkdtemp(), 1000) is None)
 kontrol("bugün grafiğinde en küçük dikey aralık", "minAralik" in app.get("/").data.decode())
 
+# MADDE 744: döküm satırında "gerçek oranlarla olsaydı"
+_dk7 = [{"tarih": "2026-11-06", "zaman": 100, "ozkaynak": 5000.0, "kitap": 2000.0, "sermaye_olcek": 0.4}]
+_an7 = {"ozkaynak": 5001.0, "kitap": 2000.4, "gelir_bas": {"bas": 100, "son": 300, "FUNDING_FEE": 0.1786},
+        "gercek_funding": {"bas": 100, "toplam": 0.3953, "son": 300}}
+kontrol("döküm: gerçek oranlı funding", panel.hesap_ozet(_dk7, _an7)["dokum"].get("funding_gercek") == 0.4, panel.hesap_ozet(_dk7, _an7)["dokum"])
+_an7["gercek_funding"]["bas"] = 99
+kontrol("başlangıç farklıysa gerçek oranlı satır yok", "funding_gercek" not in panel.hesap_ozet(_dk7, _an7)["dokum"])
+_an7.pop("gercek_funding")
+kontrol("canlı hesapta (satır yok) döküm yine çalışır", "funding_gercek" not in panel.hesap_ozet(_dk7, _an7)["dokum"])
+kontrol("sayfada gerçek oran satırı, toplama girmez", "gerçek Binance oranlarıyla olsaydı" in app.get("/").data.decode() and "Toplama girmez" in app.get("/").data.decode())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

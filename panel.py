@@ -364,6 +364,9 @@ def hesap_ozet(defter: list[dict], an: dict | None) -> dict:
                         "komisyon": round(g.get("COMMISSION", 0), 2),
                         "diger_gelir": round(sum(v for t, v in g.items() if t not in ("bas", "son", "REALIZED_PNL", "FUNDING_FEE",
                                                                                       "COMMISSION", "TRANSFER")), 2)}
+        gf = (an or {}).get("gercek_funding") or {}
+        if gf.get("bas") == defter[0].get("zaman") and gf.get("toplam") is not None:   # madde 744: gerçek oranlarla olsaydı
+            out["dokum"]["funding_gercek"] = round(float(gf["toplam"]), 2)
     return out
 
 
@@ -474,6 +477,7 @@ nav.alt button.on{background:color-mix(in srgb,var(--vurgu) 16%,transparent);col
 .dk .ac{display:none;flex-basis:100%;color:var(--soluk);font-size:12px;padding:0 0 0 17px}.dk.acik .ac{display:block}
 .dk .ok{color:var(--soluk);font-size:11px;display:inline-block;transition:transform .15s}.dk.acik .ok{transform:rotate(90deg)}
 .dk.top{cursor:default;font-weight:750}
+.dk.alt{border-top:0;padding-top:0;color:var(--soluk);font-size:12.5px}.dk.alt .a{padding-left:17px}.dk.alt .v{font-weight:650}
 .isi{position:relative;height:190px;border-radius:12px;overflow:hidden}
 .isi div{position:absolute;padding:6px 7px;overflow:hidden;border:2px solid var(--kart);border-radius:9px;display:flex;flex-direction:column;justify-content:space-between;transition:background .4s}
 .isi b{font-size:12.5px;font-weight:750;white-space:nowrap}.isi span{font-size:11.5px;font-weight:650;font-variant-numeric:tabular-nums;white-space:nowrap}
@@ -846,7 +850,9 @@ function dokumYaz(k, poz, kar){
     .filter(x => x[5] || Math.abs(x[2]) >= 0.005);
   const tm = K.reduce((a,x)=>a+Math.abs(x[2]), 0) || 1;
   const cubuk = `<div class="cubuk">${K.map(x=>`<span style="width:${(Math.abs(x[2])/tm*100).toFixed(1)}%;background:${css(x[4])}" title="${x[1]}"></span>`).join("")}</div>`;
-  return cubuk + K.map(x=>`<div class="dk ${ACIK.has(x[0])?"acik":""}" onclick="dkAc('${x[0]}')"><span class="n" style="background:${css(x[4])}"></span><span class="a">${x[1]} <span class="ok">›</span></span><span class="v ${sinif(x[2])}">${isaretli(x[2])}</span><span class="ac">${x[3]}</span></div>`).join("")
+  // madde 744: demoda funding'i demo borsa kendi oranıyla öder; bot gerçek oranlara göre seçer -> "gerçek oranlarla olsaydı" (toplama girmez)
+  const fg = D.funding_gercek, fgS = fg==null ? "" : `<div class="dk alt ${ACIK.has("fug")?"acik":""}" onclick="dkAc('fug')"><span class="n"></span><span class="a">↳ gerçek Binance oranlarıyla olsaydı <span class="ok">›</span></span><span class="v ${sinif(fg)}">${isaretli(fg)}</span><span class="ac">Bot coinleri gerçek Binance'in funding oranlarına bakarak seçer, ama pozisyonlar demo borsada olduğu için funding'i demo borsa kendi oranıyla öder (çoğu zaman gerçekle ilgisiz). Bu satır aynı pozisyonların gerçek oranlarla ne alacağını / ödeyeceğini gösterir (yaklaşık; 5 dk'lık pozisyon görüntüsüyle). Toplama girmez — canlı hesapta funding bu olurdu.</span></div>`;
+  return cubuk + K.map(x=>`<div class="dk ${ACIK.has(x[0])?"acik":""}" onclick="dkAc('${x[0]}')"><span class="n" style="background:${css(x[4])}"></span><span class="a">${x[1]} <span class="ok">›</span></span><span class="v ${sinif(x[2])}">${isaretli(x[2])}</span><span class="ac">${x[3]}</span></div>` + (x[0]=="fun" ? fgS : "")).join("")
     + `<div class="dk top"><span class="a">Toplam (başlangıçtan beri)</span><span class="v rz ${sinif(kar)}">${isaretli(kar)}</span></div>`;
 }
 function ayarKart(k){
@@ -912,7 +918,7 @@ function pozSayfa(k){
 function gecmisSayfa(k){
   const grafikVar = (k.seri||[]).length >= 3;   // madde 734/737: 1-2 noktalık grafik bilgi vermez, yalnız yer kaplar
   return `<div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2>${takvim(k)}
-      ${k.dokum?`<div class="k" style="margin-top:6px">Başlangıçtan beri: funding ${isaretli(k.dokum.funding)} · komisyon ${isaretli(k.dokum.komisyon)}</div>`
+      ${k.dokum?`<div class="k" style="margin-top:6px">Başlangıçtan beri: funding ${isaretli(k.dokum.funding)}${k.dokum.funding_gercek!=null?` (gerçek oranlarla ${isaretli(k.dokum.funding_gercek)})`:""} · komisyon ${isaretli(k.dokum.komisyon)}</div>`
         :(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:6px">Defter toplamı (yaklaşık): funding ${isaretli(k.funding_top)} · komisyon ${isaretli(k.komisyon_top)}</div>`:""}
       <div class="k" style="margin-top:4px">Her gün, Binance gününe (03:00 – 03:00) göre; bugünkü canlı sonuç Özet'te.</div></div>
     <div class="kart"><h2>Son 1 yıl</h2>${yillik(k)}</div>

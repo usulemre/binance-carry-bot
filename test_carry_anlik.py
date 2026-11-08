@@ -117,5 +117,59 @@ os.remove(_gd)
 k = carry_anlik.yaz(c, simdi=1004.0, dosya=dosya, defter_dosya=os.path.join(tmp, "yok.jsonl"))
 kontrol("transfer bilinmiyorsa (döküm yok) gün noktası YAZILMAZ", not os.path.exists(_gd))
 
+# MADDE 744: gerçek Binance oranlarıyla funding (yalnız demo)
+H = 3600 * 1000
+class _Oran:
+    def __init__(s, oranlar, hata=False):
+        s.oranlar, s.hata, s.cagri = oranlar, hata, []   # oranlar: sembol -> [(ms, oran, işaret)]
+    def futures_funding_rate(s, symbol, startTime, endTime, limit):
+        s.cagri.append(symbol)
+        if s.hata:
+            raise RuntimeError("ağ")
+        return [{"fundingTime": t, "fundingRate": str(r), "markPrice": str(m)} for t, r, m in s.oranlar.get(symbol, [])
+                if startTime <= t <= endTime][:limit]
+class _DemoC(_Oran):
+    def __init__(s, oranlar, gelir):
+        super().__init__(oranlar); s.gelir = gelir
+    def futures_income_history(s, startTime, endTime, limit, incomeType=None):
+        return [g for g in s.gelir if incomeType in (None, g["incomeType"]) and startTime <= g["time"] <= endTime][:limit]
+class _GF:
+    def __init__(s, demo, gercek, veri_gercek=True):
+        s.client, s.veri, s.veri_gercek = demo, gercek, veri_gercek
+_b = 1_000 * H   # başlangıç
+# demo: ESPORTS short, demo oranı −%0,72 -> short ÖDER (−0,126 $ = −(−17,5 $) × −0,0072)
+_demo = _DemoC({"EUSDT": [(_b + 4 * H, -0.0072, 0.011)]},
+               [{"incomeType": "FUNDING_FEE", "symbol": "EUSDT", "income": "-0.126", "time": _b + 4 * H}])
+# gerçek: aynı anda +%0,08 (short ALIR), ayrıca demoda olmayan +8 sa'te +%0,05
+_ger = _Oran({"EUSDT": [(_b + 4 * H, 0.0008, 0.011), (_b + 8 * H, 0.0005, 0.010)],
+              "XUSDT": [(_b + 10 * H, 0.001, 2.0)]})
+_gfd = os.path.join(tmp, "defter", "gercek_funding.json")
+kontrol("canlıda (veri_gercek yok) hesaplanmaz", carry_anlik.gercek_funding(_GF(_demo, _ger, False), _b // 1000, (_b + 9 * H) / 1000, {}, _gfd) is None
+        and not os.path.exists(_gfd))
+g = carry_anlik.gercek_funding(_GF(_demo, _ger), _b // 1000, (_b + 9 * H) / 1000, {}, _gfd)
+# büyüklük = −(−0,126) / −0,0072 = −17,5 $ (short); gerçek: −(−17,5) × 0,0008 + −(−17,5) × 0,0005 = +0,01400 + 0,00875
+kontrol("tohum: demo kaydından büyüklük, gerçek oranlar (8 sa içindeki gerçek anlar dahil)", abs(g["toplam"] - (17.5 * 0.0008 + 17.5 * 0.0005)) < 1e-6, g)
+_poz = {"XUSDT": {"miktar": -5.0, "isaret": 2.0}, "EUSDT": {"miktar": -1590.0, "isaret": 0.011}}
+g2 = carry_anlik.gercek_funding(_GF(_demo, _ger), _b // 1000, (_b + 11 * H) / 1000, _poz, _gfd)
+kontrol("artımlı: son çalışmadan beri gerçek funding anı × şu anki pozisyon × o anın işaret fiyatı",
+        abs(g2["toplam"] - (g["toplam"] + 5.0 * 2.0 * 0.001)) < 1e-6, g2)
+_once = json.load(open(_gfd))
+try:
+    carry_anlik.gercek_funding(_GF(_demo, _Oran({}, hata=True)), _b // 1000, (_b + 12 * H) / 1000, _poz, _gfd); _ok = False
+except RuntimeError:
+    _ok = True
+kontrol("gerçek borsa okunamazsa istisna, dosya DEĞİŞMEZ", _ok and json.load(open(_gfd)) == _once)
+g3 = carry_anlik.gercek_funding(_GF(_demo, _ger), _b // 1000, (_b + 11 * H) / 1000 + 60, _poz, _gfd)
+kontrol("aynı funding anı iki kez sayılmaz", abs(g3["toplam"] - g2["toplam"]) < 1e-12)
+class _S3(_Sahte):
+    def __init__(s):
+        super().__init__(); s.client = _DemoC({}, _k); s.veri = _Oran({}); s.veri_gercek = True
+    def get_open_positions(s):
+        return [{"symbol": "AUSDT", "positionAmt": "10", "entryPrice": "2.0", "markPrice": "2.1", "unRealizedProfit": "1.0"}]
+k = carry_anlik.yaz(_S3(), simdi=1003.0, dosya=dosya, defter_dosya=_df)
+kontrol("yaz(): anlık dosyada gerçek-oran funding (başlangıç = defterin ilk satırı)", k.get("gercek_funding", {}).get("bas") == 1000, k.get("gercek_funding"))
+k = carry_anlik.yaz(c, simdi=1004.0, dosya=dosya, defter_dosya=_df)
+kontrol("yaz(): canlı istemcide gerçek-oran satırı yok", "gercek_funding" not in k)
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
