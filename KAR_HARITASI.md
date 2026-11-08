@@ -8224,3 +8224,6 @@ Yalnız İZLEME; bot kararı / emir akışı / strateji DEĞİŞMEDİ (carry_bot
 - Sınır: koşullu stop / delist kapanışları emir defterine yazılmıyor (carry_bot değiştirilmedi); bunlar olaylarda log satırıyla
   görünmeye devam ediyor, pozisyon geçmişinde de kapanış olarak var.
 - Testler: test_panel (+7), test_carry_anlik (+3) — hepsi geçti.
+- 745 düzeltme (aynı gün): pozisyon geçmişi kaydı başlamadan ÖNCEKİ işlemlerde panel, işlemden saatler sonraki görüntüyü "sonra
+  ortalama" diye gösteriyordu (ör. 08:19 turunda 15:30'daki durum). Artık görüntü işlemden en çok 20 dk sonraysa kullanılır; değilse
+  "kayıt yok". Yeni turlarda (geçmiş kaydı başladıktan sonra) değerler doğru.

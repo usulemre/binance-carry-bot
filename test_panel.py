@@ -284,6 +284,9 @@ kontrol("işlem: dolum fiyatı / adet / maker", _cy["fiyat"] == 0.3103 and _cy["
 kontrol("işlem: SONRAKİ görüntüden ortalama ve pozisyon", _cy["ort_sonra"] == 0.3365 and _cy["poz_sonra"] == 214.9, _cy)
 kontrol("işlem: geçmişi olmayan coinde ortalama yok (hata yok)", "ort_sonra" not in _on)
 kontrol("işlem: eşlenmemiş emir 'bekleyen' sayılır, listede yok", _i["bekleyen"] == 1 and len(_i["liste"]) == 2, _i)
+json.dump({"s": {"CYBERUSDT": [[int(_t) + 5000, 214.9, 0.3365]]}}, open(os.path.join(_k745, "defter", "anlik_poz.json"), "w"))
+_cy2 = [x for x in panel.islemler(_k745)["liste"] if x["sembol"] == "CYBER"][0]
+kontrol("işlem: geç görüntü (kayıt başlamadan önceki işlem) ortalama GÖSTERMEZ", "ort_sonra" not in _cy2 and _cy2.get("kayit_yok"), _cy2)
 kontrol("işlem: yeni → eski sıralı", _i["liste"][0]["sembol"] == "ONE")
 kontrol("işlem: veritabanı yoksa boş", panel.islemler(os.path.join(tmp, "yok")) == {"liste": [], "bekleyen": 0})
 kontrol("sayfada işlem tablosu", "islemTablo" in app.get("/").data.decode())

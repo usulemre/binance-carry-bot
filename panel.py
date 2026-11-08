@@ -287,6 +287,9 @@ def icra(klasor: str) -> dict | None:
         return None
 
 
+ISLEM_GORUNTU_SN = 1200
+"""MADDE 745: işlemden sonraki pozisyon görüntüsü en çok bu kadar sonra olabilir (carry_anlik 5 dk'da bir). Daha geçse
+(geçmiş kaydı başlamadan önceki işlem ya da görüntü servisi aksadı) ortalama GÖSTERİLMEZ — yanlış (daha sonraki) değer yerine."""
 _TUR_AD = {"GIRIS": "limit", "KOVALA": "limit", "PIYASA": "piyasa", "PIYASA_YEDEK": "piyasa", "TP": "kâr al",
            "KADEME": "kâr al kademe", "FELAKET": "felaket stop"}
 
@@ -323,10 +326,16 @@ def islemler(klasor: str, gun: float = 7, simdi: float | None = None) -> dict:
         h = gec.get(sem) or []
         i = bisect.bisect_left([x[0] for x in h], t - 1)
         sonra = h[i] if i < len(h) else None
+        if sonra is not None and sonra[0] - t > ISLEM_GORUNTU_SN:   # görüntü işlemden çok sonra: arada başka işlem olmuş olabilir
+            sonra = None; k_eski = True
+        else:
+            k_eski = False
         k = {"t": int(t), "zaman": _yerel(t).strftime("%Y-%m-%d %H:%M"), "sembol": str(sem).removesuffix("USDT"),
              "tur": _TUR_AD.get(tur, tur), "yon": yon, "adet": float(dolan), "fiyat": float(ort),
              "usd": round(float(dolan) * float(ort), 2), "kom": None if kom is None else round(float(kom), 4),
              "maker": None if maker is None else bool(float(maker) >= 0.999 * float(dolan))}
+        if k_eski or (not h and t < simdi - ISLEM_GORUNTU_SN):
+            k["kayit_yok"] = True
         if sonra is not None:
             k.update({"poz_sonra": sonra[1], "ort_sonra": sonra[2] or None, "usd_sonra": round(abs(sonra[1]) * float(ort), 2)})
         out["liste"].append(k)
@@ -1008,7 +1017,7 @@ function islemTablo(o){
     if (art) return ps>0 ? "long +" : "short −"; return ps<0 ? "short +" : "long −"; };
   const sat = o.islem.map(x=>`<tr><td><b>${x.sembol}</b> <span class="s">${ad(x)}</span><div class="s">${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div></td>
     <td class="r">${fiyatYaz(x.fiyat)}<div class="s">${x.adet.toLocaleString("tr-TR",{maximumFractionDigits:4})} adet · ${para(x.usd)}</div></td>
-    <td class="r">${x.ort_sonra!=null ? fiyatYaz(x.ort_sonra) : (x.poz_sonra===0 ? "kapandı" : "—")}<div class="s">${x.poz_sonra!=null && x.poz_sonra!==0 ? "poz " + para(x.usd_sonra) : (x.poz_sonra==null ? "birkaç dk içinde" : "")}</div></td></tr>`).join("");
+    <td class="r">${x.ort_sonra!=null ? fiyatYaz(x.ort_sonra) : (x.poz_sonra===0 ? "kapandı" : "—")}<div class="s">${x.poz_sonra!=null && x.poz_sonra!==0 ? "poz " + para(x.usd_sonra) : (x.poz_sonra==null ? (x.kayit_yok ? "kayıt yok" : "birkaç dk içinde") : "")}</div></td></tr>`).join("");
   return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} işlemler (${o.islem.length})</span>${ac ? `<table><tr class="s"><td>coin · yön</td><td class="r">dolum fiyatı</td><td class="r">sonra ortalama</td></tr>${sat}</table>` : ""}</div>`;
 }
 function olayAc(id){ ACIK.has(id) ? ACIK.delete(id) : ACIK.add(id); ciz(); }
