@@ -1,0 +1,17 @@
+# MADDE 746: funding ödemesinden hemen sonra EK anlık görüntü (carry-anlik.service). Binance funding kaydını ödeme anından
+# birkaç dakika sonra işliyor (demoda ~8 dk'ya kadar); 5 dk'lık ana zamanlayıcı da kaymayla 5 dk geç kalabiliyor -> panelde
+# funding 10+ dk geç görünüyordu. Her saat başı (1 sa / 4 sa / 8 sa aralıklı coinlerin hepsi saat başında öder) birkaç ek okuma.
+[Unit]
+Description=Carry funding sonrası ek anlık görüntü (madde 746)
+
+[Timer]
+OnCalendar=*-*-* *:00:40 UTC
+OnCalendar=*-*-* *:02:00 UTC
+OnCalendar=*-*-* *:04:00 UTC
+OnCalendar=*-*-* *:07:00 UTC
+OnCalendar=*-*-* *:11:00 UTC
+AccuracySec=5s
+Unit=carry-anlik.service
+
+[Install]
+WantedBy=timers.target

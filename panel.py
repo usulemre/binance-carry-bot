@@ -864,7 +864,20 @@ function fundKart(k){
   const saat = new Date(T).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
   return `<div class="d">${sure}</div><span class="k">${saat} · tahmini <b class="${sinif(top)}">${isaretli(top)}</b></span>`;
 }
+// MADDE 746: funding ödemesi gelince veriyi hemen yeniden iste (dakikalık yenilemeyi bekleme). Sunucu ödemeden sonra
+// 0:40 / 2 / 4 / 7 / 11. dakikalarda ek okuma yapar (carry-anlik-funding.timer); tarayıcı o okumaların ardından çeker.
+let FUND_T = null, FUND_PLAN = [];
+function fundTakip(){
+  let T = null; for (const F of Object.values(FUND)) if (F && F.T) T = T==null ? F.T : Math.min(T, F.T);
+  if (T == null) return;
+  if (FUND_T != null && T > FUND_T){   // bir funding anı geçti (akış sonrakine döndü)
+    const t0 = FUND_T; FUND_PLAN.forEach(clearTimeout);
+    FUND_PLAN = [55, 135, 255, 435, 675].map(sn => setTimeout(yukle, Math.max(0, t0 + sn*1000 - Date.now())));
+  }
+  FUND_T = T;
+}
 function canliBoya(){
+  fundTakip();
   const on = canliDurum();
   const k = VERI && VERI.kurulumlar[secili]; if (!k) return;
   const ds = $("#dilimsure"); if (ds) ds.innerHTML = dilimKart(k.dilim);

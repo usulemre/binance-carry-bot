@@ -291,5 +291,12 @@ kontrol("işlem: yeni → eski sıralı", _i["liste"][0]["sembol"] == "ONE")
 kontrol("işlem: veritabanı yoksa boş", panel.islemler(os.path.join(tmp, "yok")) == {"liste": [], "bekleyen": 0})
 kontrol("sayfada işlem tablosu", "islemTablo" in app.get("/").data.decode())
 
+# MADDE 746: funding sonrası hızlı yenileme
+_sy6 = app.get("/").data.decode()
+kontrol("funding anı geçince veri hemen yeniden istenir", "function fundTakip(" in _sy6 and "fundTakip();" in _sy6)
+_tm = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deploy", "carry-anlik-funding.timer")).read()
+kontrol("funding sonrası ek zamanlayıcı anlık servisi çalıştırır", "Unit=carry-anlik.service" in _tm and "*:00:40 UTC" in _tm)
+kontrol("kurulum betiği ek zamanlayıcıyı kurar", "carry-anlik-funding.timer" in open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deploy", "sunucu_kur.sh")).read())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
