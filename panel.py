@@ -343,6 +343,29 @@ def islemler(klasor: str, gun: float = 7, simdi: float | None = None) -> dict:
     return out
 
 
+def fundingler(klasor: str, gun: float = 7, simdi: float | None = None) -> list[dict]:
+    """MADDE 749: funding ödemeleri (defter/funding_olay.json; carry_anlik 5 dk'da bir). Her ödeme anı (dakika) için
+    demo hesaba yatan (d) ve gerçek Binance oranlarıyla olsaydı (g); coin coin. Yeniden eskiye."""
+    simdi = simdi or time.time()
+    try:
+        with open(os.path.join(klasor, "defter", "funding_olay.json"), encoding="utf-8") as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        return []
+    D, G = d.get("d") or {}, d.get("g") or {}
+    out = []
+    for t in sorted(set(D) | set(G), key=int, reverse=True):
+        if int(t) / 1000 < simdi - gun * 86400:
+            continue
+        dm, gr = D.get(t) or {}, G.get(t) or {}
+        coin = [{"s": s_.removesuffix("USDT"), "demo": dm.get(s_), "gercek": gr.get(s_)} for s_ in sorted(set(dm) | set(gr))]
+        coin.sort(key=lambda c: -abs((c["demo"] or 0) if c["demo"] is not None else (c["gercek"] or 0)))
+        out.append({"t": int(t) // 1000, "zaman": _yerel(int(t) / 1000).strftime("%Y-%m-%d %H:%M"),
+                    "demo": round(sum(dm.values()), 4) if dm else None, "demo_n": len(dm),
+                    "gercek": round(sum(gr.values()), 4) if gr else None, "gercek_n": len(gr), "coin": coin})
+    return out
+
+
 ANLIK_TAZE_SN = int(os.getenv("CARRY_PANEL_ANLIK_TAZE_SN", "900"))
 """MADDE 728: defter/anlik.json (carry_anlik.py, 5 dk'da bir) bu kadar saniyeden tazeyse pozisyon tablosu ondan gösterilir."""
 
@@ -446,7 +469,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         ad = e.get("CARRY_BILDIRIM_AD") or (b[len("carry-"):] if b.startswith("carry-") else "ana")
         df = defter_oku(kl); o = ozet(df)
         o.update({"ad": ad, "mod": e.get("BINANCE_MODE", "demo"), "servis": servis_durumu(kl) if servis else "—",
-                  "olaylar": olaylar(kl), "islemler": islemler(kl), "icra": icra(kl), "dilim": sonraki_dilim(kl, e),
+                  "olaylar": olaylar(kl), "islemler": islemler(kl), "fundingler": fundingler(kl), "icra": icra(kl), "dilim": sonraki_dilim(kl, e),
                   "ayar": etkin_ayar(kl), "hedef": kar_hedefleri(e), "gun_egri": gun_egri(kl)})
         if o["ayar"] is not None:   # madde 742: koşullu stopun coin eşiği (carry_bot CARRY_LONG_24S, varsayılan 0,45)
             try:
@@ -573,7 +596,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .zo .i{flex:none;width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;color:#fff;z-index:1}
 .zo .m{font-size:13px;min-width:0;padding-top:3px}.zo .z{color:var(--soluk);font-size:11.5px;margin-top:1px}
 .i-stop,.i-hata{background:var(--eks)}.i-delist,.i-saglik,.i-uyari{background:var(--uyari)}.i-ayar{background:var(--mor)}.i-basla{background:var(--vurgu)}
-.i-tp{background:var(--art)}.i-tur{background:var(--soluk)}.i-islem{background:var(--vurgu)}
+.i-tp,.i-funding{background:var(--art)}.i-tur{background:var(--soluk)}.i-islem{background:var(--vurgu)}
 .isl{margin-top:6px}.isl .ac{color:var(--vurgu);font-size:12px;cursor:pointer;user-select:none}
 .isl table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;font-variant-numeric:tabular-nums}
 .isl td{text-align:left;padding:4px 6px 4px 0;border-top:1px solid var(--cizgi);vertical-align:top}.isl td.r{text-align:right;white-space:nowrap}
@@ -1012,9 +1035,9 @@ function gecmisSayfa(k){
     <div class="kart"><h2>İcra · son 30 gün <span class="k">(emir defteri)</span></h2>${icraKart(k)}</div>`;
 }
 // MADDE 740: olaylar zaman çizelgesi — gün gün (Bugün / Dün / tarih), türe göre simge
-const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", stop_tut:"□", delist:"!", saglik:"♥", hata:"✕", tp:"✓", uyari:"⚠", tur:"↻", islem:"⇄"};
+const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", stop_tut:"□", delist:"!", saglik:"♥", hata:"✕", tp:"✓", uyari:"⚠", tur:"↻", islem:"⇄", funding:"$"};
 const OLAY_AD = {basla:"başlama", ayar:"ayar", stop:"stop", stop_tut:"stop şartı: piyasa sakin, tutuldu", delist:"delist", saglik:"sağlık",
-                 hata:"hata", tp:"kâr al doldu", uyari:"piyasa emrine düşüldü", tur:"dilim turu", islem:"işlem"};
+                 hata:"hata", tp:"kâr al doldu", uyari:"piyasa emrine düşüldü", tur:"dilim turu", islem:"işlem", funding:"funding ödemesi"};
 // MADDE 745: her dilim turunun altında o turun işlemleri (coin, yön, adet, dolum fiyatı, limit / piyasa) ve işlemden sonra
 // coinin pozisyonu ve ORTALAMA girişi (Binance entryPrice, 5 dk'lık görüntüden). Tura bağlanmayan dolumlar (kâr al vb.) ayrı olay.
 const dk_ = s => Date.UTC(+s.slice(0,4), +s.slice(5,7)-1, +s.slice(8,10), +s.slice(11,13), +s.slice(14,16)) / 60000;
@@ -1031,6 +1054,13 @@ function olayIslem(k){
     grup = {zaman: x.zaman, tur: "islem", m: x.m, islem: [x]}; out.push(grup);
   }
   for (const g of out) if (g.tur==="islem") g.metin = g.islem.length==1 ? `${g.islem[0].sembol} · ${g.islem[0].tur}` : `${g.islem.length} işlem`;
+  // madde 749: funding ödemeleri (demo hesaba yatan · gerçek oranlarla olsaydı)
+  const demo = k.mod=="demo";
+  for (const f of (k.fundingler||[])){
+    const a = f.demo!=null ? `demo hesaba ${isaretli(f.demo)} (${f.demo_n} poz)` : (demo ? "demo hesaba ödeme yok" : "");
+    const b = demo && f.gercek!=null ? `gerçek oranlarla ${isaretli(f.gercek)} (${f.gercek_n} poz)` : "";
+    out.push({zaman: f.zaman, tur: "funding", fon: f, metin: "Funding · " + [a, b].filter(Boolean).join(" · ")});
+  }
   return out.sort((a,b)=>(b.zaman||"").localeCompare(a.zaman||""));
 }
 function islemTablo(o){
@@ -1044,6 +1074,13 @@ function islemTablo(o){
     <td class="r">${x.ort_sonra!=null ? fiyatYaz(x.ort_sonra) : (x.poz_sonra===0 ? "kapandı" : "—")}<div class="s">${x.poz_sonra!=null && x.poz_sonra!==0 ? "poz " + para(x.usd_sonra) : (x.poz_sonra==null ? (x.kayit_yok ? "kayıt yok" : "birkaç dk içinde") : "")}</div></td></tr>`).join("");
   return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} işlemler (${o.islem.length})</span>${ac ? `<table><tr class="s"><td>coin · yön</td><td class="r">dolum fiyatı</td><td class="r">sonra ortalama</td></tr>${sat}</table>` : ""}</div>`;
 }
+function fonTablo(o){
+  const f = o.fon; if (!f || !f.coin || !f.coin.length) return "";
+  const id = "fon" + o.zaman, ac = ACIK.has(id), demo = VERI.kurulumlar[secili].mod=="demo";
+  const h = v => v==null ? `<span class="s">—</span>` : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
+  const sat = f.coin.map(c=>`<tr><td><b>${c.s}</b></td><td class="r">${h(c.demo)}</td>${demo?`<td class="r">${h(c.gercek)}</td>`:""}</tr>`).join("");
+  return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} coinler (${f.coin.length})</span>${ac ? `<table><tr class="s"><td>coin</td><td class="r">${demo?"demo hesap":"ödeme"}</td>${demo?`<td class="r">gerçek oranla</td>`:""}</tr>${sat}</table>` : ""}</div>`;
+}
 function olayAc(id){ ACIK.has(id) ? ACIK.delete(id) : ACIK.add(id); ciz(); }
 function olaySayfa(k){
   const bugun = new Date(), t = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
@@ -1052,7 +1089,7 @@ function olaySayfa(k){
   let h = "", onc = null;
   for (const o of olayIslem(k)){
     const g = (o.zaman||"").slice(0,10); if (g!==onc){ h += `<div class="gun">${g?ad(g):"—"}</div>`; onc = g; }
-    h += `<div class="zo ${o.tur}"><span class="i i-${o.tur}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="m"><div>${o.metin.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\s*\|\s*/g," · ")}</div><div class="z">${(o.zaman||"").slice(11)} · ${OLAY_AD[o.tur]||o.tur}</div>${islemTablo(o)}</div></div>`;
+    h += `<div class="zo ${o.tur}"><span class="i i-${o.tur}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="m"><div>${o.metin.replace(/&/g,"&amp;").replace(/</g,"&lt;").replace(/\s*\|\s*/g," · ")}</div><div class="z">${(o.zaman||"").slice(11)} · ${OLAY_AD[o.tur]||o.tur}</div>${islemTablo(o)}${fonTablo(o)}</div></div>`;
   }
   const bek = (k.islemler||{}).bekleyen||0;
   if (bek) h = `<div style="color:var(--soluk);font-size:12px;margin-bottom:8px">${bek} emrin dolum bilgisi henüz eşlenmedi (birkaç dakika içinde görünür)</div>` + h;

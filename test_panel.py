@@ -307,5 +307,17 @@ json.dump({"zaman": int(__import__("time").time()) - 30, "pozisyonlar": {"BUSDT"
 kontrol("panel verisinde demo funding", panel.veri([kl], servis=False)["kurulumlar"][0].get("demo_funding", {}).get("n") == 3)
 os.remove(os.path.join(kl, "defter", "anlik.json"))
 
+# MADDE 749: funding ödemeleri olaylarda
+_kl9 = tempfile.mkdtemp(); os.makedirs(os.path.join(_kl9, "defter"))
+_n9 = 1_794_225_600
+json.dump({"d": {str(_n9 * 1000): {"AUSDT": 0.1, "BUSDT": -0.07}}, "g": {str(_n9 * 1000): {"AUSDT": 0.12, "BUSDT": 0.001}, str((_n9 + 3600) * 1000): {"HUSDT": 0.1}}},
+          open(os.path.join(_kl9, "defter", "funding_olay.json"), "w"))
+_f9 = panel.fundingler(_kl9, simdi=_n9 + 7200)
+kontrol("fundingler: ödeme anı başına demo + gerçek, yeniden eskiye", len(_f9) == 2 and _f9[0]["demo"] is None and _f9[0]["gercek"] == 0.1
+        and abs(_f9[1]["demo"] - 0.03) < 1e-9 and _f9[1]["demo_n"] == 2 and _f9[1]["gercek_n"] == 2 and _f9[1]["coin"][0]["s"] == "A", _f9)
+kontrol("fundingler: 7 günden eski gösterilmez", panel.fundingler(_kl9, simdi=_n9 + 8 * 86400) == [])
+kontrol("fundingler: dosya yoksa boş", panel.fundingler(tempfile.mkdtemp()) == [])
+kontrol("sayfada funding olayı ve coin tablosu", "fonTablo(o)" in app.get("/").data.decode() and "funding ödemesi" in app.get("/").data.decode())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

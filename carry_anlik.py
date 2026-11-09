@@ -122,6 +122,7 @@ def gelir_birikim(client, bas_s: int, simdi: float, dosya: str = BIRIKIM_DOSYA) 
     bit_ms = int(simdi * 1000)
     idler = dict(b.get("idler") or {})   # kimlik -> kayıt zamanı (ms); yalnız örtüşme penceresindekiler saklanır
     toplam = dict(b.get("toplam", {}))
+    yeni_fund = []   # madde 749: bu çalışmada İLK KEZ görülen funding kayıtları (olaylar sayfası için)
     s = max(bas_ms, int(b["son_ms"]) - ORTUSME_MS)
     son = bit_ms
     for _ in range(50):
@@ -133,6 +134,8 @@ def gelir_birikim(client, bas_s: int, simdi: float, dosya: str = BIRIKIM_DOSYA) 
             idler[kimlik] = int(g["time"])
             t = g.get("incomeType") or "?"
             toplam[t] = toplam.get(t, 0.0) + float(g.get("income") or 0)
+            if t == "FUNDING_FEE" and g.get("symbol"):
+                yeni_fund.append((int(g["time"]), g["symbol"], float(g.get("income") or 0)))
         if len(r) < 1000:
             break
         s = int(r[-1]["time"]) + 1
@@ -141,7 +144,7 @@ def gelir_birikim(client, bas_s: int, simdi: float, dosya: str = BIRIKIM_DOSYA) 
     idler = {k: t for k, t in idler.items() if t >= son - 2 * ORTUSME_MS}
     b = {"bas_ms": bas_ms, "son_ms": son, "toplam": {k: round(v, 6) for k, v in toplam.items()}, "idler": idler}
     _atomik_yaz(dosya, b)
-    return b
+    return {**b, "_yeni_funding": yeni_fund}
 
 
 def _veri_istemcisi(client):
@@ -210,6 +213,64 @@ def demo_funding(client, poz: dict, simdi: float) -> dict | None:
     return {"T": T // 1000, "tahmin": round(tahmin, 4), "n": sum(1 for t in zaman.values() if abs(t - T) < 60_000)}
 
 
+FUNDING_OLAY_DOSYA = os.path.join(DEFTER_KLASOR, "funding_olay.json")
+FUNDING_OLAY_GUN = 14
+
+
+def _dk(ms: int) -> str:
+    return str(int(ms) // 60000 * 60000)
+
+
+def _gercek_gecmis(client, defter_dosya: str, db: str, bas_ms: int, bit_ms: int) -> list:
+    """MADDE 749: geçmiş gerçek-oran funding olayları (yalnız ilk kurulumda). Başlangıç pozisyonları (defterin ilk satırı)
+    + emir defterindeki dolumlar -> her an tutulan miktar; gerçek borsanın her funding anı × miktar × işaret × oran.
+    Yeniden kurulan pozisyon borsadakiyle TUTMAZSA boş döner (yanlış geçmiş yazılmaz)."""
+    import sqlite3
+    with open(defter_dosya, encoding="utf-8") as f:
+        ilk = json.loads(f.readline())
+    bas_poz = {s_: float(p["miktar"]) for s_, p in (ilk.get("pozisyonlar") or {}).items() if "miktar" in p}
+    t0 = int(ilk["zaman"]) * 1000
+    olay = {}
+    c = sqlite3.connect(f"file:{db}?mode=ro", uri=True, timeout=2)
+    try:
+        for z, sem, yon, dolan, kap in c.execute("SELECT zaman, sembol, yon, dolan, kapanis FROM emir WHERE zaman>? AND dolan>0", (t0 / 1000,)):
+            olay.setdefault(sem, []).append((int(float(kap or z) * 1000), float(dolan) * (1 if yon == "BUY" else -1)))
+    finally:
+        c.close()
+    def miktar(sem, t):
+        return bas_poz.get(sem, 0.0) + sum(d for ms, d in olay.get(sem, []) if ms <= t)
+    borsa = {p["symbol"]: float(p["positionAmt"]) for p in client.get_open_positions() if abs(float(p.get("positionAmt") or 0)) > 0}
+    semler = set(bas_poz) | set(olay) | set(borsa)
+    if any(abs(miktar(s_, bit_ms) - borsa.get(s_, 0.0)) > 1e-6 * max(1.0, abs(borsa.get(s_, 0.0))) for s_ in semler):
+        return []
+    v = _veri_istemcisi(client); out = []
+    for sem in sorted(semler):
+        for x in v.futures_funding_rate(symbol=sem, startTime=max(bas_ms, t0), endTime=bit_ms, limit=1000):
+            t = int(x["fundingTime"]); m = miktar(sem, t)
+            if abs(m) > 1e-12:
+                out.append((t, sem, -m * float(x["markPrice"]) * float(x["fundingRate"])))
+    return out
+
+
+def funding_olay_ekle(dosya: str, simdi: float, demo: list, gercek: list, sakla_gun: float = FUNDING_OLAY_GUN) -> dict:
+    """MADDE 749: olaylar sayfası için funding ödemeleri. {"d": {dakika_ms: {sembol: demo hesaba yatan}},
+    "g": {dakika_ms: {sembol: gerçek oranla olsaydı}}}; aynı (dakika, sembol) iki kez gelirse toplanmaz, üzerine yazılır
+    (gelir_birikim / gercek_funding zaten tekilleştirir). sakla_gun'den eskiler atılır."""
+    try:
+        with open(dosya, encoding="utf-8") as f:
+            d = json.load(f)
+    except (OSError, ValueError):
+        d = {}
+    for anahtar, liste in (("d", demo), ("g", gercek)):
+        k = d.setdefault(anahtar, {})
+        for t, sem, v in liste:
+            k.setdefault(_dk(t), {})[sem] = round(k.get(_dk(t), {}).get(sem, 0.0) + float(v), 6) if anahtar == "d" else round(float(v), 6)
+        sinir = (simdi - sakla_gun * 86400) * 1000
+        d[anahtar] = {t: v for t, v in k.items() if int(t) >= sinir}
+    _atomik_yaz(dosya, d)
+    return d
+
+
 def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GERCEK_DOSYA) -> dict | None:
     """MADDE 744: "gerçek Binance oranlarıyla olsaydı" funding toplamı (yalnız demoda). Bot coin seçimini gerçek borsanın
     funding'ine göre yapar ama pozisyonlar demo borsada olduğu için funding'i demo borsa KENDİ oranıyla öder (çoğu zaman
@@ -237,7 +298,7 @@ def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GER
     # ödeme sayılmasın). Kapanan coinin kaydı silinir (yeniden açılırsa eski boşluk sayılmasın).
     sayilan = {k: int(t) for k, t in (b.get("sayilan") or {}).items()}
     onceki = set(b.get("poz") or [])
-    yeni_say = {}
+    yeni_say, yeni_olay = {}, []
     for sem, p in poz.items():
         if sem in sayilan:
             bas = max(sayilan[sem] + 1, son - GERCEK_ORTUSME_MS)
@@ -251,13 +312,15 @@ def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GER
             if t <= sayilan.get(sem, -1):
                 continue
             fiyat = float(x.get("markPrice") or 0) or float(p.get("isaret") or 0)
-            top += -float(p["miktar"]) * fiyat * float(x["fundingRate"])
+            v_ = -float(p["miktar"]) * fiyat * float(x["fundingRate"])
+            top += v_
+            yeni_olay.append((t, sem, v_))
             en_son = max(en_son, t)
         if en_son:
             yeni_say[sem] = en_son
     b.update(son_ms=bit_ms, toplam=round(top, 6), sayilan=yeni_say, poz=sorted(poz))
     _atomik_yaz(dosya, b)
-    return b
+    return {**b, "_yeni": yeni_olay}
 
 
 def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
@@ -286,6 +349,7 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
     bas = _ilk_zaman(defter_dosya)
     if bas is not None:   # madde 733: panel döküm satırı (pozisyonlar · gerçekleşen · funding · komisyon)
         bd = birikim_dosya or os.path.join(os.path.dirname(dosya) or ".", "gelir_birikim.json")
+        g = gf = None
         try:
             g = gelir_birikim(client, bas, simdi, bd)
             kayit["gelir_bas"] = {"bas": bas, "son": g["son_ms"] // 1000, **g["toplam"]}
@@ -297,6 +361,28 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
                 kayit["gercek_funding"] = {"bas": bas, "toplam": gf["toplam"], "son": gf["son_ms"] // 1000}
         except Exception as ex:
             print(f"UYARI: gerçek oranlı funding güncellenemedi: {ex}", file=sys.stderr)
+        try:   # madde 749: funding ödemeleri olaylar sayfasına
+            fo = os.path.join(os.path.dirname(dosya) or ".", "funding_olay.json")
+            dm = (g or {}).get("_yeni_funding") or []
+            gr = (gf or {}).get("_yeni") or []
+            if not os.path.exists(fo):   # ilk kurulum: son FUNDING_OLAY_GUN günün geçmişi
+                ilk_ms = max(bas * 1000, int((simdi - FUNDING_OLAY_GUN * 86400) * 1000)); bit = int(simdi * 1000)
+                dm, s_ = [], ilk_ms
+                for _ in range(20):
+                    r = client.client.futures_income_history(incomeType="FUNDING_FEE", startTime=s_, endTime=bit, limit=1000)
+                    dm += [(int(x["time"]), x["symbol"], float(x["income"])) for x in r if x.get("symbol")]
+                    if len(r) < 1000:
+                        break
+                    s_ = int(r[-1]["time"]) + 1
+                gr = []
+                if _veri_istemcisi(client) is not None and emir_db and os.path.exists(emir_db):
+                    try:
+                        gr = _gercek_gecmis(client, defter_dosya, emir_db, ilk_ms, bit)
+                    except Exception as ex:
+                        print(f"UYARI: gerçek-oran funding geçmişi kurulamadı: {ex}", file=sys.stderr)
+            funding_olay_ekle(fo, simdi, dm, gr)
+        except Exception as ex:
+            print(f"UYARI: funding olayları yazılamadı: {ex}", file=sys.stderr)
     _atomik_yaz(dosya, kayit)
     try:   # madde 745: pozisyon geçmişi (olaylarda işlem sonrası ortalama)
         poz_gecmis_ekle(os.path.join(os.path.dirname(dosya) or ".", "anlik_poz.json"), simdi, poz)

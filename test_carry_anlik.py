@@ -218,5 +218,17 @@ kontrol("demo funding: en yakın saat, yalnız o saatte ödeyenler, demo oranı"
 kontrol("demo funding: canlıda None", carry_anlik.demo_funding(_GF(_pi, _Oran({}), False), _pz, _t0) is None)
 kontrol("demo funding: pozisyon yoksa None", carry_anlik.demo_funding(_GF(_pi, _Oran({})), {}, _t0) is None)
 
+# MADDE 749: funding ödemeleri olaylar için
+_fo = os.path.join(tmp, "defter", "fo.json")
+_t9 = 1_800_000_000
+d = carry_anlik.funding_olay_ekle(_fo, _t9, [(_t9 * 1000, "AUSDT", 0.1), (_t9 * 1000 + 300, "BUSDT", -0.05)], [(_t9 * 1000, "AUSDT", 0.2)])
+_k9 = str(_t9 * 1000 // 60000 * 60000)
+kontrol("funding olayı: aynı dakika tek olay, demo ve gerçek ayrı", d["d"][_k9] == {"AUSDT": 0.1, "BUSDT": -0.05} and d["g"][_k9] == {"AUSDT": 0.2}, d)
+d = carry_anlik.funding_olay_ekle(_fo, _t9 + 15 * 86400, [((_t9 + 15 * 86400) * 1000, "AUSDT", 0.3)], [])
+kontrol("funding olayı: 14 günden eskiler atılır", _k9 not in d["d"] and len(d["d"]) == 1, d)
+b = carry_anlik.gelir_birikim(_G([{"tranId": 9, "incomeType": "FUNDING_FEE", "symbol": "A", "income": "0.5", "time": 7_000_500}]), 7000, 7001.0, os.path.join(tmp, "b9.json"))
+kontrol("gelir birikimi yeni funding kayıtlarını döndürür (dosyaya yazmaz)", b["_yeni_funding"] == [(7_000_500, "A", 0.5)]
+        and "_yeni_funding" not in json.load(open(os.path.join(tmp, "b9.json"))), b)
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
