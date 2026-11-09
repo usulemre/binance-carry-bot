@@ -1121,7 +1121,7 @@ function ciz(){
   grafikler.push(new Chart($("#g2"),{type:"bar",data:{labels:x,datasets:[{data:k.seri.map(s=>s.gun==null?null:s.gun*100),
     backgroundColor:k.seri.map(s=>(s.gun||0)>=0?css("--art"):css("--eks")),borderRadius:4}]},
     options:{...ortak,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>(c.parsed.y>=0?"+":"")+c.parsed.y.toFixed(2).replace(".",",")+"%"}}},
-      scales:{...ortak.scales,y:{ticks:{color:sol,callback:v=>v+"%"},grid:{color:izg}}}}}));
+      scales:{...ortak.scales,y:{ticks:{color:sol,callback:v=>(+v.toFixed(2)).toLocaleString("tr-TR")+"%"},grid:{color:izg}}}}}));
 }
 // MADDE 740: kaydırınca küçülen başlık; sağa / sola kaydırarak sekme; en üstte aşağı çekince yenile
 addEventListener("scroll", ()=>{ const u = $("#ust"); if (u) u.classList.toggle("kucuk", scrollY > 90); }, {passive:true});
