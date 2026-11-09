@@ -44,6 +44,7 @@ a, b = c["AUSDT"], c["BUSDT"]
 kontrol("24 sa değişim (mark / açılış)", a["d24"] == 20.0 and b["d24"] == -10.0, (a["d24"], b["d24"]))
 kontrol("1 sa değişim (~60 dk önceki 5 dk açılışı)", a["d1"] == 20.0, a)
 kontrol("3 g / 7 g = tamamlanmış gün kapanışlarından", a["d3"] == 20.0 and a["d7"] == 100.0, (a.get("d3"), a.get("d7")))
+kontrol("referans fiyatlar (panel canlı % için)", a["r1"] == 1.0 and a["r3"] == 1.0 and a["r7"] == 0.6 and a["r30"] == 0.6 and "r30" not in b, a)
 kontrol("30 g: yeterli gün varsa", a["d30"] == 100.0 and "d30" not in b, (a.get("d30"), b))
 kontrol("eksik mum: değişim yok, hata yok", "d1" not in b and "d3" not in b)
 kontrol("funding % ve aralık", a["fr"] == -0.1 and a["ah"] == 4 and b["ah"] == 8.0)

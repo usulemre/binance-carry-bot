@@ -8240,3 +8240,10 @@ hesabına DOKUNMAZ).
   ≥70M bot eşiği), arama, en çok yükselen / düşen (funding'de en yüksek / en negatif) 15'er satır, "daha fazla"; botun tuttuğu coin
   "bot long/short" etiketli. Yalnız bilgi; bot kararlarını etkilemez.
 - Testler: test_tarayici (13, CI'a eklendi), test_panel (+4). Bot (carry_bot.py) değişmedi.
+
+## Madde 747 — Piyasa sekmesi ANLIK (kullanıcı: "yükseliş / funding değeri anlık gerçek Binance üzerinden olmalı, bottaki gibi")
+Piyasa sekmesi açıkken telefon, pozisyon kartlarındaki gibi (madde 732) Binance'in herkese açık TÜM-COİN akışlarına bağlanır:
+!miniTicker@arr (son fiyat, 24 sa açılış, hacim) + !markPrice@arr (işaret fiyatı, anlık funding); sekmeden çıkınca bağlantı kapanır
+(mobil veri). Fiyat, 24 sa %, hacim, funding (oran + yıllık) anlık; 1 sa / 3 / 7 / 30 g % = canlı fiyat / sunucunun referans fiyatı
+(tarayici.py artık r1/r3/r7/r30 de yazar, 10 dk'da bir). Liste 2 sn'de bir yeniden sıralanır (arama kutusu odaktayken durur).
+Başlıkta "● canlı"; akış yoksa sunucu görüntüsünün saati. Anahtarsız, emir yok, bot değişmedi. Testler geçti.

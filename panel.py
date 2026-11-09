@@ -1151,11 +1151,40 @@ const PIY = {d: localStorage.getItem("carry_py_d") || "d24", h: +(localStorage.g
 const PIY_DONEM = [["d1","1 sa"],["d24","24 sa"],["d3","3 gün"],["d7","7 gün"],["d30","30 gün"],["fy","Funding"]];
 function piySec(alan, v){ PIY[alan] = v; try{ localStorage.setItem("carry_py_"+alan, v); }catch(e){} ciz(); }
 function piyAra(v){ PIY.ara = v.toUpperCase(); const el = $("#pyliste"); if (el) el.innerHTML = piyListe(PIY.k); }
+// MADDE 747: Piyasa sekmesi açıkken telefon Binance'in herkese açık TÜM-COİN akışlarına bağlanır (anahtarsız):
+// !miniTicker@arr (son fiyat, 24 sa açılış, hacim) + !markPrice@arr (işaret fiyatı, anlık funding). Sekmeden çıkınca kapanır.
+// 1 sa / 3 / 7 / 30 g %, sunucunun referans fiyatlarıyla (10 dk'da bir) canlı fiyattan hesaplanır.
+let PWS = null, PCANLI = {}, PZAMAN = 0, PCIZ = 0;
+function piyBagla(){
+  if (VERI_GOMULU || !window.WebSocket) return;
+  if (sayfa !== "piyasa"){ if (PWS){ PWS.onclose = null; PWS.close(); PWS = null; } return; }
+  if (PWS && PWS.readyState <= 1) return;
+  PWS = new WebSocket("wss://fstream.binance.com/market/stream?streams=!miniTicker@arr/!markPrice@arr");
+  PWS.onmessage = e => { try { const m = JSON.parse(e.data), d = m.data; if (!Array.isArray(d)) return;
+    const mt = (m.stream||"").startsWith("!miniTicker");
+    for (const x of d){ const c = PCANLI[x.s] || (PCANLI[x.s] = {});
+      if (mt){ c.son = +x.c; c.ac = +x.o; c.q = +x.q; } else { c.isa = +x.p; if (x.r!=="" && x.r!=null) c.r = +x.r; } }
+    PZAMAN = Date.now();
+    if (Date.now() - PCIZ > 2000 && document.activeElement?.className !== "py-ara"){ PCIZ = Date.now(); const el = $("#pyliste"); if (el) el.innerHTML = piyListe(PIY.k); const z = $("#pyzaman"); if (z) z.innerHTML = piyZaman(); }
+  } catch(_){} };
+  PWS.onclose = () => { PWS = null; setTimeout(piyBagla, 5000); };
+}
+const piyCanli = () => Date.now() - PZAMAN < 15e3;
+function piyZaman(){ const P = VERI.piyasa; return piyCanli() ? `<b style="color:var(--art)">● canlı</b>` : `${P.saat}${P.bayat ? " · <b style='color:var(--eks)'>BAYAT</b>" : ""}`; }
+function piyGuncel(c){   // sunucu satırı + canlı akış → anlık değerler
+  const l = PCANLI[c.s]; if (!l || !piyCanli()) return c;
+  const f = l.isa || l.son || c.f, y = r => r ? Math.round((f / r - 1) * 1e4) / 100 : null, o = {...c, f};
+  if (l.ac) o.d24 = y(l.ac);
+  if (c.r1) o.d1 = y(c.r1); if (c.r3) o.d3 = y(c.r3); if (c.r7) o.d7 = y(c.r7); if (c.r30) o.d30 = y(c.r30);
+  if (l.q) o.hacim = Math.round(l.q / 1e4) / 100;
+  if (l.r != null){ o.fr = Math.round(l.r * 1e6) / 1e4; o.fy = Math.round(l.r * (24 / (c.ah||8)) * 365 * 1000) / 10; }
+  return o;
+}
 function piyListe(k){
   const P = VERI.piyasa; if (!P) return "";
   k = k || {}; const tut = {};
   for (const [s, p] of Object.entries(k.pozisyonlar || {})) if (p.miktar) tut[s] = p.miktar > 0 ? "L" : "S";
-  let L = P.coinler.filter(c => c[PIY.d] != null && (c.hacim || 0) >= PIY.h);
+  let L = P.coinler.map(piyGuncel).filter(c => c[PIY.d] != null && (c.hacim || 0) >= PIY.h);
   if (PIY.ara) L = L.filter(c => c.s.includes(PIY.ara));
   const yuz = v => v==null ? "—" : (v>0?"+":"") + v.toLocaleString("tr-TR",{maximumFractionDigits: Math.abs(v)<10?2:1}) + "%";
   const fon = c => c.fr==null ? "—" : (c.fr>0?"+":"") + c.fr.toLocaleString("tr-TR",{maximumFractionDigits:4}) + "%";
@@ -1174,12 +1203,13 @@ function piyListe(k){
 function piyasaSayfa(k){
   const P = VERI.piyasa; PIY.k = k;
   if (!P) return `<div class="kart bos">Piyasa verisi yok. Sunucuda tarayıcı zamanlayıcısını aç:<br><code>sudo cp /opt/carry/deploy/carry-tarayici.* /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now carry-tarayici.timer</code></div>`;
-  return `<div class="kart py"><h2>Piyasa <span class="s" style="font-weight:500">gerçek Binance · ${P.coinler.length} coin · ${P.saat}${P.bayat ? " · <b style='color:var(--eks)'>BAYAT</b>" : ""}</span></h2>
+  return `<div class="kart py"><h2>Piyasa <span class="s" style="font-weight:500">gerçek Binance · ${P.coinler.length} coin · <span id="pyzaman">${piyZaman()}</span></span></h2>
     <div class="py-sec">${PIY_DONEM.map(([a,ad])=>`<button class="${PIY.d==a?'on':''}" onclick="piySec('d','${a}')">${ad}</button>`).join("")}</div>
     <div class="py-sec">${[[0,"tüm hacimler"],[20,"≥ 20M $"],[70,"≥ 70M $ (bot eşiği)"]].map(([v,ad])=>`<button class="${PIY.h==v?'on':''}" onclick="piySec('h',${v})">${ad}</button>`).join("")}</div>
     <input class="py-ara" placeholder="coin ara (ör. JCT)" value="${PIY.ara}" oninput="piyAra(this.value)">
     <div id="pyliste">${piyListe(k)}</div>
-    <div class="s" style="margin-top:10px">Yalnız bilgi; botun kararlarını etkilemez. 1 sa ≈ son 60 dk; 3/7/30 gün = UTC gün kapanışlarından bugüne. Funding/yıl = son oran × günlük ödeme sayısı × 365.</div></div>`;
+    <div class="s" style="margin-top:10px">Yalnız bilgi; botun kararlarını etkilemez. "● canlı": fiyat, 24 sa, hacim ve funding Binance'ten anlık (telefon doğrudan bağlanır).
+    1 sa ≈ son 60–70 dk; 3/7/30 gün = UTC gün kapanışından bugüne (referanslar 10 dk'da bir yenilenir). Funding/yıl = son oran × günlük ödeme sayısı × 365.</div></div>`;
 }
 function olaySayfa(k){
   const bugun = new Date(), t = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
@@ -1208,7 +1238,7 @@ function ciz(){
   $("#icerik").innerHTML = sayfa=="piyasa" ? piyasaSayfa(k) : sayfa=="poz" ? pozSayfa(k) : sayfa=="gecmis" ? gecmisSayfa(k) : sayfa=="olay" ? olaySayfa(k)
     : (genis ? `<div class="genis"><div>${ozetSayfa(k, svc, sv)}</div><div>${pozSayfa(k)}</div></div>` : ozetSayfa(k, svc, sv));
   const yl = $("#yil"); if (yl) yl.scrollLeft = yl.scrollWidth;
-  canliBagla(k); canliBoya();
+  canliBagla(k); canliBoya(); piyBagla();
   grafikler.forEach(g=>g.destroy()); grafikler = [];
   if (!window.Chart || !$("#g1")) return;
   const x = k.seri.map(s=>s.tarih), izg = css("--cizgi"), sol = css("--soluk");

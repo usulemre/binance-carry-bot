@@ -8,6 +8,8 @@
   * Çıktı: defter/tarayici.json (atomik yazım). Zamanlayıcı: deploy/carry-tarayici.timer (10 dk).
   * Değişimler: 1 sa = 5 dk mumlardan (~60 dk önceki açılış), 3 g / 7 g / 30 g = günlük mum kapanışlarından (UTC gün),
     24 sa = Binance ticker. Funding yıllık = son oran × (24 / ödeme aralığı) × 365.
+  * Referans fiyatlar (r1, r3, r7, r30) de yazılır: panel telefonda Binance'in canlı akışıyla (!miniTicker@arr, !markPrice@arr)
+    fiyatı, 24 sa değişimi, hacmi ve funding'i ANLIK günceller; 1 sa / 3 / 7 / 30 g % = canlı fiyat / referans (madde 747).
 
 Kullanım:  python3 tarayici.py [--cikti defter/tarayici.json]
 """
@@ -63,11 +65,12 @@ def coin_satiri(s: str, tik: dict, pi: dict, aralik_h: float, onboard_ms: int | 
          "yas": None if not onboard_ms else int((simdi_ms - int(onboard_ms)) // 86_400_000)}
     if dk5 and len(dk5) >= 12:
         k["d1"] = _yuzde(fiyat, dk5[-12][1])          # ~55–60 dk önceki 5 dk mumun açılışı
+        k["r1"] = float(dk5[-12][1])                  # referans fiyat: panel canlı fiyatla anlık % hesaplar
     if gunluk and len(gunluk) >= 2:
         kap = [float(x[4]) for x in gunluk[:-1]]      # tamamlanmış günler
         for ad, n in (("d3", 3), ("d7", 7), ("d30", 30)):
             if len(kap) >= n:
-                k[ad] = _yuzde(fiyat, kap[-n])
+                k[ad] = _yuzde(fiyat, kap[-n]); k["r" + ad[1:]] = kap[-n]
     return k
 
 
