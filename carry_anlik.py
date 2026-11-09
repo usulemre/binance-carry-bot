@@ -26,6 +26,7 @@ GERCEK_DOSYA = os.path.join(DEFTER_KLASOR, "gercek_funding.json")
 POZ_GECMIS_DOSYA = os.path.join(DEFTER_KLASOR, "anlik_poz.json")
 POZ_GECMIS_GUN = 14
 EMIR_DB = os.getenv("CARRY_EMIR_DB", os.path.join(DEFTER_KLASOR, "carry.db"))
+GERCEK_ORTUSME_MS = 30 * 60 * 1000   # madde 747: gerçek borsa funding kaydını geç yayınlarsa kaçmasın
 TOHUM_PENCERE_MS = 8 * 3600 * 1000   # tohum: gerçek funding anına en yakın demo funding kaydı bu kadar yakınsa pozisyon vardı sayılır
 GUN_DEVIR_SN = 15 * 60        # önceki günün son noktası gün başına bu kadar yakınsa yeni günün açılış değeri olur
 
@@ -201,11 +202,32 @@ def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GER
         b = {"bas_ms": bas_ms, "son_ms": bit_ms, "toplam": round(_tohum(client, v, bas_ms, bit_ms), 6), "tohum_ms": bit_ms}
         _atomik_yaz(dosya, b)
         return b
+    # MADDE 747: eskiden yalnız (son çalışma, şimdi] soruluyordu; gerçek borsa funding kaydını ödeme anından birkaç sn / dk
+    # sonra yayınlarsa ödemeden hemen sonraki çalışma onu göremiyor, bir sonraki de ondan SONRASINI sorduğu için ödeme hiç
+    # sayılmıyordu. Şimdi: coin başına en son sayılan funding anı saklanır; önceki çalışmada da açık olan coin için
+    # GERCEK_ORTUSME_MS geriye bakılır, sayılmış anlar atlanır. Yeni açılan coin için geriye bakılmaz (açılmadan önceki
+    # ödeme sayılmasın). Kapanan coinin kaydı silinir (yeniden açılırsa eski boşluk sayılmasın).
+    sayilan = {k: int(t) for k, t in (b.get("sayilan") or {}).items()}
+    onceki = set(b.get("poz") or [])
+    yeni_say = {}
     for sem, p in poz.items():
-        for x in v.futures_funding_rate(symbol=sem, startTime=son + 1, endTime=bit_ms, limit=10):
+        if sem in sayilan:
+            bas = max(sayilan[sem] + 1, son - GERCEK_ORTUSME_MS)
+        elif sem in onceki:
+            bas = son - GERCEK_ORTUSME_MS
+        else:
+            bas = son + 1
+        en_son = sayilan.get(sem, 0)
+        for x in v.futures_funding_rate(symbol=sem, startTime=bas, endTime=bit_ms, limit=50):
+            t = int(x["fundingTime"])
+            if t <= sayilan.get(sem, -1):
+                continue
             fiyat = float(x.get("markPrice") or 0) or float(p.get("isaret") or 0)
             top += -float(p["miktar"]) * fiyat * float(x["fundingRate"])
-    b.update(son_ms=bit_ms, toplam=round(top, 6))
+            en_son = max(en_son, t)
+        if en_son:
+            yeni_say[sem] = en_son
+    b.update(son_ms=bit_ms, toplam=round(top, 6), sayilan=yeni_say, poz=sorted(poz))
     _atomik_yaz(dosya, b)
     return b
 
@@ -268,7 +290,9 @@ def main() -> int:
     except Exception as ex:
         print(f"anlık görüntü alınamadı: {ex}", file=sys.stderr)
         return 1
-    print(f"{len(k['pozisyonlar'])} pozisyon · gerçekleşmemiş {k['gerceklesmemis_top']:+.2f} $ · kitap {k['kitap']:,.2f} $")
+    _f = (k.get("gelir_bas") or {}).get("FUNDING_FEE"); _g = (k.get("gercek_funding") or {}).get("toplam")
+    print(f"{len(k['pozisyonlar'])} pozisyon · gerçekleşmemiş {k['gerceklesmemis_top']:+.2f} $ · kitap {k['kitap']:,.2f} $"
+          + (f" · funding {_f:+.4f} $" if _f is not None else "") + (f" · gerçek oranlarla {_g:+.4f} $" if _g is not None else ""))
     return 0
 
 

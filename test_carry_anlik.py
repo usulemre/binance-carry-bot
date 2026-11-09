@@ -182,5 +182,26 @@ kontrol("poz geçmişi: kapanış [t, 0, 0]", _g["AUSDT"][-1] == [1900, 0.0, 0.0
 _g = carry_anlik.poz_gecmis_ekle(_pg, 1900 + 15 * 86400, {"BUSDT": {"miktar": -3.0, "giris": 2.0}}, sakla_gun=14)["s"]
 kontrol("poz geçmişi: eski kapanmış coin atılır, açığın son durumu kalır", "AUSDT" not in _g and _g["BUSDT"] == [[1600, -3.0, 2.0]], _g)
 
+# MADDE 747: gerçek borsa funding kaydını GEÇ yayınlarsa kaçmasın, iki kez sayılmasın, açılmadan önceki ödeme sayılmasın
+_gf7 = os.path.join(tmp, "defter", "gf7.json")
+_b7 = 2_000 * H
+_or7 = _Oran({})
+_d7 = _DemoC({}, [])
+_p7 = {"HUSDT": {"miktar": 1000.0, "isaret": 1.0}}
+carry_anlik.gercek_funding(_GF(_d7, _or7), _b7 // 1000, (_b7 + 600_000) / 1000, {}, _gf7)              # tohum (boş)
+carry_anlik.gercek_funding(_GF(_d7, _or7), _b7 // 1000, (_b7 + H - 300_000) / 1000, _p7, _gf7)         # HUSDT açıldı (ödeme öncesi)
+g = carry_anlik.gercek_funding(_GF(_d7, _or7), _b7 // 1000, (_b7 + H + 40_000) / 1000, _p7, _gf7)      # ödeme anı geçti, kayıt YOK
+kontrol("kayıt henüz yayınlanmadı: sayılmaz", abs(g["toplam"]) < 1e-12, g)
+_or7.oranlar["HUSDT"] = [(_b7 + H, -0.004, 1.0)]                                                       # kayıt GEÇ yayınlandı
+g = carry_anlik.gercek_funding(_GF(_d7, _or7), _b7 // 1000, (_b7 + H + 300_000) / 1000, _p7, _gf7)
+kontrol("geç yayınlanan ödeme sonraki çalışmada sayılır", abs(g["toplam"] - 4.0) < 1e-9, g)
+g = carry_anlik.gercek_funding(_GF(_d7, _or7), _b7 // 1000, (_b7 + H + 600_000) / 1000, _p7, _gf7)
+kontrol("aynı ödeme iki kez sayılmaz (örtüşme penceresinde)", abs(g["toplam"] - 4.0) < 1e-9, g)
+_or7.oranlar["YUSDT"] = [(_b7 + H, 0.01, 1.0)]                                                         # yeni coin: ödeme açılmadan önce
+g = carry_anlik.gercek_funding(_GF(_d7, _or7), _b7 // 1000, (_b7 + H + 900_000) / 1000, {**_p7, "YUSDT": {"miktar": -500.0, "isaret": 1.0}}, _gf7)
+kontrol("yeni açılan coinin açılmadan önceki ödemesi sayılmaz", abs(g["toplam"] - 4.0) < 1e-9, g)
+g = carry_anlik.gercek_funding(_GF(_d7, _or7), _b7 // 1000, (_b7 + H + 1_200_000) / 1000, {"YUSDT": {"miktar": -500.0, "isaret": 1.0}}, _gf7)
+kontrol("kapanan coinin kaydı silinir", "HUSDT" not in g["sayilan"] and g["poz"] == ["YUSDT"], g)
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
