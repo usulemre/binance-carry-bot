@@ -8227,3 +8227,16 @@ Yalnız İZLEME; bot kararı / emir akışı / strateji DEĞİŞMEDİ (carry_bot
 - 745 düzeltme (aynı gün): pozisyon geçmişi kaydı başlamadan ÖNCEKİ işlemlerde panel, işlemden saatler sonraki görüntüyü "sonra
   ortalama" diye gösteriyordu (ör. 08:19 turunda 15:30'daki durum). Artık görüntü işlemden en çok 20 dk sonraysa kullanılır; değilse
   "kayıt yok". Yeni turlarda (geçmiş kaydı başladıktan sonra) değerler doğru.
+
+## Madde 746 — panelde "Piyasa" sekmesi (piyasa tarayıcısı), elle işlem paneli 1. aşama
+Kullanıcı: "başka hesap için al-sat + stop/limit; tüm coinlerde saatlik/günlük/3 günlük/haftalık/aylık en çok yükselen-düşen,
+funding'i en uç olanlar". Kullanıcı kararı (AskUserQuestion): ÖNCE tarayıcı, sonra işlem; işlem hesabı HENÜZ YOK; istenen emirler:
+piyasa + limit giriş, stop-loss + kâr al, takip eden stop, kapat / küçült (2. aşama, ayrı hesap + ayrı anahtar + PIN, botun
+hesabına DOKUNMAZ).
+- tarayici.py: ANAHTARSIZ, emir yok; gerçek Binance herkese açık uçları (exchangeInfo, ticker/24hr, premiumIndex, fundingInfo,
+  klines 1d×31 + 5m×13) → defter/tarayici.json. Değişim 1 sa / 24 sa / 3 g / 7 g / 30 g; funding son oran, aralık, yıllık eşdeğer;
+  hacim, yaş. deploy/carry-tarayici.{service,timer} (10 dk; varsayılan kurulu DEĞİL, açma komutu dosyada).
+- panel.py: piyasa_oku() (en yeni dosya; 1 sa'ten eskiyse BAYAT) + "Piyasa" sekmesi: dönem seçimi, hacim filtresi (tümü / ≥20M /
+  ≥70M bot eşiği), arama, en çok yükselen / düşen (funding'de en yüksek / en negatif) 15'er satır, "daha fazla"; botun tuttuğu coin
+  "bot long/short" etiketli. Yalnız bilgi; bot kararlarını etkilemez.
+- Testler: test_tarayici (13, CI'a eklendi), test_panel (+4). Bot (carry_bot.py) değişmedi.

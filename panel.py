@@ -490,6 +490,28 @@ def kar_hedefleri(e: dict) -> dict:
     return {"L": [x for x in (ml, kl) if x > 0], "S": [x for x in (ms, ks) if x > 0]}
 
 
+PIYASA_BAYAT_SN = 3600
+
+
+def piyasa_oku(klasorler: list[str], simdi: float | None = None) -> dict | None:
+    """MADDE 746: piyasa tarayıcısının çıktısı (tarayici.py → <kurulum>/defter/tarayici.json; anahtarsız, gerçek
+    Binance). Birden çok kurulum varsa EN YENİ dosya. 1 saatten eskiyse `bayat` işaretlenir (zamanlayıcı durmuş olabilir)."""
+    simdi = simdi or time.time(); en = None
+    for kl in klasorler:
+        try:
+            with open(os.path.join(kl, "defter", "tarayici.json"), encoding="utf-8") as f:
+                d = json.load(f)
+        except (OSError, ValueError):
+            continue
+        if isinstance(d, dict) and isinstance(d.get("coinler"), list) and (en is None or d.get("zaman", 0) > en.get("zaman", 0)):
+            en = d
+    if en is None:
+        return None
+    en["saat"] = _yerel(en.get("zaman", 0)).strftime("%H:%M")
+    en["bayat"] = simdi - en.get("zaman", 0) > PIYASA_BAYAT_SN
+    return en
+
+
 def veri(klasorler: list[str], servis: bool = True) -> dict:
     out = []
     for kl in klasorler:
@@ -513,7 +535,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         else:
             o.update({"poz_kaynak": "günlük", "poz_zaman": o.get("son_tarih"), "gerceklesmemis": None})
         out.append(o)
-    return {"kurulumlar": out, "paketler": paketler(), "uretim": _yerel().strftime("%Y-%m-%d %H:%M")}
+    return {"kurulumlar": out, "paketler": paketler(), "piyasa": piyasa_oku(klasorler), "uretim": _yerel().strftime("%Y-%m-%d %H:%M")}
 
 
 SAYFA = r"""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
@@ -625,6 +647,14 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .zo .m{font-size:13px;min-width:0;padding-top:3px}.zo .z{color:var(--soluk);font-size:11.5px;margin-top:1px}
 .i-stop,.i-hata{background:var(--eks)}.i-delist,.i-saglik,.i-uyari{background:var(--uyari)}.i-ayar{background:var(--mor)}.i-basla{background:var(--vurgu)}
 .i-tp,.i-funding{background:var(--art)}.i-tur{background:var(--soluk)}.i-islem{background:var(--vurgu)}
+.py-sec{display:flex;gap:6px;flex-wrap:wrap;margin:4px 0 10px}.py-sec button{border:1px solid var(--cizgi);background:none;color:var(--soluk);
+ font:inherit;font-size:12.5px;font-weight:650;padding:6px 10px;border-radius:999px;cursor:pointer}.py-sec button.on{background:color-mix(in srgb,var(--vurgu) 16%,transparent);color:var(--vurgu);border-color:transparent}
+.py-ara{width:100%;box-sizing:border-box;background:var(--bg);color:inherit;border:1px solid var(--cizgi);border-radius:10px;padding:8px 10px;font:inherit;font-size:14px;margin-bottom:8px}
+.py-ikili{display:grid;grid-template-columns:1fr;gap:12px}@media(min-width:760px){.py-ikili{grid-template-columns:1fr 1fr}}
+.py table{width:100%;border-collapse:collapse;font-size:13px;font-variant-numeric:tabular-nums}.py td{text-align:left;padding:7px 4px;border-top:1px solid var(--cizgi)}
+.py td.r{text-align:right;white-space:nowrap}.py .s{color:var(--soluk);font-size:11px}.py .etk{font-size:10px;font-weight:700;padding:1px 5px;border-radius:5px;margin-left:4px;vertical-align:1px}
+.py .etk.L{background:color-mix(in srgb,var(--vurgu) 22%,transparent);color:var(--vurgu)}.py .etk.S{background:color-mix(in srgb,#f59e0b 22%,transparent);color:#f59e0b}
+.py h3{font-size:13px;color:var(--soluk);margin:0 0 4px;font-weight:650}
 .isl{margin-top:6px}.isl .ac{color:var(--vurgu);font-size:12px;cursor:pointer;user-select:none}
 .isl table{width:100%;border-collapse:collapse;font-size:12px;margin-top:4px;font-variant-numeric:tabular-nums}
 .isl td{text-align:left;padding:4px 6px 4px 0;border-top:1px solid var(--cizgi);vertical-align:top}.isl td.r{text-align:right;white-space:nowrap}
@@ -676,7 +706,7 @@ function temaUygula(){
 function temaDegis(){ tema = TEMALAR[(TEMALAR.indexOf(tema)+1) % 3]; localStorage.setItem("carry_tema", tema); temaUygula(); if (VERI) ciz(); }
 temaUygula();
 // MADDE 737: sekmeler (telefonda altta sabit). Seçim adres çubuğunda (#poz) saklanır, yenilemede korunur.
-const SAYFALAR = [["ozet","Özet"],["poz","Pozisyonlar"],["gecmis","Geçmiş"],["olay","Olaylar"]];
+const SAYFALAR = [["ozet","Özet"],["poz","Pozisyonlar"],["piyasa","Piyasa"],["gecmis","Geçmiş"],["olay","Olaylar"]];
 let sayfa = (location.hash||"").slice(1); if (!SAYFALAR.some(x=>x[0]==sayfa)) sayfa = "ozet";
 function sayfaSec(a){ if (a==sayfa) return; sayfa = a; history.replaceState(null, "", "#"+a); ciz(); scrollTo(0,0); }
 const AYAD = ["Ocak","Şubat","Mart","Nisan","Mayıs","Haziran","Temmuz","Ağustos","Eylül","Ekim","Kasım","Aralık"];
@@ -1116,6 +1146,41 @@ function fonTablo(o){
   return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} coinler (${f.coin.length})</span>${ac ? `<table><tr class="s"><td>coin</td><td class="r">${demo?"demo hesap":"ödeme"}</td>${demo?`<td class="r">gerçek oranla</td>`:""}</tr>${sat}</table>` : ""}</div>`;
 }
 function olayAc(id){ ACIK.has(id) ? ACIK.delete(id) : ACIK.add(id); ciz(); }
+// MADDE 746: piyasa tarayıcısı — gerçek Binance, tüm USDⓈ-M coinler; dönem / hacim filtresi / arama. Botun tuttuğu coinler L / S etiketli.
+const PIY = {d: localStorage.getItem("carry_py_d") || "d24", h: +(localStorage.getItem("carry_py_h") || 20), ara: "", n: 15};
+const PIY_DONEM = [["d1","1 sa"],["d24","24 sa"],["d3","3 gün"],["d7","7 gün"],["d30","30 gün"],["fy","Funding"]];
+function piySec(alan, v){ PIY[alan] = v; try{ localStorage.setItem("carry_py_"+alan, v); }catch(e){} ciz(); }
+function piyAra(v){ PIY.ara = v.toUpperCase(); const el = $("#pyliste"); if (el) el.innerHTML = piyListe(PIY.k); }
+function piyListe(k){
+  const P = VERI.piyasa; if (!P) return "";
+  k = k || {}; const tut = {};
+  for (const [s, p] of Object.entries(k.pozisyonlar || {})) if (p.miktar) tut[s] = p.miktar > 0 ? "L" : "S";
+  let L = P.coinler.filter(c => c[PIY.d] != null && (c.hacim || 0) >= PIY.h);
+  if (PIY.ara) L = L.filter(c => c.s.includes(PIY.ara));
+  const yuz = v => v==null ? "—" : (v>0?"+":"") + v.toLocaleString("tr-TR",{maximumFractionDigits: Math.abs(v)<10?2:1}) + "%";
+  const fon = c => c.fr==null ? "—" : (c.fr>0?"+":"") + c.fr.toLocaleString("tr-TR",{maximumFractionDigits:4}) + "%";
+  const sat = c => { const ad = c.s.replace(/USDT$/,""), e = tut[c.s];
+    return `<tr><td><b>${ad}</b>${e?`<span class="etk ${e}">bot ${e=="L"?"long":"short"}</span>`:""}<div class="s">${c.hacim.toLocaleString("tr-TR",{maximumFractionDigits:0})}M $ hacim${c.yas!=null && c.yas<60 ? " · "+c.yas+" g yeni" : ""}</div></td>
+      <td class="r">${fiyatYaz(c.f)}<div class="s">fund. ${fon(c)} / ${c.ah} sa</div></td>
+      <td class="r"><b class="${sinif(c[PIY.d])}">${PIY.d=="fy" ? yuz(c.fy) + "/yıl" : yuz(c[PIY.d])}</b><div class="s">${PIY.d=="d24" ? "7g " + yuz(c.d7) : "24s " + yuz(c.d24)}</div></td></tr>`; };
+  const sir = L.slice().sort((a,b)=>b[PIY.d]-a[PIY.d]);
+  if (PIY.ara) return `<table>${sir.slice(0,60).map(sat).join("") || "<tr><td class='s'>eşleşen coin yok</td></tr>"}</table>`;
+  const [ust, alt] = PIY.d=="fy" ? ["En yüksek funding (long'lar ödüyor → short alır)", "En negatif funding (short'lar ödüyor → long alır)"]
+                                  : ["En çok yükselen", "En çok düşen"];
+  return `<div class="py-ikili"><div><h3>${ust}</h3><table>${sir.slice(0,PIY.n).map(sat).join("")}</table></div>
+    <div><h3>${alt}</h3><table>${sir.slice(-PIY.n).reverse().map(sat).join("")}</table></div></div>
+    <div class="s" style="margin-top:10px">${L.length} coin · ${PIY.n < L.length/2 ? `<span style="color:var(--vurgu);cursor:pointer" onclick="PIY.n+=15;ciz()">daha fazla göster</span>` : ""}</div>`;
+}
+function piyasaSayfa(k){
+  const P = VERI.piyasa; PIY.k = k;
+  if (!P) return `<div class="kart bos">Piyasa verisi yok. Sunucuda tarayıcı zamanlayıcısını aç:<br><code>sudo cp /opt/carry/deploy/carry-tarayici.* /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now carry-tarayici.timer</code></div>`;
+  return `<div class="kart py"><h2>Piyasa <span class="s" style="font-weight:500">gerçek Binance · ${P.coinler.length} coin · ${P.saat}${P.bayat ? " · <b style='color:var(--eks)'>BAYAT</b>" : ""}</span></h2>
+    <div class="py-sec">${PIY_DONEM.map(([a,ad])=>`<button class="${PIY.d==a?'on':''}" onclick="piySec('d','${a}')">${ad}</button>`).join("")}</div>
+    <div class="py-sec">${[[0,"tüm hacimler"],[20,"≥ 20M $"],[70,"≥ 70M $ (bot eşiği)"]].map(([v,ad])=>`<button class="${PIY.h==v?'on':''}" onclick="piySec('h',${v})">${ad}</button>`).join("")}</div>
+    <input class="py-ara" placeholder="coin ara (ör. JCT)" value="${PIY.ara}" oninput="piyAra(this.value)">
+    <div id="pyliste">${piyListe(k)}</div>
+    <div class="s" style="margin-top:10px">Yalnız bilgi; botun kararlarını etkilemez. 1 sa ≈ son 60 dk; 3/7/30 gün = UTC gün kapanışlarından bugüne. Funding/yıl = son oran × günlük ödeme sayısı × 365.</div></div>`;
+}
 function olaySayfa(k){
   const bugun = new Date(), t = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   const dun = new Date(bugun); dun.setDate(dun.getDate()-1);
@@ -1140,7 +1205,7 @@ function ciz(){
   $("#ustkitap").innerHTML = `<span id="ustk">${para(AKIS.ustk.v)}</span><span id="ustkar" class="${sinif(k.kar_usd)}"> ${yz(k.kar_oran)}</span>`;
   // MADDE 740: geniş ekran (tablet / yatay): Özet sekmesinde solda özet, sağda pozisyonlar
   const genis = innerWidth >= 1000;
-  $("#icerik").innerHTML = sayfa=="poz" ? pozSayfa(k) : sayfa=="gecmis" ? gecmisSayfa(k) : sayfa=="olay" ? olaySayfa(k)
+  $("#icerik").innerHTML = sayfa=="piyasa" ? piyasaSayfa(k) : sayfa=="poz" ? pozSayfa(k) : sayfa=="gecmis" ? gecmisSayfa(k) : sayfa=="olay" ? olaySayfa(k)
     : (genis ? `<div class="genis"><div>${ozetSayfa(k, svc, sv)}</div><div>${pozSayfa(k)}</div></div>` : ozetSayfa(k, svc, sv));
   const yl = $("#yil"); if (yl) yl.scrollLeft = yl.scrollWidth;
   canliBagla(k); canliBoya();
