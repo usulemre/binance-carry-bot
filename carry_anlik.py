@@ -182,6 +182,34 @@ def _tohum(client, v, bas_ms: int, bit_ms: int) -> float:
     return top
 
 
+def demo_funding(client, poz: dict, simdi: float) -> dict | None:
+    """MADDE 748: DEMO hesabın sıradaki funding ödemesi (yalnız demo). Demo borsa funding'i kendi takvimi ve oranıyla öder
+    (ör. HOT gerçek borsada saatte bir, demoda 8 sa'te bir); panelin sayacı gerçek borsaya baktığı için demo hesaba o saatte
+    para yatmayabiliyordu. Tek çağrı (premiumIndex, tüm semboller). T = açık pozisyonların demo funding saatlerinin en
+    yakını; tahmin = YALNIZ o saatte ödeyen pozisyonlar × demo oranı. Canlıda / pozisyon yoksa None."""
+    if _veri_istemcisi(client) is None or not poz:
+        return None
+    satir = client.client.futures_mark_price()
+    satir = satir if isinstance(satir, list) else [satir]
+    pi = {x["symbol"]: x for x in satir if isinstance(x, dict) and x.get("symbol")}
+    simdi_ms = int(simdi * 1000)
+    zaman = {}
+    for sem in poz:
+        x = pi.get(sem) or {}
+        t = int(x.get("nextFundingTime") or 0)
+        if t > simdi_ms - 60_000:
+            zaman[sem] = t
+    if not zaman:
+        return None
+    T = min(zaman.values())
+    tahmin = 0.0
+    for sem, t in zaman.items():
+        if abs(t - T) < 60_000:
+            x = pi[sem]; p = poz[sem]
+            tahmin += -float(p["miktar"]) * (float(x.get("markPrice") or 0) or float(p.get("isaret") or 0)) * float(x.get("lastFundingRate") or 0)
+    return {"T": T // 1000, "tahmin": round(tahmin, 4), "n": sum(1 for t in zaman.values() if abs(t - T) < 60_000)}
+
+
 def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GERCEK_DOSYA) -> dict | None:
     """MADDE 744: "gerçek Binance oranlarıyla olsaydı" funding toplamı (yalnız demoda). Bot coin seçimini gerçek borsanın
     funding'ine göre yapar ama pozisyonlar demo borsada olduğu için funding'i demo borsa KENDİ oranıyla öder (çoğu zaman
@@ -249,6 +277,12 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
         "pozisyonlar": poz,
         "gerceklesmemis_top": round(sum(p["gerceklesmemis"] for p in poz.values()), 2),
     }
+    try:   # madde 748: demo hesabın sıradaki funding'i (yalnız demo)
+        df_ = demo_funding(client, poz, simdi)
+        if df_ is not None:
+            kayit["demo_funding"] = df_
+    except Exception as ex:
+        print(f"UYARI: demo funding saati okunamadı: {ex}", file=sys.stderr)
     bas = _ilk_zaman(defter_dosya)
     if bas is not None:   # madde 733: panel döküm satırı (pozisyonlar · gerçekleşen · funding · komisyon)
         bd = birikim_dosya or os.path.join(os.path.dirname(dosya) or ".", "gelir_birikim.json")

@@ -298,5 +298,14 @@ _tm = open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deploy", "c
 kontrol("funding sonrası ek zamanlayıcı anlık servisi çalıştırır", "Unit=carry-anlik.service" in _tm and "*:00:40 UTC" in _tm)
 kontrol("kurulum betiği ek zamanlayıcıyı kurar", "carry-anlik-funding.timer" in open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "deploy", "sunucu_kur.sh")).read())
 
+# MADDE 748: sayaç tahmini yalnız o saatte ödeyenler; demoda demo hesap satırı
+_sy8 = app.get("/").data.decode()
+kontrol("funding tahmini yalnız sıradaki saatte ödeyen pozisyonlar", "Math.abs(F.T - T) < 60e3" in _sy8)
+kontrol("demoda demo hesabın sıradaki funding satırı", "demo hesap: " in _sy8 and "k.demo_funding" in _sy8)
+json.dump({"zaman": int(__import__("time").time()) - 30, "pozisyonlar": {"BUSDT": {"yon": "S", "usd": 50, "miktar": -5, "giris": 10, "isaret": 10}},
+           "gerceklesmemis_top": 0, "demo_funding": {"T": 1800003600, "tahmin": 0.12, "n": 3}}, open(os.path.join(kl, "defter", "anlik.json"), "w"))
+kontrol("panel verisinde demo funding", panel.veri([kl], servis=False)["kurulumlar"][0].get("demo_funding", {}).get("n") == 3)
+os.remove(os.path.join(kl, "defter", "anlik.json"))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

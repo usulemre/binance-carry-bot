@@ -458,7 +458,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         if an is not None:   # madde 728: canlı pozisyon tablosu
             o.update({"pozisyonlar": an["pozisyonlar"], "poz_kaynak": "canlı",
                       "poz_zaman": _yerel(an["zaman"]).strftime("%H:%M"),
-                      "gerceklesmemis": an.get("gerceklesmemis_top")})
+                      "gerceklesmemis": an.get("gerceklesmemis_top"), "demo_funding": an.get("demo_funding")})
         else:
             o.update({"poz_kaynak": "günlük", "poz_zaman": o.get("son_tarih"), "gerceklesmemis": None})
         out.append(o)
@@ -856,13 +856,24 @@ function halka(dolu, n){
     <circle cx="17" cy="17" r="${r}" fill="none" stroke="${css("--vurgu")}" stroke-width="4" stroke-linecap="round" stroke-dasharray="${c.toFixed(1)}" stroke-dashoffset="${o.toFixed(1)}" transform="rotate(-90 17 17)"/>
     <text x="17" y="21" text-anchor="middle" font-size="10" font-weight="700" fill="${css("--yazi")}">${dolu}</text></svg>`;
 }
+// MADDE 748: sayaç gerçek Binance'in sıradaki funding saatine bakar; tahmin YALNIZ o saatte ödeyen pozisyonların toplamı
+// (eskiden hepsi toplanıyordu: saatlik ödeyen tek coin varken bile bütün kitabın funding'i gösteriliyordu). Demoda altta
+// demo hesabın kendi sıradaki ödemesi (sunucu demo borsadan okur; demo takvimi / oranı gerçekten farklı olabilir).
+const sureYaz = sn => sn >= 3600 ? `${Math.floor(sn/3600)} sa ${Math.floor(sn%3600/60)} dk` : `${Math.floor(sn/60)} dk ${Math.floor(sn%60)} sn`;
+const saatYaz = ms => new Date(ms).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
 function fundKart(k){
-  const P = Object.entries(k.pozisyonlar||{}); let T = null, top = 0, n = 0;
-  for (const [s,p] of P){ const F = FUND[s]; if (!F) continue; n++; T = T==null ? F.T : Math.min(T, F.T); top += -p.miktar * (FIYAT[s]||p.isaret) * F.r; }
-  if (!n) return `<div class="d">—</div><div class="k">akış bekleniyor</div>`;
-  const kalan = Math.max(0, (T - Date.now())/1000), sure = kalan >= 3600 ? `${Math.floor(kalan/3600)} sa ${Math.floor(kalan%3600/60)} dk` : `${Math.floor(kalan/60)} dk ${Math.floor(kalan%60)} sn`;
-  const saat = new Date(T).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
-  return `<div class="d">${sure}</div><span class="k">${saat} · tahmini <b class="${sinif(top)}">${isaretli(top)}</b></span>`;
+  const P = Object.entries(k.pozisyonlar||{}); let T = null;
+  for (const [s] of P){ const F = FUND[s]; if (F && F.T) T = T==null ? F.T : Math.min(T, F.T); }
+  if (T == null) return `<div class="d">—</div><div class="k">akış bekleniyor</div>`;
+  let top = 0, n = 0;
+  for (const [s,p] of P){ const F = FUND[s]; if (F && Math.abs(F.T - T) < 60e3){ n++; top += -p.miktar * (FIYAT[s]||p.isaret) * F.r; } }
+  const demo = k.mod=="demo", D = k.demo_funding;
+  let alt = "";
+  if (demo && D && D.T){
+    const dk = D.T*1000 - Date.now();
+    alt = `<span class="k" title="Demo borsa funding'i kendi saat ve oranıyla öder; demo hesaba bu saatte yatar.">demo hesap: ${saatYaz(D.T*1000)}${dk > 0 ? " · " + sureYaz(dk/1000) : " · işleniyor"} · <b class="${sinif(D.tahmin)}">${isaretli(D.tahmin)}</b></span>`;
+  }
+  return `<div class="d">${sureYaz(Math.max(0, (T - Date.now())/1000))}</div><span class="k" title="${n} pozisyon bu saatte öder (gerçek Binance oranıyla tahmin)">${demo?"gerçek: ":""}${saatYaz(T)} · ${n} poz · <b class="${sinif(top)}">${isaretli(top)}</b></span>${alt}`;
 }
 // MADDE 746: funding ödemesi gelince veriyi hemen yeniden iste (dakikalık yenilemeyi bekleme). Sunucu ödemeden sonra
 // 0:40 / 2 / 4 / 7 / 11. dakikalarda ek okuma yapar (carry-anlik-funding.timer); tarayıcı o okumaların ardından çeker.

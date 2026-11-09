@@ -203,5 +203,20 @@ kontrol("yeni açılan coinin açılmadan önceki ödemesi sayılmaz", abs(g["to
 g = carry_anlik.gercek_funding(_GF(_d7, _or7), _b7 // 1000, (_b7 + H + 1_200_000) / 1000, {"YUSDT": {"miktar": -500.0, "isaret": 1.0}}, _gf7)
 kontrol("kapanan coinin kaydı silinir", "HUSDT" not in g["sayilan"] and g["poz"] == ["YUSDT"], g)
 
+# MADDE 748: demo hesabın sıradaki funding'i (yalnız o saatte ödeyenler, demo oranıyla)
+class _PI:
+    def __init__(s, satir): s.satir = satir
+    def futures_mark_price(s): return s.satir
+_t0 = 1_800_000_000
+_pi = _PI([{"symbol": "HUSDT", "markPrice": "0.5", "lastFundingRate": "-0.004", "nextFundingTime": (_t0 + 3600) * 1000},
+           {"symbol": "CUSDT", "markPrice": "2", "lastFundingRate": "0.001", "nextFundingTime": (_t0 + 7200) * 1000},
+           {"symbol": "DUSDT", "markPrice": "1", "lastFundingRate": "0.002", "nextFundingTime": (_t0 + 3600) * 1000 + 5}])
+_pz = {"HUSDT": {"miktar": 100.0, "isaret": 0.5}, "CUSDT": {"miktar": -10.0, "isaret": 2.0}, "DUSDT": {"miktar": -50.0, "isaret": 1.0}}
+d = carry_anlik.demo_funding(_GF(_pi, _Oran({})), _pz, _t0)
+kontrol("demo funding: en yakın saat, yalnız o saatte ödeyenler, demo oranı", d["T"] == _t0 + 3600 and d["n"] == 2
+        and abs(d["tahmin"] - (-100 * 0.5 * -0.004 + 50 * 1 * 0.002)) < 1e-9, d)
+kontrol("demo funding: canlıda None", carry_anlik.demo_funding(_GF(_pi, _Oran({}), False), _pz, _t0) is None)
+kontrol("demo funding: pozisyon yoksa None", carry_anlik.demo_funding(_GF(_pi, _Oran({})), {}, _t0) is None)
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
