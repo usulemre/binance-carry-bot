@@ -319,5 +319,32 @@ kontrol("fundingler: 7 günden eski gösterilmez", panel.fundingler(_kl9, simdi=
 kontrol("fundingler: dosya yoksa boş", panel.fundingler(tempfile.mkdtemp()) == [])
 kontrol("sayfada funding olayı ve coin tablosu", "fonTablo(o)" in app.get("/").data.decode() and "funding ödemesi" in app.get("/").data.decode())
 
+# MADDE 750: olaylarda kısmi / tam kapanışların gerçekleşen kârı
+_kk = panel.kapanis_kar
+kontrol("kapanış: short küçültme (HYPE örneği, Binance realizedPnl 0,7833)",
+        _kk("BUY", 0.22, 73.527, [0, -2.14, 77.08740654205], [1, -1.92, 77.08740654205]) == {"kapanan": 0.22, "kapanis_kar": 0.7833, "tam": False})
+kontrol("kapanış: önceki görüntü yoksa küçültmede sonraki ortalama", _kk("BUY", 0.22, 73.527, None, [1, -1.92, 77.08740654205])["kapanis_kar"] == 0.7833)
+kontrol("kapanış: long tam kapanış zararla", _kk("SELL", 10, 0.9, [0, 10, 1.0], [1, 0, 0]) == {"kapanan": 10, "kapanis_kar": -1.0, "tam": True})
+kontrol("kapanış: yön değişiminde yalnız eski pozisyon kadar", _kk("BUY", 15, 0.9, [0, -10, 1.0], [1, 5, 0.9]) == {"kapanan": 10, "kapanis_kar": 1.0, "tam": True})
+kontrol("kapanış: aynı yönde ekleme kapanış değil", _kk("BUY", 5, 1, [0, 10, 1.0], [1, 15, 1.0]) is None)
+kontrol("kapanış: pozisyon bilinmiyorsa yok", _kk("SELL", 5, 1, None, None) is None and _kk("BUY", 5, 1, None, [1, 0, 0]) is None)
+_k750 = os.path.join(tmp, "carry-i2"); os.makedirs(os.path.join(_k750, "defter")); _db750 = os.path.join(_k750, "defter", "carry.db")
+_t5 = __import__("time").time() - 3600
+_DB.emir_kaydet("PIYASA_YEDEK", "HYPEUSDT", "BUY", 0.22, db=_db750, simdi=_t5, oid="9")
+_DB.emir_kaydet("TP", "ADAUSDT", "BUY", 96, db=_db750, simdi=_t5 - 600, oid="8")
+_DB.emir_kaydet("GIRIS", "ADAUSDT", "BUY", 50, db=_db750, simdi=_t5 - 300, oid="7")
+_c = _sq.connect(_db750)
+for _o, _a, _f in (("9", 0.22, 73.527), ("8", 96, 0.1755), ("7", 50, 0.17)):
+    _c.execute("UPDATE emir SET durum='FILLED', dolan=?, ort_fiyat=? WHERE oid=?", (_a, _f, _o))
+_c.commit(); _c.close()
+json.dump({"s": {"HYPEUSDT": [[int(_t5) - 9000, -2.14, 77.08740654205], [int(_t5) + 120, -1.92, 77.08740654205]],
+                 "ADAUSDT": [[int(_t5) - 9000, -96.0, 0.1837], [int(_t5) + 120, 50.0, 0.17]]}},
+          open(os.path.join(_k750, "defter", "anlik_poz.json"), "w"))
+_l5 = {x["sembol"] + x["tur"]: x for x in panel.islemler(_k750)["liste"]}
+kontrol("işlem listesinde kısmi kapanış kârı", _l5["HYPEpiyasa"].get("kapanis_kar") == 0.7833 and _l5["HYPEpiyasa"]["tam"] is False, _l5)
+kontrol("görüntüden sonraki İLK dolum kapanışı doğru (tam)", _l5["ADAkâr al"].get("kapanis_kar") == 0.7872 and _l5["ADAkâr al"]["tam"] is True, _l5)
+kontrol("arada başka dolum varsa eski görüntüyle kâr UYDURULMAZ", "kapanis_kar" not in _l5["ADAlimit"], _l5)
+kontrol("sayfada kapanış satırı", 'kapanış ${isaretli(top)}' in app.get("/").data.decode())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

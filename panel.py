@@ -294,6 +294,24 @@ _TUR_AD = {"GIRIS": "limit", "KOVALA": "limit", "PIYASA": "piyasa", "PIYASA_YEDE
            "KADEME": "kâr al kademe", "FELAKET": "felaket stop"}
 
 
+def kapanis_kar(yon: str, adet: float, fiyat: float, once, sonra) -> dict | None:
+    """MADDE 750: işlem mevcut pozisyonu (kısmen ya da tamamen) kapattıysa kapanan adet ve gerçekleşen kâr (komisyonsuz,
+    ≈ Binance realizedPnl). Ortalama giriş: işlemden önceki görüntü (`once` = [t, adet, giriş]); yoksa küçültmede Binance
+    ortalamayı değiştirmediği için sonraki görüntünün girişi. Pozisyon bilinmiyorsa None."""
+    al = yon == "BUY"
+    if once is not None and once[1] and once[2]:
+        onceki, giris = float(once[1]), float(once[2])
+    elif sonra is not None and sonra[1] and sonra[2] and ((al and sonra[1] < 0) or (not al and sonra[1] > 0)):
+        onceki, giris = float(sonra[1]) + (-adet if al else adet), float(sonra[2])   # küçültme: önce = sonra ∓ adet
+    else:
+        return None
+    if (onceki > 0) == al:                 # aynı yönde ekleme: kapanış yok
+        return None
+    kapanan = min(adet, abs(onceki))
+    kar = kapanan * (fiyat - giris) * (1 if onceki > 0 else -1)
+    return {"kapanan": round(kapanan, 8), "kapanis_kar": round(kar, 4), "tam": kapanan >= abs(onceki) * 0.999}
+
+
 def islemler(klasor: str, gun: float = 7, simdi: float | None = None) -> dict:
     """MADDE 745: son `gun` günün DOLAN emirleri (emir defteri, SALT OKUNUR) + her işlemden sonra coinin pozisyonu ve
     ORTALAMA girişi (defter/anlik_poz.json: carry_anlik 5 dk'da bir, yalnız değişince yazar; ortalama Binance'in kendi
@@ -317,6 +335,10 @@ def islemler(klasor: str, gun: float = 7, simdi: float | None = None) -> dict:
             c.close()
     except Exception:
         return out
+    dolum_t: dict[str, list[float]] = {}   # madde 750: sembol başına dolum zamanları (önceki görüntü hâlâ geçerli mi?)
+    for z, sem, tur, yon, dolan, ort, maker, kom, kap, durum in satir:
+        if dolan and ort:
+            dolum_t.setdefault(sem, []).append(float(kap or z))
     for z, sem, tur, yon, dolan, ort, maker, kom, kap, durum in satir:
         if not dolan or not ort:
             if durum is None and tur in ("GIRIS", "KOVALA", "PIYASA", "PIYASA_YEDEK") and simdi - z < 86400:
@@ -338,6 +360,12 @@ def islemler(klasor: str, gun: float = 7, simdi: float | None = None) -> dict:
             k["kayit_yok"] = True
         if sonra is not None:
             k.update({"poz_sonra": sonra[1], "ort_sonra": sonra[2] or None, "usd_sonra": round(abs(sonra[1]) * float(ort), 2)})
+        once = h[i - 1] if i > 0 else None
+        if once is not None and any(once[0] < x < t - 1 for x in dolum_t.get(sem, [])):
+            once = None                    # görüntüyle bu işlem arasında başka dolum var: önceki pozisyon bilinmiyor
+        kap_ = kapanis_kar(yon, float(dolan), float(ort), once, sonra)
+        if kap_ is not None:
+            k.update(kap_)
         out["liste"].append(k)
     out["liste"].reverse()
     return out
@@ -1054,6 +1082,11 @@ function olayIslem(k){
     grup = {zaman: x.zaman, tur: "islem", m: x.m, islem: [x]}; out.push(grup);
   }
   for (const g of out) if (g.tur==="islem") g.metin = g.islem.length==1 ? `${g.islem[0].sembol} · ${g.islem[0].tur}` : `${g.islem.length} işlem`;
+  // madde 750: turdaki / gruptaki kısmi ve tam kapanışların gerçekleşen kârı olay satırına
+  for (const g of out){ const kp = (g.islem||[]).filter(x=>x.kapanis_kar!=null); if (!kp.length) continue;
+    const top = kp.reduce((a,x)=>a+x.kapanis_kar,0), tam = kp.filter(x=>x.tam).length, kis = kp.length - tam;
+    const ne = [kis ? `${kis} kısmi` : "", tam ? `${tam} tam` : ""].filter(Boolean).join(" + ");
+    g.metin += ` | ${ne} kapanış ${isaretli(top)} (${kp.map(x=>x.sembol).filter((v,i,a)=>a.indexOf(v)===i).join(", ")})`; g.kapanis = top; }
   // madde 749: funding ödemeleri (demo hesaba yatan · gerçek oranlarla olsaydı)
   const demo = k.mod=="demo";
   for (const f of (k.fundingler||[])){
@@ -1069,7 +1102,8 @@ function islemTablo(o){
   const ad = x => { const art = x.yon==="BUY"; const ps = x.poz_sonra;
     if (ps==null) return art ? "al" : "sat";
     if (art) return ps>0 ? "long +" : "short −"; return ps<0 ? "short +" : "long −"; };
-  const sat = o.islem.map(x=>`<tr><td><b>${x.sembol}</b> <span class="s">${ad(x)}</span><div class="s">${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div></td>
+  const sat = o.islem.map(x=>`<tr><td><b>${x.sembol}</b> <span class="s">${ad(x)}</span><div class="s">${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div>
+    ${x.kapanis_kar!=null ? `<div class="s">${x.tam?"tam":"kısmi"} kapanış <span class="${sinif(x.kapanis_kar)}">${isaretli(x.kapanis_kar)}</span></div>` : ""}</td>
     <td class="r">${fiyatYaz(x.fiyat)}<div class="s">${x.adet.toLocaleString("tr-TR",{maximumFractionDigits:4})} adet · ${para(x.usd)}</div></td>
     <td class="r">${x.ort_sonra!=null ? fiyatYaz(x.ort_sonra) : (x.poz_sonra===0 ? "kapandı" : "—")}<div class="s">${x.poz_sonra!=null && x.poz_sonra!==0 ? "poz " + para(x.usd_sonra) : (x.poz_sonra==null ? (x.kayit_yok ? "kayıt yok" : "birkaç dk içinde") : "")}</div></td></tr>`).join("");
   return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} işlemler (${o.islem.length})</span>${ac ? `<table><tr class="s"><td>coin · yön</td><td class="r">dolum fiyatı</td><td class="r">sonra ortalama</td></tr>${sat}</table>` : ""}</div>`;
