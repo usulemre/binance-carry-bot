@@ -15,6 +15,7 @@ import json
 import os
 import sys
 import time
+from datetime import datetime, timezone
 
 from carry_gunluk_defter import DEFTER_DOSYA, DEFTER_KLASOR, _pozisyonlar
 
@@ -318,7 +319,11 @@ def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GER
             en_son = max(en_son, t)
         if en_son:
             yeni_say[sem] = en_son
-    b.update(son_ms=bit_ms, toplam=round(top, 6), sayilan=yeni_say, poz=sorted(poz))
+    gun = {k: float(v) for k, v in (b.get("gun") or {}).items()}   # madde 748: UTC gün başına gerçek funding (panel günlük grafiği)
+    for t, _s, v_ in yeni_olay:
+        g = datetime.fromtimestamp(t / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+        gun[g] = round(gun.get(g, 0.0) + v_, 6)
+    b.update(son_ms=bit_ms, toplam=round(top, 6), sayilan=yeni_say, poz=sorted(poz), gun=gun)
     _atomik_yaz(dosya, b)
     return {**b, "_yeni": yeni_olay}
 

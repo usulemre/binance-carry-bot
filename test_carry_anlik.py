@@ -9,6 +9,7 @@ def kontrol(ad, ok, ek=""):
     print(("  OK  " if ok else "  XX  ") + ad + (f"  [{ek}]" if ek and not ok else "")); _h += 0 if ok else 1
 
 import carry_anlik
+from datetime import datetime, timezone
 
 
 class _Sahte:
@@ -161,6 +162,8 @@ except RuntimeError:
 kontrol("gerçek borsa okunamazsa istisna, dosya DEĞİŞMEZ", _ok and json.load(open(_gfd)) == _once)
 g3 = carry_anlik.gercek_funding(_GF(_demo, _ger), _b // 1000, (_b + 11 * H) / 1000 + 60, _poz, _gfd)
 kontrol("aynı funding anı iki kez sayılmaz", abs(g3["toplam"] - g2["toplam"]) < 1e-12)
+_gk = datetime.fromtimestamp((_b + 10 * H) / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
+kontrol("madde 748: artımlı funding UTC GÜN kırılımında (tekrar sayılmaz)", abs(g3["gun"].get(_gk, 0) - 5.0 * 2.0 * 0.001) < 1e-9 and sum(g3["gun"].values()) == g3["gun"][_gk], g3.get("gun"))
 class _S3(_Sahte):
     def __init__(s):
         super().__init__(); s.client = _DemoC({}, _k); s.veri = _Oran({}); s.veri_gercek = True

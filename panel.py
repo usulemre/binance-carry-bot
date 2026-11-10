@@ -512,6 +512,46 @@ def piyasa_oku(klasorler: list[str], simdi: float | None = None) -> dict | None:
     return en
 
 
+def gercek_gorunum(df: list[dict], o: dict, klasor: str) -> dict | None:
+    """MADDE 748: demo kurulumda "gerçek funding ile" görünüm. Demo borsa funding'i KENDİ oranıyla öder (gerçekle ilgisiz);
+    carry_anlik gerçek Binance oranlarıyla aynı pozisyonların funding'ini hesaplar (madde 744; gün kırılımı 748).
+    Kitap / kâr: (gerçek − demo) funding farkı eklenir. Günlük getiri: o günün demo funding'i çıkar, gerçeği eklenir
+    (yalnız gerçek gün kırılımı olan günler; olmayan gün değişmez, `duzeltilmeyen` sayılır). Gerçek veri yoksa None."""
+    d = o.get("dokum") or {}
+    if d.get("funding_gercek") is None or d.get("funding") is None:
+        return None
+    try:
+        with open(os.path.join(klasor, "defter", "gercek_funding.json"), encoding="utf-8") as f:
+            gun = json.load(f).get("gun") or {}
+    except (OSError, ValueError, AttributeError):
+        gun = {}
+    fark = d["funding_gercek"] - d["funding"]
+    adj, onc, top_fark, fark_satir, duz, duzm = [], None, 0.0, [], 0, 0
+    for k in df:
+        k2 = dict(k); g = k.get("gun_getiri")
+        if g is not None and onc is not None:
+            et = gun_etiketi(k); taban = (onc.get("ozkaynak") or 0) * float(onc.get("sermaye_olcek", k.get("sermaye_olcek", 1.0)) or 1.0)
+            if et in gun and taban > 0:
+                demo_f = ((k.get("gelir_24s") or {}).get("FUNDING_FEE") or 0) * _gelir_payi(onc, k)
+                df_ = gun[et] - demo_f; top_fark += df_
+                k2["gun_getiri"] = g + df_ / taban; duz += 1
+            else:
+                duzm += 1
+        fark_satir.append(top_fark); adj.append(k2); onc = k
+    v = ozet(adj)
+    for s_, f_ in zip(v["seri"], fark_satir):   # kitap eğrisi de gerçek funding farkıyla
+        if s_.get("kitap") is not None:
+            s_["kitap"] = round(s_["kitap"] + f_, 4)
+    out = {k: v[k] for k in ("seri", "toplam", "dd", "g7", "g30", "bugun", "aylik")}
+    if o.get("kitap_canli") is not None:
+        out["kitap_canli"] = round(o["kitap_canli"] + fark, 4)
+    if o.get("kar_usd") is not None:
+        out["kar_usd"] = round(o["kar_usd"] + fark, 2)
+        out["kar_oran"] = round(out["kar_usd"] / o["kitap_bas"], 6) if o.get("kitap_bas") else None
+    out.update(fark=round(fark, 2), duzeltilen=duz, duzeltilmeyen=duzm)
+    return out
+
+
 def veri(klasorler: list[str], servis: bool = True) -> dict:
     out = []
     for kl in klasorler:
@@ -534,6 +574,8 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
                       "gerceklesmemis": an.get("gerceklesmemis_top"), "demo_funding": an.get("demo_funding")})
         else:
             o.update({"poz_kaynak": "günlük", "poz_zaman": o.get("son_tarih"), "gerceklesmemis": None})
+        if o["mod"] == "demo":
+            o["gercek"] = gercek_gorunum(df, o, kl)
         out.append(o)
     return {"kurulumlar": out, "paketler": paketler(), "piyasa": piyasa_oku(klasorler), "uretim": _yerel().strftime("%Y-%m-%d %H:%M")}
 
@@ -1061,7 +1103,7 @@ function ozetSayfa(k, svc, sv){
   return `<div class="kart ozet">
     <div class="ust"><span class="k">Kitap</span>${svc?`<span class="durum ${svc}">● ${sv=="active"?"çalışıyor":sv}</span>`:""}</div>
     <div class="buyuk" id="kitapd">${para(AKIS.kitapd.v)}</div>
-    ${k.kar_usd!=null?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="karusd" class="kar rz ${sinif(k.kar_usd)}">${ok_(k.kar_usd)} ${isaretli(k.kar_usd)} (${yz(k.kar_oran)})</span><span class="k">başlangıç ${para(k.kitap_bas)}</span></div>`:""}
+    ${k.kar_usd!=null?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="karusd" class="kar rz ${sinif(k.kar_usd)}">${ok_(k.kar_usd)} ${isaretli(k.kar_usd)} (${yz(k.kar_oran)})</span><span class="k">başlangıç ${para(k.kitap_bas)}</span></div>`:""}${fgAnahtar(k)}
     <div class="egri"><div style="display:flex;justify-content:flex-end"><div class="mod"><button data-m="bugun" class="${egriMod=="bugun"?"on":""}" onclick="egriSec('bugun')">Bugün</button><button data-m="tum" class="${egriMod=="tum"?"on":""}" onclick="egriSec('tum')">Başlangıçtan</button></div></div>
       <div id="egri">${egriIc(k)}</div></div>
     <div class="cipler">${cip(`Son gün${k.son_gun_tarih?" · "+(+k.son_gun_tarih.slice(8,10))+" "+AYAD[+k.son_gun_tarih.slice(5,7)-1].slice(0,3):""}`, yz(k.bugun), sinif(k.bugun))}${cip(k.g7==null&&k.gun_sayisi?`7 gün · ${k.gun_sayisi} gün veri`:"7 gün", yz(k.g7), sinif(k.g7))}${cip(k.g30==null&&k.gun_sayisi>=7?`30 gün · ${k.gun_sayisi} gün veri`:"30 gün", yz(k.g30), sinif(k.g30))}${cip("En büyük düşüş", yz(k.dd), k.dd<0?"eks":"")}</div>
@@ -1225,6 +1267,32 @@ function olaySayfa(k){
   return `<div class="kart"><h2>Olaylar</h2>${h ? `<div class="zc">${h}</div>` : "<div class='bos'>olay yok</div>"}</div>
   ${(VERI.paketler||[]).length && !VERI_GOMULU ? `<div class="kart"><h2>Aylık veri paketleri <span class="k">(araştırma: indirip sohbete yükleyin)</span></h2>${VERI.paketler.map(p=>`<div class="zo"><span class="i i-basla">↓</span><div class="m"><a href="paket/${p.ad}" style="color:var(--vurgu)">${p.ad}</a><div class="z">${p.mb} MB</div></div></div>`).join("")}</div>` : ""}`;
 }
+// MADDE 748: demo kurulumda "gerçek funding ile" görünüm (varsayılan AÇIK): kitap, kâr, günlük getiri ve 7/30 gün / düşüş
+// demonun kendi funding'i yerine gerçek Binance oranlarıyla. Ham demo değerleri k._demo'da; anahtar Özet'te.
+let FG = (()=>{ try { return localStorage.getItem("carry_fg") !== "0"; } catch(_) { return true; } })();
+function gorunum(V){
+  for (const k of (V.kurulumlar||[])){
+    if (!k.gercek) continue;
+    const alan = ["seri","toplam","dd","g7","g30","bugun","aylik","kitap_canli","kar_usd","kar_oran"];
+    k._demo = Object.fromEntries(alan.map(a=>[a, k[a]]));
+    k._gercek = Object.fromEntries(alan.filter(a=>a in k.gercek).map(a=>[a, k.gercek[a]]));
+    Object.assign(k, FG ? k._gercek : {});
+  }
+  return V;
+}
+function fgSec(v){
+  FG = v; try { localStorage.setItem("carry_fg", v ? "1" : "0"); } catch(_){}
+  for (const k of (VERI.kurulumlar||[])) if (k._demo) Object.assign(k, k._demo, FG ? k._gercek : {});
+  AKIS.ustk = null; AKIS.kitapd = null; ciz();
+}
+function fgAnahtar(k){
+  if (!k.gercek) return "";
+  const g = k.gercek;
+  return `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 2px;font-size:12px;color:var(--soluk)">funding:
+    <button class="${FG?'on':''}" style="border-radius:999px;border:1px solid var(--cizgi);background:${FG?'color-mix(in srgb,var(--vurgu) 16%,transparent)':'none'};color:${FG?'var(--vurgu)':'var(--soluk)'};font:inherit;padding:4px 10px;cursor:pointer" onclick="fgSec(true)">gerçek Binance</button>
+    <button style="border-radius:999px;border:1px solid var(--cizgi);background:${!FG?'color-mix(in srgb,var(--vurgu) 16%,transparent)':'none'};color:${!FG?'var(--vurgu)':'var(--soluk)'};font:inherit;padding:4px 10px;cursor:pointer" onclick="fgSec(false)">demo (ham)</button>
+    <span>fark ${isaretli(g.fark)}${g.duzeltilmeyen ? ` · ${g.duzeltilmeyen} eski gün düzeltilemedi` : ""}</span></div>`;
+}
 function ciz(){
   const K = VERI.kurulumlar; $("#alt").textContent = K[secili] ? `${K[secili].ad} · ${K[secili].mod}` : "";
   $("#sekme").innerHTML = K.length > 1 ? K.map((k,i)=>`<button class="${i==secili?'on':''}" onclick="secili=${i};ciz()">${k.ad} · ${k.mod}</button>`).join("") : "";
@@ -1267,8 +1335,8 @@ addEventListener("touchend", e=>{ if (!dokB) return; const t = e.changedTouches[
   dokB = null; }, {passive:true});
 let _gen = innerWidth >= 1000; addEventListener("resize", ()=>{ const g = innerWidth >= 1000; if (g !== _gen){ _gen = g; if (VERI) ciz(); } });
 async function yukle(){
-  if (VERI_GOMULU){ VERI = VERI_GOMULU; ciz(); return; }
-  try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = await r.json(); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
+  if (VERI_GOMULU){ VERI = gorunum(VERI_GOMULU); ciz(); return; }
+  try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = gorunum(await r.json()); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
 }
 yukle(); if(!VERI_GOMULU){ setInterval(yukle, 60000); setInterval(canliBoya, 1000); }
 if(!VERI_GOMULU && "serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }

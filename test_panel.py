@@ -358,5 +358,22 @@ kontrol("piyasa: dosya yoksa None", panel.piyasa_oku([os.path.join(tmp, "yok")])
 _sf = app.get("/").data.decode()
 kontrol("sayfada Piyasa sekmesi", "piyasaSayfa" in _sf and '["piyasa","Piyasa"]' in _sf)
 
+# MADDE 748: gerçek funding görünümü — kitap / kâr farkı, gün kırılımı olan gün düzeltilir, olmayan dokunulmaz
+_k8 = os.path.join(tmp, "carry-g8"); os.makedirs(os.path.join(_k8, "defter"))
+_d8 = [{"tarih": "2026-11-07", "zaman": 1794268800 + 300, "ozkaynak": 5000.0, "sermaye_olcek": 0.4, "kitap": 2000.0, "gun_getiri": None},
+       {"tarih": "2026-11-08", "zaman": 1794355200 + 300, "ozkaynak": 4990.0, "sermaye_olcek": 0.4, "kitap": 1996.0, "gun_getiri": -0.005,
+        "gelir_24s": {"FUNDING_FEE": -0.40}},
+       {"tarih": "2026-11-09", "zaman": 1794441600 + 300, "ozkaynak": 4980.0, "sermaye_olcek": 0.4, "kitap": 1992.0, "gun_getiri": -0.005,
+        "gelir_24s": {"FUNDING_FEE": -0.20}}]
+json.dump({"gun": {panel.gun_etiketi(_d8[2]): 0.60}}, open(os.path.join(_k8, "defter", "gercek_funding.json"), "w"))
+_o8 = {"dokum": {"funding": -0.60, "funding_gercek": 1.00}, "kitap_canli": 1990.0, "kar_usd": -10.0, "kitap_bas": 2000.0}
+_g8 = panel.gercek_gorunum(_d8, _o8, _k8)
+kontrol("gerçek: kitap ve kâr = demo + (gerçek − demo funding)", _g8["kitap_canli"] == 1991.6 and _g8["kar_usd"] == -8.4 and _g8["fark"] == 1.6, _g8)
+_gs = [s_["gun"] for s_ in _g8["seri"] if s_["gun"] is not None]
+kontrol("gerçek: kırılımı olan gün düzeltilir (−0,5% + (0,60+0,20)/1996), olmayan aynı", abs(_gs[0] + 0.005) < 1e-12 and abs(_gs[1] - (-0.005 + 0.80 / 1996.0)) < 1e-9
+        and _g8["duzeltilen"] == 1 and _g8["duzeltilmeyen"] == 1, (_gs, _g8))
+kontrol("gerçek: veri yoksa None", panel.gercek_gorunum(_d8, {"dokum": {"funding": 1}}, _k8) is None)
+kontrol("sayfada funding anahtarı", "fgAnahtar" in app.get("/").data.decode())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

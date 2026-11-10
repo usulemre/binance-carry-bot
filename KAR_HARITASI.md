@@ -8247,3 +8247,13 @@ Piyasa sekmesi açıkken telefon, pozisyon kartlarındaki gibi (madde 732) Binan
 (mobil veri). Fiyat, 24 sa %, hacim, funding (oran + yıllık) anlık; 1 sa / 3 / 7 / 30 g % = canlı fiyat / sunucunun referans fiyatı
 (tarayici.py artık r1/r3/r7/r30 de yazar, 10 dk'da bir). Liste 2 sn'de bir yeniden sıralanır (arama kutusu odaktayken durur).
 Başlıkta "● canlı"; akış yoksa sunucu görüntüsünün saati. Anahtarsız, emir yok, bot değişmedi. Testler geçti.
+
+## Madde 748 — panelde "gerçek funding ile" görünüm (kullanıcı: "neden gerçek funding'i hesaba katmıyoruz, doğru olmaz mı")
+Demo borsa funding'i KENDİ oranıyla öder (gerçekle ilgisiz); bot ise gerçek oranlarla seçim yapar. Demo kurulumda panel artık
+varsayılan olarak GERÇEK Binance funding'iyle gösterir: kitap, toplam kâr, günlük getiri grafiği, 7 / 30 gün, en büyük düşüş.
+Özet'te anahtar: "gerçek Binance" / "demo (ham)" (telefonda hatırlanır) + toplam fark.
+- carry_anlik.gercek_funding: gerçek-oran funding artık UTC GÜN kırılımıyla da saklanır (gercek_funding.json "gun").
+- panel.gercek_gorunum(): kitap / kâr += (gerçek − demo) funding; her günün getirisi: o günün demo funding'i çıkar, gerçeği
+  eklenir (taban = önceki gün özkaynak × ölçek). Gün kırılımı olmayan eski günler değişmez ve "N eski gün düzeltilemedi" yazar
+  (kırılım bu güncellemeden SONRA birikir; madde 744'ün tohum toplamı güne dağıtılamaz).
+- Canlı (gerçek hesap) kurulumda görünüm yok (zaten gerçek funding). Bot / strateji değişmedi. Testler (panel +4, anlık +1) geçti.
