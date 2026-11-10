@@ -761,7 +761,7 @@ nav.alt button.on{background:color-mix(in srgb,var(--vurgu) 16%,transparent);col
 .sat .ust .ok2{display:none}.sat.acik{background:var(--kart2)}
 .sat .det{padding:0 10px 11px 9px}.sat .det .f{font-size:17px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
 .sat .det .gr{font-size:11.5px;color:var(--soluk);font-variant-numeric:tabular-nums;display:flex;justify-content:space-between;gap:6px;margin-top:1px}
-.sat .det svg{width:100%;height:70px;display:block;margin-top:8px;overflow:visible}
+.sat .det svg{width:100%;height:90px;display:block;margin-top:8px;overflow:visible}
 .sat .det .fund,.sat .det .hedef .t{white-space:normal;font-size:11.5px}
 .fgac{cursor:pointer;color:var(--vurgu)}.fgacik{flex-basis:100%;font-size:12px;color:var(--soluk);line-height:1.4}
 @media(max-width:699px){.isi{height:230px}.coin td,.coin th{padding:6px 4px;font-size:12px;white-space:nowrap}.coin td:nth-child(4){display:none}
@@ -978,14 +978,14 @@ function cizgi(seri, W, H, renk, yatay, kimlik="c", xs=null, yatayAralikta=false
     <path d="${yol}" fill="none" stroke="${renk}" stroke-width="2" vector-effect="non-scaling-stroke" stroke-linejoin="round" stroke-linecap="round"/>
     <circle class="uc" cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="3" fill="${renk}"/><circle cx="${sx.toFixed(1)}" cy="${sy.toFixed(1)}" r="3" fill="${renk}"/></svg>`;
 }
-function kivilcim(s, p, f, renk){
+function kivilcim(s, p, f, renk, W=160, H=64){   // madde 755: W/H = gösterildiği alanın gerçek ölçüsü (esnetilmesin)
   const M = MUM[s], simdi = Date.now();
   if (!M || M.bas !== gunBasi(simdi)) return `<div class="grbekle iskelet"></div>`;
   const nok = M.nok.filter(n => n[0] < simdi - 1e3);   // tamamlanan mumlar; son nokta anlık fiyat
   if (f) nok.push([simdi, f]);
   if (nok.length < 2) return `<div class="grbekle">gün yeni başladı (03:00)…</div>`;
   // madde 743: en küçük dikey aralık fiyatın %1'i (gün başında 2-3 mumluk oynama duvar gibi görünmesin)
-  return cizgi(nok.map(n=>n[1]), 160, 64, renk, p.giris>0 ? p.giris : null, s, nok.map(n=>Math.min(1, (n[0]-M.bas)/GUN_MS)), true, 0.01 * (f || nok[nok.length-1][1]));
+  return cizgi(nok.map(n=>n[1]), W, H, renk, p.giris>0 ? p.giris : null, s, nok.map(n=>Math.min(1, (n[0]-M.bas)/GUN_MS)), true, 0.01 * (f || nok[nok.length-1][1]));
 }
 // MADDE 737: kâr al hedefine ilerleme. Long: giriş -> giriş x (1 + kademe); short: giriş -> giriş x (1 − kademe).
 function hedefCubuk(k, p, f){
@@ -1003,6 +1003,7 @@ function fundSatir(s, p, f){
   const t = -p.miktar * (f||p.isaret) * F.r, al = t >= 0;
   return `<div class="fund">funding ${(F.r*100).toFixed(4).replace(".",",")}% · <span class="${al?"art":"eks"}">${al?"alıyoruz":"ödüyoruz"} ${isaretli(t)}</span></div>`;
 }
+let KUTU_W = 160;   // madde 755: kart içi grafik genişliği (ilk kart çizilince ölçülür)
 function kutuIc(s, p, k){
   const f = FIYAT[s] || p.isaret, ok = f && p.giris>0 && p.miktar;
   const ky = ok ? (f/p.giris - 1) * (p.miktar>0 ? 1 : -1) * 100 : p.kar_yuzde;
@@ -1013,7 +1014,7 @@ function kutuIc(s, p, k){
   return `<div class="ad"><span>${s.replace(/USDT$/,"")}</span><span class="k">${para(usd)}</span></div>
     <div class="f ${flas}">${fiyatYaz(f)}</div><div class="gr"><span>giriş ${fiyatYaz(p.giris)}</span>${bg!=null?`<span class="${sinif(bg)}">bugün ${yz(bg)}</span>`:""}</div>
     <div class="y ${sinif(ky)}"><span class="rz">${ok_(ky)} ${ky==null?"—":Math.abs(ky).toFixed(2).replace(".",",")+"%"}</span><small>${g==null?"":isaretli(g)}</small></div>
-    ${kivilcim(s, p, f, renk)}${k ? hedefCubuk(k, p, f) : ""}${fundSatir(s, p, f)}${k ? stopSatir(k, s, p) : ""}`;
+    ${kivilcim(s, p, f, renk, KUTU_W)}${k ? hedefCubuk(k, p, f) : ""}${fundSatir(s, p, f)}${k ? stopSatir(k, s, p) : ""}`;
 }
 // MADDE 754: telefonda pozisyon = tek satır (coin, yön, büyüklük, kâr %, $); dokununca kutudaki ayrıntılar açılır
 function satirIc(s, p, k){
@@ -1027,7 +1028,7 @@ function satirIc(s, p, k){
   return `<div class="ust" onclick="pozAc('${s}')"><span class="c"><b>${s.replace(/USDT$/,"")}</b><span class="yb">${p.miktar>0?"L":"S"}</span>${uy}</span>
       <span class="u">${para(usd)}</span><span class="p"><span class="rz ${sinif(ky)}">${ky==null?"—":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"}</span></span><span class="g ${sinif(g)}">${g==null?"":isaretli(g)}</span></div>
     ${ac ? `<div class="det"><div class="f">${fiyatYaz(f)}</div><div class="gr"><span>giriş ${fiyatYaz(p.giris)}</span>${bg!=null?`<span class="${sinif(bg)}">bugün ${yz(bg)}</span>`:""}</div>
-      ${kivilcim(s, p, f, renk)}${hedefCubuk(k, p, f)}${fundSatir(s, p, f)}${stopSatir(k, s, p)}</div>` : ""}`;
+      ${kivilcim(s, p, f, renk, Math.max(200, Math.round((($("#icerik")||{}).clientWidth || innerWidth - 28) - 52)), 90)}${hedefCubuk(k, p, f)}${fundSatir(s, p, f)}${stopSatir(k, s, p)}</div>` : ""}`;
 }
 function pozAc(s){ ACIK.has("p"+s) ? ACIK.delete("p"+s) : ACIK.add("p"+s); const e = document.getElementById("t-"+s), k = VERI.kurulumlar[secili];
   if (e && k.pozisyonlar[s]){ e.classList.toggle("acik", ACIK.has("p"+s)); e.innerHTML = satirIc(s, k.pozisyonlar[s], k); } }
@@ -1099,18 +1100,19 @@ function bugunEgri(k){
   return {seri: nok.map(n=>n[1]), xs: nok.map(n=>Math.min(1,(n[0]-bas)/GUN_MS)), son, ilk: G.ilk*1000, bas,
           oran: kit!=null && kit - son > 0 ? son / (kit - son) : null};
 }
+const EGRI_W = () => Math.max(200, Math.round((($("#egri")||{}).clientWidth) || (($("#icerik")||{}).clientWidth || innerWidth - 28) - 30));
 function egriIc(k){
   if (egriMod=="bugun"){
     const E = bugunEgri(k);
     if (!E || E.seri.length < 2) return `<div class="bl"><span>bugün 03:00'ten beri · kitap</span><span>—</span></div><div class="bekle" style="padding:20px 0">gün içi kitap kaydı bekleniyor (5 dakikada bir)</div>`;
     const bsl = E.ilk - E.bas > 20*60e3 ? new Date(E.ilk).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}) + " kaydından beri" : "03:00'ten beri";
     return `<div class="bl"><span>bugün ${bsl} · kitap</span><b class="rz ${sinif(E.son)}">${isaretli(E.son)}${E.oran!=null?" ("+yz(E.oran)+")":""}</b></div>
-      ${cizgi(E.seri, 300, 70, css(E.son>=0?"--art":"--eks"), 0, "bugun", E.xs, true, Math.max(4, 0.004 * (k.kitap_canli || k.kitap || 1000)))}<div class="eksen"><span>03:00</span><span>09:00</span><span>15:00</span><span>21:00</span><span>03:00</span></div>`;
+      ${cizgi(E.seri, EGRI_W(), 70, css(E.son>=0?"--art":"--eks"), 0, "bugun", E.xs, true, Math.max(4, 0.004 * (k.kitap_canli || k.kitap || 1000)))}<div class="eksen"><span>03:00</span><span>09:00</span><span>15:00</span><span>21:00</span><span>03:00</span></div>`;
   }
   const kit = (k.seri||[]).map(s=>s.kitap).filter(v=>v!=null); if (k.kitap_canli!=null && kit.length) kit.push(k.kitap_canli);
   if (kit.length < 2) return `<div class="bl"><span>kitap · başlangıçtan</span></div><div class="bekle" style="padding:20px 0">en az 2 gün gerekli</div>`;
   const d = kit[kit.length-1]-kit[0];
-  return `<div class="bl"><span>kitap · başlangıçtan (${(k.seri||[]).length} gün)</span><b class="rz ${sinif(d)}">${isaretli(d)}</b></div>${cizgi(kit, 300, 70, css(d>=0?"--art":"--eks"), kit[0], "kitap")}`;
+  return `<div class="bl"><span>kitap · başlangıçtan (${(k.seri||[]).length} gün)</span><b class="rz ${sinif(d)}">${isaretli(d)}</b></div>${cizgi(kit, EGRI_W(), 70, css(d>=0?"--art":"--eks"), kit[0], "kitap")}`;
 }
 function egriSec(m){ egriMod = m; const k = VERI.kurulumlar[secili]; document.querySelectorAll(".mod button").forEach(b=>b.classList.toggle("on", b.dataset.m==m)); const e = $("#egri"); if (e) e.innerHTML = egriIc(k); }
 function canliDurum(){
@@ -1455,6 +1457,8 @@ function ciz(){
     : (genis ? `<div class="genis"><div>${ozetSayfa(k, svc, sv)}</div><div>${pozSayfa(k)}</div></div>` : ozetSayfa(k, svc, sv));
   const yl = $("#yil"); if (yl) yl.scrollLeft = yl.scrollWidth;
   isiSigdir();
+  const kt = document.querySelector(".kutu"); if (kt){ const w = Math.round(kt.clientWidth - 20); if (w > 80 && Math.abs(w - KUTU_W) > 4){ KUTU_W = w; canliBoya(); } }
+  const eg0 = $("#egri"); if (eg0 && egriMod) eg0.innerHTML = egriIc(k);
   canliBagla(k); canliBoya();
   grafikler.forEach(g=>g.destroy()); grafikler = [];
   if (!window.Chart || !$("#g1")) return;
