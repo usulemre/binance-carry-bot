@@ -1023,18 +1023,21 @@ function dengeIc(T){
 const ACIK = new Set();
 function dkAc(a){ ACIK.has(a) ? ACIK.delete(a) : ACIK.add(a); const k = VERI.kurulumlar[secili]; canliBoya(); if (k.poz_kaynak!="canlı"){ const ed=$("#dokum"); if(ed) ed.innerHTML = dokumYaz(k, k.gerceklesmemis, k.kar_usd); } }
 function dokumYaz(k, poz, kar){
-  const D = k.dokum, dg = D.diger_gelir||0, fark = kar - poz - D.gerceklesen - D.funding - D.komisyon - dg;
+  // madde 752: "gerçek funding" görünümünde toplam gerçek funding'le; döküm de aynı funding'i kullanmalı (yoksa fark
+  // "başlangıç farkı"na düşüyordu). Demo hesabın ödediği alt satırda.
+  const D = k.dokum, gz = FG && k.gercek && D.funding_gercek!=null, F = gz ? D.funding_gercek : D.funding;
+  const dg = D.diger_gelir||0, fark = kar - poz - D.gerceklesen - F - D.komisyon - dg;
   const K = [["poz","Açık pozisyonlar", poz, "şu an açık coinlerin fiyat hareketi; kapanınca kesinleşir", "--vurgu", true],
              ["kap","Kapanan pozisyonlar", D.gerceklesen, "kapatılmış işlemlerin kesinleşmiş kâr / zararı", "--mor", false],
-             ["fun","Funding", D.funding, "pozisyon taşıdığı için funding saatlerinde (çoğu coinde 8, bazılarında 4 saatte bir) alınan (+) / ödenen (−) ücret — stratejinin asıl geliri", "--art", true],
+             ["fun", gz ? "Funding (gerçek oranla)" : "Funding", F, "pozisyon taşıdığı için funding saatlerinde (çoğu coinde 8, bazılarında 4 saatte bir) alınan (+) / ödenen (−) ücret — stratejinin asıl geliri", "--art", true],
              ["kom","Komisyon", D.komisyon, "Binance işlem ücreti", "--uyari", true],
              ["dig","Diğer Binance kayıtları", dg, "sigorta fonu vb.", "--mor", false],
-             ["bas","Başlangıç farkı", fark, "başlangıç kaydı alınırken açık pozisyonların o anki kârı (başlangıç tutarına zaten dahil) ve demo / gerçek fiyat farkı; sabit kalır", "--soluk", false]]
+             ["bas","Başlangıç farkı", fark, "başlangıç kaydı alınırken açık pozisyonların o anki kârı ve ölçüm zamanlaması; demoda ayrıca demo / gerçek fiyat farkı (açık pozisyonlar gerçek fiyatla, toplam demo hesaptan). Küçük oynar; gerçek hesapta ~0", "--soluk", false]]
     .filter(x => x[5] || Math.abs(x[2]) >= 0.005);
   const tm = K.reduce((a,x)=>a+Math.abs(x[2]), 0) || 1;
   const cubuk = `<div class="cubuk">${K.map(x=>`<span style="width:${(Math.abs(x[2])/tm*100).toFixed(1)}%;background:${css(x[4])}" title="${x[1]}"></span>`).join("")}</div>`;
   // madde 744: demoda funding'i demo borsa kendi oranıyla öder; bot gerçek oranlara göre seçer -> "gerçek oranlarla olsaydı" (toplama girmez)
-  const fg = D.funding_gercek, fgS = fg==null ? "" : `<div class="dk alt ${ACIK.has("fug")?"acik":""}" onclick="dkAc('fug')"><span class="n"></span><span class="a">↳ gerçek Binance oranlarıyla olsaydı <span class="ok">›</span></span><span class="v ${sinif(fg)}">${isaretli(fg)}</span><span class="ac">Bot coinleri gerçek Binance'in funding oranlarına bakarak seçer, ama pozisyonlar demo borsada olduğu için funding'i demo borsa kendi oranıyla öder (çoğu zaman gerçekle ilgisiz). Bu satır aynı pozisyonların gerçek oranlarla ne alacağını / ödeyeceğini gösterir (yaklaşık; 5 dk'lık pozisyon görüntüsüyle). Toplama girmez — canlı hesapta funding bu olurdu.</span></div>`;
+  const fg = gz ? D.funding : D.funding_gercek, fgS = fg==null ? "" : gz ? `<div class="dk alt ${ACIK.has("fug")?"acik":""}" onclick="dkAc('fug')"><span class="n"></span><span class="a">↳ demo hesabın ödediği <span class="ok">›</span></span><span class="v ${sinif(fg)}">${isaretli(fg)}</span><span class="ac">Demo borsa funding'i kendi oranıyla öder (gerçekle ilgisiz). Toplama girmez; "demo (ham)" görünümünde toplam bununla hesaplanır.</span></div>` : `<div class="dk alt ${ACIK.has("fug")?"acik":""}" onclick="dkAc('fug')"><span class="n"></span><span class="a">↳ gerçek Binance oranlarıyla olsaydı <span class="ok">›</span></span><span class="v ${sinif(fg)}">${isaretli(fg)}</span><span class="ac">Bot coinleri gerçek Binance'in funding oranlarına bakarak seçer, ama pozisyonlar demo borsada olduğu için funding'i demo borsa kendi oranıyla öder (çoğu zaman gerçekle ilgisiz). Bu satır aynı pozisyonların gerçek oranlarla ne alacağını / ödeyeceğini gösterir (yaklaşık; 5 dk'lık pozisyon görüntüsüyle). Toplama girmez — canlı hesapta funding bu olurdu.</span></div>`;
   return cubuk + K.map(x=>`<div class="dk ${ACIK.has(x[0])?"acik":""}" onclick="dkAc('${x[0]}')"><span class="n" style="background:${css(x[4])}"></span><span class="a">${x[1]} <span class="ok">›</span></span><span class="v ${sinif(x[2])}">${isaretli(x[2])}</span><span class="ac">${x[3]}</span></div>` + (x[0]=="fun" ? fgS : "")).join("")
     + `<div class="dk top"><span class="a">Toplam (başlangıçtan beri)</span><span class="v rz ${sinif(kar)}">${isaretli(kar)}</span></div>`;
 }

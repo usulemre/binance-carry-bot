@@ -8263,3 +8263,9 @@ Tablo yerine her işlem 3 satır: (1) coin + "long/short açıldı · eklendi ·
 (2) adet × dolum fiyatı · limit/piyasa · maker/taker, (3) "pozisyon ÖNCE → SONRA $ · ort. önce → sonra" ve kapanışta kâr
 (madde 750). panel.islemler() artık işlemden önceki görüntüyü de verir (poz_once / ort_once / usd_once; görüntü yoksa ve
 sonraki pozisyon tam işlem kadarsa önce = 0 → "açıldı"). Önce bilinmiyorsa "pozisyon şimdi X". Yalnız panel; bot değişmedi.
+
+## Madde 752 — düzeltme (madde 748 hatası): "gerçek funding" görünümünde döküm
+748'de toplam kâr gerçek funding'le hesaplanıyordu ama "Kâr / zarar nereden geldi?" dökümü hâlâ DEMO funding'i gösteriyordu;
+aradaki fark (gerçek − demo funding, o an +5,77 $) "Başlangıç farkı"na düşüyordu (kullanıcı ekranı: gerçek görünümde +5,61 $,
+demo görünümde −0,14 $). Artık gerçek görünümde döküm "Funding (gerçek oranla)" satırını kullanır, demo hesabın ödediği alt satırda.
+Başlangıç farkı açıklaması da düzeltildi ("sabit kalır" değil; küçük oynar, gerçek hesapta ~0). Yalnız panel.
