@@ -366,6 +366,12 @@ def islemler(klasor: str, gun: float = 7, simdi: float | None = None) -> dict:
         kap_ = kapanis_kar(yon, float(dolan), float(ort), once, sonra)
         if kap_ is not None:
             k.update(kap_)
+        # madde 751: işlemden ÖNCEKİ durum (önce → sonra satırı için). Görüntü yoksa ve sonraki pozisyon tam bu işlem kadarsa
+        # pozisyon yeni açılmıştır (önce 0).
+        if once is not None:
+            k.update({"poz_once": once[1], "ort_once": once[2] or None, "usd_once": round(abs(once[1]) * float(ort), 2)})
+        elif sonra is not None and abs(abs(sonra[1]) - float(dolan)) <= 1e-9 * max(1.0, float(dolan)):
+            k.update({"poz_once": 0.0, "ort_once": None, "usd_once": 0.0})
         out["liste"].append(k)
     out["liste"].reverse()
     return out
@@ -1169,16 +1175,26 @@ function olayIslem(k){
   return out.sort((a,b)=>(b.zaman||"").localeCompare(a.zaman||""));
 }
 function islemTablo(o){
+  // MADDE 751: her işlem tek satır grubu — ne oldu (açıldı / eklendi / azaltıldı / kapandı), ne kadar, ve ÖNCE → SONRA
   if (!o.islem || !o.islem.length) return "";
   const id = "isl" + o.zaman + o.tur, ac = ACIK.has(id);
-  const ad = x => { const art = x.yon==="BUY"; const ps = x.poz_sonra;
-    if (ps==null) return art ? "al" : "sat";
-    if (art) return ps>0 ? "long +" : "short −"; return ps<0 ? "short +" : "long −"; };
-  const sat = o.islem.map(x=>`<tr><td><b>${x.sembol}</b> <span class="s">${ad(x)}</span><div class="s">${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div>
-    ${x.kapanis_kar!=null ? `<div class="s">${x.tam?"tam":"kısmi"} kapanış <span class="${sinif(x.kapanis_kar)}">${isaretli(x.kapanis_kar)}</span></div>` : ""}</td>
-    <td class="r">${fiyatYaz(x.fiyat)}<div class="s">${x.adet.toLocaleString("tr-TR",{maximumFractionDigits:4})} adet · ${para(x.usd)}</div></td>
-    <td class="r">${x.ort_sonra!=null ? fiyatYaz(x.ort_sonra) : (x.poz_sonra===0 ? "kapandı" : "—")}<div class="s">${x.poz_sonra!=null && x.poz_sonra!==0 ? "poz " + para(x.usd_sonra) : (x.poz_sonra==null ? (x.kayit_yok ? "kayıt yok" : "birkaç dk içinde") : "")}</div></td></tr>`).join("");
-  return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} işlemler (${o.islem.length})</span>${ac ? `<table><tr class="s"><td>coin · yön</td><td class="r">dolum fiyatı</td><td class="r">sonra ortalama</td></tr>${sat}</table>` : ""}</div>`;
+  const tip = x => { const ps = x.poz_sonra, po = x.poz_once, al = x.yon==="BUY";
+    const yon = ps ? (ps>0 ? "long" : "short") : (po ? (po>0 ? "long" : "short") : (al ? "long" : "short"));
+    let ne;
+    if (po===0) ne = "açıldı"; else if (ps===0) ne = "kapandı";
+    else if (ps!=null) ne = ((ps>0)===al) ? "eklendi" : "azaltıldı"; else ne = al ? "alındı" : "satıldı";
+    return {yon, ne, ekle: ne=="açıldı"||ne=="eklendi"}; };
+  const sat = o.islem.map(x=>{ const t = tip(x), L = t.yon=="long";
+    const once = x.usd_once!=null ? (x.usd_once===0 ? "0 $" : para(x.usd_once)) : null, sonra = x.poz_sonra===0 ? "0 $" : (x.usd_sonra!=null ? para(x.usd_sonra) : "…");
+    const ort = (x.ort_once && x.ort_sonra && Math.abs(x.ort_once/x.ort_sonra-1) > 1e-6) ? ` · ort. ${fiyatYaz(x.ort_once)} → ${fiyatYaz(x.ort_sonra)}`
+              : (x.ort_sonra && t.ne=="açıldı" ? "" : (x.ort_sonra ? ` · ort. ${fiyatYaz(x.ort_sonra)}` : ""));
+    return `<div style="padding:9px 0;border-top:1px solid var(--cizgi)">
+      <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
+        <span><b>${x.sembol}</b> <span style="font-size:12px;font-weight:650;color:${L?'var(--vurgu)':'#f59e0b'}">${t.yon} ${t.ne}</span></span>
+        <span style="font-weight:650">${t.ekle?"+":"−"}${para(x.usd)}</span></div>
+      <div class="s">${x.adet.toLocaleString("tr-TR",{maximumFractionDigits:4})} adet × ${fiyatYaz(x.fiyat)} · ${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div>
+      <div style="font-size:12.5px;margin-top:2px">${x.kayit_yok && x.poz_sonra==null ? `<span class="s">pozisyon kaydı yok</span>` : (once!=null ? `pozisyon ${once} → <b>${sonra}</b>` : `pozisyon şimdi <b>${sonra}</b>`) + ort}${x.kapanis_kar!=null ? ` · kâr <b class="${sinif(x.kapanis_kar)}">${isaretli(x.kapanis_kar)}</b>` : ""}</div></div>`; }).join("");
+  return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} işlemler (${o.islem.length})</span>${ac ? `<div style="margin-top:4px">${sat}</div>` : ""}</div>`;
 }
 function fonTablo(o){
   const f = o.fon; if (!f || !f.coin || !f.coin.length) return "";

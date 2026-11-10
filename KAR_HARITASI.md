@@ -8257,3 +8257,9 @@ varsayılan olarak GERÇEK Binance funding'iyle gösterir: kitap, toplam kâr, g
   eklenir (taban = önceki gün özkaynak × ölçek). Gün kırılımı olmayan eski günler değişmez ve "N eski gün düzeltilemedi" yazar
   (kırılım bu güncellemeden SONRA birikir; madde 744'ün tohum toplamı güne dağıtılamaz).
 - Canlı (gerçek hesap) kurulumda görünüm yok (zaten gerçek funding). Bot / strateji değişmedi. Testler (panel +4, anlık +1) geçti.
+
+## Madde 751 — Olaylar'daki işlem listesi sadeleşti (kullanıcı: "karmaşık; neyi ne kadar aldı, eskiden neydi ne oldu yok")
+Tablo yerine her işlem 3 satır: (1) coin + "long/short açıldı · eklendi · azaltıldı · kapandı" + tutar (+ ekleme / − azaltma),
+(2) adet × dolum fiyatı · limit/piyasa · maker/taker, (3) "pozisyon ÖNCE → SONRA $ · ort. önce → sonra" ve kapanışta kâr
+(madde 750). panel.islemler() artık işlemden önceki görüntüyü de verir (poz_once / ort_once / usd_once; görüntü yoksa ve
+sonraki pozisyon tam işlem kadarsa önce = 0 → "açıldı"). Önce bilinmiyorsa "pozisyon şimdi X". Yalnız panel; bot değişmedi.
