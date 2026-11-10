@@ -872,7 +872,11 @@ function takvim(k){
   }
   const g = M.map(s=>s.gun), art_ = g.filter(v=>v>0).length, eks_ = g.filter(v=>v<0).length;
   const eniyi = M.reduce((p,c)=>c.gun>p.gun?c:p), enkotu = M.reduce((p,c)=>c.gun<p.gun?c:p);
-  const ayg = M.length ? M.reduce((p,c)=>(1+p)*(1+c.gun)-1, 0) : (k.aylik||{})[a];   // madde 753: bugün dahil
+  // madde 753: canlı günü içeren ayın toplamı KİTAPTAN (ay başı kitabı → şu anki kitap). Günlük yüzdeleri çarpmak defterin
+  // 00:05 kaydıyla gün içi eğrinin 00:00 başlangıcı arasındaki farkı ve (gerçek funding görünümünde) gün kırılımı olmayan
+  // eski günleri biriktirir; başlıktaki kitapla çelişirdi. Geçmiş aylar defterin günlük zinciriyle.
+  const gercekS = S.filter(x=>!x.canli), onc_ = gercekS.filter(x=>x.tarih < a + "-01"), ayBas = (onc_.length ? onc_[onc_.length-1] : gercekS[0] || {}).kitap;
+  const ayg = M.some(x=>x.canli) && k.kitap_canli!=null && ayBas ? k.kitap_canli / ayBas - 1 : (k.aylik||{})[a];
   return `<div class="aygez"><button ${i<=0?"disabled":""} onclick="ayIdx[secili]=${i-1};ciz()" aria-label="önceki ay">‹</button>
     <b>${AYAD[m-1]} ${y} · <span class="${sinif(ayg)}">${yz(ayg)}</span></b>
     <button ${i>=aylar.length-1?"disabled":""} onclick="ayIdx[secili]=${i+1};ciz()" aria-label="sonraki ay">›</button></div>
@@ -892,6 +896,8 @@ function yillik(k){
     if (v!=null){ n++; top = (1+top)*(1+v)-1; }
     h += `<i ${v!=null ? isi(v,0.03,"").replace('class=" ','class="') : ""} title="${t}${v!=null?"  "+yz(v):""}"></i>`;
   }
+  const S0 = (k.seri||[])[0];   // madde 753: tüm geçmiş pencere içindeyse dönem toplamı kitaptan (başlıktaki kitapla aynı)
+  if (S0 && S0.kitap && k.kitap_canli!=null && S0.tarih >= `${bas.getFullYear()}-${String(bas.getMonth()+1).padStart(2,"0")}-${String(bas.getDate()).padStart(2,"0")}`) top = k.kitap_canli / S0.kitap - 1;
   return `<div class="yil yatay" id="yil"><div class="ic">${h}</div></div><div class="k" style="margin-top:6px">${n} işlem günü · bu dönemde ${yz(n?top:null)}</div>`;
 }
 // MADDE 732: ANLIK FİYAT. Pozisyon listesi (miktar, giriş) sunucudan; işaret fiyatı tarayıcıdan Binance'in HERKESE AÇIK
