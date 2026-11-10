@@ -401,5 +401,9 @@ _sf6 = app.get("/").data.decode()
 kontrol("sayfada mobil liste, harita sığdırma, sade olay metni",
         all(x in _sf6 for x in ("satirIc", "pozAc", "isiSigdir", "MOBIL()", "emir limitte dolmadı", ".sat .ust")))
 
+# MADDE 756: sade geçmiş (büyük toplam, dönem seçici, günlük çubuklar, gün listesi; eski ayrıntılar kapalı bölümde)
+_sf7 = app.get("/").data.decode()
+kontrol("sayfada sade geçmiş ve ayrıntılar bölümü", all(x in _sf7 for x in ("gecmisSade", "gecGunler", "gecDonem", "Ayrıntılar", ".gcub")))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

@@ -749,6 +749,22 @@ nav.alt button.on{background:color-mix(in srgb,var(--vurgu) 16%,transparent);col
 .kutu .y{font-size:14px;font-weight:750;margin-top:4px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}.kutu .y small{font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
 .kutu svg{width:100%;height:64px;display:block;margin-top:8px;overflow:visible}
 .uyr{color:var(--uyari)}
+/* MADDE 756: sade geçmiş */
+.gsade{padding:18px 18px 6px}.gsade .n{font-variant-numeric:tabular-nums}.gust{display:flex;justify-content:space-between;align-items:center}
+.gb{font-size:22px;font-weight:650;letter-spacing:-.4px}
+.gdon{display:flex;gap:2px;background:var(--kart2);border-radius:99px;padding:3px}
+.gdon button{height:30px;padding:0 13px;border-radius:99px;border:0;background:none;color:var(--soluk);font:inherit;font-size:12.5px;font-weight:550;cursor:pointer}
+.gdon button.on{background:var(--yazi);color:var(--bg);font-weight:650}
+.gk{font-size:13px;color:var(--soluk);margin-top:26px}
+.gt{font-size:50px;font-weight:650;letter-spacing:-2px;line-height:1.05;margin-top:6px}.gt small{font-size:26px;color:var(--soluk);letter-spacing:-.5px}
+.go{font-size:14px;margin-top:6px}
+.gcub{position:relative;display:flex;gap:10px;margin-top:28px}.gcub>b{position:absolute;left:0;right:0;height:1px;background:var(--cizgi)}
+.gc{flex:1;position:relative;min-width:0}.gc i{position:absolute;left:12%;right:12%;border-radius:7px;box-sizing:border-box}
+.gc .ge{position:absolute;left:-6px;right:-6px;text-align:center;font-size:11px;font-weight:650;white-space:nowrap}
+.galt{display:flex;gap:10px;margin-top:8px}.galt span{flex:1;text-align:center;font-size:11.5px;color:var(--soluk);min-width:0;white-space:nowrap}.galt .bg{color:var(--yazi)}
+.gliste{margin-top:22px}.gs{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-top:1px solid var(--cizgi)}
+.ga{font-size:15px;font-weight:500}.gn{font-size:12px;color:var(--soluk);margin-top:2px}.gv{font-size:15px;font-weight:650}
+.gayr{width:100%;text-align:left;background:none;border:0;color:var(--yazi);font:inherit;font-size:14px;font-weight:600;padding:14px;cursor:pointer}
 /* MADDE 754: mobil — sıkı pozisyon listesi (dokununca ayrıntı) */
 .liste{border:1px solid var(--cizgi);border-radius:13px;overflow:hidden;margin-bottom:12px;background:var(--kart)}
 .sat{border-top:1px solid var(--cizgi);border-left:3px solid var(--vurgu)}.sat:first-child{border-top:0}.sat.S{border-left-color:var(--uyari)}
@@ -1285,9 +1301,59 @@ function pozSayfa(k){
     ${kutular(L, "L", "LONG") + kutular(S, "S", "SHORT") || "<div class='bos'>açık pozisyon yok</div>"}
     <div class="k">${MOBIL() ? "satıra dokun: grafik, hedef, funding, stop · " : ""}grafik: bugün 03:00'ten beri (15 dk, gün sonuna kadar uzar) · kesikli çizgi giriş fiyatı (grafik aralığındaysa) · renk pozisyonun kâr / zararı (short'ta fiyat düşerse yeşil) · çubuk kâr al hedefine kalan yol · funding: bir sonraki ödemede bu pozisyonun alacağı / ödeyeceği</div></div>`;
 }
+// MADDE 756: SADE GEÇMİŞ — büyük toplam, Hafta / Ay / Tümü, tek grafik (günlük çubuklar), gün listesi. Tutarlar kitap
+// zincirinden (gün = gün sonu kitabı − önceki gün sonu; bugün = şimdiki kitap − dünkü gün sonu): liste toplamı = büyük toplam.
+let GEC_DONEM = (()=>{ try { return localStorage.getItem("carry_gec") || "ay"; } catch(_){ return "ay"; } })();
+function gecDonem(d){ GEC_DONEM = d; try { localStorage.setItem("carry_gec", d); } catch(_){} ciz(); }
+const GUN_AD = ["Pazar","Pazartesi","Salı","Çarşamba","Perşembe","Cuma","Cumartesi"];
+function gecGunler(k){
+  const S = seriCanli(k), out = [];
+  for (let i = 1; i < S.length; i++){
+    const o = S[i-1].kitap, n = S[i].kitap; if (o==null || n==null || !S[i].tarih) continue;
+    out.push({t: S[i].tarih, usd: n - o, oran: o > 0 ? (n - o) / o : null, bas: o, canli: !!S[i].canli, ilk: i === 1});
+  }
+  return out;
+}
+function gecmisSade(k){
+  const G = gecGunler(k);
+  if (!G.length) return `<div class="kart bos">Henüz tamamlanmış gün yok. İlk gün sonu kaydı 03:05'te.</div>`;
+  const son = G[G.length-1].t, ay = son.slice(0,7);
+  const kes = GEC_DONEM=="hafta" ? new Date(Date.parse(son+"T00:00:00Z") - 6*864e5).toISOString().slice(0,10) : GEC_DONEM=="ay" ? ay+"-01" : "";
+  let D = G.filter(g=>g.t >= kes);
+  let birim = "gün";
+  if (D.length > 31){   // Tümü uzun: ay ay
+    const A = {}; for (const g of D){ const a = g.t.slice(0,7); (A[a] = A[a] || {t: a, usd: 0, bas: g.bas, canli: false}).usd += g.usd; A[a].canli = A[a].canli || g.canli; }
+    D = Object.values(A).map(a=>({...a, oran: a.bas > 0 ? a.usd / a.bas : null})); birim = "ay";
+  }
+  const top = D.reduce((a,g)=>a+g.usd, 0), bas = D[0].bas, oran = bas > 0 ? top / bas : null;
+  const ad = g => birim=="ay" ? `${AYAD[+g.t.slice(5,7)-1]} ${g.t.slice(0,4)}` : g.canli ? "Bugün" : `${GUN_AD[new Date(g.t+"T00:00:00Z").getUTCDay()]} ${+g.t.slice(8,10)} ${AYAD[+g.t.slice(5,7)-1]}`;
+  const kisa = g => birim=="ay" ? AYAD[+g.t.slice(5,7)-1].slice(0,3) : g.canli ? "bugün" : String(+g.t.slice(8,10));
+  const not = g => g.canli ? "canlı · 03:05'te kesinleşir" : (g.ilk && birim=="gün") ? "başlangıç günü" : "";
+  const baslik = GEC_DONEM=="hafta" ? "Son 7 gün" : GEC_DONEM=="ay" ? `${AYAD[+ay.slice(5,7)-1]}` : "Başlangıçtan beri";
+  // çubuklar: sıfır çizgisi en büyük kazanç / kayıp oranına göre; 170 px
+  const H = 170, mp = Math.max(0, ...D.map(g=>g.usd)), mn = Math.max(0, ...D.map(g=>-g.usd)), et = D.length <= 12;
+  const ic = H - (et ? 36 : 8), olc = (mp + mn) > 0 ? ic / (mp + mn) : 0, sifir = (et ? 18 : 4) + mp * olc;
+  const cub = D.map(g=>{ const b = Math.max(3, Math.abs(g.usd) * olc), art = g.usd >= 0, r = css(art ? "--art" : "--eks");
+    const tp = art ? sifir - b : sifir, eT = art ? sifir - b - 16 : sifir + b + 3;
+    return `<div class="gc"><span class="ge n ${art?"art":"eks"}" style="top:${eT}px">${et ? (art?"+":"−") + Math.abs(g.usd).toFixed(0) : ""}</span>
+      <i style="top:${tp}px;height:${b}px;background:${g.canli ? `color-mix(in srgb, ${r} 35%, transparent)` : r};${g.canli ? `border:1.5px dashed ${r}` : ""}" title="${ad(g)} ${isaretli(g.usd)}"></i></div>`; }).join("");
+  const adim = Math.ceil(D.length / 8);
+  const alt = D.map((g,i)=>`<span class="${g.canli?"bg":""}">${(i % adim === 0 || i === D.length-1) ? kisa(g) : ""}</span>`).join("");
+  const liste = D.slice().reverse().map(g=>`<div class="gs"><div><div class="ga">${ad(g)}</div>${not(g)?`<div class="gn">${not(g)}</div>`:""}</div>
+    <div style="text-align:right"><div class="gv n ${sinif(g.usd)}">${isaretli(g.usd)}</div><div class="gn n">${yz(g.oran)}</div></div></div>`).join("");
+  const dk = d => `<button class="${GEC_DONEM==d?"on":""}" onclick="gecDonem('${d}')">${{hafta:"Hafta", ay:"Ay", tum:"Tümü"}[d]}</button>`;
+  return `<div class="kart gsade">
+    <div class="gust"><span class="gb">Geçmiş</span><div class="gdon">${dk("hafta")}${dk("ay")}${dk("tum")}</div></div>
+    <div class="gk">${baslik} · toplam kâr / zarar</div>
+    <div class="gt n">${top<0?"−":"+"}${Math.abs(top).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})} <small>$</small></div>
+    <div class="go n ${sinif(top)}">${top>=0?"▲":"▼"} %${Math.abs((oran||0)*100).toFixed(2).replace(".",",")} · ${D.length} ${birim}</div>
+    <div class="gcub" style="height:${H}px"><b style="top:${sifir}px"></b>${cub}</div><div class="galt n">${alt}</div>
+    <div class="gliste">${liste}</div></div>`;
+}
 function gecmisSayfa(k){
   const grafikVar = (k.seri||[]).length >= 3;   // madde 734/737: 1-2 noktalık grafik bilgi vermez, yalnız yer kaplar
-  return `<div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2>${takvim(k)}
+  const ac = ACIK.has("gecay");   // madde 756: eski ayrıntılar (takvim, yıllık, grafikler, coinler, icra) kapalı bölümde
+  return gecmisSade(k) + `<div class="kart" style="padding:0"><button class="gayr" onclick="olayAc('gecay')">${ac?"▾":"▸"} Ayrıntılar <span class="k">takvim · coinler · icra</span></button></div>` + (!ac ? "" : `<div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2>${takvim(k)}
       ${k.dokum?`<div class="k" style="margin-top:6px">Başlangıçtan beri: funding ${isaretli(k.dokum.funding)}${k.dokum.funding_gercek!=null?` (gerçek oranlarla ${isaretli(k.dokum.funding_gercek)})`:""} · komisyon ${isaretli(k.dokum.komisyon)}</div>`
         :(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:6px">Defter toplamı (yaklaşık): funding ${isaretli(k.funding_top)} · komisyon ${isaretli(k.komisyon_top)}</div>`:""}
       <div class="k" style="margin-top:4px">Her gün, Binance gününe (03:00 – 03:00) göre. ● işaretli gün bugün: canlı, gün sonunda (03:05) kesinleşir.</div></div>
@@ -1296,7 +1362,7 @@ function gecmisSayfa(k){
       <div class="kart"><h2>Günlük getiri</h2><div class="grafik"><canvas id="g2"></canvas></div></div></div>`
       :`<div class="kart bekle">Kitap ve günlük getiri grafikleri 3 günlük veri birikince görünür (şu an ${(k.seri||[]).length} gün).</div>`}
     ${coinTablo(k)}
-    <div class="kart"><h2>İcra · son 30 gün <span class="k">(emir defteri)</span></h2>${icraKart(k)}</div>`;
+    <div class="kart"><h2>İcra · son 30 gün <span class="k">(emir defteri)</span></h2>${icraKart(k)}</div>`);
 }
 // MADDE 753: coin bazında başlangıçtan beri kâr / zarar (borsa gelir kayıtları + açık pozisyon)
 function coinTablo(k){
