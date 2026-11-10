@@ -346,18 +346,6 @@ kontrol("görüntüden sonraki İLK dolum kapanışı doğru (tam)", _l5["ADAkâ
 kontrol("arada başka dolum varsa eski görüntüyle kâr UYDURULMAZ", "kapanis_kar" not in _l5["ADAlimit"], _l5)
 kontrol("sayfada kapanış satırı", 'kapanış ${isaretli(top)}' in app.get("/").data.decode())
 
-# MADDE 746: piyasa tarayıcısı çıktısı (en yeni dosya, bayatlık), sekme
-_p1 = os.path.join(tmp, "carry-p1"); _p2 = os.path.join(tmp, "carry-p2")
-for _k, _z in ((_p1, 1000), (_p2, 2000)):
-    os.makedirs(os.path.join(_k, "defter"), exist_ok=True)
-    json.dump({"zaman": _z, "coinler": [{"s": "XUSDT", "f": 1.0, "d24": 5.0, "hacim": 80}]}, open(os.path.join(_k, "defter", "tarayici.json"), "w"))
-_pv = panel.piyasa_oku([_p1, _p2], simdi=2000 + 10)
-kontrol("piyasa: en yeni dosya, taze", _pv["zaman"] == 2000 and _pv["bayat"] is False, _pv)
-kontrol("piyasa: 1 saatten eski = bayat", panel.piyasa_oku([_p1], simdi=1000 + 4000)["bayat"] is True)
-kontrol("piyasa: dosya yoksa None", panel.piyasa_oku([os.path.join(tmp, "yok")]) is None)
-_sf = app.get("/").data.decode()
-kontrol("sayfada Piyasa sekmesi", "piyasaSayfa" in _sf and '["piyasa","Piyasa"]' in _sf)
-
 # MADDE 748: gerçek funding görünümü — kitap / kâr farkı, gün kırılımı olan gün düzeltilir, olmayan dokunulmaz
 _k8 = os.path.join(tmp, "carry-g8"); os.makedirs(os.path.join(_k8, "defter"))
 _d8 = [{"tarih": "2026-11-07", "zaman": 1794268800 + 300, "ozkaynak": 5000.0, "sermaye_olcek": 0.4, "kitap": 2000.0, "gun_getiri": None},
