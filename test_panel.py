@@ -396,5 +396,10 @@ _sf5 = app.get("/").data.decode()
 kontrol("sayfada: canlı gün, coin tablosu, stop durumu, saatlik funding, post-only, hashchange",
         all(x in _sf5 for x in ("seriCanli", "coinTablo", "stopDurum", "Saatlik funding", "postonly", "hashchange", "TOPLAM kayma")))
 
+# MADDE 754: mobil tasarım — sıkı pozisyon listesi, ölçülerek sığdırılan ısı haritası, sade olay metinleri
+_sf6 = app.get("/").data.decode()
+kontrol("sayfada mobil liste, harita sığdırma, sade olay metni",
+        all(x in _sf6 for x in ("satirIc", "pozAc", "isiSigdir", "MOBIL()", "emir limitte dolmadı", ".sat .ust")))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

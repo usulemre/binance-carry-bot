@@ -748,7 +748,25 @@ nav.alt button.on{background:color-mix(in srgb,var(--vurgu) 16%,transparent);col
 .kutu .gr{font-size:11px;color:var(--soluk);font-variant-numeric:tabular-nums;display:flex;justify-content:space-between;gap:4px}
 .kutu .y{font-size:14px;font-weight:750;margin-top:4px;display:flex;align-items:center;gap:5px;flex-wrap:wrap}.kutu .y small{font-size:11px;font-weight:600;font-variant-numeric:tabular-nums}
 .kutu svg{width:100%;height:64px;display:block;margin-top:8px;overflow:visible}
-.uyr{color:var(--uyari)}.takvim .g.canlig{outline:1.5px dashed var(--vurgu);outline-offset:-2px}
+.uyr{color:var(--uyari)}
+/* MADDE 754: mobil — sıkı pozisyon listesi (dokununca ayrıntı) */
+.liste{border:1px solid var(--cizgi);border-radius:13px;overflow:hidden;margin-bottom:12px;background:var(--kart)}
+.sat{border-top:1px solid var(--cizgi);border-left:3px solid var(--vurgu)}.sat:first-child{border-top:0}.sat.S{border-left-color:var(--uyari)}
+.sat .ust{display:grid;grid-template-columns:minmax(0,1fr) auto 70px 64px;align-items:center;gap:8px;padding:11px 10px 11px 9px;cursor:pointer;font-variant-numeric:tabular-nums;-webkit-user-select:none;user-select:none}
+.sat .ust .c{display:flex;align-items:center;gap:6px;min-width:0}.sat .ust b{font-size:14.5px;font-weight:750;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.sat .ust .yb{font-size:10px;font-weight:700;color:var(--soluk);border:1px solid var(--cizgi);border-radius:5px;padding:0 4px;line-height:15px}
+.sat .ust .w{font-size:11px;font-weight:800;color:#fff;background:var(--uyari);border-radius:5px;padding:0 4px;line-height:15px}.sat .ust .w.e{background:var(--eks)}
+.sat .ust .u{font-size:12px;color:var(--soluk);text-align:right;white-space:nowrap}
+.sat .ust .p{text-align:right;font-weight:750;font-size:13px;white-space:nowrap}.sat .ust .g{text-align:right;font-size:12.5px;font-weight:650;white-space:nowrap}
+.sat .ust .ok2{display:none}.sat.acik{background:var(--kart2)}
+.sat .det{padding:0 10px 11px 9px}.sat .det .f{font-size:17px;font-weight:650;font-variant-numeric:tabular-nums;letter-spacing:-.3px}
+.sat .det .gr{font-size:11.5px;color:var(--soluk);font-variant-numeric:tabular-nums;display:flex;justify-content:space-between;gap:6px;margin-top:1px}
+.sat .det svg{width:100%;height:70px;display:block;margin-top:8px;overflow:visible}
+.sat .det .fund,.sat .det .hedef .t{white-space:normal;font-size:11.5px}
+.fgac{cursor:pointer;color:var(--vurgu)}.fgacik{flex-basis:100%;font-size:12px;color:var(--soluk);line-height:1.4}
+@media(max-width:699px){.isi{height:230px}.coin td,.coin th{padding:6px 4px;font-size:12px;white-space:nowrap}.coin td:nth-child(4){display:none}
+  .coin .yon{font-size:10px;color:var(--soluk);font-weight:700;margin-left:4px}}
+@media(min-width:700px){.coin .yon{font-size:11px;color:var(--soluk);margin-left:4px}}.takvim .g.canlig{outline:1.5px dashed var(--vurgu);outline-offset:-2px}
 .fund{font-size:10.5px;margin-top:6px;font-variant-numeric:tabular-nums;color:var(--soluk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hedef{margin-top:6px}.hedef .c{height:4px;border-radius:9px;background:var(--kart2);overflow:hidden}.hedef .c span{display:block;height:100%;background:var(--art);border-radius:9px;transition:width .4s}
 .hedef .t{font-size:10.5px;color:var(--soluk);margin-top:3px;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
@@ -824,6 +842,7 @@ temaUygula();
 // MADDE 737: sekmeler (telefonda altta sabit). Seçim adres çubuğunda (#poz) saklanır, yenilemede korunur.
 const SAYFALAR = [["ozet","Özet"],["poz","Pozisyonlar"],["gecmis","Geçmiş"],["olay","Olaylar"]];
 let sayfa = (location.hash||"").slice(1); if (!SAYFALAR.some(x=>x[0]==sayfa)) sayfa = "ozet";
+const MOBIL = () => innerWidth < 700;   // madde 754: telefonda sıkı liste ve sade metinler
 function sayfaSec(a){ if (a==sayfa) return; sayfa = a; history.replaceState(null, "", "#"+a); ciz(); scrollTo(0,0); }
 // madde 753: adres çubuğunda / yer iminde #gecmis vb. değişince sekme de değişsin
 addEventListener("hashchange", ()=>{ const h = (location.hash||"").slice(1); if (SAYFALAR.some(x=>x[0]==h) && h!=sayfa && VERI){ sayfa = h; ciz(); scrollTo(0,0); } });
@@ -996,6 +1015,22 @@ function kutuIc(s, p, k){
     <div class="y ${sinif(ky)}"><span class="rz">${ok_(ky)} ${ky==null?"—":Math.abs(ky).toFixed(2).replace(".",",")+"%"}</span><small>${g==null?"":isaretli(g)}</small></div>
     ${kivilcim(s, p, f, renk)}${k ? hedefCubuk(k, p, f) : ""}${fundSatir(s, p, f)}${k ? stopSatir(k, s, p) : ""}`;
 }
+// MADDE 754: telefonda pozisyon = tek satır (coin, yön, büyüklük, kâr %, $); dokununca kutudaki ayrıntılar açılır
+function satirIc(s, p, k){
+  const f = FIYAT[s] || p.isaret, ok = f && p.giris>0 && p.miktar;
+  const ky = ok ? (f/p.giris - 1) * (p.miktar>0 ? 1 : -1) * 100 : p.kar_yuzde;
+  const g = ok ? p.miktar * (f - p.giris) : p.gerceklesmemis, usd = ok ? Math.abs(p.miktar) * f : p.usd;
+  const D = k.stop_durum, sv = D && !D.kapali && p.miktar>0 ? (D.coin||{})[s.replace(/USDT$/,"")] : null;
+  const uy = sv!=null && sv <= -D.esik_coin*0.5 ? `<span class="w ${sv<=-D.esik_coin?'e':''}" title="koşullu stop'a yakın">!</span>` : "";
+  const ac = ACIK.has("p"+s), renk = css((ky||0) >= 0 ? "--art" : "--eks");
+  const M = MUM[s], acilis = M && M.bas===gunBasi() && M.nok.length ? M.nok[0][1] : null, bg = acilis && f ? (f/acilis - 1) : null;
+  return `<div class="ust" onclick="pozAc('${s}')"><span class="c"><b>${s.replace(/USDT$/,"")}</b><span class="yb">${p.miktar>0?"L":"S"}</span>${uy}</span>
+      <span class="u">${para(usd)}</span><span class="p"><span class="rz ${sinif(ky)}">${ky==null?"—":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"}</span></span><span class="g ${sinif(g)}">${g==null?"":isaretli(g)}</span></div>
+    ${ac ? `<div class="det"><div class="f">${fiyatYaz(f)}</div><div class="gr"><span>giriş ${fiyatYaz(p.giris)}</span>${bg!=null?`<span class="${sinif(bg)}">bugün ${yz(bg)}</span>`:""}</div>
+      ${kivilcim(s, p, f, renk)}${hedefCubuk(k, p, f)}${fundSatir(s, p, f)}${stopSatir(k, s, p)}</div>` : ""}`;
+}
+function pozAc(s){ ACIK.has("p"+s) ? ACIK.delete("p"+s) : ACIK.add("p"+s); const e = document.getElementById("t-"+s), k = VERI.kurulumlar[secili];
+  if (e && k.pozisyonlar[s]){ e.classList.toggle("acik", ACIK.has("p"+s)); e.innerHTML = satirIc(s, k.pozisyonlar[s], k); } }
 // madde 753: long kutusunda koşullu stop'a yakınlık (coin 24 sa eşiğin yarısını geçtiyse)
 function stopSatir(k, s, p){
   const D = k.stop_durum; if (!D || D.kapali || p.miktar<=0) return "";
@@ -1026,9 +1061,22 @@ function isiHarita(k){
   return kareler(A, 100, 100).map(r=>{
     const yog = Math.round(18 + 62 * Math.min(1, Math.abs(r.ky)/0.08)), renk = r.ky>=0 ? "--art" : "--eks";
     const kucuk = r.h < 24 || r.w < 22;   // küçük kare: tek satır, yön etiketi yok
-    return `<div class="${kucuk?"kk":""}" style="left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%;background:color-mix(in srgb,var(${renk}) ${yog}%,var(--kart2))">
-      <b>${r.s.replace(/USDT$/,"")}${kucuk?"":` <small>${r.yon=="L"?"long":"short"}</small>`}</b><span>${yz(r.ky)}</span></div>`;
+    // madde 754: telefonda küçük karede yazı taşıyordu ("1000PEPE s") — çizimden sonra isiSigdir() gerçek genişliği ölçüp sığmayanı gizler
+    const ad = r.s.replace(/USDT$/,""), ip = `${ad} ${r.yon=="L"?"long":"short"} ${yz(r.ky)}`;
+    return `<div class="${kucuk?"kk":""}" title="${ip}" style="left:${r.x}%;top:${r.y}%;width:${r.w}%;height:${r.h}%;background:color-mix(in srgb,var(${renk}) ${yog}%,var(--kart2))">
+      <b>${ad}${kucuk?"":` <small>${r.yon=="L"?"long":"short"}</small>`}</b><span>${yz(r.ky)}</span></div>`;
   }).join("");
+}
+function isiSigdir(){
+  const ih = $("#isi"); if (!ih) return;
+  for (const d of ih.children){
+    const b = d.querySelector("b"), sp = d.querySelector("span"), sm = d.querySelector("small"); if (!b) continue;
+    const ic = d.clientWidth - 12, tasar = e => e && e.style.display!="none" && e.scrollWidth > ic;
+    if (sm && b.scrollWidth > ic) sm.remove();
+    if (d.classList.contains("kk")){ if (d.scrollWidth > d.clientWidth + 1 && sp) sp.style.display = "none"; }
+    else if (tasar(sp)) sp.style.display = "none";
+    if (tasar(b) || d.clientHeight < 18) { b.style.display = "none"; if (sp) sp.style.display = "none"; }
+  }
 }
 // MADDE 742: canlı fiyatla açık pozisyonların şu anki kâr/zararı ile son anlık görüntüdeki (5 dk) farkı. Canlı değilse 0.
 function canliFark(k){
@@ -1119,11 +1167,11 @@ function canliBoya(){
     const f = FIYAT[s], ok = k.poz_kaynak=="canlı" && f && p.giris>0 && p.miktar;
     const g = ok ? p.miktar * (f - p.giris) : (p.gerceklesmemis||0); top += g;
     const t = taraf[p.yon] || taraf.L; t[0] += ok ? Math.abs(p.miktar)*f : (p.usd||0); t[1] += g;
-    const et = document.getElementById("t-"+s); if (et) et.innerHTML = kutuIc(s, p, k);
+    const et = document.getElementById("t-"+s); if (et) et.innerHTML = et.classList.contains("sat") ? satirIc(s, p, k) : kutuIc(s, p, k);
   }
   for (const y of ["L","S"]){ const e = document.getElementById("taraf-"+y); if (e) e.innerHTML = `${para(taraf[y][0])} · <span class="rz ${sinif(taraf[y][1])}">${isaretli(taraf[y][1])}</span>`; }
   const dn = $("#denge"); if (dn) dn.innerHTML = dengeIc(taraf);
-  const ih = $("#isi"); if (ih) ih.innerHTML = isiHarita(k);
+  const ih = $("#isi"); if (ih){ ih.innerHTML = isiHarita(k); isiSigdir(); }
   const eg2 = $("#egri"); if (eg2 && egriMod=="bugun") eg2.innerHTML = egriIc(k);
   if (k.poz_kaynak!="canlı") return;
   const fark = top - (k.gerceklesmemis||0), eg = $("#gerc");
@@ -1178,9 +1226,9 @@ function stopDurum(k){
   const ep = D.esik_piyasa, ec = D.esik_coin, med = D.medyan;
   const pyz = v => v==null ? "—" : (v>=0?"+":"−") + "%" + Math.abs(v*100).toFixed(1).replace(".",",");
   const yakin = Object.entries(D.coin||{}).filter(([,v])=>v <= -ec*0.5).sort((a,b)=>a[1]-b[1]).slice(0,3);
-  const ps = D.piyasa_sart ? `<b class="eks">şart sağlanıyor</b>` : `<span class="art">şart yok</span>`;
-  const cl = yakin.length ? " · " + yakin.map(([s,v])=>`<span class="${v<=-ec?'eks':''}">${s} ${pyz(v)}</span>`).join(", ") + ` (eşik −%${Math.round(ec*100)})` : "";
-  return `<div class="k" style="white-space:normal;margin-top:3px" title="Bot her dilim turunda bakar. Long, coin 24 sa ≤ −%${Math.round(ec*100)} VE piyasa medyanı ≤ −%${Math.round(ep*100)} ise kapanır. Ölçüm saatte bir (botla aynı yöntem: son kapanmış 4 sa mumu, ${D.n} coinlik evren).">piyasa ${pyz(med)} (eşik −%${Math.round(ep*100)}) · ${ps}${cl}<br><span style="opacity:.75">ölçüm ${D.saat_ad}${D.bayat?" · ESKİ":""}</span></div>`;
+  const ps = D.piyasa_sart ? `<b class="eks">şart var</b>` : `<span class="art">şart yok</span>`;
+  const cl2 = yakin.length ? yakin.map(([s,v])=>`<span class="${v<=-ec?'eks':'uyr'}">${s} ${pyz(v)}</span>`).join(", ") + ` / −%${Math.round(ec*100)}` : "eşiğe yakın long yok";
+  return `<div class="k" style="white-space:normal;margin-top:3px;line-height:1.45" title="Bot her dilim turunda bakar. Long, coin 24 sa ≤ −%${Math.round(ec*100)} VE piyasa medyanı ≤ −%${Math.round(ep*100)} ise kapanır. Ölçüm saatte bir (botla aynı yöntem: son kapanmış 4 sa mumu, ${D.n} coinlik evren).">piyasa ${pyz(med)} / −%${Math.round(ep*100)} · ${ps}<br>${cl2} <span style="opacity:.7">· ${D.saat_ad}${D.bayat?" ESKİ":""}</span></div>`;
 }
 function dilimKart(D){
   if (!D) return `<div class="d">—</div>`;
@@ -1218,7 +1266,7 @@ function ozetSayfa(k, svc, sv){
     ${k.kar_usd!=null?`<div style="display:flex;gap:8px;align-items:center;flex-wrap:wrap"><span id="karusd" class="kar rz ${sinif(k.kar_usd)}">${ok_(k.kar_usd)} ${isaretli(k.kar_usd)} (${yz(k.kar_oran)})</span><span class="k">başlangıç ${para(k.kitap_bas)}</span></div>`:""}${fgAnahtar(k)}
     <div class="egri"><div style="display:flex;justify-content:flex-end"><div class="mod"><button data-m="bugun" class="${egriMod=="bugun"?"on":""}" onclick="egriSec('bugun')">Bugün</button><button data-m="tum" class="${egriMod=="tum"?"on":""}" onclick="egriSec('tum')">Başlangıçtan</button></div></div>
       <div id="egri">${egriIc(k)}</div></div>
-    <div class="cipler">${cip(`Son gün${k.son_gun_tarih?" · "+(+k.son_gun_tarih.slice(8,10))+" "+AYAD[+k.son_gun_tarih.slice(5,7)-1].slice(0,3):""}`, yz(k.bugun), sinif(k.bugun))}${cip(k.g7==null&&k.gun_sayisi?`7 gün · ${k.gun_sayisi} gün veri`:"7 gün", yz(k.g7), sinif(k.g7))}${cip(k.g30==null&&k.gun_sayisi>=7?`30 gün · ${k.gun_sayisi} gün veri`:"30 gün", yz(k.g30), sinif(k.g30))}${cip("En büyük düşüş", yz(k.dd), k.dd<0?"eks":"")}</div>
+    <div class="cipler">${cip(`Son gün${k.son_gun_tarih?" · "+(+k.son_gun_tarih.slice(8,10))+" "+AYAD[+k.son_gun_tarih.slice(5,7)-1].slice(0,3):""}`, yz(k.bugun), sinif(k.bugun))}${k.g7!=null?cip("7 gün", yz(k.g7), sinif(k.g7)):""}${k.g30!=null?cip("30 gün", yz(k.g30), sinif(k.g30)):""}${cip("En büyük düşüş", yz(k.dd), k.dd<0?"eks":"")}</div>
     <div class="bilgi"><div class="cip"><div class="e">Ayar</div>${ayarKart(k)}</div><div class="cip"><div class="e">Sonraki dilim</div><div id="dilimsure">${dilimKart(k.dilim)}</div></div><div class="cip"><div class="e">Sonraki funding</div><div id="fundsure">${fundKart(k)}</div></div></div>
   </div>
   <div class="kart"><h2>Pozisyon haritası <span class="k">· kare boyu = büyüklük, renk = kâr / zarar</span></h2><div class="isi" id="isi">${isiHarita(k)}</div></div>
@@ -1228,11 +1276,12 @@ function pozSayfa(k){
   const P = Object.entries(k.pozisyonlar||{}); const L = P.filter(p=>p[1].yon=="L").sort((a,b)=>b[1].usd-a[1].usd), S = P.filter(p=>p[1].yon=="S").sort((a,b)=>b[1].usd-a[1].usd);
   const top = (A, i) => A.reduce((a,p)=>a+(i ? (p[1].gerceklesmemis||0) : (p[1].usd||0)), 0);
   const kutular = (A, y, ad) => A.length ? `<div class="taraf"><span>${ad} (${A.length})</span><b id="taraf-${y}">${para(top(A,0))} · <span class="rz ${sinif(top(A,1))}">${isaretli(top(A,1))}</span></b></div>
-    <div class="kutular">${A.map(p=>`<div class="kutu ${y}" id="t-${p[0]}">${kutuIc(p[0], p[1], k)}</div>`).join("")}</div>` : "";
+    ${MOBIL() ? `<div class="liste">${A.map(p=>`<div class="sat ${y}${ACIK.has("p"+p[0])?" acik":""}" id="t-${p[0]}">${satirIc(p[0], p[1], k)}</div>`).join("")}</div>`
+      : `<div class="kutular">${A.map(p=>`<div class="kutu ${y}" id="t-${p[0]}">${kutuIc(p[0], p[1], k)}</div>`).join("")}</div>`}` : "";
   return `<div class="kart"><h2>Pozisyonlar <span class="k">${k.poz_kaynak=="canlı"?"liste "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")}${k.gerceklesmemis!=null?` · gerçekleşmemiş <b id="gerc" class="rz ${sinif(k.gerceklesmemis)}">${isaretli(k.gerceklesmemis)}</b>`:""}</span></h2>
     ${P.length?`<div class="denge" id="denge">${dengeIc({L:[top(L,0),0], S:[top(S,0),0]})}</div>`:""}
     ${kutular(L, "L", "LONG") + kutular(S, "S", "SHORT") || "<div class='bos'>açık pozisyon yok</div>"}
-    <div class="k">grafik: bugün 03:00'ten beri (15 dk, gün sonuna kadar uzar) · kesikli çizgi giriş fiyatı (grafik aralığındaysa) · renk pozisyonun kâr / zararı (short'ta fiyat düşerse yeşil) · çubuk kâr al hedefine kalan yol · funding: bir sonraki ödemede bu pozisyonun alacağı / ödeyeceği</div></div>`;
+    <div class="k">${MOBIL() ? "satıra dokun: grafik, hedef, funding, stop · " : ""}grafik: bugün 03:00'ten beri (15 dk, gün sonuna kadar uzar) · kesikli çizgi giriş fiyatı (grafik aralığındaysa) · renk pozisyonun kâr / zararı (short'ta fiyat düşerse yeşil) · çubuk kâr al hedefine kalan yol · funding: bir sonraki ödemede bu pozisyonun alacağı / ödeyeceği</div></div>`;
 }
 function gecmisSayfa(k){
   const grafikVar = (k.seri||[]).length >= 3;   // madde 734/737: 1-2 noktalık grafik bilgi vermez, yalnız yer kaplar
@@ -1252,13 +1301,13 @@ function coinTablo(k){
   const C = k.coin_ozet; if (!C || !C.length) return "";
   const id = "coinler", ac = ACIK.has(id), L = ac ? C : [...C.slice(0,5), ...C.slice(-5).filter(x=>!C.slice(0,5).includes(x))];
   const h = v => Math.abs(v) < 0.005 ? `<span class="k">0</span>` : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
-  const sat = L.map(x=>`<tr><td class="l"><b>${x.s}</b>${x.yon?` <span class="k">${x.yon=="L"?"long":"short"} açık</span>`:""}</td><td>${h(x.kapanan)}</td><td>${h(x.funding)}</td><td>${h(x.komisyon)}</td><td>${h(x.acik)}</td><td><b>${h(x.toplam)}</b></td></tr>`).join("");
+  const sat = L.map(x=>`<tr><td class="l"><b>${x.s}</b>${x.yon?`<span class="yon">${MOBIL() ? x.yon : (x.yon=="L"?"long açık":"short açık")}</span>`:""}</td><td>${h(x.kapanan)}</td><td>${h(x.funding)}</td><td>${h(x.komisyon)}</td><td>${h(x.acik)}</td><td><b>${h(x.toplam)}</b></td></tr>`).join("");
   const T = C.reduce((a,x)=>({kp:a.kp+x.kapanan, f:a.f+x.funding, km:a.km+x.komisyon, a:a.a+x.acik, t:a.t+x.toplam}), {kp:0,f:0,km:0,a:0,t:0});
   return `<div class="kart"><h2>Coin bazında kâr / zarar <span class="k">· başlangıçtan beri, en kötüden en iyiye</span></h2>
-    <div class="tablo yatay"><table><tr class="k"><td class="l">coin</td><td>kapanan</td><td>funding</td><td>komisyon</td><td>açık</td><td>toplam</td></tr>${sat}
+    <div class="tablo yatay"><table class="coin"><tr class="k"><td class="l">coin</td><td>kapanan</td><td>funding</td><td>komisyon</td><td>açık</td><td>toplam</td></tr>${sat}
     <tr><td class="l"><b>Toplam (${C.length} coin)</b></td><td>${h(T.kp)}</td><td>${h(T.f)}</td><td>${h(T.km)}</td><td>${h(T.a)}</td><td><b>${h(T.t)}</b></td></tr></table></div>
     ${C.length>10?`<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾ en kötü / en iyi 5'e dön":`▸ tüm coinler (${C.length})`}</span></div>`:""}
-    <div class="k" style="margin-top:6px">Kapanan, funding ve komisyon borsanın gelir kayıtlarından${k.mod=="demo"?" (funding: demo hesabın aldığı)":""}; açık = şu anki gerçekleşmemiş kâr / zarar.</div></div>`;
+    <div class="k" style="margin-top:6px">Kapanan, funding ve komisyon borsanın gelir kayıtlarından${k.mod=="demo"?" (funding: demo hesabın aldığı)":""}; açık = şu anki gerçekleşmemiş kâr / zarar.${MOBIL()?" Telefonda komisyon sütunu gizli (toplama dahil).":""}</div></div>`;
 }
 // MADDE 740: olaylar zaman çizelgesi — gün gün (Bugün / Dün / tarih), türe göre simge
 const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", stop_tut:"□", delist:"!", saglik:"♥", hata:"✕", tp:"✓", uyari:"⚠", tur:"↻", islem:"⇄", funding:"$", postonly:"↺"};
@@ -1281,6 +1330,14 @@ function olayIslem(k){
     grup = {zaman: x.zaman, tur: "islem", m: x.m, islem: [x]}; out.push(grup);
   }
   for (const g of out) if (g.tur==="islem") g.metin = g.islem.length==1 ? `${g.islem[0].sembol} · ${g.islem[0].tur}` : `${g.islem.length} işlem`;
+  // madde 754: ham log satırları kısa Türkçe cümle (özellikle telefonda dört satıra yayılıyordu)
+  const ss = v => (+v).toLocaleString("tr-TR", {maximumFractionDigits: 0});
+  for (const o of out){
+    const m = o.tur==="tur" && /bakiye ([\d.]+) USDT \| dilim (\d+\/\d+) yenilendi \| (\d+) pozisyon \| LONG funding ort %(-?[\d.]+)\/yıl \| SHORT %(-?[\d.]+)\/yıl/.exec(o.metin||"");
+    if (m) o.metin = `Dilim ${m[2]} yenilendi · ${m[3]} pozisyon · bakiye ${ss(m[1])} $ | funding yıllık: long ${ss(m[4])}% · short ${ss(m[5])}%` + (o.metin.split("/yıl").slice(2).join("/yıl") || "");
+    const u = o.tur==="uyari" && /(\d+) emir dolmadı/.exec(o.metin||"");
+    if (u) o.metin = `${u[1]} emir limitte dolmadı, piyasa emriyle tamamlandı`;
+  }
   // madde 750: turdaki / gruptaki kısmi ve tam kapanışların gerçekleşen kârı olay satırına
   for (const g of out){ const kp = (g.islem||[]).filter(x=>x.kapanis_kar!=null); if (!kp.length) continue;
     const top = kp.reduce((a,x)=>a+x.kapanis_kar,0), tam = kp.filter(x=>x.tam).length, kis = kp.length - tam;
@@ -1381,7 +1438,8 @@ function fgAnahtar(k){
   return `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 2px;font-size:12px;color:var(--soluk)">funding:
     <button class="${FG?'on':''}" style="border-radius:999px;border:1px solid var(--cizgi);background:${FG?'color-mix(in srgb,var(--vurgu) 16%,transparent)':'none'};color:${FG?'var(--vurgu)':'var(--soluk)'};font:inherit;padding:4px 10px;cursor:pointer" onclick="fgSec(true)">gerçek Binance</button>
     <button style="border-radius:999px;border:1px solid var(--cizgi);background:${!FG?'color-mix(in srgb,var(--vurgu) 16%,transparent)':'none'};color:${!FG?'var(--vurgu)':'var(--soluk)'};font:inherit;padding:4px 10px;cursor:pointer" onclick="fgSec(false)">demo (ham)</button>
-    <span title="Gerçek oranlı funding'in gün gün kaydı sonradan başladı. O kayıttan önceki günlerin günlük getirisi gerçek oranla yeniden hesaplanamadı (demo funding'le kaldı); toplam kitap ve kâr yine gerçek oranla.">fark ${isaretli(g.fark)}${g.duzeltilmeyen ? ` · ilk ${g.duzeltilmeyen} günün günlük getirisi demo funding'le (gün kırılımı yok) ⓘ` : ""}</span></div>`;
+    <span class="fgac" onclick="const a=this.nextElementSibling; a.hidden=!a.hidden">fark ${isaretli(g.fark)} ⓘ</span>
+    <span class="fgacik" hidden>Demo borsa funding'i kendi oranıyla öder; "gerçek Binance" aynı pozisyonların gerçek oranlarla alacağını gösterir (fark ${isaretli(g.fark)}).${g.duzeltilmeyen ? ` İlk ${g.duzeltilmeyen} günün günlük getirisi demo funding'le kaldı (gerçek oranın gün kırılımı o günler için yok); toplam kitap ve kâr yine gerçek oranla.` : ""}</span></div>`;
 }
 function ciz(){
   const K = VERI.kurulumlar; $("#alt").textContent = K[secili] ? `${K[secili].ad} · ${K[secili].mod}` : "";
@@ -1396,6 +1454,7 @@ function ciz(){
   $("#icerik").innerHTML = sayfa=="poz" ? pozSayfa(k) : sayfa=="gecmis" ? gecmisSayfa(k) : sayfa=="olay" ? olaySayfa(k)
     : (genis ? `<div class="genis"><div>${ozetSayfa(k, svc, sv)}</div><div>${pozSayfa(k)}</div></div>` : ozetSayfa(k, svc, sv));
   const yl = $("#yil"); if (yl) yl.scrollLeft = yl.scrollWidth;
+  isiSigdir();
   canliBagla(k); canliBoya();
   grafikler.forEach(g=>g.destroy()); grafikler = [];
   if (!window.Chart || !$("#g1")) return;
@@ -1423,7 +1482,7 @@ addEventListener("touchend", e=>{ if (!dokB) return; const t = e.changedTouches[
     const i = SAYFALAR.findIndex(x=>x[0]==sayfa), j = i + (dx < 0 ? 1 : -1);
     if (j >= 0 && j < SAYFALAR.length) sayfaSec(SAYFALAR[j][0]); }
   dokB = null; }, {passive:true});
-let _gen = innerWidth >= 1000; addEventListener("resize", ()=>{ const g = innerWidth >= 1000; if (g !== _gen){ _gen = g; if (VERI) ciz(); } });
+let _gen = (innerWidth >= 1000) + "" + MOBIL(); addEventListener("resize", ()=>{ const g = (innerWidth >= 1000) + "" + MOBIL(); if (g !== _gen){ _gen = g; if (VERI) ciz(); } });
 async function yukle(){
   if (VERI_GOMULU){ VERI = gorunum(VERI_GOMULU); ciz(); return; }
   try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = gorunum(await r.json()); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
