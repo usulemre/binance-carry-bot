@@ -363,5 +363,38 @@ kontrol("gerçek: kırılımı olan gün düzeltilir (−0,5% + (0,60+0,20)/1996
 kontrol("gerçek: veri yoksa None", panel.gercek_gorunum(_d8, {"dokum": {"funding": 1}}, _k8) is None)
 kontrol("sayfada funding anahtarı", "fgAnahtar" in app.get("/").data.decode())
 
+# MADDE 753: başlangıç kesimi, stop durumu, coin bazında özet, karar fiyatına göre kayma, sayfa öğeleri
+_dfk = [{"tarih": "2026-11-06", "zaman": 1793996574}]
+_ilk = panel._yerel(1793996574).strftime("%Y-%m-%d %H:%M")
+_ol = [{"zaman": "2026-10-11 05:06", "tur": "basla"}, {"zaman": _ilk[:11] + "00:00", "tur": "basla"}, {"zaman": "2026-12-01 00:00", "tur": "basla"}]
+kontrol("başlangıç: defterden önceki SON başlama olayı", panel.baslangic_kesim(_dfk, _ol) == _ilk[:11] + "00:00", panel.baslangic_kesim(_dfk, _ol))
+kontrol("başlangıç: başlama olayı yoksa defterin ilk satırı", panel.baslangic_kesim(_dfk, []) == _ilk)
+kontrol("başlangıç: defter yoksa None", panel.baslangic_kesim([], _ol) is None)
+_k53 = os.path.join(tmp, "carry-753"); os.makedirs(os.path.join(_k53, "defter"))
+json.dump({"zaman": 1000, "medyan": -0.05, "piyasa_sart": True, "coin": {"AKEUSDT": -0.42}}, open(os.path.join(_k53, "defter", "stop_durum.json"), "w"))
+_st = panel.stop_oku(_k53, simdi=1000 + 60)
+kontrol("stop: dosya okunur, USDT soneki atılır, taze", _st["coin"] == {"AKE": -0.42} and _st["bayat"] is False, _st)
+kontrol("stop: 3 saatten eski = bayat", panel.stop_oku(_k53, simdi=1000 + 4 * 3600)["bayat"] is True)
+kontrol("stop: dosya yoksa None", panel.stop_oku(os.path.join(tmp, "yok")) is None)
+json.dump({"coin": {"AKEUSDT": {"REALIZED_PNL": -5.26, "FUNDING_FEE": 0.1, "COMMISSION": -0.02}, "HYPEUSDT": {"REALIZED_PNL": 3.0}}},
+          open(os.path.join(_k53, "defter", "gelir_birikim.json"), "w"))
+_co = panel.coin_ozet(_k53, {"pozisyonlar": {"AKEUSDT": {"gerceklesmemis": -28.0, "yon": "L"}, "ZECUSDT": {"gerceklesmemis": -15.0, "yon": "L"}}})
+kontrol("coin özeti: kapanan + funding + komisyon + açık, en kötüden",
+        [x["s"] for x in _co] == ["AKE", "ZEC", "HYPE"] and _co[0]["toplam"] == -33.18 and _co[1]["toplam"] == -15.0 and _co[2]["yon"] is None, _co)
+kontrol("coin özeti: kayıt yoksa None", panel.coin_ozet(os.path.join(tmp, "yok"), None) is None)
+_db53 = os.path.join(_k53, "defter", "carry.db"); _t53 = __import__("time").time() - 3600
+_DB.emir_kaydet("GIRIS", "KOMAUSDT", "BUY", 100, db=_db53, simdi=_t53, oid="a", ref=1.0)
+_DB.emir_kaydet("PIYASA_YEDEK", "KOMAUSDT", "BUY", 100, db=_db53, simdi=_t53 + 370, oid="b", ref=1.0)
+_DB.emir_kaydet("GIRIS", "ONEUSDT", "SELL", 300, db=_db53, simdi=_t53 + 5, oid="c", ref=1.0)
+_c = _sq.connect(_db53)
+_c.execute("UPDATE emir SET durum='FILLED', dolan=100, ort_fiyat=1.0023 WHERE oid='b'")
+_c.execute("UPDATE emir SET durum='FILLED', dolan=300, ort_fiyat=1.0005 WHERE oid='c'"); _c.commit(); _c.close()
+_kk = panel.karar_kayma(_k53)
+kontrol("kayma: karar fiyatına göre, yol başına ve tutar ağırlıklı",
+        _kk["piyasa"] == 23.0 and _kk["giris"] == -5.0 and _kk["n"] == 2 and abs(_kk["bp"] - round((23.0 * 100.23 - 5.0 * 300.15) / 400.38, 1)) < 0.11, _kk)
+_sf5 = app.get("/").data.decode()
+kontrol("sayfada: canlı gün, coin tablosu, stop durumu, saatlik funding, post-only, hashchange",
+        all(x in _sf5 for x in ("seriCanli", "coinTablo", "stopDurum", "Saatlik funding", "postonly", "hashchange", "TOPLAM kayma")))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

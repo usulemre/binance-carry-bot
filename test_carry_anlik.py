@@ -8,6 +8,7 @@ def kontrol(ad, ok, ek=""):
     global _h
     print(("  OK  " if ok else "  XX  ") + ad + (f"  [{ek}]" if ek and not ok else "")); _h += 0 if ok else 1
 
+os.environ["CARRY_ANLIK_STOP"] = "0"   # madde 753: yaz() testlerinde gerçek evren ölçümü yok
 import carry_anlik
 from datetime import datetime, timezone
 
@@ -232,6 +233,30 @@ kontrol("funding olayı: 14 günden eskiler atılır", _k9 not in d["d"] and len
 b = carry_anlik.gelir_birikim(_G([{"tranId": 9, "incomeType": "FUNDING_FEE", "symbol": "A", "income": "0.5", "time": 7_000_500}]), 7000, 7001.0, os.path.join(tmp, "b9.json"))
 kontrol("gelir birikimi yeni funding kayıtlarını döndürür (dosyaya yazmaz)", b["_yeni_funding"] == [(7_000_500, "A", 0.5)]
         and "_yeni_funding" not in json.load(open(os.path.join(tmp, "b9.json"))), b)
+
+# MADDE 753: coin bazında gelir birikimi (+ eski dosyaya bir kez geçmiş kurulumu) ve koşullu stop durumu
+_k3 = [{"tranId": 1, "incomeType": "REALIZED_PNL", "symbol": "A", "income": "2", "time": 8_000_100},
+       {"tranId": 2, "incomeType": "FUNDING_FEE", "symbol": "A", "income": "0.5", "time": 8_000_200},
+       {"tranId": 3, "incomeType": "COMMISSION", "symbol": "B", "income": "-0.1", "time": 8_000_300}]
+_b3 = os.path.join(tmp, "b753.json")
+b = carry_anlik.gelir_birikim(_G(_k3), 8000, 8001.0, _b3)
+kontrol("coin kırılımı: tür başına doğru", b["coin"] == {"A": {"REALIZED_PNL": 2.0, "FUNDING_FEE": 0.5}, "B": {"COMMISSION": -0.1}}, b["coin"])
+_eski = json.load(open(_b3)); _eski.pop("coin"); json.dump(_eski, open(_b3, "w"))   # coin alanı olmayan eski dosya
+_k3.append({"tranId": 4, "incomeType": "REALIZED_PNL", "symbol": "B", "income": "-1", "time": 8_001_500})
+b = carry_anlik.gelir_birikim(_G(_k3), 8000, 8002.0, _b3)
+kontrol("eski dosya: geçmiş bir kez kurulur, yeni kayıt ÇİFT sayılmaz",
+        b["coin"] == {"A": {"REALIZED_PNL": 2.0, "FUNDING_FEE": 0.5}, "B": {"COMMISSION": -0.1, "REALIZED_PNL": -1.0}}
+        and b["toplam"]["REALIZED_PNL"] == 1.0, b)
+_ev = {f"S{i}": -0.01 * i for i in range(11)}; _ev.update({"AKE": -0.42, "ZEC": -0.12, "YOK": None})
+_sd = carry_anlik.stop_hesapla(list(_ev), ["AKE", "ZEC", "YOK"], _ev.get, 0.45, 0.03)
+kontrol("stop: piyasa medyanı (13 coin) ve şart", _sd["medyan"] == -0.06 and _sd["n"] == 13 and _sd["piyasa_sart"] is True, _sd)
+kontrol("stop: long başına 24 sa (okunamayan yok)", _sd["coin"] == {"AKE": -0.42, "ZEC": -0.12}, _sd)
+_sd2 = carry_anlik.stop_hesapla(["A", "B"], [], {"A": -0.5, "B": -0.5}.get, 0.45, 0.03)
+kontrol("stop: 10 coinden az = medyan yok (bot da ölçmez)", _sd2["medyan"] is None and _sd2["piyasa_sart"] is False, _sd2)
+_sf = os.path.join(tmp, "stop753.json")
+json.dump({"saat": 10, "longlar": ["AKEUSDT"], "coin": {"AKEUSDT": -0.4}}, open(_sf, "w"))
+kontrol("stop: aynı saat + aynı long seti = önbellek (borsa çağrısı yok)",
+        carry_anlik.stop_durum(None, {"AKEUSDT": {"yon": "L"}, "XUSDT": {"yon": "S"}}, 10 * 3600 + 5, _sf)["coin"] == {"AKEUSDT": -0.4})
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

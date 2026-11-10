@@ -119,10 +119,14 @@ def gelir_birikim(client, bas_s: int, simdi: float, dosya: str = BIRIKIM_DOSYA) 
         if b.get("bas_ms") != bas_ms:
             raise ValueError("başlangıç değişti")
     except (OSError, ValueError, AttributeError):
-        b = {"bas_ms": bas_ms, "son_ms": bas_ms, "toplam": {}, "idler": {}}
+        b = {"bas_ms": bas_ms, "son_ms": bas_ms, "toplam": {}, "idler": {}, "coin": {}}
     bit_ms = int(simdi * 1000)
     idler = dict(b.get("idler") or {})   # kimlik -> kayıt zamanı (ms); yalnız örtüşme penceresindekiler saklanır
     toplam = dict(b.get("toplam", {}))
+    coin = b.get("coin")
+    if coin is None:   # madde 753: coin kırılımı sonradan eklendi — eski dosyada yok: başlangıçtan son_ms'e kadar bir kez kur
+        coin = _coin_gecmis(client, bas_ms, int(b["son_ms"]))
+    coin = {k: dict(v) for k, v in coin.items()}
     yeni_fund = []   # madde 749: bu çalışmada İLK KEZ görülen funding kayıtları (olaylar sayfası için)
     s = max(bas_ms, int(b["son_ms"]) - ORTUSME_MS)
     son = bit_ms
@@ -135,6 +139,8 @@ def gelir_birikim(client, bas_s: int, simdi: float, dosya: str = BIRIKIM_DOSYA) 
             idler[kimlik] = int(g["time"])
             t = g.get("incomeType") or "?"
             toplam[t] = toplam.get(t, 0.0) + float(g.get("income") or 0)
+            if g.get("symbol"):   # madde 753: coin başına (panel "coin bazında kâr / zarar")
+                c_ = coin.setdefault(g["symbol"], {}); c_[t] = c_.get(t, 0.0) + float(g.get("income") or 0)
             if t == "FUNDING_FEE" and g.get("symbol"):
                 yeni_fund.append((int(g["time"]), g["symbol"], float(g.get("income") or 0)))
         if len(r) < 1000:
@@ -143,9 +149,80 @@ def gelir_birikim(client, bas_s: int, simdi: float, dosya: str = BIRIKIM_DOSYA) 
     else:
         son = s - 1   # 50 sayfa yetmedi: kalanı sonraki çalışmada
     idler = {k: t for k, t in idler.items() if t >= son - 2 * ORTUSME_MS}
-    b = {"bas_ms": bas_ms, "son_ms": son, "toplam": {k: round(v, 6) for k, v in toplam.items()}, "idler": idler}
+    b = {"bas_ms": bas_ms, "son_ms": son, "toplam": {k: round(v, 6) for k, v in toplam.items()}, "idler": idler,
+         "coin": {s_: {k: round(v, 6) for k, v in c_.items()} for s_, c_ in coin.items()}}
     _atomik_yaz(dosya, b)
     return {**b, "_yeni_funding": yeni_fund}
+
+
+def _coin_gecmis(client, bas_ms: int, son_ms: int) -> dict:
+    """MADDE 753: [bas_ms, son_ms] arasındaki gelir kayıtlarının coin × tür toplamı (tranId tekil). Okunamazsa istisna
+    yukarı çıkar (birikim değişmez, sonraki çalışmada yeniden denenir)."""
+    coin, gor, s = {}, set(), bas_ms
+    for _ in range(100):
+        if s > son_ms:
+            break
+        r = client.client.futures_income_history(startTime=s, endTime=son_ms, limit=1000)
+        for g in r:
+            kimlik = f"{g.get('tranId')}:{g.get('incomeType')}:{g.get('symbol')}"
+            if kimlik in gor or not g.get("symbol"):
+                continue
+            gor.add(kimlik); t = g.get("incomeType") or "?"
+            c_ = coin.setdefault(g["symbol"], {}); c_[t] = c_.get(t, 0.0) + float(g.get("income") or 0)
+        if len(r) < 1000:
+            break
+        s = int(r[-1]["time"]) + 1
+    return coin
+
+
+STOP_DOSYA = os.path.join(DEFTER_KLASOR, "stop_durum.json")
+
+
+def stop_hesapla(evren: list, longlar: list, g24, esik_coin: float, esik_piyasa: float) -> dict:
+    """MADDE 753: koşullu 24 sa stop'un (carry_bot madde 622) şu anki durumu — panel için, SAF fonksiyon.
+    g24(sembol) -> son KAPANMIŞ 4 sa mumunun 24 sa getirisi (carry_bot._kapanis_24s ile aynı ölçü) ya da None.
+    Piyasa = evrenin medyanı (en az 10 coin; bot da öyle). Long başına coin getirisi ve eşiğe kalan mesafe."""
+    ev = [v for v in (g24(s) for s in evren) if v is not None]
+    ev.sort()
+    med = None
+    if len(ev) >= 10:
+        n = len(ev); med = ev[n // 2] if n % 2 else (ev[n // 2 - 1] + ev[n // 2]) / 2
+    cl = {}
+    for s in longlar:
+        v = g24(s)
+        if v is not None:
+            cl[s] = round(v, 4)
+    return {"medyan": None if med is None else round(med, 4), "n": len(ev), "esik_coin": esik_coin, "esik_piyasa": esik_piyasa,
+            "piyasa_sart": med is not None and esik_piyasa > 0 and med <= -esik_piyasa, "coin": cl}
+
+
+def stop_durum(client, poz: dict, simdi: float, dosya: str = STOP_DOSYA, kitap: float | None = None) -> dict | None:
+    """MADDE 753: stop_hesapla'yı SAATTE BİR çalıştırır (bot da piyasa medyanını saatte bir ölçer; değer yalnız 4 sa mum
+    kapanınca değişir). Evren ve 24 sa ölçüsü botun kendi fonksiyonlarıyla (carry_bot.evren_sec / _kapanis_24s, gerçek
+    Binance herkese açık verisi) — EMİR YOK, bot durumuna dokunmaz. Long seti değişince de yeniden ölçülür."""
+    longlar = sorted(s for s, p in poz.items() if p.get("yon") == "L")
+    saat = int(simdi // 3600)
+    try:
+        with open(dosya, encoding="utf-8") as f:
+            eski = json.load(f)
+        if eski.get("saat") == saat and eski.get("longlar") == longlar:
+            return eski
+    except (OSError, ValueError, AttributeError, TypeError):
+        pass
+    import logging
+    logging.getLogger("carry_bot").setLevel(logging.CRITICAL)   # botun log satırları bu süreçte yazılmasın
+    import onerilen
+    if onerilen.gerekli():   # bot açılışta "önerilen ayar"ı ortama yazıp kendini yeniden başlatır; aynı çözümleme burada
+        onerilen.cozumle(lambda: kitap)
+    import carry_bot as cb
+    if cb.LONG_24S <= 0 or cb.LONG_24S_PIYASA <= 0:
+        d = {"saat": saat, "zaman": int(simdi), "kapali": True, "coin": {}, "longlar": longlar}
+    else:
+        evren = cb.evren_sec(client)
+        d = stop_hesapla(evren, longlar, lambda s_: cb._kapanis_24s(client, s_), cb.LONG_24S, cb.LONG_24S_PIYASA)
+        d.update(saat=saat, zaman=int(simdi), longlar=longlar)
+    _atomik_yaz(dosya, d)
+    return d
 
 
 def _veri_istemcisi(client):
@@ -400,6 +477,11 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
                 defter_db.emir_esle(client, db=emir_db, simdi=simdi, taze_sn=120, haric=("FELAKET", "TP", "KADEME"))
         except Exception as ex:
             print(f"UYARI: emir dolumları eşlenemedi: {ex}", file=sys.stderr)
+    if os.getenv("CARRY_ANLIK_STOP", "1") != "0":   # madde 753: koşullu stop yakınlığı (saatte bir, salt okuma)
+        try:
+            stop_durum(client, poz, simdi, os.path.join(os.path.dirname(dosya) or ".", "stop_durum.json"), kayit["kitap"])
+        except Exception as ex:
+            print(f"UYARI: koşullu stop durumu ölçülemedi: {ex}", file=sys.stderr)
     if "gelir_bas" in kayit:   # madde 742: transfer bilinmeden nokta yazılmaz (yatırma eğride kâr gibi görünmesin)
         try:
             gun_egri_ekle(os.path.join(os.path.dirname(dosya) or ".", "anlik_gun.json"), simdi,
