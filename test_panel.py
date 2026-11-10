@@ -130,7 +130,7 @@ kontrol("sonraki dilim = son yazım + 120/15 sa", _d["zaman"] == 1_794_000_000 +
 _d = panel.sonraki_dilim(kl, {"CARRY_N_DILIM": "10", "CARRY_REBALANCE_H": "60"})
 kontrol(".env dilim ayarı uygulanır", _d["zaman"] == 1_794_000_000 + 6 * 3600 and _d["n"] == 10, _d)
 kontrol("panel verisinde dilim", panel.veri([kl], servis=False)["kurulumlar"][0]["dilim"]["dolu"] == 2)
-kontrol("sayfada sonraki dilim kartı", b"Sonraki dilim" in app.get("/").data)
+kontrol("sayfada sonraki dilim kartı", "Sıradaki dilim" in app.get("/").data.decode())
 os.remove(_dl)
 # MADDE 733: döküm satırı
 _dk = [{"tarih": "2026-11-06", "zaman": 100, "ozkaynak": 4991.53, "kitap": 2000.11, "sermaye_olcek": 0.4007},
@@ -176,7 +176,7 @@ kontrol("sayfada ısı haritası, funding, yıllık takvim, tema", all(x in _sy2
 _csp = app.get("/").headers["Content-Security-Policy"]
 kontrol("CSP yalnız Binance herkese açık akışı / REST", "connect-src 'self' wss://fstream.binance.com https://fapi.binance.com;" in _csp, _csp)
 _sy = app.get("/").data
-kontrol("sayfada markPrice akışı ve canlı hücre kimlikleri", b"@markPrice@1s" in _sy and b'id="t-${p[0]}"' in _sy and b"fapi/v1/klines" in _sy and b'id="gerc"' in _sy)
+kontrol("sayfada markPrice akışı ve canlı hücre kimlikleri", b"@markPrice@1s" in _sy and b'id="t-${x[0]}"' in _sy and b"fapi/v1/klines" in _sy and b'id="gerc"' in _sy)
 
 # MADDE 742: panel düzeltmeleri
 # (a) getirinin ait olduğu gün: 00:05 UTC'de yazılan satır ÖNCEKİ günündür; kurulum satırı aynı gün, getirisiz
@@ -404,6 +404,10 @@ kontrol("sayfada mobil liste, harita sığdırma, sade olay metni",
 # MADDE 756: sade geçmiş (büyük toplam, dönem seçici, günlük çubuklar, gün listesi; eski ayrıntılar kapalı bölümde)
 _sf7 = app.get("/").data.decode()
 kontrol("sayfada sade geçmiş ve ayrıntılar bölümü", all(x in _sf7 for x in ("gecmisSade", "gecGunler", "gecDonem", "Ayrıntılar", ".gcub")))
+
+# MADDE 757: D tasarımı — durum cümlesi, dikkat kartları, filtreli pozisyon listesi + alt sayfa, filtreli olaylar, simgeli menü
+_sf8 = app.get("/").data.decode()
+kontrol("sayfada D tasarımı öğeleri", all(x in _sf8 for x in ("durumCumle", "dikkatler", "nerdenHtml", "sheetAc", "satirD", "pozFiltre", "olayFiltre", "NAV_SVG", 'id="sheet"', 'id="gsade"')))
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
