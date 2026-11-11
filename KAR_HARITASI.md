@@ -8379,3 +8379,10 @@ Kullanıcının hatırladığı kârlı satış: kâr al / kademe (+%45 sabit se
 yüzü farklı: her 8 sa'te ağırlık hedefi %10 aşınca küçük parça satmak. 765'te long tamamlama (ekle + sat birlikte) zararlıydı; yüzler
 ayrı ölçülür. Kollar (2), ortalama giriş (TEK_GIRIS=1) + eklemede ağırlıklı giriş (767 gibi): TAMAMLA=4 long yalnız DÜŞENE EKLE,
 TAMAMLA=5 long yalnız YÜKSELENDEN SAT. Taban P3T2. Ölçüt 762 ile aynı (≥ +8 ve Sharpe alt dönemler → o yüz İYİ; ≤ −8 ZARARLI).
+
+## Madde 768 SONUÇ — long tamamlamanın iki yüzü de zararlı (strateji / canlı DEĞİŞMEDİ)
+4 koşu rc 0. [ÖLÇÜM] taban 239,3 · Sh 4,05 · dd −13,3 · en kötü −7,41 → eşit risk 315,2 | yalnız DÜŞENE EKLE 251,6 · 3,95 · −17,5 · −7,89 ·
+3,97 / 3,98 → 198,8 (doz 0,85) | yalnız YÜKSELENDEN SAT 223,7 · 4,03 · −13,3 · −6,50 · 4,01 / 4,13 → 293,1 (doz 1,15). Ekle: ham getiri
++12 ama düşüş −4,2 puan derin (eşit risk −116 → ZARARLI); sat: düşüş aynı, en kötü gün iyileşiyor ama getiri −16 (kazananı kırpıyor;
+eşit risk −22 → ZARARLI). Kullanıcının hatırladığı kârlı satış = sabit seviyeli kâr al / kademe (+%45), o AYRI ve kalıyor.
+Düzeltme önerisi değişmedi: tutuşta tamamlama yok (iki yüz, iki taraf); TP / kademe / stop aynen.
