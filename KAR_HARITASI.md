@@ -8365,3 +8365,11 @@ yaklaşır. 762'nin zararı bu yüzden abartılmış olabilir. Kollar (2), ikisi
 Motor /tmp/g33_m767.py = 765 motoru + TAMAMLA_GIRIS (kapalıyken yol aynı). P3T2 ayarları, iki hiza, 2.000 $. Karar: B − A eşit riskte
 ≤ −8 ve iki alt dönem Sharpe'ı B'de düşükse 762/765 ADAY'ı GEÇERLİ (tamamlamayı kapat); |fark| < 8 ise 762 bulgusu canlıya
 taşınmıyor → ADAY GERİ ÇEKİLİR; B daha iyiyse tamamlama korunur.
+
+## Madde 767 SONUÇ — canlı ikizi: 762 / 765 ADAY'ı GEÇERLİ (tamamlamayı kapat) — canlı DEĞİŞMEDİ
+Not: P3T2 zaten TEK_GIRIS=1 (ortalama giriş) ile koşuyor; A kolu tabanla BAYT BAYT AYNI çıktı (iki hiza) = parite. 4 koşu rc 0.
+[ÖLÇÜM] A düzeltilmiş bot 239,3 · Sh 4,05 · dd −13,3 · en kötü −7,41 · 4,03 / 4,14 → eşit risk 315,2 | B bugünkü bot (tamamlama +
+eklemede ağırlıklı ortalama giriş) 227,5 · 3,90 · −17,3 · −6,99 · 3,97 / 3,83 → 180,9 (doz 0,85). B − A = −134,3 (≤ −8), iki alt dönem
+Sharpe'ı B'de düşük → ADAY GEÇERLİ. Ortalama girişin düşmesi (TP yaklaşması) 762'ye göre yalnız +14 eşit-risk puanı geri getiriyor;
+düşüş −17,3 (taban −13,3). Yıllar (A / B, ×1,15): 2020 112/108 · 2021 637/689 · 2022 75/66 · 2023 402/345 · 2024 144/145 · 2025 342/306 ·
+2026 341/315. Sonuç: canlı bot bugün backtest'ten ölçülebilir şekilde daha riskli; düzeltme = tutuşta tamamlama yok (iki taraf).
