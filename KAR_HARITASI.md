@@ -8348,3 +8348,11 @@ BRUT_PRIM=0 (diğer her şey P3T2). Rapor: tam dönem farkı ve herhangi bir gü
 getiri / düşüş farkının dağılımı (p10 / medyan / p90), ve Ekim–Kasım 2026 penceresi. Karar kuralı: 90 günlük pencerelerde fark p10 ≤ −2
 puan ya da düşüş farkı medyanı ≤ −1 puan ise ADAY = sunucuya arşiv verisinden prim geçmişi tohumu (veri dosyası; kod değişmez,
 kullanıcı onayı); değilse ısınma ihmal edilebilir, değişiklik yok.
+
+## Madde 766 SONUÇ — prim çarpanı ısınması: ön kayıt kuralına göre ADAY (prim geçmişi tohumu) — canlı DEĞİŞMEDİ
+2 koşu rc 0 (g33.py değişmedi). [ÖLÇÜM] P3T2 (prim açık) 239,3 · Sh 4,05 · dd −13,3 · en kötü −7,41 → eşit risk 315,2 | prim kapalı 260,8 ·
+3,91 · −15,4 · −8,42 → 247,3. 90 günlük pencereler (442, ×1,15), kapalı − açık: getiri p10 −2,9 · medyan +1,1 · p90 +11,7 puan; düşüş
+p10 −2,9 · medyan −0,2. Son 90 gün (Ağu–Eki 2026) açık +13,5 / kapalı +17,7. Yıllar açık/kapalı: 2020 112/117 · 2021 637/798 · 2022
+75/65 · 2023 402/428 · 2024 144/173 · 2025 342/342 · 2026 341/388. Kural (p10 ≤ −2) → ADAY. Yorum: çarpan kapalıyken brüt daha yüksek
+→ ortalamada biraz DAHA ÇOK getiri, kötü pencerelerde ~3 puan daha derin düşüş; yani canlının ilk 3 ayı backtest'ten biraz riskli.
+Önerilen: sunucuya botun prim_olc tanımıyla arşivden üretilmiş 180 günlük prim geçmişi (veri dosyası, kod yok; kullanıcı onayı).
