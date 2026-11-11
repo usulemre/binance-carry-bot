@@ -8302,3 +8302,11 @@ riskte doz 1,15'ten 0,80'e iniyor. Yani CANLI BOT BUGÜN backtest'in ölçtüğ�
 ile canlı arasındaki parite açığı). ADAY: botta tutuştaki tamamlamayı kapatmak — hedef coin MİKTARI olarak tutulur (yalnız yeni dilim,
 kademe / TP / stop, short tavanı ve bakiye ölçeği emir üretir). Bota girmesi kullanıcı kararı + ayrı canlı uygulama incelemesi
 (toleransın gerçek davranışı: TAMAMLA_TOL 0,10 dilim başına yaklaşık; tek dilimli coinde bot eşiği daha geniş).
+
+## Madde 763 ÖN KAYIT (2026-11-12, sonuçlar görülmeden; kullanıcı: "hepsini tek tek test edelim") — funding'i dönen long'u kapat (motorda)
+Çakışma: 167 (funding solma çıkışı, oran) RED; 713 Kol B (long funding'i evren medyanına inince kapat) MUHASEBE karşı-olgusunda RED
+(eşit risk sağlanamadı); 520 (solan long'u yeni girene devret) RED. Bu kol 713 Kol B'nin daha katı ve MOTORDA ölçülen hâli: tutulan
+long bacağın coin'i son funding ödemesinde long'a ÖDETTİYSE (funding pozitif = long öder) ve bacak ≥ 1 gün yaşındaysa bar kapanışında
+kapanır; sermaye nakitte kalır (sonraki dengelemeye kadar). Önsel: 713 nedeniyle düşük (TP ve sonraki fiyatı kesebilir).
+Kol (TEK): FDON=1. Taban P3T2 (EK_T7KKS). Motor /tmp/g33_m763.py = g33.py + yalnız bu düğme; kapalıyken bayt paritesi ÖNCE. Ölçüt
+(685 / 741 / 762 ile aynı): eşit risk ≥ taban + 8 VE Sharpe ≤2024 ve 2025+ düşmez → ADAY; değilse RED. Ek: kapanış sayısı, dd, Ekim.
