@@ -8356,3 +8356,12 @@ p10 −2,9 · medyan −0,2. Son 90 gün (Ağu–Eki 2026) açık +13,5 / kapal�
 75/65 · 2023 402/428 · 2024 144/173 · 2025 342/342 · 2026 341/388. Kural (p10 ≤ −2) → ADAY. Yorum: çarpan kapalıyken brüt daha yüksek
 → ortalamada biraz DAHA ÇOK getiri, kötü pencerelerde ~3 puan daha derin düşüş; yani canlının ilk 3 ayı backtest'ten biraz riskli.
 Önerilen: sunucuya botun prim_olc tanımıyla arşivden üretilmiş 180 günlük prim geçmişi (veri dosyası, kod yok; kullanıcı onayı).
+
+## Madde 767 ÖN KAYIT (2026-11-12, sonuçlar görülmeden; kullanıcı: "başka araştırmalar yapmaya devam et") — 762'nin geçerlilik kontrolü: CANLI İKİZİ
+762 / 765'te tamamlama eklemesi dilimin GİRİŞ fiyatını değiştirmiyordu ve TP / kademe / stop her dilimin kendi girişinden ölçülüyordu.
+Canlı bot ise tek hesapta Binance'in AĞIRLIKLI ORTALAMA girişinden kurar (madde 481 TEK_GIRIS) ve ekleme ortalamayı düşürür → TP
+yaklaşır. 762'nin zararı bu yüzden abartılmış olabilir. Kollar (2), ikisi de TEK_GIRIS=1 (canlı gibi ortalama giriş):
+  A "düzeltilmiş bot": tamamlama yok.  B "bugünkü bot": TAMAMLA=1 + TAMAMLA_GIRIS=1 (eklemede giriş ağırlıklı ortalama).
+Motor /tmp/g33_m767.py = 765 motoru + TAMAMLA_GIRIS (kapalıyken yol aynı). P3T2 ayarları, iki hiza, 2.000 $. Karar: B − A eşit riskte
+≤ −8 ve iki alt dönem Sharpe'ı B'de düşükse 762/765 ADAY'ı GEÇERLİ (tamamlamayı kapat); |fark| < 8 ise 762 bulgusu canlıya
+taşınmıyor → ADAY GERİ ÇEKİLİR; B daha iyiyse tamamlama korunur.
