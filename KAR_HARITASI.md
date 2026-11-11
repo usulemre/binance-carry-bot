@@ -8373,3 +8373,9 @@ eklemede ağırlıklı ortalama giriş) 227,5 · 3,90 · −17,3 · −6,99 · 3
 Sharpe'ı B'de düşük → ADAY GEÇERLİ. Ortalama girişin düşmesi (TP yaklaşması) 762'ye göre yalnız +14 eşit-risk puanı geri getiriyor;
 düşüş −17,3 (taban −13,3). Yıllar (A / B, ×1,15): 2020 112/108 · 2021 637/689 · 2022 75/66 · 2023 402/345 · 2024 144/145 · 2025 342/306 ·
 2026 341/315. Sonuç: canlı bot bugün backtest'ten ölçülebilir şekilde daha riskli; düzeltme = tutuşta tamamlama yok (iki taraf).
+
+## Madde 768 ÖN KAYIT (2026-11-12, sonuçlar görülmeden; kullanıcı: "ama yükseleni satmasını test etmiştik, kârlıydı") — long tamamlamanın iki yüzü
+Kullanıcının hatırladığı kârlı satış: kâr al / kademe (+%45 sabit seviye, 466 / 536 / 608: YERİNDE, kalır). Tamamlamanın "yükselenden sat"
+yüzü farklı: her 8 sa'te ağırlık hedefi %10 aşınca küçük parça satmak. 765'te long tamamlama (ekle + sat birlikte) zararlıydı; yüzler
+ayrı ölçülür. Kollar (2), ortalama giriş (TEK_GIRIS=1) + eklemede ağırlıklı giriş (767 gibi): TAMAMLA=4 long yalnız DÜŞENE EKLE,
+TAMAMLA=5 long yalnız YÜKSELENDEN SAT. Taban P3T2. Ölçüt 762 ile aynı (≥ +8 ve Sharpe alt dönemler → o yüz İYİ; ≤ −8 ZARARLI).
