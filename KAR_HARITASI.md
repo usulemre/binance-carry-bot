@@ -8386,3 +8386,14 @@ TAMAMLA=5 long yalnız YÜKSELENDEN SAT. Taban P3T2. Ölçüt 762 ile aynı (≥
 +12 ama düşüş −4,2 puan derin (eşit risk −116 → ZARARLI); sat: düşüş aynı, en kötü gün iyileşiyor ama getiri −16 (kazananı kırpıyor;
 eşit risk −22 → ZARARLI). Kullanıcının hatırladığı kârlı satış = sabit seviyeli kâr al / kademe (+%45), o AYRI ve kalıyor.
 Düzeltme önerisi değişmedi: tutuşta tamamlama yok (iki yüz, iki taraf); TP / kademe / stop aynen.
+
+## Madde 769 — demo olayları (12 Kas 01:50): iki bot hatası + panel etiketi
+- [ÖLÇÜM, kod] ONDOUSDT −4023 "Qty not increased by step size": bot emir adedini quantityPrecision ile yuvarlıyor (carry_bot
+  _emirleri_gonder / dolum / TP / merdiven), LOT_SIZE (piyasada MARKET_LOT_SIZE) stepSize'ı değil — 725'teki tickSize hatasının adet
+  karşılığı. Adım 10^−hassasiyet olmayan coinde bacak hiç açılmıyor ("1/12 bacak açılamadı"). ADAY düzeltme: adedi stepSize katına
+  yuvarla (exchange_client.get_symbol_precision step döndürsün).
+- [ÖLÇÜM, ekran] ARB: short 45,30 $ kapatılırken (BUY, +5,43 $) pozisyon 0 yerine ters yönde +0,06 $ TOZ kaldı (USD farkından adet
+  hesabı). ADAY düzeltme: hedef 0 olan sembolde kapanış adedi = tam positionAmt (reduceOnly).
+- CYBER −5022 kovalama boşluğu tekrarladı (bekleyen düzeltme).
+- Panel (bu madde, yalnız görünüm): kapanışta toz kalınca satır "long eklendi" görünüyordu; artık yön önceki pozisyondan, ~0 kalan
+  "kapandı". Bot değişmedi.

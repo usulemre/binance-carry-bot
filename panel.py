@@ -1650,8 +1650,10 @@ function islemTablo(o){
   // MADDE 751: her işlem tek satır grubu — ne oldu (açıldı / eklendi / azaltıldı / kapandı), ne kadar, ve ÖNCE → SONRA
   if (!o.islem || !o.islem.length) return "";
   const id = "isl" + o.zaman + o.tur, ac = ACIK.has(id);
-  const tip = x => { const ps = x.poz_sonra, po = x.poz_once, al = x.yon==="BUY";
-    const yon = ps ? (ps>0 ? "long" : "short") : (po ? (po>0 ? "long" : "short") : (al ? "long" : "short"));
+  // madde 769: kapanışta toz kalırsa (ör. ARB short kapatıldı, +0,06 $ ters yönde artık) "kapandı" say, yönü ÖNCEKİ pozisyondan al
+  const tip = x => { let ps = x.poz_sonra; const po = x.poz_once, al = x.yon==="BUY";
+    if (ps && po && x.usd_sonra!=null && x.usd_sonra < 1 && (x.usd_once||0) > 5 && ((po>0)!==al)) ps = 0;
+    const yon = po ? (po>0 ? "long" : "short") : (ps ? (ps>0 ? "long" : "short") : (al ? "long" : "short"));
     let ne;
     if (po===0) ne = "açıldı"; else if (ps===0) ne = "kapandı";
     else if (ps!=null) ne = ((ps>0)===al) ? "eklendi" : "azaltıldı"; else ne = al ? "alındı" : "satıldı";
