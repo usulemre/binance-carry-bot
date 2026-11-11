@@ -1633,14 +1633,16 @@ function olayIslem(k){
   }
   for (const a of Object.values(ara)){
     const f = {...a, coin: Object.values(a.coin).sort((p,q)=>Math.abs(q.gercek??q.demo??0)-Math.abs(p.gercek??p.demo??0))};
-    const x = f.demo!=null ? `demo hesaba ${isaretli(f.demo)}` : (demo ? "demo hesaba ödeme yok" : "");
+    const x = f.demo!=null ? `demo hesaba ${isaretli(f.demo)}` : (demo ? "demo hesaba yatmadı" : "");
     const y = demo && f.gercek!=null ? `gerçek oranlarla ${isaretli(f.gercek)}` : "";
-    out.push({zaman: f.zaman, tur: "funding", fon: f, metin: `Saatlik funding · ${f.n} ödeme | ${f.coin.map(c=>c.s).join(", ")} · ` + [x, y].filter(Boolean).join(" · ")});
+    // madde 760: "toplam" olduğu ve demo hesaba yatıp yatmadığı açık yazılsın
+    const sa = f.saat.slice().sort().map(h=>h+":00").join(", ");
+    out.push({zaman: f.zaman, tur: "funding", fon: f, metin: `Saatlik funding · ${f.n} ödemenin toplamı ${demo && f.gercek!=null ? isaretli(f.gercek) : (f.demo!=null ? isaretli(f.demo) : "")} | ${f.coin.map(c=>c.s).join(", ")} · saat ${sa} · ` + (demo ? (f.demo!=null ? `demo hesaba yatan ${isaretli(f.demo)} · gerçek oranlarla ${isaretli(f.gercek)}` : "gerçek Binance oranlarıyla hesaplandı, demo hesaba yatmadı") : "")});
   }
   for (const f of ana){
-    const a = f.demo!=null ? `demo hesaba ${isaretli(f.demo)} (${f.demo_n} poz)` : (demo ? "demo hesaba ödeme yok" : "");
+    const a = f.demo!=null ? `demo hesaba ${isaretli(f.demo)} (${f.demo_n} poz)` : (demo ? "demo hesaba yatmadı" : "");
     const b = demo && f.gercek!=null ? `gerçek oranlarla ${isaretli(f.gercek)} (${f.gercek_n} poz)` : "";
-    out.push({zaman: f.zaman, tur: "funding", fon: f, metin: `Funding · ${Math.max(f.gercek_n||0, f.demo_n||0)} pozisyon | ` + [a, b].filter(Boolean).join(" · ")});
+    out.push({zaman: f.zaman, tur: "funding", fon: f, metin: `Funding · ${Math.max(f.gercek_n||0, f.demo_n||0)} pozisyon ${demo && f.gercek!=null ? isaretli(f.gercek) : (f.demo!=null ? isaretli(f.demo) : "")} | ` + [a, b].filter(Boolean).join(" · ")});
   }
   return out.sort((a,b)=>(b.zaman||"").localeCompare(a.zaman||""));
 }
