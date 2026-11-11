@@ -8290,3 +8290,15 @@ küçülür) geri getirilir, |fark| ≥ TAMAMLA_TOL=0,10 × hedef ise (yarım ba
 tabandan düşük değil → "tamamlama iyi" (bot korunur, backtest'e eklenir); eşit risk ≤ taban − 8 ise "tamamlama zararlı" → ADAY düzeltme:
 botta tamamlamayı kapatmak (kullanıcı kararı, ayrı canlı inceleme); arada → FARK YOK (parite notu, değişiklik yok). Ek (karar dışı):
 düzeltme sayısı, eklenen / kırpılan ağırlık, maks DD, en kötü gün, long 5g ≤ −%7,5 dönemlerinde sonuç. Tek işçi, rc + dosya kontrolü.
+
+## Madde 762 SONUÇ — düşen long'u tamamlama (canlı botun davranışı): ZARARLI → ADAY düzeltme (strateji / canlı DEĞİŞMEDİ)
+4 koşu rc 0; düğme kapalıyken parite iki hizada BAYT BAYT AYNI. [ÖLÇÜM] (yıllık · Sh · dd · en kötü gün · Sh ≤2024 / 2025+ → eşit risk):
+taban (tamamlama YOK) 239,3 · 4,05 · −13,3 · −7,41 · 4,03 / 4,14 → 315,2 (doz 1,15) | tamamlama (bot) 231,1 · 3,90 · −18,1 · −7,10 ·
+3,95 / 3,90 → 166,8 (doz 0,80). Eşit risk −148,4 (≤ −8) ve iki alt dönem Sharpe'ı düştü → ön kayıttaki "tamamlama zararlı" kolu.
+Yıllar (taban / tamamlama): 2020 92/91 · 2021 472/512 · 2022 63/55 · 2023 309/267 · 2024 118/115 · 2025 267/263 · 2026 267/258;
+Ekim 2026 −4,27 / −1,57 (karar dışı). Düzeltme ~59 bin (15 faz × 2 hiza toplamı), eklenen ≈ kırpılan ağırlık (~375 / ~380).
+Yorum [VARSAYIM]: ham getiri neredeyse aynı ama maks düşüş ~5 puan DERİN (çöken coine para eklemek kuyruğu büyütüyor) → eşit
+riskte doz 1,15'ten 0,80'e iniyor. Yani CANLI BOT BUGÜN backtest'in ölçtüğünden daha riskli bir şey yapıyor (madde 419 kaymalı model
+ile canlı arasındaki parite açığı). ADAY: botta tutuştaki tamamlamayı kapatmak — hedef coin MİKTARI olarak tutulur (yalnız yeni dilim,
+kademe / TP / stop, short tavanı ve bakiye ölçeği emir üretir). Bota girmesi kullanıcı kararı + ayrı canlı uygulama incelemesi
+(toleransın gerçek davranışı: TAMAMLA_TOL 0,10 dilim başına yaklaşık; tek dilimli coinde bot eşiği daha geniş).
