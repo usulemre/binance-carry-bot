@@ -754,16 +754,24 @@ nav.alt .nok{position:absolute;top:6px;right:calc(50% - 22px);width:8px;height:8
 .kutu svg{width:100%;height:64px;display:block;margin-top:8px;overflow:visible}
 .uyr{color:var(--uyari)}
 /* MADDE 757: D tasarımı — Özet */
-.dozet{padding:18px}.dcumle{margin:0;font-size:17px;line-height:1.45;color:var(--yazi);opacity:.9}
-.dbuyuk{font-size:44px;font-weight:700;letter-spacing:-1.6px;line-height:1.05;margin-top:2px;font-variant-numeric:tabular-nums}
+.dozet{padding:18px}.dhero{padding:6px 4px 14px}
+.dcumle{font-size:14px;color:var(--soluk);display:flex;align-items:center;gap:7px;flex-wrap:wrap}.dcumle .uyr{font-weight:600}
+.dnok{width:8px;height:8px;border-radius:50%;background:var(--art);box-shadow:0 0 0 4px color-mix(in srgb,var(--art) 18%,transparent)}.dnok.yok{background:var(--eks);box-shadow:none}
+.dgr{margin-top:18px}.dgr .mod{display:flex;width:max-content;margin-left:auto}.dgr .mod button{font-size:12px;padding:4px 12px}.dgr svg{width:100%;height:84px;display:block;margin-top:8px;overflow:visible}
+.dnh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}.dnh .dnk{margin:0}
+.fgk{display:inline-flex;align-items:center;background:var(--kart2);border-radius:8px;padding:2px;gap:1px}
+.fgk button{border:0;background:none;color:var(--soluk);font:inherit;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;cursor:pointer}.fgk button.on{background:var(--kart);color:var(--yazi)}
+.fgk .fgi{padding:3px 6px}.fgacik{flex-basis:100%;font-size:12px;color:var(--soluk);line-height:1.45;margin:-4px 0 10px}
+.dikili{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.dikili .kart{margin-bottom:12px;padding:12px 14px}.dkv{font-size:17px;font-weight:650;margin:3px 0 2px;font-variant-numeric:tabular-nums}.dkv .k{font-weight:500;margin-left:4px}
+.dbuyuk{margin-top:10px;font-size:44px;font-weight:700;letter-spacing:-1.6px;line-height:1.05;margin-top:2px;font-variant-numeric:tabular-nums}
 .dalt{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
 .dozet .mod button{font-size:12px;padding:4px 11px}
-.ddk{margin-top:14px;border-radius:16px;padding:12px 14px;border:1px solid;cursor:default}.ddk[role=button]{cursor:pointer}
+.ddk{margin-bottom:12px;border-radius:16px;padding:12px 14px;border:1px solid;cursor:default}.ddk[role=button]{cursor:pointer}
 .ddk.uyari{background:color-mix(in srgb,var(--uyari) 9%,var(--kart));border-color:color-mix(in srgb,var(--uyari) 30%,transparent)}
 .ddk.eks{background:color-mix(in srgb,var(--eks) 10%,var(--kart));border-color:color-mix(in srgb,var(--eks) 35%,transparent)}
 .ddb{display:flex;justify-content:space-between;align-items:center;font-size:13.5px}.ddk.uyari b{color:var(--uyari)}.ddk.eks b{color:var(--eks)}
 .ddm{font-size:12.5px;margin-top:4px;line-height:1.45;opacity:.85}
-.dnerden{margin-top:16px}.dnk{font-size:12px;color:var(--soluk);margin-bottom:8px}
+.dnerden{padding:14px}.dnk{font-size:12.5px;color:var(--soluk);font-weight:600}
 .dnb{display:flex;height:10px;border-radius:99px;overflow:hidden;gap:2px}.dnb span{display:block;height:100%}
 .dng{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));row-gap:6px;column-gap:14px;margin-top:10px;font-size:12.5px;font-variant-numeric:tabular-nums}
 .dng>span{display:flex;justify-content:space-between;gap:6px}.dng b{white-space:nowrap}.dng i{display:inline-block;width:8px;height:8px;border-radius:3px;margin-right:6px}
@@ -1176,14 +1184,14 @@ function egriIc(k){
     const E = bugunEgri(k);
     if (!E || E.seri.length < 2) return `<div class="bl"><span>bugün 03:00'ten beri · kitap</span><span>—</span></div><div class="bekle" style="padding:20px 0">gün içi kitap kaydı bekleniyor (5 dakikada bir)</div>`;
     const bsl = E.ilk - E.bas > 20*60e3 ? new Date(E.ilk).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}) + " kaydından beri" : "03:00'ten beri";
-    return `<div class="bl"><span>bugün ${bsl} · kitap</span><b class="rz ${sinif(E.son)}">${isaretli(E.son)}${E.oran!=null?" ("+yz(E.oran)+")":""}</b></div>
+    return `${E.ilk - E.bas > 20*60e3 ? `<div class="bl"><span>${bsl}</span></div>` : ""}
       ${cizgi(E.seri, EGRI_W(), 70, css(E.son>=0?"--art":"--eks"), 0, "bugun", E.xs, true, Math.max(4, 0.004 * (k.kitap_canli || k.kitap || 1000)))}<div class="eksen"><span>03:00</span><span>09:00</span><span>15:00</span><span>21:00</span><span>03:00</span></div>`;
   }
   const SS = egriMod=="hafta" ? (k.seri||[]).slice(-8) : (k.seri||[]);   // madde 757: 1H = son 7 gün sonu + şimdi
   const kit = SS.map(s=>s.kitap).filter(v=>v!=null); if (k.kitap_canli!=null && kit.length) kit.push(k.kitap_canli + canliFark(k));
   if (kit.length < 2) return `<div class="bl"><span>kitap · başlangıçtan</span></div><div class="bekle" style="padding:20px 0">en az 2 gün gerekli</div>`;
   const d = kit[kit.length-1]-kit[0];
-  return `<div class="bl"><span>kitap · ${egriMod=="hafta" ? "son 7 gün" : `başlangıçtan (${(k.seri||[]).length} gün)`}</span><b class="rz ${sinif(d)}">${isaretli(d)}</b></div>${cizgi(kit, EGRI_W(), 70, css(d>=0?"--art":"--eks"), kit[0], "kitap")}`;
+  return `<div class="bl"><span>${egriMod=="hafta" ? "son 7 gün" : `başlangıçtan (${(k.seri||[]).length} gün)`}</span><b class="${sinif(d)}">${isaretli(d)}</b></div>${cizgi(kit, EGRI_W(), 70, css(d>=0?"--art":"--eks"), kit[0], "kitap")}`;
 }
 function egriSec(m){ egriMod = m; const k = VERI.kurulumlar[secili]; document.querySelectorAll(".mod button").forEach(b=>b.classList.toggle("on", b.dataset.m==m)); const e = $("#egri"); if (e) e.innerHTML = egriIc(k); }
 function canliDurum(){
@@ -1358,10 +1366,9 @@ function dikkatler(k){
 function dikkatHtml(k){
   return dikkatler(k).map(d=>`<div class="ddk ${d.sev}"${d.sem?` onclick="sheetAc('${d.sem}')" role="button"`:""}><div class="ddb"><b>${d.baslik}</b>${d.sem?'<span class="k">ayrıntı ›</span>':""}</div><div class="ddm">${d.metin}</div></div>`).join("");
 }
-function durumCumle(k){
-  const sv = k.servis, ok = !sv || sv==="active" || sv==="—" || sv==="?", E = bugunEgri(k), n = dikkatler(k).length;
-  const b = E ? `Bugün <b class="${sinif(E.son)}">${isaretli(E.son)}</b> ${E.son>=0?"kazandı":"kaybetti"}.` : "";
-  return `${ok ? "Bot çalışıyor." : '<b class="eks">Bot çalışmıyor.</b>'} ${b}<br>${n ? `<span class="uyr">${n} konu</span> dikkatini istiyor.` : '<span style="color:var(--soluk)">Dikkat isteyen bir şey yok.</span>'}`;
+function durumCumle(k){   // madde 758: kısa — bugünkü tutar hemen altta, tekrar etmez
+  const sv = k.servis, ok = !sv || sv==="active" || sv==="—" || sv==="?", n = dikkatler(k).length;
+  return `<span class="dnok ${ok?"":"yok"}"></span>${ok ? "Bot çalışıyor" : '<b class="eks">Bot çalışmıyor</b>'} · ${n ? `<span class="uyr">${n} konu dikkat istiyor</span>` : "her şey yolunda"}`;
 }
 function daltHtml(k, kar){
   const E = bugunEgri(k), ok = v => v>=0 ? "▲" : "▼";
@@ -1373,36 +1380,38 @@ function nerdenHtml(k, poz, kar){
   const fark = kar - poz - D.gerceklesen - F - D.komisyon - dg;
   const K = [["Kapanan", D.gerceklesen, "--vurgu"], ["Funding", F, "--art"], ["Açık", poz, "--eks"], ["Komisyon", D.komisyon, "--uyari"]];
   const tm = K.reduce((a,x)=>a+Math.abs(x[1]), 0) || 1;
-  return `<div class="dnk">Başlangıçtan beri nereden geldi${gz ? " · funding gerçek oranla" : ""}</div>
-    <div class="dnb">${K.map(x=>`<span style="flex:${Math.max(0.6, Math.abs(x[1])/tm*100).toFixed(1)};background:${css(x[2])}"></span>`).join("")}</div>
+  return `<div class="dnb">${K.map(x=>`<span style="flex:${Math.max(0.6, Math.abs(x[1])/tm*100).toFixed(1)};background:${css(x[2])}"></span>`).join("")}</div>
     <div class="dng">${K.map(x=>`<span><span class="k"><i style="background:${css(x[2])}"></i>${x[0]}</span><b class="${sinif(x[1])}">${isaretli(x[1])}</b></span>`).join("")}</div>
-    ${Math.abs(fark) >= 0.5 || dg ? `<div class="k" style="margin-top:6px">başlangıç farkı ${isaretli(fark)}${dg?` · diğer ${isaretli(dg)}`:""} (kayıt anı ve demo / gerçek fiyat farkı)</div>` : ""}`;
+    ${Math.abs(fark) >= 3 || dg ? `<div class="k" style="margin-top:8px" title="Başlangıç kaydı anı ve demo / gerçek fiyat farkı">başlangıç farkı ${isaretli(fark)}${dg?` · diğer ${isaretli(dg)}`:""}</div>` : ""}`;
+}
+function fgKucuk(k){   // madde 758: gerçek / demo funding seçici — küçük, ayrıntı dokununca
+  if (!k.gercek) return "";
+  const g = k.gercek;
+  return `<span class="fgk"><button class="${FG?"on":""}" onclick="fgSec(true)">gerçek</button><button class="${!FG?"on":""}" onclick="fgSec(false)">demo</button><button class="fgi" onclick="const a=document.getElementById('fgacik'); a.hidden=!a.hidden" aria-label="funding açıklaması">ⓘ</button></span>
+    <div id="fgacik" class="fgacik" hidden>Demo borsa funding'i kendi oranıyla öder. "Gerçek" aynı pozisyonların gerçek Binance oranlarıyla alacağını gösterir (fark ${isaretli(g.fark)}); kitap ve kâr da buna göre.${g.duzeltilmeyen ? ` İlk ${g.duzeltilmeyen} günün günlük getirisi demo funding'le kaldı.` : ""}</div>`;
 }
 function dilimMetin(D){
   if (!D) return "—"; const kalan = D.zaman - Date.now()/1000;
-  return kalan <= 0 ? (kalan > -1800 ? "şimdi" : "gecikti") : sureYaz(kalan) + ` <span class="k">· ${D.dolu}/${D.n}</span>`;
+  return (kalan <= 0 ? (kalan > -1800 ? "şimdi" : "gecikti") : sureYaz(kalan)) + ` <span class="k">${D.dolu}/${D.n}</span>`;
 }
 function fundMetin(k){
   let T = null; for (const s of Object.keys(k.pozisyonlar||{})){ const F = FUND[s]; if (F && F.T) T = T==null ? F.T : Math.min(T, F.T); }
   return T==null ? "—" : sureYaz(Math.max(0, (T - Date.now())/1000));
 }
-function ozetSayfa(k, svc, sv){
+function ozetSayfa(k, svc, sv){   // madde 758: sade — kahraman alan kartsız, bölümler ayrı kartlarda, tekrar yok
   const kitap = k.kitap_canli!=null ? k.kitap_canli : k.kitap; AKIS.kitapd = AKIS.kitapd || {v: kitap};
-  const A = k.ayar, ce = A && A.coin_esik!=null ? A.coin_esik : 0.45;
-  const ayar = A ? `${A.profil||k.profil||"—"} · ${A.gross.toFixed(2).replace(".",",")}x${A.stop!=null?` · stop: coin −%${Math.round(ce*100)} ve piyasa −%${Math.round(A.stop*100)}`:""}` : (k.profil||"");
+  const A = k.ayar, ayar = A ? `${A.profil||k.profil||"—"} · ${A.gross.toFixed(2).replace(".",",")}x` : (k.profil||"");
   const ch = (m, ad) => `<button data-m="${m}" class="${egriMod==m?"on":""}" onclick="egriSec('${m}')">${ad}</button>`;
-  return `<div class="kart dozet">
-    <p class="dcumle" id="dcumle">${durumCumle(k)}</p>
-    <div class="k" style="margin-top:16px">Kitap</div>
+  return `<div class="dhero">
+    <div class="dcumle" id="dcumle">${durumCumle(k)}</div>
     <div class="dbuyuk" id="kitapd">${para(AKIS.kitapd.v)}</div>
     <div class="dalt" id="dalt">${daltHtml(k, k.kar_usd)}</div>
-    ${fgAnahtar(k)}
-    <div class="egri"><div style="display:flex;justify-content:flex-end"><div class="mod">${ch("bugun","1G")}${ch("hafta","1H")}${ch("tum","Tümü")}</div></div><div id="egri">${egriIc(k)}</div></div>
-    <div id="dikkat">${dikkatHtml(k)}</div>
-    ${k.dokum&&k.gerceklesmemis!=null?`<div class="dnerden" id="nerden">${nerdenHtml(k, k.gerceklesmemis, k.kar_usd)}</div>`:""}
-    <div class="dsira"><span>Sıradaki dilim <b id="dilimd">${dilimMetin(k.dilim)}</b></span><span>Funding <b id="fundd">${fundMetin(k)}</b></span></div>
-    <div class="k" style="margin-top:8px;white-space:normal">${ayar}</div>
-  </div>`;
+    <div class="dgr"><div class="mod">${ch("bugun","1G")}${ch("hafta","1H")}${ch("tum","Tümü")}</div><div id="egri">${egriIc(k)}</div></div>
+  </div>
+  <div id="dikkat">${dikkatHtml(k)}</div>
+  ${k.dokum&&k.gerceklesmemis!=null?`<div class="kart dnerden"><div class="dnh"><span class="dnk">Başlangıçtan beri nereden geldi</span>${fgKucuk(k)}</div><div id="nerden">${nerdenHtml(k, k.gerceklesmemis, k.kar_usd)}</div></div>`:""}
+  <div class="dikili"><div class="kart"><div class="k">Sıradaki dilim</div><div class="dkv" id="dilimd">${dilimMetin(k.dilim)}</div><div class="k">${ayar}</div></div>
+    <div class="kart"><div class="k">Sıradaki funding</div><div class="dkv" id="fundd">${fundMetin(k)}</div><div class="k">canlı oranla</div></div></div>`;
 }
 // MADDE 757: D TASARIMI — POZİSYONLAR. Filtre (Tümü / Long / Short) + sıralama, long ve short ayrı bölüm, satırda büyüklük,
 // mini grafik ve ▲▼ kâr / zarar; dokununca alttan açılan sayfada ayrıntı (grafik, giriş, funding, hedef, stop).
