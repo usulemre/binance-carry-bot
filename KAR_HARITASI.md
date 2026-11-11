@@ -8317,3 +8317,11 @@ eşit risk 315,2 | FDON 157,0 · 3,34 · −16,7 · −5,93 · 3,09 / 3,89 → 1
 FDON): 2020 92/40 · 2021 472/193 · 2022 63/125 · 2023 309/166 · 2024 118/55 · 2025 267/229 · 2026 267/201; Ekim 2026 −4,27 / −0,13
 (karar dışı; 2022 ve Ekim gibi çöküş dönemlerinde yardım ediyor, toplamda kârı yarıya indiriyor). ~21,9 bin kapanış (15 faz × hiza).
 713 Kol B (muhasebe) motorda da doğrulandı: funding'i sönen long'un değeri TP ve sonraki fiyatta; erken çıkış kazananı kesiyor.
+
+## Madde 764 — long zarar otopsisi (betimsel; motor yok; kullanıcı: "longlar fena zararda") — YENİ TEST YOK
+Araç arastirma_m764_long_otopsi.py (711 defteri, P3T2, ×1,15). Long 5 günlük fiyat katkısı ≤ −%7,5 olan 50 dönem (2020-09 → 2026-08):
+medyan long −8,7 · zarar eden coin 19,5 · ilk coin payı %26,5 · ilk 3 payı %56,5 · AYNI 5 günde toplam kitap −0,6 · sonraki 15 gün
+toplam +3,3 (long tarafı +1,9). Yoğun (ilk 3 ≥ %60, n 21): sonraki 15 g toplam medyan +2,4, %81 artı, long −1,6; dağınık (n 29): +5,8,
+%79 artı, long +3,3. Demo 12 Kas: long ≈ −%7,5, ilk 3 (AKE / CYBER / ONE) ≈ %63 → "yoğun" sınıf. [VARSAYIM] yoğun dönemlerde zarar
+eden coinler toparlanmadan devrediliyor, kitabı short + funding + yeni dilimler taşıyor. Tek eyleme dönük bulgu 762 (canlı botun
+tamamlaması yoğunluğu büyütüyor); 763 / 713 / 741 / 542-543 / 538-541 çıkış ve tavan aileleri RED.
