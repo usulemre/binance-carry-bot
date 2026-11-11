@@ -8325,3 +8325,10 @@ toplam +3,3 (long tarafı +1,9). Yoğun (ilk 3 ≥ %60, n 21): sonraki 15 g topl
 %79 artı, long +3,3. Demo 12 Kas: long ≈ −%7,5, ilk 3 (AKE / CYBER / ONE) ≈ %63 → "yoğun" sınıf. [VARSAYIM] yoğun dönemlerde zarar
 eden coinler toparlanmadan devrediliyor, kitabı short + funding + yeni dilimler taşıyor. Tek eyleme dönük bulgu 762 (canlı botun
 tamamlaması yoğunluğu büyütüyor); 763 / 713 / 741 / 542-543 / 538-541 çıkış ve tavan aileleri RED.
+
+## Madde 765 ÖN KAYIT (2026-11-12, sonuçlar görülmeden; kullanıcı: "başka derin araştırmalar yapalım") — tamamlamanın ayrıştırılması
+762'de tamamlama İKİ tarafa birden uygulandı (long: düşene ekle / yükselenden sat; short: yükselen short'u kırp / düşene ekle). Düzeltmenin
+şekli için hangi tarafın zararlı olduğu ölçülür. Kollar (2): TAMAMLA=2 yalnız long, TAMAMLA=3 yalnız short (diğer her şey 762 ile aynı:
+8 sa, TOL 0,10, 5 bp). Taban P3T2; motor /tmp/g33_m765.py = 762 motoru + taraf seçici (TAMAMLA 0/1 yolu bayt aynı; 762 paritesi geçerli).
+Ölçüt (762 ile aynı): her kol için eşit risk ≥ taban + 8 VE Sharpe ≤2024 / 2025+ düşmez → o tarafta tamamlama İYİ (botta korunur);
+≤ taban − 8 → o tarafta ZARARLI (botta kapatılır); arada FARK YOK. Beklenti: iki kolun toplamı ≈ 762'nin etkisi.
