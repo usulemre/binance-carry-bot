@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""MADDE 753 testleri: funding doğrulama — sahte resmi oranlarla yeniden hesap, pozisyon = ödeme ÖNCESİ son görüntü; anahtar / emir YOK."""
+"""MADDE 761 testleri: funding doğrulama — sahte resmi oranlarla yeniden hesap, pozisyon = ödeme ÖNCESİ son görüntü; anahtar / emir YOK."""
 import json, os, sys, tempfile
 sys.path.insert(0, os.path.dirname(os.path.abspath(__file__)))
 import funding_dogrula as F

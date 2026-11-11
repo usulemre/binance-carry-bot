@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
-"""MADDE 753 — "gerçek Binance oranlarıyla olsaydı" funding'inin BAĞIMSIZ doğrulaması (kullanıcı: "kesin doğru mu bilmem lazım").
+"""MADDE 761 — "gerçek Binance oranlarıyla olsaydı" funding'inin BAĞIMSIZ doğrulaması (kullanıcı: "kesin doğru mu bilmem lazım").
 
 carry_anlik'in hesapladığı her funding ödemesini (defter/funding_olay.json, "g") baştan, ayrı bir yoldan yeniden hesaplar:
   * oran ve işaret fiyatı: Binance'in HERKESE AÇIK resmi funding geçmişi (/fapi/v1/fundingRate) — anahtar yok, emir yok;

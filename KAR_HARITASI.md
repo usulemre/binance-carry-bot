@@ -8270,7 +8270,7 @@ aradaki fark (gerçek − demo funding, o an +5,77 $) "Başlangıç farkı"na d�
 demo görünümde −0,14 $). Artık gerçek görünümde döküm "Funding (gerçek oranla)" satırını kullanır, demo hesabın ödediği alt satırda.
 Başlangıç farkı açıklaması da düzeltildi ("sabit kalır" değil; küçük oynar, gerçek hesapta ~0). Yalnız panel.
 
-## Madde 753 — "gerçek oranlarla funding"in bağımsız doğrulaması (kullanıcı: "bu fundingler kesin doğru mu bilmem lazım")
+## Madde 761 — "gerçek oranlarla funding"in bağımsız doğrulaması (kullanıcı: "bu fundingler kesin doğru mu bilmem lazım")
 funding_dogrula.py (anahtarsız, emir yok): paneldeki her gerçek-oran funding ödemesini (defter/funding_olay.json "g") ayrı yoldan
 yeniden hesaplar — Binance RESMİ funding geçmişi (/fapi/v1/fundingRate: kesinleşmiş oran + o anın işaret fiyatı) × ödeme
 ÖNCESİ son pozisyon görüntüsü (anlik_poz.json) → −adet × işaret × oran. Coin coin / toplam fark ve en büyük 5 fark; demo hesaba
