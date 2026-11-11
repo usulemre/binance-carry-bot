@@ -8332,3 +8332,11 @@ tamamlaması yoğunluğu büyütüyor); 763 / 713 / 741 / 542-543 / 538-541 çı
 8 sa, TOL 0,10, 5 bp). Taban P3T2; motor /tmp/g33_m765.py = 762 motoru + taraf seçici (TAMAMLA 0/1 yolu bayt aynı; 762 paritesi geçerli).
 Ölçüt (762 ile aynı): her kol için eşit risk ≥ taban + 8 VE Sharpe ≤2024 / 2025+ düşmez → o tarafta tamamlama İYİ (botta korunur);
 ≤ taban − 8 → o tarafta ZARARLI (botta kapatılır); arada FARK YOK. Beklenti: iki kolun toplamı ≈ 762'nin etkisi.
+
+## Madde 765 SONUÇ — tamamlama İKİ tarafta da zararlı, asıl kaynak LONG (strateji / canlı DEĞİŞMEDİ)
+4 koşu rc 0 (TAMAMLA 0/1 yolu 762 ile bayt aynı). [ÖLÇÜM] (yıllık · Sh · dd · en kötü gün · Sh ≤2024 / 2025+ → eşit risk):
+taban 239,3 · 4,05 · −13,3 · −7,41 · 4,03 / 4,14 → 315,2 | 762 iki taraf 231,1 · 3,90 · −18,1 → 166,8 | yalnız long 235,9 · 3,93 · −17,7 ·
+−7,19 · 3,93 / 4,01 → 186,3 (doz 0,85) | yalnız short 233,6 · 4,02 · −13,5 · −7,41 · 4,05 / 4,02 → 284,6 (doz 1,10). Long kolu −128,9,
+short kolu −30,6: ikisi de ≤ −8 → ön kayda göre ikisi de ZARARLI. Düşüşü derinleştiren long tarafı (−17,7); short tamamlamada düşüş
+aynı, getiri düşük (kırpılan > eklenen: yükselen short'u kırpmak sıkışmadan korumuyor, toparlanmayı kaçırıyor). ADAY (762'yi
+netleştirir): botta tutuşta tamamlama İKİ tarafta da kapatılır (hedef coin miktarı); short coin tavanı (%8) giriş anında kalır.
