@@ -8276,3 +8276,17 @@ yeniden hesaplar — Binance RESMİ funding geçmişi (/fapi/v1/fundingRate: kes
 ÖNCESİ son pozisyon görüntüsü (anlik_poz.json) → −adet × işaret × oran. Coin coin / toplam fark ve en büyük 5 fark; demo hesaba
 fiilen yatan yanında. Pozisyon geçmişi olmayan (madde 745 öncesi) ödemeler "ölçülemeyen". Test: test_funding_dogrula (6, CI'da).
 Ay sonu ayrıca data.binance.vision Kasım funding arşiviyle (Aralık başı) karşılaştırma yapılacak.
+
+## Madde 762 ÖN KAYIT (2026-11-12, sonuçlar görülmeden; kullanıcı: "longlar fena zararda — araştırma yapalım, hepsini tek tek test edelim") — düşen long'u tamamlama
+BULGU (kod okuması, ÖLÇÜM değil): canlı bot hedefleri DOLAR olarak tutar (toplam_hedef, madde 205 ölçeği) ve her turda (8 sa) açık
+pozisyonu güncel değeriyle karşılaştırıp farkı yarım bacağı (~8,6 $) aşarsa hedefe TAMAMLAR / KIRPAR (mevcut_portfoy madde 164 +
+emirleri_hesapla). Düşen long'a ekleme = ortalama düşürme (demo AKE: giriş maliyeti ~136 $ / değer ~98 $), yükselen long'dan satma.
+Backtest (T7K) ise AGIRLIK_KAYMA=1: tutuşta coin miktarı SABİT, tamamlama YOK (madde 419). → bot ile backtest arasında PARİTE FARKI.
+HİPOTEZ: tamamlama, çöken coine para ekleyip kazanandan kestiği için kuyruğu derinleştirir; ya da tersine ortalamaya dönüşten kazanır.
+Kol (TEK): TAMAMLA=1 — her 2 barda (8 sa, dilimin kendi ızgarası) açık bacak hedef ağırlığına (giriş ağırlığı; kademe / yarım TP ile
+küçülür) geri getirilir, |fark| ≥ TAMAMLA_TOL=0,10 × hedef ise (yarım bacak toleransının dilim başına yaklaşığı: düşen coinler tipik
+~5 dilimde, 0,5/5), komisyon 5 bp. Taban: P3T2 (EK_T7KKS). Motor /tmp/g33_m762.py = g33.py + yalnız bu düğme; kapalıyken bayt paritesi
+ÖNCE (2 koşu). İki hiza, 2.000 $, Ekim dahil zemin. Ölçüt (685 / 719 / 741 ile aynı): eşit risk ≥ taban + 8 VE Sharpe ≤2024 ve 2025+
+tabandan düşük değil → "tamamlama iyi" (bot korunur, backtest'e eklenir); eşit risk ≤ taban − 8 ise "tamamlama zararlı" → ADAY düzeltme:
+botta tamamlamayı kapatmak (kullanıcı kararı, ayrı canlı inceleme); arada → FARK YOK (parite notu, değişiklik yok). Ek (karar dışı):
+düzeltme sayısı, eklenen / kırpılan ağırlık, maks DD, en kötü gün, long 5g ≤ −%7,5 dönemlerinde sonuç. Tek işçi, rc + dosya kontrolü.
