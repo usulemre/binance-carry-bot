@@ -511,18 +511,32 @@ def gercek_gorunum(df: list[dict], o: dict, klasor: str) -> dict | None:
     except (OSError, ValueError, AttributeError):
         gun = {}
     fark = d["funding_gercek"] - d["funding"]
-    adj, onc, top_fark, fark_satir, duz, duzm = [], None, 0.0, [], 0, 0
+    # madde 759: iki geçiş. (1) gün kırılımı olan günlerin farkı ve demo funding toplamı; (2) kırılımı OLMAYAN günlere
+    # kalan fark eşit dağıtılır — önceden bu kalan (ilk günler, ~10 $) "bugün"e yükleniyor, Geçmiş'te bugün şişiyordu.
+    # Bugünün (son gün sonu kaydından sonraki) farkı = gerçek bugün − demo bugün; o kısım günlere dağıtılmaz.
+    satir, onc, top_fark, demo_top, duz, duzm = [], None, 0.0, 0.0, 0, 0
     for k in df:
-        k2 = dict(k); g = k.get("gun_getiri")
+        g = k.get("gun_getiri"); bilgi = None
         if g is not None and onc is not None:
             et = gun_etiketi(k); taban = (onc.get("ozkaynak") or 0) * float(onc.get("sermaye_olcek", k.get("sermaye_olcek", 1.0)) or 1.0)
-            if et in gun and taban > 0:
-                demo_f = ((k.get("gelir_24s") or {}).get("FUNDING_FEE") or 0) * _gelir_payi(onc, k)
-                df_ = gun[et] - demo_f; top_fark += df_
-                k2["gun_getiri"] = g + df_ / taban; duz += 1
-            else:
-                duzm += 1
-        fark_satir.append(top_fark); adj.append(k2); onc = k
+            demo_f = ((k.get("gelir_24s") or {}).get("FUNDING_FEE") or 0) * _gelir_payi(onc, k); demo_top += demo_f
+            if taban > 0:
+                if et in gun:
+                    bilgi = ("d", gun[et] - demo_f, taban); top_fark += gun[et] - demo_f; duz += 1
+                else:
+                    bilgi = ("m", 0.0, taban); duzm += 1
+        satir.append((k, bilgi)); onc = k
+    son_et = gun_etiketi(df[-1]) if df else None
+    bugun_fark = (sum(v_ for g_, v_ in gun.items() if son_et and g_ > son_et) - (d["funding"] - demo_top)) if df else 0.0
+    kalan = fark - top_fark - bugun_fark
+    pay = kalan / duzm if duzm else 0.0
+    adj, fark_satir, birikim = [], [], 0.0
+    for k, bilgi in satir:
+        k2 = dict(k)
+        if bilgi is not None:
+            df_ = bilgi[1] if bilgi[0] == "d" else pay
+            birikim += df_; k2["gun_getiri"] = k["gun_getiri"] + df_ / bilgi[2]
+        fark_satir.append(birikim); adj.append(k2)
     v = ozet(adj)
     for s_, f_ in zip(v["seri"], fark_satir):   # kitap eğrisi de gerçek funding farkıyla
         if s_.get("kitap") is not None:
@@ -944,11 +958,24 @@ function akit(id, hedef, bicim){
 // MADDE 753: Geçmiş'te bugün (Binance günü, 03:00'ten beri) CANLI olarak — defter günde bir (03:05) yazıldığı için
 // takvim / ay toplamı / grafikler son kaydın anında kalıyordu (dipte alınan kayıt ayı olduğundan kötü gösteriyordu).
 function seriCanli(k){
-  const S = k.seri || [], E = bugunEgri(k);
-  if (!E || E.oran==null || !S.length) return S;
-  const t = new Date(gunBasi()).toISOString().slice(0,10);
-  if (S.some(x=>x.tarih===t)) return S;
-  return [...S, {tarih: t, gun: E.oran, kitap: k.kitap_canli!=null ? k.kitap_canli + canliFark(k) : null, canli: true}];
+  const S = k.seri || [], B = bugunKZ(k);
+  if (!B || S.some(x=>x.tarih===B.tarih)) return S;
+  const ek = B.dunEk ? [{tarih: B.dunEk.tarih, gun: B.dunEk.oran, kitap: B.bas, canli: true, kesin: false}] : [];
+  return [...S, ...ek, {tarih: B.tarih, gun: B.oran, kitap: B.simdi, canli: true}];
+}
+// MADDE 759: TEK "BUGÜN" HESABI — Özet ve Geçmiş aynı sayıyı gösterir. Bugün = şimdiki kitap − dünün gün sonu kaydı
+// (defter, 03:05). Dünün kaydı henüz yazılmadıysa (03:00–03:05 ya da gecikme) gün başı kitabı gün içi eğriden alınır
+// ve dün ayrı "kesinleşiyor" günü olarak gösterilir — önceden dünün kazancı da "bugün"e katılıyordu.
+function bugunKZ(k){
+  const S = (k.seri||[]).filter(x=>x.kitap!=null), son = S[S.length-1];
+  if (!son || k.kitap_canli==null) return null;
+  const simdi = k.kitap_canli + canliFark(k), bas0 = gunBasi(), bugun = new Date(bas0).toISOString().slice(0,10), dun = new Date(bas0 - 864e5).toISOString().slice(0,10);
+  if (son.tarih >= dun) return {usd: simdi - son.kitap, oran: son.kitap > 0 ? (simdi - son.kitap) / son.kitap : null, bas: son.kitap, simdi, tarih: bugun, dunEk: null};
+  const E = bugunEgri(k);
+  if (!E) return {usd: simdi - son.kitap, oran: son.kitap > 0 ? (simdi - son.kitap) / son.kitap : null, bas: son.kitap, simdi, tarih: bugun, dunEk: null};
+  const gb = simdi - E.son;
+  return {usd: E.son, oran: gb > 0 ? E.son / gb : null, bas: gb, simdi, tarih: bugun,
+          dunEk: {tarih: dun, usd: gb - son.kitap, oran: son.kitap > 0 ? (gb - son.kitap) / son.kitap : null, bas: son.kitap}};
 }
 function takvim(k){
   const S = seriCanli(k); const G = S.map((s,j)=>({...s, j})).filter(s=>s.gun!=null && s.tarih);
@@ -1371,8 +1398,8 @@ function durumCumle(k){   // madde 758: kısa — bugünkü tutar hemen altta, t
   return `<span class="dnok ${ok?"":"yok"}"></span>${ok ? "Bot çalışıyor" : '<b class="eks">Bot çalışmıyor</b>'} · ${n ? `<span class="uyr">${n} konu dikkat istiyor</span>` : "her şey yolunda"}`;
 }
 function daltHtml(k, kar){
-  const E = bugunEgri(k), ok = v => v>=0 ? "▲" : "▼";
-  return `${E ? `<span class="${sinif(E.son)}">${ok(E.son)} ${isaretli(E.son)} bugün</span>` : ""}${kar!=null ? `<span class="${sinif(kar)}">${ok(kar)} ${isaretli(kar)} başlangıçtan</span>` : ""}`;
+  const B = bugunKZ(k), ok = v => v>=0 ? "▲" : "▼", ko = k.kitap_bas ? kar / k.kitap_bas : null;
+  return `${B ? `<span class="${sinif(B.usd)}">${ok(B.usd)} ${isaretli(B.usd)} (${yz(B.oran)}) bugün</span>` : ""}${kar!=null ? `<span class="${sinif(kar)}">${ok(kar)} ${isaretli(kar)}${ko!=null?` (${yz(ko)})`:""} başlangıçtan</span>` : ""}`;
 }
 function nerdenHtml(k, poz, kar){
   const D = k.dokum; if (!D || poz==null || kar==null) return "";
@@ -1489,7 +1516,7 @@ function gecGunler(k){
   const S = seriCanli(k), out = [];
   for (let i = 1; i < S.length; i++){
     const o = S[i-1].kitap, n = S[i].kitap; if (o==null || n==null || !S[i].tarih) continue;
-    out.push({t: S[i].tarih, usd: n - o, oran: o > 0 ? (n - o) / o : null, bas: o, canli: !!S[i].canli, ilk: i === 1});
+    out.push({t: S[i].tarih, usd: n - o, oran: o > 0 ? (n - o) / o : null, bas: o, canli: !!S[i].canli && S[i].kesin !== false, kesinlesiyor: S[i].kesin === false, ilk: i === 1});
   }
   return out;
 }
@@ -1507,7 +1534,7 @@ function gecmisSade(k){
   const top = D.reduce((a,g)=>a+g.usd, 0), bas = D[0].bas, oran = bas > 0 ? top / bas : null;
   const ad = g => birim=="ay" ? `${AYAD[+g.t.slice(5,7)-1]} ${g.t.slice(0,4)}` : g.canli ? "Bugün" : `${GUN_AD[new Date(g.t+"T00:00:00Z").getUTCDay()]} ${+g.t.slice(8,10)} ${AYAD[+g.t.slice(5,7)-1]}`;
   const kisa = g => birim=="ay" ? AYAD[+g.t.slice(5,7)-1].slice(0,3) : g.canli ? "bugün" : String(+g.t.slice(8,10));
-  const not = g => g.canli ? "canlı · 03:05'te kesinleşir" : (g.ilk && birim=="gün") ? "başlangıç günü" : "";
+  const not = g => g.canli ? "canlı · yarın 03:05'te kesinleşir" : g.kesinlesiyor ? "gün kapandı · kayıt 03:05'te yazılıyor" : (g.ilk && birim=="gün") ? "başlangıç günü" : "";
   const baslik = GEC_DONEM=="hafta" ? "Son 7 gün" : GEC_DONEM=="ay" ? `${AYAD[+ay.slice(5,7)-1]}` : "Başlangıçtan beri";
   // çubuklar: sıfır çizgisi en büyük kazanç / kayıp oranına göre; 170 px
   const H = 170, mp = Math.max(0, ...D.map(g=>g.usd)), mn = Math.max(0, ...D.map(g=>-g.usd)), et = D.length <= 12;

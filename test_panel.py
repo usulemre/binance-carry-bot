@@ -358,8 +358,10 @@ _o8 = {"dokum": {"funding": -0.60, "funding_gercek": 1.00}, "kitap_canli": 1990.
 _g8 = panel.gercek_gorunum(_d8, _o8, _k8)
 kontrol("gerçek: kitap ve kâr = demo + (gerçek − demo funding)", _g8["kitap_canli"] == 1991.6 and _g8["kar_usd"] == -8.4 and _g8["fark"] == 1.6, _g8)
 _gs = [s_["gun"] for s_ in _g8["seri"] if s_["gun"] is not None]
-kontrol("gerçek: kırılımı olan gün düzeltilir (−0,5% + (0,60+0,20)/1996), olmayan aynı", abs(_gs[0] + 0.005) < 1e-12 and abs(_gs[1] - (-0.005 + 0.80 / 1996.0)) < 1e-9
+kontrol("gerçek: kırılımı olan gün düzeltilir (−0,5% + (0,60+0,20)/1996), olmayana kalan fark dağıtılır (madde 759)",
+        abs(_gs[0] - (-0.005 + 0.80 / 2000.0)) < 1e-9 and abs(_gs[1] - (-0.005 + 0.80 / 1996.0)) < 1e-9
         and _g8["duzeltilen"] == 1 and _g8["duzeltilmeyen"] == 1, (_gs, _g8))
+kontrol("gerçek: gün zinciri kitapla tutarlı (son gün sonu + bugün farkı = canlı kitap)", abs(_g8["seri"][-1]["kitap"] - 1981.6) < 1e-6 and abs(_g8["kitap_canli"] - _g8["seri"][-1]["kitap"] - (1990.0 - 1980.0)) < 1e-6, _g8["seri"][-1])
 kontrol("gerçek: veri yoksa None", panel.gercek_gorunum(_d8, {"dokum": {"funding": 1}}, _k8) is None)
 kontrol("sayfada funding anahtarı", "fgAnahtar" in app.get("/").data.decode())
 
@@ -408,6 +410,10 @@ kontrol("sayfada sade geçmiş ve ayrıntılar bölümü", all(x in _sf7 for x i
 # MADDE 757: D tasarımı — durum cümlesi, dikkat kartları, filtreli pozisyon listesi + alt sayfa, filtreli olaylar, simgeli menü
 _sf8 = app.get("/").data.decode()
 kontrol("sayfada D tasarımı öğeleri", all(x in _sf8 for x in ("durumCumle", "dikkatler", "nerdenHtml", "sheetAc", "satirD", "pozFiltre", "olayFiltre", "NAV_SVG", 'id="sheet"', 'id="gsade"')))
+
+# MADDE 759: tek "bugün" hesabı (Özet = Geçmiş), dünün kaydı yazılmadan önce dün ayrı gün
+_sf9 = app.get("/").data.decode()
+kontrol("sayfada tek bugün hesabı", "function bugunKZ" in _sf9 and "kesinlesiyor" in _sf9 and "B.dunEk" in _sf9)
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
