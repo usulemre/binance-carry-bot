@@ -8310,3 +8310,10 @@ long bacağın coin'i son funding ödemesinde long'a ÖDETTİYSE (funding poziti
 kapanır; sermaye nakitte kalır (sonraki dengelemeye kadar). Önsel: 713 nedeniyle düşük (TP ve sonraki fiyatı kesebilir).
 Kol (TEK): FDON=1. Taban P3T2 (EK_T7KKS). Motor /tmp/g33_m763.py = g33.py + yalnız bu düğme; kapalıyken bayt paritesi ÖNCE. Ölçüt
 (685 / 741 / 762 ile aynı): eşit risk ≥ taban + 8 VE Sharpe ≤2024 ve 2025+ düşmez → ADAY; değilse RED. Ek: kapanış sayısı, dd, Ekim.
+
+## Madde 763 SONUÇ — funding'i dönen long'u kapat (FDON, motorda): RED (strateji / canlı DEĞİŞMEDİ)
+4 koşu rc 0; parite iki hizada BAYT BAYT AYNI. [ÖLÇÜM] taban 239,3 · Sh 4,05 · dd −13,3 · en kötü gün −7,41 · Sh ≤2024 4,03 / 2025+ 4,14 →
+eşit risk 315,2 | FDON 157,0 · 3,34 · −16,7 · −5,93 · 3,09 / 3,89 → 137,6 (doz 0,90). Üç şartın üçü de tutmadı → RED. Yıllar (taban /
+FDON): 2020 92/40 · 2021 472/193 · 2022 63/125 · 2023 309/166 · 2024 118/55 · 2025 267/229 · 2026 267/201; Ekim 2026 −4,27 / −0,13
+(karar dışı; 2022 ve Ekim gibi çöküş dönemlerinde yardım ediyor, toplamda kârı yarıya indiriyor). ~21,9 bin kapanış (15 faz × hiza).
+713 Kol B (muhasebe) motorda da doğrulandı: funding'i sönen long'un değeri TP ve sonraki fiyatta; erken çıkış kazananı kesiyor.
