@@ -8340,3 +8340,11 @@ taban 239,3 · 4,05 · −13,3 · −7,41 · 4,03 / 4,14 → 315,2 | 762 iki tar
 short kolu −30,6: ikisi de ≤ −8 → ön kayda göre ikisi de ZARARLI. Düşüşü derinleştiren long tarafı (−17,7); short tamamlamada düşüş
 aynı, getiri düşük (kırpılan > eklenen: yükselen short'u kırpmak sıkışmadan korumuyor, toparlanmayı kaçırıyor). ADAY (762'yi
 netleştirir): botta tutuşta tamamlama İKİ tarafta da kapatılır (hedef coin miktarı); short coin tavanı (%8) giriş anında kalır.
+
+## Madde 766 ÖN KAYIT (2026-11-12, sonuçlar görülmeden) — prim çarpanı ISINMASI (canlıda ilk ~90 gün çarpan 1,0)
+Bulgu (kod): carry_bot.prim_carpani() kendi ölçüm geçmişi PRIM_REF_GUN×0,5 = 90 günü doldurmadan 1,0 döner; backtest (T7K, BRUT_PRIM=1,
+alt 0,7) çarpanı ilk günden uygular. Yeni kurulumun ilk ~90 günü = "BRUT_PRIM kapalı" ile aynı. Ölçüm (tek kol, g33.py değişmeden):
+BRUT_PRIM=0 (diğer her şey P3T2). Rapor: tam dönem farkı ve herhangi bir günden başlayan 90 günlük pencerelerde (kapalı − açık)
+getiri / düşüş farkının dağılımı (p10 / medyan / p90), ve Ekim–Kasım 2026 penceresi. Karar kuralı: 90 günlük pencerelerde fark p10 ≤ −2
+puan ya da düşüş farkı medyanı ≤ −1 puan ise ADAY = sunucuya arşiv verisinden prim geçmişi tohumu (veri dosyası; kod değişmez,
+kullanıcı onayı); değilse ısınma ihmal edilebilir, değişiklik yok.
