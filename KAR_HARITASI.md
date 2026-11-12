@@ -8514,3 +8514,8 @@ coin = short'ların yığıldığı coin (pompa sonrası ya da düşüşte); lon
 Backtest (711 defteri, iki hiza): long tarafının 6 günlük toplamı ≤ −%6,58 kitap (en kötü %5) → 35 ayrı olay (her yıl var; 2026'da 3). O 6 günde
 short ortalama +7,8 (bu kez yalnız ≈ +1,6: düşüş piyasa değil coin-özel). Sonraki 7 gün long +2,09 (pozitif %70), toplam +2,33 (%69); 14 gün toplam
 +4,40 (%79) — normal haftalardan ayırt edilemez (tüm günler 7 g toplam +2,46). Kural önerisi yok (774 / 651 / 763 / 741 aynı soruyu RED etti).
+**Ek (tepe-dip, kullanıcı: "yükselişler gelir mi"):** 13 Kas fiyatı tepesinden: INIT −62 (tepe 10 Kas fitil) · CYBER −47 · ZEC −45 · ONE −70 · AKE −98 ·
+ICNT −29 · BMT −58 · WLD −58; 30 g aralıkta INIT / ZEC / AKE / WLD DİPTE (%0-2), ICNT %61. Taban oranı (zemin 2022-01 → 2026-10, funding'i negatif
+uygun coin-gün, fiyat): hepsi 5 g medyan −1,6 (yükselen %44); 30 g dipte olanlar +0,3 (yükselen %51, +%20↑ %6 / −%20↓ %6); dipte + 90 g tepesinden
+−%50+ +0,3 (%51; +%20↑ %8 / −%20↓ %9); tepede olanlar −3,2 (%41). Dip tek başına toparlanma sinyali değil: yazı-tura. Long'un kârı fiyattan değil
+funding'den (madde 712). `arastirma_m776_tepe_dip.py`.
