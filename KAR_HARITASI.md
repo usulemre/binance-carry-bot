@@ -8526,3 +8526,10 @@ evren İÇİ (70M hacim + 60 g yaş + uç hareket) funding +1,64 · fiyat +0,17 
 evren DIŞI (filtreye takılan) funding +1,54 · fiyat −0,86 · toplam +0,67 (medyan −0,49) · en kötü −66; 2023-26 her yıl evren dışı geride, 2026 −1,3.
 Filtresiz kısım fazladan funding bile getirmiyor, fiyatı kötü; buna ince tahtada kayma / komisyon eklenir. Motor testleri aynı yönde:
 401 / 403 / 518 (hacim 50M −21,2, geniş evren GE3 eşit riskte eksi, 100M −29,1) → 70M tepe. Filtre funding'i AZALTMIYOR, fiyat çöküşünü eliyor.
+
+## Madde 778 ÖN KAYIT (sonuçlar görülmeden; kullanıcı: "kapanacak ama zarar kesinleşmiş olacak, iyi bir şey değil — test et") — zarardaki long'u UZAT
+Tam dengelemede (5 g) süresi dolan long bacak kendi girişinin ALTINDAYSA kapanmaz: aynı ağırlık ve girişle ZUZAT bar daha sürer (yalnız bir kez),
+başabaşa (kendi girişi) gelince ya da süre dolunca kapanır (sonra yer yeni dilime kadar nakit). Long brütü korunur: o dilimin yeni long'ları kalan
+pay için orantılı küçülür. Motor `/tmp/m778/g33_m778.py` = g33 + yalnız ZUZAT (`arastirma_m778_zarar_uzat.py`). Kollar Z12 (en çok +2 g),
+Z30 (en çok +5 g). Parite: ZUZAT=0 hiza 0 taban ile birebir. Beklenti (VARSAYIM): "zarardakini tut" eğilimi genelde zararlı; 679'da 6 g
+tutma −29. Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor.
