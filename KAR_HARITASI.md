@@ -8572,3 +8572,14 @@ Eşleme: (1) carry'de evreni likit coinlere daraltma → 401 / 518 (70M tepe); (
 (8) USDC-M maker %0 (ÖLÇÜM): 40 USDC perp; 2025+ defterde long sermaye-günün %18,7'si, short'un %60,5'i bu coinlerde; 5 bp modelde komisyon 8,2 puan / yıl,
 USDC'li coinlerde 3,4 → gerçek USDT maker 2 bp ile tasarruf ≈ 1,4 puan / yıl + 387'ye göre USDC tarafı funding'i ~%2 / yıl yüksek (short'a ≈ +0,7) ≈ +2 puan / yıl
 (239'un %1'i). Bedeli: USDC teminat (çoklu varlık modu), ince tahta, iki ayrı sembol yolu, kampanya her an bitebilir → ÖNERİLMEZ (karmaşıklık > kazanç).
+
+## Madde 781 ÖN KAYIT (2026-11-13, ücret geçmişi İNDİRİLMEDEN; kullanıcı "devam", madde 780 açık eksen 7) — YENİ VERİ AİLESİ: zincir üstü ÜCRET BÜYÜMESİ kitabı
+Veri: DefiLlama (ücretsiz, anahtar yok) günlük protokol / zincir ücretleri; protokol → token sembolü (/protocols symbol, zincirler elle), token → Binance
+perp (uzun zemin sütunu). İlk eşleme 202 perp (total1y > 50 bin $); bariz yanlış eşleşmeler (isim çakışması) elle çıkarılır, liste betikte.
+Kural (carry'den BAĞIMSIZ ayrı kitap, haftalık): Pazartesi 00:00 UTC; evren = zemin uygun (U) ∩ son 14 g ücreti ≥ 1.000 $; sinyal 2 gün gecikmeli:
+G14 = ln(son 14 g ücret / önceki 14 g) · G30 = ln(son 30 g / önceki 30 g). Üst 1/3 LONG, alt 1/3 SHORT, eşit ağırlık, dolar nötr, en az 12 coin;
+getiri 4 sa kapanış + gerçek funding (ODE), maliyet 10 bp × devir. Dönem 2022-01 → 2026-10 (IS ≤ 2024, OOS 2025+).
+Elek (madde 353): net Sh ≥ 1,5 · üç dönem (2022-23 / 2024 / 2025-26) Sh > 0,5 · plasebo (sinyal coinler arası karıştırılmış, 200 tur) %95'inin üstü ·
+P3T2 günlük serisiyle korelasyon ≤ 0,30. Geçerse yalnız "ADAY ikinci kitap" (ayrı ön kayıtla sermaye paylaşımı testi); geçmezse eksen kapanır.
+Bilinen zayıflıklar (VARSAYIM): eşleme BUGÜNKÜ sembollerle (hayatta kalma yanlılığı), ücret serileri sonradan doldurulmuş olabilir (gerçek zamanlı
+yayın gecikmesi 2 günle temsil ediliyor), piyasa değeri kullanılmıyor (değer faktörü ileri bakış gerektirir → bilerek dışarıda).
