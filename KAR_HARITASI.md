@@ -8541,3 +8541,11 @@ tutma −29. Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 v
 | +5 g | 176,3 | 3,94 | −14,5 | 3,78 / 4,30 | 196,0 (−119,2) | 13.551 | 4.679 (%35) | 8.819 (%65) |
 Zarardaki long'ların çoğu ek sürede de toparlanmıyor; asıl maliyet, o payın yeni (funding'i yüksek) long'lara gidememesi: yıllık −63..−67 puan,
 2020-24'ün her yılı kötü. "Zararı kesinleştirmemek" ekseni (651 / 679 / 762-768 / 778) kapandı: süresi dolan bacak kapanmalı.
+
+## Madde 779 ÖN KAYIT (sonuçlar görülmeden; kullanıcı: "bulamadığımız kârı mantıksal kurgunla bul") — KÂRDAKİ long'u uzat (778'in aynası)
+Kurgu: 778 gösterdi ki süresi dolan zarardaki long'ların %65-77'si ek sürede de toparlanmıyor → tutuş içinde fiyat SÜREKLİLİĞİ var. Aynı
+süreklilik kazanan tarafta da varsa (short sıkışması süren, funding'i hâlâ negatif coin), süresi dolan KÂRDAKİ long'u kapatmak erken satıştır.
+Kural: tam dengelemede long bacak kendi girişinin ÜSTÜNDEYSE kapanmaz, aynı ağırlık / girişle en çok ZUZAT bar sürer (bir kez); girişine geri
+düşerse (başabaş stop) ya da süre dolunca kapanır. Long brütü korunur (yeni long'lar orantılı küçülür). Motor `/tmp/m779/g33_m779.py` (778 motoru +
+ZUZAT_KAR). Kollar K12 (+2 g), K30 (+5 g). Parite ZUZAT=0. Daha önce ölçülmedi (679 / 522 tutmayı HERKES için uzattı: doz; 520 solanı değiştirdi).
+Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor.
