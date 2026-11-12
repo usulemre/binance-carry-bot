@@ -8519,3 +8519,10 @@ ICNT −29 · BMT −58 · WLD −58; 30 g aralıkta INIT / ZEC / AKE / WLD DİP
 uygun coin-gün, fiyat): hepsi 5 g medyan −1,6 (yükselen %44); 30 g dipte olanlar +0,3 (yükselen %51, +%20↑ %6 / −%20↓ %6); dipte + 90 g tepesinden
 −%50+ +0,3 (%51; +%20↑ %8 / −%20↓ %9); tepede olanlar −3,2 (%41). Dip tek başına toparlanma sinyali değil: yazı-tura. Long'un kârı fiyattan değil
 funding'den (madde 712). `arastirma_m776_tepe_dip.py`.
+
+## Madde 777 — "Amaç funding ise neden hacim filtresi?" (kullanıcı) — betimsel, motor yok
+Zemin 2022 öncesi dahil (bar 1200 → 2026-10), günde bir: en negatif 60 sa sinyalli 4 coin LONG, 5 gün tutuş, MALİYETSİZ, eşit ağırlık:
+evren İÇİ (70M hacim + 60 g yaş + uç hareket) funding +1,64 · fiyat +0,17 · toplam +1,80 (medyan +0,07) · en kötü 5 g −57;
+evren DIŞI (filtreye takılan) funding +1,54 · fiyat −0,86 · toplam +0,67 (medyan −0,49) · en kötü −66; 2023-26 her yıl evren dışı geride, 2026 −1,3.
+Filtresiz kısım fazladan funding bile getirmiyor, fiyatı kötü; buna ince tahtada kayma / komisyon eklenir. Motor testleri aynı yönde:
+401 / 403 / 518 (hacim 50M −21,2, geniş evren GE3 eşit riskte eksi, 100M −29,1) → 70M tepe. Filtre funding'i AZALTMIYOR, fiyat çöküşünü eliyor.
