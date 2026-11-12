@@ -8445,3 +8445,18 @@ kurulumu sk_bar60 ile fark 0. Değişen hücre %0,71. Kabul ölçütü aynı (e�
 Ham getiri +2,5 ve 2025 +30 puan, ama oynaklık artıyor (eşit risk dozu 1,15 → 1,10), 2026 −4 ve Sharpe iki dönemde de hafif düşük. Saatlik
 coinleri tam oranıyla öne almak daha çok piyango bileti almak demek: ortalama hafif artıyor, risk daha çok artıyor. Madde 138'in 4 sa tabanı
 yerinde kalır. Funding aralığı ekseni (138, 552, 632, 771) kapandı.
+
+## Madde 772 — Tur saati ve long sinyal penceresi (kullanıcı: "test yapalım en iyi saati ve kalabalık için") — ÖN KAYIT + saat ölçümü
+**Tur saati (ÖLÇÜM, yeni koşu yok):** 4 sa motorda dilim turu iki hizada açılabiliyor; P3T2'nin iki hizası zaten ayrı koşulu
+(hiza 0 = bar kapanışı 04/12/20 UTC, 8 sa funding ödemesinin 4 sa SONRASI; hiza 1 = 08/16/00 UTC, ödeme ANI):
+hiza 0 241,5 · Sh 4,00 · dd −13,9 · Sh ≤24 / 25+ 4,04 / 3,96 — hiza 1 236,5 · Sh 4,04 · dd −13,3 · 3,97 / 4,23; yıllar karışık
+(2021/2023/2024 hiza 0, 2022/2025/2026 hiza 1 önde). Fark gürültü düzeyinde: açılış saatinin funding ödemesine göre konumu kenar
+vermiyor. Daha ince saat (1 sa) için madde 634 (5 dk veriyle icra zamanlaması: kenar yok) ve 440/441 (saatlik kitap: RED) geçerli.
+**ÖN KAYIT — long penceresi (iki kol, short 96 sa kalır):** L48 / L72 (canli_sinyal_kur.py, TABAN 4, uzun veri; builder paritesi madde
+771'de sk_bar60 ile fark 0). Önceki ölçümler (460/490/516/549) T4 ve öncesinde 60 sa'i tepe buldu; P3T2'de (kalabalık + ağırlık kayması +
+koşullu stop) yeniden ölçülüyor. Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor.
+
+## Madde 773 — Long tarafında kalabalık seçimini kapat (HAVUZ_L=1) — ÖN KAYIT
+Tetik: ONE (en yüksek funding'li long'lardan) yeni dilimde seçilmedi; olası neden kalabalık filtresi (16 aday → long/short hesap oranı en
+düşük 4). Tek kol KL: long = funding sırasının ilk n'i, short havuzu 4 (madde 578'de long havuz 3 −22,9 / 5 −8,4; filtre TAMAMEN kapalı hiç
+ölçülmedi). Yan etki: short'un dışlandığı long havuzu 16 → 4 coin. Kabul ölçütü madde 772 ile aynı.
