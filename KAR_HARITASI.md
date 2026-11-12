@@ -8480,3 +8480,12 @@ Short'ta düzen yok (en az long'çu +22, en çok +10; yıllar karışık) → ya
 **ÖN KAYIT:** motor g33 + yalnız KAL_CIK düğmesi (`/tmp/m774/g33_m774.py`): tutulan long'un yüzdeliği 8 sa ritimde (2 bar) eşik üstüne çıkarsa
 bacak o kapanıştan kapanır, yeni dilime kadar boş. Kollar K80 (> 0,80) ve K60 (> 0,60). Parite: KAL_CIK=0 hiza 0 taban ile birebir olmalı.
 Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor. 2020-21 veri yok → o yıllar tabanla aynı olmalı (kontrol).
+**SONUÇ 774 (parite KAL_CIK=0 = taban hiza 0, fark 0; 4 koşu rc 0): İKİSİ DE RED.**
+| kol | yıllık | Sh | dd | en kötü gün | Sh ≤2024 / 2025+ | eşit risk | çıkış (hiza 0/1) | ×1,15 2025 / 2026 |
+|---|---|---|---|---|---|---|---|---|
+| P3T2 | 239,3 | 4,05 | −13,3 | −7,41 | 4,03 / 4,14 | **315,2** | — | 342 / 341 |
+| > 0,80 | 238,9 | 4,05 | −13,4 | −7,41 | 4,05 / 4,09 | 290,9 (−24,3) | 365 / 413 | 345 / 324 |
+| > 0,60 | 239,1 | 4,05 | −13,7 | −7,23 | 4,07 / 4,08 | 291,2 (−24,0) | 1.331 / 1.401 | 344 / 313 |
+2020-21 tabanla aynı (veri yok, kontrol tuttu). 2022-24 hafif iyi (+2..+16), 2026 kötü (−17..−28). Betimsel eğim gerçek ama çıkış
+kapanıştan, boşalan pay yeni dilime kadar nakitte bekliyor ve çıkılan coinlerin bir kısmı (kalabalık yükselişi sürerken) toparlıyor;
+net etki sıfır, eşit risk dozu 1,15 → 1,10. Tutuşta kalabalık ekseni kapandı (seçimde kalabalık kalır, tutuşta değil).
