@@ -86,7 +86,7 @@ def analiz():
     if not all(os.path.exists(f"{OUT}/M357_EK_AR_2000_{h}.pkl") for h in (0, 1)):
         print("EKSİK KOŞU — analiz yapılmaz"); return
     seri = {}
-    M.CIKTI = "/tmp/m_ekim"; seri["taban (genişleyen medyan)"] = sum(M.gunluk(f"M357_EK_T7KKS_2000_{h}") for h in (0, 1)) / 2
+    M.CIKTI = "/tmp/m_ekim"; seri["taban P3T2 (aralık tabanı 4 sa)"] = sum(M.gunluk(f"M357_EK_T7KKS_2000_{h}") for h in (0, 1)) / 2
     M.CIKTI = OUT; seri["aralık tabanı 1 sa (canlı 4 sa)"] = sum(M.gunluk(f"M357_EK_AR_2000_{h}") for h in (0, 1)) / 2
     for ad, s in seri.items():
         s = s[:"2026-10-31"]; o = T.olc(s); zs = s.reindex(Z.P.index).dropna(); k, er = Z.esit(zs)

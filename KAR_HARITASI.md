@@ -8437,3 +8437,11 @@ Sh ≤2024 ve 2025+ düşmüyor. Geçerse canlıda madde 138 tabanının (4 sa) 
 (yukarıdaki "canlıyla fark" cümlesi yanlış); ilk koşu kullanılmayan paneli değiştirdiği için tabanla birebir çıktı. Gerçek soru madde 138'in
 tabanı: **kol B = aynı kurucu TABAN=1** (60 sa long, 96 sa short), başka her şey P3T2, motor g33.py değişmeden. Parite: TABAN=4 yeniden
 kurulumu sk_bar60 ile fark 0. Değişen hücre %0,71. Kabul ölçütü aynı (eşit risk ≥ +8, dd ≤ 1 puan kötü, iki dönem Sharpe düşmüyor).
+**SONUÇ (kol B, aralık tabanı 1 sa; iki hiza, rc 0, sinyal dosyaları logda doğrulandı): RED.**
+| | yıllık | Sh | dd | en kötü gün | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2025 / 2026 |
+|---|---|---|---|---|---|---|---|
+| P3T2 (taban 4 sa) | 239,3 | 4,05 | −13,3 | −7,41 | 4,03 / 4,14 | **315,2** | 342 / 341 |
+| taban 1 sa | 241,8 | 4,04 | −13,5 | −7,41 | 4,03 / 4,13 | **294,5** (−20,7) | 372 / 337 |
+Ham getiri +2,5 ve 2025 +30 puan, ama oynaklık artıyor (eşit risk dozu 1,15 → 1,10), 2026 −4 ve Sharpe iki dönemde de hafif düşük. Saatlik
+coinleri tam oranıyla öne almak daha çok piyango bileti almak demek: ortalama hafif artıyor, risk daha çok artıyor. Madde 138'in 4 sa tabanı
+yerinde kalır. Funding aralığı ekseni (138, 552, 632, 771) kapandı.
