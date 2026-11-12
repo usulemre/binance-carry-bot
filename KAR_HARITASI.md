@@ -8583,3 +8583,11 @@ Elek (madde 353): net Sh ≥ 1,5 · üç dönem (2022-23 / 2024 / 2025-26) Sh > 
 P3T2 günlük serisiyle korelasyon ≤ 0,30. Geçerse yalnız "ADAY ikinci kitap" (ayrı ön kayıtla sermaye paylaşımı testi); geçmezse eksen kapanır.
 Bilinen zayıflıklar (VARSAYIM): eşleme BUGÜNKÜ sembollerle (hayatta kalma yanlılığı), ücret serileri sonradan doldurulmuş olabilir (gerçek zamanlı
 yayın gecikmesi 2 günle temsil ediliyor), piyasa değeri kullanılmıyor (değer faktörü ileri bakış gerektirir → bilerek dışarıda).
+**SONUÇ 781 (DefiLlama 250 protokol / zincir serisi → 145 perp; `arastirma_m781_ucret_buyume.py`): İKİSİ DE RED — eksen kapandı.**
+| kol | hafta | evren | net yıllık | Sh (maliyetsiz) | maks düşüş | Sh 2022-23 / 2024 / 2025-26 | plasebo %95 | P3T2 kor. |
+|---|---|---|---|---|---|---|---|---|
+| G14 | 146 | ort 18 coin | +15,7 | 0,58 (0,83) | −29 | 0,57 / −0,06 / 1,08 | 0,56 | +0,12 |
+| G30 | 146 | ort 18 coin | −22,2 | −0,86 (−0,66) | −62 | −0,59 / −1,32 / −0,78 | 0,71 | +0,07 |
+Elek Sh ≥ 1,5 istiyordu; G14 0,58 (plaseboyla aynı düzey), G30 negatif. Evren dar: ücreti ölçülen VE 70M hacim eşiğini geçen perp haftada ~18
+(250 haftanın 146'sında ≥ 12). Carry'yle korelasyon düşük (bağımsız) ama tek başına ayakta durmuyor (madde 353 yasası yine). Hayatta kalma
+yanlılığı sonucu LEHE çevirirdi; yine de geçmedi. Zincir üstü ücret büyümesi → kapalı.
