@@ -8495,3 +8495,12 @@ Gerekçe: 773 kalabalığın kitabın en güçlü sinyali olduğunu gösterdi (l
 ve 406 (GE2 üzerinde KE3 +22..+25 ham) eski kitaplarda yön olarak POZİTİFTİ, yalnız eski P-barı yüzünden RED; P3T2'de (685 eşit risk
 yöntemiyle) hiç ölçülmedi. Kollar (motor g33 değişmeden): AGIRLIK=kalabalik KAL_EGIM 0,3 / 0,6 — taraf içinde en uç kalabalıklı (long için en
 az long'çu) bacak 1+e, en az uç 1−e ağırlık, taraf toplamı korunur. Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor.
+**SONUÇ 775 (4 koşu rc 0): İKİSİ DE RED — ham getiri büyük, risk-ayarlı küçük (375 ile aynı tablo).**
+| kol | yıllık | Sh | dd | en kötü gün | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2025 / 2026 |
+|---|---|---|---|---|---|---|---|
+| P3T2 | 239,3 | 4,05 | −13,3 | −7,41 | 4,03 / 4,14 | **315,2** | 342 / 341 |
+| KE 0,3 | 266,1 | 4,09 | −14,0 | −7,31 | 4,00 / 4,32 | 300,0 (−15,2) | 414 / 421 |
+| KE 0,6 | 299,0 | 4,10 | −16,9 | −7,23 | 3,99 / 4,38 | 234,2 (−81,0) | 474 / 502 |
+Eğim kitabı yoğunlaştırıyor: getiri ve düşüş birlikte büyüyor. Aynı düşüşe izin verilirse P3T2'nin dozunu artırmak (eşit risk) eğimden
+daha çok kazandırıyor → eğim bir "daha çok risk" düğmesi, kenar değil. 2025+ Sharpe artışı (4,14 → 4,32/4,38) not edildi: Kasım OOS'ta
+izlenebilir, canlıya önerilmez. Kalabalık ağırlığı ekseni (375, 406, 775) kapandı.
