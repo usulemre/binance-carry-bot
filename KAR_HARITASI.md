@@ -8489,3 +8489,9 @@ Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düş
 2020-21 tabanla aynı (veri yok, kontrol tuttu). 2022-24 hafif iyi (+2..+16), 2026 kötü (−17..−28). Betimsel eğim gerçek ama çıkış
 kapanıştan, boşalan pay yeni dilime kadar nakitte bekliyor ve çıkılan coinlerin bir kısmı (kalabalık yükselişi sürerken) toparlıyor;
 net etki sıfır, eşit risk dozu 1,15 → 1,10. Tutuşta kalabalık ekseni kapandı (seçimde kalabalık kalır, tutuşta değil).
+
+## Madde 775 — Kalabalık EĞİMİ (seçilen bacaklara kalabalık uçluğuna göre ağırlık) P3T2'de — ÖN KAYIT (yeniden açma)
+Gerekçe: 773 kalabalığın kitabın en güçlü sinyali olduğunu gösterdi (long seçimi kapalı −172). Madde 375 (KE3 eşit risk +6..+17, KE6 +5..+29)
+ve 406 (GE2 üzerinde KE3 +22..+25 ham) eski kitaplarda yön olarak POZİTİFTİ, yalnız eski P-barı yüzünden RED; P3T2'de (685 eşit risk
+yöntemiyle) hiç ölçülmedi. Kollar (motor g33 değişmeden): AGIRLIK=kalabalik KAL_EGIM 0,3 / 0,6 — taraf içinde en uç kalabalıklı (long için en
+az long'çu) bacak 1+e, en az uç 1−e ağırlık, taraf toplamı korunur. Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor.
