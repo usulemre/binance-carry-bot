@@ -8460,3 +8460,13 @@ koşullu stop) yeniden ölçülüyor. Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 
 Tetik: ONE (en yüksek funding'li long'lardan) yeni dilimde seçilmedi; olası neden kalabalık filtresi (16 aday → long/short hesap oranı en
 düşük 4). Tek kol KL: long = funding sırasının ilk n'i, short havuzu 4 (madde 578'de long havuz 3 −22,9 / 5 −8,4; filtre TAMAMEN kapalı hiç
 ölçülmedi). Yan etki: short'un dışlandığı long havuzu 16 → 4 coin. Kabul ölçütü madde 772 ile aynı.
+**SONUÇ 772-773 (iki hiza ort., 6 koşu rc 0, sinyal dosyaları logda doğrulandı): ÜÇÜ DE RED.**
+| kol | yıllık | Sh | dd | en kötü gün | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2025 / 2026 |
+|---|---|---|---|---|---|---|---|
+| P3T2 (long 60 sa, kalabalık açık) | 239,3 | 4,05 | −13,3 | −7,41 | 4,03 / 4,14 | **315,2** | 342 / 341 |
+| 772 long 48 sa | 230,6 | 4,00 | −13,6 | −6,41 | 4,02 / 4,01 | 281,6 (−33,6) | 319 / 319 |
+| 772 long 72 sa | 237,6 | 4,00 | −14,6 | −8,34 | 3,98 / 4,08 | 266,7 (−48,5) | 336 / 342 |
+| 773 long kalabalık KAPALI | 176,6 | 3,41 | −17,7 | −6,75 | 3,70 / 3,02 | **143,1 (−172,1)** | 185 / 239 |
+60 sa P3T2'de de tepe (her iki komşu kötü; pencere ekseni beşinci kez kapandı). Long kalabalık filtresi kitabın EN DEĞERLİ parçalarından:
+kapatınca yıllık −63 puan, düşüş −13,3 → −17,7, 2025+ Sharpe 4,14 → 3,02. Longçuların yığıldığı yüksek funding'li coin (ONE tipi) long için
+tuzak: funding'i yüksek çünkü herkes long, fiyat o kalabalık çözülürken düşüyor. ONE'ın yeni dilimde alınmaması kuralın doğru işlemesi.
