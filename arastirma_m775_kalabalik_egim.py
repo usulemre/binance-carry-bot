@@ -1,10 +1,8 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 """MADDE 775 — kalabalık eğimi (AGIRLIK=kalabalik, KAL_EGIM 0,3 / 0,6) P3T2 üzerinde. Ön kayıt KAR_HARITASI 775. Yalnız araştırma.
-Taban P3T2 (/tmp/m_ekim/M357_EK_T7KKS_2000_{0,1}). Motor g33.py DEĞİŞMEDEN, yalnız ortam:
-  772 L48 / L72: long sinyal penceresi 48 / 72 sa (SK_DOSYA; canli_sinyal_kur.py VERI_EK=uzun TABAN=4, AD=m772_48/72). Short 96 sa kalır.
-  773 KL: long tarafında kalabalık seçimi KAPALI (HAVUZ_L=1: long = funding sırasının ilk n'i; short havuzu 4 kalır).
-  python3 arastirma_m772_pencere_kalabalik.py kos | analiz"""
+Taban P3T2 (/tmp/m_ekim/M357_EK_T7KKS_2000_{0,1}). Motor g33.py DEĞİŞMEDEN, yalnız ortam (madde 375 düğmesi).
+  python3 arastirma_m775_kalabalik_egim.py kos | analiz"""
 import os, sys, subprocess
 import arastirma_m346_prim as M, izleme_ekim_oos as I
 OUT = "/tmp/m775"; R = os.path.dirname(os.path.abspath(__file__))
