@@ -8504,3 +8504,13 @@ az long'çu) bacak 1+e, en az uç 1−e ağırlık, taraf toplamı korunur. Kabu
 Eğim kitabı yoğunlaştırıyor: getiri ve düşüş birlikte büyüyor. Aynı düşüşe izin verilirse P3T2'nin dozunu artırmak (eşit risk) eğimden
 daha çok kazandırıyor → eğim bir "daha çok risk" düğmesi, kenar değil. 2025+ Sharpe artışı (4,14 → 4,32/4,38) not edildi: Kasım OOS'ta
 izlenebilir, canlıya önerilmez. Kalabalık ağırlığı ekseni (375, 406, 775) kapandı.
+
+## Madde 776 — Demo long'ları inceleme (kullanıcı 13 Kas 01:11: "longlar hep zararda ve toparlanmıyor, bu coinleri incele") — betimsel
+Demo: 15 long 957 $ açık K/Z −139,5 $ (kitabın ≈ −%6,9), short +31,8 $, toplam −107,8 $. Veri data.binance.vision (vadeli 1 sa + metrics, 11 Kas'a
+kadar) + spot son 24 sa (`arastirma_m776_long_inceleme.py`). Kas 1 → 11: BTC −5,5 · ETH −9,6 (düşen piyasa). INIT pompa-boşalma (Kas 8 64 → Kas 10
+116 → Kas 11 71, son 24 sa −15; L/S 0,41 → 1,26, OI +%89); ONE Kas 7'de +%81 sonra −30 (OI −53); AKE Kas'ta −71 (L/S 2,05 — perakende long'a
+yığılmış); ICNT ay +60 ama Kas 7'den −12; ZEC −22 / WLD −22 piyasayla yavaş erime; CYBER / BMT yatay-dalgalı. Ortak desen: funding'i negatif
+coin = short'ların yığıldığı coin (pompa sonrası ya da düşüşte); long tarafı düşen piyasada kitabın beklenen zayıf yanı.
+Backtest (711 defteri, iki hiza): long tarafının 6 günlük toplamı ≤ −%6,58 kitap (en kötü %5) → 35 ayrı olay (her yıl var; 2026'da 3). O 6 günde
+short ortalama +7,8 (bu kez yalnız ≈ +1,6: düşüş piyasa değil coin-özel). Sonraki 7 gün long +2,09 (pozitif %70), toplam +2,33 (%69); 14 gün toplam
++4,40 (%79) — normal haftalardan ayırt edilemez (tüm günler 7 g toplam +2,46). Kural önerisi yok (774 / 651 / 763 / 741 aynı soruyu RED etti).
