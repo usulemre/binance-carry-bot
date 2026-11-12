@@ -8549,3 +8549,13 @@ Kural: tam dengelemede long bacak kendi girişinin ÜSTÜNDEYSE kapanmaz, aynı 
 düşerse (başabaş stop) ya da süre dolunca kapanır. Long brütü korunur (yeni long'lar orantılı küçülür). Motor `/tmp/m779/g33_m779.py` (778 motoru +
 ZUZAT_KAR). Kollar K12 (+2 g), K30 (+5 g). Parite ZUZAT=0. Daha önce ölçülmedi (679 / 522 tutmayı HERKES için uzattı: doz; 520 solanı değiştirdi).
 Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor.
+**SONUÇ 779 (parite fark 0; 4 koşu rc 0): İKİSİ DE RED.**
+| kol | yıllık | Sh | dd | en kötü gün | Sh ≤2024 / 2025+ | eşit risk | uzatılan (hiza 0) |
+|---|---|---|---|---|---|---|---|
+| P3T2 | 239,3 | 4,05 | −13,3 | −7,41 | 4,03 / 4,14 | **315,2** | — |
+| kârdaki +2 g | 180,3 | 3,93 | −12,1 | −5,96 | 3,90 / 4,07 | 266,9 (−48,3) | 9.111 |
+| kârdaki +5 g | 188,8 | 3,99 | −13,8 | −6,24 | 4,02 / 4,03 | 226,6 (−88,6) | 9.061 |
+(Logdaki "başabaş 0" sayaç hatası: çıkış türü sayılmadan iz siliniyor; kural çalışıyor, yalnız döküm yok.) Kazanan da kaybeden de uzatılınca
+kitap kötüleşiyor (778 −119..−177, 779 −48..−89) → sorun pozisyonun kâr / zarar durumu değil, KOLTUĞUN TAZELENMEMESİ: kitabın değeri her 5 günde
+en taze funding sıralamasına dönmekten geliyor. Tek olumlu iz: +2 g kolunda kuyruk inceliyor (dd −12,1, en kötü gün −5,96) ama getiri daha çok
+düşüyor. Tutuş süresi / uzatma ekseni (522 / 679 / 778 / 779) kapandı.
