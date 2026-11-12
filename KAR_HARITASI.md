@@ -8470,3 +8470,13 @@ düşük 4). Tek kol KL: long = funding sırasının ilk n'i, short havuzu 4 (ma
 60 sa P3T2'de de tepe (her iki komşu kötü; pencere ekseni beşinci kez kapandı). Long kalabalık filtresi kitabın EN DEĞERLİ parçalarından:
 kapatınca yıllık −63 puan, düşüş −13,3 → −17,7, 2025+ Sharpe 4,14 → 3,02. Longçuların yığıldığı yüksek funding'li coin (ONE tipi) long için
 tuzak: funding'i yüksek çünkü herkes long, fiyat o kalabalık çözülürken düşüyor. ONE'ın yeni dilimde alınmaması kuralın doğru işlemesi.
+
+## Madde 774 — Long TUTUŞTA kalabalık çıkışı (kullanıcı: "kâr arama çalışmalarına devam et") — betimsel + ÖN KAYIT
+**Betimsel (ÖLÇÜM, `arastirma_m774_kalabalik_tutus.py`, defter 711 iki hiza, 2022-01 → 2026-10):** dün de aynı yönde tutulan long'un dün
+akşamki perakende L/S hesap oranı yüzdeliği (evren içinde) → ertesi gün getirisi (bp, sermaye başına): en az long'çu %20 +13,0 (13.761) ·
+q2 −1,2 · q3 −2,8 · q4 −9,2 (1.095) · en çok long'çu %20 **−38,2** (371). Düzenli eğim; üst − alt fark yıllar: 2022 −9 · 2023 −39 · 2024 −47 ·
+2025 +31 · 2026 −183 (5 yılın 4'ü aynı yön). Seçim kalabalığa yalnız GİRİŞTE bakıyor; 5 günlük tutuşta long'çular yığılırsa bacak kötüleşiyor.
+Short'ta düzen yok (en az long'çu +22, en çok +10; yıllar karışık) → yalnız long.
+**ÖN KAYIT:** motor g33 + yalnız KAL_CIK düğmesi (`/tmp/m774/g33_m774.py`): tutulan long'un yüzdeliği 8 sa ritimde (2 bar) eşik üstüne çıkarsa
+bacak o kapanıştan kapanır, yeni dilime kadar boş. Kollar K80 (> 0,80) ve K60 (> 0,60). Parite: KAL_CIK=0 hiza 0 taban ile birebir olmalı.
+Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor. 2020-21 veri yok → o yıllar tabanla aynı olmalı (kontrol).
