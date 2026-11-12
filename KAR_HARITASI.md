@@ -8416,3 +8416,19 @@ Strateji kuralları (seçim, doz, TP / kademe / stop, tutma süreleri) DEĞİŞM
 6 (prim geçmişi tohumu, 766) kullanıcı kararıyla YAPILMADI: ilk ~90 gün prim çarpanı 1,0 (biraz daha büyük brüt).
 Testler: test_tutus_sabit (yeni; geçiş sıfır emir, düşen coine ekleme yok, biten dilim payı, kademe, adım yuvarlama, tam kapanış,
 tur zamanı, aday kaydı, −5022 piyasa yedeği) + mevcut takım.
+
+## Madde 771 — Funding ödeme ARALIĞI (kullanıcı: "saatlik funding'ler 8 / 4 saatliklerden daha iyi ödüyor") — betimsel + ÖN KAYIT
+**Betimsel (ÖLÇÜM, `arastirma_m771_funding_araligi.py`, 711 defteri P3T2, pozisyonun GİRİŞ günündeki aralık; birim: sermaye-gün başına):**
+LONG funding: 1 sa 162,6 · 2 sa 248,6 · 4 sa 44,9 · 8 sa 10,3 — net: 1 sa 243 · 4 sa 40 · 8 sa 50 (1 sa'lik coinler yalnız 2025+, sermaye-günün %7,5'i).
+2025+ long net: 1-2 sa +262 · 4 sa +35 · 8 sa −28. Gözlem DOĞRU: saatlik coinler sermaye başına çok daha fazla funding ödüyor (Binance aralığı
+uç funding'li coinlerde kısaltıyor — yüksek funding'in SONUCU). AMA net üstünlük birkaç piyango pozisyonuna dayanıyor: en iyi 10 pozisyon
+çıkınca 1-2 sa +17 vs 4 sa +6; en iyi 20 çıkınca −60 vs −11. 2026-2 yarıyılında 1-2 sa −53. Kazanan coinler RIVER, PIPPIN, FUN, ALPACA;
+kaybedenler SOON, MYX, LYN, AKE (90 coin). Short 1 sa yalnız 25 pozisyon (örnek az). Saf "saatlik coine ağırlık" kuralı önerilmez (madde 632
+short tarafında aynı yönü denedi: +3, bar altı).
+**Bulunan asıl açık (ÖLÇÜM):** motor sinyali = son ödeme × 24 / ARALIK, ARALIK = listelemeden beri GENİŞLEYEN medyan (carry_denetim S3).
+8 sa'ten 1 sa'e geçen coinin günlük oranı sinyalde 8 KAT eksik sayılıyor; canlı bot son ~73 kaydın medyanını 4 sa tabanla kullanıyor
+(madde 138) — yani backtest ile canlı arasında da fark var. Uygun hücrelerde güncel aralık genişleyen medyandan KISA: 2020-24 %1,00 ·
+2025-26 %3,25 (uzun %0,59). Parite: yeniden kurulan genişleyen-medyan sinyali zemin sk ile birebir (fark 0).
+**ÖN KAYIT (sonuçtan önce):** tek kol B = ARALIK son 9 ödeme aralığının medyanı (nedensel, taban yok), başka her şey P3T2; motor g33 kopyası
+yalnız zemin yolu farklı (`arastirma_m771_aralik_sinyal.py`). Kabul: iki hiza ortalamasında eşit risk ≥ 315,2 + 8, dd en çok 1 puan kötü,
+Sh ≤2024 ve 2025+ düşmüyor. Geçerse canlıda madde 138 tabanının (4 sa) kaldırılması ayrıca kullanıcıya sorulur; otomatik değişiklik yok.
