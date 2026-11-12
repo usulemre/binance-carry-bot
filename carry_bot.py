@@ -2912,11 +2912,19 @@ TUR_ZAMAN_DOSYA = os.getenv("CARRY_TUR_ZAMAN", "carry_tur_zaman.json")
 """MADDE 770 (altyapı): son tur BAŞLANGIÇ zamanı dosyası (tur ızgarası; yeniden başlatma ek tur açmasın)."""
 
 
-def tur_zamani_oku(dosya: str = None) -> float | None:
+def tur_zamani_oku(dosya: str = None, yedek: str | None = "") -> float | None:
+    """Son tur başlangıcı. Dosya yoksa (ilk kurulum / eski sürümden geçiş) dilim durum dosyasının değişme zamanından tahmin:
+    durum turun SONUNDA yazılır, tur ~6-10 dk sürer → başlangıç ≈ değişme − 10 dk. Böylece güncellemeden sonraki ilk
+    yeniden başlatma da ek tur açmaz."""
     try:
         with open(dosya or TUR_ZAMAN_DOSYA, encoding="utf-8") as f:
             return float(json.load(f)["bas"])
     except (OSError, ValueError, KeyError, TypeError):
+        pass
+    y = DILIM_DURUM_DOSYA if yedek == "" else yedek
+    try:
+        return os.path.getmtime(y) - 600.0 if y else None
+    except OSError:
         return None
 
 

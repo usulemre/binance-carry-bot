@@ -68,7 +68,9 @@ kontrol("kapanan yoksa okuma yok", cb.tam_kapanis_adetleri(None, {"A": 1}, [("A"
 # --- madde 770 / 5: tur zamanı
 import tempfile, json
 _tz = os.path.join(tempfile.mkdtemp(), "tz.json")
-kontrol("tur zamanı yoksa None", cb.tur_zamani_oku(_tz) is None)
+kontrol("tur zamanı yoksa None", cb.tur_zamani_oku(_tz, yedek=None) is None)
+_dd = os.path.join(tempfile.mkdtemp(), "dilim.json"); open(_dd, "w").write("{}"); os.utime(_dd, (5000, 5000))
+kontrol("tur zamanı dosyası yoksa dilim durumundan tahmin (değişme − 10 dk)", cb.tur_zamani_oku(_tz, yedek=_dd) == 4400.0)
 cb.tur_zamani_yaz(1234.5, _tz)
 kontrol("tur zamanı yaz / oku", cb.tur_zamani_oku(_tz) == 1234.5)
 kontrol("ızgara varsayılan AÇIK", cb.TUR_IZGARA is True)
