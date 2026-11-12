@@ -8533,3 +8533,11 @@ başabaşa (kendi girişi) gelince ya da süre dolunca kapanır (sonra yer yeni 
 pay için orantılı küçülür. Motor `/tmp/m778/g33_m778.py` = g33 + yalnız ZUZAT (`arastirma_m778_zarar_uzat.py`). Kollar Z12 (en çok +2 g),
 Z30 (en çok +5 g). Parite: ZUZAT=0 hiza 0 taban ile birebir. Beklenti (VARSAYIM): "zarardakini tut" eğilimi genelde zararlı; 679'da 6 g
 tutma −29. Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor.
+**SONUÇ 778 (parite ZUZAT=0 = taban hiza 0, fark 0; 4 koşu rc 0): İKİSİ DE KESİN RED.**
+| kol | yıllık | Sh | dd | Sh ≤2024 / 2025+ | eşit risk | uzatılan | başabaşa dönen | süre dolup zararda kapanan |
+|---|---|---|---|---|---|---|---|---|
+| P3T2 | 239,3 | 4,05 | −13,3 | 4,03 / 4,14 | **315,2** | — | — | — |
+| +2 g | 171,9 | 3,88 | −17,5 | 3,69 / 4,32 | 138,4 (−176,8) | 13.550 | 3.065 (%23) | 10.463 (%77) |
+| +5 g | 176,3 | 3,94 | −14,5 | 3,78 / 4,30 | 196,0 (−119,2) | 13.551 | 4.679 (%35) | 8.819 (%65) |
+Zarardaki long'ların çoğu ek sürede de toparlanmıyor; asıl maliyet, o payın yeni (funding'i yüksek) long'lara gidememesi: yıllık −63..−67 puan,
+2020-24'ün her yılı kötü. "Zararı kesinleştirmemek" ekseni (651 / 679 / 762-768 / 778) kapandı: süresi dolan bacak kapanmalı.
