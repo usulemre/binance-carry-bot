@@ -8591,3 +8591,13 @@ yayın gecikmesi 2 günle temsil ediliyor), piyasa değeri kullanılmıyor (değ
 Elek Sh ≥ 1,5 istiyordu; G14 0,58 (plaseboyla aynı düzey), G30 negatif. Evren dar: ücreti ölçülen VE 70M hacim eşiğini geçen perp haftada ~18
 (250 haftanın 146'sında ≥ 12). Carry'yle korelasyon düşük (bağımsız) ama tek başına ayakta durmuyor (madde 353 yasası yine). Hayatta kalma
 yanlılığı sonucu LEHE çevirirdi; yine de geçmedi. Zincir üstü ücret büyümesi → kapalı.
+
+## Madde 782 ÖN KAYIT (2026-11-13, fiyat verisi İNDİRİLMEDEN; kullanıcı: "başka borsadan fiyat farkından kâr elde etmeyi test et") — borsalar arası FİYAT farkı (Binance ↔ OKX perp)
+718-D bu aileyi ölçmeden "uygulanamaz" demişti; şimdi ölçülüyor. Veri: Binance USDⓈ-M 5 dk mum (data.binance.vision) + OKX USDT-SWAP 5 dk mum (herkese
+açık API), 2026-10-12 → 2026-11-11 (30 gün). Evren: Ekim'de zeminde uygun ∩ OKX'te canlı 94 coinin alfabetik her 2.'si = 40 coin (sonuçtan bağımsız seçim).
+Kural: s = ln(OKX / Binance) 5 dk kapanış; sapma d = s − s'nin son 24 sa medyanı (kalıcı baz = funding farkı, o ayrı). |d| ≥ X → pahalı borsada SHORT,
+ucuzda LONG (transfer yok, iki borsada teminat); |d| ≤ X/4 ya da 24 sa sonra kapat. Giriş / çıkış sinyalden SONRAKİ 5 dk kapanışından (ileri bakış yok).
+Kollar X = 30 bp ve 60 bp. Maliyet: 4 bacak × 5 bp = 20 bp / tur (gerçekçi, piyasa emri) · 4 × 2 bp = 8 bp (iyimser). Sermaye: 10 eşzamanlı yer, yer başına
+sermayenin %10'u (borsa başına %5'lik bacak, kaldıraçsız); dolu ise sinyal atlanır. EŞİK (683 ile aynı): gerçekçi maliyette yıllık net < %20 → RED.
+Bilinen iyimserlikler (VARSAYIM): 5 dk kapanış işlem görebilir fiyat sayılıyor (ince coinde bayat fiyat sahte fark üretir), kayma / emir derinliği yok,
+tutuş sırasındaki funding farkı yok, iki borsada ayrı teminat ve likidasyon riski yok. Yani sonuç ÜST SINIR.
