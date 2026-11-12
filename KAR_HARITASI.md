@@ -8559,3 +8559,16 @@ Kabul: eşit risk ≥ 315,2 + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düş
 kitap kötüleşiyor (778 −119..−177, 779 −48..−89) → sorun pozisyonun kâr / zarar durumu değil, KOLTUĞUN TAZELENMEMESİ: kitabın değeri her 5 günde
 en taze funding sıralamasına dönmekten geliyor. Tek olumlu iz: +2 g kolunda kuyruk inceliyor (dd −12,1, en kötü gün −5,96) ama getiri daha çok
 düşüyor. Tutuş süresi / uzatma ekseni (522 / 679 / 778 / 779) kapandı.
+
+## Madde 780 — DIŞ KAYNAK TARAMASI (kullanıcı: "kendin başka araştırma kaynakları bul, kâr için neler yapılabilir") — test yok, strateji DEĞİŞMEDİ
+Kaynaklar (2026-11-13): Robot Wealth "Hyperliquid Carry Looks Trendy" (kesitsel funding carry, Binance vs HL) · arXiv 2510.14435 "Cryptocurrency as
+an Investable Asset Class" (BTC nakit-taşıma Sharpe 6,45 → 2024+ 4,06 → 2025 negatif; 2 haftalık kesitsel momentum t 3,9; 12 / 24 hafta anlamsız) ·
+Artemis faktör modeli (boyut / değer / momentum / büyüme; 3 haftalık oynaklık ayarlı momentum) · Binance duyuruları (USDC-M perp maker %0, 2025-12-10'dan
+"ikinci duyuruya kadar"; yeni listeleme maker %0 kampanyası 2025-10-25'te bitti).
+Eşleme: (1) carry'de evreni likit coinlere daraltma → 401 / 518 (70M tepe); (2) eşit oynaklık ağırlığı → oynaklık paritesi RED (C1 listesi), 698;
+(3) "exit liquidity" (çöken coinde negatif funding long'u tuzak) → kalabalık filtresi (773: −172 kapatınca) + 777; (4) sinyali Binance'ten al → zaten;
+(5) kısa vadeli kesitsel momentum → 389 / 649 (60 kol) RED; (6) BTC nakit-taşıma → 170 / 478 ölü (kaynak da 2025'te negatif diyor);
+(7) zincir üstü değer / büyüme faktörleri (ücret, DAU) → VERİ YOK (yeni veri ailesi; ücretsiz kaynak DefiLlama) — açık eksen, haftalık dengeleme, ayrı kitap.
+(8) USDC-M maker %0 (ÖLÇÜM): 40 USDC perp; 2025+ defterde long sermaye-günün %18,7'si, short'un %60,5'i bu coinlerde; 5 bp modelde komisyon 8,2 puan / yıl,
+USDC'li coinlerde 3,4 → gerçek USDT maker 2 bp ile tasarruf ≈ 1,4 puan / yıl + 387'ye göre USDC tarafı funding'i ~%2 / yıl yüksek (short'a ≈ +0,7) ≈ +2 puan / yıl
+(239'un %1'i). Bedeli: USDC teminat (çoklu varlık modu), ince tahta, iki ayrı sembol yolu, kampanya her an bitebilir → ÖNERİLMEZ (karmaşıklık > kazanç).
