@@ -249,7 +249,8 @@ def ac(client, sec: list, bacak: float, simdi_ms: int = None) -> dict:
         try:
             pr = client.get_symbol_precision(sem)
             fiyat = float(client.client.futures_symbol_ticker(symbol=sem)["price"])
-            miktar = round(bacak / fiyat, pr["quantity_precision"])
+            from exchange_client import adet_yuvarla
+            miktar = adet_yuvarla(bacak / fiyat, pr)   # madde 770: adım katı
             if miktar <= 0 or miktar * fiyat < 5.0:
                 continue
             client.client.futures_create_order(

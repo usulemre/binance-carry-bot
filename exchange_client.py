@@ -25,6 +25,31 @@ def _tick_ondalik(s: dict) -> int:
             return len(t.split(".")[1]) if "." in t else 0
     return s.get("pricePrecision", 2)
 
+def _adim(s: dict, tip: str) -> float:
+    """LOT_SIZE / MARKET_LOT_SIZE stepSize (madde 770). Yoksa 0."""
+    for f in s.get("filters", []):
+        if f.get("filterType") == tip and f.get("stepSize"):
+            try:
+                return float(f["stepSize"])
+            except (TypeError, ValueError):
+                return 0.0
+    return 0.0
+
+
+def adet_yuvarla(miktar: float, p: dict, piyasa: bool = False, asagi: bool = False) -> float:
+    """MADDE 770: emir adedi borsanın ADIM büyüklüğünün tam katı olmalı (−4023 "Qty not increased by step size").
+    Eskiden quantityPrecision ondalığına yuvarlanıyordu; adımı 10^−ondalık olmayan coinde (ör. ONDOUSDT) emir reddediliyordu —
+    725'teki tickSize hatasının adet karşılığı. piyasa=True: MARKET_LOT_SIZE adımı (yoksa LOT_SIZE). asagi=True: aşağı
+    yuvarla (kâr al / kapanış pozisyondan fazla olmasın); yoksa en yakın kat. Adım bilinmiyorsa eski ondalık yuvarlaması."""
+    from decimal import Decimal, ROUND_DOWN, ROUND_HALF_UP
+    step = (p.get("piyasa_step") or p.get("step")) if piyasa else p.get("step")
+    if not step or step <= 0:
+        return round(abs(miktar), int(p.get("quantity_precision", 3)))
+    d = Decimal(str(step))
+    q = (Decimal(str(abs(miktar))) / d).quantize(Decimal(1), rounding=ROUND_DOWN if asagi else ROUND_HALF_UP) * d
+    return float(q)
+
+
 # Binance'in rate-limit (429) ve IP ban (418) durumlarında dönebileceği kodlar.
 # Bu durumlarda hemen pes etmek yerine, borsanın istediği süre kadar bekleyip
 # yeniden denemek gerekir - aksi halde geçici bir yoğunluk, botun tamamen
@@ -242,6 +267,8 @@ class ExchangeClient:
                 return {
                     "quantity_precision": s["quantityPrecision"],
                     "price_precision": _tick_ondalik(s),
+                    "step": _adim(s, "LOT_SIZE"),              # madde 770
+                    "piyasa_step": _adim(s, "MARKET_LOT_SIZE") or _adim(s, "LOT_SIZE"),
                 }
         return {"quantity_precision": 3, "price_precision": 2}
 

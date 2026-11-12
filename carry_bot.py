@@ -57,7 +57,7 @@ import pandas as pd
 
 import carry_saglik
 import config
-from exchange_client import ExchangeClient
+from exchange_client import ExchangeClient, adet_yuvarla
 try:                                   # MADDE 701: emir defteri (yalnız kayıt; yoksa bot aynen çalışır)
     import defter_db as _ED
 except Exception:                      # pragma: no cover
@@ -2897,6 +2897,124 @@ def dilim_durum_yaz(durum: dict, dosya: str = None) -> None:
         logger.warning("dilim durumu yazılamadı: %s", e)
 
 
+TUTUS_SABIT = os.getenv("CARRY_TUTUS_SABIT", "1") not in ("0", "false", "False")
+"""MADDE 770 (madde 762 / 765 / 767 / 768): TUTUŞTA TAMAMLAMA YOK. Eskiden dilim hedefleri DOLAR olarak tutuluyor ve her
+turda açık pozisyon güncel değeriyle hedefe çekiliyordu: düşen coine EKLEME (ortalama düşürme), yükselenden SATMA, bakiye
+değişince bütün dilimleri yeniden boyutlama (madde 205). Backtest (T7K, AGIRLIK_KAYMA=1) bunu yapmıyor; canlı ikizi testinde
+(767) bu davranış eşit riskte 315 → 181, düşüş −13,3 → −17,3 idi. Artık her dilim bacağının GİRİŞ referans fiyatı tutulur
+(durum["dilim_fiyat"]) ve hedef = sabit coin adedi × güncel fiyat: bacak alındığı adetle tutulur; emir yalnız yeni dilim,
+short yenilemesi, kademe / kâr al / stop / delist ve short tavanı kırpmasından doğar. 0 → eski (dolar hedefi) davranış."""
+
+
+TUR_IZGARA = os.getenv("CARRY_TUR_IZGARA", "1") not in ("0", "false", "False")
+"""MADDE 770: turlar sabit ızgarada (son tur başlangıcı + aralık); yeniden başlatma ek tur açmaz. 0 → eski davranış."""
+TUR_ZAMAN_DOSYA = os.getenv("CARRY_TUR_ZAMAN", "carry_tur_zaman.json")
+"""MADDE 770 (altyapı): son tur BAŞLANGIÇ zamanı dosyası (tur ızgarası; yeniden başlatma ek tur açmasın)."""
+
+
+def tur_zamani_oku(dosya: str = None) -> float | None:
+    try:
+        with open(dosya or TUR_ZAMAN_DOSYA, encoding="utf-8") as f:
+            return float(json.load(f)["bas"])
+    except (OSError, ValueError, KeyError, TypeError):
+        return None
+
+
+def tur_zamani_yaz(t: float, dosya: str = None) -> None:
+    try:
+        with open(dosya or TUR_ZAMAN_DOSYA, "w", encoding="utf-8") as f:
+            json.dump({"bas": float(t)}, f)
+    except OSError as e:
+        logger.warning("tur zamanı yazılamadı: %s", e)
+
+
+def bacak_imzasi(durum: dict) -> dict:
+    """{(dilim, sembol): usd} — tur içindeki değişen / yeni bacakları bulmak için anlık görüntü."""
+    return {(str(a), s): float(v) for a, h in (durum.get("dilimler") or {}).items() for s, v in (h or {}).items()}
+
+
+def guncel_fiyatlar(client, semboller=None) -> dict:
+    """Bütün sembollerin işaret fiyatı (pozisyonların değerlendiği borsadan). Sırayla: işaret fiyatı → son işlem fiyatı →
+    (verilen semboller için) tek tek ticker. Okunamazsa boş sözlük."""
+    out = _guncel_fiyatlar_toplu(client)
+    if out or not semboller:
+        return out
+    for s_ in semboller:
+        try:
+            p_ = float(client.client.futures_symbol_ticker(symbol=s_)["price"])
+            if p_ > 0:
+                out[s_] = p_
+        except Exception:
+            pass
+    return out
+
+
+def _guncel_fiyatlar_toplu(client) -> dict:
+    try:
+        return {x["symbol"]: float(x.get("markPrice") or 0) for x in client.client.futures_mark_price()
+                if float(x.get("markPrice") or 0) > 0}
+    except Exception as e:
+        logger.warning("işaret fiyatları alınamadı (%s) - son işlem fiyatı kullanılıyor", e)
+    try:
+        return {x["symbol"]: float(x.get("lastPrice") or 0) for x in client.client.futures_ticker()
+                if float(x.get("lastPrice") or 0) > 0}
+    except Exception as e:
+        logger.warning("fiyatlar alınamadı (%s)", e)
+        return {}
+
+
+def tutus_referans_guncelle(durum: dict, once: dict, fiyat: dict, mevcut: dict) -> dict:
+    """MADDE 770: dilim bacaklarının referans (giriş) fiyatlarını günceller. Döner: {"yeni": n, "gecis": n}.
+
+    * Tur içinde YENİ ya da tutarı DEĞİŞEN bacak (yeni dilim, short yenilemesi, tavan kırpması): referans = şimdiki fiyat.
+    * Değişmeyen bacak: referans korunur (kademe / kâr al küçültmesi tura girmeden önce yapılır, adetle orantılı).
+    * GEÇİŞ (durumda hiç referans yokken, ilk tur): eski bacaklara, BUGÜNKÜ pozisyonu emir üretmeden tutacak referans verilir —
+      sembolün eski bacak toplamı T, pozisyonun güncel değeri V ise referans = fiyat × T / V (aynı yönse). Böylece geçiş
+      turunda yalnız biten dilimin payı ve yeni dilim emir üretir; düşmüş coin "tamamlanmaz".
+    * Dilimde olmayan sembollerin referansı silinir."""
+    gecis = "dilim_fiyat" not in durum
+    ref = durum.setdefault("dilim_fiyat", {})
+    T = {}
+    if gecis:
+        for (a, s), v in once.items():
+            T[s] = T.get(s, 0.0) + v
+    n_yeni = n_gecis = 0
+    for a, h in (durum.get("dilimler") or {}).items():
+        a = str(a); r = ref.setdefault(a, {})
+        for s, v in (h or {}).items():
+            p = fiyat.get(s)
+            if not p:
+                continue
+            eski = once.get((a, s))
+            degisti = eski is None or abs(eski - float(v)) > 1e-9 * max(1.0, abs(float(v)))
+            if degisti:
+                r[s] = p; n_yeni += 1
+            elif gecis or s not in r:
+                t_, v_ = T.get(s, 0.0), (mevcut or {}).get(s, 0.0)
+                r[s] = p * t_ / v_ if (t_ and v_ and (t_ > 0) == (v_ > 0)) else p
+                n_gecis += 1
+        for s in list(r):
+            if s not in (h or {}):
+                del r[s]
+    for a in list(ref):
+        if a not in (durum.get("dilimler") or {}):
+            del ref[a]
+    return {"yeni": n_yeni, "gecis": n_gecis}
+
+
+def toplam_hedef_tut(durum: dict, fiyat: dict) -> dict:
+    """MADDE 770: portföy hedefi = her bacağın sabit adedi × güncel fiyat (= usd × fiyat / referans). Bakiye ölçeği UYGULANMAZ
+    (yalnız yeni dilim güncel bakiyeyle kurulur). Referansı ya da fiyatı olmayan bacak dolar hedefiyle sayılır."""
+    top = {}
+    ref = durum.get("dilim_fiyat") or {}
+    for a, h in (durum.get("dilimler") or {}).items():
+        r = ref.get(str(a)) or {}
+        for s, v in (h or {}).items():
+            q, p = r.get(s), fiyat.get(s)
+            top[s] = top.get(s, 0.0) + float(v) * (p / q if (q and p and q > 0 and p > 0) else 1.0)
+    return {s: v for s, v in top.items() if v != 0}
+
+
 DILIM_OLCEK_TAVAN = float(os.getenv("CARRY_DILIM_OLCEK_TAVAN", "1.5"))
 """Bayat dilim hedefi en fazla bu katsayıyla ölçeklenir (madde 205).
 Bakiye çok hızlı düşerse ölçek patlamasın diye güvenlik sınırı."""
@@ -3397,6 +3515,41 @@ def rezerv_agirlik(uzun: list, kisa: list, ham_funding: pd.Series) -> tuple[dict
     return ({s: pay for s in uc}, {s: toplam / len(kisa) for s in kisa})
 
 
+ADAY_DOSYA = os.getenv("CARRY_ADAY_LOG", "carry_adaylar.jsonl")
+"""MADDE 770 (altyapı): tur aday havuzu kaydı (yalnız kayıt)."""
+ADAY_SAKLA = int(os.getenv("CARRY_ADAY_SAKLA", "200"))
+"""MADDE 770 (altyapı): aday kaydında tutulan tur sayısı."""
+
+
+def aday_kaydet(la: list, sa: list, uzun: list, kisa: list, skor: pd.Series, skor_s, oran, ham=None,
+                dosya: str = None, simdi: float = None) -> None:
+    """MADDE 770: her turun ADAY havuzu ("X neden alınmadı?"): taraf başına adaylar (skor sırasıyla), sinyal penceresi
+    funding'i (yıllık), anlık funding, long/short hesap oranı ve seçildi mi. Yalnız KAYIT; seçimi değiştirmez. Son ADAY_SAKLA
+    tur tutulur. Hata sessiz."""
+    try:
+        def _v(seri, a):
+            try:
+                x = float(seri[a]) if (seri is not None and a in seri.index) else None
+                return None if x is None or not np.isfinite(x) else round(x, 6)
+            except Exception:
+                return None
+        kay = {"t": int(simdi or time.time()),
+               "long": [{"s": a, "skor": _v(skor, a), "fund": _v(ham, a), "oran": _v(oran, a), "secildi": a in uzun} for a in la],
+               "short": [{"s": a, "skor": _v(skor_s if skor_s is not None else skor, a), "fund": _v(ham, a), "oran": _v(oran, a),
+                          "secildi": a in kisa} for a in sa]}
+        yol = dosya or ADAY_DOSYA
+        try:
+            with open(yol, encoding="utf-8") as fh:
+                eski = fh.read().splitlines()[-(ADAY_SAKLA - 1):]
+        except OSError:
+            eski = []
+        with open(yol + ".tmp", "w", encoding="utf-8") as fh:
+            fh.write("\n".join(eski + [json.dumps(kay, ensure_ascii=False)]) + "\n")
+        os.replace(yol + ".tmp", yol)
+    except Exception as e:
+        logger.warning("aday kaydı yazılamadı: %s", e)
+
+
 def hedef_portfoy(funding: pd.Series, bakiye: float,
                   n_legs: int = None, kalabalik: pd.Series = None,
                   ham_funding: pd.Series = None, funding_s: pd.Series = None) -> dict[str, float]:
@@ -3426,6 +3579,7 @@ def hedef_portfoy(funding: pd.Series, bakiye: float,
         la, sa = kalabalik_adaylar(f, n, skor_s=funding_s)
         uzun = kalabalik_sec(la, kalabalik, n, +1)
         kisa = kalabalik_sec(sa, kalabalik, n, -1)
+        aday_kaydet(la, sa, uzun, kisa, f, funding_s, kalabalik, ham_funding)
     else:
         uzun = list(sirali.index[:n])          # en düşük funding -> LONG
         kisa = list(sirali.index[-n:])         # en yüksek funding -> SHORT
@@ -3898,7 +4052,7 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
             yon, fiyat = "BUY", giris * (1 - KAR_AL_SHORT)
         try:
             pr = client.get_symbol_precision(sem)
-            adet = round(abs(miktar), pr["quantity_precision"])
+            adet = adet_yuvarla(abs(miktar), pr, asagi=True)     # madde 770: adım katı
             if adet <= 0:
                 return (None, False, "miktar hassasiyete yuvarlanınca 0")
             if miktar < 0 and SHORT_FELAKET > 0 and sem not in durum.get("felaket", {}):
@@ -3916,8 +4070,8 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
             _m_esik = MERDIVEN if miktar > 0 else MERDIVEN_SHORT
             _m_tp = KAR_AL_ORAN if miktar > 0 else KAR_AL_SHORT
             if _m_esik > 0 and not _yap and _m_esik < _m_tp:
-                _q1 = round(adet * MERDIVEN_PAY, pr["quantity_precision"])
-                _q2 = round(adet - _q1, pr["quantity_precision"])
+                _q1 = adet_yuvarla(adet * MERDIVEN_PAY, pr, asagi=True)
+                _q2 = adet_yuvarla(adet - _q1, pr, asagi=True)
                 if _q1 > 0 and _q2 > 0:
                     if sem not in durum.get("merdiven", {}):   # yeniden denemede ikinci kademe koyma
                         _m_fiyat = giris * (1 + _m_esik) if miktar > 0 else giris * (1 - _m_esik)
@@ -4430,6 +4584,7 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     # (kuru çalışmada durum değiştirilmez).
     if not dry_run and koruma_acik():
         kar_al_kontrol(client, durum)
+    _imza_once = bacak_imzasi(durum)      # madde 770: bu turda değişen / yeni bacakları bulmak için
     sira = int(durum.get("sira", 0)) % max(1, N_DILIM)
     dilim_sermaye = (bakiye * olcek) / max(1, N_DILIM)
     kalabalik = None
@@ -4470,10 +4625,20 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
         logger.info("funding SOLDU, %d bacak erken kapatılıyor: %s",
                     len(_solan), ", ".join(_solan[:6]))
 
-    hedef = toplam_hedef(durum, bakiye)
+    mevcut = mevcut_portfoy(client)
+    if TUTUS_SABIT:
+        _fiyat = guncel_fiyatlar(client, {s_ for h_ in (durum.get("dilimler") or {}).values() for s_ in (h_ or {})} | set(mevcut))
+        if not _fiyat:
+            logger.error("madde 770: işaret fiyatları okunamadı — bu tur ATLANDI (durum yazılmadı, sıra ilerlemedi)")
+            return {"atlandi": "fiyat"}
+        _rg = tutus_referans_guncelle(durum, _imza_once, _fiyat, mevcut)
+        if _rg["gecis"]:
+            logger.info("madde 770 geçişi: %d bacak bugünkü pozisyonla sabitlendi (tamamlama yok)", _rg["gecis"])
+        hedef = toplam_hedef_tut(durum, _fiyat)
+    else:
+        hedef = toplam_hedef(durum, bakiye)
     if not hedef:
         return {}
-    mevcut = mevcut_portfoy(client)
     # MADDE 211: ELLE DEĞİŞTİRİLEN AYARLAR. İkisi de backtest'te yok ve
     # ikisi de botun kendi hata mesajlarını YANILTICI hâle getiriyor.
     if not dry_run and not pozisyon_modu_hazirla(client, mevcut):
@@ -4507,7 +4672,7 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
         return {"bakiye": bakiye, "emir": len(emirler), "hedef": hedef,
                 "dilim": sira, "saglik": s_durum}
 
-    basarili = _emirleri_gonder(client, emirler, mevcut)
+    basarili = _emirleri_gonder(client, emirler, mevcut, kapat_adet=tam_kapanis_adetleri(client, hedef, emirler))
     logger.info("%d/%d emir gönderildi", basarili, len(emirler))
     # MADDE 208: KÂR AL, DİLİM DEFTERİNİ REHİN ALAMAZ. Eskiden sıra
     # `kar_al_kur` -> `dilim_durum_yaz` idi. `kar_al_kur` içindeki
@@ -4682,7 +4847,7 @@ def dolumu_kovala(client: ExchangeClient, bekleyen: list[dict]) -> int:
                 p = client.get_symbol_precision(b["sembol"])
                 fiyat = float(client.client.futures_symbol_ticker(
                     symbol=b["sembol"])["price"])
-                miktar = round(float(b["miktar"]), p["quantity_precision"])
+                miktar = adet_yuvarla(float(b["miktar"]), p, piyasa=bool(son and PIYASA_YEDEK))
                 if miktar <= 0 or miktar * fiyat < MIN_NOTIONAL_USD:
                     continue
                 if son and PIYASA_YEDEK:
@@ -4704,7 +4869,21 @@ def dolumu_kovala(client: ExchangeClient, bekleyen: list[dict]) -> int:
                     _emir_kaydet("KOVALA", b["sembol"], b["yon"], miktar, limit=limit, ref=fiyat, oid=_oid(e), deneme=tur + 1)
                     tamamlanan += 1
             except Exception as ex:
-                logger.error("%s dolum kovalama başarısız: %s", b["sembol"], ex)
+                if "-5022" in str(ex) and PIYASA_YEDEK and not son:
+                    # MADDE 770: kovalamada post-only (GTX) emir maker olamadığı için reddedildi (fiyat limitin içinden
+                    # geçmiş). Eskiden kalan miktar listeden DÜŞÜYOR, bacak bir sonraki tura (8 sa) kadar eksik kalıyordu
+                    # (demo CYBER, 8 ve 12 Kas). Artık hemen piyasa emriyle tamamlanır (son turdaki yedekle aynı).
+                    try:
+                        _pm = adet_yuvarla(float(b["miktar"]), p, piyasa=True)
+                        if _pm > 0:
+                            _o = client.open_market_position(b["sembol"], b["yon"], _pm)
+                            _emir_kaydet("PIYASA_YEDEK", b["sembol"], b["yon"], _pm, ref=fiyat, oid=_oid(_o))
+                            tamamlanan += 1
+                            logger.warning("%s kovalama GTX reddedildi (−5022) - piyasa emriyle tamamlandı", b["sembol"])
+                    except Exception as ex2:
+                        logger.error("%s kovalama piyasa yedeği de başarısız: %s", b["sembol"], ex2)
+                else:
+                    logger.error("%s dolum kovalama başarısız: %s", b["sembol"], ex)
             time.sleep(0.2)
         bekleyen = yeni_bekleyen
         if not bekleyen:
@@ -4737,8 +4916,22 @@ def _kuculten_mi(sembol: str, yon: str, usd: float, mevcut: dict | None) -> bool
     return (m > 0 and yon == "SELL") or (m < 0 and yon == "BUY")
 
 
+def tam_kapanis_adetleri(client: ExchangeClient, hedef: dict, emirler: list) -> dict:
+    """MADDE 770: bu turda TAMAMEN kapanacak (hedefte olmayan) sembollerin borsadaki tam pozisyon adedi {sembol: |adet|}.
+    Okunamazsa boş (eski davranış: dolar farkından adet)."""
+    kapanan = {s for s, _y, _u in emirler if not hedef.get(s)}
+    if not kapanan:
+        return {}
+    try:
+        return {p["symbol"]: abs(float(p["positionAmt"])) for p in client.get_open_positions()
+                if p.get("symbol") in kapanan and float(p.get("positionAmt") or 0) != 0}
+    except Exception as e:
+        logger.warning("tam kapanış adetleri okunamadı (%s) - dolar farkından adet", e)
+        return {}
+
+
 def _emirleri_gonder(client: ExchangeClient, emirler: list,
-                     mevcut: dict | None = None) -> int:
+                     mevcut: dict | None = None, kapat_adet: dict | None = None) -> int:
     """Emirleri gönderir, başarılı sayısını döner. Önceki turdan kalan
     dolmamış limit emirleri önce temizlenir - bayat fiyattan dolmasınlar.
 
@@ -4758,7 +4951,11 @@ def _emirleri_gonder(client: ExchangeClient, emirler: list,
                 continue          # çapraz teminat doğrulanamadı - bu turda dokunma
             p = client.get_symbol_precision(s)
             fiyat = float(client.client.futures_symbol_ticker(symbol=s)["price"])
-            miktar = round(usd / fiyat, p["quantity_precision"])
+            miktar = adet_yuvarla(usd / fiyat, p, piyasa=not LIMIT_EMIR)
+            if kapat_adet and s in kapat_adet and _kuculten_mi(s, yon, usd, mevcut):
+                # MADDE 770: hedefi 0 olan sembol TAM pozisyon adediyle kapatılır (dolar farkından adet, ters yönde toz
+                # bırakıyordu: 12 Kas ARB short kapanışı +0,06 $ long artık)
+                miktar = kapat_adet[s]
             if miktar <= 0 or miktar * fiyat < MIN_NOTIONAL_USD:
                 # MADDE 204: bu atlama eskiden SESSİZDİ. Bakiye küçükse her
                 # bacak buradan dönüyor, bot hiç işlem açmıyor ve hiçbir
@@ -4880,7 +5077,19 @@ def main():
                 AKIS_AGIRLIK * 100, RISK_PROFILI, VOL_HEDEF * 100)
 
     _hata_ust = 0
+    _aralik = REBALANCE_HOURS * 3600 / max(1, N_DILIM)
+    if TUR_IZGARA and not args.dry_run and not args.once:
+        # MADDE 770: yeniden başlatma fazladan tur AÇMAZ — son turun BAŞLANGICINDAN tur aralığı geçmediyse beklenir.
+        _son = tur_zamani_oku()
+        _bek = (_son + _aralik - time.time()) if _son else 0.0
+        if 0 < _bek <= _aralik:
+            logger.info("son tur %.0f dk önce başlamıştı - sıradaki tur %.0f dk sonra (yeniden başlatma ek tur açmaz)",
+                        (time.time() - _son) / 60, _bek / 60)
+            time.sleep(_bek)
     while True:
+        _t0 = time.time()
+        if TUR_IZGARA and not args.dry_run:
+            tur_zamani_yaz(_t0)
         try:
             bir_tur(client, dry_run=args.dry_run)
             if _hata_ust >= 2 and not args.dry_run:
@@ -4914,7 +5123,8 @@ def main():
             logger.warning("önerilen ayar eşik kontrolü atlandı: %s", e)
         # Her dilim REBALANCE_HOURS'ta bir yenilenir; N dilim varsa
         # bot bunun 1/N'i kadar sıklıkta çalışır.
-        time.sleep(REBALANCE_HOURS * 3600 / max(1, N_DILIM))
+        # MADDE 770: aralık turun BAŞLANGICINDAN sayılır (eskiden bitişinden: her tur ~8 dk kayıyordu, günde ~25 dk).
+        time.sleep(max(0.0, _t0 + _aralik - time.time()) if TUR_IZGARA else _aralik)
 
 
 if __name__ == "__main__":

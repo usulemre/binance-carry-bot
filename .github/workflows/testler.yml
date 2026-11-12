@@ -30,7 +30,7 @@ jobs:
           for t in test_carry_bot test_carry_gunluk_defter test_onerilen test_carry_preflight test_log_kirliligi test_acil_kapat \
                    test_transfer test_api_izin test_failure_modes test_delist test_bildirim test_panel test_ek_ay_paket test_ed25519 test_defter_db test_emir_defteri \
                    test_carry_sapma test_carry_rapor test_carry_short_ara test_carry_saglik test_carry_olay test_carry_izleme \
-                   test_carry_defter test_exchange_client test_likidasyon_toplayici test_carry_anlik test_funding_dogrula; do
+                   test_carry_defter test_exchange_client test_likidasyon_toplayici test_carry_anlik test_funding_dogrula test_tutus_sabit; do
             echo "::group::$t"; python "$t.py"; echo "::endgroup::"
           done
   entegrasyon:

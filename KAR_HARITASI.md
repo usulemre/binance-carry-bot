@@ -8397,3 +8397,22 @@ Düzeltme önerisi değişmedi: tutuşta tamamlama yok (iki yüz, iki taraf); TP
 - CYBER −5022 kovalama boşluğu tekrarladı (bekleyen düzeltme).
 - Panel (bu madde, yalnız görünüm): kapanışta toz kalınca satır "long eklendi" görünüyordu; artık yön önceki pozisyondan, ~0 kalan
   "kapandı". Bot değişmedi.
+
+## Madde 770 — BOT DÜZELTME PAKETİ (kullanıcı onayı 2026-11-12: "6. madde dışında hepsini yap") — CANLI KOD DEĞİŞTİ
+Strateji kuralları (seçim, doz, TP / kademe / stop, tutma süreleri) DEĞİŞMEDİ; bot backtest'e yaklaştırıldı ve icra hataları kapatıldı.
+1. TUTUŞTA TAMAMLAMA YOK (762 / 765 / 767 / 768): her dilim bacağının referans (giriş) fiyatı durum["dilim_fiyat"]'ta; hedef = sabit
+   adet × güncel işaret fiyatı (toplam_hedef_tut). Düşen coine ekleme / yükselenden küçük satış / bakiye değişince eski dilimleri
+   yeniden boyutlama (madde 205) YOK; emir yalnız yeni dilim, short yenilemesi, tavan kırpması, kademe / kâr al / stop / delist'ten.
+   GEÇİŞ: ilk turda eski bacaklara bugünkü pozisyonu emir üretmeden tutan referans verilir (fiyat × T / V). İşaret fiyatı okunamazsa
+   tur ATLANIR. Geri dönüş: CARRY_TUTUS_SABIT=0.
+2. ADET = borsa adım büyüklüğünün katı (exchange_client.adet_yuvarla; LOT_SIZE, piyasada MARKET_LOT_SIZE; kâr al / kademe aşağı) —
+   ONDOUSDT −4023 (madde 769). carry_olay'da da.
+3. Hedefi 0 olan sembol TAM pozisyon adediyle kapanır (tam_kapanis_adetleri) — ARB +0,06 $ toz (madde 769).
+4. Kovalamada GTX −5022 reddi → kalan miktar hemen piyasa emriyle (eskiden bacak 8 sa eksik kalıyordu; CYBER 8 / 12 Kas).
+5. TUR IZGARASI: aralık turun BAŞLANGICINDAN sayılır (eskiden bitişinden: tur başına ~8 dk kayma); açılışta son tur başlangıcı
+   (carry_tur_zaman.json) + 8 sa dolmadıysa beklenir → yeniden başlatma ek tur açmaz. Geri dönüş: CARRY_TUR_IZGARA=0.
+7. ADAY KAYDI: her turun long / short aday havuzu, skor, anlık funding, long/short hesap oranı, seçildi mi → carry_adaylar.jsonl (son
+   200 tur). Yalnız kayıt.
+6 (prim geçmişi tohumu, 766) kullanıcı kararıyla YAPILMADI: ilk ~90 gün prim çarpanı 1,0 (biraz daha büyük brüt).
+Testler: test_tutus_sabit (yeni; geçiş sıfır emir, düşen coine ekleme yok, biten dilim payı, kademe, adım yuvarlama, tam kapanış,
+tur zamanı, aday kaydı, −5022 piyasa yedeği) + mevcut takım.
