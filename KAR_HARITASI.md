@@ -8432,3 +8432,8 @@ short tarafında aynı yönü denedi: +3, bar altı).
 **ÖN KAYIT (sonuçtan önce):** tek kol B = ARALIK son 9 ödeme aralığının medyanı (nedensel, taban yok), başka her şey P3T2; motor g33 kopyası
 yalnız zemin yolu farklı (`arastirma_m771_aralik_sinyal.py`). Kabul: iki hiza ortalamasında eşit risk ≥ 315,2 + 8, dd en çok 1 puan kötü,
 Sh ≤2024 ve 2025+ düşmüyor. Geçerse canlıda madde 138 tabanının (4 sa) kaldırılması ayrıca kullanıcıya sorulur; otomatik değişiklik yok.
+**ÖN KAYIT DÜZELTMESİ (sonuç görülmeden, ilk koşu GEÇERSİZ):** P3T2 sinyali zemin sk değil, `SK_DOSYA=/tmp/sk_bar60.pkl` + `SK_DOSYA_S=/tmp/sk_bar96.pkl`
+(canli_sinyal_kur.py = canlı botun tahmincisi: son PEN+4 kaydın medyan aralığı, **4 sa taban**). Yani backtest ile canlı bot ZATEN aynı
+(yukarıdaki "canlıyla fark" cümlesi yanlış); ilk koşu kullanılmayan paneli değiştirdiği için tabanla birebir çıktı. Gerçek soru madde 138'in
+tabanı: **kol B = aynı kurucu TABAN=1** (60 sa long, 96 sa short), başka her şey P3T2, motor g33.py değişmeden. Parite: TABAN=4 yeniden
+kurulumu sk_bar60 ile fark 0. Değişen hücre %0,71. Kabul ölçütü aynı (eşit risk ≥ +8, dd ≤ 1 puan kötü, iki dönem Sharpe düşmüyor).

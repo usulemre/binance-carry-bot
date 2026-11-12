@@ -66,12 +66,16 @@ def kur():
 def kos():
     import arastirma_m346_prim as M, izleme_ekim_oos as I
     ENV = {**M.TABAN, **I._T7K, "SLL24_KAP": "1", "SLL24_PIY": "0.03", "SLL24_KAP_TAZE": "2", "SEMBOL_HARIC": ",".join(M.D8)}
+    # DÜZELTME (madde 771 ek): P3T2 sinyali zemin sk DEĞİL, SK_DOSYA=/tmp/sk_bar60 + SK_DOSYA_S=/tmp/sk_bar96 (canli_sinyal_kur.py,
+    # canlı tahminci, TABAN 4). İlk koşu zemin sk'yi değiştirdiği için tabanla BİREBİR çıktı (geçersiz, /tmp/m771/gecersiz).
+    # Kol B: aynı kurucu TABAN=1 (VERI_EK=uzun PEN=60/96 AD=m771_60_t1/m771_96_t1); TABAN=4 yeniden kurulumu sk_bar60 ile fark 0.
+    ENV.update(SK_DOSYA="/tmp/sk_m771_60_t1.pkl", SK_DOSYA_S="/tmp/sk_m771_96_t1.pkl")
     for h in (0, 1):
         e = f"{OUT}/M357_EK_AR_2000_{h}.pkl"
         if os.path.exists(e): print(h, "var"); continue
         env = dict(os.environ, **ENV, FAZ_KAY=str(h), E_CIKTI=e + ".tmp", PYTHONPATH=R)
         with open(e.replace(".pkl", ".txt"), "w") as f:
-            r = subprocess.run([sys.executable, MOTOR, "ls", "4"], env=env, cwd=R, stdout=f, stderr=subprocess.STDOUT)
+            r = subprocess.run([sys.executable, os.path.join(R, "g33.py"), "ls", "4"], env=env, cwd=R, stdout=f, stderr=subprocess.STDOUT)
         ok = r.returncode == 0 and os.path.exists(e + ".tmp")
         if ok: os.replace(e + ".tmp", e)
         print(h, "rc", r.returncode, "TAMAM" if ok else "EKSİK — SAYILMAZ", flush=True)
@@ -83,7 +87,7 @@ def analiz():
         print("EKSİK KOŞU — analiz yapılmaz"); return
     seri = {}
     M.CIKTI = "/tmp/m_ekim"; seri["taban (genişleyen medyan)"] = sum(M.gunluk(f"M357_EK_T7KKS_2000_{h}") for h in (0, 1)) / 2
-    M.CIKTI = OUT; seri["güncel aralık (son 9 ödeme)"] = sum(M.gunluk(f"M357_EK_AR_2000_{h}") for h in (0, 1)) / 2
+    M.CIKTI = OUT; seri["aralık tabanı 1 sa (canlı 4 sa)"] = sum(M.gunluk(f"M357_EK_AR_2000_{h}") for h in (0, 1)) / 2
     for ad, s in seri.items():
         s = s[:"2026-10-31"]; o = T.olc(s); zs = s.reindex(Z.P.index).dropna(); k, er = Z.esit(zs)
         yl = s.groupby(s.index.year).apply(lambda x: ((1 + x * 1.15).prod() - 1) * 100)
