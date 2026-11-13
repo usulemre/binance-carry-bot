@@ -8610,3 +8610,9 @@ Fiyatlar çok sıkı: sapmanın coin medyanı sd 4,5 bp, %99'luk 12,2 bp (maliye
 30 bp'lik sapma maliyeti karşılamıyor (zararda); 60 bp'lik sapma kârlı ama ayda 27 kez, sermayenin çoğu boşta → yıllık %9-11, o da ÜST SINIR (kayma /
 derinlik yok, 5 dk kapanışı bayat olabilir; kazancın %83'ü günde 40-55 M $ hacimli 3 coinde). İkinci borsa hesabı + teminat bölünmesi + borsa riski
 karşılığında carry'nin ~%240'ının yanında anlamsız. Borsalar arası eksen (fiyat 782, funding 683 / 676 / 717) kapandı.
+
+## Madde 783 — panel: yönü dönen işlem "eklendi" görünüyordu (yalnız görünüm, bot değişmedi)
+Kullanıcı ekranı (13 Kas 09:48 turu): "AKE long eklendi" ama AKE long listesinde yok. [ÖLÇÜM] AKE SELL 6.424: pozisyon long 4.729 →
+short −1.695. AKE iki dilimde long (6, 8: +17,2 $), iki yeni dilimde short (3, 13: −19 $; funding artıya döndü, 7 g +%22) → net
+ters döndü. Bot doğru; etiket po > 0 ve SELL'den "long" + ((ps>0)===al) → "eklendi" üretiyordu. Artık işaret değişirse
+"long kapandı → short açıldı" (renk yeni yönden). test_panel geçti.

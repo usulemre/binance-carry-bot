@@ -1655,6 +1655,10 @@ function islemTablo(o){
     if (ps && po && x.usd_sonra!=null && x.usd_sonra < 1 && (x.usd_once||0) > 5 && ((po>0)!==al)) ps = 0;
     const yon = po ? (po>0 ? "long" : "short") : (ps ? (ps>0 ? "long" : "short") : (al ? "long" : "short"));
     let ne;
+    // madde 783: yön dönerse (ör. AKE long 4.729 → short −1.695: bir dilim long tutarken yeni dilimler short seçti, net ters
+    // döndü) eskiden "long eklendi" yazıyordu. Artık "long kapandı → short açıldı"; renk yeni yönden.
+    if (po && ps && (po>0)!==(ps>0)) return {yon: ps>0 ? "long" : "short", ne: "", ekle: false,
+                                             etiket: `${po>0 ? "long" : "short"} kapandı → ${ps>0 ? "long" : "short"} açıldı`};
     if (po===0) ne = "açıldı"; else if (ps===0) ne = "kapandı";
     else if (ps!=null) ne = ((ps>0)===al) ? "eklendi" : "azaltıldı"; else ne = al ? "alındı" : "satıldı";
     return {yon, ne, ekle: ne=="açıldı"||ne=="eklendi"}; };
@@ -1664,7 +1668,7 @@ function islemTablo(o){
               : (x.ort_sonra && t.ne=="açıldı" ? "" : (x.ort_sonra ? ` · ort. ${fiyatYaz(x.ort_sonra)}` : ""));
     return `<div style="padding:9px 0;border-top:1px solid var(--cizgi)">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-        <span><b>${x.sembol}</b> <span style="font-size:12px;font-weight:650;color:${L?'var(--vurgu)':'#f59e0b'}">${t.yon} ${t.ne}</span></span>
+        <span><b>${x.sembol}</b> <span style="font-size:12px;font-weight:650;color:${L?'var(--vurgu)':'#f59e0b'}">${t.etiket || (t.yon + " " + t.ne)}</span></span>
         <span style="font-weight:650">${t.ekle?"+":"−"}${para(x.usd)}</span></div>
       <div class="s">${x.adet.toLocaleString("tr-TR",{maximumFractionDigits:4})} adet × ${fiyatYaz(x.fiyat)} · ${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div>
       <div style="font-size:12.5px;margin-top:2px">${x.kayit_yok && x.poz_sonra==null ? `<span class="s">pozisyon kaydı yok</span>` : (once!=null ? `pozisyon ${once} → <b>${sonra}</b>` : `pozisyon şimdi <b>${sonra}</b>`) + ort}${x.kapanis_kar!=null ? ` · kâr <b class="${sinif(x.kapanis_kar)}">${isaretli(x.kapanis_kar)}</b>` : ""}</div></div>`; }).join("");
