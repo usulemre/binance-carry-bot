@@ -8601,3 +8601,12 @@ Kollar X = 30 bp ve 60 bp. Maliyet: 4 bacak × 5 bp = 20 bp / tur (gerçekçi, p
 sermayenin %10'u (borsa başına %5'lik bacak, kaldıraçsız); dolu ise sinyal atlanır. EŞİK (683 ile aynı): gerçekçi maliyette yıllık net < %20 → RED.
 Bilinen iyimserlikler (VARSAYIM): 5 dk kapanış işlem görebilir fiyat sayılıyor (ince coinde bayat fiyat sahte fark üretir), kayma / emir derinliği yok,
 tutuş sırasındaki funding farkı yok, iki borsada ayrı teminat ve likidasyon riski yok. Yani sonuç ÜST SINIR.
+**SONUÇ 782 (40 coin, 30 gün, 5 dk; `arastirma_m782_borsa_fiyat_farki.py`): İKİ KOL DA RED (ön kayıt eşiği yıllık net ≥ %20).**
+Fiyatlar çok sıkı: sapmanın coin medyanı sd 4,5 bp, %99'luk 12,2 bp (maliyet 20 bp). Fırsat yalnız birkaç ince coinde (ONE %99 255 bp, IOST 98, RSR / APR / ORDER ~35).
+| kol | işlem (30 g) | brüt ort / medyan | tutuş medyan | net 20 bp → yıllık | net 8 bp → yıllık | ilk 3 coin payı |
+|---|---|---|---|---|---|---|
+| X 30 bp | 316 | 14,2 / 10,4 bp | 0,3 sa | −5,8 bp → **−%11,6** | +6,2 bp → +%12,2 | %70 |
+| X 60 bp | 27 | 72,6 / 63,0 bp | 1,2 sa | +52,6 bp → **+%8,9** | +64,6 bp → +%11,0 | %83 (ONE, IOST, ORDER) |
+30 bp'lik sapma maliyeti karşılamıyor (zararda); 60 bp'lik sapma kârlı ama ayda 27 kez, sermayenin çoğu boşta → yıllık %9-11, o da ÜST SINIR (kayma /
+derinlik yok, 5 dk kapanışı bayat olabilir; kazancın %83'ü günde 40-55 M $ hacimli 3 coinde). İkinci borsa hesabı + teminat bölünmesi + borsa riski
+karşılığında carry'nin ~%240'ının yanında anlamsız. Borsalar arası eksen (fiyat 782, funding 683 / 676 / 717) kapandı.
