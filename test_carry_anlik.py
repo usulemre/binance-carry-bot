@@ -165,6 +165,11 @@ g3 = carry_anlik.gercek_funding(_GF(_demo, _ger), _b // 1000, (_b + 11 * H) / 10
 kontrol("aynı funding anı iki kez sayılmaz", abs(g3["toplam"] - g2["toplam"]) < 1e-12)
 _gk = datetime.fromtimestamp((_b + 10 * H) / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
 kontrol("madde 748: artımlı funding UTC GÜN kırılımında (tekrar sayılmaz)", abs(g3["gun"].get(_gk, 0) - 5.0 * 2.0 * 0.001) < 1e-9 and sum(g3["gun"].values()) == g3["gun"][_gk], g3.get("gun"))
+kontrol("madde 784: coin başına gerçek funding birikir (tohum funding_olay yoksa boş, sonra yalnız yeni ödemeler)",
+        abs(g3["coin"].get("XUSDT", 0) - 5.0 * 2.0 * 0.001) < 1e-9 and set(g3["coin"]) == {"XUSDT"}, g3.get("coin"))
+_fo784 = os.path.join(tmp, "fo784.json")
+json.dump({"g": {str(_b + 4 * H): {"EUSDT": 0.014}, str(_b - H): {"EUSDT": 9.0}}}, open(_fo784, "w"))
+kontrol("madde 784: tohum funding_olay 'g'den, başlangıçtan önceki anlar sayılmaz", carry_anlik._coin_tohum(_fo784, _b) == {"EUSDT": 0.014})
 class _S3(_Sahte):
     def __init__(s):
         super().__init__(); s.client = _DemoC({}, _k); s.veri = _Oran({}); s.veri_gercek = True

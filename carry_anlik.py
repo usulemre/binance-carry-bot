@@ -349,6 +349,21 @@ def funding_olay_ekle(dosya: str, simdi: float, demo: list, gercek: list, sakla_
     return d
 
 
+def _coin_tohum(dosya: str, bas_ms: int) -> dict:
+    """Madde 784: funding_olay.json "g" (gerçek oranla ödeme anı × coin) kaydından coin başına toplam. Okunamazsa boş."""
+    try:
+        with open(dosya, encoding="utf-8") as f:
+            g = json.load(f).get("g") or {}
+    except (OSError, ValueError, AttributeError):
+        return {}
+    out: dict = {}
+    for t, d in g.items():
+        if int(t) >= bas_ms:
+            for sem, v in (d or {}).items():
+                out[sem] = round(out.get(sem, 0.0) + float(v), 6)
+    return out
+
+
 def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GERCEK_DOSYA) -> dict | None:
     """MADDE 744: "gerçek Binance oranlarıyla olsaydı" funding toplamı (yalnız demoda). Bot coin seçimini gerçek borsanın
     funding'ine göre yapar ama pozisyonlar demo borsada olduğu için funding'i demo borsa KENDİ oranıyla öder (çoğu zaman
@@ -400,7 +415,15 @@ def gercek_funding(client, bas_s: int, simdi: float, poz: dict, dosya: str = GER
     for t, _s, v_ in yeni_olay:
         g = datetime.fromtimestamp(t / 1000, tz=timezone.utc).strftime("%Y-%m-%d")
         gun[g] = round(gun.get(g, 0.0) + v_, 6)
-    b.update(son_ms=bit_ms, toplam=round(top, 6), sayilan=yeni_say, poz=sorted(poz), gun=gun)
+    # madde 784: coin başına başlangıçtan beri gerçek funding (panel coin tablosu). Alan yoksa funding_olay.json'un "g"
+    # kaydından (14 gün saklanır) bir kez tohumlanır; sonra her yeni ödeme eklenir.
+    coin = b.get("coin")
+    if not isinstance(coin, dict):
+        coin = _coin_tohum(os.path.join(os.path.dirname(dosya) or ".", "funding_olay.json"), bas_ms)
+    coin = {k: float(v) for k, v in coin.items()}
+    for _t, sem, v_ in yeni_olay:
+        coin[sem] = round(coin.get(sem, 0.0) + v_, 6)
+    b.update(son_ms=bit_ms, toplam=round(top, 6), sayilan=yeni_say, poz=sorted(poz), gun=gun, coin=coin)
     _atomik_yaz(dosya, b)
     return {**b, "_yeni": yeni_olay}
 

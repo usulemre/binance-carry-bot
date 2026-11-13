@@ -8616,3 +8616,13 @@ Kullanıcı ekranı (13 Kas 09:48 turu): "AKE long eklendi" ama AKE long listesi
 short −1.695. AKE iki dilimde long (6, 8: +17,2 $), iki yeni dilimde short (3, 13: −19 $; funding artıya döndü, 7 g +%22) → net
 ters döndü. Bot doğru; etiket po > 0 ve SELL'den "long" + ((ps>0)===al) → "eklendi" üretiyordu. Artık işaret değişirse
 "long kapandı → short açıldı" (renk yeni yönden). test_panel geçti.
+
+## Madde 784 — panel: her yerde CANLI (gerçek Binance) funding (yalnız görünüm, bot değişmedi)
+
+Kullanıcı (2026-11-14): "paneldeki geçmiş alanında hep canlı funding göster ama neden demo amacımız her yerde canlıyı görmek".
+- `FG` hep açık; "gerçek / demo (ham)" seçicisi kaldırıldı (eski tarayıcıda `carry_fg=0` kalmışsa da artık demo görünmez). Yerine "canlı funding ⓘ" açıklaması (demo hesaba yatan ile fark orada).
+- Geçmiş › Ayrıntılar: "Başlangıçtan beri funding" önce canlı tutarı, parantez içinde demo hesaba yatanı gösterir.
+- Coin bazında kâr / zarar tablosu: funding sütunu artık gerçek oranlı (demo `funding_demo` alanında); toplam ona göre.
+- carry_anlik `gercek_funding.json`'a `coin` (coin başına başlangıçtan beri gerçek funding) eklendi; alan yoksa `funding_olay.json` "g" kaydından bir kez tohumlanır (14 gün saklanır, bot 7 gündür çalışıyor → tam).
+- Doğrulama: funding_dogrula.py 8 gün panel = Binance resmi oran +49,09 $, fark 0,00 $. Demo hesaba yatan +24,50 $.
+- Testler: test_panel, test_carry_anlik geçti (yeni kontroller: coin funding gerçek, tohum başlangıç öncesini saymaz, sayfada demo seçici yok). JS sözdizimi node --check temiz.

@@ -591,12 +591,21 @@ def coin_ozet(klasor: str, an: dict | None) -> list[dict] | None:
     if c is None:
         return None
     poz = (an or {}).get("pozisyonlar") or {}
+    # madde 784: demoda coin başına GERÇEK oranlı funding (carry_anlik gercek_funding.json "coin"); yoksa None.
+    try:
+        with open(os.path.join(klasor, "defter", "gercek_funding.json"), encoding="utf-8") as f:
+            gc = json.load(f).get("coin")
+        gc = gc if isinstance(gc, dict) and gc else None
+    except (OSError, ValueError, AttributeError):
+        gc = None
     out = []
-    for s_ in set(c) | set(poz):
+    for s_ in set(c) | set(poz) | set(gc or {}):
         g = c.get(s_) or {}; p = poz.get(s_) or {}
         k = {"s": s_.removesuffix("USDT"), "kapanan": round(g.get("REALIZED_PNL", 0.0), 4), "funding": round(g.get("FUNDING_FEE", 0.0), 4),
              "komisyon": round(g.get("COMMISSION", 0.0), 4), "acik": round(float(p.get("gerceklesmemis") or 0.0), 4),
              "yon": p.get("yon")}
+        if gc is not None:
+            k["funding_demo"] = k["funding"]; k["funding"] = round(float(gc.get(s_, 0.0)), 4)
         k["toplam"] = round(k["kapanan"] + k["funding"] + k["komisyon"] + k["acik"], 4)
         out.append(k)
     return sorted(out, key=lambda x: x["toplam"])
@@ -1321,7 +1330,7 @@ function dokumYaz(k, poz, kar){
   const tm = K.reduce((a,x)=>a+Math.abs(x[2]), 0) || 1;
   const cubuk = `<div class="cubuk">${K.map(x=>`<span style="width:${(Math.abs(x[2])/tm*100).toFixed(1)}%;background:${css(x[4])}" title="${x[1]}"></span>`).join("")}</div>`;
   // madde 744: demoda funding'i demo borsa kendi oranıyla öder; bot gerçek oranlara göre seçer -> "gerçek oranlarla olsaydı" (toplama girmez)
-  const fg = gz ? D.funding : D.funding_gercek, fgS = fg==null ? "" : gz ? `<div class="dk alt ${ACIK.has("fug")?"acik":""}" onclick="dkAc('fug')"><span class="n"></span><span class="a">↳ demo hesabın ödediği <span class="ok">›</span></span><span class="v ${sinif(fg)}">${isaretli(fg)}</span><span class="ac">Demo borsa funding'i kendi oranıyla öder (gerçekle ilgisiz). Toplama girmez; "demo (ham)" görünümünde toplam bununla hesaplanır.</span></div>` : `<div class="dk alt ${ACIK.has("fug")?"acik":""}" onclick="dkAc('fug')"><span class="n"></span><span class="a">↳ gerçek Binance oranlarıyla olsaydı <span class="ok">›</span></span><span class="v ${sinif(fg)}">${isaretli(fg)}</span><span class="ac">Bot coinleri gerçek Binance'in funding oranlarına bakarak seçer, ama pozisyonlar demo borsada olduğu için funding'i demo borsa kendi oranıyla öder (çoğu zaman gerçekle ilgisiz). Bu satır aynı pozisyonların gerçek oranlarla ne alacağını / ödeyeceğini gösterir (yaklaşık; 5 dk'lık pozisyon görüntüsüyle). Toplama girmez — canlı hesapta funding bu olurdu.</span></div>`;
+  const fg = gz ? D.funding : D.funding_gercek, fgS = fg==null ? "" : gz ? `<div class="dk alt ${ACIK.has("fug")?"acik":""}" onclick="dkAc('fug')"><span class="n"></span><span class="a">↳ demo hesabın ödediği <span class="ok">›</span></span><span class="v ${sinif(fg)}">${isaretli(fg)}</span><span class="ac">Demo borsa funding'i kendi oranıyla öder (gerçekle ilgisiz). Toplama girmez; yalnız bilgi.</span></div>` : `<div class="dk alt ${ACIK.has("fug")?"acik":""}" onclick="dkAc('fug')"><span class="n"></span><span class="a">↳ gerçek Binance oranlarıyla olsaydı <span class="ok">›</span></span><span class="v ${sinif(fg)}">${isaretli(fg)}</span><span class="ac">Bot coinleri gerçek Binance'in funding oranlarına bakarak seçer, ama pozisyonlar demo borsada olduğu için funding'i demo borsa kendi oranıyla öder (çoğu zaman gerçekle ilgisiz). Bu satır aynı pozisyonların gerçek oranlarla ne alacağını / ödeyeceğini gösterir (yaklaşık; 5 dk'lık pozisyon görüntüsüyle). Toplama girmez — canlı hesapta funding bu olurdu.</span></div>`;
   return cubuk + K.map(x=>`<div class="dk ${ACIK.has(x[0])?"acik":""}" onclick="dkAc('${x[0]}')"><span class="n" style="background:${css(x[4])}"></span><span class="a">${x[1]} <span class="ok">›</span></span><span class="v ${sinif(x[2])}">${isaretli(x[2])}</span><span class="ac">${x[3]}</span></div>` + (x[0]=="fun" ? fgS : "")).join("")
     + `<div class="dk top"><span class="a">Toplam (başlangıçtan beri)</span><span class="v rz ${sinif(kar)}">${isaretli(kar)}</span></div>`;
 }
@@ -1414,8 +1423,9 @@ function nerdenHtml(k, poz, kar){
 function fgKucuk(k){   // madde 758: gerçek / demo funding seçici — küçük, ayrıntı dokununca
   if (!k.gercek) return "";
   const g = k.gercek;
-  return `<span class="fgk"><button class="${FG?"on":""}" onclick="fgSec(true)">gerçek</button><button class="${!FG?"on":""}" onclick="fgSec(false)">demo</button><button class="fgi" onclick="const a=document.getElementById('fgacik'); a.hidden=!a.hidden" aria-label="funding açıklaması">ⓘ</button></span>
-    <div id="fgacik" class="fgacik" hidden>Demo borsa funding'i kendi oranıyla öder. "Gerçek" aynı pozisyonların gerçek Binance oranlarıyla alacağını gösterir (fark ${isaretli(g.fark)}); kitap ve kâr da buna göre.${g.duzeltilmeyen ? ` İlk ${g.duzeltilmeyen} günün günlük getirisi demo funding'le kaldı.` : ""}</div>`;
+  // madde 784: seçici kaldırıldı — her yerde canlı (gerçek Binance) funding; yalnız açıklama
+  return `<span class="fgk"><button class="on fgi" onclick="const a=document.getElementById('fgacik'); a.hidden=!a.hidden" aria-label="funding açıklaması">canlı funding ⓘ</button></span>
+    <div id="fgacik" class="fgacik" hidden>Paneldeki tüm funding, kitap ve kâr rakamları gerçek Binance funding oranlarıyla (canlı hesapta alınacak tutar). Demo borsa funding'i kendi oranıyla öder; demo hesaba yatan ile fark ${isaretli(g.fark)}.${g.duzeltilmeyen ? ` İlk ${g.duzeltilmeyen} günün gün gün dağılımı tahmini (o günlerin gerçek-oran kırılımı yok); toplam kesin.` : ""}</div>`;
 }
 function dilimMetin(D){
   if (!D) return "—"; const kalan = D.zaman - Date.now()/1000;
@@ -1560,7 +1570,7 @@ function gecmisSayfa(k){
   const grafikVar = (k.seri||[]).length >= 3;   // madde 734/737: 1-2 noktalık grafik bilgi vermez, yalnız yer kaplar
   const ac = ACIK.has("gecay");   // madde 756: eski ayrıntılar (takvim, yıllık, grafikler, coinler, icra) kapalı bölümde
   return `<div id="gsade">${gecmisSade(k)}</div>` + `<div class="kart" style="padding:0"><button class="gayr" onclick="olayAc('gecay')">${ac?"▾":"▸"} Ayrıntılar <span class="k">takvim · coinler · icra</span></button></div>` + (!ac ? "" : `<div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2>${takvim(k)}
-      ${k.dokum?`<div class="k" style="margin-top:6px">Başlangıçtan beri: funding ${isaretli(k.dokum.funding)}${k.dokum.funding_gercek!=null?` (gerçek oranlarla ${isaretli(k.dokum.funding_gercek)})`:""} · komisyon ${isaretli(k.dokum.komisyon)}</div>`
+      ${k.dokum?`<div class="k" style="margin-top:6px">Başlangıçtan beri: funding ${k.dokum.funding_gercek!=null?`${isaretli(k.dokum.funding_gercek)} <span class="k">(canlı · demo hesaba yatan ${isaretli(k.dokum.funding)})</span>`:isaretli(k.dokum.funding)} · komisyon ${isaretli(k.dokum.komisyon)}</div>`
         :(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:6px">Defter toplamı (yaklaşık): funding ${isaretli(k.funding_top)} · komisyon ${isaretli(k.komisyon_top)}</div>`:""}
       <div class="k" style="margin-top:4px">Her gün, Binance gününe (03:00 – 03:00) göre. ● işaretli gün bugün: canlı, gün sonunda (03:05) kesinleşir.</div></div>
     <div class="kart"><h2>Son 1 yıl</h2>${yillik(k)}</div>
@@ -1581,7 +1591,7 @@ function coinTablo(k){
     <div class="tablo yatay"><table class="coin"><tr class="k"><td class="l">coin</td><td>kapanan</td><td>funding</td><td>komisyon</td><td>açık</td><td>toplam</td></tr>${sat}
     <tr><td class="l"><b>Toplam (${C.length} coin)</b></td><td>${h(T.kp)}</td><td>${h(T.f)}</td><td>${h(T.km)}</td><td>${h(T.a)}</td><td><b>${h(T.t)}</b></td></tr></table></div>
     ${C.length>10?`<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾ en kötü / en iyi 5'e dön":`▸ tüm coinler (${C.length})`}</span></div>`:""}
-    <div class="k" style="margin-top:6px">Kapanan, funding ve komisyon borsanın gelir kayıtlarından${k.mod=="demo"?" (funding: demo hesabın aldığı)":""}; açık = şu anki gerçekleşmemiş kâr / zarar.${MOBIL()?" Telefonda komisyon sütunu gizli (toplama dahil).":""}</div></div>`;
+    <div class="k" style="margin-top:6px">Kapanan, funding ve komisyon borsanın gelir kayıtlarından${k.mod=="demo"?(C.some(x=>x.funding_demo!=null)?" (funding: canlı / gerçek Binance oranlarıyla)":" (funding: demo hesabın aldığı)"):""}; açık = şu anki gerçekleşmemiş kâr / zarar.${MOBIL()?" Telefonda komisyon sütunu gizli (toplama dahil).":""}</div></div>`;
 }
 // MADDE 740: olaylar zaman çizelgesi — gün gün (Bugün / Dün / tarih), türe göre simge
 const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", stop_tut:"□", delist:"!", saglik:"♥", hata:"✕", tp:"✓", uyari:"⚠", tur:"↻", islem:"⇄", funding:"$", postonly:"↺"};
@@ -1715,7 +1725,8 @@ function olaySayfa(k){
 }
 // MADDE 748: demo kurulumda "gerçek funding ile" görünüm (varsayılan AÇIK): kitap, kâr, günlük getiri ve 7/30 gün / düşüş
 // demonun kendi funding'i yerine gerçek Binance oranlarıyla. Ham demo değerleri k._demo'da; anahtar Özet'te.
-let FG = (()=>{ try { return localStorage.getItem("carry_fg") !== "0"; } catch(_) { return true; } })();
+// MADDE 784: kullanıcı "her yerde canlıyı görmek" istiyor — demo (ham) seçeneği kaldırıldı, FG hep açık.
+const FG = true;
 function gorunum(V){
   for (const k of (V.kurulumlar||[])){
     if (!k.gercek) continue;
@@ -1725,20 +1736,6 @@ function gorunum(V){
     Object.assign(k, FG ? k._gercek : {});
   }
   return V;
-}
-function fgSec(v){
-  FG = v; try { localStorage.setItem("carry_fg", v ? "1" : "0"); } catch(_){}
-  for (const k of (VERI.kurulumlar||[])) if (k._demo) Object.assign(k, k._demo, FG ? k._gercek : {});
-  AKIS.ustk = null; AKIS.kitapd = null; ciz();
-}
-function fgAnahtar(k){
-  if (!k.gercek) return "";
-  const g = k.gercek;
-  return `<div style="display:flex;gap:6px;align-items:center;flex-wrap:wrap;margin:6px 0 2px;font-size:12px;color:var(--soluk)">funding:
-    <button class="${FG?'on':''}" style="border-radius:999px;border:1px solid var(--cizgi);background:${FG?'color-mix(in srgb,var(--vurgu) 16%,transparent)':'none'};color:${FG?'var(--vurgu)':'var(--soluk)'};font:inherit;padding:4px 10px;cursor:pointer" onclick="fgSec(true)">gerçek Binance</button>
-    <button style="border-radius:999px;border:1px solid var(--cizgi);background:${!FG?'color-mix(in srgb,var(--vurgu) 16%,transparent)':'none'};color:${!FG?'var(--vurgu)':'var(--soluk)'};font:inherit;padding:4px 10px;cursor:pointer" onclick="fgSec(false)">demo (ham)</button>
-    <span class="fgac" onclick="const a=this.nextElementSibling; a.hidden=!a.hidden">fark ${isaretli(g.fark)} ⓘ</span>
-    <span class="fgacik" hidden>Demo borsa funding'i kendi oranıyla öder; "gerçek Binance" aynı pozisyonların gerçek oranlarla alacağını gösterir (fark ${isaretli(g.fark)}).${g.duzeltilmeyen ? ` İlk ${g.duzeltilmeyen} günün günlük getirisi demo funding'le kaldı (gerçek oranın gün kırılımı o günler için yok); toplam kitap ve kâr yine gerçek oranla.` : ""}</span></div>`;
 }
 function ciz(){
   const K = VERI.kurulumlar; $("#alt").textContent = K[secili] ? `${K[secili].ad} · ${K[secili].mod}` : "";

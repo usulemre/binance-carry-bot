@@ -363,7 +363,8 @@ kontrol("gerçek: kırılımı olan gün düzeltilir (−0,5% + (0,60+0,20)/1996
         and _g8["duzeltilen"] == 1 and _g8["duzeltilmeyen"] == 1, (_gs, _g8))
 kontrol("gerçek: gün zinciri kitapla tutarlı (son gün sonu + bugün farkı = canlı kitap)", abs(_g8["seri"][-1]["kitap"] - 1981.6) < 1e-6 and abs(_g8["kitap_canli"] - _g8["seri"][-1]["kitap"] - (1990.0 - 1980.0)) < 1e-6, _g8["seri"][-1])
 kontrol("gerçek: veri yoksa None", panel.gercek_gorunum(_d8, {"dokum": {"funding": 1}}, _k8) is None)
-kontrol("sayfada funding anahtarı", "fgAnahtar" in app.get("/").data.decode())
+_html = app.get("/").data.decode()
+kontrol("madde 784: sayfada canlı funding etiketi, demo seçici YOK", "canlı funding" in _html and "fgSec" not in _html and "const FG = true" in _html)
 
 # MADDE 753: başlangıç kesimi, stop durumu, coin bazında özet, karar fiyatına göre kayma, sayfa öğeleri
 _dfk = [{"tarih": "2026-11-06", "zaman": 1793996574}]
@@ -384,6 +385,12 @@ _co = panel.coin_ozet(_k53, {"pozisyonlar": {"AKEUSDT": {"gerceklesmemis": -28.0
 kontrol("coin özeti: kapanan + funding + komisyon + açık, en kötüden",
         [x["s"] for x in _co] == ["AKE", "ZEC", "HYPE"] and _co[0]["toplam"] == -33.18 and _co[1]["toplam"] == -15.0 and _co[2]["yon"] is None, _co)
 kontrol("coin özeti: kayıt yoksa None", panel.coin_ozet(os.path.join(tmp, "yok"), None) is None)
+json.dump({"coin": {"AKEUSDT": 0.5, "INITUSDT": 2.0}}, open(os.path.join(_k53, "defter", "gercek_funding.json"), "w"))
+_cg = {x["s"]: x for x in panel.coin_ozet(_k53, {"pozisyonlar": {"AKEUSDT": {"gerceklesmemis": -28.0, "yon": "L"}}})}
+kontrol("madde 784: coin özeti funding'i GERÇEK oranlı (demo ayrı alanda), toplam ona göre",
+        _cg["AKE"]["funding"] == 0.5 and _cg["AKE"]["funding_demo"] == 0.1 and abs(_cg["AKE"]["toplam"] - (-5.26 + 0.5 - 0.02 - 28.0)) < 1e-9
+        and _cg["INIT"]["funding"] == 2.0 and _cg["HYPE"]["funding"] == 0.0, _cg)
+os.remove(os.path.join(_k53, "defter", "gercek_funding.json"))
 _db53 = os.path.join(_k53, "defter", "carry.db"); _t53 = __import__("time").time() - 3600
 _DB.emir_kaydet("GIRIS", "KOMAUSDT", "BUY", 100, db=_db53, simdi=_t53, oid="a", ref=1.0)
 _DB.emir_kaydet("PIYASA_YEDEK", "KOMAUSDT", "BUY", 100, db=_db53, simdi=_t53 + 370, oid="b", ref=1.0)
