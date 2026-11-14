@@ -8646,3 +8646,10 @@ ONE long −1,44 · **AKE short −1,34 (13 Kas) + AKE long −0,92** · INIT lo
 fiyattan kaybediyor, AKE iki yönde zarar, funding birikiyor) backtestin de tablosu; coin seçimi örtüşüyor. Açık kalan: demo short tarafı backtestteki kadar kazandırmadı
 (rampa: ilk günlerde short payı küçüktü) ve 12 Kas'a kadar eski "tamamlama" davranışı canlıydı (madde 770). 14 Kasım (demo −%4,05'e indi) henüz veride yok.
 Yan ürün: ay bitmeden OOS yolu (`indir_ek_gun.py`: günlük dosyalar + resmi funding geçmişi) — Kasım OOS'u artık günlük izlenebilir. Bot ayarı DEĞİŞMEDİ.
+
+## Madde 784 — Sert düşüşten sonra tepki (kullanıcı 15 Kas: "büyük ihtimal sert yükselecek, testte böyle düşüşlerde tepki nedir") — betimsel, kural yok
+Durum: BTC 24 sa −7,0 / 47 sa −10,7; altlar −13..−19. Olay tanımı: BTC 2 günde ≤ −%10 (7 gün ayrık), 2020-07 → 2026-10: 21 olay (2023 ve 2025'te yok).
+Sonrası (medyan / ortalama / pozitif): BTC 1 g +0,8 / +1,0 / %67 · 3 g +2,0 / +1,7 / %62 · 7 g +1,9 / +0,7 / %57; alt medyanı 7 g +2,8 / +0,6 / %57
+(aralık −37 … +19: 2021-05, 2022-05, 2022-11, 2026-06'da düşüş SÜRDÜ). Kitap (P3T2 ×1,15): olay 2 günü +0,5 / −0,3 / %52 · sonraki 1 g 0,0 / +0,5 / %52 ·
+3 g +1,4 / +1,6 / %71 · 7 g +1,4 / +3,3 / %76 (en kötü −3,7 / −3,3). Tepki "büyük ihtimal" değil, hafif olasılık (%57-67); kitap yöne bağlı değil
+(sıçrayan 2021-01, 2026-02 ve süren 2022-11 düşüşlerinin ikisinde de 7 g artı). Yön tahminiyle kitabı eğme önerilmez (yön filtreleri 566 / 649 RED).
