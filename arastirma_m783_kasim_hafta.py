@@ -38,9 +38,9 @@ def analiz():
     rp = (1 + pd.Series(h7.values * np.array(pay), index=h7.index) / 100).prod() - 1
     print("rampa payları:", [round(p, 2) for p in pay], f"→ 7-13 Kasım RAMPA AYARLI {rp * 100:+.2f}%   | demo 13 Kas UTC sonu ≈ −2,76%")
     G = pd.concat([pd.read_pickle(f"{OUT}/gk_{h}.pkl") for h in (0, 1)]); G["gun"] = pd.to_datetime(G.gun)
-    G = G[(G.gun >= "2026-11-07") & (G.gun <= "2026-11-13")]; G["net"] = (G.fiyat_top + G.funding - G.komisyon) / 2 * 115
+    G = G[(G.gun >= "2026-11-07") & (G.gun <= "2026-11-13")]; G["net"] = (G.fiyat + G.funding) / 2 * 115
     G["yon"] = np.where(G.ort_poz > 0, "long", "short")
-    t = G.groupby("yon")[["net"]].sum(); f = G.groupby("yon").apply(lambda x: pd.Series({"fiyat": x.fiyat_top.sum() / 2 * 115, "funding": x.funding.sum() / 2 * 115}))
+    t = G.groupby("yon")[["net"]].sum(); f = G.groupby("yon").apply(lambda x: pd.Series({"fiyat": x.fiyat.sum() / 2 * 115, "funding": x.funding.sum() / 2 * 115}))
     print("\n7-13 Kasım katkı (% kitap, ×1,15):"); print(pd.concat([t, f], axis=1).round(2).to_string())
     c = G.groupby(["sembol", "yon"]).net.sum().sort_values()
     print("en kötü 8:", c.head(8).round(2).to_dict()); print("en iyi 6:", c.tail(6).round(2).to_dict())

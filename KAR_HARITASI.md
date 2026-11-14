@@ -8637,3 +8637,12 @@ Veri yolu (yeni): 4 sa mum + metrik = data.binance.vision GÜNLÜK dosyalar (1-1
 o gün açık dilim payı; demo başlangıcı 7 Kas ~00:00 UTC, 8 sa'te bir dilim). Okuma kuralı (tek hafta İSTATİSTİKSEL kanıt değil):
 rampa ayarlı backtest ile demo (13 Kas UTC sonu −%2,76) farkı ≤ 2 puan → "tutarlı, kötü hafta"; backtest demodan > 2 puan iyi → "ayrışma, incelenir"
 (aday nedenler: madde 770 öncesi tamamlama davranışı 12 Kas'a kadar canlıydı, demo dolum / funding farkı, coin seçimi). Bot ayarı DEĞİŞMEZ.
+**SONUÇ 783 (822 sembol 13 Kas 20:00'a kadar; zemin / sk60 / sk96 / metrik paneli eski kısımda fark 0; yeni koşu ≤ 30 Ekim günlük serisi referansla fark 0; 2 koşu rc 0): TUTARLI — backtest de aynı haftayı EKSİ yazıyor.**
+P3T2 ×1,15 günlük (%; iki hiza ort.): 1 Kas −2,13 · 2 −2,76 · 3 +0,88 · 4 +3,37 · 5 −0,08 · 6 +1,00 · **7 −0,79 · 8 +0,47 · 9 −2,56 · 10 +1,83 · 11 −1,50 · 12 +1,11 · 13 −0,74**.
+1-13 Kasım −2,06 · 7-13 Kasım tam kitap **−2,21** · rampa ayarlı (0,1 / 0,3 / 0,5 / 0,7 / 0,9 / 1 / 1) **−0,94** · demo 13 Kas UTC sonu ≈ **−2,76** → fark 1,8 puan (ön kayıt sınırı 2: "tutarlı,
+kötü hafta", sınıra yakın). İki hiza 13 Kas'ta çok ayrışıyor (+1,48 / −2,95): AKE short'una hangi dilimin girdiğine bağlı → tek haftada hiza gürültüsü ±2 puan.
+7-13 Kasım katkı (% kitap): long **−9,69** (fiyat −11,98, funding +2,28) · short **+7,75** (fiyat +7,68, funding +0,07). Backtest AYNI coinleri tuttu: ZEC long −2,27 · PUMP long −1,46 ·
+ONE long −1,44 · **AKE short −1,34 (13 Kas) + AKE long −0,92** · INIT long −1,23 · CYBER long −0,63; kazananlar JCT / LYN / XRP / ON / 1000PEPE short. Yani demodaki tablo (long'lar
+fiyattan kaybediyor, AKE iki yönde zarar, funding birikiyor) backtestin de tablosu; coin seçimi örtüşüyor. Açık kalan: demo short tarafı backtestteki kadar kazandırmadı
+(rampa: ilk günlerde short payı küçüktü) ve 12 Kas'a kadar eski "tamamlama" davranışı canlıydı (madde 770). 14 Kasım (demo −%4,05'e indi) henüz veride yok.
+Yan ürün: ay bitmeden OOS yolu (`indir_ek_gun.py`: günlük dosyalar + resmi funding geçmişi) — Kasım OOS'u artık günlük izlenebilir. Bot ayarı DEĞİŞMEDİ.
