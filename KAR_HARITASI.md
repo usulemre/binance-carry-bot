@@ -8626,3 +8626,14 @@ Kullanıcı (2026-11-14): "paneldeki geçmiş alanında hep canlı funding göst
 - carry_anlik `gercek_funding.json`'a `coin` (coin başına başlangıçtan beri gerçek funding) eklendi; alan yoksa `funding_olay.json` "g" kaydından bir kez tohumlanır (14 gün saklanır, bot 7 gündür çalışıyor → tam).
 - Doğrulama: funding_dogrula.py 8 gün panel = Binance resmi oran +49,09 $, fark 0,00 $. Demo hesaba yatan +24,50 $.
 - Testler: test_panel, test_carry_anlik geçti (yeni kontroller: coin funding gerçek, tohum başlangıç öncesini saymaz, sayfada demo seçici yok). JS sözdizimi node --check temiz.
+
+## Madde 783 ÖN KAYIT (2026-11-14, Kasım verisi İNDİRİLMEDEN; kullanıcı: "zarar büyüyor … bak bakalım") — demo haftası (7-13 Kasım) backtestte nasıldı? KARAR VERMEZ
+Demo: 13 Kas 01:47 −%0,54 · 13 Kas 19:20 −%1,52 · 14 Kas 03:00 TSİ (= 13 Kas UTC sonu) ≈ −%2,76 · 14 Kas 13:53 −%4,05 (AKE short zararına kapandı).
+Veri yolu (yeni): 4 sa mum + metrik = data.binance.vision GÜNLÜK dosyalar (1-13 Kas); funding = Binance web'in herkese açık funding geçmişi ucu
+(bapi get-funding-rate-history; resmi kayıt, aylık arşivle aynı kaynak — 413'ün "primden tahmin" sorunu yok). Ham veri + /tmp zemini önce yedeklenir
+(`/tmp/yedek_ekim`); ekleme artımlı (aylık Kasım arşivi gelince 14 Kas'tan devam eder). Zemin / sinyal / metrik paneli yeniden kurulur.
+Ölçüm: P3T2 (önerilen ayar, canlıdaki T7K 1,15x + koşullu stop), iki hiza, günlük getiri × 1,15, 7-13 Kasım (UTC). Parite kontrolü: yeni koşunun
+≤ 31 Ekim günlük serisi eski referansla aynı olmalı. Demo kitabı 5 günde 15 dilime kademeli doldu → yanına RAMPA AYARLI seri (gün getirisi ×
+o gün açık dilim payı; demo başlangıcı 7 Kas ~00:00 UTC, 8 sa'te bir dilim). Okuma kuralı (tek hafta İSTATİSTİKSEL kanıt değil):
+rampa ayarlı backtest ile demo (13 Kas UTC sonu −%2,76) farkı ≤ 2 puan → "tutarlı, kötü hafta"; backtest demodan > 2 puan iyi → "ayrışma, incelenir"
+(aday nedenler: madde 770 öncesi tamamlama davranışı 12 Kas'a kadar canlıydı, demo dolum / funding farkı, coin seçimi). Bot ayarı DEĞİŞMEZ.
