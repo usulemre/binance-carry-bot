@@ -8719,3 +8719,6 @@ merdiven (kademe), felaket stop seviyesi. Bilinen yaklaşım: motorda adet vekil
 **788 uygulama (varsayılan KAPALI):** `carry_bot.CARRY_GIRIS_DILIM` (0 = Binance entryPrice, eski) / 1 = `dilim_giris_ortalamasi()` (açık bacakların
 adet ağırlıklı ortalaması, adet = |usd| / dilim_fiyat). `kar_al_kur` içinde TP, kademe ve felaket stop bu girişi kullanır; dilim kaydı yoksa Binance girişi.
 test_tutus_sabit.py: 4 yeni kontrol (ortalama, short yönü, pahalı dilim çıkınca iniş, varsayılan kapalı). Açmak kullanıcı kararı.
+**788 kullanıcı ONAYI (2026-11-15 23:42: "Onaylıyorum"):** sunucuda `.env`'e `CARRY_GIRIS_DILIM=1`. Panel de aynı girişi gösterir: `tp_giris` (çıkış takviminin
+parça girişlerinden adet ağırlıklı ortalama) yalnız bu bayrak açıkken; kâr al hedefi / ilerleme çubuğu / alt sayfa kutusu `tpGiris()` ile. K/Z hesabı
+Binance girişinde kalır (Binance'in gerçekleşmemiş kâr / zararı o girişle hesaplanır).

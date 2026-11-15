@@ -721,6 +721,9 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
             o["fundingler"] = [x for x in o["fundingler"] if x["zaman"] >= kes]
         o["stop_durum"] = stop_oku(kl)
         o["cikis"] = cikis_takvimi(kl, e, o.get("dilim"))   # madde 787
+        if (e.get("CARRY_GIRIS_DILIM") or "0") not in ("0", "false", "False") and o["cikis"]:   # madde 788: kâr al kendi dilim girişinden
+            o["tp_giris"] = {sem: round(sum(x["pay"] * x["giris"] for x in L) / sum(x["pay"] for x in L), 10)
+                             for sem, L in o["cikis"].items() if L and all(x.get("giris") for x in L)}
         kk = karar_kayma(kl)
         if kk is not None and o.get("icra"):
             o["icra"]["karar"] = kk
@@ -1156,13 +1159,15 @@ function kivilcim(s, p, f, renk, W=160, H=64){   // madde 755: W/H = gösterildi
   // madde 743: en küçük dikey aralık fiyatın %1'i (gün başında 2-3 mumluk oynama duvar gibi görünmesin)
   return cizgi(nok.map(n=>n[1]), W, H, renk, p.giris>0 ? p.giris : null, s, nok.map(n=>Math.min(1, (n[0]-M.bas)/GUN_MS)), true, 0.01 * (f || nok[nok.length-1][1]));
 }
+// MADDE 788: kâr al'ın giriş referansı — CARRY_GIRIS_DILIM=1 ise botun kendi dilim girişi (açık parçaların ortalaması), yoksa Binance girişi
+function tpGiris(k, s, p){ const d = s && (k.tp_giris||{})[s]; return d && d > 0 ? d : p.giris; }
 // MADDE 737: kâr al hedefine ilerleme. Long: giriş -> giriş x (1 + kademe); short: giriş -> giriş x (1 − kademe).
-function hedefCubuk(k, p, f){
-  const H = (k.hedef||{})[p.miktar>0 ? "L" : "S"] || [];
-  if (!H.length || !(p.giris>0) || !f) return "";
-  const yon = p.miktar>0 ? 1 : -1, hareket = (f/p.giris - 1) * yon;
+function hedefCubuk(k, p, f, s){
+  const H = (k.hedef||{})[p.miktar>0 ? "L" : "S"] || [], tg = tpGiris(k, s, p);
+  if (!H.length || !(tg>0) || !f) return "";
+  const yon = p.miktar>0 ? 1 : -1, hareket = (f/tg - 1) * yon;
   let i = H.findIndex(h => hareket < h); const gecti = i < 0; if (gecti) i = H.length - 1;
-  const h = H[i], hf = p.giris * (1 + yon*h), ilerl = Math.max(0, Math.min(1, hareket / h));
+  const h = H[i], hf = tg * (1 + yon*h), ilerl = Math.max(0, Math.min(1, hareket / h));
   const etiket = gecti ? `son hedef ${fiyatYaz(hf)} geçildi` : `${i?"2. hedef":"hedef"} ${fiyatYaz(hf)} (${yon>0?"+":"−"}%${Math.round(h*100)}) · %${Math.round(ilerl*100)} yol`;
   return `<div class="hedef"><div class="c"><span style="width:${(ilerl*100).toFixed(1)}%"></span></div><div class="t">${etiket}</div></div>`;
 }
@@ -1183,7 +1188,7 @@ function kutuIc(s, p, k){
   return `<div class="ad"><span>${s.replace(/USDT$/,"")}</span><span class="k">${para(usd)}</span></div>
     <div class="f ${flas}">${fiyatYaz(f)}</div><div class="gr"><span>giriş ${fiyatYaz(p.giris)}</span>${bg!=null?`<span class="${sinif(bg)}">bugün ${yz(bg)}</span>`:""}</div>
     <div class="y ${sinif(ky)}"><span class="rz">${ok_(ky)} ${ky==null?"—":Math.abs(ky).toFixed(2).replace(".",",")+"%"}</span><small>${g==null?"":isaretli(g)}</small></div>
-    ${kivilcim(s, p, f, renk, KUTU_W)}${k ? hedefCubuk(k, p, f) : ""}${fundSatir(s, p, f)}${k ? stopSatir(k, s, p) : ""}`;
+    ${kivilcim(s, p, f, renk, KUTU_W)}${k ? hedefCubuk(k, p, f, s) : ""}${fundSatir(s, p, f)}${k ? stopSatir(k, s, p) : ""}`;
 }
 // MADDE 754: telefonda pozisyon = tek satır (coin, yön, büyüklük, kâr %, $); dokununca kutudaki ayrıntılar açılır
 function satirIc(s, p, k){
@@ -1197,7 +1202,7 @@ function satirIc(s, p, k){
   return `<div class="ust" onclick="pozAc('${s}')"><span class="c"><b>${s.replace(/USDT$/,"")}</b><span class="yb">${p.miktar>0?"L":"S"}</span>${uy}</span>
       <span class="u">${para(usd)}</span><span class="p"><span class="rz ${sinif(ky)}">${ky==null?"—":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"}</span></span><span class="g ${sinif(g)}">${g==null?"":isaretli(g)}</span></div>
     ${ac ? `<div class="det"><div class="f">${fiyatYaz(f)}</div><div class="gr"><span>giriş ${fiyatYaz(p.giris)}</span>${bg!=null?`<span class="${sinif(bg)}">bugün ${yz(bg)}</span>`:""}</div>
-      ${kivilcim(s, p, f, renk, Math.max(200, Math.round((($("#icerik")||{}).clientWidth || innerWidth - 28) - 52)), 90)}${hedefCubuk(k, p, f)}${fundSatir(s, p, f)}${stopSatir(k, s, p)}</div>` : ""}`;
+      ${kivilcim(s, p, f, renk, Math.max(200, Math.round((($("#icerik")||{}).clientWidth || innerWidth - 28) - 52)), 90)}${hedefCubuk(k, p, f, s)}${fundSatir(s, p, f)}${stopSatir(k, s, p)}</div>` : ""}`;
 }
 function pozAc(s){ ACIK.has("p"+s) ? ACIK.delete("p"+s) : ACIK.add("p"+s); const e = document.getElementById("t-"+s), k = VERI.kurulumlar[secili];
   if (e && k.pozisyonlar[s]){ e.classList.toggle("acik", ACIK.has("p"+s)); e.innerHTML = satirIc(s, k.pozisyonlar[s], k); } }
@@ -1560,7 +1565,7 @@ function sheetIc(s, p, k){
   const D = k.stop_durum, sv = uzun && D && !D.kapali ? (D.coin||{})[s.replace(/USDT$/,"")] : null, ec = D ? D.esik_coin : 0.45;
   const pyz = v => v==null ? "—" : (v>=0?"+":"−") + "%" + Math.abs(v*100).toFixed(1).replace(".",",");
   const kutu = (e, d) => `<div class="shk"><div class="k">${e}</div><div class="shd">${d}</div></div>`;
-  const H = (k.hedef||{})[uzun ? "L" : "S"] || [], h0 = H.length && p.giris>0 ? p.giris * (1 + (uzun?1:-1) * H[0]) : null;
+  const tg = tpGiris(k, s, p), H = (k.hedef||{})[uzun ? "L" : "S"] || [], h0 = H.length && tg>0 ? tg * (1 + (uzun?1:-1) * H[0]) : null;
   const stop = sv==null ? "" : `<div class="shs"><div class="shr"><span class="k">Koşullu stop · coin 24 sa</span><span>${pyz(sv)} / <b>−%${Math.round(ec*100)}</b></span></div>
       <div class="shc"><span style="width:${Math.min(100, Math.max(0, -sv/ec*100)).toFixed(0)}%;background:${css(sv<=-ec?"--eks":sv<=-ec*0.5?"--uyari":"--soluk")}"></span></div>
       <div class="shr" style="margin-top:10px"><span class="k">Piyasa medyanı 24 sa</span><span class="${D.piyasa_sart?"uyr":""}">${pyz(D.medyan)} / −%${Math.round(D.esik_piyasa*100)} · ${D.piyasa_sart?"şart var":"şart yok"}</span></div></div>`;
