@@ -8662,3 +8662,10 @@ zararlı 12 ayda ortalama çarpan 0,85 (tüm aylar 0,89; 6'sında ≤ 0,76). Kap
 önlemler RED: dinamik doz 7 kol (685), çarpan tabanı 0,5 / 0,6 / 0,8 (598), çarpana üst (597), tek tarafa (615), düşüşe bağlı doz / profil seçici (620),
 yön / rejim filtreleri (566 / 649 / 693). Canlıdaki tek açık: çarpan ilk ~90 gün 1,0 (766; "prim tohumu" ADAY, kullanıcı 12 Kas'ta 6. maddeyi atladı).
 Şu an etkisi yok: backtest çarpanı 7-13 Kasım 0,94-1,00 (20-26 Ekim'de 0,70) → demo ile fark bu hafta ≤ %6 brüt.
+
+## Madde 786 ÖN KAYIT (2026-11-15, sonuçlar görülmeden; kullanıcı: JCT short'u tavanda (%8) +%38 sıçradı → "dene") — short coin tavanı P3T2'de
+(Not: madde 784 numarası iki kez kullanıldı — panel ve tepki ölçümü; bundan sonra 786.) 455'te tavan %6 eski kitapta −6,4 puan / dd +1,6 idi; P3T2'de hiç ölçülmedi.
+Kollar (motor g33.py değişmeden, yalnız CAP_ORTAK): C6 = %6, C7 = %7 (taban %8). Zemin 13 Kas'a uzatılmış zemin (madde 783; ≤ 30 Eki parite 0);
+taban serisi /tmp/m783/M357_EK_KAS_2000_{0,1}; ölçüm 2020-07 → 2026-10-31. Ek rapor: tek SHORT coinin en kötü günlük katkısı (% kitap) ve en kötü 5
+(GUNLUK_KATKI defteri). Kabul: eşit risk ≥ taban + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor. Geçmezse ama tek coin kuyruğu belirgin
+küçülürse kullanıcıya "risk ↔ getiri" seçeneği olarak sunulur (otomatik değişiklik yok).
