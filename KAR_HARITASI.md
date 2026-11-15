@@ -8747,3 +8747,25 @@ Kullanıcı (2026-11-16): "9.55'te satılacak diyor … jct için 3 farklı par�
 Bir turda seçilen coin borsaya TEK emirle gider; bot onu o turda yenilenen dilimlere paylaştırır (short'ta 3 dilim: sıradaki + ara dengelemeyle
 5 ve 10 tur önceki). Panel bu payları ayrı "parça" sayıyordu. Artık: "HYPE pozisyonu 2 alımdan (6 dilim payı) oluşuyor", satırda "1 emir, 3 dilime
 bölündü", kutular "1 alım", "24 saatte 2 alım", başlık "Alımların süresi ne zaman doluyor?". Yalnız görünüm.
+
+## Madde 792 — KOD DENETİMİ: canlı bot ↔ backtest referansı (P3T2 / T7K + KS) parametre ve mekanizma eşlemesi (kullanıcı: "tamam yap")
+Yöntem: canlı botun ETKİN değerleri (sunucu .env + ONERILEN çözümü T7K 1,15x KS 0,03, carry_bot modül sabitleri) ile referans ölçümün
+ortamı (M.TABAN + I._T7K + KS, `g33.py ls 4`, SEMBOL_HARIC D8, TEK_GIRIS=1) yan yana. Ölçüm DEĞİL, eşleme.
+EŞİT (✓): dilim 15 / 120 sa (FAZ 15, REB_GUN 5) · bacak 4+4 (BACAK_TAVAN 4 = ls 4) · long pencere 60 sa (sk_bar60) · short pencere 96 sa
+(sk_bar96) · kalabalık havuzu 4 · akış %20 (AKIS 0,2) · rezerv 0,10 / eşik 0,015 gün (=5,475 yıl) / coin tavanı 0,05 · TP %60 / %20 · kademe
+%45 / −%15 pay 0,80 · short felaket +%200 (SLS 2) · koşullu stop 0,45 + piyasa 0,03 · short ara dengeleme 40 sa (S_REB 10) · short tavanı
+0,08 · prim 0,7–1,0, 30 / 180 gün · hacim 70 M, evren tabanı 30 / 20 M · yaş 60 gün · uç hareket kapalı · tutuş sabit (AGIRLIK_KAYMA) ·
+giriş = kalan parça ortalaması (788 sonrası) · kademe işareti dilim başına (789 sonrası) · gross 1,15 (ölçüm ×1,15).
+FARKLI / ÖLÇÜLMEMİŞ:
+ 1. EVREN: referans 2.000 $'da D8'i (BTC, QNT, ETH, BCH, LTC, ETC, LINK, AAVE) dışlar; canlı yalnız bacağa sığmayanı eler (log: BTC 50 $,
+    ETH 20 $) → LINK / AAVE / LTC / BCH / ETC / QNT canlıda işlem görür (bugün AAVE long, LINK short açık). Kaba lot (AAVE 0,1 ≈ 11 $,
+    bacak 17 $) adet hatasını ±%30'a çıkarır. Madde 341 kanal A'ya göre evren genişlemesi iyi yönde olabilir; ama bu kitap ölçülmedi.
+ 2. KOŞULLU STOP ZAMANI: canlı kontrolü tur anında (yeni alımdan dakikalar sonra; KAVA 14 ve 15 Kas: al → 7 dk sonra stop) yapar;
+    motor (SLL24_KAP_TAZE 2) seviyeyi bir sonraki 4 sa kapanışında ((i+1) % 2 == 0) ölçer → kontrol ızgarası 4 sa kaymış olabilir.
+ 3. İŞLEM TOLERANSI %50 (bacağın yarısından küçük sapma işlenmez): madde 124'te eski profilde ölçüldü (fark gürültü); T7K + tutuş sabit
+    + dilim girişiyle yeniden ölçülmedi. Etki: pozisyon dilim kayıtlarından sapabilir.
+ 4. Yalnız canlıda: TradFi dışlama, delist kapatma, sağlık kapısı, demo borsada olmayan semboller (bugün 11 — CANLIDA YOK, demo kusuru),
+    limit / GTX / piyasa yedeği icrası (dolum sapması ölçüldü: ort. %0,03).
+ 5. Kademe yeniden kurulunca kapsam: canlı tüm pozisyona, motor yalnız yeni dilime (her iki girişte de önceden vardı).
+Sonraki adım: tur tur CANLI İKİZ (veri ve motor bulut oturumunda): motoru 6 Kas başlangıç durumuyla koşup her turun seçimini, ağırlığını,
+TP / kademe seviyesini ve stoplarını canlıyla karşılaştır; 1-3'ü ayrı düğmelerle ölç.
