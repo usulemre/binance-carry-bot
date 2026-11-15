@@ -8653,3 +8653,12 @@ Sonrası (medyan / ortalama / pozitif): BTC 1 g +0,8 / +1,0 / %67 · 3 g +2,0 / 
 (aralık −37 … +19: 2021-05, 2022-05, 2022-11, 2026-06'da düşüş SÜRDÜ). Kitap (P3T2 ×1,15): olay 2 günü +0,5 / −0,3 / %52 · sonraki 1 g 0,0 / +0,5 / %52 ·
 3 g +1,4 / +1,6 / %71 · 7 g +1,4 / +3,3 / %76 (en kötü −3,7 / −3,3). Tepki "büyük ihtimal" değil, hafif olasılık (%57-67); kitap yöne bağlı değil
 (sıçrayan 2021-01, 2026-02 ve süren 2022-11 düşüşlerinin ikisinde de 7 g artı). Yön tahminiyle kitabı eğme önerilmez (yön filtreleri 566 / 649 RED).
+
+## Madde 785 — "Funding az gelen aylarda zarar: önlem alabilir miyiz?" (kullanıcı 15 Kas) — betimsel + mevcut önlemlerin dökümü, yeni kural yok
+ÖLÇÜM (76 ay, P3T2 ×1,15, defter 711): aylık funding üçte birlikleri → düşük (ort %1,0) toplam +6,5 (medyan +4,4, 7 zararlı ay) · orta (%2,3) +12,1 (4) ·
+yüksek (%8,6) +21,1 (1). 12 zararlı ayın 11'i funding ≤ %2 (istisna 2026-10: funding +6,0, ay −5,0). Korelasyon funding ~ toplam 0,49.
+Önlem ZATEN kitapta: prim çarpanı (BRUT_PRIM, madde 581-584 / 598): funding yayılımı son 180 g normunun altına inince brüt 0,7'ye kadar küçülür;
+zararlı 12 ayda ortalama çarpan 0,85 (tüm aylar 0,89; 6'sında ≤ 0,76). Kapalıyken eşit risk 315 → 247, dd −13,3 → −15,4 (766). Denenen diğer
+önlemler RED: dinamik doz 7 kol (685), çarpan tabanı 0,5 / 0,6 / 0,8 (598), çarpana üst (597), tek tarafa (615), düşüşe bağlı doz / profil seçici (620),
+yön / rejim filtreleri (566 / 649 / 693). Canlıdaki tek açık: çarpan ilk ~90 gün 1,0 (766; "prim tohumu" ADAY, kullanıcı 12 Kas'ta 6. maddeyi atladı).
+Şu an etkisi yok: backtest çarpanı 7-13 Kasım 0,94-1,00 (20-26 Ekim'de 0,70) → demo ile fark bu hafta ≤ %6 brüt.
