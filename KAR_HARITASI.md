@@ -8678,3 +8678,8 @@ küçülürse kullanıcıya "risk ↔ getiri" seçeneği olarak sunulur (otomati
 En kötü tek coin günü aynı kalıyor (o gün TAC tavana takılmamıştı; sıçrama bacak ilk açılırken geliyor), düşüş ve en kötü gün bile KÖTÜLEŞİYOR:
 tavan, en yüksek funding'li short'ları kesip kitabı short tarafında daha az alfalı coinlere kaydırıyor. 6 yılda tek short coinin bir günde
 kitaptan en çok −%3,55 götürdüğü görüldü (demo JCT 15 Kas ≈ −%2,6, AKE ≈ −%2,3 bu aralıkta). %8 yerinde; short tavan ekseni (455 / 786) kapandı.
+**DÜZELTME 786 (aynı gün):** "tek short coin ≤ −%1,5 günü 15" yalnız 2026 (GUNLUK_KATKI defteri 2026-01-01'den tutuluyor), 6 yıl DEĞİL. Tüm yıllar
+(defter 711, 2020-07 → 2026-10, 2.296 gün): ≤ −%1,5 olay günü 74 (2021'de 29, 2026'da 15) · ≤ −%2 olay günü 29. 10 günde ≥ 2 olay olasılığı:
+≤ −%1,5 için %4 (Poisson) / %5 (kayan pencere), ≤ −%2 için %1 / %2. Demo ilk 10 günde iki ≤ −%2 olayı yaşadı (AKE ≈ −2,3 · JCT ≈ −2,6) → backtest
+sıklığına göre ~1/50 olaylık şanssızlık YA DA demonun short tarafı backtestten kuyruklu. Ayrım için: 14-15 Kas verisi gelince 783'ü uzat ve backtestin
+JCT / AKE short'unu aynı günlerde aynı büyüklükte tutup tutmadığına bak.
