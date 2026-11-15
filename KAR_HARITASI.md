@@ -8690,3 +8690,8 @@ k = (j − sira) mod N tur sonra yenilenir (carry_bot.bir_tur sira'yı yeniler v
 (adim = 40 / 8 = 5 tur) değişir. Pay = dilimdeki ADET / toplam adet (madde 770: adet = usd / dilim_fiyat referansı). Zaman = sonraki_dilim
 zamanı + k × 8 sa. Alt sayfada (sheet) "Çıkış takvimi": ilk 8 parça, tarih-saat, pay % ve ≈ $; "yeni dilim coini yeniden seçerse parça kalır —
 en erken çıkış" notu. Bot DEĞİŞMEDİ (yalnız panel okuması). test_panel.py: 4 yeni kontrol.
+**787 ek (kullanıcı A tasarımını seçti):** alt sayfadaki çıkış takvimi "Bu pozisyon nasıl satılacak?" düzenine geçti: açıklama, üç özet kutu
+(sıradaki satış · 24 saatte · tamamen biter), gün gün satılacak tutar çubukları, gün başlıklı parça listesi (her satır "HH:MM'de satılacak" +
+"Alındı: gün · saat · giriş fiyatı", sağda şu anki değer · pay % ve parçanın kâr/zararı), ilk 5 parça + "hepsini göster", en erken satış notu.
+`cikis_takvimi` parça başına `giris` (dilim_fiyat referansı) ve `alis` (long N tur, short ara dengeleme adımı önce) da döndürüyor. Tasarım:
+claude.ai artifact "Carry Çıkış Takvimi" (A). test_panel.py 5 kontrol.

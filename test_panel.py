@@ -428,8 +428,10 @@ json.dump({"sira": 3, "dilimler": {"3": {"AUSDT": 10.0, "XUSDT": -20.0}, "4": {"
            "dilim_fiyat": {"3": {"AUSDT": 1.0, "XUSDT": 2.0}, "4": {"AUSDT": 1.0}, "10": {"AUSDT": 2.0}, "1": {"XUSDT": 2.0}}},
           open(os.path.join(_k87, "carry_dilimler.json"), "w"))
 _c = panel.cikis_takvimi(_k87, {"CARRY_N_DILIM": "15", "CARRY_REBALANCE_H": "120", "CARRY_SHORT_ARA_SAAT": "40"}, {"zaman": 1000})
-kontrol("çıkış takvimi: long k = (j − sira) mod N, pay adet oranı", _c["AUSDT"] == [{"k": 0, "zaman": 1000, "pay": 0.3333}, {"k": 1, "zaman": 1000 + 8 * 3600, "pay": 0.3333},
-                                                                                 {"k": 7, "zaman": 1000 + 7 * 8 * 3600, "pay": 0.3333}], _c["AUSDT"])
+kontrol("çıkış takvimi: long k = (j − sira) mod N, pay adet oranı", [(x["k"], x["zaman"], x["pay"]) for x in _c["AUSDT"]] == [(0, 1000, 0.3333), (1, 1000 + 8 * 3600, 0.3333),
+                                                                                 (7, 1000 + 7 * 8 * 3600, 0.3333)], _c["AUSDT"])
+kontrol("çıkış takvimi: giriş fiyatı ve alış zamanı (long 15 tur, short 5 tur önce)", _c["AUSDT"][2]["giris"] == 2.0 and _c["AUSDT"][0]["alis"] == 1000 - 15 * 8 * 3600
+        and _c["XUSDT"][1]["alis"] == 1000 + (3 - 5) * 8 * 3600, (_c["AUSDT"], _c["XUSDT"]))
 kontrol("çıkış takvimi: short ara dengelemeyle (dilim 1 → 3 tur sonra sira 6, 6−1=5)", [x["k"] for x in _c["XUSDT"]] == [0, 3], _c["XUSDT"])
 kontrol("çıkış takvimi: dosya yoksa None", panel.cikis_takvimi(tempfile.mkdtemp(), {}) is None)
 kontrol("sayfada çıkış takvimi", "function cikisIc" in app.get("/").data.decode())

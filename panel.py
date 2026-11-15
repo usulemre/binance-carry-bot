@@ -459,7 +459,8 @@ def cikis_takvimi(klasor: str, e: dict | None = None, sonraki: dict | None = Non
     Bot her turda `sira` numaralı dilimi yeniler ve sırayı bir artırır (carry_bot.bir_tur) → dilim j, k = (j − sira) mod N tur sonra
     yenilenir. Short'lar ayrıca SHORT_ARA_SAAT'te bir ara dengelemeyle değişir (short_ara_dengele: yenilenen dilimden adim, 2·adim …
     önceki dilimler). Pay = o dilimdeki ADET / coinin toplam adedi (madde 770: bacak adedi = usd / giriş referansı). Yenilenen dilim
-    coini YENİDEN seçerse o pay kalır — yani bu "en erken çıkış" takvimi. Döner {sembol: [{"k", "zaman", "pay"}, ...]} (k sırasıyla)."""
+    coini YENİDEN seçerse o pay kalır — yani bu "en erken çıkış" takvimi. Döner {sembol: [{"k", "zaman", "pay", "giris", "alis"}, ...]}
+    (k sırasıyla; giris = parçanın referans giriş fiyatı, alis ≈ parçanın kurulduğu tur: long N tur, short ara dengeleme adımı kadar önce)."""
     e = e if e is not None else _env(klasor)
     yol = e.get("CARRY_DILIM_LOG") or "carry_dilimler.json"
     yol = yol if os.path.isabs(yol) else os.path.join(klasor, yol)
@@ -491,17 +492,19 @@ def cikis_takvimi(klasor: str, e: dict | None = None, sonraki: dict | None = Non
                 continue
             q = abs(usd) / r if r > 0 else abs(usd)
             if usd > 0:
-                k = (jj - sira) % n
+                k = (jj - sira) % n; geri = n               # long: dilim 5 g (N tur) önce kuruldu
             else:
                 k = min(x for x in range(n) if (sira + x - jj) % n == 0 or (adim and (sira + x - jj) % n % adim == 0))
-            adet.setdefault(sem, {}).setdefault(k, 0.0)
-            adet[sem][k] += q
+                geri = adim or n                             # short: son ara dengelemeden beri
+            adet.setdefault(sem, []).append((k, q, r if r > 0 else None, geri))
     out = {}
-    for sem, kq in adet.items():
-        top = sum(kq.values())
+    for sem, L in adet.items():
+        top = sum(q for _, q, _, _ in L)
         if top <= 0:
             continue
-        out[sem] = [{"k": k, "zaman": int(t0 + k * aralik * 3600) if t0 else None, "pay": round(q / top, 4)} for k, q in sorted(kq.items())]
+        out[sem] = [{"k": k, "zaman": int(t0 + k * aralik * 3600) if t0 else None, "pay": round(q / top, 4),
+                     "giris": r, "alis": int(t0 + (k - g) * aralik * 3600) if t0 else None}
+                    for k, q, r, g in sorted(L, key=lambda x: (x[0], -x[1]))]
     return out
 
 
@@ -1547,7 +1550,7 @@ function pozSayfa(k){
 // MADDE 757: pozisyon ayrıntısı — alttan açılan sayfa (bottom sheet); canlı fiyatla saniyede bir güncellenir
 let SHEET = null;
 function sheetAc(s){ SHEET = s; const k = VERI.kurulumlar[secili]; if (!k.pozisyonlar[s]) return; const el = $("#sheet"); el.hidden = false; el.innerHTML = `<div class="shb" onclick="sheetKapat()"></div><div class="shp" role="dialog" aria-label="${s.replace(/USDT$/,"")} ayrıntı"><div class="shh"></div><div id="sheetic">${sheetIc(s, k.pozisyonlar[s], k)}</div></div>`; document.body.style.overflow = "hidden"; }
-function sheetKapat(){ SHEET = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; }
+function sheetKapat(){ SHEET = null; CIKIS_TUM = false; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; }
 addEventListener("keydown", e=>{ if (e.key === "Escape" && SHEET) sheetKapat(); });
 function sheetIc(s, p, k){
   const {f, ky, g, usd} = pozDeger(s, p), renk = css((g||0) >= 0 ? "--art" : "--eks"), uzun = p.miktar > 0;
@@ -1569,14 +1572,46 @@ function sheetIc(s, p, k){
     <div class="shkg">${kutu("Giriş", fiyatYaz(p.giris))}${kutu("Büyüklük", para(usd))}${kutu("Funding", F ? `%${(F.r*100).toFixed(4).replace(".",",")} · <span class="${sinif(fr)}">${fr>=0?"alıyor":"ödüyor"}</span>` : "—")}${kutu("Kâr al hedefi", h0 ? `${fiyatYaz(h0)} <span class="k">${uzun?"+":"−"}%${Math.round(H[0]*100)}</span>` : "—")}</div>
     ${stop}${neden}${cikisIc(s, usd, k)}`;
 }
-// MADDE 787: çıkış takvimi — coinin dilim paylarının en erken ne zaman yenileneceği (yeni dilim coini yeniden seçerse pay kalır)
+// MADDE 787: çıkış takvimi (A tasarımı) — parça parça: ne zaman alındı → ne zaman satılacak, şu anki değer ve kâr/zarar
+let CIKIS_TUM = false;
+function cikisTum(){ CIKIS_TUM = !CIKIS_TUM; if (SHEET) { const k = VERI.kurulumlar[secili]; const el = $("#sheetic"); if (el && k.pozisyonlar[SHEET]) el.innerHTML = sheetIc(SHEET, k.pozisyonlar[SHEET], k); } }
 function cikisIc(s, usd, k){
-  const L = (k.cikis||{})[s]; if (!L || !L.length) return "";
-  const sa = t => { if (!t) return "—"; const d = new Date(t*1000), b = new Date(); const g = Math.round((new Date(d.toDateString()) - new Date(b.toDateString()))/864e5);
-    return (g==0?"bugün":g==1?"yarın":d.toLocaleDateString("tr-TR",{day:"numeric",month:"short"})) + " " + d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}); };
-  const sat = L.slice(0, 8).map(x=>`<div class="shr"><span class="k">${sa(x.zaman)} <span style="opacity:.7">· ${x.k+1}. tur</span></span><span>%${Math.round(x.pay*100)} · ≈ ${para((usd||0)*x.pay)}</span></div>`).join("");
-  return `<div class="shs"><div class="shr" style="margin-bottom:6px"><b>Çıkış takvimi</b><span class="k">${L.length} parça</span></div>${sat}${L.length>8?`<div class="k">+${L.length-8} parça daha</div>`:""}
-    <p class="shn" style="margin-top:8px">Her parça kendi dilimi yenilenince satılır. Yeni dilim bu coini yeniden seçerse o parça kalır; yani bu en erken çıkış takvimi.</p></div>`;
+  const L = (k.cikis||{})[s], p = (k.pozisyonlar||{})[s]; if (!L || !L.length || !p) return "";
+  const {f} = pozDeger(s, p), uzun = p.miktar > 0, ad = s.replace(/USDT$/,""), q = Math.abs(p.miktar||0);
+  const GUNK = ["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"], bugun = new Date(new Date().toDateString());
+  const gunfark = t => Math.round((new Date(new Date(t*1000).toDateString()) - bugun)/864e5);
+  const gunAd = t => { const g = gunfark(t), d = new Date(t*1000); return g==0 ? "Bugün" : g==1 ? "Yarın" : GUNK[d.getDay()] + " " + d.getDate(); };
+  const saat = t => new Date(t*1000).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
+  const ek = x => { const v = String(x).slice(-1); return /[13457]/.test(v) ? "'ten" : /[69]/.test(v) ? "'dan" : /[2]/.test(v) ? "'den" : /[0]/.test(v) ? "'dan" : "'den"; };
+  const P = L.map(x=>{ const qq = q * x.pay, deg = (usd||0) * x.pay, kz = x.giris && f ? (uzun ? 1 : -1) * qq * (f - x.giris) : null; return {...x, deg, kz}; });
+  const ilk = P[0], yirmi4 = P.filter(x=>x.zaman && x.zaman - ilk.zaman < 86400), son = P[P.length-1];
+  const gunler = {}; P.forEach(x=>{ if (!x.zaman) return; const g = gunAd(x.zaman); (gunler[g] = gunler[g] || {ad:g, t:x.zaman, P:[]}).P.push(x); });
+  const G = Object.values(gunler), maks = Math.max(...G.map(g=>g.P.reduce((a,x)=>a+x.deg,0)), 1);
+  const kut = (e, d, a) => `<div class="shk"><div class="k">${e}</div><div style="font-weight:700;font-size:14px">${d}</div><div class="k">${a}</div></div>`;
+  const cubuk = G.slice(0,6).map((g,i)=>{ const t = g.P.reduce((a,x)=>a+x.deg,0); return `<div style="display:flex;flex-direction:column;align-items:center;justify-content:flex-end;gap:4px;height:88px"><span style="font-size:11px;font-weight:600">${Math.round(t)} $</span><div style="width:100%;height:${Math.max(6, t/maks*58).toFixed(0)}px;border-radius:6px;background:var(--vurgu);opacity:${i?0.55:1}"></div></div>`; }).join("");
+  const etik = G.slice(0,6).map((g,i)=>`<span style="${i?"":"font-weight:600;color:var(--yazi)"}">${g.ad}</span>`).join("");
+  const kolon = `grid-template-columns:repeat(${Math.min(6,G.length)},minmax(0,1fr))`;
+  const satir = x => `<div style="display:flex;justify-content:space-between;gap:10px;background:var(--kart);border-radius:12px;padding:10px 12px">
+      <div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:14px;font-weight:700">${saat(x.zaman)}'de satılacak</span>
+        <span class="k">${x.alis ? `Alındı: ${gunAd(x.alis)} · ${saat(x.alis)}` : "Alış zamanı bilinmiyor"}${x.giris ? ` · ${fiyatYaz(x.giris)}${ek(fiyatYaz(x.giris))}` : ""}</span></div>
+      <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none"><span style="font-size:14px;font-weight:600">${para(x.deg)} <span class="k">· %${Math.round(x.pay*100)}</span></span>
+        ${x.kz==null ? "" : `<span class="${sinif(x.kz)}" style="font-size:12px;font-weight:600">${isaretli(x.kz)}</span>`}</div></div>`;
+  let n = 0; const sinir = CIKIS_TUM ? 1e9 : 5;
+  const liste = G.map((g,i)=>{ const ic = g.P.filter(()=> n++ < sinir); if (!ic.length) return ""; return `<div style="display:flex;flex-direction:column;gap:8px;margin-top:12px"><span style="font-size:12px;font-weight:700;color:${i?"var(--soluk)":"var(--vurgu)"}">${g.ad.toLocaleUpperCase("tr-TR")}</span>${ic.map(satir).join("")}</div>`; }).join("");
+  const kalan = P.length - Math.min(P.length, sinir), kalanDeg = P.slice(sinir).reduce((a,x)=>a+x.deg,0), kalanKz = P.slice(sinir).reduce((a,x)=>a+(x.kz||0),0);
+  return `<div class="shs" style="margin-top:12px;padding:14px">
+    <div style="font-size:16px;font-weight:700">Bu pozisyon nasıl satılacak?</div>
+    <p class="shn" style="margin-top:6px">${ad} tek seferde değil, <b>${P.length} parça</b> halinde alındı. Her parça ${uzun ? "alındıktan <b>5 gün sonra</b>" : "<b>40 saatte bir</b> yenilenen short dilimiyle"} kendiliğinden satılır. Önce en eski parçalar çıkar.</p>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px">${kut("Sıradaki satış", ilk.zaman ? gunAd(ilk.zaman).toLowerCase()+" "+saat(ilk.zaman) : "—", "≈ "+para(ilk.deg))}${kut("24 saatte", yirmi4.length+" parça", "≈ "+para(yirmi4.reduce((a,x)=>a+x.deg,0)))}${kut("Tamamen biter", son.zaman ? gunAd(son.zaman) : "—", son.zaman ? saat(son.zaman) : "")}</div>
+    <div class="k" style="margin-top:14px">Gün gün satılacak tutar</div>
+    <div style="display:grid;${kolon};gap:8px;align-items:end;height:88px;margin-top:6px">${cubuk}</div>
+    <div style="display:grid;${kolon};gap:8px;text-align:center;font-size:11px;color:var(--soluk);margin-top:4px">${etik}</div>
+    <div style="height:1px;background:var(--cizgi);margin:14px 0 2px"></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--soluk)"><span>PARÇA · ALINDI → SATILACAK</span><span>ŞU AN</span></div>
+    ${liste}
+    ${kalan>0 ? `<div class="k" style="margin-top:10px">+${kalan} parça daha · ${para(kalanDeg)} · <span class="${sinif(kalanKz)}">${isaretli(kalanKz)}</span></div>` : ""}
+    ${P.length>5 ? `<button onclick="cikisTum()" style="width:100%;height:44px;margin-top:10px;border-radius:12px;border:0;background:var(--kart);color:var(--vurgu);font:inherit;font-size:14px;font-weight:600">${CIKIS_TUM ? "Daha az göster" : `${P.length} parçanın hepsini göster`}</button>` : ""}
+    <p class="shn" style="background:var(--kart);border-radius:12px;padding:10px 12px">Satış saatinde yeni açılan dilim ${ad}'i yeniden seçerse o parça satılmaz, kalır; yani bunlar <b>en erken</b> satış zamanları. Fiyat kâr al hedefine ulaşırsa parçalar daha erken de satılabilir.${uzun ? "" : " Short'ta alış saati yaklaşıktır (son ara dengeleme)."}</p></div>`;
 }
 // MADDE 756: SADE GEÇMİŞ — büyük toplam, Hafta / Ay / Tümü, tek grafik (günlük çubuklar), gün listesi. Tutarlar kitap
 // zincirinden (gün = gün sonu kitabı − önceki gün sonu; bugün = şimdiki kitap − dünkü gün sonu): liste toplamı = büyük toplam.
