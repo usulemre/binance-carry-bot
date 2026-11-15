@@ -3899,6 +3899,7 @@ def merdiven_kontrol(client: ExchangeClient, durum: dict) -> list[str]:
                 if hedef.get(sem, 0) != 0:
                     hedef[sem] = hedef[sem] * (1 - MERDIVEN_PAY)
             durum["merdiven"].pop(sem, None)
+            kademe_parca_kaydet(durum, sem)   # madde 789
     if dolan:
         logger.info("MERDİVEN doldu (%%%.0f'i kapandı; long +%%%.0f / short −%%%.0f): %s - hedefler küçültüldü",
                     MERDIVEN_PAY * 100, MERDIVEN * 100, MERDIVEN_SHORT * 100, ", ".join(dolan))
@@ -3999,6 +4000,45 @@ def dilim_giris_ortalamasi(durum: dict) -> dict:
         if d[y][0] > 0:
             out[s_] = (y, d[y][1] / d[y][0])
     return out
+
+
+def _kademe_parcalari(durum: dict, sem: str) -> set:
+    """MADDE 789: sembolün açık dilim bacakları, (dilim, referans fiyat) çiftleri. Referans (madde 770) bacak açılınca /
+    tutarı değişince yazılır; kademe / kâr al küçültmesi referansı DEĞİŞTİRMEZ. Yeni bacak = listede olmayan çift."""
+    ref = durum.get("dilim_fiyat") or {}
+    out = set()
+    for a, h in (durum.get("dilimler") or {}).items():
+        try:
+            v = float((h or {}).get(sem) or 0); g = float((ref.get(str(a)) or {}).get(sem) or 0)
+        except (TypeError, ValueError):
+            continue
+        if v != 0 and g > 0:
+            out.add((str(a), f"{g:.10g}"))
+    return out
+
+
+def kademe_parca_kaydet(durum: dict, sem: str) -> None:
+    """MADDE 789: kademe dolduğu andaki bacak kümesini saklar (yalnız CARRY_GIRIS_DILIM=1)."""
+    if GIRIS_DILIM:
+        durum.setdefault("merdiven_parca", {})[sem] = sorted([a, g] for a, g in _kademe_parcalari(durum, sem))
+
+
+def kademe_yeniden_mi(durum: dict, sem: str, yap: float, giris: float) -> bool:
+    """Kademe 'yapıldı' işareti sıfırlansın mı (= coine YENİ parça eklendi mi)?
+
+    * CARRY_GIRIS_DILIM=0 (eski): giriş %0,5'ten fazla değiştiyse. Binance girişi yalnız eklemede değiştiği için bu = ekleme.
+    * CARRY_GIRIS_DILIM=1 (MADDE 789): dilim girişi bacak ÇIKINCA da kayar; giriş kıyası, kademesi dolmuş coinin kalan
+      payına her dilim yenilenişinde yeniden kademe kurdururdu (backtest motoru kademeyi dilim başına BİR kez yapar).
+      Bunun yerine: kademe anındaki bacak kümesinde olmayan bir bacak (yeni dilim, short yenilemesi) varsa sıfırlanır;
+      yalnız bacak çıkması sıfırlamaz. Kayıt yoksa (bayrak açılmadan önce dolan kademe) bugünkü bacaklar taban alınır."""
+    if not GIRIS_DILIM:
+        return abs(yap / giris - 1) > 0.005
+    kayit = (durum.get("merdiven_parca") or {}).get(sem)
+    simdi = _kademe_parcalari(durum, sem)
+    if kayit is None:
+        kademe_parca_kaydet(durum, sem)
+        return False
+    return bool(simdi - {(str(a), str(g)) for a, g in kayit})
 
 
 def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
@@ -4108,8 +4148,9 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
             # MADDE 465: LONG MERDİVEN - bu giriş için kademe yapılmadıysa
             # pozisyonun PAY'i +%MERDIVEN'de ayrı emirle satılır, kalan TP'ye.
             _yap = durum.get("merdiven_yapildi", {}).get(sem)
-            if _yap and abs(_yap / giris - 1) > 0.005:
+            if _yap and kademe_yeniden_mi(durum, sem, _yap, giris):   # madde 789: dilim modunda yalnız YENİ parça sıfırlar
                 durum["merdiven_yapildi"].pop(sem, None); _yap = None   # yeni giriş
+                (durum.get("merdiven_parca") or {}).pop(sem, None)
             _m_esik = MERDIVEN if miktar > 0 else MERDIVEN_SHORT
             _m_tp = KAR_AL_ORAN if miktar > 0 else KAR_AL_SHORT
             if _m_esik > 0 and not _yap and _m_esik < _m_tp:

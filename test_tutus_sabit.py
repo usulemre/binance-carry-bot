@@ -115,5 +115,26 @@ kontrol("dilim girişi: short yönü ve fiyatı", _g["JCTUSDT"][0] == -1 and yak
 _d["dilimler"].pop("0")
 kontrol("pahalı dilim çıkınca giriş kalan parçalara iner (0,1025)", yakin(cb.dilim_giris_ortalamasi(_d)["INITUSDT"][1], 0.1025), cb.dilim_giris_ortalamasi(_d))
 kontrol("varsayılan kapalı (Binance girişi)", cb.GIRIS_DILIM is False)
+# MADDE 789: dilim modunda kademe işareti yalnız YENİ parça eklenince sıfırlanır (bacak çıkması sıfırlamaz)
+kontrol("789: bayrak kapalı = eski kural (giriş %0,5 kayarsa sıfırla)", cb.kademe_yeniden_mi({}, "X", 1.0, 1.01) is True and cb.kademe_yeniden_mi({}, "X", 1.0, 1.004) is False)
+cb.GIRIS_DILIM = True
+try:
+    _k = {"dilimler": {"0": {"INITUSDT": 18.5}, "1": {"INITUSDT": 10.0}, "2": {"INITUSDT": 10.5}},
+          "dilim_fiyat": {"0": {"INITUSDT": 0.185}, "1": {"INITUSDT": 0.10}, "2": {"INITUSDT": 0.105}}}
+    cb.kademe_parca_kaydet(_k, "INITUSDT")
+    kontrol("789: kayıt üç bacak", len(_k["merdiven_parca"]["INITUSDT"]) == 3, _k.get("merdiven_parca"))
+    _k["dilimler"]["0"]["INITUSDT"] *= 0.2; _k["dilimler"]["1"]["INITUSDT"] *= 0.2
+    kontrol("789: kademe küçültmesi (tutar değişir, referans aynı) sıfırlamaz", cb.kademe_yeniden_mi(_k, "INITUSDT", 0.13, 0.13) is False)
+    _k["dilimler"].pop("0")
+    kontrol("789: pahalı dilim çıkınca (giriş %21 kaydı) SIFIRLAMAZ", cb.kademe_yeniden_mi(_k, "INITUSDT", 0.13, 0.1025) is False)
+    _k["dilimler"]["0"] = {"INITUSDT": 20.0}; _k["dilim_fiyat"]["0"] = {"INITUSDT": 0.09}
+    kontrol("789: aynı dilim numarasına YENİ parça (yeni referans) sıfırlar", cb.kademe_yeniden_mi(_k, "INITUSDT", 0.13, 0.1) is True)
+    _k2 = {"dilimler": {"3": {"SOPHUSDT": 5.0}}, "dilim_fiyat": {"3": {"SOPHUSDT": 0.0017}}}
+    kontrol("789: kayıt yoksa (bayrak öncesi kademe) bugünkü bacaklar taban, sıfırlamaz",
+            cb.kademe_yeniden_mi(_k2, "SOPHUSDT", 0.0016999, 0.0019) is False and _k2["merdiven_parca"]["SOPHUSDT"] == [["3", "0.0017"]])
+    _k2["dilimler"]["4"] = {"SOPHUSDT": 4.0}; _k2["dilim_fiyat"]["4"] = {"SOPHUSDT": 0.0012}
+    kontrol("789: sonra yeni dilim eklenince sıfırlar", cb.kademe_yeniden_mi(_k2, "SOPHUSDT", 0.0016999, 0.0015) is True)
+finally:
+    cb.GIRIS_DILIM = False
 
 print("\nHEPSİ GEÇTİ" if _h == 0 else f"\n{_h} HATA"); sys.exit(1 if _h else 0)

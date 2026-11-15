@@ -8722,3 +8722,15 @@ test_tutus_sabit.py: 4 yeni kontrol (ortalama, short yönü, pahalı dilim çık
 **788 kullanıcı ONAYI (2026-11-15 23:42: "Onaylıyorum"):** sunucuda `.env`'e `CARRY_GIRIS_DILIM=1`. Panel de aynı girişi gösterir: `tp_giris` (çıkış takviminin
 parça girişlerinden adet ağırlıklı ortalama) yalnız bu bayrak açıkken; kâr al hedefi / ilerleme çubuğu / alt sayfa kutusu `tpGiris()` ile. K/Z hesabı
 Binance girişinde kalır (Binance'in gerçekleşmemiş kâr / zararı o girişle hesaplanır).
+
+## Madde 789 — CARRY_GIRIS_DILIM'de kademe işareti yalnız YENİ parça eklenince sıfırlanır (788'in ön koşulu; kullanıcı: "düzeltelim")
+Sorun (kod incelemesi, 788 açılmadan önce): `kar_al_kur` kademe "yapıldı" işaretini giriş %0,5'ten fazla kayınca sıfırlıyordu. Binance girişiyle
+bu = ekleme (Binance girişi azaltmada değişmez — sunucuda doğrulandı: 73 azaltmanın 73'ünde giriş aynı, 118 eklemenin 116'sında değişti).
+Dilim girişi ise bacak ÇIKINCA da kayar → kademesi dolmuş coinin kalan %20'sine her dilim yenilenişinde yeniden kademe kurulurdu. Motor
+(g33, TEK_GIRIS) kademeyi dilim başına BİR kez yapar (merd_yapildi dilim dizisinde) → bu, 788'in ölçtüğü kitaptan ölçülmemiş bir sapma olurdu.
+Düzeltme: `kademe_parca_kaydet` kademe dolunca coinin (dilim, referans fiyat) bacak kümesini `durum["merdiven_parca"]`'ya yazar;
+`kademe_yeniden_mi` dilim modunda yalnız kümede OLMAYAN bacak (yeni dilim / short yenilemesi; madde 770 referansı yalnız yeni ya da tutarı
+değişen bacakta yazılır, kademe küçültmesi referansı değiştirmez) varsa sıfırlar. Bayrak açılmadan önce dolmuş kademelerde (sunucuda
+ESPORTS, ON, SOPH, PLAY) kayıt yok → ilk kontrolde bugünkü bacaklar taban alınır, sıfırlanmaz. CARRY_GIRIS_DILIM=0 iken davranış AYNEN eski.
+Bilinen kalan fark (her iki modda da önceden vardı): sıfırlanınca kademe tüm pozisyona kurulur, motor yalnız yeni dilimin payına.
+Testler: test_tutus_sabit 7 yeni kontrol (eski kural, küçültme, pahalı dilim çıkışı, aynı numaraya yeni parça, kayıtsız taban, sonra ekleme).
