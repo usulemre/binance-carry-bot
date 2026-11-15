@@ -8695,3 +8695,14 @@ en erken çıkış" notu. Bot DEĞİŞMEDİ (yalnız panel okuması). test_panel
 "Alındı: gün · saat · giriş fiyatı", sağda şu anki değer · pay % ve parçanın kâr/zararı), ilk 5 parça + "hepsini göster", en erken satış notu.
 `cikis_takvimi` parça başına `giris` (dilim_fiyat referansı) ve `alis` (long N tur, short ara dengeleme adımı önce) da döndürüyor. Tasarım:
 claude.ai artifact "Carry Çıkış Takvimi" (A). test_panel.py 5 kontrol.
+
+## Madde 788 ÖN KAYIT (2026-11-15, sonuçlar görülmeden; kullanıcı: "kâr al kalan parçaların gerçek ortalamasına göre mi? backtestte 6 yılda bak") — BINANCE GİRİŞİ ile motor girişi
+Bulgu (kod, ÖLÇÜM değil): motorun TEK_GIRIS ortalaması (_Pe/_Pw, madde 481) AÇIK dilimlerin girişlerinden hesaplanıyor → eski (pahalı) dilim çıkınca
+ortalama kalan parçalara kayıyor. Canlı bot ise Binance positionRisk.entryPrice kullanıyor; Binance bu girişi yalnız EKLEMEDE değiştirir, AZALTMADA
+değiştirmez. Yani "backtest de Binance gibi çalışıyor" sözüm YANLIŞTI: motor zaten "kalan parçaların ortalaması" kolu, canlı bot "Binance" kolu →
+canlı ile backtest arasında bir PARİTE FARKI. Test: motor g33 + yalnız TEK_BINANCE düğmesi (`/tmp/m788/g33_m788.py`): coin başına Binance girişi
+taklidi (E = (Q·E + q·p)/(Q+q) eklemede; azaltmada sabit; sıfırda silinir; adet vekili poz / fiyat); TP / kademe / stop referansı bu giriş.
+Parite: TEK_BINANCE=0 hiza 0 taban ile birebir. Karar kuralı: Binance kolu tabana göre eşit riskte ≥ 8 puan KÖTÜYSE → canlı botun kâr al'ı kendi
+dilim referanslarından (dilim_fiyat, madde 770) kurulmalı (ADAY, kullanıcı onayı); fark < 8 ise parite farkı ihmal edilebilir, değişiklik yok;
+Binance kolu ≥ 8 İYİYSE motor canlıya uydurulur (değişiklik yok, not). Bilinen yaklaşım: yeni dilim bacağı, o barda önce işlenen dilimlerin
+snapshot'ına bir bar gecikmeyle girebilir.
