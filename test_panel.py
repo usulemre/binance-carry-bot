@@ -422,5 +422,17 @@ kontrol("sayfada D tasarımı öğeleri", all(x in _sf8 for x in ("durumCumle", 
 _sf9 = app.get("/").data.decode()
 kontrol("sayfada tek bugün hesabı", "function bugunKZ" in _sf9 and "kesinlesiyor" in _sf9 and "B.dunEk" in _sf9)
 
+# MADDE 787: çıkış takvimi — dilim j, (j − sira) mod N tur sonra yenilenir; short ara dengelemesi adim'ın katlarında
+_k87 = tempfile.mkdtemp()
+json.dump({"sira": 3, "dilimler": {"3": {"AUSDT": 10.0, "XUSDT": -20.0}, "4": {"AUSDT": 10.0}, "10": {"AUSDT": 20.0}, "1": {"XUSDT": -20.0}},
+           "dilim_fiyat": {"3": {"AUSDT": 1.0, "XUSDT": 2.0}, "4": {"AUSDT": 1.0}, "10": {"AUSDT": 2.0}, "1": {"XUSDT": 2.0}}},
+          open(os.path.join(_k87, "carry_dilimler.json"), "w"))
+_c = panel.cikis_takvimi(_k87, {"CARRY_N_DILIM": "15", "CARRY_REBALANCE_H": "120", "CARRY_SHORT_ARA_SAAT": "40"}, {"zaman": 1000})
+kontrol("çıkış takvimi: long k = (j − sira) mod N, pay adet oranı", _c["AUSDT"] == [{"k": 0, "zaman": 1000, "pay": 0.3333}, {"k": 1, "zaman": 1000 + 8 * 3600, "pay": 0.3333},
+                                                                                 {"k": 7, "zaman": 1000 + 7 * 8 * 3600, "pay": 0.3333}], _c["AUSDT"])
+kontrol("çıkış takvimi: short ara dengelemeyle (dilim 1 → 3 tur sonra sira 6, 6−1=5)", [x["k"] for x in _c["XUSDT"]] == [0, 3], _c["XUSDT"])
+kontrol("çıkış takvimi: dosya yoksa None", panel.cikis_takvimi(tempfile.mkdtemp(), {}) is None)
+kontrol("sayfada çıkış takvimi", "function cikisIc" in app.get("/").data.decode())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

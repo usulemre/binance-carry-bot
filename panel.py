@@ -454,6 +454,57 @@ def sonraki_dilim(klasor: str, e: dict | None = None) -> dict | None:
             "dolu": min(dolu, n), "n": n, "aralik_sa": round(aralik / 3600.0, 2)}
 
 
+def cikis_takvimi(klasor: str, e: dict | None = None, sonraki: dict | None = None) -> dict | None:
+    """MADDE 787: her coinin dilim paylarının ne zaman YENİLENECEĞİ (kullanıcı: "hangi parça hangi gün çıkacak görsem").
+    Bot her turda `sira` numaralı dilimi yeniler ve sırayı bir artırır (carry_bot.bir_tur) → dilim j, k = (j − sira) mod N tur sonra
+    yenilenir. Short'lar ayrıca SHORT_ARA_SAAT'te bir ara dengelemeyle değişir (short_ara_dengele: yenilenen dilimden adim, 2·adim …
+    önceki dilimler). Pay = o dilimdeki ADET / coinin toplam adedi (madde 770: bacak adedi = usd / giriş referansı). Yenilenen dilim
+    coini YENİDEN seçerse o pay kalır — yani bu "en erken çıkış" takvimi. Döner {sembol: [{"k", "zaman", "pay"}, ...]} (k sırasıyla)."""
+    e = e if e is not None else _env(klasor)
+    yol = e.get("CARRY_DILIM_LOG") or "carry_dilimler.json"
+    yol = yol if os.path.isabs(yol) else os.path.join(klasor, yol)
+    try:
+        with open(yol, encoding="utf-8") as f:
+            d = json.load(f)
+        n = max(1, int(float(e.get("CARRY_N_DILIM") or 15)))
+        aralik = float(e.get("CARRY_REBALANCE_H") or 120) / n
+        ara = float(e.get("CARRY_SHORT_ARA_SAAT") or 40)
+        sira = int(d.get("sira", 0)) % n
+    except (OSError, ValueError, TypeError, AttributeError):
+        return None
+    adim = int(round(ara / aralik)) if aralik > 0 and ara > 0 else 0
+    adim = adim if 0 < adim < n else 0
+    t0 = (sonraki or {}).get("zaman")
+    ref = d.get("dilim_fiyat") or {}
+    adet = {}
+    for j, h in (d.get("dilimler") or {}).items():
+        try:
+            jj = int(j) % n
+        except (TypeError, ValueError):
+            continue
+        for sem, usd in (h or {}).items():
+            try:
+                usd = float(usd); r = float((ref.get(str(j)) or {}).get(sem) or 0)
+            except (TypeError, ValueError):
+                continue
+            if usd == 0:
+                continue
+            q = abs(usd) / r if r > 0 else abs(usd)
+            if usd > 0:
+                k = (jj - sira) % n
+            else:
+                k = min(x for x in range(n) if (sira + x - jj) % n == 0 or (adim and (sira + x - jj) % n % adim == 0))
+            adet.setdefault(sem, {}).setdefault(k, 0.0)
+            adet[sem][k] += q
+    out = {}
+    for sem, kq in adet.items():
+        top = sum(kq.values())
+        if top <= 0:
+            continue
+        out[sem] = [{"k": k, "zaman": int(t0 + k * aralik * 3600) if t0 else None, "pay": round(q / top, 4)} for k, q in sorted(kq.items())]
+    return out
+
+
 def hesap_ozet(defter: list[dict], an: dict | None) -> dict:
     """MADDE 730: hesap özkaynağı (canlıysa anlık, değilse son defter) ve başlangıçtan beri $ kâr/zarar (transferler hariç)."""
     if not defter and an is None:
@@ -666,6 +717,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
             o["islemler"]["liste"] = [x for x in o["islemler"]["liste"] if x["zaman"] >= kes]
             o["fundingler"] = [x for x in o["fundingler"] if x["zaman"] >= kes]
         o["stop_durum"] = stop_oku(kl)
+        o["cikis"] = cikis_takvimi(kl, e, o.get("dilim"))   # madde 787
         kk = karar_kayma(kl)
         if kk is not None and o.get("icra"):
             o["icra"]["karar"] = kk
@@ -1515,7 +1567,16 @@ function sheetIc(s, p, k){
       <button class="shx" onclick="sheetKapat()" aria-label="Kapat">✕</button></div>
     <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>
     <div class="shkg">${kutu("Giriş", fiyatYaz(p.giris))}${kutu("Büyüklük", para(usd))}${kutu("Funding", F ? `%${(F.r*100).toFixed(4).replace(".",",")} · <span class="${sinif(fr)}">${fr>=0?"alıyor":"ödüyor"}</span>` : "—")}${kutu("Kâr al hedefi", h0 ? `${fiyatYaz(h0)} <span class="k">${uzun?"+":"−"}%${Math.round(H[0]*100)}</span>` : "—")}</div>
-    ${stop}${neden}`;
+    ${stop}${neden}${cikisIc(s, usd, k)}`;
+}
+// MADDE 787: çıkış takvimi — coinin dilim paylarının en erken ne zaman yenileneceği (yeni dilim coini yeniden seçerse pay kalır)
+function cikisIc(s, usd, k){
+  const L = (k.cikis||{})[s]; if (!L || !L.length) return "";
+  const sa = t => { if (!t) return "—"; const d = new Date(t*1000), b = new Date(); const g = Math.round((new Date(d.toDateString()) - new Date(b.toDateString()))/864e5);
+    return (g==0?"bugün":g==1?"yarın":d.toLocaleDateString("tr-TR",{day:"numeric",month:"short"})) + " " + d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}); };
+  const sat = L.slice(0, 8).map(x=>`<div class="shr"><span class="k">${sa(x.zaman)} <span style="opacity:.7">· ${x.k+1}. tur</span></span><span>%${Math.round(x.pay*100)} · ≈ ${para((usd||0)*x.pay)}</span></div>`).join("");
+  return `<div class="shs"><div class="shr" style="margin-bottom:6px"><b>Çıkış takvimi</b><span class="k">${L.length} parça</span></div>${sat}${L.length>8?`<div class="k">+${L.length-8} parça daha</div>`:""}
+    <p class="shn" style="margin-top:8px">Her parça kendi dilimi yenilenince satılır. Yeni dilim bu coini yeniden seçerse o parça kalır; yani bu en erken çıkış takvimi.</p></div>`;
 }
 // MADDE 756: SADE GEÇMİŞ — büyük toplam, Hafta / Ay / Tümü, tek grafik (günlük çubuklar), gün listesi. Tutarlar kitap
 // zincirinden (gün = gün sonu kitabı − önceki gün sonu; bugün = şimdiki kitap − dünkü gün sonu): liste toplamı = büyük toplam.

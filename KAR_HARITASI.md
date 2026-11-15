@@ -8683,3 +8683,10 @@ kitaptan en çok −%3,55 götürdüğü görüldü (demo JCT 15 Kas ≈ −%2,6
 ≤ −%1,5 için %4 (Poisson) / %5 (kayan pencere), ≤ −%2 için %1 / %2. Demo ilk 10 günde iki ≤ −%2 olayı yaşadı (AKE ≈ −2,3 · JCT ≈ −2,6) → backtest
 sıklığına göre ~1/50 olaylık şanssızlık YA DA demonun short tarafı backtestten kuyruklu. Ayrım için: 14-15 Kas verisi gelince 783'ü uzat ve backtestin
 JCT / AKE short'unu aynı günlerde aynı büyüklükte tutup tutmadığına bak.
+
+## Madde 787 — panel: pozisyon sayfasında ÇIKIŞ TAKVİMİ (kullanıcı: "hangi parça hangi gün çıkacak, kaç gün sonra kaç parça satılacak görsem")
+`panel.cikis_takvimi()`: carry_dilimler.json'dan her coinin dilim paylarını ve yenilenme zamanını hesaplar. Dilim j, sıradaki turdan
+k = (j − sira) mod N tur sonra yenilenir (carry_bot.bir_tur sira'yı yeniler ve artırır); short'lar ayrıca SHORT_ARA_SAAT ara dengelemesiyle
+(adim = 40 / 8 = 5 tur) değişir. Pay = dilimdeki ADET / toplam adet (madde 770: adet = usd / dilim_fiyat referansı). Zaman = sonraki_dilim
+zamanı + k × 8 sa. Alt sayfada (sheet) "Çıkış takvimi": ilk 8 parça, tarih-saat, pay % ve ≈ $; "yeni dilim coini yeniden seçerse parça kalır —
+en erken çıkış" notu. Bot DEĞİŞMEDİ (yalnız panel okuması). test_panel.py: 4 yeni kontrol.
