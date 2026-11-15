@@ -8779,3 +8779,7 @@ Test: tek kol EV2 = SEMBOL_HARIC "BTCUSDT,ETHUSDT" (demonun evreni), başka her 
 Motor adet yuvarlamasını HİÇBİR coinde taklit etmez (AVAX / BNB / UNI tabanda da var) → AAVE / QNT'nin ±%30 boyut hatası ölçülmez (VARSAYIM: küçük;
 iki coin). Kabul / karar: EV2 eşit riskte taban ± 8 içindeyse fark ihmal edilir (değişiklik yok); ≥ 8 kötüyse canlıya D8 dışlaması ADAY;
 ≥ 8 iyiyse not (demo evreni daha iyi; gerçek borsada filtre neyse o).
+**793 ek ÖLÇÜM — GERÇEK borsa filtreleri (www.binance.com/fapi/v1/exchangeInfo, 2026-11-16; `/tmp/m793/exinfo_gercek.json`):** minimum emir BTC 50 · ETH 20 ·
+LINK / LTC / BCH / ETC **20 $** (demoda 5 $) · AAVE / QNT 5 $ (adım 0,1 ≈ 11 $ / 16 $). Gerçek parada bacak 17 $ iken bot LINK / LTC / BCH / ETC'yi kendi
+eler (backtest gibi) → 792'nin 1. farkının 4 coini DEMOYA ÖZGÜ. Gerçekte kalan fark yalnız AAVE ve QNT (min emre sığar, adımı kaba; backtest dışlar).
+Not: canlıya geçince evren demodan farklı olacak; demo–backtest karşılaştırmasında bu 4 coinin katkısı ayrı okunmalı.
