@@ -8734,3 +8734,11 @@ değişen bacakta yazılır, kademe küçültmesi referansı değiştirmez) vars
 ESPORTS, ON, SOPH, PLAY) kayıt yok → ilk kontrolde bugünkü bacaklar taban alınır, sıfırlanmaz. CARRY_GIRIS_DILIM=0 iken davranış AYNEN eski.
 Bilinen kalan fark (her iki modda da önceden vardı): sıfırlanınca kademe tüm pozisyona kurulur, motor yalnız yeni dilimin payına.
 Testler: test_tutus_sabit 7 yeni kontrol (eski kural, küçültme, pahalı dilim çıkışı, aynı numaraya yeni parça, kayıtsız taban, sonra ekleme).
+
+## Madde 790 — panel: çıkış takvimi anlaşılır hale (yalnız görünüm, bot değişmedi)
+Kullanıcı (2026-11-16): "9.55'te satılacak diyor … jct için 3 farklı parça var aynı saatte neden … tasarımdan dolayı pek anlaşılır değil".
+- Aynı turda yenilenen parçalar (short'ta her tur 3 dilimin short tarafı: yenilenen + ara dengeleme 5 ve 10 tur önceki) TEK satır: "Bugün 09:47 turu · 3 parçanın süresi dolar".
+- "Satılacak" yerine "süresi dolar"; en üstte iki kutu: "yine seçilirse parça kalır, işlem olmaz, olaylarda görünmez" / "seçilmezse satılır (short'ta geri alınır), olaylarda 'azaltıldı' yazar".
+- Saatler tur BAŞLANGICI (01:47 / 09:47 / 17:47; takvim tur bitişini, ~8 dk sonrasını veriyordu). "Tamamen biter" → "Hiç seçilmezse biter".
+- Üst kutu "Kâr al hedefi" aslında KADEMEYİ (%45 / −%15) gösteriyordu → "Kademe · kâr al", iki seviye.
+- HATA düzeltmesi (788 panel kısmı): `_env` beyaz listesinde CARRY_GIRIS_DILIM yoktu → panel kâr al seviyelerini dilim girişinden HİÇ göstermiyordu (Binance girişi). Eklendi (CARRY_SHORT_ARA_SAAT da).
