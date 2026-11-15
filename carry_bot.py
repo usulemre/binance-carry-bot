@@ -3970,6 +3970,37 @@ def kar_al_iptal(client: ExchangeClient, durum: dict) -> None:
     durum["felaket"] = {}
 
 
+GIRIS_DILIM = os.getenv("CARRY_GIRIS_DILIM", "0") not in ("0", "false", "False")
+"""MADDE 788: kâr al / kademe / felaket stop'un GİRİŞ referansı. 0 (varsayılan, eski davranış) = Binance positionRisk.entryPrice;
+Binance bu girişi yalnız EKLEMEDE değiştirir, azaltmada DEĞİŞTİRMEZ → pahalı dilim çıkınca giriş yukarıda kalır. 1 = botun kendi dilim
+kayıtlarından AÇIK parçaların adet ağırlıklı ortalaması (dilim_giris_ortalamasi; backtest motorunun TEK_GIRIS tanımı, madde 481). Ölçüm
+(madde 788, 6 yıl, P3T2): Binance girişi eşit riskte 315,2 → 213,7 (−101), dd −13,3 → −15,5. Açmak kullanıcı kararı."""
+
+
+def dilim_giris_ortalamasi(durum: dict) -> dict:
+    """MADDE 788: {sembol: (yön ±1, giriş)} — açık dilim bacaklarının adet ağırlıklı ortalama girişi. Adet = |usd| / dilim_fiyat
+    (madde 770 referansı); referansı olmayan bacak sayılmaz. Coinin net yönündeki bacaklar kullanılır."""
+    ref = durum.get("dilim_fiyat") or {}
+    top = {}
+    for a, h in (durum.get("dilimler") or {}).items():
+        r = ref.get(str(a)) or {}
+        for s_, v in (h or {}).items():
+            try:
+                v = float(v); g = float(r.get(s_) or 0)
+            except (TypeError, ValueError):
+                continue
+            if v == 0 or g <= 0:
+                continue
+            t = top.setdefault(s_, {1: [0.0, 0.0], -1: [0.0, 0.0]})[1 if v > 0 else -1]
+            q = abs(v) / g; t[0] += q; t[1] += q * g
+    out = {}
+    for s_, d in top.items():
+        y = 1 if d[1][0] >= d[-1][0] else -1
+        if d[y][0] > 0:
+            out[s_] = (y, d[y][1] / d[y][0])
+    return out
+
+
 def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
     """Açık her pozisyona reduce-only kâr al limit emri koyar. Konan
     emir sayısını döner. Emir kimlikleri durum["kar_al"]'a yazılır.
@@ -4043,6 +4074,7 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
             felaket_basarisiz[sem] = str(ex)[:80]
 
     felaket_basarisiz: dict = {}
+    _dg = dilim_giris_ortalamasi(durum) if GIRIS_DILIM else {}
 
     def _koy(p) -> tuple:
         """(sembol, kondu_mu, sebep). Hedef dışıysa sembol None döner."""
@@ -4052,6 +4084,9 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
             giris = float(p.get("entryPrice") or 0)
         except (KeyError, ValueError, TypeError):
             return (None, False, "pozisyon satırı okunamadı")
+        dg = _dg.get(sem)
+        if dg and dg[0] == (1 if miktar > 0 else -1) and dg[1] > 0:
+            giris = dg[1]                                    # madde 788: kendi dilim girişi
         if abs(miktar) < 1e-12 or giris <= 0:
             return (None, False, "boş pozisyon")
         if miktar > 0:

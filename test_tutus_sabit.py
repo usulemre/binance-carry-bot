@@ -106,4 +106,14 @@ try:
 finally:
     cb.DOLUM_BEKLEME_SN, cb.DOLUM_DENEME = _eski
 kontrol("−5022 → kalan miktar piyasa emriyle (bacak eksik kalmaz)", kk.piyasa and kk.piyasa[0][0] == "CYBERUSDT" and kk.piyasa[0][2] == 57.0, kk.piyasa)
+# MADDE 788: kendi dilim girişi — açık parçaların adet ağırlıklı ortalaması (Binance azaltmada girişi değiştirmez)
+_d = {"dilimler": {"0": {"INITUSDT": 18.5, "JCTUSDT": -50.0}, "1": {"INITUSDT": 10.0}, "2": {"INITUSDT": 10.5}},
+      "dilim_fiyat": {"0": {"INITUSDT": 0.185, "JCTUSDT": 0.0021}, "1": {"INITUSDT": 0.10}, "2": {"INITUSDT": 0.105}}}
+_g = cb.dilim_giris_ortalamasi(_d)
+kontrol("dilim girişi: INIT = Σadet·fiyat / Σadet (100+100+100 adet → 0,13)", yakin(_g["INITUSDT"][1], 0.13) and _g["INITUSDT"][0] == 1, _g)
+kontrol("dilim girişi: short yönü ve fiyatı", _g["JCTUSDT"][0] == -1 and yakin(_g["JCTUSDT"][1], 0.0021), _g)
+_d["dilimler"].pop("0")
+kontrol("pahalı dilim çıkınca giriş kalan parçalara iner (0,1025)", yakin(cb.dilim_giris_ortalamasi(_d)["INITUSDT"][1], 0.1025), cb.dilim_giris_ortalamasi(_d))
+kontrol("varsayılan kapalı (Binance girişi)", cb.GIRIS_DILIM is False)
+
 print("\nHEPSİ GEÇTİ" if _h == 0 else f"\n{_h} HATA"); sys.exit(1 if _h else 0)

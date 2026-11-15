@@ -8716,3 +8716,6 @@ daha zayıf bir kitabı çalıştırıyor: pahalı parçalar çıktıktan sonra 
 düşüş 2 puan derinleşiyor. ADAY düzeltme (kullanıcı onayı, otomatik değil): canlı bot giriş referansını kendi dilim kayıtlarından hesaplasın —
 coin başına Σ(adet × dilim_fiyat) / Σ adet, adet = |usd| / dilim_fiyat (madde 770 referansları; motorun _Pe/_Pw tanımı). Kapsam: kar_al_kur,
 merdiven (kademe), felaket stop seviyesi. Bilinen yaklaşım: motorda adet vekili poz / fiyat ve yeni bacağın en çok bir bar gecikmesi.
+**788 uygulama (varsayılan KAPALI):** `carry_bot.CARRY_GIRIS_DILIM` (0 = Binance entryPrice, eski) / 1 = `dilim_giris_ortalamasi()` (açık bacakların
+adet ağırlıklı ortalaması, adet = |usd| / dilim_fiyat). `kar_al_kur` içinde TP, kademe ve felaket stop bu girişi kullanır; dilim kaydı yoksa Binance girişi.
+test_tutus_sabit.py: 4 yeni kontrol (ortalama, short yönü, pahalı dilim çıkınca iniş, varsayılan kapalı). Açmak kullanıcı kararı.
