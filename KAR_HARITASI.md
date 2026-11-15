@@ -8790,3 +8790,15 @@ Not: canlıya geçince evren demodan farklı olacak; demo–backtest karşılaş
 | yalnız BTC + ETH dışarıda (demo evreni) | 239,1 | 4,12 | −13,1 | 4,10 / 4,22 | 316,4 (+1,2) | 313 / 378 |
 6 coinin 2026 katkısı (% kitap): LINK +4,78 · LTC +1,00 · QNT +0,04 · AAVE −0,11 · ETC −0,14 · BCH −1,63. Gerçek parada kalan AAVE + QNT toplamı ≈ 0
 (adet yuvarlaması ölçülmedi; iki coin, katkı sıfır civarı). Evren farkı (792-1) kapandı: ne canlıya dışlama eklenir ne backtest değişir.
+
+## Madde 793 — hedefi 0 olan küçük pozisyon toleransa takılıp hiç kapanmıyordu (kullanıcı: "önerini yap testte ölç")
+Bulgu (792 madde 3 incelemesi): `emirleri_hesapla` |hedef − mevcut| < max(tolerans = bacak × %50 ≈ 8,6 $, 5 $) ise emir üretmez — hedef 0
+(coin hiçbir dilimde değil) olsa bile. Kademe sonrası %20 artık (bugün SOPH ~4,6 $) dilimi bitip yeniden seçilmezse SAHİPSİZ kalırdı
+(sunucuda doğrulandı: 4,6 $ → emir yok, 12 $ → SELL). Geçmişte olmadı (en küçük kapanış 10,5 $). Motor kapatır → parite farkı.
+Düzeltme: hedef 0 ve pozisyon ≠ 0 ise tolerans atlanır; asgari tutar (5 $) altındaki TAM kapanış reduce-only PİYASA emriyle
+(`close_position`; Binance asgari tutarı reduce-only'ye uygulamaz), emir defterine "KAPAT_KUCUK". Kısmi farklarda tolerans AYNEN (792/3:
+6 yıllık testte ayrıca ölçülecek). Testler: test_carry_bot 4 yeni kontrol; bot test paketi geçti.
+Ek (793): `adet_yuvarla(asagi=True)` float çıkarma artığında bir adım kaybediyordu: AAVE pozisyonu 0,5 iken kademe 0,4 + kalan
+0,5 − 0,4 = 0,0999…98 → 0 → kademe koşulu düştü, 15 Kas 01:47 turunda AAVE'ye yalnız %60 TP kondu (kademe yok). Oran önce 9 ondalığa
+yuvarlanıyor. Doğrulama (01:47 turu, 788/789 ilk tur): 22 pozisyonun tamamında emirler dilim girişinin tam +%45 / +%60 (short −%15 /
+−%20) seviyesinde; Binance girişine göre CYBER kademesi +%17, ZEC +%27, ONE +%30, INIT +%33'e indi.

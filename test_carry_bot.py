@@ -94,6 +94,30 @@ kontrol("hedefte olmayan pozisyon kapatılır (SELL)",
         len(kapat) == 1 and kapat[0][1] == "SELL", f"({kapat})")
 kontrol("MIN_NOTIONAL altı emir üretilmez",
         cb.emirleri_hesapla({"AUSDT": 3.0}, {}, 0.0) == [])
+# MADDE 793: hedefi 0 olan pozisyon toleranstan bağımsız kapanır (kademe sonrası %20 artık sahipsiz kalıyordu)
+kontrol("793: hedefte olmayan 4,6 $ artık tolerans 8,6 iken de kapatılır",
+        cb.emirleri_hesapla({}, {"SOPHUSDT": 4.6}, 8.6) == [("SOPHUSDT", "SELL", 4.6)])
+kontrol("793: hedefte olmayan toz (0,06 $, short) da kapatılır",
+        cb.emirleri_hesapla({}, {"ARBUSDT": -0.06}, 8.6) == [("ARBUSDT", "BUY", 0.06)])
+kontrol("793: kısmi fark (yeniden seçimde +4 $) tolerans içinde hâlâ atlanır",
+        cb.emirleri_hesapla({"INITUSDT": 206.0}, {"INITUSDT": 202.0}, 8.6) == [])
+class _K793:
+    def __init__(s):
+        s.kapat = []; s.client = s
+    def get_symbol_precision(s, sem): return {"quantity_precision": 0, "price_precision": 7, "step": 1.0, "piyasa_step": 1.0}
+    def futures_symbol_ticker(s, symbol): return {"price": "0.00116"}
+    def futures_get_open_orders(s, **k): return []
+    def close_position(s, sem, yon, adet, verify_fill=True): s.kapat.append((sem, yon, adet)); return {"orderId": 7}
+    def futures_create_order(s, **k): raise AssertionError("küçük tam kapanış limit / GTX yoluna gitmemeli")
+_k = _K793(); _eski = cb.EMIR_DEFTER; cb.EMIR_DEFTER = False
+try:
+    _n = cb._emirleri_gonder(_k, [("SOPHUSDT", "SELL", 4.6)], {"SOPHUSDT": 4.6}, kapat_adet={"SOPHUSDT": 3977.0})
+finally:
+    cb.EMIR_DEFTER = _eski
+from exchange_client import adet_yuvarla as _ay
+kontrol("793: float artığı aşağı yuvarlamada adım kaybettirmez (0,5 − 0,4 → 0,1; AAVE kademesi)",
+        _ay(0.5 - 0.4, {"step": 0.1}, asagi=True) == 0.1 and _ay(0.19999, {"step": 0.1}, asagi=True) == 0.1 and _ay(0.3, {"step": 0.1}, asagi=True) == 0.3)
+kontrol("793: asgari tutar altı TAM kapanış reduce-only piyasa emriyle, tam adet", _n == 1 and _k.kapat == [("SOPHUSDT", "SELL", 3977.0)], (_n, _k.kapat))
 
 print("\n5) YILLIKLAŞTIRMA — backtest/canlı paritesi")
 def kayit(oran, aralik_saat, adet=6):

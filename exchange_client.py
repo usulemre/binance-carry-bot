@@ -46,7 +46,10 @@ def adet_yuvarla(miktar: float, p: dict, piyasa: bool = False, asagi: bool = Fal
     if not step or step <= 0:
         return round(abs(miktar), int(p.get("quantity_precision", 3)))
     d = Decimal(str(step))
-    q = (Decimal(str(abs(miktar))) / d).quantize(Decimal(1), rounding=ROUND_DOWN if asagi else ROUND_HALF_UP) * d
+    # madde 793: önce 9 ondalığa — float çıkarma artığı (0,5 − 0,4 = 0,0999…98) aşağı yuvarlamada bir adım kaybettirmesin
+    # (AAVE 15 Kas: kademe payı 0,1 → 0 hesaplandı, kademe emri hiç konmadı).
+    r = (Decimal(str(abs(miktar))) / d).quantize(Decimal("1e-9"), rounding=ROUND_HALF_UP)
+    q = r.quantize(Decimal(1), rounding=ROUND_DOWN if asagi else ROUND_HALF_UP) * d
     return float(q)
 
 

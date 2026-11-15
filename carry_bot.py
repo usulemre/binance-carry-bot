@@ -4323,7 +4323,9 @@ def emirleri_hesapla(hedef: dict[str, float], mevcut: dict[str, float],
         h = hedef.get(s, 0.0)
         m = mevcut.get(s, 0.0)
         fark = h - m
-        if abs(fark) < max(tolerans_usd, MIN_NOTIONAL_USD):
+        # MADDE 793: hedefi 0 olan (hiçbir dilimde kalmayan) pozisyon toleranstan bağımsız HER ZAMAN kapanır. Eskiden 8,6 $'dan
+        # küçük artık (ör. kademe sonrası %20) hiç kapanmıyor, sahipsiz kalıyordu; backtest motoru kapatır.
+        if abs(fark) < max(tolerans_usd, MIN_NOTIONAL_USD) and not (h == 0 and m != 0):
             continue
         emirler.append((s, "BUY" if fark > 0 else "SELL", abs(fark)))
     # Önce kapanışlar (marj boşalsın), sonra açılışlar
@@ -5040,6 +5042,15 @@ def _emirleri_gonder(client: ExchangeClient, emirler: list,
                 # MADDE 770: hedefi 0 olan sembol TAM pozisyon adediyle kapatılır (dolar farkından adet, ters yönde toz
                 # bırakıyordu: 12 Kas ARB short kapanışı +0,06 $ long artık)
                 miktar = kapat_adet[s]
+            if (kapat_adet and s in kapat_adet and _kuculten_mi(s, yon, usd, mevcut) and miktar > 0
+                    and miktar * fiyat < MIN_NOTIONAL_USD):
+                # MADDE 793: asgari tutarın altındaki TAM kapanış reduce-only piyasa emriyle (Binance -4164: asgari tutar
+                # reduce-only emre uygulanmaz). Limit / GTX yolu bu tutarı reddederdi.
+                _o = client.close_position(s, yon, miktar, verify_fill=False)
+                _emir_kaydet("KAPAT_KUCUK", s, yon, miktar, ref=fiyat, oid=_oid(_o))
+                basarili += 1
+                time.sleep(0.2)
+                continue
             if miktar <= 0 or miktar * fiyat < MIN_NOTIONAL_USD:
                 # MADDE 204: bu atlama eskiden SESSİZDİ. Bakiye küçükse her
                 # bacak buradan dönüyor, bot hiç işlem açmıyor ve hiçbir
