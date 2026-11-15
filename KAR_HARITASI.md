@@ -8783,3 +8783,10 @@ iki coin). Kabul / karar: EV2 eşit riskte taban ± 8 içindeyse fark ihmal edil
 LINK / LTC / BCH / ETC **20 $** (demoda 5 $) · AAVE / QNT 5 $ (adım 0,1 ≈ 11 $ / 16 $). Gerçek parada bacak 17 $ iken bot LINK / LTC / BCH / ETC'yi kendi
 eler (backtest gibi) → 792'nin 1. farkının 4 coini DEMOYA ÖZGÜ. Gerçekte kalan fark yalnız AAVE ve QNT (min emre sığar, adımı kaba; backtest dışlar).
 Not: canlıya geçince evren demodan farklı olacak; demo–backtest karşılaştırmasında bu 4 coinin katkısı ayrı okunmalı.
+**SONUÇ 793 (2 koşu rc 0): FARK YOK — ihmal edilir, değişiklik yok.**
+| evren | yıllık | Sh | dd | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2025 / 2026 |
+|---|---|---|---|---|---|---|
+| D8 dışarıda (taban) | 239,3 | 4,05 | −13,3 | 4,03 / 4,14 | 315,2 | 342 / 341 |
+| yalnız BTC + ETH dışarıda (demo evreni) | 239,1 | 4,12 | −13,1 | 4,10 / 4,22 | 316,4 (+1,2) | 313 / 378 |
+6 coinin 2026 katkısı (% kitap): LINK +4,78 · LTC +1,00 · QNT +0,04 · AAVE −0,11 · ETC −0,14 · BCH −1,63. Gerçek parada kalan AAVE + QNT toplamı ≈ 0
+(adet yuvarlaması ölçülmedi; iki coin, katkı sıfır civarı). Evren farkı (792-1) kapandı: ne canlıya dışlama eklenir ne backtest değişir.
