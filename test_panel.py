@@ -437,7 +437,7 @@ kontrol("çıkış takvimi: dosya yoksa None", panel.cikis_takvimi(tempfile.mkdt
 kontrol("sayfada çıkış takvimi", "function cikisIc" in app.get("/").data.decode())
 _h790 = app.get("/").data.decode()
 kontrol("madde 790: çıkış takvimi tur başına, 'yine seçilirse kalır' açıklaması, kademe + kâr al kutusu",
-        "turun hepsini göster" in _h790 and "yine seçilirse" in _h790 and "Kademe · kâr al" in _h790 and "satılacak</span>" not in _h790)
+        "turun hepsini göster" in _h790 and "dilime bölündü" in _h790 and "dilim payı" in _h790 and "yine seçilirse" in _h790 and "Kademe · kâr al" in _h790 and "satılacak</span>" not in _h790)
 kontrol("madde 790: panel CARRY_GIRIS_DILIM'i .env'den okur", "CARRY_GIRIS_DILIM" in open(panel.__file__, encoding="utf-8").read().split("def _env")[1].split("return d")[0])
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")

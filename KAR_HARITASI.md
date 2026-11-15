@@ -8742,3 +8742,8 @@ Kullanıcı (2026-11-16): "9.55'te satılacak diyor … jct için 3 farklı par�
 - Saatler tur BAŞLANGICI (01:47 / 09:47 / 17:47; takvim tur bitişini, ~8 dk sonrasını veriyordu). "Tamamen biter" → "Hiç seçilmezse biter".
 - Üst kutu "Kâr al hedefi" aslında KADEMEYİ (%45 / −%15) gösteriyordu → "Kademe · kâr al", iki seviye.
 - HATA düzeltmesi (788 panel kısmı): `_env` beyaz listesinde CARRY_GIRIS_DILIM yoktu → panel kâr al seviyelerini dilim girişinden HİÇ göstermiyordu (Binance girişi). Eklendi (CARRY_SHORT_ARA_SAAT da).
+
+## Madde 791 — panel: çıkış takviminde "parça" yerine ALIM (kullanıcı: "hype 6 parça ama 2 saat dilimi, tek seferde neden 3'er parça alınmış … değiştir")
+Bir turda seçilen coin borsaya TEK emirle gider; bot onu o turda yenilenen dilimlere paylaştırır (short'ta 3 dilim: sıradaki + ara dengelemeyle
+5 ve 10 tur önceki). Panel bu payları ayrı "parça" sayıyordu. Artık: "HYPE pozisyonu 2 alımdan (6 dilim payı) oluşuyor", satırda "1 emir, 3 dilime
+bölündü", kutular "1 alım", "24 saatte 2 alım", başlık "Alımların süresi ne zaman doluyor?". Yalnız görünüm.

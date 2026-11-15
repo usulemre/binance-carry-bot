@@ -1584,7 +1584,7 @@ let CIKIS_TUM = false;
 function cikisTum(){ CIKIS_TUM = !CIKIS_TUM; if (SHEET) { const k = VERI.kurulumlar[secili]; const el = $("#sheetic"); if (el && k.pozisyonlar[SHEET]) el.innerHTML = sheetIc(SHEET, k.pozisyonlar[SHEET], k); } }
 function cikisIc(s, usd, k){
   // MADDE 790: kullanıcı "tasarımdan dolayı pek anlaşılır değil". Parçalar TUR başına tek satır (aynı turda yenilenen 2-3 parça ayrı satır
-  // değil), "satılacak" yerine "süresi dolar" (short'ta kapanış ALIŞTIR), yeniden seçilirse kalacağı en başta, "tamamen biter" → "hiç seçilmezse".
+  // değil; madde 791: "N alım (M dilim payı)", satırda "1 emir, 3 dilime bölündü"), "satılacak" yerine "süresi dolar" (short'ta kapanış ALIŞTIR), yeniden seçilirse kalacağı en başta, "tamamen biter" → "hiç seçilmezse".
   const L = (k.cikis||{})[s], p = (k.pozisyonlar||{})[s]; if (!L || !L.length || !p) return "";
   const {f} = pozDeger(s, p), uzun = p.miktar > 0, ad = s.replace(/USDT$/,""), q = Math.abs(p.miktar||0);
   const GUNK = ["Paz","Pzt","Sal","Çar","Per","Cum","Cmt"], bugun = new Date(new Date().toDateString());
@@ -1605,20 +1605,20 @@ function cikisIc(s, usd, k){
   const kut = (e, d, a) => `<div class="shk"><div class="k">${e}</div><div style="font-weight:700;font-size:14px">${d}</div><div class="k">${a}</div></div>`;
   const satir = (t, i) => `<div style="display:flex;justify-content:space-between;gap:10px;background:var(--kart);border-radius:12px;padding:10px 12px;${i?"":"outline:1.5px solid color-mix(in srgb,var(--vurgu) 45%,transparent)"}">
       <div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:14px;font-weight:700">${t.zaman ? `${gunAd(turT(t.zaman))} ${saat(t.zaman)} turu` : "Tur saati bilinmiyor"}</span>
-        <span class="k">${t.n > 1 ? `${t.n} parçanın süresi dolar` : "1 parçanın süresi dolar"}${t.alis ? ` · açılış ${gunAd(turT(t.alis)).toLowerCase()} ${saat(t.alis)}` : ""}${t.giris ? ` · giriş ${fiyatYaz(t.giris)}` : ""}</span></div>
+        <span class="k">${t.n > 1 ? `1 emir, ${t.n} dilime bölündü` : "1 emir"}${t.alis ? ` · açılış ${gunAd(turT(t.alis)).toLowerCase()} ${saat(t.alis)}` : ""}${t.giris ? ` · giriş ${fiyatYaz(t.giris)}` : ""}</span></div>
       <div style="display:flex;flex-direction:column;align-items:flex-end;gap:3px;flex:none"><span style="font-size:14px;font-weight:600">${para(t.deg)} <span class="k">· %${Math.max(1, Math.round(t.pay*100))}</span></span>
         ${t.kz==null ? "" : `<span class="${sinif(t.kz)}" style="font-size:12px;font-weight:600">${isaretli(t.kz)}</span>`}</div></div>`;
   const sinir = CIKIS_TUM ? 1e9 : 4, gor = turlar.slice(0, sinir), kalan = turlar.slice(sinir);
   const kalanDeg = kalan.reduce((a,t)=>a+t.deg,0), kalanKz = kalan.reduce((a,t)=>a+(t.kz||0),0);
   return `<div class="shs" style="margin-top:12px;padding:14px">
-    <div style="font-size:16px;font-weight:700">Parçaların süresi ne zaman doluyor?</div>
-    <p class="shn" style="margin-top:6px">${ad} pozisyonu <b>${P.length} parçadan</b> oluşuyor. ${uzun ? "Long parçaların süresi <b>5 günde</b>" : "Short parçaların süresi <b>40 saatte</b>"} dolar. Süresi dolan parça için bot o turda karar verir:</p>
+    <div style="font-size:16px;font-weight:700">Alımların süresi ne zaman doluyor?</div>
+    <p class="shn" style="margin-top:6px">${ad} pozisyonu <b>${turlar.length} alımdan</b>${P.length > turlar.length ? ` (${P.length} dilim payı)` : ""} oluşuyor. ${P.length > turlar.length ? `Her alım borsaya <b>tek emir</b> olarak gider; bot onu kendi defterinde o turda yenilenen ${uzun ? "dilimlere" : "3 dilime (sıradaki + short ara dengelemesiyle 5 ve 10 tur önceki)"} paylaştırır. ` : ""}${uzun ? "Long alımların süresi <b>5 günde</b>" : "Short alımların süresi <b>40 saatte</b>"} dolar. Süresi dolan alım için bot o turda karar verir:</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
-      <div class="shk"><div style="font-weight:700;font-size:13px;color:var(--art)">${ad} yine seçilirse</div><div class="k" style="margin-top:3px">parça <b>kalır</b>, hiçbir işlem olmaz, olaylarda görünmez</div></div>
-      <div class="shk"><div style="font-weight:700;font-size:13px;color:var(--uyari)">seçilmezse</div><div class="k" style="margin-top:3px">o parça ${kapanis}; olaylarda "${uzun?"long":"short"} azaltıldı" yazar</div></div></div>
-    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px">${kut("Sıradaki tur", ilk.zaman ? gunAd(turT(ilk.zaman)).toLowerCase()+" "+saat(ilk.zaman) : "—", `${ilk.n} parça · ${para(ilk.deg)}`)}${kut("24 saatte", g24.length+" tur", `${g24.reduce((a,t)=>a+t.n,0)} parça · ${para(g24.reduce((a,t)=>a+t.deg,0))}`)}${kut("Hiç seçilmezse biter", son.zaman ? gunAd(turT(son.zaman)) : "—", son.zaman ? saat(son.zaman) : "")}</div>
+      <div class="shk"><div style="font-weight:700;font-size:13px;color:var(--art)">${ad} yine seçilirse</div><div class="k" style="margin-top:3px">alım <b>kalır</b>, hiçbir işlem olmaz, olaylarda görünmez</div></div>
+      <div class="shk"><div style="font-weight:700;font-size:13px;color:var(--uyari)">seçilmezse</div><div class="k" style="margin-top:3px">o alım ${kapanis}; olaylarda "${uzun?"long":"short"} azaltıldı" yazar</div></div></div>
+    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px">${kut("Sıradaki tur", ilk.zaman ? gunAd(turT(ilk.zaman)).toLowerCase()+" "+saat(ilk.zaman) : "—", `1 alım · ${para(ilk.deg)}`)}${kut("24 saatte", g24.length+" alım", para(g24.reduce((a,t)=>a+t.deg,0)))}${kut("Hiç seçilmezse biter", son.zaman ? gunAd(turT(son.zaman)) : "—", son.zaman ? saat(son.zaman) : "")}</div>
     <div style="height:1px;background:var(--cizgi);margin:14px 0 2px"></div>
-    <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--soluk)"><span>TUR · SÜRESİ DOLAN PARÇALAR</span><span>DEĞER · K/Z</span></div>
+    <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--soluk)"><span>SÜRESİ DOLAN ALIM</span><span>DEĞER · K/Z</span></div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${gor.map(satir).join("")}</div>
     ${kalan.length ? `<div class="k" style="margin-top:10px">+${kalan.length} tur daha · ${para(kalanDeg)} · <span class="${sinif(kalanKz)}">${isaretli(kalanKz)}</span></div>` : ""}
     ${turlar.length>4 ? `<button onclick="cikisTum()" style="width:100%;height:44px;margin-top:10px;border-radius:12px;border:0;background:var(--kart);color:var(--vurgu);font:inherit;font-size:14px;font-weight:600">${CIKIS_TUM ? "Daha az göster" : `${turlar.length} turun hepsini göster`}</button>` : ""}
