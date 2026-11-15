@@ -8669,3 +8669,12 @@ Kollar (motor g33.py değişmeden, yalnız CAP_ORTAK): C6 = %6, C7 = %7 (taban %
 taban serisi /tmp/m783/M357_EK_KAS_2000_{0,1}; ölçüm 2020-07 → 2026-10-31. Ek rapor: tek SHORT coinin en kötü günlük katkısı (% kitap) ve en kötü 5
 (GUNLUK_KATKI defteri). Kabul: eşit risk ≥ taban + 8, dd ≤ 1 puan kötü, Sh ≤2024 ve 2025+ düşmüyor. Geçmezse ama tek coin kuyruğu belirgin
 küçülürse kullanıcıya "risk ↔ getiri" seçeneği olarak sunulur (otomatik değişiklik yok).
+**SONUÇ 786 (4 koşu rc 0): İKİSİ DE RED — tavanı düşürmek her ölçüde KÖTÜ, tek coin kuyruğunu da kısmıyor.**
+| tavan | yıllık | Sh | dd | en kötü gün | Sh ≤2024 / 2025+ | eşit risk | tek short coin en kötü gün | ≤ −%1,5 gün |
+|---|---|---|---|---|---|---|---|---|
+| **%8** | 239,3 | 4,05 | −13,3 | −7,41 | 4,03 / 4,14 | **315,2** | −3,55 (TAC 26-07-09) | 15 |
+| %7 | 226,4 | 3,98 | −13,7 | −7,46 | 3,96 / 4,06 | 275,0 (−40) | −3,55 | 16 |
+| %6 | 212,8 | 3,86 | −14,7 | −7,49 | 3,85 / 3,94 | 220,1 (−95) | −3,55 | 13 |
+En kötü tek coin günü aynı kalıyor (o gün TAC tavana takılmamıştı; sıçrama bacak ilk açılırken geliyor), düşüş ve en kötü gün bile KÖTÜLEŞİYOR:
+tavan, en yüksek funding'li short'ları kesip kitabı short tarafında daha az alfalı coinlere kaydırıyor. 6 yılda tek short coinin bir günde
+kitaptan en çok −%3,55 götürdüğü görüldü (demo JCT 15 Kas ≈ −%2,6, AKE ≈ −%2,3 bu aralıkta). %8 yerinde; short tavan ekseni (455 / 786) kapandı.
