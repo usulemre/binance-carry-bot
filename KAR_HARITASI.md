@@ -8769,3 +8769,13 @@ FARKLI / ÖLÇÜLMEMİŞ:
  5. Kademe yeniden kurulunca kapsam: canlı tüm pozisyona, motor yalnız yeni dilime (her iki girişte de önceden vardı).
 Sonraki adım: tur tur CANLI İKİZ (veri ve motor bulut oturumunda): motoru 6 Kas başlangıç durumuyla koşup her turun seçimini, ağırlığını,
 TP / kademe seviyesini ve stoplarını canlıyla karşılaştır; 1-3'ü ayrı düğmelerle ölç.
+
+## Madde 793 ÖN KAYIT (2026-11-16, sonuç görülmeden; 792'nin 1. farkı, kullanıcı "tamam") — EVREN: D8 dışlama vs yalnız BTC + ETH dışlama
+ÖLÇÜM (filtreler, testnet exchangeInfo — demo botun gördüğü; `/tmp/m793/filtreler.json`): minimum emir > 17 $ (bacak) yalnız BTC (50 $) ve ETH (20 $);
+LINK / LTC / BCH / ETC / AAVE / QNT 5 $. Adet adımı bacağın %30'undan kaba: AAVE (0,1 = 11,2 $), BTC, AVAX, BNB, UNI; QNT 0,1 = 16,0 $. Yani demoda
+D8'in 6 coini işlem görür (792 gözlemi). DİKKAT: madde 296 / 341'in D8'i GERÇEK borsanın filtreleriyle kurulmuştu (o zaman LINK / LTC / BCH / ETC
+minimumu 20 $ idi) → fark DEMOYA ÖZGÜ olabilir; gerçek borsanın güncel filtreleri sunucuda okunmalı.
+Test: tek kol EV2 = SEMBOL_HARIC "BTCUSDT,ETHUSDT" (demonun evreni), başka her şey P3T2, motor g33.py değişmeden; taban /tmp/m783 (aynı zemin).
+Motor adet yuvarlamasını HİÇBİR coinde taklit etmez (AVAX / BNB / UNI tabanda da var) → AAVE / QNT'nin ±%30 boyut hatası ölçülmez (VARSAYIM: küçük;
+iki coin). Kabul / karar: EV2 eşit riskte taban ± 8 içindeyse fark ihmal edilir (değişiklik yok); ≥ 8 kötüyse canlıya D8 dışlaması ADAY;
+≥ 8 iyiyse not (demo evreni daha iyi; gerçek borsada filtre neyse o).
