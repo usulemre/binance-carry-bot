@@ -8706,3 +8706,13 @@ Parite: TEK_BINANCE=0 hiza 0 taban ile birebir. Karar kuralı: Binance kolu taba
 dilim referanslarından (dilim_fiyat, madde 770) kurulmalı (ADAY, kullanıcı onayı); fark < 8 ise parite farkı ihmal edilebilir, değişiklik yok;
 Binance kolu ≥ 8 İYİYSE motor canlıya uydurulur (değişiklik yok, not). Bilinen yaklaşım: yeni dilim bacağı, o barda önce işlenen dilimlerin
 snapshot'ına bir bar gecikmeyle girebilir.
+**SONUÇ 788 (parite TEK_BINANCE=0 = taban hiza 0, fark 0; 3 koşu rc 0): BINANCE GİRİŞİ ÇOK KÖTÜ → ön kayıt kuralına göre ADAY.**
+| giriş referansı | yıllık | Sh | dd | en kötü gün | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2025 / 2026 |
+|---|---|---|---|---|---|---|---|
+| motor (açık parçaların ortalaması) | 239,3 | 4,05 | −13,3 | −7,41 | 4,03 / 4,14 | **315,2** | 342 / 341 |
+| Binance entryPrice (canlı bot bugün) | 225,5 | 3,98 | −15,5 | −6,55 | 4,02 / 3,95 | **213,7 (−101,5)** | 305 / 298 |
+Her yıl kötü (2024 hariç). Canlı bot TP / kademe / felaket stop'u Binance girişinden kurduğu için backtest'in ölçtüğü kitabı DEĞİL, eşit riskte ~100 puan
+daha zayıf bir kitabı çalıştırıyor: pahalı parçalar çıktıktan sonra Binance girişi yukarıda kalıyor, kalan ucuz parçaların TP'si gecikiyor / hiç dolmuyor,
+düşüş 2 puan derinleşiyor. ADAY düzeltme (kullanıcı onayı, otomatik değil): canlı bot giriş referansını kendi dilim kayıtlarından hesaplasın —
+coin başına Σ(adet × dilim_fiyat) / Σ adet, adet = |usd| / dilim_fiyat (madde 770 referansları; motorun _Pe/_Pw tanımı). Kapsam: kar_al_kur,
+merdiven (kademe), felaket stop seviyesi. Bilinen yaklaşım: motorda adet vekili poz / fiyat ve yeni bacağın en çok bir bar gecikmesi.
