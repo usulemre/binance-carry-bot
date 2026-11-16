@@ -8894,3 +8894,9 @@ Oca 37,4 / −37,4 / −32,4 · Şub 20,8 / −20,8 / −9,1 · Mar 10,6 / −10
 Tem 2,1 / −2,1 / +10,9 · Ağu 11,5 / −11,5 / −10,2 · Eyl 9,1 / −9,1 / −9,3 · Eki −3,7 / +3,7 / +8,7 · Kas(15) −5,9 / +5,9 / +18,9. Ayna 2026'da funding
 olarak −101,6 öder. Ayna toplam 2026 ≈ −158, yalnız long aynası ≈ −55. Okuma: Ekim-Kasım'da kalabalıkla olmak kazandırırdı (geriye dönük seçim); yıl
 boyunca felaket. "Rejim anahtarı" (kenar eksiyken tarafı çevir) ölçülmedi; 6 yılda tek eksi kenar dönemi (2025 Q3+) → aşırı uydurma riski çok yüksek.
+
+## Madde 685 İZLEME SONUCU (örnek dışı, 2026-10-01 → 11-15; kullanıcı: "düşüşü azaltma çalışmaları yapmalıyız") — DDA2 yumuşak düşüş freni
+685'in izleme listesine alınan DDA2 ×1,30 (ölçek = max(0,5 ; 1 + 3 × dd), 10 bp / Δ, eşik 0,05) vs P3T2 ×1,15, zemin 15 Kas (`/tmp/m783c`):
+Ekim −5,0 / −5,9 · 1-15 Kas −6,4 / −5,1 · Eki+Kas **−11,0 / −10,7** · dönem içi dd −16,4 / −16,3 · en kötü gün −4,05 / −3,78. Doz Ekim sonundan beri 0,69
+(× 1,30 = 0,90 ≈ taban 1,15'e yakın net brüt). Okuma: örnek dışında da FARK YOK — fren düşüşü azaltmadı (yüksek başlangıç dozu, frenle tabana iniyor).
+Kitap düzeyi fren ailesi (555 / 685 / bu) kapandı. Düşüşü ORANTILI azaltan tek kaldıraç pozisyon büyüklüğü (×1,15 → ×0,75: getiri ve dd birlikte ~%35 küçülür).
