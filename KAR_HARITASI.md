@@ -8950,3 +8950,13 @@ Model: HistGradientBoostingRegressor (max_iter 200, lr 0,05, max_leaf_nodes 15, 
 önceki veriyle, 6 g boşluk). Uygulama SONRADAN (685 yöntemi): r' = r − (1 − ölçek) × long katkısı; ölçek değişimi 10 bp × |Δ| × 0,6 (long brüt payı).
 Kollar (2): tahmin < 0 iken long ölçeği 0,5 · 0,75 (≥ 0 iken 1). 2022 öncesi ölçek 1. Ölçüt 685 ile aynı: eşit risk ≥ taban + 8 VE Sharpe ≤ 2024 ve 2025+
 düşmez → ADAY (Aralık verisiyle doğrulanmadan bota girmez). Sonradan uygulama TP / rezerv etkileşimini yok sayar (yaklaşık).
+**SONUÇ 801 (defter 2 koşu rc 0, E serisi parite 0; ilk analiz 2022 öncesi metrik sütunları boş olduğu için çöktü → eğitimde verisi olmayan sütun atlandı,
+ön kayıtta yazılmamış teknik düzeltme): RED.**
+Model IC (yıl, yürüyen): 2022 +0,04 · 2023 **−0,15** · 2024 +0,07 · 2025 +0,17 · 2026 +0,08; tahmin < 0 günleri 2022 %10 · 2023 %56 · 2024 %51 · 2025 %12 · 2026 **%3**.
+| kol | yıllık | Sh | dd | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2023 / 2024 / 2025 / 2026 | Eki+Kas |
+|---|---|---|---|---|---|---|---|
+| taban | 239,3 | 4,05 | −13,3 | 4,03 / 4,14 | 315,2 | 402 / 144 / 342 / 341 | −11,0 |
+| tahmin<0 → long ×0,5 | 202,4 | 3,85 | −18,0 | 3,70 / 4,23 | 148,5 | 158 / 101 / 405 / 296 | −11,1 |
+| tahmin<0 → long ×0,75 | 220,7 | 4,00 | −14,4 | 3,93 / 4,21 | 247,4 | 261 / 122 / 373 / 318 | −11,1 |
+İkisi de eşit riskte ≤ −8 → RED. Model 2026'da günlerin yalnız %3'ünde uyardı → Eki-Kas'ı GÖRMEDİ. Long'u kısmak kitabı dengesiz bırakıyor (short açık kalır):
+dd −13,3 → −18,0. 2023'te IC ters (−0,15) → ×0,5 kolu 402 → 158. ML ailesi (389 / 390 / 800 / 801: kesitsel ve zaman serisi) kapandı.
