@@ -9036,3 +9036,11 @@ Sharpe ve Calmar (yıllık / |dd|) İKİSİ DE tabandan iyi VE 2024, 2025, 2026 
 2024+ Sharpe ve Calmar ikisi de düşük, yalnız 2024 iyi (1/3) → RED. Teşhiste veto kümesi kalandan 1,2-1,7 puan kötüydü, ama motorda RED: veto edilen coinin yerine giren
 sıradaki aday da çoğu zaman kötü / funding'i daha az; ayrım "kalanla" değil "yerine gelenle" ölçülmeli (805 dersi). Eki+Kas yine iyi (−9,6 / −5,9): 802 ile birlikte
 "bu rejimde ML vetosu yardım ediyor, 2024-25'te zarar" deseni → Aralık izlemesi (797) kayıtlı; motor değişmez.
+
+## Madde 807 ÖN KAYIT (2026-11-17, sonuç görülmeden; kullanıcı: "devam et araştırmaya") — ML SEÇİCİ (kalabalık filtresinin yerine), "yerine gelen" ile kıyaslı kapı
+806 dersi: veto teşhisi "kalan ortalama" ile kıyaslandı, motor "yerine gelen" aday ile çalışır. Doğru kapı: AYNI gün AYNI aday havuzunda seçici A vs seçici B.
+Vekil havuz: günlük (00 UTC) evrende fon3 en düşük 16 coin (canlı havuz 16 → 4). Seçiciler (her biri 4 coin): (K) kalabalık = ls oranı en düşük 4 (P3T2'nin şimdiki kuralı
+vekili) · (S) 802 sıçrama olasılığı en yüksek 4 · (A) 804 asimetri en iyi 4 (en düşük P(çöküş) − P(sıçrama)) · (R) rastgele 4 (beklenen = havuz ortalaması).
+Ödeme: 800 hedefi (TP'li 5 g, funding dahil). Ölçüm: 2022 … 2026 yıllık ortalama ödeme (seçici başına), ayrıca 2026-10-01 → 11-10.
+KAPI: S ya da A, K'yı ≥ 0,5 puan geçer, 2024 / 2025 / 2026'nın (öğrenme yeterli yıllar, 806 gerekçesi) ≥ 2'sinde VE 2022-26 ortalamasında → 808 motor ön kaydı (kalabalık filtresi
+yerine ML sırası); aksi halde ML seçici ekseni kapanır.
