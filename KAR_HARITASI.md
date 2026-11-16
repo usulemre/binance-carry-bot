@@ -8938,3 +8938,15 @@ Teşhis (long adayı = fon3 en düşük %10; tahminin alt %20'si vs kalan, gerç
 | ML veto en kötü %20 | 215,3 | 4,05 | −13,3 | 4,00 / 4,19 | 282,2 (−33) | 252 / 239 / 384 | −8,3 |
 Eşit riskte ikisi de ≤ −8 → RED. 2026 iyileşiyor (+40) ama 2023 / 2025 −100 .. −150; Eki+Kas iki kolda zıt yönde (−13,8 / −8,3) → gürültü. 390 yasası long
 tarafında da geçerli: modelin "kötü" bulduğu kalabalık long'lar bazı yıllar en büyük sıçramaları yapanlar. ML ailesi (389 / 390 / 800) kapandı.
+
+## Madde 801 ÖN KAYIT (2026-11-16, sonuç görülmeden; kullanıcı: "ML modelleriyle başka şeyler dene") — ML REJİM: long TARAFININ dozu
+389 / 390 / 800 coin seçti (kesitsel); hepsi RED. Burada model piyasa durumundan (zaman serisi) kitabın LONG tarafının sonraki 5 gün katkısını tahmin eder.
+Veri: P3T2 GUNLUK_KATKI defteri GK_BAS=2020-01-01 (iki hiza; E serisi `/tmp/m783c` ile parite 0 olmalı), `/tmp/m801`.
+Özellikler (günlük, nedensel, t günü 00 UTC'ye kadar): BTC getiri 1 / 7 / 30 g, BTC oynaklık 7 / 30 g, evren medyan getirisi 1 / 7 / 30 g, kesitsel dağılım
+(7 g getiri sd), evren medyan funding (3 g), long aday funding'i (fon3 en düşük %10 ort.), funding yayılımı (üst − alt %10), OI 7 g medyan değişim,
+ls medyanı, gerçekleşmiş long kenarı (negatif funding %10'luk dilimin 5 g getirisi − medyan; 5 g gecikmeli, 30 / 90 g ort.), kitabın kendi long katkısı
+son 10 / 30 g (gecikmeli). Hedef: long tarafı katkısı t+1 … t+5 toplamı.
+Model: HistGradientBoostingRegressor (max_iter 200, lr 0,05, max_leaf_nodes 15, min_samples_leaf 50, l2 1; arama yok). Yürüyen 2022 … 2026 (yıl başına,
+önceki veriyle, 6 g boşluk). Uygulama SONRADAN (685 yöntemi): r' = r − (1 − ölçek) × long katkısı; ölçek değişimi 10 bp × |Δ| × 0,6 (long brüt payı).
+Kollar (2): tahmin < 0 iken long ölçeği 0,5 · 0,75 (≥ 0 iken 1). 2022 öncesi ölçek 1. Ölçüt 685 ile aynı: eşit risk ≥ taban + 8 VE Sharpe ≤ 2024 ve 2025+
+düşmez → ADAY (Aralık verisiyle doğrulanmadan bota girmez). Sonradan uygulama TP / rezerv etkileşimini yok sayar (yaklaşık).
