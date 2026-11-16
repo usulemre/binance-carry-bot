@@ -8960,3 +8960,14 @@ Model IC (yıl, yürüyen): 2022 +0,04 · 2023 **−0,15** · 2024 +0,07 · 2025
 | tahmin<0 → long ×0,75 | 220,7 | 4,00 | −14,4 | 3,93 / 4,21 | 247,4 | 261 / 122 / 373 / 318 | −11,1 |
 İkisi de eşit riskte ≤ −8 → RED. Model 2026'da günlerin yalnız %3'ünde uyardı → Eki-Kas'ı GÖRMEDİ. Long'u kısmak kitabı dengesiz bırakıyor (short açık kalır):
 dd −13,3 → −18,0. 2023'te IC ters (−0,15) → ×0,5 kolu 402 → 158. ML ailesi (389 / 390 / 800 / 801: kesitsel ve zaman serisi) kapandı.
+
+## Madde 802 ÖN KAYIT (2026-11-16, sonuç görülmeden; kullanıcı: "ML gibi modelleme yaklaşımları bir sonuç vermeli, araştırma yap bul") — SIÇRAMA SINIFLANDIRICI + MUM YOLU ÖZELLİKLERİ
+Araştırma: (a) meta-labeling (López de Prado; 390 / 800 bunun filtre biçimiydi); (b) ön kayıtlı Binance perp funding çalışması (JosephBerachah/crypto-fundingrate-alpha:
+prim gerçek, devir maliyeti yiyor — bizimle aynı); (c) kesitsel ML çalışması (SmartR168): doğrusal olmayan GBM > doğrusal; en güçlü tekil özellik GÜN İÇİ getiri
+ÇARPIKLIĞI, ayrıca 3 g geri dönüş ve fitil oranı — 389 / 800 / 801 özelliklerinde mum yolu YOKTU.
+Hipotez: long kârı sıçrama olayından (kademe +%45) gelir; 390 sıçramayı AUC 0,62-0,80 ile seziyordu (short'ta risk olarak). Long'da sıçrama = kâr olayı → aynı
+öngörü gücü long adayları ARASINDA olumlu seçici olabilir.
+Model: HistGradientBoostingClassifier (max_iter 300, lr 0,05, max_leaf_nodes 31, min_samples_leaf 500, l2 1; arama yok). Hedef: 5 g içinde 4 sa HIGH ≥ giriş × 1,45.
+Özellikler: 389'un 18'i + mum yolu 6 (4 sa getiri çarpıklığı 7 / 30 g, üst fitil oranı 7 g, alt fitil oranı 7 g, 3 g getiri, 4 sa getiri basıklığı 30 g), kesitsel sıra.
+Yürüyen 2022 … 2026. KAPI (önce, ucuz): long adayları (fon3 en düşük %10) içinde AUC ≥ 0,60 HER yıl → motor koşusu; değilse DUR (RED, motor koşulmaz).
+Motor (kapı geçerse): MOM_DOSYA V = 0,5 × sıra(olasılık) → MOM_Q 0,05 / 0,10 (sıçrama olasılığı en düşük %10 / %20 long adayı olmaz). Ölçüt 800 ile aynı.
