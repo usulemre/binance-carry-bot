@@ -8915,3 +8915,15 @@ Kitap düzeyi fren ailesi (555 / 685 / bu) kapandı. Düşüşü ORANTILI azalta
 Okuma: (1) bütün profiller aynı dönemde kaybediyor (strateji ailesi, ayar değil). (2) Koşullu stop (KS) bu dönemin en etkili savunması: T7K −18,0 → T7K+KS
 −11,0; T6 −15,0 → T6KS −7,5. (3) T6KS 1,0x bu 1,5 ayda P3T2 1,15x'ten iyi (×1,15'e ölçekli ≈ −8,6); fark: short coin tavanı yok + prim çarpanı yok.
 1,5 aylık tek dönem → seçim etkisi; profil değişikliği önerilmez. Aralık başı (797) değerlendirmesinde T6KS ×1,15 izleme kolu olarak raporlanır.
+
+## Madde 800 ÖN KAYIT (2026-11-16, sonuç görülmeden; kullanıcı: "ML model eğitsek bir de onu denesek") — ML LONG VETOSU ("kalabalık haklı mı?")
+Önceki ML: 389 (kesitsel getiri sırası: IC yüksek, para yok — sıra hedefi MEDYANI öğrenir, getiri sağa çarpık) · 390 (short sıkışma vetosu: AUC 0,66-0,80,
+veto büyüdükçe monoton kötü — kuyruğu kesmek onu fiyatlayan geliri keser). Long tarafı (şimdiki kaybın kaynağı) ML ile HİÇ denenmedi.
+Tasarım (389 / 390 derslerine göre): hedef sıra değil, botun long'unun TP'li 5 gün ödemesi (ortalama öğrenilsin; üst kuyruk kesik):
+ y = +0,45 (5 g içinde 4 sa HIGH ≥ giriş × 1,45, kademe) yoksa 5 g kapanış getirisi; − long'un ödediği funding; [−0,9 ; +0,45].
+Özellikler: 389'un 18 kesitsel sıra özelliği (getiri 1-90 g, oynaklık, funding 1 / 3 g, hacim oranı, aralık konumu, ls, taker, OI 1 / 7 g, beta, yaş).
+Model: HistGradientBoostingRegressor (389 ayarı, ayar araması YOK). Yürüyen: her yıl (2022 … 2026) yalnız önceki verilerle (5+1 g boşluk) eğitim.
+Uygulama: g33 MOM_DOSYA yolu, V = 0,5 × günlük sıra(tahmin) (short vetosu tetiklenmez); 00 UTC (04:00 kapanış) tahmini o günün 4 sa barlarına;
+2022 öncesi tahmin yok → veto yok. Kollar (2): MOM_Q 0,05 / 0,10 → tahmini en kötü %10 / %20 (evrende) long adayı olamaz. Taban P3T2 (`/tmp/m783c`).
+Ölçüt: eşit risk ≥ taban + 8 VE Sharpe ≤ 2024 ve 2025+ düşmez → ADAY (Aralık verisiyle doğrulanmadan bota girmez); 2022+ (örnek dışı yıllar) ayrıca;
+Eki+Kas raporlanır. Beklenti (önceden): 390 yasası gereği RED olasılığı yüksek.
