@@ -6,7 +6,7 @@
 import os, sys, subprocess, pickle
 import numpy as np, pandas as pd
 import arastirma_m346_prim as M, izleme_ekim_oos as I
-OUT = "/tmp/m783"; R = os.path.dirname(os.path.abspath(__file__))
+OUT = os.environ.get("M783_OUT", "/tmp/m783"); R = os.path.dirname(os.path.abspath(__file__))
 ENV = {**M.TABAN, **I._T7K, "SLL24_KAP": "1", "SLL24_PIY": "0.03", "SLL24_KAP_TAZE": "2", "SEMBOL_HARIC": ",".join(M.D8)}
 
 
@@ -28,7 +28,7 @@ def analiz():
     for h in (0, 1):
         a = yeni[h].reindex(eski[h][:"2026-10-30"].index); print(f"PARİTE hiza {h}: ≤ 30 Ekim en büyük günlük fark {np.abs(a - eski[h][:'2026-10-30']).max():.2e}")
     s = (yeni[0] + yeni[1]) / 2 * 1.15 * 100
-    k = s["2026-11-01":"2026-11-13"]
+    k = s["2026-11-01":os.environ.get("M783_BIT", "2026-11-13")]
     print("\nGünlük getiri (%, ×1,15, iki hiza ort.; UTC gün):")
     for d, v in k.items(): print(f"  {d:%d Kas}  {v:+.2f}   (hiza 0 {yeni[0][d] * 115:+.2f} · hiza 1 {yeni[1][d] * 115:+.2f})")
     h7 = k["2026-11-07":]
@@ -38,7 +38,7 @@ def analiz():
     rp = (1 + pd.Series(h7.values * np.array(pay), index=h7.index) / 100).prod() - 1
     print("rampa payları:", [round(p, 2) for p in pay], f"→ 7-13 Kasım RAMPA AYARLI {rp * 100:+.2f}%   | demo 13 Kas UTC sonu ≈ −2,76%")
     G = pd.concat([pd.read_pickle(f"{OUT}/gk_{h}.pkl") for h in (0, 1)]); G["gun"] = pd.to_datetime(G.gun)
-    G = G[(G.gun >= "2026-11-07") & (G.gun <= "2026-11-13")]; G["net"] = (G.fiyat + G.funding) / 2 * 115
+    G = G[(G.gun >= "2026-11-07") & (G.gun <= os.environ.get("M783_BIT", "2026-11-13"))]; G["net"] = (G.fiyat + G.funding) / 2 * 115
     G["yon"] = np.where(G.ort_poz > 0, "long", "short")
     t = G.groupby("yon")[["net"]].sum(); f = G.groupby("yon").apply(lambda x: pd.Series({"fiyat": x.fiyat.sum() / 2 * 115, "funding": x.funding.sum() / 2 * 115}))
     print("\n7-13 Kasım katkı (% kitap, ×1,15):"); print(pd.concat([t, f], axis=1).round(2).to_string())
