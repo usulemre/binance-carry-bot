@@ -8900,3 +8900,18 @@ boyunca felaket. "Rejim anahtarı" (kenar eksiyken tarafı çevir) ölçülmedi;
 Ekim −5,0 / −5,9 · 1-15 Kas −6,4 / −5,1 · Eki+Kas **−11,0 / −10,7** · dönem içi dd −16,4 / −16,3 · en kötü gün −4,05 / −3,78. Doz Ekim sonundan beri 0,69
 (× 1,30 = 0,90 ≈ taban 1,15'e yakın net brüt). Okuma: örnek dışında da FARK YOK — fren düşüşü azaltmadı (yüksek başlangıç dozu, frenle tabana iniyor).
 Kitap düzeyi fren ailesi (555 / 685 / bu) kapandı. Düşüşü ORANTILI azaltan tek kaldıraç pozisyon büyüklüğü (×1,15 → ×0,75: getiri ve dd birlikte ~%35 küçülür).
+
+## Madde 799 — ÖLÇÜM: aday profiller Ekim + 1-15 Kasım'da (kullanıcı: "önerilen ayar dışındaki adaylar bu aylarda ne kadar zarar ederdi"; karar vermez)
+`arastirma_m799_profiller.py`, zemin 15 Kas, 2.000 $, iki hiza (10 koşu rc 0; 4'ü bellekten rc −9 → tek tek yeniden). Parite: 5 profilin ≤ 29 Eki serisi
+`/tmp/m_ekim` ile fark 0. % (doz ile):
+| profil | doz | Eyl | Eki | Kas 1-15 | Eki+Kas | zirveden | 6y maks dd (≤ Eyl) | 2026 Oca-Eyl |
+|---|---|---|---|---|---|---|---|---|
+| P3T2 (T7K + KS, önerilen) | 1,15 | +8,4 | −5,0 | −6,4 | −11,0 | −16,4 | −15,2 | +364 |
+| T1 | 1,00 | +4,9 | −4,5 | −9,6 | −13,6 | −21,7 | −18,0 | +214 |
+| T4 | 1,00 | +4,5 | −8,4 | −7,7 | −15,5 | −23,2 | −15,3 | +284 |
+| T6 | 1,00 | +11,6 | −7,4 | −8,1 | −15,0 | −21,3 | −16,5 | +364 |
+| T6KS | 1,00 | +11,7 | −3,4 | −4,3 | **−7,5** | **−14,4** | −16,5 | +391 |
+| T7K (KS yok) | 1,15 | +8,3 | −8,2 | −10,6 | −18,0 | −22,9 | −15,2 | +336 |
+Okuma: (1) bütün profiller aynı dönemde kaybediyor (strateji ailesi, ayar değil). (2) Koşullu stop (KS) bu dönemin en etkili savunması: T7K −18,0 → T7K+KS
+−11,0; T6 −15,0 → T6KS −7,5. (3) T6KS 1,0x bu 1,5 ayda P3T2 1,15x'ten iyi (×1,15'e ölçekli ≈ −8,6); fark: short coin tavanı yok + prim çarpanı yok.
+1,5 aylık tek dönem → seçim etkisi; profil değişikliği önerilmez. Aralık başı (797) değerlendirmesinde T6KS ×1,15 izleme kolu olarak raporlanır.
