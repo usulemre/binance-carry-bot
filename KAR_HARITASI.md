@@ -8866,3 +8866,13 @@ Dolum fiyatı seviye (değişmez). Motor `/tmp/m796/g33_m796.py`. Taban `/tmp/m7
 Ölçüm: ≤ 31 Eki yıllık / Sh / dd / eşit risk, ×1,15 yıl yıl (özellikle 2026), 2026-07..11 aylar.
 Okuma ölçütü: %0,2'de eşit risk ≥ 30 düşerse "backtest dolum varsayımına DUYARLI" (canlı beklenti aşağı revize); 2026 payı orantısız düşerse
 "2026 kârı tepe dolumlarına dayanıyor". Karar vermez; üretim değişmez.
+**SONUÇ 796 (4 koşu rc 0): dolum varsayımı GÖZDEN KAÇAN BÜYÜK BİR İYİMSERLİK DEĞİL.**
+| dolum | yıllık | Sh | dd | eşit risk | ×1,15 2025 / 2026 | 2026 Tem · Ağu · Eyl · Eki · Kas |
+|---|---|---|---|---|---|---|
+| taban (tam değince) | 239,3 | 4,05 | −13,3 | 315,2 | 342 / 341 | +0,9 · +10,3 · +8,4 · −5,0 · −6,4 |
+| %0,2 geçerse | 234,8 | 4,01 | −13,3 | 309,6 (−5,6) | 333 / 328 | +0,9 · +9,5 · +8,1 · −6,0 · −6,5 |
+| %1 geçerse (sert) | 217,9 | 3,84 | −14,3 | 244,9 (−70) | 311 / 292 | +0,2 · +8,0 · +6,8 · −6,5 · −6,8 |
+Makul varsayımda (%0,2) kayıp küçük (ölçüt 30'un altı); 2026 payı orantısız düşmüyor (−%4, diğer yıllarla aynı). Sert %1'de bile Sh 3,84.
+Okuma: backtestin kârı "tepede dolum" iyimserliğine dayanmıyor. Ekim-Kasım kaybı dolum modelinden değil; en olası açıklama sinyal kenarının
+2025 Q3'ten beri zayıflaması / tersine dönmesi (rejim). Ham kenar eksiyken 2026 H1 kârının kaynağı (kalabalık filtresi, funding, kademe
+oynaklık hasadı) ayrıca ayrıştırılabilir. Karar yok.
