@@ -23,13 +23,15 @@ olay = (g >= 0.02) & (g3 >= 0.015)
 ol = [(t, c, float(g.loc[t, c])) for c in olay.columns for t in olay.index[olay[c]]]
 print(f"arz verisi olan coin {S.shape[1]} · olay (≥%2 arz artışı) {len(ol)} · coin başına medyan {pd.Series([c for _, c, _ in ol]).value_counts().median() if ol else 0}")
 # (a) olay etrafı fazla getiri (evren medyanına göre)
-r = (C / C.shift(1) - 1).where(uy); fz = r.sub(r.median(axis=1), axis=0)
+r = C / C.shift(1) - 1; fz = r.sub(r.where(uy).median(axis=1), axis=0)   # düzeltme: olay coini evren dışında olsa da getirisi sayılır
 pen = range(-7, 8); M = []
 for t, c, b in ol:
     if t not in fz.index or c not in fz.columns: continue
     i = fz.index.get_loc(t); 
     if i < 8 or i + 8 > len(fz): continue
-    M.append([fz[c].iloc[i + k] for k in pen])
+    v = [fz[c].iloc[i + k] for k in pen]
+    if np.isnan(v).any(): continue
+    M.append(v)
 M = pd.DataFrame(M, columns=list(pen)); print(f"(a) n {len(M)} olay")
 cum = M.loc[:, -7:0].sum(axis=1); sonra = M.loc[:, 1:7].sum(axis=1)
 print(f"   −7…0 birikimli fazla getiri ort {cum.mean() * 100:+.2f} (medyan {cum.median() * 100:+.2f}) · +1…+7 ort {sonra.mean() * 100:+.2f} (medyan {sonra.median() * 100:+.2f})")
