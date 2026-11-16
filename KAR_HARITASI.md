@@ -8981,3 +8981,10 @@ model sıçramayı GERÇEKTEN seziyor (projedeki en tutarlı ML öngörüsü). 4
 Eşit riskte ≤ −8 ve iki dönemde Sharpe düşüyor → RED. Eki+Kas iki kolda da iyi (−11,0 → −6,8 / −7,7) ama 6 yıl ölçütü geçmiyor; tek dönem → seçim etkisi, aday değil.
 Okuma: sıçramayı sezmek yetmiyor — olasılığı düşük long'lar az sıçrasa da funding taşıyıp kitabı dengeliyor; onları atmak oynaklığı artırıyor (dd −13,3 → −14,1),
 getiri artmıyor. Madde 251 yasası (seçici en uç = en oynak) ML ile de geçerli. Eki+Kas iyileşmesi Aralık izlemesinde (797) not edilir.
+
+## Madde 803 ÖN KAYIT (2026-11-16, sonuç görülmeden; kullanıcı: "devam et") — META-LABELING BOYUTLANDIRMA (802 modeli, coin atmadan)
+802: sıçrama olasılığı long adayı içinde AUC 0,66-0,73, ama veto (coin atmak) kitabı oynaklaştırdı. Meta-labeling'in 3. adımı (bet sizing): coin ATILMAZ, long toplamı
+KORUNUR; her yeni dengelemede long bacak ağırlığı × (1 + a × (sıra − 0,5)), sıra = 802'nin yürüyen sıçrama olasılığının günlük kesitsel sırası (`/tmp/m802/veto.pkl`,
+V = 0,5 × sıra → sıra = 2V; yoksa 0,5), sonra long toplamı ilk değere ölçeklenir. Short dokunulmaz. 2022 öncesi olasılık yok → ağırlık değişmez.
+Motor `/tmp/m803/g33_m803.py` (OLAS_A=0 → yol kapalı, bayt aynı). Kollar (2): a = 0,5 (ağırlık 0,75-1,25) · a = 1 (0,5-1,5). Taban P3T2 (`/tmp/m783c`).
+Ölçüt 800 ile aynı (eşit risk ≥ +8 VE Sharpe ≤2024 ve 2025+ düşmez → ADAY, Aralık verisiyle doğrulanmadan bota girmez).
