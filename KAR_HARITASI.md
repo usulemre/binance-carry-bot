@@ -8886,3 +8886,11 @@ Taban oranlar (backtest ≤ 31 Eki, ×1,15): sonraki 15 gün artı %77 (medyan +
  (2) Backtest 16-30 Kas ≥ 0 → olağan toparlanma (taban oran %77-86). < −2,4 (%10'luk kuyruk altı) → kötü kuyruk, iki eksi ay (6 yılda 2. kez).
  (3) Gerçek paraya geçiş ÖNERİSİ yalnız: (1) tutarlı VE backtest zirveden düşüş toparlanmaya başlamış (en az bir artı ay / düşüş < %10). Aksi halde
      demo Aralık boyunca sürer, gerçek para ertelenir. Kural değişikliği bu değerlendirmeden bağımsız ve ancak ön kayıtlı test + kullanıcı onayıyla.
+
+## Madde 798 — ÖLÇÜM (ön kayıtsız hızlı bakış, karar vermez; kullanıcı: "fundinge karşı kalabalığın yanında olsak ne olurdu bu ay"): AYNA
+Yöntem: P3T2 GUNLUK_KATKI defteri (`/tmp/m783c`, 2026-01 → 15 Kas, iki hiza ort. ×1,15), botun pozisyonlarının TERSİ = −(fiyat + funding). Basit toplam,
+komisyon ve aynanın stop / TP mekaniği YOK (gerçekte daha kötü). Aylık %: bot / ayna / ayna yalnız long tarafı (negatif funding'li coini short):
+Oca 37,4 / −37,4 / −32,4 · Şub 20,8 / −20,8 / −9,1 · Mar 10,6 / −10,6 / −3,3 · Nis 36,6 / −36,6 / −20,3 · May 16,6 / −16,6 / −5,4 · Haz 22,5 / −22,5 / −3,9 ·
+Tem 2,1 / −2,1 / +10,9 · Ağu 11,5 / −11,5 / −10,2 · Eyl 9,1 / −9,1 / −9,3 · Eki −3,7 / +3,7 / +8,7 · Kas(15) −5,9 / +5,9 / +18,9. Ayna 2026'da funding
+olarak −101,6 öder. Ayna toplam 2026 ≈ −158, yalnız long aynası ≈ −55. Okuma: Ekim-Kasım'da kalabalıkla olmak kazandırırdı (geriye dönük seçim); yıl
+boyunca felaket. "Rejim anahtarı" (kenar eksiyken tarafı çevir) ölçülmedi; 6 yılda tek eksi kenar dönemi (2025 Q3+) → aşırı uydurma riski çok yüksek.
