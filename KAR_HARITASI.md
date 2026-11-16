@@ -8971,3 +8971,13 @@ Model: HistGradientBoostingClassifier (max_iter 300, lr 0,05, max_leaf_nodes 31,
 Özellikler: 389'un 18'i + mum yolu 6 (4 sa getiri çarpıklığı 7 / 30 g, üst fitil oranı 7 g, alt fitil oranı 7 g, 3 g getiri, 4 sa getiri basıklığı 30 g), kesitsel sıra.
 Yürüyen 2022 … 2026. KAPI (önce, ucuz): long adayları (fon3 en düşük %10) içinde AUC ≥ 0,60 HER yıl → motor koşusu; değilse DUR (RED, motor koşulmaz).
 Motor (kapı geçerse): MOM_DOSYA V = 0,5 × sıra(olasılık) → MOM_Q 0,05 / 0,10 (sıçrama olasılığı en düşük %10 / %20 long adayı olmaz). Ölçüt 800 ile aynı.
+**SONUÇ 802: KAPI GEÇTİ, MOTOR RED.** Long adayı içinde sıçrama AUC (yürüyen): 2022 0,657 · 2023 0,690 · 2024 0,693 · 2025 0,726 · 2026 0,679 (tüm evren 0,62-0,81) —
+model sıçramayı GERÇEKTEN seziyor (projedeki en tutarlı ML öngörüsü). 4 koşu rc 0:
+| kol | yıllık | Sh | dd | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2023 / 2025 / 2026 | Eki+Kas |
+|---|---|---|---|---|---|---|---|
+| taban P3T2 | 239,3 | 4,05 | −13,3 | 4,03 / 4,14 | 315,2 | 402 / 342 / 341 | −11,0 |
+| sıçrama olas. en düşük %10 long olamaz | 233,5 | 3,97 | −13,8 | 3,98 / 4,02 | 283,7 (−31) | 395 / 336 / 316 | −6,8 |
+| en düşük %20 long olamaz | 236,2 | 3,99 | −14,1 | 4,01 / 4,02 | 265,0 (−50) | 410 / 317 / 335 | −7,7 |
+Eşit riskte ≤ −8 ve iki dönemde Sharpe düşüyor → RED. Eki+Kas iki kolda da iyi (−11,0 → −6,8 / −7,7) ama 6 yıl ölçütü geçmiyor; tek dönem → seçim etkisi, aday değil.
+Okuma: sıçramayı sezmek yetmiyor — olasılığı düşük long'lar az sıçrasa da funding taşıyıp kitabı dengeliyor; onları atmak oynaklığı artırıyor (dd −13,3 → −14,1),
+getiri artmıyor. Madde 251 yasası (seçici en uç = en oynak) ML ile de geçerli. Eki+Kas iyileşmesi Aralık izlemesinde (797) not edilir.
