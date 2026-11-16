@@ -9066,3 +9066,14 @@ Soru: ML, K'nın funding-sırası seçimine (F = havuzun funding'i en düşük 4
 KAPI: anahtarlı seçimin ortalama 5 g ödemesi, her zaman K'dan ≥ 0,3 puan iyi, 2024 / 2025 / 2026'nın ≥ 2'sinde VE 2022-26 ortalamasında → 809 motor ön kaydı (HAVUZ_L
 zaman serisi); aksi halde eksen kapanır. Bota hiçbir şey girmez.
 808 TEKNİK: ls metriği geç başladığı için eğitim verisi olmayan yıllar atlanır; 'tümü' = model olan yıllar (ön kayıtta 2022-26).
+**SONUÇ 808: KAPI GEÇMEDİ (0/3) → eksen kapandı.** (ls metriği 2022-02-23'te başlıyor → 2022 modeli yok.) 5 g TP'li ödeme ort. (%):
+| yıl | K kalabalık | F funding-4 | H havuz | anahtar | F seçilen gün |
+|---|---|---|---|---|---|
+| 2023 | 3,78 | 1,91 | 1,55 | 2,41 | %73 |
+| 2024 | 2,18 | 0,44 | 0,71 | 1,49 | %28 |
+| 2025 | 0,58 | 0,79 | −1,09 | 0,52 | %46 |
+| 2026 | 2,09 | 0,39 | −0,37 | 0,35 | %83 |
+| tümü | 2,16 | 0,91 | 0,23 | 1,24 | %56 |
+| 2026-10 → 11-10 | −3,65 | −1,35 | −1,97 | −1,31 | %88 |
+Model K'nın üstünlüğünü öngöremiyor: günlerin yarısında F seçiyor, oysa K neredeyse her yıl F'yi 1-2 puan geçiyor. Eki-Kas'ta doğru (+2,33) ama 2026'nın geri kalanında
+pahalı. Kalabalık filtresi bu çerçevede "her zaman açık" en iyisi.
