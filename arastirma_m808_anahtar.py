@@ -26,13 +26,14 @@ y = D.K - D.F; tah = pd.Series(np.nan, index=D.index)
 for yil in range(2022, 2027):
     bas = pd.Timestamp(f"{yil}-01-01"); e = (D.index < bas - pd.Timedelta(days=6)) & y.notna()
     te = (D.index >= bas) & (D.index < pd.Timestamp(f"{yil + 1}-01-01"))
+    if e.sum() < 200: print(yil, 'eğitim verisi yok (ls metriği yeni) — atlandı', e.sum()); continue
     fk = f.replace([np.inf, -np.inf], np.nan); kol = [c for c in fk.columns if fk.loc[e, c].notna().mean() > 0.5]
     m = HistGradientBoostingRegressor(max_iter=200, learning_rate=0.05, max_leaf_nodes=15, min_samples_leaf=50, l2_regularization=1.0, random_state=808)
     m.fit(fk.loc[e, kol].values, y[e].values); tah[te] = m.predict(fk.loc[te, kol].values)
-S = D[D.index >= "2022-01-01"].copy(); S["anahtar"] = np.where(tah.reindex(S.index) < 0, S.F, S.K); S["F_günü"] = (tah.reindex(S.index) < 0)
+S = D[tah.notna()].copy(); S["anahtar"] = np.where(tah.reindex(S.index) < 0, S.F, S.K); S["F_günü"] = (tah.reindex(S.index) < 0)
 t2 = (S[["K", "F", "H", "anahtar"]] * 100).groupby(S.index.year).mean(); t2["F seçilen gün %"] = S.groupby(S.index.year)["F_günü"].mean() * 100
-t2.loc["2022-26"] = list((S[["K", "F", "H", "anahtar"]] * 100).mean()) + [S.F_günü.mean() * 100]
+t2.loc["tümü"] = list((S[["K", "F", "H", "anahtar"]] * 100).mean()) + [S.F_günü.mean() * 100]
 e2 = S["2026-10-01":"2026-11-10"]; t2.loc["Eki-10Kas"] = list((e2[["K", "F", "H", "anahtar"]] * 100).mean()) + [e2.F_günü.mean() * 100]
 print(t2.round(2).to_string())
-fk_ = t2["anahtar"] - t2["K"]; n = sum(fk_.loc[[2024, 2025, 2026]] >= 0.3); gec = n >= 2 and fk_.loc["2022-26"] >= 0.3
+fk_ = t2["anahtar"] - t2["K"]; n = sum(fk_.loc[[2024, 2025, 2026]] >= 0.3); gec = n >= 2 and fk_.loc["tümü"] >= 0.3
 print("anahtar − K:", " ".join(f"{i}:{v:+.2f}" for i, v in fk_.items()), f"→ 2024-26 {n}/3 · KAPI {'GEÇTİ' if gec else 'GEÇMEDİ'}")

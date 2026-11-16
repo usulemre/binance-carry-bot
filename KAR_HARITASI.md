@@ -9065,3 +9065,4 @@ Soru: ML, K'nın funding-sırası seçimine (F = havuzun funding'i en düşük 4
 (801 ayarı). Yürüyen 2022 … 2026. Kural: tahmin(K − F) < 0 → o gün F, yoksa K.
 KAPI: anahtarlı seçimin ortalama 5 g ödemesi, her zaman K'dan ≥ 0,3 puan iyi, 2024 / 2025 / 2026'nın ≥ 2'sinde VE 2022-26 ortalamasında → 809 motor ön kaydı (HAVUZ_L
 zaman serisi); aksi halde eksen kapanır. Bota hiçbir şey girmez.
+808 TEKNİK: ls metriği geç başladığı için eğitim verisi olmayan yıllar atlanır; 'tümü' = model olan yıllar (ön kayıtta 2022-26).
