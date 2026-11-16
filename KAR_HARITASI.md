@@ -8829,3 +8829,16 @@ daha büyük kaldı (ort_poz −0,167 vs −0,081) ve gün −8,6 (taban −2,3)
 parçalar dururken short eklenmesi) yaklaşık modellemesinden geliyor; demonun 13 Kas günü toplam −2,17, yani demo bu kaybı YAŞAMADI.
 Okuma: AKE hariç Binance girişinin bu haftaya etkisi ≈ −0,5 puan (tam kitap; rampayla daha az) → 1,3 puanlık farkın ancak küçük bir kısmı
 (≈ %20-40). Kalan fark: 792/2 stop zamanlaması, demoya özgü coinler (LINK/LTC/BCH/ETC), demo dolum fiyatları. Karar yok; düzeltme zaten açık.
+
+## Madde 795 ÖN KAYIT (2026-11-16, sonuç görülmeden; 792'nin 2. farkı, kullanıcı: "onu de dene") — KOŞULLU STOP ZAMANI: canlı gibi
+Eşleme (kod okuması): motor hiza 0'ın turları çift barda (bas = 1200 + 2f); koşullu stop kontrolü (SLL24_KAP_TAZE 2) çift bar kapanışında
+(04 / 12 / 20 UTC) → canlı turlar (22:48 / 06:48 / 14:48 UTC) aynı kapanışa bakar = **canlı hizası hiza 0**. Kontrol ızgarası AYNI.
+Asıl fark: canlı turda ÖNCE alır, SONRA aynı kapanmış mumla stopu kontrol eder → koşulu zaten sağlayan coini alıp dakikalar sonra satar
+(KAVA 14-15 Kas). Motor taze girişi ancak bir sonraki kontrolde (8 sa sonra, yeni veriyle) ölçer; arada tutar.
+Kollar (2, yalnız hiza 0; hiza 1'de tur ve kontrol aynı barda olmadığından fark yok): taban = `/tmp/m783b` hiza 0 · CS = `/tmp/m795/g33_m795.py`
+CANLI_STOP=1: kontrol barına denk gelen dengelemede yeni alınan long, motorun seviye formülü + piyasa şartı sağlıyorsa aynı fiyattan
+(cv[i]) satılır, komisyon iki kez. Parite: aynı motor CANLI_STOP=0 → m783b hiza 0 ile fark 0 olmalı. rc kontrolü.
+Ölçüm: 6 yıl (≤ 31 Eki) hiza 0 yıllık / Sh / dd / eşit risk; 6-14 Kas günlük; tetik sayısı.
+Karar ölçütü: CS eşit riskte taban hiza 0'dan ≥ 8 kötü → canlıya "aynı turda yeni alınana koşullu stop uygulama" (ya da stop koşulundaki coini
+alma) ADAY, kullanıcı onayıyla; ± 8 içi → ihmal; ≥ 8 iyi → not (canlı davranış daha iyi; motor değişmez).
+Yan not (önceden): motor seviyesi cv[m−7] (SLL24_TAZE 2 ile 28 sa), canlı k[−8] (24 sa) — ayrı fark, bu koşuda ölçülmez.
