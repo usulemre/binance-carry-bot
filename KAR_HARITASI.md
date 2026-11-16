@@ -9027,3 +9027,12 @@ sonuç ancak "umut verici" sayılır, kanıt Aralık ileri verisidir (797). Reji
 Motor: 804 veto paneli, MOM_Q 0,05 / 0,10, P3T2 (kapı kararı elle aşıldı, bu madde ile). Ölçüt (2024-01-01 → 2026-11-15, taban aynı dönem): eşit risk benzeri ölçü için
 Sharpe ve Calmar (yıllık / |dd|) İKİSİ DE tabandan iyi VE 2024, 2025, 2026 yıllarının ≥ 2'sinde ×1,15 getiri tabandan iyi → "UMUT VERİCİ, Aralık izlemesine"; aksi RED.
 6 yıl tablosu ayrıca raporlanır (2022-23 kötüyse beklenen).
+**SONUÇ 806 (4 koşu rc 0; ilk deneme kapı dosyasındaki satır sonu yüzünden koşmadı, düzeltildi): RED.** (analiz çıktısındaki "sıçrama olas." etiketi 802 fonksiyonundan; kollar 804 asimetri vetosu.)
+| kol | 2024+ yıllık | Sh | dd | Calmar | 2024 / 2025 / 2026 | 6y eşit risk | Eki+Kas |
+|---|---|---|---|---|---|---|---|
+| taban | 274 | 3,67 | −16,4 | 16,7 | 144 / 342 / 313 | 315,2 | −11,0 |
+| asimetri en kötü %10 | 253 | 3,62 | −15,3 | 16,5 | 149 / 305 / 272 | 268,3 | −9,6 |
+| en kötü %20 | 243 | 3,57 | −15,6 | 15,5 | 153 / 263 / 277 | 240,3 | −5,9 |
+2024+ Sharpe ve Calmar ikisi de düşük, yalnız 2024 iyi (1/3) → RED. Teşhiste veto kümesi kalandan 1,2-1,7 puan kötüydü, ama motorda RED: veto edilen coinin yerine giren
+sıradaki aday da çoğu zaman kötü / funding'i daha az; ayrım "kalanla" değil "yerine gelenle" ölçülmeli (805 dersi). Eki+Kas yine iyi (−9,6 / −5,9): 802 ile birlikte
+"bu rejimde ML vetosu yardım ediyor, 2024-25'te zarar" deseni → Aralık izlemesi (797) kayıtlı; motor değişmez.
