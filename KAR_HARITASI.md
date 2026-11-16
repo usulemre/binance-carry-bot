@@ -8845,3 +8845,10 @@ Yan not (önceden): motor seviyesi cv[m−7] (SLL24_TAZE 2 ile 28 sa), canlı k[
 795 DÜZELTME (geçerli sonuç görülmeden): ilk CS koşusu 0 tetik — yama dengelemenin KARAR barını varsaydı; motor GEC=1 ile kararı çift barda
 verir, ÇİFT+1 barda (cv[i+1]) icra eder. Doğru taklit: icra barında yeni alınan long, KARAR barının (kontrol barı, canlının baktığı kapanış)
 seviyesi + piyasa şartı sağlanıyorsa icra fiyatından hemen satılır (alım fiyatı = satış fiyatı, iki komisyon). PAR (CANLI_STOP=0) parite 0 ✓.
+**SONUÇ 795 (CS rc 0, PAR rc 0, parite 0): FARK YOK — ihmal edilir, değişiklik yok.**
+| hiza 0 (canlı hizası) | yıllık | Sh | dd | eşit risk | ×1,15 2025 / 2026 | 6-14 Kas |
+|---|---|---|---|---|---|---|
+| taban (motor) | 241,5 | 4,00 | −13,9 | 292,3 | 335 / 314 | −3,48 |
+| CS (canlı gibi: aynı turda al-sat) | 241,1 | 4,00 | −13,9 | 291,8 (−0,5) | 333 / 311 | −3,48 |
+6 yılda yalnız 16 kez "alınıp aynı turda satılan long" (yılda ~3); her biri yalnız iki komisyon kaybı. Demo haftasında backtestte HİÇ olmadı;
+canlıdaki KAVA (14-15 Kas) backtestte yok → ya KAVA backtest seçiminde yok, ya 24 / 28 sa pencere farkı (yan not; ölçülmedi). 792/2 kapandı.
