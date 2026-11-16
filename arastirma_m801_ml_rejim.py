@@ -60,7 +60,9 @@ def analiz():
         bas = pd.Timestamp(f"{yil}-01-01"); e = (f.index < bas - pd.Timedelta(days=6)) & y.notna() & f.notna().sum(axis=1).gt(len(f.columns) * 0.7)
         te = (f.index >= bas) & (f.index < pd.Timestamp(f"{yil + 1}-01-01"))
         m = HistGradientBoostingRegressor(max_iter=200, learning_rate=0.05, max_leaf_nodes=15, min_samples_leaf=50, l2_regularization=1.0, random_state=801)
-        m.fit(f[e].values, y[e].values); tah[te] = m.predict(f[te].values)
+        fk = f.replace([np.inf, -np.inf], np.nan); kol = [c for c in fk.columns if fk.loc[e, c].notna().mean() > 0.5]   # eğitimde verisi olan sütunlar
+        m.fit(fk.loc[e, kol].values, y[e].values); tah[te] = m.predict(fk.loc[te, kol].values)
+        if yil == 2022: print("  2022 sütunları:", len(kol), "/", len(fk.columns))
         ic = pd.Series(tah[te]).corr(pd.Series(y[te]), method="spearman")
         print(f"{yil}: eğitim {e.sum()} gün · IC {ic:+.3f} · tahmin<0 payı {(tah[te] < 0).mean():.2f}", flush=True)
     seri = {"taban P3T2": s}
