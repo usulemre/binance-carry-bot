@@ -27,8 +27,8 @@ for t in C.index[C.index >= "2022-01-01"]:
     sat.append((t, ort(LS.loc[t], False), ort(S802.loc[t], True), ort(A804.loc[t], True), p[rng.choice(hav, 4, replace=False)].mean(), p[hav].mean()))
 D = pd.DataFrame(sat, columns=["t", "K kalabalık", "S sıçrama", "A asimetri", "R rastgele", "havuz"]).set_index("t") * 100
 y = D.groupby(D.index.year).mean(); y.loc["2022-26"] = D.mean(); y.loc["Eki-10Kas 26"] = D["2026-10-01":"2026-11-10"].mean()
-y.loc["n gün"] = D.groupby(D.index.year).size().reindex(y.index[:-2]).tolist() + [len(D), len(D["2026-10-01":"2026-11-10"])]
+print("gün sayısı:", D.groupby(D.index.year).size().to_dict(), "Eki-10Kas", len(D["2026-10-01":"2026-11-10"]))
 print(y.round(2).to_string())
 for c in ("S sıçrama", "A asimetri"):
     fark = y[c] - y["K kalabalık"]; n = sum(fark.loc[[2024, 2025, 2026]] >= 0.5); gec = n >= 2 and fark.loc["2022-26"] >= 0.5
-    print(f"{c}: fark K'ya göre " + " ".join(f"{i}:{v:+.2f}" for i, v in fark.items() if i != 'n gün') + f" → 2024-26 {n}/3 · KAPI {'GEÇTİ' if gec else 'GEÇMEDİ'}")
+    print(f"{c}: fark K'ya göre " + " ".join(f"{i}:{v:+.2f}" for i, v in fark.items() ) + f" → 2024-26 {n}/3 · KAPI {'GEÇTİ' if gec else 'GEÇMEDİ'}")
