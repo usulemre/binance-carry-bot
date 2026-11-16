@@ -8855,3 +8855,14 @@ canlıdaki KAVA (14-15 Kas) backtestte yok → ya KAVA backtest seçiminde yok, 
 **783 UZATMA 2 — 15 Kasım (zemin 15 Kas 20:00; eski kısım parite 0; `/tmp/m783c`):** backtest 15 Kas **−3,29** (long −0,61 · short −2,64; BTW long −1,75 [demoda yok],
 JCT / HYPE / XRP / UAI short; INIT long +1,07). Demo 15 Kas −16,15 $ ≈ **−0,84**. Toplam 6-15 Kas: backtest RAMPA AYARLI **−5,55** · tam kitap 7-15 −6,51 ·
 demo (panel günleri −1 +14 −3 −85 +73 −2 −8 −43 −15 −16 $ ≈ −86 $) ≈ **−4,3** → fark tersine döndü: demo ≈ 1,2 puan DAHA İYİ (sınır 2 içinde, tutarlı).
+
+## Madde 796 ÖN KAYIT (2026-11-16, sonuç görülmeden; kullanıcı: "eski backtestlerde gözden kaçan bir durum mu vardı" → "bakalım") — LİMİT DOLUM İYİMSERLİĞİ
+Bulgu (ölçüm, karar değil): funding'i en negatif 8 coinin 5 gün ileri getirisi − evren medyanı (günlük, çeyrek ort.) 2021-2025 Q2 neredeyse her çeyrek
+artı (+0,05 .. +7,8), 2025 Q3'ten beri çoğunlukla EKSİ (−1,2 · 2026 Q1 −2,6 · Q2 −1,3 · Q3 +0,4 · Q4 −2,4). Oysa backtest 2026 H1 aylık ~+%26 →
+kâr ham yön etkisinden değil çıkış mekaniğinden (TP %60 / kademe %45 bar içi tepede) gelmiş olabilir. Madde 659 iyimserlik (1): limit, bar ucu seviyeye
+TAM değince dolu sayılıyor (gerçekte kuyruk sırası). Ölçülmedi.
+Kollar (2, iki hiza): DOL_ASIM=0,002 (TP / kademe limiti yalnız bar ucu seviyeyi %0,2 GEÇERSE dolar; makul "trade-through") · DOL_ASIM=0,01 (%1, sert).
+Dolum fiyatı seviye (değişmez). Motor `/tmp/m796/g33_m796.py`. Taban `/tmp/m783c` (zemin 15 Kas). Parite: DOL_ASIM=0 ifadesi birebir (×1,0) → koşu yok.
+Ölçüm: ≤ 31 Eki yıllık / Sh / dd / eşit risk, ×1,15 yıl yıl (özellikle 2026), 2026-07..11 aylar.
+Okuma ölçütü: %0,2'de eşit risk ≥ 30 düşerse "backtest dolum varsayımına DUYARLI" (canlı beklenti aşağı revize); 2026 payı orantısız düşerse
+"2026 kârı tepe dolumlarına dayanıyor". Karar vermez; üretim değişmez.
