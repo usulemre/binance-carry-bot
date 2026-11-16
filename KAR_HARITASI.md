@@ -8996,3 +8996,10 @@ Motor `/tmp/m803/g33_m803.py` (OLAS_A=0 → yol kapalı, bayt aynı). Kollar (2)
 | a = 1 | 246,3 | 3,94 | −14,8 | 3,88 / 4,15 | 254,8 (−60) | 57 / 387 / 396 | −10,9 |
 Ham getiri doza bağlı ARTIYOR (+3 / +7; 2025-26 +25 .. +55) ama dd ve en kötü gün daha hızlı derinleşiyor → eşit riskte kayıp; ≤2024 Sharpe düşüyor. Sıçrama olasılığı
 yüksek coin = oynak coin: ağırlığı oraya kaydırmak gizli kaldıraç (madde 251 / 597 ile aynı). Eki+Kas değişmedi. Meta-labeling ailesi (filtre 390 / 800 / 802, boyut 803) kapandı.
+
+## Madde 804 ÖN KAYIT (2026-11-16, sonuç görülmeden; kullanıcı: "ML için devam et araştırmaya") — ASİMETRİ VETOSU (oynaklık-nötr)
+800 / 802 / 803 ortak dersi: ML'in "riskli" bulduğu coin = oynak coin (hem çöker hem sıçrar); filtre / boyut gizli kaldıraç ya da kenar kaybı. Burada iki sınıflandırıcı:
+P(sıçrama) = 5 g içinde 4 sa HIGH ≥ giriş × 1,45 (802 hedefi) · P(çöküş) = 5 g içinde 4 sa LOW ≤ giriş × 0,70. Skor = P(çöküş) − P(sıçrama) (oynaklık iki olasılığı birlikte
+şişirir, fark asimetriyi ölçer). Özellikler / model / yürüyen (2022 … 2026): 802 ile aynı (18 + 6 mum yolu, HGB sınıflandırıcı, arama yok).
+KAPI (önce, ucuz): long adayı (fon3 en düşük %10) içinde skorun üst %20'sinin gerçekleşen 800-ödemesi (TP'li 5 g, funding dahil) kalandan ≥ 1 puan DÜŞÜK, 5 yılın ≥ 4'ünde
+→ motor; değilse DUR (RED). Motor: V = 0,5 × (1 − sıra(skor)) → MOM_Q 0,05 / 0,10 (asimetrisi en kötü %10 / %20 long adayı olmaz). Ölçüt 800 ile aynı.
