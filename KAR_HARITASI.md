@@ -9057,3 +9057,11 @@ yerine ML sırası); aksi halde ML seçici ekseni kapanır.
 Okuma: (1) kalabalık filtresi (ls) çok güçlü — havuzu 5 günde ort. +1,74 puan geçiyor (her yıl), ML seçicilerin üç katı; şimdiki kural ML'den iyi. (2) Eki-Kas 2026'da
 kalabalık filtresi havuzun ve rastgelenin ALTINDA (−3,65 / −1,97): bu rejimde kaybı büyüten şey en kalabalık short'lu coinleri seçmek ("kalabalık haklı"). 773 (long
 kalabalığı kapatmak) 6 yılda −172 → eylem yok; ama Aralık izlemesine (797) "K − havuz farkı 16-30 Kas" eklenir: rejim göstergesi olarak.
+
+## Madde 808 ÖN KAYIT (2026-11-17, sonuç görülmeden; kullanıcı: "sistemi geliştirmek için ML ile yeni araştırmalara devam") — ML ANAHTAR: kalabalık filtresi açık / kapalı
+807: kalabalık filtresi (K) havuzu 2022-26 her yıl geçiyor (+1,74 / 5 g) ama 2026-10 → 11-10 havuzun altında. 773 (long kalabalık TAMAMEN kapalı, HAVUZ_L=1) 6 yılda RED.
+Soru: ML, K'nın funding-sırası seçimine (F = havuzun funding'i en düşük 4'ü, HAVUZ_L=1 vekili) göre üstünlüğünü (K − F, sonraki 5 g TP'li ödeme) önceden kestirebilir mi?
+Özellikler: 801 piyasa durumu (BTC / evren getiri, oynaklık, dağılım, funding seviyeleri, OI, ls) + gerçekleşmiş K − F (6 g gecikmeli, 30 / 90 g ort.). Model: HGB regresör
+(801 ayarı). Yürüyen 2022 … 2026. Kural: tahmin(K − F) < 0 → o gün F, yoksa K.
+KAPI: anahtarlı seçimin ortalama 5 g ödemesi, her zaman K'dan ≥ 0,3 puan iyi, 2024 / 2025 / 2026'nın ≥ 2'sinde VE 2022-26 ortalamasında → 809 motor ön kaydı (HAVUZ_L
+zaman serisi); aksi halde eksen kapanır. Bota hiçbir şey girmez.
