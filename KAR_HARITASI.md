@@ -9019,3 +9019,11 @@ skoruna göre EN İYİ %20'si (en düşük P(çöküş) − P(sıçrama)) için 
 2023 +1,15 / +0,91 / +1,49 (−0,34) · 2024 +0,26 / +0,39 / +0,92 (−0,65) · 2025 −1,57 / −1,16 / −1,11 (−0,46) · 2026 −1,53 / −2,57 / −0,34 (−1,19). (n sayımı yine maskeli
 NaN'ları sayıyor; ortalamalar doğru.) Yeni aday, ML'in seçtiği uzatmadan 4 yılda iyi → "süresi dolan bacak kapanmalı" (778) ML ile de geçerli. ML koşulu zarardakiler
 içinde ayrım yapıyor (2026: −1,53'e karşı −2,57) ama yeni adayı geçemiyor.
+
+## Madde 806 ÖN KAYIT (2026-11-16, motor sonucu görülmeden; kullanıcı: "ML öğrenen, zamanla iyileşen yapı; her yıl iyi olması beklenmez") — 804 MOTORU, 2024+ değerlendirme
+Gerekçe (kullanıcı, geçerli): yürüyen eğitimde 2022 modeli 2 yıl, 2026 modeli 6 yıl veriyle eğitildi; "≥ 4/5 yıl" kapısı öğrenen modeli erken yıllar için cezalandırır.
+Öğrenme eğrisi: 802 AUC 0,66 → 0,73; 804 fark +0,7 / −0,5 / +1,2 / +1,7 / +1,6. UYARI: dönem (2024+) kapı sonuçları GÖRÜLDÜKTEN sonra seçildi → seçim yanlılığı;
+sonuç ancak "umut verici" sayılır, kanıt Aralık ileri verisidir (797). Rejim değişimiyle öğrenme ayırt edilemez.
+Motor: 804 veto paneli, MOM_Q 0,05 / 0,10, P3T2 (kapı kararı elle aşıldı, bu madde ile). Ölçüt (2024-01-01 → 2026-11-15, taban aynı dönem): eşit risk benzeri ölçü için
+Sharpe ve Calmar (yıllık / |dd|) İKİSİ DE tabandan iyi VE 2024, 2025, 2026 yıllarının ≥ 2'sinde ×1,15 getiri tabandan iyi → "UMUT VERİCİ, Aralık izlemesine"; aksi RED.
+6 yıl tablosu ayrıca raporlanır (2022-23 kötüyse beklenen).
