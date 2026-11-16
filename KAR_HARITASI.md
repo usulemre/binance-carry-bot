@@ -9015,3 +9015,7 @@ denenmedi. Soru: 804 asimetri modeli (yürüyen) süresi dolan zarardaki long'la
 KAPI (yalnız teşhis; motor yok bu turda): t günü "süresi dolan zarardaki long" vekili = t−5'te long adayı (fon3 en düşük %10) VE C(t) < C(t−5). Bunların 804
 skoruna göre EN İYİ %20'si (en düşük P(çöküş) − P(sıçrama)) için sonraki 5 g TP'li ödeme (800 hedefi) vs aynı gün YENİ long adaylarının (t'de fon3 ≤ %10) ortalama
 ödemesi. Geçme: fark ≥ +1 puan, 2022 … 2026'nın ≥ 4'ünde. Geçerse 806 olarak motor testi (ZUZAT + ML koşulu) ön kaydı yazılır; geçmezse ekseni kapatır.
+**SONUÇ 805: KAPI 1/5 → RED, eksen kapandı.** ML en iyi %20 uzatılacak / tüm dolan zarardaki / yeni aday (5 g TP'li ödeme): 2022 +0,19 / −1,16 / −1,68 (+1,87 ✓) ·
+2023 +1,15 / +0,91 / +1,49 (−0,34) · 2024 +0,26 / +0,39 / +0,92 (−0,65) · 2025 −1,57 / −1,16 / −1,11 (−0,46) · 2026 −1,53 / −2,57 / −0,34 (−1,19). (n sayımı yine maskeli
+NaN'ları sayıyor; ortalamalar doğru.) Yeni aday, ML'in seçtiği uzatmadan 4 yılda iyi → "süresi dolan bacak kapanmalı" (778) ML ile de geçerli. ML koşulu zarardakiler
+içinde ayrım yapıyor (2026: −1,53'e karşı −2,57) ama yeni adayı geçemiyor.
