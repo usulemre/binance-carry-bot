@@ -8817,3 +8817,15 @@ Parite: BIN ≤ 12 Kas, 788 BIN koşusuyla (zemin 13 Kas) karşılaştırılır 
 Karar ölçütü: BIN rampa ayarlı ≤ −2,95 (1,3 puanlık farkın yarısı kapanır) → "farkın çoğunu açıklar"; −2,3 ile −2,95 arası → "kısmen"; ≥ −2,3 → "açıklamaz".
 UYARI (önceden): tam kitap backtestte Binance girişi ile dilim ortalaması ilk günden ayrışık; demoda ilk çıkışa kadar (short ~40 sa, long 5 gün) ikisi
 AYNIDIR. Bu yüzden BIN kolu etkinin ÜST SINIRI. Karar vermez; üretim değişmez (düzeltme zaten açık).
+**SONUÇ 794 (2 koşu rc 0; hiza 0 ilk denemede bellekten rc −9 → tek başına yeniden koşuldu; parite ≤ 12 Kas 788 BIN ile fark 0):**
+| 6-14 Kas | rampa ayarlı | tam kitap 7-14 |
+|---|---|---|
+| taban (motor girişi) | −2,34 | −3,33 |
+| BIN (Binance girişi, canlı gibi) | **−6,15** | −7,11 |
+| demo | ≈ −3,6 | — |
+Ölçüt mekanik olarak "≤ −2,95 → farkın çoğunu açıklar" der, AMA BIN demoyu 2,5 puan AŞIYOR: etkinin tamamına yakını tek olay. 7-14 Kas BIN − taban
+(tam kitap) −4,05 puan = **AKE −3,50** + diğer tüm coinler −0,55 (JCT −0,47, INIT +0,17). AKE: hiza 1'de 13 Kas long → short dönüşü; BIN'de short
+daha büyük kaldı (ort_poz −0,167 vs −0,081) ve gün −8,6 (taban −2,3). Bu, tam kitabın geçmişinden ve taklidin net pozisyon yön değişimini (long
+parçalar dururken short eklenmesi) yaklaşık modellemesinden geliyor; demonun 13 Kas günü toplam −2,17, yani demo bu kaybı YAŞAMADI.
+Okuma: AKE hariç Binance girişinin bu haftaya etkisi ≈ −0,5 puan (tam kitap; rampayla daha az) → 1,3 puanlık farkın ancak küçük bir kısmı
+(≈ %20-40). Kalan fark: 792/2 stop zamanlaması, demoya özgü coinler (LINK/LTC/BCH/ETC), demo dolum fiyatları. Karar yok; düzeltme zaten açık.
