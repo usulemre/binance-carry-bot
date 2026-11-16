@@ -8852,3 +8852,6 @@ seviyesi + piyasa şartı sağlanıyorsa icra fiyatından hemen satılır (alım
 | CS (canlı gibi: aynı turda al-sat) | 241,1 | 4,00 | −13,9 | 291,8 (−0,5) | 333 / 311 | −3,48 |
 6 yılda yalnız 16 kez "alınıp aynı turda satılan long" (yılda ~3); her biri yalnız iki komisyon kaybı. Demo haftasında backtestte HİÇ olmadı;
 canlıdaki KAVA (14-15 Kas) backtestte yok → ya KAVA backtest seçiminde yok, ya 24 / 28 sa pencere farkı (yan not; ölçülmedi). 792/2 kapandı.
+**783 UZATMA 2 — 15 Kasım (zemin 15 Kas 20:00; eski kısım parite 0; `/tmp/m783c`):** backtest 15 Kas **−3,29** (long −0,61 · short −2,64; BTW long −1,75 [demoda yok],
+JCT / HYPE / XRP / UAI short; INIT long +1,07). Demo 15 Kas −16,15 $ ≈ **−0,84**. Toplam 6-15 Kas: backtest RAMPA AYARLI **−5,55** · tam kitap 7-15 −6,51 ·
+demo (panel günleri −1 +14 −3 −85 +73 −2 −8 −43 −15 −16 $ ≈ −86 $) ≈ **−4,3** → fark tersine döndü: demo ≈ 1,2 puan DAHA İYİ (sınır 2 içinde, tutarlı).
