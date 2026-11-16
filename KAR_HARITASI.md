@@ -8802,3 +8802,8 @@ Ek (793): `adet_yuvarla(asagi=True)` float çıkarma artığında bir adım kayb
 0,5 − 0,4 = 0,0999…98 → 0 → kademe koşulu düştü, 15 Kas 01:47 turunda AAVE'ye yalnız %60 TP kondu (kademe yok). Oran önce 9 ondalığa
 yuvarlanıyor. Doğrulama (01:47 turu, 788/789 ilk tur): 22 pozisyonun tamamında emirler dilim girişinin tam +%45 / +%60 (short −%15 /
 −%20) seviyesinde; Binance girişine göre CYBER kademesi +%17, ZEC +%27, ONE +%30, INIT +%33'e indi.
+**783 UZATMA — 14 Kasım (zemin 14 Kas 20:00'a; eski kısım parite 0; `/tmp/m783b`):** backtest 14 Kas −1,14 (demo −0,77). Demo panel günü = Binance (UTC) günü.
+Demo 6 Kas başladı → rampa 6-14 Kas (0,1 / 0,3 / 0,5 / 0,7 / 0,9 / 1 / 1 / 1 / 1): backtest RAMPA AYARLI ≈ **−2,3** · tam kitap 7-14 Kas **−3,33** · demo 6-14 Kas ≈ **−3,6**
+→ rampaya göre fark ≈ 1,3 puan (sınır 2: "tutarlı, kötü hafta"). Gün gün en büyük ayrışma 9 Kas (demo −4,25 · backtest −2,56 × 0,7 pay ≈ −1,8) ve 13 Kas (demo −2,17 ·
+backtest −0,74; hiza 0 +1,47 / hiza 1 −2,95 = AKE short'u). 7-14 Kas katkı (backtest, % kitap): long −14,4 (fiyat −17,2, funding +2,9) · short +11,3; en kötü PUMP long
+−3,1 · ZEC −2,4 · INIT −1,8 · ONE −1,7 · AKE short −1,3; en iyi JCT / XRP / LYN short. Not: betiğin "7-13" etiketi bu koşuda 7-14'ü kapsar.
