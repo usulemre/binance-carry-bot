@@ -8927,3 +8927,14 @@ Uygulama: g33 MOM_DOSYA yolu, V = 0,5 × günlük sıra(tahmin) (short vetosu te
 2022 öncesi tahmin yok → veto yok. Kollar (2): MOM_Q 0,05 / 0,10 → tahmini en kötü %10 / %20 (evrende) long adayı olamaz. Taban P3T2 (`/tmp/m783c`).
 Ölçüt: eşit risk ≥ taban + 8 VE Sharpe ≤ 2024 ve 2025+ düşmez → ADAY (Aralık verisiyle doğrulanmadan bota girmez); 2022+ (örnek dışı yıllar) ayrıca;
 Eki+Kas raporlanır. Beklenti (önceden): 390 yasası gereği RED olasılığı yüksek.
+**SONUÇ 800 (model 5 yıl yürüyen; 4 koşu rc 0): RED.**
+Model: günlük kesitsel IC +0,005 .. +0,018 (çok zayıf; 389'un sıra modelinin +0,08-0,17'sinin onda biri — TP'li ödeme hedefi tahmin edilemiyor).
+Teşhis (long adayı = fon3 en düşük %10; tahminin alt %20'si vs kalan, gerçekleşen y ort): 2022 −3,26 / −1,50 · 2023 +2,18 / +1,29 (ters) · 2024 −0,02 / +1,20 ·
+2025 −1,46 / −0,97 · 2026 −2,02 / +0,28 (teşhis betiğinde n sayımı hatalı — maskelenmiş NaN'lar sayıldı; ortalamalar doğru).
+| kol | yıllık | Sh | dd | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2023 / 2025 / 2026 | Eki+Kas |
+|---|---|---|---|---|---|---|---|
+| taban P3T2 | 239,3 | 4,05 | −13,3 | 4,03 / 4,14 | 315,2 | 402 / 342 / 341 | −11,0 |
+| ML veto en kötü %10 | 227,5 | 4,09 | −14,2 | 4,05 / 4,23 | 256,0 (−59) | 300 / 270 / 381 | −13,8 |
+| ML veto en kötü %20 | 215,3 | 4,05 | −13,3 | 4,00 / 4,19 | 282,2 (−33) | 252 / 239 / 384 | −8,3 |
+Eşit riskte ikisi de ≤ −8 → RED. 2026 iyileşiyor (+40) ama 2023 / 2025 −100 .. −150; Eki+Kas iki kolda zıt yönde (−13,8 / −8,3) → gürültü. 390 yasası long
+tarafında da geçerli: modelin "kötü" bulduğu kalabalık long'lar bazı yıllar en büyük sıçramaları yapanlar. ML ailesi (389 / 390 / 800) kapandı.
