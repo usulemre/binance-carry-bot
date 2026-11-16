@@ -9008,3 +9008,10 @@ KAPI (önce, ucuz): long adayı (fon3 en düşük %10) içinde skorun üst %20's
 Not (karar değil): son 3 yıl geçiyor ve fark büyüyor — "kalabalık haklı" ayrımı yakın dönemde güçleniyor olabilir (2025 Q3+ kenar kayması ile tutarlı). Ön kayıt kuralı gereği
 motor koşulmadı; sonradan koşmak seçim yanlılığı olur. İLERİ İZLEME: `/tmp/m804/veto.pkl` mantığı Aralık'ta (797) 16-30 Kas için yeniden üretilir; veto edilecek long'ların
 gerçekleşen ödemesi kalandan ≥ 1 puan kötüyse, 2027 başında yeni ön kayıtla motor testi. Bota girmez.
+
+## Madde 805 ÖN KAYIT (2026-11-16, sonuç görülmeden; kullanıcı: "ML'de farklı araştırma ve düşüncelere devam") — ML KOŞULLU UZATMA (çıkışta ML)
+778: süresi dolan zarardaki long'u kuralla uzatmak KESİN RED (%23-35 toparlanır; asıl maliyet payın yeni long'a gidememesi). ML'in giriş yerine ÇIKIŞTA kullanımı hiç
+denenmedi. Soru: 804 asimetri modeli (yürüyen) süresi dolan zarardaki long'lar içinden, YERİNE ALINACAK yeni long adayından daha iyi gidecekleri seçebilir mi?
+KAPI (yalnız teşhis; motor yok bu turda): t günü "süresi dolan zarardaki long" vekili = t−5'te long adayı (fon3 en düşük %10) VE C(t) < C(t−5). Bunların 804
+skoruna göre EN İYİ %20'si (en düşük P(çöküş) − P(sıçrama)) için sonraki 5 g TP'li ödeme (800 hedefi) vs aynı gün YENİ long adaylarının (t'de fon3 ≤ %10) ortalama
+ödemesi. Geçme: fark ≥ +1 puan, 2022 … 2026'nın ≥ 4'ünde. Geçerse 806 olarak motor testi (ZUZAT + ML koşulu) ön kaydı yazılır; geçmezse ekseni kapatır.
