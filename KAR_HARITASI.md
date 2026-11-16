@@ -8807,3 +8807,13 @@ Demo 6 Kas başladı → rampa 6-14 Kas (0,1 / 0,3 / 0,5 / 0,7 / 0,9 / 1 / 1 / 1
 → rampaya göre fark ≈ 1,3 puan (sınır 2: "tutarlı, kötü hafta"). Gün gün en büyük ayrışma 9 Kas (demo −4,25 · backtest −2,56 × 0,7 pay ≈ −1,8) ve 13 Kas (demo −2,17 ·
 backtest −0,74; hiza 0 +1,47 / hiza 1 −2,95 = AKE short'u). 7-14 Kas katkı (backtest, % kitap): long −14,4 (fiyat −17,2, funding +2,9) · short +11,3; en kötü PUMP long
 −3,1 · ZEC −2,4 · INIT −1,8 · ONE −1,7 · AKE short −1,3; en iyi JCT / XRP / LYN short. Not: betiğin "7-13" etiketi bu koşuda 7-14'ü kapsar.
+
+## Madde 794 ÖN KAYIT (2026-11-16, sonuç görülmeden; kullanıcı: "1. maddeyi ölç yaklaşacak mı sonuç demoya") — demo haftası Binance girişiyle
+Soru: demo 6-14 Kas boyunca TP / kademe / felaketi Binance entryPrice'a göre kurdu (788 düzeltmesi 15 Kas 01:47'de devreye girdi). Backtest bu haftayı
+bir de canlı gibi (TEK_BINANCE=1, 788 motoru `/tmp/m788/g33_m788.py`) koşarsa rampa ayarlı sonuç demoya (≈ −3,6) yaklaşır mı?
+Kollar (2): taban = `/tmp/m783b` (motor girişi, zemin 14 Kas 20:00) · BIN = aynı zemin + TEK_BINANCE=1, hiza 0 ve 1, çıktı `/tmp/m794`.
+Parite: BIN ≤ 12 Kas, 788 BIN koşusuyla (zemin 13 Kas) karşılaştırılır (en büyük günlük fark raporlanır). rc kontrolü.
+Ölçüm: 6-14 Kas rampa ayarlı (0,1 / 0,3 / 0,5 / 0,7 / 0,9 / 1 / 1 / 1 / 1) ve tam kitap 7-14 Kas; coin bazında BIN − taban farkı.
+Karar ölçütü: BIN rampa ayarlı ≤ −2,95 (1,3 puanlık farkın yarısı kapanır) → "farkın çoğunu açıklar"; −2,3 ile −2,95 arası → "kısmen"; ≥ −2,3 → "açıklamaz".
+UYARI (önceden): tam kitap backtestte Binance girişi ile dilim ortalaması ilk günden ayrışık; demoda ilk çıkışa kadar (short ~40 sa, long 5 gün) ikisi
+AYNIDIR. Bu yüzden BIN kolu etkinin ÜST SINIRI. Karar vermez; üretim değişmez (düzeltme zaten açık).
