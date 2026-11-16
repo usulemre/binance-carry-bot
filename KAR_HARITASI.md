@@ -9077,3 +9077,13 @@ zaman serisi); aksi halde eksen kapanır. Bota hiçbir şey girmez.
 | 2026-10 → 11-10 | −3,65 | −1,35 | −1,97 | −1,31 | %88 |
 Model K'nın üstünlüğünü öngöremiyor: günlerin yarısında F seçiyor, oysa K neredeyse her yıl F'yi 1-2 puan geçiyor. Eki-Kas'ta doğru (+2,33) ama 2026'nın geri kalanında
 pahalı. Kalabalık filtresi bu çerçevede "her zaman açık" en iyisi.
+
+## Madde 809 ÖN KAYIT (2026-11-17, sonuç görülmeden; kullanıcı: "kayda alsak ne geçecek… test yap eskiden ne olurdu bu haberlerle backtestte") — TOKEN KİLİT AÇILIŞI
+Mekanizma: kilit açılışı arzı artırır, tarihi aylar önceden bilinir → kalabalık short "haklı" olabilir (AKE ~21 Kas %9; SOPH ağ kapanışı). Bot göremiyor.
+Veri: DefiLlama emissions API artık ÜCRETLİ (402), GitHub erişimi kapalı → CoinGecko ücretsiz market_chart (365 g sınırı): dolaşan arz ≈ piyasa değeri / fiyat (günlük).
+Olay: arz bir günde ≥ %2 artar VE 3 gün sonra hâlâ ≥ %1,5 yukarıda (veri sıçramalarını eler). Dönem 2025-11-17 → 2026-11-15 (yalnız 1 yıl → istatistik gücü düşük).
+Eşleme: CoinGecko /coins/markets ilk 1.000 (piyasa değerine göre), sembol başına en büyük piyasa değerli id; Binance evreniyle kesişim.
+TEŞHİS: (a) olay günü etrafında (−7 … +7 g) evren medyanına göre birikimli getiri; (b) olaydan önceki 7 g fon3 sırası (kalabalık short mu?); (c) P3T2 GUNLUK_KATKI
+(2026, iki hiza) içinde olaydan önceki 7 g long olarak tutulan coinlerin katkısı vs diğer long günleri.
+KAPI: (a) −7 … 0 penceresinde ort. fazla getiri ≤ −2 puan VE (c) olay öncesi long katkısı diğer long günlerinden kötü → 810 motor ön kaydı (olaydan önceki 7 g long vetosu,
+MOM_DOSYA); değilse kapanır. Arz verisi gecikmeli / hatalı olabilir; olay tarihi gerçek takvim tarihine ±1-2 g yakın varsayılır. Bota hiçbir şey girmez.
