@@ -9003,3 +9003,8 @@ P(sıçrama) = 5 g içinde 4 sa HIGH ≥ giriş × 1,45 (802 hedefi) · P(çök�
 şişirir, fark asimetriyi ölçer). Özellikler / model / yürüyen (2022 … 2026): 802 ile aynı (18 + 6 mum yolu, HGB sınıflandırıcı, arama yok).
 KAPI (önce, ucuz): long adayı (fon3 en düşük %10) içinde skorun üst %20'sinin gerçekleşen 800-ödemesi (TP'li 5 g, funding dahil) kalandan ≥ 1 puan DÜŞÜK, 5 yılın ≥ 4'ünde
 → motor; değilse DUR (RED). Motor: V = 0,5 × (1 − sıra(skor)) → MOM_Q 0,05 / 0,10 (asimetrisi en kötü %10 / %20 long adayı olmaz). Ölçüt 800 ile aynı.
+**SONUÇ 804: KAPI GEÇMEDİ (3/5) → RED, motor koşulmadı.** Long adayı içinde asimetri skorunun üst %20'si vs kalan (gerçekleşen TP'li 5 g ödeme):
+2022 −2,26 / −1,56 (fark +0,70 ✗) · 2023 +1,87 / +1,39 (−0,47 ✗, ters) · 2024 −0,04 / +1,15 (+1,19 ✓) · 2025 −2,46 / −0,75 (+1,71 ✓) · 2026 −1,59 / −0,00 (+1,59 ✓).
+Not (karar değil): son 3 yıl geçiyor ve fark büyüyor — "kalabalık haklı" ayrımı yakın dönemde güçleniyor olabilir (2025 Q3+ kenar kayması ile tutarlı). Ön kayıt kuralı gereği
+motor koşulmadı; sonradan koşmak seçim yanlılığı olur. İLERİ İZLEME: `/tmp/m804/veto.pkl` mantığı Aralık'ta (797) 16-30 Kas için yeniden üretilir; veto edilecek long'ların
+gerçekleşen ödemesi kalandan ≥ 1 puan kötüyse, 2027 başında yeni ön kayıtla motor testi. Bota girmez.
