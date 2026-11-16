@@ -8876,3 +8876,13 @@ Makul varsayımda (%0,2) kayıp küçük (ölçüt 30'un altı); 2026 payı oran
 Okuma: backtestin kârı "tepede dolum" iyimserliğine dayanmıyor. Ekim-Kasım kaybı dolum modelinden değil; en olası açıklama sinyal kenarının
 2025 Q3'ten beri zayıflaması / tersine dönmesi (rejim). Ham kenar eksiyken 2026 H1 kârının kaynağı (kalabalık filtresi, funding, kademe
 oynaklık hasadı) ayrıca ayrıştırılabilir. Karar yok.
+
+## Madde 797 ÖN KAYIT — ARALIK BAŞI DEĞERLENDİRME ÖLÇÜTLERİ (2026-11-16, Kasım bitmeden; kullanıcı: "aralık başında beklentimiz ne olmalı")
+Taban oranlar (backtest ≤ 31 Eki, ×1,15): sonraki 15 gün artı %77 (medyan +4,4, %10'luk −2,4, %90'lık +18,8); zirveden ≥ %10 düşükken (77 gün) artı %86
+(medyan +4,4, %10'luk −0,8). 76 ayın 12'si eksi; art arda iki eksi ay yalnız 1 kez. Not: 790+ deneme → backtest iyimser; canlı beklenti daha düşük.
+Ölçüm (Aralık 1-2, Kasım verisi gelince): demo Kasım (panel, UTC gün) vs backtest Kasım aynı günler (11-30 Kas tam kitap; 6-10 rampa ayarlı).
+Ölçütler (önceden):
+ (1) |demo − backtest| ≤ 2 puan → bot backtestle tutarlı (çalışma hatası yok). > 2 puan demo aleyhine → coin coin otopsi, kanal bul.
+ (2) Backtest 16-30 Kas ≥ 0 → olağan toparlanma (taban oran %77-86). < −2,4 (%10'luk kuyruk altı) → kötü kuyruk, iki eksi ay (6 yılda 2. kez).
+ (3) Gerçek paraya geçiş ÖNERİSİ yalnız: (1) tutarlı VE backtest zirveden düşüş toparlanmaya başlamış (en az bir artı ay / düşüş < %10). Aksi halde
+     demo Aralık boyunca sürer, gerçek para ertelenir. Kural değişikliği bu değerlendirmeden bağımsız ve ancak ön kayıtlı test + kullanıcı onayıyla.
