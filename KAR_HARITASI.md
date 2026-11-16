@@ -8842,3 +8842,6 @@ CANLI_STOP=1: kontrol barına denk gelen dengelemede yeni alınan long, motorun 
 Karar ölçütü: CS eşit riskte taban hiza 0'dan ≥ 8 kötü → canlıya "aynı turda yeni alınana koşullu stop uygulama" (ya da stop koşulundaki coini
 alma) ADAY, kullanıcı onayıyla; ± 8 içi → ihmal; ≥ 8 iyi → not (canlı davranış daha iyi; motor değişmez).
 Yan not (önceden): motor seviyesi cv[m−7] (SLL24_TAZE 2 ile 28 sa), canlı k[−8] (24 sa) — ayrı fark, bu koşuda ölçülmez.
+795 DÜZELTME (geçerli sonuç görülmeden): ilk CS koşusu 0 tetik — yama dengelemenin KARAR barını varsaydı; motor GEC=1 ile kararı çift barda
+verir, ÇİFT+1 barda (cv[i+1]) icra eder. Doğru taklit: icra barında yeni alınan long, KARAR barının (kontrol barı, canlının baktığı kapanış)
+seviyesi + piyasa şartı sağlanıyorsa icra fiyatından hemen satılır (alım fiyatı = satış fiyatı, iki komisyon). PAR (CANLI_STOP=0) parite 0 ✓.
