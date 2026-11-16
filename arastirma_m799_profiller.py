@@ -13,7 +13,7 @@ PROF = {k: I.ANA[k][0] for k in ("EK_T1", "EK_T4", "EK_T6", "EK_T6KS", "EK_T7K")
 def tek(a):
     ad, h = a; e = f"{OUT}/M357_{ad}_2000_{h}.pkl"
     if os.path.exists(e): return ad, h, "var"
-    env = dict(os.environ, **M.TABAN, **PROF[ad], FAZ_KAY=str(h), SEMBOL_HARIC=",".join(M.D8), E_CIKTI=e + ".tmp", PYTHONPATH=R)
+    env = dict(os.environ, **{**M.TABAN, **PROF[ad]}, FAZ_KAY=str(h), SEMBOL_HARIC=",".join(M.D8), E_CIKTI=e + ".tmp", PYTHONPATH=R)
     with open(e.replace(".pkl", ".txt"), "w") as f:
         r = subprocess.run([sys.executable, os.path.join(R, "g33.py"), "ls", "4"], env=env, cwd=R, stdout=f, stderr=subprocess.STDOUT)
     ok = r.returncode == 0 and os.path.exists(e + ".tmp")
