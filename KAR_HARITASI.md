@@ -9088,3 +9088,9 @@ TEŞHİS: (a) olay günü etrafında (−7 … +7 g) evren medyanına göre biri
 KAPI: (a) −7 … 0 penceresinde ort. fazla getiri ≤ −2 puan VE (c) olay öncesi long katkısı diğer long günlerinden kötü → 810 motor ön kaydı (olaydan önceki 7 g long vetosu,
 MOM_DOSYA); değilse kapanır. Arz verisi gecikmeli / hatalı olabilir; olay tarihi gerçek takvim tarihine ±1-2 g yakın varsayılır. Bota hiçbir şey girmez.
 809 HATA DÜZELTMESİ (kapı ölçütü aynı): ilk teşhiste (a) getiri evren maskesiyle (uy) alınmıştı → olayların çoğu NaN, toplamda 0 sayıldı (medyan 0,00). Getiri maskesiz, NaN'lı olay dışlanır.
+**SONUÇ 809: KAPI GEÇMEDİ → RED (kapandı).** CoinGecko 411 coin, 847 arz olayı (≥ %2, coin başına medyan 2), 2025-11-17 → 2026-11-15.
+(a) olay etrafı evren medyanına göre fazla getiri (n 826): −7…0 ort **+1,36** / medyan **−1,90** · +1…+7 ort +0,16 / medyan −1,87 → tipik olay hafif eksi ama ortalamayı
+sıçramalar artıya çekiyor (çarpık; ölçüt ort ≤ −2 → geçmedi). (b) olay öncesi fon3 sırası 0,41 (evren 0,50): hafif kalabalık short, belirgin değil.
+(c) P3T2 long-gün: olaydan önceki 7 g −0,388 %/gün (n 529) vs diğer +0,028 %/gün — gün düzeyinde güçlü görünüyor AMA olay düzeyinde (63 olay, coin kümelenmesi
+düzeltilmiş) ort −3,26 % / medyan −0,88 % / t −1,38 (anlamlı değil); 2026 H1 +0,34, H2 −6,74 (tutarsız). Kilit açılışı bu veriyle (1 yıl, arz vekili) güvenilir bir
+long vetosu vermiyor. Not: 365 g ücretsiz sınır; daha uzun takvim verisi (Tokenomist / DefiLlama ücretli) olursa yeniden açılabilir.
