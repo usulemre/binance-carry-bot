@@ -8988,3 +8988,11 @@ KORUNUR; her yeni dengelemede long bacak ağırlığı × (1 + a × (sıra − 0
 V = 0,5 × sıra → sıra = 2V; yoksa 0,5), sonra long toplamı ilk değere ölçeklenir. Short dokunulmaz. 2022 öncesi olasılık yok → ağırlık değişmez.
 Motor `/tmp/m803/g33_m803.py` (OLAS_A=0 → yol kapalı, bayt aynı). Kollar (2): a = 0,5 (ağırlık 0,75-1,25) · a = 1 (0,5-1,5). Taban P3T2 (`/tmp/m783c`).
 Ölçüt 800 ile aynı (eşit risk ≥ +8 VE Sharpe ≤2024 ve 2025+ düşmez → ADAY, Aralık verisiyle doğrulanmadan bota girmez).
+**SONUÇ 803 (4 koşu rc 0; 20.709 dengeleme boyutlandı): RED — yine "uç = oynak" yasası.**
+| kol | yıllık | Sh | dd | Sh ≤2024 / 2025+ | eşit risk | ×1,15 2022 / 2025 / 2026 | Eki+Kas |
+|---|---|---|---|---|---|---|---|
+| taban P3T2 | 239,3 | 4,05 | −13,3 | 4,03 / 4,14 | 315,2 | 75 / 342 / 341 | −11,0 |
+| a = 0,5 | 242,6 | 3,99 | −14,3 | 3,95 / 4,15 | 272,6 (−43) | 64 / 367 / 367 | −10,9 |
+| a = 1 | 246,3 | 3,94 | −14,8 | 3,88 / 4,15 | 254,8 (−60) | 57 / 387 / 396 | −10,9 |
+Ham getiri doza bağlı ARTIYOR (+3 / +7; 2025-26 +25 .. +55) ama dd ve en kötü gün daha hızlı derinleşiyor → eşit riskte kayıp; ≤2024 Sharpe düşüyor. Sıçrama olasılığı
+yüksek coin = oynak coin: ağırlığı oraya kaydırmak gizli kaldıraç (madde 251 / 597 ile aynı). Eki+Kas değişmedi. Meta-labeling ailesi (filtre 390 / 800 / 802, boyut 803) kapandı.
