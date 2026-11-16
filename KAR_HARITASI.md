@@ -9044,3 +9044,16 @@ vekili) · (S) 802 sıçrama olasılığı en yüksek 4 · (A) 804 asimetri en i
 Ödeme: 800 hedefi (TP'li 5 g, funding dahil). Ölçüm: 2022 … 2026 yıllık ortalama ödeme (seçici başına), ayrıca 2026-10-01 → 11-10.
 KAPI: S ya da A, K'yı ≥ 0,5 puan geçer, 2024 / 2025 / 2026'nın (öğrenme yeterli yıllar, 806 gerekçesi) ≥ 2'sinde VE 2022-26 ortalamasında → 808 motor ön kaydı (kalabalık filtresi
 yerine ML sırası); aksi halde ML seçici ekseni kapanır.
+**SONUÇ 807: KAPI GEÇMEDİ (S 0/3, A 0/3) → ML seçici ekseni kapandı.** Aynı havuzda (fon3 en düşük 16) 4 coin, 5 g TP'li ödeme ort. (%):
+| yıl | K kalabalık (şimdiki) | S sıçrama | A asimetri | R rastgele | havuz |
+|---|---|---|---|---|---|
+| 2022 | −0,76 | −1,41 | −1,29 | −1,41 | −1,45 |
+| 2023 | 3,78 | 1,50 | 0,87 | 1,25 | 1,55 |
+| 2024 | 2,18 | 1,07 | 1,16 | 0,60 | 0,71 |
+| 2025 | 0,58 | 0,65 | 0,74 | −0,40 | −1,09 |
+| 2026 | 2,09 | 0,48 | 1,16 | −0,74 | −0,29 |
+| 2022-26 | **1,63** | 0,46 | 0,51 | −0,12 | −0,11 |
+| 2026-10-01 → 11-10 | **−3,65** | −4,10 | −2,21 | −2,74 | −1,97 |
+Okuma: (1) kalabalık filtresi (ls) çok güçlü — havuzu 5 günde ort. +1,74 puan geçiyor (her yıl), ML seçicilerin üç katı; şimdiki kural ML'den iyi. (2) Eki-Kas 2026'da
+kalabalık filtresi havuzun ve rastgelenin ALTINDA (−3,65 / −1,97): bu rejimde kaybı büyüten şey en kalabalık short'lu coinleri seçmek ("kalabalık haklı"). 773 (long
+kalabalığı kapatmak) 6 yılda −172 → eylem yok; ama Aralık izlemesine (797) "K − havuz farkı 16-30 Kas" eklenir: rejim göstergesi olarak.
