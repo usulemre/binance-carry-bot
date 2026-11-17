@@ -9119,3 +9119,6 @@ GERİ DÖNÜŞ (kullanıcı fikri: düşene long, yükselene short): k = 1 / 3 /
 TERSİ — MOMENTUM (yükselene long, düşene short): Sh 0,95 / 1,37 / 1,11; 2021 +13 / +76 / +80 · 2023 −5 / −3 / −14 · 2024 −15 / −6 / +11 · 2025 +100 / +179 / +210 · 2026 +77 / +120 / +66;
 Eki-16 Kas −2,9 / +0,8 / +2,7. Carry (P3T2) ile günlük korelasyon ≈ +0,02 … +0,05 (neredeyse bağımsız). UYARI: 3 geriye bakış denendi (seçim); üst 10 yükselen sığ coinler →
 5 bp kayma iyimser; 2025-26 ağırlıklı. Not: 686 (BTC/ETH trend) harmanı RED'di; kesitsel momentum ayrı. Ön kayıtlı test (harman, kayma duyarlılığı) aday — kullanıcı kararı.
+811 EK (kullanıcı: "günlük tutsan ne olur"): aynı kurgu, 1 g tutuş (her gün tam yenileme), 5 / 10 bp. Momentum Sh −0,46 / +0,46 / +0,66 (k = 1 / 3 / 7, 5 bp) — 5 g tutuştan
+KÖTÜ (günlük devir 0,7-1,5 → maliyet). Geri dönüş Sh −0,59 / −1,14 / −1,15; her yıl derin eksi (2025-26 −62 … −89). TEK istisna: geri dönüş 7 g günlük Eki-16 Kas +24,7 / +22,4
+— 12 varyant içinde tek dönemde parlayan biri (seçim); aynı kural 2025 −86, 2026 −62. Eylem yok.
