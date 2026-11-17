@@ -9107,3 +9107,7 @@ YAVAŞ ANAHTAR (parametresiz kural, model yok): gün t'de gerçekleşmiş (K −
 (funding-sırası, HAVUZ_L=1 vekili), yoksa K. 808 ML anahtarından farkı: yavaş, tek eşik (0), öğrenme yok.
 KAPI (807 / 808 vekil çerçevesi, 5 g TP'li ödeme ort.): anahtar her zaman K'dan 2022-26 ortalamasında ≥ 0,2 puan iyi VE hiçbir yılda ≥ 0,3 puan kötü değil →
 811 motor ön kaydı (HAVUZ_L zaman serisi); aksi halde RED. Ek: F günlerinin oranı ve kaç ayrı "kapalı" dönem (yanlış alarm sayısı) raporlanır.
+**SONUÇ 810: KAPI GEÇMEDİ → yavaş anahtar RED.** Anahtar − K (5 g ödeme, puan): 2022 −0,16 · 2023 −0,14 · 2024 −0,08 · 2025 −0,24 · 2026 −0,39 · tümü −0,20 · Eki-Kas 26 −0,02.
+Kapalı gün oranı tümü %18 (2025 %42); 15 ayrı kapalı dönem (2022-06 … 2026-11-11) → her yıl yanlış alarm. Eki-Kas 2026'da anahtar ANCAK 11 Kas'ta kapandı (60 g gecikme)
+→ kötü rejimi geç yakalıyor, iyi rejimde maliyet. 2025: 60 g K − F günlerin %42'sinde eksi olmasına rağmen K yıl ortalamasında yine F'den iyi değil, ama anahtar daha kötü
+(geçişler ters zamanlı). Sonuç: K'yı kapatan hiçbir kural (773 tam kapalı, 808 ML, 810 yavaş) her zaman açık K'yı geçemiyor. KARAR PLANI (yukarıda) geçerli kalır.
