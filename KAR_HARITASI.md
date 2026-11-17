@@ -9094,3 +9094,7 @@ sıçramalar artıya çekiyor (çarpık; ölçüt ort ≤ −2 → geçmedi). (b
 (c) P3T2 long-gün: olaydan önceki 7 g −0,388 %/gün (n 529) vs diğer +0,028 %/gün — gün düzeyinde güçlü görünüyor AMA olay düzeyinde (63 olay, coin kümelenmesi
 düzeltilmiş) ort −3,26 % / medyan −0,88 % / t −1,38 (anlamlı değil); 2026 H1 +0,34, H2 −6,74 (tutarsız). Kilit açılışı bu veriyle (1 yıl, arz vekili) güvenilir bir
 long vetosu vermiyor. Not: 365 g ücretsiz sınır; daha uzun takvim verisi (Tokenomist / DefiLlama ücretli) olursa yeniden açılabilir.
+**783 UZATMA 3 — 16 Kasım (zemin 16 Kas 20:00, ≤ 15 Kas parite 0,004 puan; `/tmp/m783d`):** backtest 16 Kas **−3,37** (long −3,49 · short +0,12; BTW long −1,73, JCT short
+−0,48, BARD / AKE / KAVA / PUMP long). Demo 16 Kas −25,56 $ ≈ **−1,34**. Toplam 6-16 Kas: backtest rampa ayarlı **−8,74** · tam 7-16 −9,67 · demo (panel günleri toplamı ≈ −112 $)
+≈ **−5,6** → demo ≈ 3 puan DAHA İYİ (2 puan sınırını demo LEHİNE aştı). Kaynak: BTW long (demoda yok; demo borsada işlem görmüyor) backtestte 15-16 Kas'ta tek başına
+≈ −3,5 puan. BTW hariç fark sınır içinde. Okuma: canlı çalışma hatası yok; fark demo evreninin eksik coinlerinden. Gerçek borsada BTW alınabilir → canlı sonuç backtest'e yakın olur.
