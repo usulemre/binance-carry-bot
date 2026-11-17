@@ -9098,3 +9098,12 @@ long vetosu vermiyor. Not: 365 g ücretsiz sınır; daha uzun takvim verisi (Tok
 −0,48, BARD / AKE / KAVA / PUMP long). Demo 16 Kas −25,56 $ ≈ **−1,34**. Toplam 6-16 Kas: backtest rampa ayarlı **−8,74** · tam 7-16 −9,67 · demo (panel günleri toplamı ≈ −112 $)
 ≈ **−5,6** → demo ≈ 3 puan DAHA İYİ (2 puan sınırını demo LEHİNE aştı). Kaynak: BTW long (demoda yok; demo borsada işlem görmüyor) backtestte 15-16 Kas'ta tek başına
 ≈ −3,5 puan. BTW hariç fark sınır içinde. Okuma: canlı çalışma hatası yok; fark demo evreninin eksik coinlerinden. Gerçek borsada BTW alınabilir → canlı sonuç backtest'e yakın olur.
+
+## Madde 810 ÖN KAYIT (2026-11-17, sonuç görülmeden; kullanıcı: "eğer geçmezse ne yapacağız" → "araştırma iyileştirmelere devam") — KARAR PLANI + YAVAŞ REJİM ANAHTARI
+KARAR PLANI (önceden): "rejim değişti" = kalabalık filtresi (K) havuz ortalamasının (H) art arda 2 takvim ayı ALTINDA (807 vekili, 5 g TP'li ödeme). Durum 1 (K toparlanır):
+strateji aynen, gerçek para 797 ölçütleriyle ×0,5-0,75. Durum 2 (sürer): gerçek para YOK, demo izlemede; rejim-koşullu varyant ön kayıtla test; o da tutmazsa stratejiyi
+durdurmak + düşük riskli alternatif (BTC/ETH spot-vadeli funding) masaya. Hiçbir değişiklik testsiz / onaysız bota girmez.
+YAVAŞ ANAHTAR (parametresiz kural, model yok): gün t'de gerçekleşmiş (K − F) farkının son 60 g ortalaması (6 g gecikmeli, nedensel) < 0 → o gün long seçimi F
+(funding-sırası, HAVUZ_L=1 vekili), yoksa K. 808 ML anahtarından farkı: yavaş, tek eşik (0), öğrenme yok.
+KAPI (807 / 808 vekil çerçevesi, 5 g TP'li ödeme ort.): anahtar her zaman K'dan 2022-26 ortalamasında ≥ 0,2 puan iyi VE hiçbir yılda ≥ 0,3 puan kötü değil →
+811 motor ön kaydı (HAVUZ_L zaman serisi); aksi halde RED. Ek: F günlerinin oranı ve kaç ayrı "kapalı" dönem (yanlış alarm sayısı) raporlanır.
