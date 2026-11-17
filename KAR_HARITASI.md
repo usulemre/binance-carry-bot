@@ -9111,3 +9111,11 @@ KAPI (807 / 808 vekil çerçevesi, 5 g TP'li ödeme ort.): anahtar her zaman K'd
 Kapalı gün oranı tümü %18 (2025 %42); 15 ayrı kapalı dönem (2022-06 … 2026-11-11) → her yıl yanlış alarm. Eki-Kas 2026'da anahtar ANCAK 11 Kas'ta kapandı (60 g gecikme)
 → kötü rejimi geç yakalıyor, iyi rejimde maliyet. 2025: 60 g K − F günlerin %42'sinde eksi olmasına rağmen K yıl ortalamasında yine F'den iyi değil, ama anahtar daha kötü
 (geçişler ters zamanlı). Sonuç: K'yı kapatan hiçbir kural (773 tam kapalı, 808 ML, 810 yavaş) her zaman açık K'yı geçemiyor. KARAR PLANI (yukarıda) geçerli kalır.
+
+## Madde 811 — ÖLÇÜM (ön kayıtsız hızlı bakış; kullanıcı: "en çok yükselene short, en çok düşene long şu dönemde daha iyi çalışırdı"; karar vermez)
+Basit kesitsel strateji, günlük 00 UTC evren (uy): son k gün getirisine göre alt 10 / üst 10, her bacak 0,5 brüt, 5 g örtüşen tutuş (1 g gecikme), funding dahil, 5 bp taker / devir.
+GERİ DÖNÜŞ (kullanıcı fikri: düşene long, yükselene short): k = 1 / 3 / 7 → Sh −1,48 / −1,73 / −1,38; HER yıl eksi (2025 −59 … −77, 2026 −57 … −70); Eki-16 Kas 2026 −1,9 / −7,2 / −9,9.
+→ RED, bu dönemde de kaybettirirdi (düşen düşmeye devam ediyor).
+TERSİ — MOMENTUM (yükselene long, düşene short): Sh 0,95 / 1,37 / 1,11; 2021 +13 / +76 / +80 · 2023 −5 / −3 / −14 · 2024 −15 / −6 / +11 · 2025 +100 / +179 / +210 · 2026 +77 / +120 / +66;
+Eki-16 Kas −2,9 / +0,8 / +2,7. Carry (P3T2) ile günlük korelasyon ≈ +0,02 … +0,05 (neredeyse bağımsız). UYARI: 3 geriye bakış denendi (seçim); üst 10 yükselen sığ coinler →
+5 bp kayma iyimser; 2025-26 ağırlıklı. Not: 686 (BTC/ETH trend) harmanı RED'di; kesitsel momentum ayrı. Ön kayıtlı test (harman, kayma duyarlılığı) aday — kullanıcı kararı.
