@@ -9219,3 +9219,7 @@ Okuma: kesitsel momentum 2025-26'da gerçek ve parametreye duyarsız bir kenar (
 w_t = 0,50 eğer son 60 g Sharpe(M) > son 60 g Sharpe(P3T2), değilse 0,10 (1 g gecikmeli; değişimde ek maliyet 10 bp × |Δw|). r = (1 − w) · P + w · M.
 Karşılaştırma: P3T2 yalnız · sabit w 0,20 · dinamik. Dönemler: tasarım 2021-24, doğrulama 2025-01 → 2026-11-16. Ölçüt: doğrulamada dinamik Sharpe ≥ P3T2 + 0,2 VE maks düşüş daha sığ
 VE tasarımda da P3T2'den kötü değil (Sh farkı ≥ −0,1) → ADAY (ayrı motor, ileri izleme, kullanıcı onayı); aksi RED.
+**SONUÇ 822: KESİN RED — performans kovalamak zarar.** (Sh · dd ×1,15 · getiri) Tasarım 2021-24: P3T2 3,90 · −15,2 | sabit 0,2 3,94 · −14,7 | dinamik 3,59 · **−27,3**.
+Doğrulama 2025-26: 3,92 · −19,2 | 3,81 · −15,8 | 3,51 · −23,8. Eki-16 Kas: −14 % | −9 % | **−19 %** (dinamik en kötü). w = 0,5 gün oranı 2021-24 %17 · 2025-26 %20 · Eki-Kas %40.
+Momentum'a "iyi gittikten sonra" geçmek, momentumun geri dönüşüne yakalanıyor; düşüşü derinleştiriyor. Sabit küçük pay (813 / 821) dinamikten her dönemde iyi.
+Strateji arası zamanlama da (773 / 801 / 808 / 810 ile birlikte) kapandı.
