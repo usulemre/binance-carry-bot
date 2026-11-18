@@ -9156,3 +9156,11 @@ Yeni ölçüm (mevcut seriler, zemin 15 Kas): korelasyon P3T2 / T6KS 0,975. P3T2
 272,9 · −8,8 | ½ + ½ 277,1 · 4,12 · −14,9 · 286,4 · −9,9 → RED (profiller neredeyse aynı şeyi yapıyor; ortalama çeşitlendirme vermiyor).
 Arama alanı notu: aynı veriyle ölçülebilen kural / ML / harman aileleri tükenmiş durumda (800-814). Yeni kenar ancak YENİ VERİ ile (likidasyon akışı 723, uzun kilit
 takvimi, emir defteri) ya da farklı strateji sınıfıyla (spot-vadeli baz, piyasa yapıcılık) mümkün.
+
+## Madde 815 — ÖLÇÜM: long zarar otopsisi Oca-Eyl vs Eki-Kas 2026 (kullanıcı: "trader gibi yaklaş… bulabilmen lazım"; karar vermez)
+P3T2 GUNLUK_KATKI (2026, iki hiza) long-gün birim getirisi vs önceki gün 389 özellik sıraları (Spearman IC). Oca-Eyl n 5.209 · Eki-Kas n 994.
+Eki-Kas'ta belirginleşen: konum (aralık tepesine yakın) IC +0,001 → −0,118 · r14 −0,02 → −0,12 · oi7 −0,02 → −0,11 · r7 −0,02 → −0,11 · r1 / oi1 +0,04 → −0,07 ·
+vol7 −0,07 → −0,13 (oynaklık iki dönemde de eksi). Eki-Kas en kötü %20 long-gün, en iyi %20'ye göre: daha yüksek r7 (+0,09), r14, oi7, konum, vol7 sırası →
+"POMPADAN SONRA ALINAN long kaybettiriyor" (INIT deseni). Ancak bu tam olarak UCELE pompa filtresi: 196'da eski kitapta kârlı, 447-448'de 7 g / 30 g eşikleriyle
+RED — "2022-24'te +19 puan, 2025-26'da −120 puan; pompalanan coinler aynı zamanda en büyük kazananlar" → rejime bağlı. 800 / 802 ML aynı özellikleri içeriyordu.
+Otopsi bulgusu GERÇEK ama yeni değil; kural zaten ölçülmüş ve rejime bağlı. Rejim göstergesi (807 / 810) ile birlikte izleme notu.
