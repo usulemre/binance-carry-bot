@@ -9235,3 +9235,15 @@ Yeniden kurgu (günlük funding, evren uy, aynı tanım: 1 g sinyal en düşük 
 TARİHSEL EN YÜKSEK (+131 … +406 bp) → "funding edge'i öldü" okuması veriyle çelişiyor. Şüphe: canlı ölçümde veri sorunu (sembol başına funding geçmişi çekimi; hata /
 eksik sembol → gölge kitap bileşimi bozulur) ya da 1 sa / 4 sa aralıklı sembollerde toplama farkı. Sunucu günlüğü olmadan kesin değil.
 Öneri (kullanıcı onayı gerekir): CARRY_SAGLIK_MODU=uyar (yalnız uyarı; backtest ile aynı davranış) + günlükten "edge sağlığı / sağlık" satırları ve carry_saglik.json incelenir.
+
+## Madde 824 — 823'ün KÖKÜ BULUNDU: tek coin funding şoku (BREVUSDT) gölge kitabı bozdu → bacak başına ±%1 kırpma
+Sunucu günlüğü + aynı fonksiyonla (`carry_saglik.metrikleri_hesapla`, bugünkü 30 sembollük evren, gerçek Binance funding) yeniden hesap:
+- 30 g F'nin 6 bloğundan 5'i +5 … +10 bp. Son blok (13 Kas 14:47 → 18 Kas 14:47) **−28,8 bp**; bunun **−42,7 bp**'si tek coin: **BREVUSDT**. BREV funding'i günlerce +%0,005 iken
+  17 Kas 16:00'da **−%2 tavana** atladı, ödeme 1 saatliğe geçti (saatte −0,23 … −0,44 %) → 5 g'de ≈ **−%10,2**. Gölge kitap 13 Kas sinyaliyle BREV'i SHORT tutuyor ve blok boyunca
+  dönmüyordu. Canlı bot ise 8 sa'te bir dengeliyor ve BREV'i **LONG (rezerv uç coin)** tutuyordu (17 Kas 22:48, 18 Kas 06:48) → gölgenin zararı gerçekte yok.
+- 16-17 Kas'taki 57 → 3 bp "erime" ise EVREN DEĞİŞİMİ: dedektör o anki evreni 30 g geriye uygular; bugünkü evrenle aynı anlar +8 … +9 bp (yüksek funding'li coinler hacim
+  listesinden çıktı, evren 5 sembol tabanla dolduruldu). Düşük F'li evrende tek şok eşiği aşmaya yetti. (823'teki +215 bp yeniden kurgu farklı evren/örnekleme; buradaki canlı tanım.)
+Düzeltme: `carry_saglik.BACAK_SINIR = 0.01` — F'de her bacağın blok içi gerçekleşen funding'i ±%1 ile kırpılır (tek bacak F'yi en çok 1 % / 24 ≈ 4,2 bp oynatır). IC sıra tabanlı,
+kırpılmaz. Eşikler (F 0, DISP 2,86 bp, pencere 6, toparlanma 2) DEĞİŞMEDİ. Kırpmayla 18 Kas 14:47 F = **+8,5 bp** (son blok +10) → kapı kapanmazdı.
+Testler (`test_carry_saglik` 9. bölüm): tek coin şokunda SAGLIKLI; kırpmasız BOZUK (olay yeniden üretiliyor); kalıcılık ölümü ve 12 short bacağın hepsinin dönmesi yine yakalanıyor.
+Sunucuda: kapı dosyası (`carry_saglik.json`) yeni ölçümle uyumlu olduğu için {"acik": true} ile sıfırlandı (kullanıcı onayı, 2026-11-18).

@@ -212,6 +212,39 @@ kontrol("canlı botun dedektör penceresi >= 24 saat",
         _sp >= 24.0, f"({_sp})")
 
 
+print("\n9) TEK COİN FUNDING ŞOKU (madde 824, BREVUSDT 2026-11-18)")
+# Düşük primli ama sağlıklı dünya (canlı evrene benzer F ~ +10 bp/blok);
+# short tarafın en üstündeki coin SON blokta −%2 tavana kilitlenip saatlik
+# ödemeye geçiyor (gerçek olay: ≈ −%10 / gün).
+_g = dunya(olcek=0.15)
+_sok = "S39"   # en yüksek funding -> gölge kitapta SHORT
+_bas = SIMDI - 2 * GUN
+_g[_sok] = [(z, r) for z, r in _g[_sok] if z <= _bas]
+_t = _bas + SAAT
+while _t <= SIMDI:
+    _g[_sok].append((_t, -0.003))
+    _t += SAAT
+ic, f, d = H.metrikleri_hesapla(_g, SIMDI, 12)
+durum, gerekce = H.saglik_durumu(ic, f, d)
+kontrol("tek coin şokunda kapı KAPANMAZ (kırpma açık)",
+        durum == "SAGLIKLI", f"({durum}: {gerekce}, F {[round(x*1e4,1) for x in f]})")
+ic0, f0, d0 = H.metrikleri_hesapla(_g, SIMDI, 12, bacak_sinir=0)
+kontrol("kırpma olmadan aynı şok kapıyı KAPATIYORDU (test olayı yeniden üretiyor)",
+        H.saglik_durumu(ic0, f0, d0)[0] == "BOZUK",
+        f"({H.saglik_durumu(ic0, f0, d0)}, F {[round(x*1e4,1) for x in f0]})")
+# Yaygın bozulma hâlâ yakalanmalı: TÜM short bacaklar negatife dönerse
+_g2 = dunya(olcek=0.15)
+for i in range(28, 40):
+    _g2[f"S{i}"] = [(z, r if z <= SIMDI - 5 * GUN else -0.0004)
+                    for z, r in _g2[f"S{i}"]]
+_g3 = dunya(olcek=0.15, mod="karisik")
+kontrol("kalıcılık ölümünde kırpmaya rağmen BOZUK",
+        H.saglik_durumu(*H.metrikleri_hesapla(_g3, SIMDI, 12))[0] == "BOZUK")
+_f2 = H.metrikleri_hesapla(_g2, SIMDI, 12)[1]
+kontrol("12 short bacağın hepsi dönünce son blok F negatif (kırpma yutmuyor)",
+        _f2[-1] < 0, f"(son blok {_f2[-1]*1e4:+.1f} bp)")
+
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:

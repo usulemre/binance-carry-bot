@@ -68,6 +68,17 @@ F_ESIK = 0.0            # kayan ortalama funding geliri <= 0 ise (oran)
 DISP_ESIK = 2.86e-4     # kayan ortalama short-long funding farkı (günlük eşdeğer)
 PENCERE = 6             # 6 rebalance = 30 gün (5 günlük tutmada)
 TOPARLANMA = 2          # tüm koşullar art arda bu kadar tur temizse devam
+# MADDE 824: gölge kitapta TEK BACAĞIN blok içi gerçekleşen funding'i bu
+# sınırla kırpılır (±%1 / 5 g). Olay 2026-11-18: BREVUSDT 17 Kas 16:00'da
+# +%0,005'ten −%2'ye (tavan) atladı, ödeme 1 saatliğe geçti, bir günde ≈ −%10
+# ödedi. Gölge kitap onu blok başındaki (13 Kas) sinyalle SHORT tutuyordu ve
+# 5 gün hiç dönmüyordu → tek coin son bloğa −42,7 bp yazdı, 30 g ort. F +2 bp'den
+# −0,4'e indi, kapı kitabı kapattı. Canlı bot ise 8 sa'te bir dengeliyor ve
+# BREV'i LONG (rezerv uç coin) tutuyordu - gölgenin "zararı" gerçekte yoktu.
+# Kapının amacı edge'in GENEL çöküşü (prim sıkışması, kalıcılık ölümü); tek
+# coinin funding şoku değil. Kırpma sonrası tek bacak F'yi en çok
+# BACAK_SINIR / (2n) = 1 % / 24 ≈ 4,2 bp oynatır; yaygın bozulma yine görünür.
+BACAK_SINIR = 0.01
 
 
 def saglik_durumu(ic_gecmis, f_gecmis, disp_gecmis, pencere=PENCERE):
@@ -137,7 +148,8 @@ def _yillik(kayit_listesi) -> float | None:
 
 def metrikleri_hesapla(gecmis: dict, simdi_ms: int, n_legs: int,
                        blok_saat: float = 120.0, sinyal_saat: float = 72.0,
-                       pencere: int = PENCERE):
+                       pencere: int = PENCERE,
+                       bacak_sinir: float = BACAK_SINIR):
     """Funding geçmişinden IC, F ve DISP dizilerini DURUMSUZ hesaplar.
 
     gecmis: {sembol: [(fundingTime_ms, fundingRate), ...]}
@@ -179,8 +191,12 @@ def metrikleri_hesapla(gecmis: dict, simdi_ms: int, n_legs: int,
             continue                      # şimdiki blok henüz gerçekleşmedi
         gercek = {s: sum(r for z, r in gecmis[s] if t < z <= t + B)
                   for s in sinyal}
-        ic.append(_sira_korelasyonu(sinyal, gercek))
-        f.append((-sum(gercek[s] for s in L) + sum(gercek[s] for s in S))
+        ic.append(_sira_korelasyonu(sinyal, gercek))   # IC sıra tabanlı, kırpılmaz
+        # MADDE 824: F'de tek bacağın katkısı ±bacak_sinir ile sınırlı
+        def _k(x):
+            return x if not bacak_sinir or bacak_sinir <= 0 else \
+                max(-bacak_sinir, min(bacak_sinir, x))
+        f.append((-sum(_k(gercek[s]) for s in L) + sum(_k(gercek[s]) for s in S))
                  / (2 * n))
     return ic, f, disp
 
