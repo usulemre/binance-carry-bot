@@ -440,5 +440,28 @@ kontrol("madde 790: çıkış takvimi tur başına, 'yine seçilirse kalır' aç
         "turun hepsini göster" in _h790 and "dilime bölündü" in _h790 and "dilim payı" in _h790 and "yine seçilirse" in _h790 and "Kademe · kâr al" in _h790 and "satılacak</span>" not in _h790)
 kontrol("madde 790: panel CARRY_GIRIS_DILIM'i .env'den okur", "CARRY_GIRIS_DILIM" in open(panel.__file__, encoding="utf-8").read().split("def _env")[1].split("return d")[0])
 
+# MADDE 828: zorunlu kapanış + yeniden açılışın gerçekleşen zararı, pozisyon açıkken "Açık"a taşınır
+_kl8 = tempfile.mkdtemp(); os.makedirs(os.path.join(_kl8, "defter"))
+_t8 = 1_795_000_000
+json.dump({"t_acilis": _t8, "coin": {"AUSDT": {"r": -10.0, "adet": 100.0}, "BUSDT": {"r": 4.0, "adet": -50.0},
+                                     "CUSDT": {"r": -3.0, "adet": 10.0}}}, open(os.path.join(_kl8, "defter", "devir_duzeltme.json"), "w"))
+json.dump({"s": {"AUSDT": [[_t8 - 600, 100, 1.2], [_t8 + 300, 100, 1.0]],
+                 "BUSDT": [[_t8 + 300, -50, 2.0], [_t8 + 900, -25, 2.0], [_t8 + 1800, -50, 2.1]],
+                 "CUSDT": [[_t8 + 300, 10, 1.0], [_t8 + 900, 0, 0]]}}, open(os.path.join(_kl8, "defter", "anlik_poz.json"), "w"))
+_an8 = {"pozisyonlar": {"AUSDT": {"miktar": 100, "giris": 1.0, "isaret": 1.1, "gerceklesmemis": 10.0, "kar_yuzde": 10.0},
+                        "BUSDT": {"miktar": -50, "giris": 2.1, "isaret": 2.0, "gerceklesmemis": 5.0, "kar_yuzde": 4.76},
+                        "CUSDT": {"miktar": 10, "giris": 1.0, "isaret": 1.0, "gerceklesmemis": 0.0}},
+        "gerceklesmemis_top": 15.0}
+_d8 = panel.devir_uygula(_kl8, _an8)
+_pa = _an8["pozisyonlar"]["AUSDT"]
+kontrol("devir: tam açık pozisyonda r Açık'a taşınır, giriş ≈ eski giriş (1,1)",
+        _d8.get("AUSDT") == -10.0 and abs(_pa["giris"] - 1.1) < 1e-12 and _pa["gerceklesmemis"] == 0.0 and _pa["giris_borsa"] == 1.0, (_d8, _pa))
+kontrol("devir: arada yarıya küçülen pozisyonda yalnız yarısı (sonradan büyüme diriltmez)", abs(_d8.get("BUSDT", 0) - 2.0) < 1e-12, _d8)
+kontrol("devir: arada tamamen kapanan pozisyonda taşıma yok", "CUSDT" not in _d8, _d8)
+kontrol("devir: gerçekleşmemiş toplam güncellendi", _an8["gerceklesmemis_top"] == round(15.0 - 10.0 + 2.0, 2), _an8["gerceklesmemis_top"])
+kontrol("devir: dosya yoksa dokunmaz", panel.devir_uygula(tempfile.mkdtemp(), {"pozisyonlar": {"AUSDT": {"miktar": 1, "giris": 1}}}) == {})
+kontrol("devir: veri() dökümde Kapanan'dan düşer", "devir_uygula(kl, an)" in open(panel.__file__, encoding="utf-8").read()
+        and 'o["dokum"]["gerceklesen"] - sum(_devir.values())' in open(panel.__file__, encoding="utf-8").read())
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

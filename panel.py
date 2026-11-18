@@ -406,6 +406,49 @@ ANLIK_TAZE_SN = int(os.getenv("CARRY_PANEL_ANLIK_TAZE_SN", "900"))
 """MADDE 728: defter/anlik.json (carry_anlik.py, 5 dk'da bir) bu kadar saniyeden tazeyse pozisyon tablosu ondan gösterilir."""
 
 
+def devir_uygula(klasor: str, an: dict | None) -> dict:
+    """MADDE 828: zorunlu kapatıp aynı adetle yeniden açma (madde 827) borsada açık kârı GERÇEKLEŞMİŞE çevirdi. Panel bunu
+    kapanış hiç olmamış gibi gösterir: coin başına kapanışta gerçekleşen `r` (defter/devir_duzeltme.json), pozisyon hâlâ
+    açıkken "Kapanan"dan "Açık"a taşınır; giriş = borsa girişi − r / adet (≈ eski giriş). Toplam kâr (özsermaye) DEĞİŞMEZ.
+    Pozisyon sonradan küçülürse taşınan pay, yeniden açılıştan beri görülen EN KÜÇÜK adet oranıyla azalır (kapanan kısım
+    gerçekleşmişe döner, sonradan yeniden açılış onu diriltmez). `an` yerinde değiştirilir. Döner: {sembol: taşınan $}."""
+    try:
+        with open(os.path.join(klasor, "defter", "devir_duzeltme.json"), encoding="utf-8") as f:
+            dv = json.load(f)
+        t0, coin = float(dv["t_acilis"]), dv["coin"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return {}
+    if not an or not isinstance(an.get("pozisyonlar"), dict):
+        return {}
+    try:
+        with open(os.path.join(klasor, "defter", "anlik_poz.json"), encoding="utf-8") as f:
+            gec = json.load(f).get("s") or {}
+    except (OSError, ValueError, AttributeError):
+        gec = {}
+    out = {}
+    for s, d in coin.items():
+        p = an["pozisyonlar"].get(s)
+        adet, r = float(d.get("adet") or 0), float(d.get("r") or 0)
+        if not p or not adet or not r:
+            continue
+        oranlar = [float(k[1]) / adet for k in gec.get(s, []) if float(k[0]) >= t0] + [float(p.get("miktar") or 0) / adet]
+        frac = max(0.0, min(1.0, min(oranlar)))
+        q = float(p.get("miktar") or 0)
+        if frac <= 0 or not q:
+            continue
+        adj = r * frac
+        p["giris_borsa"] = p.get("giris")
+        p["giris"] = float(p["giris"]) - adj / q
+        p["gerceklesmemis"] = round(float(p.get("gerceklesmemis") or 0) + adj, 4)
+        if p.get("isaret") and p["giris"] > 0:
+            p["kar_yuzde"] = round((float(p["isaret"]) / p["giris"] - 1) * (1 if q > 0 else -1) * 100, 2)
+        p["devir"] = round(adj, 4)
+        out[s] = adj
+    if out:
+        an["gerceklesmemis_top"] = round(float(an.get("gerceklesmemis_top") or 0) + sum(out.values()), 2)
+    return out
+
+
 def anlik_oku(klasor: str, simdi: float | None = None) -> dict | None:
     """Taze anlık pozisyon görüntüsü ya da None (yok / bozuk / bayat) — madde 728."""
     try:
@@ -729,8 +772,18 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
         if kk is not None and o.get("icra"):
             o["icra"]["karar"] = kk
         an = anlik_oku(kl)
+        _devir = devir_uygula(kl, an)   # madde 828: an yerinde (giriş / gerçekleşmemiş) düzeltilir
         o["coin_ozet"] = coin_ozet(kl, an)
         o.update(hesap_ozet(df, an))
+        if _devir:   # taşınan tutar "Kapanan"dan düşer (Açık'a eklendi; toplam aynı)
+            if o.get("dokum"):
+                o["dokum"]["gerceklesen"] = round(o["dokum"]["gerceklesen"] - sum(_devir.values()), 2)
+            for k_ in o.get("coin_ozet") or []:
+                a_ = _devir.get(k_["s"] + "USDT")
+                if a_:
+                    k_["kapanan"] = round(k_["kapanan"] - a_, 4)
+                    k_["toplam"] = round(k_["kapanan"] + k_["funding"] + k_["komisyon"] + k_["acik"], 4)
+            o["devir"] = {"toplam": round(sum(_devir.values()), 2), "madde": 828}
         if an is not None:   # madde 728: canlı pozisyon tablosu
             o.update({"pozisyonlar": an["pozisyonlar"], "poz_kaynak": "canlı",
                       "poz_zaman": _yerel(an["zaman"]).strftime("%H:%M"),

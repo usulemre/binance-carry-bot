@@ -9270,3 +9270,11 @@ Testler: `test_carry_saglik` 10. bölüm (kayıtlı / kayıtsız / kısmi / geri
   Botun kendi emir yolu (`emirleri_hesapla` + `_emirleri_gonder`) 22/22 emir, ardından `kar_al_kur`: 23 kâr al + 8 felaket stop. Borsa adetleri hedefle ±%0,5 içinde (adım yuvarlaması).
   Giriş referansları ESKİ (kademe / kâr al / felaket eski girişten), yeniden açılış fiyat farkı ve iki yönlü komisyon kayıp olarak defterde. Yedek: `carry_dilimler.json.yedek_m826_*`.
   Betik: sunucuda `/opt/carry_m826/geri_kur_islem.py` (kuru / uygula).
+
+## Madde 828 — Panel: zorunlu kapanışın gerçekleşen zararı, pozisyon açıkken "Açık" kâr / zarara geri taşınır
+827'de pozisyonlar aynı adetle geri açıldı ama borsa kapanışta biriken açık kâr / zararı GERÇEKLEŞMİŞ yazdı (22 coin, toplam **−111,07 $**; BARD −39,2, INIT −36,6, BLESS −14,0 …)
+ve yeni giriş = yeniden açılış fiyatı. Panel artık `defter/devir_duzeltme.json`'daki coin başına `r`'yi (kapanış adedi × (kapanış fiyatı − kapanış öncesi Binance girişi), komisyonsuz
+≈ realizedPnl) "Kapanan"dan "Açık"a taşır; gösterilen giriş = borsa girişi − r / adet (≈ eski giriş, yeniden açılış fiyat farkı içinde). Toplam kâr (özsermaye) ve "fark" satırı
+değişmez. Pozisyon sonradan küçülürse (kâr al / tur) taşınan pay, yeniden açılıştan beri `anlik_poz` görüntülerinde görülen EN KÜÇÜK adet oranıyla azalır → kapanan kısım
+gerçekleşmişe döner; sonradan aynı yönde büyüme onu diriltmez. Borsa kayıtları ve carry.db DEĞİŞMEDİ (yalnız gösterim). Telegram / günlük rapor bu düzeltmeyi uygulamaz.
+Testler: `test_panel` madde 828 bölümü (tam / yarı / tamamen kapanmış / dosya yok).
