@@ -9164,3 +9164,10 @@ vol7 −0,07 → −0,13 (oynaklık iki dönemde de eksi). Eki-Kas en kötü %20
 "POMPADAN SONRA ALINAN long kaybettiriyor" (INIT deseni). Ancak bu tam olarak UCELE pompa filtresi: 196'da eski kitapta kârlı, 447-448'de 7 g / 30 g eşikleriyle
 RED — "2022-24'te +19 puan, 2025-26'da −120 puan; pompalanan coinler aynı zamanda en büyük kazananlar" → rejime bağlı. 800 / 802 ML aynı özellikleri içeriyordu.
 Otopsi bulgusu GERÇEK ama yeni değil; kural zaten ölçülmüş ve rejime bağlı. Rejim göstergesi (807 / 810) ile birlikte izleme notu.
+
+## Madde 816 — ÖLÇÜM: BTC / ETH spot-vadeli funding (cash-and-carry; kullanıcı: "araştırmaya devam"; karar vermez) — getiri ÇÖKMÜŞ
+Ön kontrol: top trader oranı / ls − top farkı 576-577'de RED (perakende hesap sayısı en iyi kalabalık ölçüsü).
+Spot long + vadeli short, sermaye 2 birim (spot + teminat), funding / 2 (her zaman açık) ya da yalnız 3 g funding > 0 iken (aç / kapa 0,2 % gidiş-dönüş):
+BTC her zaman 2020 +8,5 · 2021 +15,4 · 2022 +2,1 · 2023 +3,9 · 2024 +6,0 · 2025 +2,6 · 2026 +1,5 % · Eki-16 Kas +0,37 | ETH 13,7 · 18,8 · 0,4 · 4,1 · 6,5 · 2,5 · 1,0.
+Koşullu sürüm daha kötü (2026 BTC −0,4, ETH −2,1). 2025-26'da yıllık %1-2,5 → stabil coin faizinin altında; ayrı strateji olarak DEĞMEZ. Funding gelirinin majörlerde
+de sönmesi carry'nin long funding'inin (Eki-Kas +10 / 1,5 ay) düşmesiyle tutarlı: piyasa genelinde funding primi daralıyor.
