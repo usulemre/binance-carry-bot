@@ -9140,3 +9140,12 @@ Momentum kolu (SABİT, sonuç görmeden): günlük 00 UTC, evren uy; k = 3 g ve 
 5 g örtüşen tutuş (1 g gecikme), funding dahil, **10 bp** / devir (811'in iki katı, sığ coin kayması için). Harman: r = (1 − w) · P3T2(1,0x) + w · M. Kollar (2): w = 0,20 · 0,35.
 Ölçüt (685 / 686 ile aynı): eşit risk (Z.esit: dd / en kötü gün / p1 T4 tabanına) ≥ taban + 8 VE Sharpe ≤ 2024 ve 2025+ düşmez → ADAY (Aralık ileri verisiyle doğrulanmadan
 bota girmez; momentum ayrı motor / hesap ister). Ek rapor: Eki-16 Kas 2026 ve "kötü rejim günleri" (810: 60 g gerçekleşmiş K − F < 0) içindeki ortalama.
+**SONUÇ 813: RED (eşit risk ölçütü) — ama gerçek çeşitlendirme izi.** Momentum kolu tek başına (2021+, 10 bp) Sh 1,13, carry korelasyonu 0,04.
+| kol | yıllık | Sh | dd | en kötü gün | Sh ≤2024 / 2025+ | eşit risk (doz) | 2023 / 2025 / 2026 | Eki-16 Kas |
+|---|---|---|---|---|---|---|---|---|
+| taban | 239,3 | 4,05 | −13,3 | −7,41 | 4,03 / 4,14 | 315,2 (1,15) | 402 / 342 / 341 | −14,0 |
+| w 0,20 | 192,5 | **4,20** | −12,2 | −5,68 | 4,07 / **4,54** | 284,9 (1,25) | 256 / 326 / 306 | **−10,5** |
+| w 0,35 | 160,3 | 4,06 | −11,4 | −5,49 | 3,88 / 4,52 | 261,8 (1,35) | 174 / 310 / 276 | **−8,0** |
+686 ile aynı desen: Sharpe, dd, en kötü gün ve Eki-Kas iyileşiyor; ama momentumun düşük getirisi carry'yi sulandırıyor ve eşit risk dozu (1,25 / 1,35) bunu geri
+kazanamıyor (−30 / −53). Kötü rejim günlerinde fark yok (+0,36 / +0,33 / +0,32 %/gün) → momentum "kötü rejim sigortası" değil, genel çeşitlendirici. 2025+ Sharpe
+4,14 → 4,54 (yakın dönemde daha yararlı). Ölçüt RED; ileri izleme notu: w 0,20 kolu Aralık değerlendirmesinde (797) raporlanır.
