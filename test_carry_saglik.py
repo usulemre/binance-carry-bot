@@ -245,6 +245,46 @@ kontrol("12 short bacağın hepsi dönünce son blok F negatif (kırpma yutmuyor
         _f2[-1] < 0, f"(son blok {_f2[-1]*1e4:+.1f} bp)")
 
 
+print("\n10) EVREN GEÇMİŞİ (madde 826) - geçmiş bloklar O GÜNÜN evreniyle")
+_A = dunya(olcek=1.0)                                  # eski evren: yüksek prim
+_B = {f"Y{i}": [(z, 0.00001 * ((i % 5) - 2)) for z, _ in _A["S0"]] for i in range(30)}  # bugünkü: ~sıfır prim
+_hepsi = dict(_A); _hepsi.update(_B)
+_B_ad = list(_B)
+_bl = 120 * SAAT
+_kayit = []
+_t = SIMDI - 32 * GUN
+while _t < SIMDI:
+    _kayit = H.evren_kaydi_ekle(_kayit, _t, list(_A), tut_gun=40)
+    _t += 8 * SAAT
+_ref_A = H.metrikleri_hesapla(_A, SIMDI, 12)[1]
+_ref_B = H.metrikleri_hesapla(_B, SIMDI, 12)[1]
+_f_ev = H.metrikleri_hesapla(_hepsi, SIMDI, 12, evren_gecmisi=_kayit, simdiki_evren=_B_ad)[1]
+_f_yok = H.metrikleri_hesapla(_hepsi, SIMDI, 12, simdiki_evren=_B_ad)[1]
+kontrol("kayıt varken geçmiş bloklar eski evrenle (F = yalnız A ile)",
+        np.allclose(_f_ev, _ref_A), f"({[round(x*1e4,1) for x in _f_ev]} vs {[round(x*1e4,1) for x in _ref_A]})")
+kontrol("kayıt yokken eski davranış (bugünün evreni geriye uygulanır)",
+        np.allclose(_f_yok, _ref_B))
+_f_eski = H.metrikleri_hesapla(_A, SIMDI, 12)[1]
+_f_bos = H.metrikleri_hesapla(_A, SIMDI, 12, evren_gecmisi=[], simdiki_evren=None)[1]
+kontrol("evren argümanları verilmezse sonuç birebir aynı (geriye uyum)",
+        np.allclose(_f_eski, _f_bos))
+# kısmi kayıt: yalnız son 7 gün kayıtlı -> son blok(lar) A, öncekiler B
+_kis = [(z, e) for z, e in _kayit if z >= SIMDI - 7 * GUN]
+_f_kis = H.metrikleri_hesapla(_hepsi, SIMDI, 12, evren_gecmisi=_kis, simdiki_evren=_B_ad)[1]
+kontrol("kısmi kayıtta kayıtlı blok A, kayıtsızlar B ile",
+        np.isclose(_f_kis[-1], _ref_A[-1]) and np.allclose(_f_kis[:-2], _ref_B[:-2]),
+        f"({[round(x*1e4,1) for x in _f_kis]})")
+# budama ve tolerans
+_k2 = H.evren_kaydi_ekle([(SIMDI - 50 * GUN, ["X"]), (SIMDI - GUN, ["Y"])], SIMDI, ["Z", "Z"], tut_gun=40)
+kontrol("40 günden eski kayıt budandı, yeni kayıt tekilleştirildi",
+        [e for _, e in _k2] == [["Y"], ["Z"]], f"({_k2})")
+kontrol("blok_evreni en yakın ÖNCEKİ kaydı döner",
+        H.blok_evreni(_k2, SIMDI - 1) == ["Y"])
+kontrol("blok_evreni 24 sa'ten eski kayıtta None (bayat evren kullanılmaz)",
+        H.blok_evreni([(SIMDI - 30 * SAAT, ["Y"])], SIMDI) is None)
+kontrol("blok_evreni boş kayıtta None", H.blok_evreni([], SIMDI) is None)
+
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:

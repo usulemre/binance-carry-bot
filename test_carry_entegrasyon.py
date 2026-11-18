@@ -608,6 +608,9 @@ kontrol("sağlıklıyken normal işlem yapılıyor",
 kontrol("funding geçmişi gerçekten çekildi", c.client.gecmis_cagri > 0,
         f"({c.client.gecmis_cagri} çağrı)")
 kontrol("kapı durumu dosyaya yazıldı", os.path.exists(cb.SAGLIK_DOSYA))
+_evren_yol = os.path.splitext(cb.SAGLIK_DOSYA)[0] + "_evren.json"
+kontrol("madde 826: tur evreni kapı dosyasının YANINA yazıldı",
+        os.path.exists(_evren_yol) and len(_json.load(open(_evren_yol))) == 1)
 
 # 9b) edge ölünce: mevcut pozisyonların HEPSİ kapatılıyor mu
 c.pozisyonlari_ayarla(cb.toplam_hedef(cb.dilim_durum_oku()))
@@ -652,6 +655,8 @@ r = cb.bir_tur(c, dry_run=True)
 kontrol("dry-run'da bozuk tespit ediliyor", r.get("saglik") == "BOZUK")
 kontrol("dry-run'da BORSAYA emir gitmedi", c.client.gonderilen == [])
 kontrol("dry-run kapı dosyasını YAZMADI", not os.path.exists(cb.SAGLIK_DOSYA))
+kontrol("dry-run evren geçmişini YAZMADI (madde 826)",
+        not os.path.exists(os.path.splitext(cb.SAGLIK_DOSYA)[0] + "_evren.json"))
 
 # 9f) geçmiş API'si patlarsa bot DURMUYOR (sessiz duruş yok)
 temiz_ortam()

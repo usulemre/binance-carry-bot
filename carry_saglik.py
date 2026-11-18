@@ -146,11 +146,49 @@ def _yillik(kayit_listesi) -> float | None:
     return ort * (24.0 / aralik) * 365.0
 
 
+EVREN_TUT_GUN = 40          # madde 826: evren kaydı bu kadar gün tutulur (6x5 g pencere + sinyal payı)
+EVREN_TOLERANS_SAAT = 24.0  # blok başına en yakın ÖNCEKİ kayıt en çok bu kadar eski olabilir
+
+
+def evren_kaydi_ekle(kayit: list, simdi_ms: int, semboller: list,
+                     tut_gun: float = EVREN_TUT_GUN) -> list:
+    """Madde 826: tur evrenini geçmişe ekler, eskileri budar. Saf fonksiyon."""
+    alt = simdi_ms - tut_gun * 86400000.0
+    yeni = [(int(z), list(e)) for z, e in (kayit or []) if alt <= int(z) < simdi_ms]
+    yeni.append((int(simdi_ms), sorted(set(semboller))))
+    yeni.sort(key=lambda x: x[0])
+    return yeni
+
+
+def blok_evreni(kayit: list, t_ms: float,
+                tolerans_saat: float = EVREN_TOLERANS_SAAT):
+    """t anında geçerli evren: t'den önceki EN YAKIN kayıt (tolerans içinde).
+    Yoksa None (çağıran eski davranışa düşer)."""
+    if not kayit:
+        return None
+    aday = None
+    for z, e in kayit:
+        if z <= t_ms:
+            aday = (z, e)
+        else:
+            break
+    if aday is None or t_ms - aday[0] > tolerans_saat * 3600000.0:
+        return None
+    return aday[1]
+
+
 def metrikleri_hesapla(gecmis: dict, simdi_ms: int, n_legs: int,
                        blok_saat: float = 120.0, sinyal_saat: float = 72.0,
                        pencere: int = PENCERE,
-                       bacak_sinir: float = BACAK_SINIR):
+                       bacak_sinir: float = BACAK_SINIR,
+                       evren_gecmisi: list = None,
+                       simdiki_evren: list = None):
     """Funding geçmişinden IC, F ve DISP dizilerini DURUMSUZ hesaplar.
+
+    MADDE 826: `evren_gecmisi` verilirse ([(ms, [sembol, ...]), ...]) blok k,
+    t_k anındaki evrenle (`blok_evreni`) kurulur - bot o gün hangi evrenle
+    işlem yaptıysa gölge kitap da onunla. Kayıt yoksa `simdiki_evren`
+    (yoksa gecmis'teki tüm semboller) kullanılır = eski davranış.
 
     gecmis: {sembol: [(fundingTime_ms, fundingRate), ...]}
     Son `pencere` tamamlanmış blok değerlendirilir. Blok k için:
@@ -172,7 +210,13 @@ def metrikleri_hesapla(gecmis: dict, simdi_ms: int, n_legs: int,
     for k in range(pencere, -1, -1):
         t = simdi_ms - k * B
         sinyal = {}
+        _ev = blok_evreni(evren_gecmisi, t) if k > 0 else None
+        if _ev is None:
+            _ev = simdiki_evren if simdiki_evren is not None else gecmis.keys()
+        _ev = set(_ev)
         for s, kay in gecmis.items():
+            if s not in _ev:
+                continue
             pen = [(z, r) for z, r in kay if t - W < z <= t]
             y = _yillik(pen)
             if y is not None:

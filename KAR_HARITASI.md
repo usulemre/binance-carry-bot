@@ -9252,3 +9252,21 @@ Sunucuda: kapı dosyası (`carry_saglik.json`) yeni ölçümle uyumlu olduğu i�
 Gerekçe: 823 / 824 — sağlık kapısı backtest'te yok; 2021-26 yeniden kurguda tek tetiklenmesi de yanlış alarm olurdu; canlı evren küçükken (30 sembol) gölge kitap kırılgan.
 "uyar": dedektör ölçmeye ve "SAĞLIK UYARISI" bildirmeye devam eder, işlem akışına dokunmaz → canlı = backtest davranışı. 824 kırpması kodda kalır (uyarıların da doğru olması için).
 Geri dönüş: CARRY_SAGLIK_MODU=durdur. Uyarı gelirse elle değerlendirilir (gerçek yaygın funding çöküşü mü, tek coin / evren gürültüsü mü).
+
+## Madde 826 — Sağlık dedektörü geçmiş blokları O GÜNÜN evreniyle kurar (evren geçmişi)
+Sorun (824'te görüldü): dedektör `evren_sec`'in BUGÜNKÜ listesini 30 g geriye uyguluyordu. Bot ise her turu o günün evreniyle kuruyor. Evren değiştikçe geçmiş bloklar
+geriye dönük yeniden yazılıyordu: 16 Kas F +56,7 bp (o günün evreni) → aynı anlar bugünkü evrenle +8,3 bp. (Not: ayrı bir "işlem evreni" YOK — bot = `evren_sec` −
+`islem_yapilabilir` boyut süzmesi, 30 → 28; panelde görülen AKE / HUMA / JCT 11-15 Kas evrenlerinden kalan toz.)
+Düzeltme: `saglik_kontrol` her canlı turda (yaz=True) evreni kapı dosyasının yanına `<ad>_evren.json`a yazar (canlı: `carry_saglik_evren.json`; 40 g budama).
+`metrikleri_hesapla(evren_gecmisi=, simdiki_evren=)`: blok k, t_k'den önceki en yakın kayıtla (≤ 24 sa) kurulur; kayıt yoksa bugünün evreni (eski davranış). Funding geçmişi
+evrenlerin birleşimi için çekilir. Boyut süzmesindeki ±2 sembol farkı bilinçli bırakıldı (süzme bakiyeye bağlı ve kapıdan SONRA çalışıyor).
+Geçiş: geçmiş kayıt yok → ilk ~30 g kısmen eski davranış; log satırı "sağlık evreni (madde 826): k/6 blok kendi günün evreniyle". Kuru çalışma 18 Kas: SAGLIKLI, F +11,3 bp.
+Testler: `test_carry_saglik` 10. bölüm (kayıtlı / kayıtsız / kısmi / geriye uyum / budama / tolerans), entegrasyon 9a-9e (dosya yeri, dry-run yazmıyor).
+
+## Madde 827 — 18 Kas 14:47 kapanışı geri alındı (kullanıcı kararı, 2026-11-18); kapı 825'e göre UYARI modunda
+- Sunucu `.env`: `CARRY_SAGLIK_MODU=uyar` uygulandı (madde 825 kararı; yedek `.env.yedek_m826`). Gölge kitap ölçülmeye ve Telegram'a uyarı göndermeye devam eder, kitabı KAPATMAZ (backtest ile aynı davranış).
+- Geri kurma (bot durmuşken, 15:57-16:05 UTC): kapanış öncesi adet = kapanış emirleri (emir tablosu, 14:47 + 15 dk, FILLED) + kalan toz. Dilim/sembol eşleşmesi ve giriş
+  referansları kapanışta silinmeyen `dilim_fiyat`'tan; her sembolün adedi onu içeren dilimlere girişte eşit dolar olacak şekilde dağıtıldı (15 dilim, 106 bacak, sira 6 korundu).
+  Botun kendi emir yolu (`emirleri_hesapla` + `_emirleri_gonder`) 22/22 emir, ardından `kar_al_kur`: 23 kâr al + 8 felaket stop. Borsa adetleri hedefle ±%0,5 içinde (adım yuvarlaması).
+  Giriş referansları ESKİ (kademe / kâr al / felaket eski girişten), yeniden açılış fiyat farkı ve iki yönlü komisyon kayıp olarak defterde. Yedek: `carry_dilimler.json.yedek_m826_*`.
+  Betik: sunucuda `/opt/carry_m826/geri_kur_islem.py` (kuru / uygula).

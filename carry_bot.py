@@ -1599,6 +1599,9 @@ getiriyi de kaçırdı (+22.9% -> +3.5%).
 "kapali": dedektör hiç çalışmaz (API çağrısı da yapılmaz)."""
 
 SAGLIK_DOSYA = os.getenv("CARRY_SAGLIK_LOG", "carry_saglik.json")
+# Madde 826: her turun evreni (zaman, semboller) SAGLIK_DOSYA'nın yanında
+# "<ad>_evren.json"a yazılır. Dedektör geçmiş blokları bugünün değil O GÜNÜN
+# evreniyle kurar. Dosya / kayıt yoksa eski davranış (bugünün evreni).
 """Sadece kapının durumu (açık/kapalı, ne zamandan beri temiz)
 saklanır. Metrikler her turda Binance'ten DURUMSUZ yeniden hesaplanır,
 bu yüzden bot ilk günden silahlıdır ve bozuk bir durum dosyası
@@ -4416,8 +4419,20 @@ def saglik_kontrol(client: ExchangeClient, semboller: list[str],
     _sag_pencere = max(FUNDING_WINDOW_HOURS, 24.0)
     geri_saat = blok * (carry_saglik.PENCERE + 1) + max(_sag_pencere, 72.0) + 24
     bas = simdi - int(geri_saat * 3600000)
+    # MADDE 826: geçmiş blokları o günün evreniyle kurmak için tur evrenleri
+    # kaydedilir; funding geçmişi bu evrenlerin BİRLEŞİMİ için çekilir.
+    # Kapı dosyasının YANINDA (canlı: carry_saglik_evren.json; testte geçici klasör)
+    evren_yol = os.path.splitext(yol)[0] + "_evren.json"
+    try:
+        with open(evren_yol, encoding="utf-8") as fh:
+            evren_kayit = [(int(z), list(e)) for z, e in json.load(fh)]
+    except (OSError, ValueError, TypeError):
+        evren_kayit = []
+    evren_kayit = [(z, e) for z, e in evren_kayit if bas <= z < simdi]
+    birlesim = list(dict.fromkeys(list(semboller)
+                                  + [x for _, e in evren_kayit for x in e]))
     gecmis = {}
-    for i, s in enumerate(semboller):
+    for i, s in enumerate(birlesim):
         try:
             h = _veri(client).futures_funding_rate(symbol=s, startTime=bas,
                                                     endTime=simdi, limit=1000)
@@ -4430,7 +4445,8 @@ def saglik_kontrol(client: ExchangeClient, semboller: list[str],
     try:
         ic, f, disp = carry_saglik.metrikleri_hesapla(
             gecmis, simdi, SAGLIK_GOLGE_BACAK, blok_saat=blok,
-            sinyal_saat=_sag_pencere)
+            sinyal_saat=_sag_pencere, evren_gecmisi=evren_kayit,
+            simdiki_evren=list(semboller))
         durum, gerekce = carry_saglik.saglik_durumu(ic, f, disp)
     except Exception as e:
         logger.warning("sağlık ölçülemedi (%s) - kapı AÇIK varsayılıyor", e)
@@ -4444,6 +4460,12 @@ def saglik_kontrol(client: ExchangeClient, semboller: list[str],
     kapi = carry_saglik.kapi_guncelle_zamanli(kapi, durum, simdi, blok_saat=blok)
     if yaz:   # kuru çalışma kapıyı DEĞİŞTİRMEZ - test canlıyı etkilemesin
         try:
+            with open(evren_yol, "w", encoding="utf-8") as fh:
+                json.dump(carry_saglik.evren_kaydi_ekle(evren_kayit, simdi,
+                                                        list(semboller)), fh)
+        except OSError as e:
+            logger.warning("evren geçmişi yazılamadı: %s", e)
+        try:
             with open(yol, "w", encoding="utf-8") as fh:
                 json.dump(kapi, fh)
         except OSError as e:
@@ -4455,6 +4477,10 @@ def saglik_kontrol(client: ExchangeClient, semboller: list[str],
         logger.warning("sağlık ölçümü için geçmiş yetersiz: %s", gerekce)
     else:
         logger.info("edge sağlığı: %s", gerekce)
+    _kayitli = sum(1 for k in range(1, carry_saglik.PENCERE + 1)
+                   if carry_saglik.blok_evreni(evren_kayit, simdi - k * blok * 3600000) is not None)
+    logger.info("sağlık evreni (madde 826): %d/%d blok kendi günün evreniyle, birleşim %d sembol",
+                _kayitli, carry_saglik.PENCERE, len(birlesim))
     if not kapi["acik"] and durum == "SAGLIKLI":
         kalan = (carry_saglik.TOPARLANMA * blok * 3600000.0
                  - (simdi - kapi["temiz_bas_ms"])) / 86400000.0
