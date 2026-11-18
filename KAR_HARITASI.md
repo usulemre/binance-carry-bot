@@ -9132,3 +9132,11 @@ incele"; > %50 → "sızıntı şüphesi, ayrıntılı denetim". Ayrıca 2026 ve
 ×1,15 yıllar 2020 112 / 107 · 2021 637 / 607 · 2022 75 / 74 · 2023 402 / 387 · 2024 144 / 133 · 2025 342 / 291 · 2026 341 / 298 · Eki-16 Kas −14,0 / −14,1. Her yıl
 küçük, düzgün bozulma; çöküş yok → kenar bir zaman damgası hatasına dayanmıyor. Gözden kaçan hata aramasında kapananlar: survivorship (146), komisyon (659), funding
 sınır etkisi (687 / 688, ~yılda %2-4), limit dolum (796), sızıntı (812). Kalan açıklama: rejim (807) + çoklu deneme iyimserliği.
+
+## Madde 813 ÖN KAYIT (2026-11-18, sonuç görülmeden; kullanıcı: "şu anki rejime uygun bir şey geliştirmek istersek en kârlı uygun testi yapalım") — CARRY + KESİTSEL MOMENTUM KOLU
+Gerekçe: rejim "kalabalık haklı / düşen düşmeye devam" = momentum. Zamanlama (773 / 801 / 808 / 810) hep RED → her zaman açık ikinci kol. 811: momentum Sh 1,1-1,4,
+carry ile korelasyon ≈ 0, Eki-Kas hafif artı. 686 (BTC/ETH trend harmanı) RED'di: tek iki coin, carry'nin tek-coin çöküşlerini yakalamıyordu; burada tüm evren kesitsel.
+Momentum kolu (SABİT, sonuç görmeden): günlük 00 UTC, evren uy; k = 3 g ve k = 7 g kollarının EŞİT ortalaması (seçim yok); üst 10 long / alt 10 short, her bacak 0,5 brüt,
+5 g örtüşen tutuş (1 g gecikme), funding dahil, **10 bp** / devir (811'in iki katı, sığ coin kayması için). Harman: r = (1 − w) · P3T2(1,0x) + w · M. Kollar (2): w = 0,20 · 0,35.
+Ölçüt (685 / 686 ile aynı): eşit risk (Z.esit: dd / en kötü gün / p1 T4 tabanına) ≥ taban + 8 VE Sharpe ≤ 2024 ve 2025+ düşmez → ADAY (Aralık ileri verisiyle doğrulanmadan
+bota girmez; momentum ayrı motor / hesap ister). Ek rapor: Eki-16 Kas 2026 ve "kötü rejim günleri" (810: 60 g gerçekleşmiş K − F < 0) içindeki ortalama.
