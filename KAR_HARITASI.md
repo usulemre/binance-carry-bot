@@ -9201,3 +9201,10 @@ Eki-Kas en kötü short'lar: TIA −2,59 · ARIA −1,96 · AKE −1,36 · 龙�
 Okuma: İKİ tarafta da "kalabalık haklı" — long'da kalabalık short haklı (815), short'ta kalabalık long'un bir kısmı sıçradı (TIA / ARIA). Bu, trend / momentum rejimiyle
 tutarlı (811 / 813: kesitsel momentum Eki-Kas artı). Carry'nin iki bacağı da "kalabalığa karşı" olduğu için rejim ikisini birden vuruyor; 2022'de short tarafı kitabı
 taşımıştı, bu kez taşımıyor.
+
+## Madde 821 ÖN KAYIT (2026-11-18, sonuç görülmeden; kullanıcı: "başka testler yap, daha iyi bot yapabiliriz") — MOMENTUM MOTORU, TASARIM / DOĞRULAMA AYRIMI
+Ön not: momentum kolunun günlük oynaklığı carry'nin 1,13 katı → sermaye payı ≈ risk payı; 813'ü risk payıyla yeniden karıştırmak sonucu değiştirmez (koşulmadı).
+Yöntem (aşırı uydurmaya karşı): 27 varyant = geriye bakış {3, 7, 14} g × tutuş {3, 5, 10} g × bacak {5, 10, 20}; her bacak 0,5 brüt, örtüşen tutuş, 1 g gecikme, funding dahil, 10 bp / devir.
+TASARIM 2021-01-01 → 2024-12-31: Sharpe'a göre EN İYİ varyant seçilir (tek seçim). DOĞRULAMA 2025-01-01 → 2026-11-16 (dokunulmamış): seçilen varyantın Sharpe'ı ve
+w 0,20 harmanı (r = 0,8 · P3T2 + 0,2 · M). Ölçüt: (a) doğrulamada tek başına Sharpe ≥ 0,8 VE (b) harman doğrulama döneminde P3T2'ye göre Sharpe ≥ +0,2 ve maks düşüş daha sığ
+→ "İKİNCİ MOTOR ADAYI" (ayrı alt hesap, ileri izleme, kullanıcı onayı); aksi RED. Ek: seçilen varyantın tasarım / doğrulama Sharpe farkı (aşırı uydurma ölçüsü), Eki-16 Kas.
