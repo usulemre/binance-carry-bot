@@ -9128,3 +9128,7 @@ KÖTÜ (günlük devir 0,7-1,5 → maliyet). Geri dönüş Sh −0,59 / −1,14 
 ls / kalabalık, metrikler, TP / stop dahil HER bilgi 4 sa eskir). Gerçek kenar: hafif bozulma; zaman damgası sızıntısı (ör. ls metriği / funding damgası 1 bar ileri): ÇÖKÜŞ.
 Kollar (2 hiza): P3T2 + GEC=2, `/tmp/m812`. Taban `/tmp/m783d` (GEC=1). Okuma ölçütü (önceden): eşit risk düşüşü ≤ %25 → "sızıntı izi yok"; %25-50 → "zamanlamaya duyarlı,
 incele"; > %50 → "sızıntı şüphesi, ayrıntılı denetim". Ayrıca 2026 ve Eki-Kas raporlanır. Karar vermez.
+**SONUÇ 812 (2 koşu rc 0): SIZINTI İZİ YOK.** GEC=1 / GEC=2: yıllık 239,3 / 222,8 · Sh 4,05 / 3,91 · dd −13,3 / −13,6 · eşit risk 315,2 / 270,8 (**−%14**, ölçüt ≤ %25) ·
+×1,15 yıllar 2020 112 / 107 · 2021 637 / 607 · 2022 75 / 74 · 2023 402 / 387 · 2024 144 / 133 · 2025 342 / 291 · 2026 341 / 298 · Eki-16 Kas −14,0 / −14,1. Her yıl
+küçük, düzgün bozulma; çöküş yok → kenar bir zaman damgası hatasına dayanmıyor. Gözden kaçan hata aramasında kapananlar: survivorship (146), komisyon (659), funding
+sınır etkisi (687 / 688, ~yılda %2-4), limit dolum (796), sızıntı (812). Kalan açıklama: rejim (807) + çoklu deneme iyimserliği.
