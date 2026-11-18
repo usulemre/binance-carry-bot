@@ -9122,3 +9122,9 @@ Eki-16 Kas −2,9 / +0,8 / +2,7. Carry (P3T2) ile günlük korelasyon ≈ +0,02 
 811 EK (kullanıcı: "günlük tutsan ne olur"): aynı kurgu, 1 g tutuş (her gün tam yenileme), 5 / 10 bp. Momentum Sh −0,46 / +0,46 / +0,66 (k = 1 / 3 / 7, 5 bp) — 5 g tutuştan
 KÖTÜ (günlük devir 0,7-1,5 → maliyet). Geri dönüş Sh −0,59 / −1,14 / −1,15; her yıl derin eksi (2025-26 −62 … −89). TEK istisna: geri dönüş 7 g günlük Eki-16 Kas +24,7 / +22,4
 — 12 varyant içinde tek dönemde parlayan biri (seçim); aynı kural 2025 −86, 2026 −62. Eylem yok.
+
+## Madde 812 ÖN KAYIT (2026-11-18, sonuç görülmeden; kullanıcı: "testler çok iyiydi, gözden kaçırdığımız bir şey olabilir mi") — GECİKME TESTİ (sızıntı dedektörü)
+687 look-ahead'i KOD OKUYARAK aradı (bulmadı). Deneysel doğrulama hiç yapılmadı. Yöntem: GEC=1 → GEC=2 (karar ile icra arası 1 bar = 4 sa EK gecikme; funding sinyali,
+ls / kalabalık, metrikler, TP / stop dahil HER bilgi 4 sa eskir). Gerçek kenar: hafif bozulma; zaman damgası sızıntısı (ör. ls metriği / funding damgası 1 bar ileri): ÇÖKÜŞ.
+Kollar (2 hiza): P3T2 + GEC=2, `/tmp/m812`. Taban `/tmp/m783d` (GEC=1). Okuma ölçütü (önceden): eşit risk düşüşü ≤ %25 → "sızıntı izi yok"; %25-50 → "zamanlamaya duyarlı,
+incele"; > %50 → "sızıntı şüphesi, ayrıntılı denetim". Ayrıca 2026 ve Eki-Kas raporlanır. Karar vermez.
