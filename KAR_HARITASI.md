@@ -9226,3 +9226,12 @@ Strateji arası zamanlama da (773 / 801 / 808 / 810 ile birlikte) kapandı.
 **783 UZATMA 4 — 17 Kasım (zemin 17 Kas 20:00, ≤ 16 Kas parite 0,006 puan; `/tmp/m783e`):** backtest 17 Kas **+2,06** (long +1,03 · short +1,05; BTW long +0,75, JCT short +0,59,
 MUU short +0,41, KAVA / INJ long; en kötü HUMA / AKE long −0,2). Demo 17 Kas +24,77 $ ≈ **+1,31**. Toplam 6-17 Kas: backtest rampa ayarlı **−6,87** · tam 7-17 −7,81 · demo ≈ **−4,4**
 (panel −87 $). BTW 7-17 Kas toplamı −3,43 (demoda yok) → BTW hariç backtest ≈ −3,4, demo ≈ −4,4: fark ~1 puan, sınır içinde. Toparlanma iki tarafta da aynı gün.
+
+## Madde 823 — CANLI OLAY: SAĞLIK KAPISI 2026-11-18 17:47'de kitabı KAPATTI ("funding geliri −0,4 bp ≤ 0"); yeniden kurgu bunu DESTEKLEMİYOR
+Olay: canlı demo, madde 139 sağlık kapısı (yalnız canlıda; backtest P3T2'de YOK — 8767), F ölçütü (gölge kitap 12 + 12 bacak, 24 sa sinyal, REBALANCE_HOURS 120 → 6 blok = 30 g
+kayan ort.) ≤ 0 → tüm pozisyonlar kapatıldı, dilimler 0/15. Yeniden açılış: 2 × 120 sa = 10 g kesintisiz SAGLIKLI.
+Yeniden kurgu (günlük funding, evren uy, aynı tanım: 1 g sinyal en düşük / en yüksek 12, sonraki 5 g gerçekleşen, 6 blok ort.): 2026-11-17 gölge F **+215 bp / blok** (eşik 0).
+2021-26'da F ≤ 0 yalnız 3 gün (2025-08-18 / 23 / 28) ve sonrası strateji 30 g +3 … +7 %, 60 g +19 … +23 % (yani o kapanış da yanlış alarm olurdu). Çeyrek ort. gölge F 2025-26'da
+TARİHSEL EN YÜKSEK (+131 … +406 bp) → "funding edge'i öldü" okuması veriyle çelişiyor. Şüphe: canlı ölçümde veri sorunu (sembol başına funding geçmişi çekimi; hata /
+eksik sembol → gölge kitap bileşimi bozulur) ya da 1 sa / 4 sa aralıklı sembollerde toplama farkı. Sunucu günlüğü olmadan kesin değil.
+Öneri (kullanıcı onayı gerekir): CARRY_SAGLIK_MODU=uyar (yalnız uyarı; backtest ile aynı davranış) + günlükten "edge sağlığı / sağlık" satırları ve carry_saglik.json incelenir.
