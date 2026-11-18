@@ -9171,3 +9171,11 @@ Spot long + vadeli short, sermaye 2 birim (spot + teminat), funding / 2 (her zam
 BTC her zaman 2020 +8,5 · 2021 +15,4 · 2022 +2,1 · 2023 +3,9 · 2024 +6,0 · 2025 +2,6 · 2026 +1,5 % · Eki-16 Kas +0,37 | ETH 13,7 · 18,8 · 0,4 · 4,1 · 6,5 · 2,5 · 1,0.
 Koşullu sürüm daha kötü (2026 BTC −0,4, ETH −2,1). 2025-26'da yıllık %1-2,5 → stabil coin faizinin altında; ayrı strateji olarak DEĞMEZ. Funding gelirinin majörlerde
 de sönmesi carry'nin long funding'inin (Eki-Kas +10 / 1,5 ay) düşmesiyle tutarlı: piyasa genelinde funding primi daralıyor.
+
+## Madde 817 — ÖLÇÜM: funding primi çeyrek çeyrek (kullanıcı: "araştırmaya devam"; karar vermez) — 816'daki "prim daralıyor" genellemesi ALT long'lar için YANLIŞ
+Evren (uy) günlük funding, çeyrek ort. yıllıklaştırılmış: alt %10 (long adayları) · üst %10 · |medyan|; P3T2 defteri (m801, iki hiza, ×1,15) long / short funding geliri (çeyrek toplamı, % kitap).
+2022-2024 alt %10 −9 … −31 % yıllık, bot long funding çeyrekte 2-8 (2023Q3 33,5 istisna). 2025Q1 −29 / 16,0 · Q2 −61 / 20,0 · Q3 −34 / 15,1 · Q4 **−159 / 26,5** ·
+2026Q1 **−258 / 41,8** · Q2 −112 / 24,6 · Q3 −104 / 21,9 · Q4 (1,5 ay) −79 / 9,5. |medyan| 2022'den beri ~%9-11 sabit; üst %10 (short tarafı) 10-35. Bot short funding ≤ 2.
+Okuma: majörlerde (BTC / ETH, 816) funding primi sönmüş; ama ALT long adaylarında 2025-26'da TERSİNE patlamış (alt short kalabalığı tarihsel en yüksek). Long tarafının
+funding geliri 2022-24'ün 3-8 katı. Eki-Kas'ta düşüyor ama hâlâ 2022-24'ün üstünde. Kayıp kaynağı funding değil, fiyat: kalabalık short ödüyor VE haklı çıkıyor.
+816'nın son cümlesi ("funding primi daralıyor") düzeltildi: daralma yalnız majörlerde.
