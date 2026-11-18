@@ -9179,3 +9179,11 @@ Evren (uy) günlük funding, çeyrek ort. yıllıklaştırılmış: alt %10 (lon
 Okuma: majörlerde (BTC / ETH, 816) funding primi sönmüş; ama ALT long adaylarında 2025-26'da TERSİNE patlamış (alt short kalabalığı tarihsel en yüksek). Long tarafının
 funding geliri 2022-24'ün 3-8 katı. Eki-Kas'ta düşüyor ama hâlâ 2022-24'ün üstünde. Kayıp kaynağı funding değil, fiyat: kalabalık short ödüyor VE haklı çıkıyor.
 816'nın son cümlesi ("funding primi daralıyor") düzeltildi: daralma yalnız majörlerde.
+
+## Madde 818 — ÖLÇÜM: funding aşırılığı dilimi → 5 g net ödeme (fiyat + funding, TP'li), yıl yıl (kullanıcı: "araştırmaya devam"; karar vermez)
+Negatif funding'li evren coinleri, son 3 g ort. funding (yıllık %) dilimi; 5 g TP'li ödeme ort. (%): <−300 · −300..−150 · −150..−75 · −75..−30 · −30..−10 · −10..0
+2021 −7,97 · 5,64 · 2,61 · 2,64 · 3,22 · 3,01 | 2022 −1,22 · 0,89 · 1,00 · 0,64 · 0,16 · −0,93 | 2023 6,75 · 3,42 · 3,95 · 1,31 · 2,03 · 2,27 | 2024 3,89 · 0,44 · 1,32 · 1,88 · 1,55 · 2,15 |
+2025 1,90 · −1,55 · −0,91 · −1,21 · −0,19 · −0,38 | 2026 0,21 · −1,79 · −0,42 · −1,08 · −0,34 · −0,35. Coin-gün (<−300): 2022-24 ~140-240 → 2025 1.422, 2026 1.716.
+Okuma: (1) "funding ne kadar aşırı, kalabalık o kadar haklı" DESTEKLENMİYOR — 2023-26'da en aşırı dilim en iyi ya da iyiler arasında; tavan / eleme kuralı yanlış olur.
+(2) 2025-26'da ham negatif-funding long'u HER dilimde ~0 / eksi (2021-24 hep artı) → ham kenar gitti (6. bölümdeki kenar kaymasıyla tutarlı); strateji kârı kalabalık
+filtresi (807, +1,74) + TP mekaniğinden. (3) Aşırı negatif funding'li coin sayısı 2025-26'da 7-10 kat → alt short kalabalığı yapısal büyüdü.
