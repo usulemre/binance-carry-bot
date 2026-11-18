@@ -9247,3 +9247,8 @@ Düzeltme: `carry_saglik.BACAK_SINIR = 0.01` — F'de her bacağın blok içi ge
 kırpılmaz. Eşikler (F 0, DISP 2,86 bp, pencere 6, toparlanma 2) DEĞİŞMEDİ. Kırpmayla 18 Kas 14:47 F = **+8,5 bp** (son blok +10) → kapı kapanmazdı.
 Testler (`test_carry_saglik` 9. bölüm): tek coin şokunda SAGLIKLI; kırpmasız BOZUK (olay yeniden üretiliyor); kalıcılık ölümü ve 12 short bacağın hepsinin dönmesi yine yakalanıyor.
 Sunucuda: kapı dosyası (`carry_saglik.json`) yeni ölçümle uyumlu olduğu için {"acik": true} ile sıfırlandı (kullanıcı onayı, 2026-11-18).
+
+## Madde 825 — KULLANICI KARARI (2026-11-18 18:47): CARRY_SAGLIK_MODU=uyar
+Gerekçe: 823 / 824 — sağlık kapısı backtest'te yok; 2021-26 yeniden kurguda tek tetiklenmesi de yanlış alarm olurdu; canlı evren küçükken (30 sembol) gölge kitap kırılgan.
+"uyar": dedektör ölçmeye ve "SAĞLIK UYARISI" bildirmeye devam eder, işlem akışına dokunmaz → canlı = backtest davranışı. 824 kırpması kodda kalır (uyarıların da doğru olması için).
+Geri dönüş: CARRY_SAGLIK_MODU=durdur. Uyarı gelirse elle değerlendirilir (gerçek yaygın funding çöküşü mü, tek coin / evren gürültüsü mü).
