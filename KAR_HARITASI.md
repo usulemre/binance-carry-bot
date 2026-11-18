@@ -9208,3 +9208,8 @@ Yöntem (aşırı uydurmaya karşı): 27 varyant = geriye bakış {3, 7, 14} g �
 TASARIM 2021-01-01 → 2024-12-31: Sharpe'a göre EN İYİ varyant seçilir (tek seçim). DOĞRULAMA 2025-01-01 → 2026-11-16 (dokunulmamış): seçilen varyantın Sharpe'ı ve
 w 0,20 harmanı (r = 0,8 · P3T2 + 0,2 · M). Ölçüt: (a) doğrulamada tek başına Sharpe ≥ 0,8 VE (b) harman doğrulama döneminde P3T2'ye göre Sharpe ≥ +0,2 ve maks düşüş daha sığ
 → "İKİNCİ MOTOR ADAYI" (ayrı alt hesap, ileri izleme, kullanıcı onayı); aksi RED. Ek: seçilen varyantın tasarım / doğrulama Sharpe farkı (aşırı uydurma ölçüsü), Eki-16 Kas.
+**SONUÇ 821: ÖLÇÜT RED (b), ama momentum kenarı doğrulamada SAĞLAM.** 27 varyantın 27'si doğrulamada (2025-01 → 2026-11-16) artı: Sh 1,27 … 2,09 (medyan 1,58); tasarımda
+(2021-24) −0,49 … +0,97. Tasarımla seçilen k 7 / tut 3 / n 5: tasarım 0,97 → doğrulama 1,29 (27'de 25. sıra — seçim zayıf ama kenar ailede geniş) · Eki-16 Kas +1,7 %.
+Doğrulamada harman (×1,15): P3T2 Sh 3,92 · dd −19,2 · +1.663 % · Eki-16 Kas −14,0 | w 0,20 Sh 3,81 · dd **−15,8** · +1.578 % · **−9,5**. (a) ✓ (b) ✗ (Sharpe +0,2 yok; dd daha sığ ✓).
+Okuma: kesitsel momentum 2025-26'da gerçek ve parametreye duyarsız bir kenar (tek başına Sh ~1,3-2); 2021-24'te zayıf. Carry'nin Sharpe'ı (3,9) çok yüksek olduğu için
+%20 harman Sharpe'ı artırmıyor, düşüşü ~%18 sığlaştırıyor. Ayrı ikinci motor ancak "düşük düşüş" önceliğinde anlamlı → kullanıcı kararı; bota girmez.
