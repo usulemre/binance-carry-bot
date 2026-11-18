@@ -9187,3 +9187,9 @@ Negatif funding'li evren coinleri, son 3 g ort. funding (yıllık %) dilimi; 5 g
 Okuma: (1) "funding ne kadar aşırı, kalabalık o kadar haklı" DESTEKLENMİYOR — 2023-26'da en aşırı dilim en iyi ya da iyiler arasında; tavan / eleme kuralı yanlış olur.
 (2) 2025-26'da ham negatif-funding long'u HER dilimde ~0 / eksi (2021-24 hep artı) → ham kenar gitti (6. bölümdeki kenar kaymasıyla tutarlı); strateji kârı kalabalık
 filtresi (807, +1,74) + TP mekaniğinden. (3) Aşırı negatif funding'li coin sayısı 2025-26'da 7-10 kat → alt short kalabalığı yapısal büyüdü.
+
+## Madde 819 — ÖLÇÜM: long / short tarafı yıllık NET katkısı (m801 defteri, ×1,15, basit toplam; kullanıcı: "longlar hep kaybediyor"; karar vermez)
+Yıl: long fiyat / long funding / LONG NET / SHORT NET — 2020 63 / 4 / 67 / 14 · 2021 156 / −2 / 153 / 59 · 2022 −41 / 18 / −22 / 91 · 2023 127 / 46 / 173 / 2 · 2024 49 / 10 / 59 / 44 ·
+2025 −2 / 78 / 75 / 91 · 2026 −42 / 98 / 55 / 102. Long NET aylık artı oranı 2021-26 %66. Art arda iki eksi long ayı: 2025-01/02 (−5 / −6 → sonra +9 / +18); şimdi 2026-10/11
+(−9 / −19; Kasım 2025'ten beri en kötü). Okuma: long tarafı 7 yılın 6'sında net artı; 2025-26'da fiyattan kaybedip funding'den kazanıyor (tasarım). Aralık izlemesine (797) "long NET
+aylık" eklenir: 3. eksi ay = rejim kararında güçlü işaret.
