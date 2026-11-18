@@ -9213,3 +9213,9 @@ w 0,20 harmanı (r = 0,8 · P3T2 + 0,2 · M). Ölçüt: (a) doğrulamada tek ba�
 Doğrulamada harman (×1,15): P3T2 Sh 3,92 · dd −19,2 · +1.663 % · Eki-16 Kas −14,0 | w 0,20 Sh 3,81 · dd **−15,8** · +1.578 % · **−9,5**. (a) ✓ (b) ✗ (Sharpe +0,2 yok; dd daha sığ ✓).
 Okuma: kesitsel momentum 2025-26'da gerçek ve parametreye duyarsız bir kenar (tek başına Sh ~1,3-2); 2021-24'te zayıf. Carry'nin Sharpe'ı (3,9) çok yüksek olduğu için
 %20 harman Sharpe'ı artırmıyor, düşüşü ~%18 sığlaştırıyor. Ayrı ikinci motor ancak "düşük düşüş" önceliğinde anlamlı → kullanıcı kararı; bota girmez.
+
+## Madde 822 ÖN KAYIT (2026-11-18, sonuç görülmeden; kullanıcı: "iyileştirme ve araştırmaya devam") — CARRY / MOMENTUM ARASI PERFORMANSA GÖRE AĞIRLIK
+820: iki bacak da "kalabalığa karşı" → trend rejiminde carry kaybeder, momentum (821) kazanır. Kural (SABİT): momentum = 821'in tasarımla seçtiği k 7 / tut 3 / n 5 (10 bp).
+w_t = 0,50 eğer son 60 g Sharpe(M) > son 60 g Sharpe(P3T2), değilse 0,10 (1 g gecikmeli; değişimde ek maliyet 10 bp × |Δw|). r = (1 − w) · P + w · M.
+Karşılaştırma: P3T2 yalnız · sabit w 0,20 · dinamik. Dönemler: tasarım 2021-24, doğrulama 2025-01 → 2026-11-16. Ölçüt: doğrulamada dinamik Sharpe ≥ P3T2 + 0,2 VE maks düşüş daha sığ
+VE tasarımda da P3T2'den kötü değil (Sh farkı ≥ −0,1) → ADAY (ayrı motor, ileri izleme, kullanıcı onayı); aksi RED.
