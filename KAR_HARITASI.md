@@ -9149,3 +9149,10 @@ bota girmez; momentum ayrı motor / hesap ister). Ek rapor: Eki-16 Kas 2026 ve "
 686 ile aynı desen: Sharpe, dd, en kötü gün ve Eki-Kas iyileşiyor; ama momentumun düşük getirisi carry'yi sulandırıyor ve eşit risk dozu (1,25 / 1,35) bunu geri
 kazanamıyor (−30 / −53). Kötü rejim günlerinde fark yok (+0,36 / +0,33 / +0,32 %/gün) → momentum "kötü rejim sigortası" değil, genel çeşitlendirici. 2025+ Sharpe
 4,14 → 4,54 (yakın dönemde daha yararlı). Ölçüt RED; ileri izleme notu: w 0,20 kolu Aralık değerlendirmesinde (797) raporlanır.
+
+## Madde 814 — ÖLÇÜM (kullanıcı: "daha iyi araştırmalara farklı yaklaşımlara devam"; karar vermez) — taraf payı ve profil ortalaması zaten kapalı; ½ P3T2 + ½ T6KS
+Ön kontrol: short payı %60 / %40 (566) iki yönde Sharpe düşürür; taraf zamanlaması (215) RED; profil harmanları (6946: ½T6+½T7K 275,8, ½T4+½T7K 262,7) T7K altında.
+Yeni ölçüm (mevcut seriler, zemin 15 Kas): korelasyon P3T2 / T6KS 0,975. P3T2 239,3 · Sh 4,05 · dd −13,3 · eşit risk 315,2 · Eki-15 Kas −11,0 | T6KS 318,2 · 4,14 · −16,5 ·
+272,9 · −8,8 | ½ + ½ 277,1 · 4,12 · −14,9 · 286,4 · −9,9 → RED (profiller neredeyse aynı şeyi yapıyor; ortalama çeşitlendirme vermiyor).
+Arama alanı notu: aynı veriyle ölçülebilen kural / ML / harman aileleri tükenmiş durumda (800-814). Yeni kenar ancak YENİ VERİ ile (likidasyon akışı 723, uzun kilit
+takvimi, emir defteri) ya da farklı strateji sınıfıyla (spot-vadeli baz, piyasa yapıcılık) mümkün.
