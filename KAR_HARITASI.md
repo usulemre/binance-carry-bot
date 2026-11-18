@@ -9193,3 +9193,11 @@ Yıl: long fiyat / long funding / LONG NET / SHORT NET — 2020 63 / 4 / 67 / 14
 2025 −2 / 78 / 75 / 91 · 2026 −42 / 98 / 55 / 102. Long NET aylık artı oranı 2021-26 %66. Art arda iki eksi long ayı: 2025-01/02 (−5 / −6 → sonra +9 / +18); şimdi 2026-10/11
 (−9 / −19; Kasım 2025'ten beri en kötü). Okuma: long tarafı 7 yılın 6'sında net artı; 2025-26'da fiyattan kaybedip funding'den kazanıyor (tasarım). Aralık izlemesine (797) "long NET
 aylık" eklenir: 3. eksi ay = rejim kararında güçlü işaret.
+
+## Madde 820 — ÖLÇÜM: short zarar otopsisi Oca-Eyl vs Eki-Kas 2026 (815'in aynası; karar vermez)
+Short birim getirisi: Oca-Eyl **+0,424 %/gün** (n 2.840) → Eki-Kas **−0,033 %/gün** (n 586). IC (short kazancıyla): vol30 +0,152 → +0,033 · vol7 +0,154 → +0,062 · fon1 +0,114 → +0,050 ·
+yas −0,100 → −0,026 · r1 / oi1 +0,03 → −0,05. Oca-Eyl'de short kârı oynak, genç, yüksek funding'li (kalabalık long) coinlerden geliyordu; Eki-Kas'ta o kenar söndü.
+Eki-Kas en kötü short'lar: TIA −2,59 · ARIA −1,96 · AKE −1,36 · 龙虾 −1,23 · BTW −1,21 · INJ −1,05; en iyi: LYN +3,78 · CAP +2,61 · XRP +2,20 · SIREN +1,72 · JCT +1,27.
+Okuma: İKİ tarafta da "kalabalık haklı" — long'da kalabalık short haklı (815), short'ta kalabalık long'un bir kısmı sıçradı (TIA / ARIA). Bu, trend / momentum rejimiyle
+tutarlı (811 / 813: kesitsel momentum Eki-Kas artı). Carry'nin iki bacağı da "kalabalığa karşı" olduğu için rejim ikisini birden vuruyor; 2022'de short tarafı kitabı
+taşımıştı, bu kez taşımıyor.
