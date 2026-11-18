@@ -9223,3 +9223,6 @@ VE tasarımda da P3T2'den kötü değil (Sh farkı ≥ −0,1) → ADAY (ayrı m
 Doğrulama 2025-26: 3,92 · −19,2 | 3,81 · −15,8 | 3,51 · −23,8. Eki-16 Kas: −14 % | −9 % | **−19 %** (dinamik en kötü). w = 0,5 gün oranı 2021-24 %17 · 2025-26 %20 · Eki-Kas %40.
 Momentum'a "iyi gittikten sonra" geçmek, momentumun geri dönüşüne yakalanıyor; düşüşü derinleştiriyor. Sabit küçük pay (813 / 821) dinamikten her dönemde iyi.
 Strateji arası zamanlama da (773 / 801 / 808 / 810 ile birlikte) kapandı.
+**783 UZATMA 4 — 17 Kasım (zemin 17 Kas 20:00, ≤ 16 Kas parite 0,006 puan; `/tmp/m783e`):** backtest 17 Kas **+2,06** (long +1,03 · short +1,05; BTW long +0,75, JCT short +0,59,
+MUU short +0,41, KAVA / INJ long; en kötü HUMA / AKE long −0,2). Demo 17 Kas +24,77 $ ≈ **+1,31**. Toplam 6-17 Kas: backtest rampa ayarlı **−6,87** · tam 7-17 −7,81 · demo ≈ **−4,4**
+(panel −87 $). BTW 7-17 Kas toplamı −3,43 (demoda yok) → BTW hariç backtest ≈ −3,4, demo ≈ −4,4: fark ~1 puan, sınır içinde. Toparlanma iki tarafta da aynı gün.
