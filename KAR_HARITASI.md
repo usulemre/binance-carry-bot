@@ -9278,3 +9278,8 @@ ve yeni giriş = yeniden açılış fiyatı. Panel artık `defter/devir_duzeltme
 değişmez. Pozisyon sonradan küçülürse (kâr al / tur) taşınan pay, yeniden açılıştan beri `anlik_poz` görüntülerinde görülen EN KÜÇÜK adet oranıyla azalır → kapanan kısım
 gerçekleşmişe döner; sonradan aynı yönde büyüme onu diriltmez. Borsa kayıtları ve carry.db DEĞİŞMEDİ (yalnız gösterim). Telegram / günlük rapor bu düzeltmeyi uygulamaz.
 Testler: `test_panel` madde 828 bölümü (tam / yarı / tamamen kapanmış / dosya yok).
+**783 UZATMA 5 — 18 Kasım (zemin 18 Kas 20:00, ≤ 17 Kas parite 0,004 puan; `/tmp/m783f`):** backtest 18 Kas **+1,00** (long −0,17 · short +1,21; SNXX short +0,76, HUMA long +0,61,
+BTW long +0,59; en kötü BLESS short −0,76, BARD / BREV / INJ / PUMP long ~−0,3). Demo 18 Kas ≈ **−1,0** (panel ≈ −19,9 $; 14:47 UTC sağlık kapısı yanlış alarmı — 823 — ile
+kapanış + 827 geri kurma: yeniden açılış fiyat farkı + iki yönlü komisyon DAHİL, backtest'te yok). Toplam 6-18 Kas: backtest rampa ayarlı **−5,94** · tam 7-18 −6,90 · BTW 7-18 toplamı
+−2,84 → BTW hariç ≈ −3,1 · demo (Kasım paneli) ≈ **−5,5**. BTW hariç fark ≈ 2,4 puan demo ALEYHİNE (sınır 2'yi hafif aştı); 18 Kas tek gün farkı ~2 puan ve büyük kısmı
+kapı olayının maliyeti + o turda kitabın birkaç saat kapalı kalması. Kapı olayı hariç tutulunca tutarlılık sürüyor; 19 Kas'tan itibaren yeniden izlenir.
