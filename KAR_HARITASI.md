@@ -9288,3 +9288,18 @@ kapı olayının maliyeti + o turda kitabın birkaç saat kapalı kalması. Kap�
 zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (panel, 22 Kas 02:26): başlangıçtan −228 $ (−11,4 %), bunun −41,9 $'ı 21 Kas (henüz backtest yok) → 20 Kas sonu
 ≈ −186 $ ≈ **−9,3** (gün gün panel değerleri bekleniyor). GEÇİCİ okuma: BTW hariç fark ≈ 4 puan demo ALEYHİNE → 797 ölçütü (2 puan) aşıldı → coin coin otopsi gerekli
 (adaylar: 18 Kas kapı olayı maliyeti, demoda AKE ağırlığı, demoya özgü evren). Demo günlük kayıtları gelince kesinleşir.
+
+## Madde 829 — 783 uzatma 6 kesinleşti: demo farkının ana kaynağı AKE'nin KAPATILAMAYAN stop'u (-2022), strateji ayrışması değil
+- Demo panel gün gün (kullanıcı ekranı): 18 Kas −0,97 % · 19 Kas **+1,65 %** (backtest +3,57; BTW +1,12 demoda yok) · 20 Kas **−5,67 %** (backtest −4,30) · 21 Kas (kısmi) −2,34 %.
+  Toplam 6-20 Kas: demo ≈ **−9,5** · backtest BTW hariç ≈ **−5,3** → fark ≈ 4,2 puan demo aleyhine.
+- Coin coin: demo AKE long **kapanan −201,5 $**; backtest AKE 7-20 Kas toplamı **−5,72 puan ≈ −114 $** (20 Kas tek başına −3,42). Fazla kayıp ≈ **87 $ ≈ 4,4 puan** = farkın tamamı.
+  Diğer coinler (BARD −48, CYBER −42, ONE −39, BREV −33, ZEC −28, BLESS −27 …) backtest'teki aynı bacaklarla aynı işarette; AKE çıkarılınca fark ≈ 0 → 797 tutarlılığı sürüyor.
+- Olay (20 Kas 09:55 UTC+3): koşullu 24 sa stop doğru TETİKLENDİ (AKE 24 sa −47,9 %, piyasa −9,9 %; motor da bu barda çıkarıyor) ama
+  `felaket_simdi_kapat` → `close_position` (MARKET, reduceOnly) **APIError -2022 "ReduceOnly Order is rejected"**; aynı turda AKE kâr al emri de -2022 (1/23 korumasız).
+  Pozisyon sonraki tur(lar)da kapanana kadar düşüş sürdü.
+- Kod incelemesi (üretim DEĞİŞMEDİ): yalnız AKE reddedildi (22 coinin TP'si kondu) → sembole özgü durum. En olası sebep: borsada AKE için botun kaydında olmayan açık reduceOnly
+  emir (yetim TP / kademe) — `kar_al_iptal` iptal hatasını sessizce yutup kaydı siliyor; 827 geri kurmada da eski emir kalmış olabilir. Açık reduceOnly toplamı pozisyonu
+  doldurunca yeni reduceOnly (piyasa kapanışı dahil) reddedilir. Alternatif: borsa tarafı sembol kısıtı. Kesin değil — sunucu kaydı gerekli.
+- Teşhis aracı: `teshis_reduceonly.py` (SALT OKUR; yetim emirler, reduceOnly toplamı > pozisyon, AKE 20-21 Kas emir ve işlem geçmişi).
+- Önerilecek düzeltme (KULLANICI ONAYI BEKLER, test yazılmadan uygulanmaz): -2022'de o sembolün açık emirlerini `futures_cancel_all_open_orders` ile iptal edip
+  güncel pozisyon adediyle bir kez yeniden kapat; başarısızsa her tur yeniden dene ve acil bildir.
