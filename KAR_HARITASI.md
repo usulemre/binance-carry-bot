@@ -9283,3 +9283,8 @@ BTW long +0,59; en kötü BLESS short −0,76, BARD / BREV / INJ / PUMP long ~�
 kapanış + 827 geri kurma: yeniden açılış fiyat farkı + iki yönlü komisyon DAHİL, backtest'te yok). Toplam 6-18 Kas: backtest rampa ayarlı **−5,94** · tam 7-18 −6,90 · BTW 7-18 toplamı
 −2,84 → BTW hariç ≈ −3,1 · demo (Kasım paneli) ≈ **−5,5**. BTW hariç fark ≈ 2,4 puan demo ALEYHİNE (sınır 2'yi hafif aştı); 18 Kas tek gün farkı ~2 puan ve büyük kısmı
 kapı olayının maliyeti + o turda kitabın birkaç saat kapalı kalması. Kapı olayı hariç tutulunca tutarlılık sürüyor; 19 Kas'tan itibaren yeniden izlenir.
+**783 UZATMA 6 — 19-20 Kasım (zemin 20 Kas 20:00, ≤ 18 Kas parite 0,004; `/tmp/m783g`):** backtest 19 Kas **+3,57** (long +3,11: BTW +1,12, HUMA +0,87) · 20 Kas **−4,30**
+(long −6,16: **AKE long −3,42** [kilit açılışı ~21 Kas, 809 notu], INJ −0,75, HUMA −0,55, ZEC −0,50; short +1,85). Toplam 6-20 Kas rampa ayarlı −6,78 · tam 7-20 −7,73 · Kasım 1-20 −7,58 ·
+zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (panel, 22 Kas 02:26): başlangıçtan −228 $ (−11,4 %), bunun −41,9 $'ı 21 Kas (henüz backtest yok) → 20 Kas sonu
+≈ −186 $ ≈ **−9,3** (gün gün panel değerleri bekleniyor). GEÇİCİ okuma: BTW hariç fark ≈ 4 puan demo ALEYHİNE → 797 ölçütü (2 puan) aşıldı → coin coin otopsi gerekli
+(adaylar: 18 Kas kapı olayı maliyeti, demoda AKE ağırlığı, demoya özgü evren). Demo günlük kayıtları gelince kesinleşir.
