@@ -492,5 +492,10 @@ _s48 = open(panel.__file__, encoding="utf-8").read()
 kontrol("madde 848: coin penceresi ve pozisyon ayrıntısında 24 sa / 3 gün / hafta / ay / 3 ay özeti",
         all(x in _s48 for x in ("function donemHtml", '["3 gün", 72, "s"]', '["1 ay", 30, "g"]', "h += donemHtml(I.s, f)", "${donemHtml(s, f)}", "donemBoya(ISL.s)")))
 
+_s49 = open(panel.__file__, encoding="utf-8").read()
+kontrol("madde 849: elle pozisyon botun toplamlarına girmez, ayrı bölüm ve özet satırı",
+        all(x in _s49 for x in ("def elle_ayir", "elle_ayir(o, an)", "PE = PT.filter(x=>elleMi(k, x[0]))", "✋ ELLE (SENİN)", "bota dahil değil",
+                                 "if (elleMi(k, s)) continue;", "k.pozisyonlar[s].elle)")))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

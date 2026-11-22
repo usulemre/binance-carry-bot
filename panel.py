@@ -730,6 +730,35 @@ def coin_ozet(klasor: str, an: dict | None) -> list[dict] | None:
     return sorted(out, key=lambda x: x["toplam"])
 
 
+def elle_ayir(o: dict, an: dict | None) -> None:
+    """MADDE 849: anlık görüntü özkaynağı artık BOTUN (elle K/Z düşülmüş). Döküm ve coin tablosundaki borsa gelirleri ise hesabın
+    tamamı — elle aralıklardaki payı (carry_elle_kz özeti) buradan düşülür ki parçalar botun kârına eşit kalsın. Devralınan
+    pozisyonun devir anına kadarki kâr/zararı (`devir`) botun gerçekleşenine yazılır. Elle özeti `o["elle"]`."""
+    E = (an or {}).get("elle")
+    if not E:
+        return
+    T = E.get("toplam") or {}
+    d = o.get("dokum")
+    if d:
+        d["gerceklesen"] = round(d["gerceklesen"] - (T.get("R", 0) - T.get("devir", 0)), 2)
+        d["funding"] = round(d["funding"] - T.get("F", 0), 2)
+        d["komisyon"] = round(d["komisyon"] - T.get("C", 0), 2)
+    for k_ in o.get("coin_ozet") or []:
+        e = (E.get("sembol") or {}).get(k_["s"] + "USDT")
+        if not e:
+            continue
+        k_["kapanan"] = round(k_["kapanan"] - (e["R"] - e["devir"]), 4)
+        k_["funding"] = round(k_["funding"] - e["F"], 4)
+        if "funding_demo" in k_:
+            k_["funding_demo"] = round(k_["funding_demo"] - e["F"], 4)
+        k_["komisyon"] = round(k_["komisyon"] - e["C"], 4)
+        k_["acik"] = round(k_["acik"] - e["U"], 4)
+        k_["elle_kz"] = round(e["kz"], 4)
+        k_["toplam"] = round(k_["kapanan"] + k_["funding"] + k_["komisyon"] + k_["acik"], 4)
+    o["elle"] = {"kz": round(T.get("kz", 0), 2), "acik_sembol": E.get("acik_sembol") or [],
+                 "hesap_ozkaynak": an.get("ozkaynak_hesap"), "sembol": {s: round(v["kz"], 2) for s, v in (E.get("sembol") or {}).items()}}
+
+
 def karar_kayma(klasor: str, gun: float = 30, simdi: float | None = None) -> dict | None:
     """MADDE 753: giriş dolumlarının KARAR fiyatına (turun ilk GTX emrindeki referans) göre kayması, bp (+ = aleyhte).
     İcra özetindeki kayma her emri kendi gönderim fiyatıyla kıyaslar; kovalama / piyasaya düşme sırasında fiyatın kaçması
@@ -808,6 +837,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
                     k_["kapanan"] = round(k_["kapanan"] - a_, 4)
                     k_["toplam"] = round(k_["kapanan"] + k_["funding"] + k_["komisyon"] + k_["acik"], 4)
             o["devir"] = {"toplam": round(sum(_devir.values()), 2), "madde": 828}
+        elle_ayir(o, an)   # madde 849
         if an is not None:   # madde 728: canlı pozisyon tablosu
             o.update({"pozisyonlar": an["pozisyonlar"], "poz_kaynak": "canlı",
                       "poz_zaman": _yerel(an["zaman"]).strftime("%H:%M"),
@@ -1870,7 +1900,7 @@ function kareler(A, W, H){
   return out;
 }
 function isiHarita(k){
-  const A = Object.entries(k.pozisyonlar||{}).map(([s,p])=>{
+  const A = Object.entries(k.pozisyonlar||{}).filter(([s])=>!elleMi(k, s)).map(([s,p])=>{   // madde 849: yalnız bot
     const f = FIYAT[s] || p.isaret, ok = f && p.giris>0 && p.miktar;
     return {s, yon: p.yon, v: ok ? Math.abs(p.miktar)*f : (p.usd||0), ky: ok ? (f/p.giris-1)*(p.miktar>0?1:-1) : (p.kar_yuzde||0)/100, g: ok ? p.miktar*(f-p.giris) : p.gerceklesmemis};
   }).filter(a=>a.v>0).sort((a,b)=>b.v-a.v);
@@ -1900,6 +1930,7 @@ function canliFark(k){
   if (k.poz_kaynak!="canlı" || Date.now() - wsZaman >= 5000) return 0;
   let top = 0;
   for (const [s,p] of Object.entries(k.pozisyonlar||{})){
+    if (elleMi(k, s)) continue;   // madde 849: elle pozisyon botun kâr/zararına girmez
     const f = FIYAT[s]; top += (f && p.giris>0 && p.miktar) ? p.miktar * (f - p.giris) : (p.gerceklesmemis||0);
   }
   return top - (k.gerceklesmemis||0);
@@ -1949,7 +1980,7 @@ function halka(dolu, n){
 const sureYaz = sn => sn >= 3600 ? `${Math.floor(sn/3600)} sa ${Math.floor(sn%3600/60)} dk` : `${Math.floor(sn/60)} dk ${Math.floor(sn%60)} sn`;
 const saatYaz = ms => new Date(ms).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"});
 function fundKart(k){
-  const P = Object.entries(k.pozisyonlar||{}); let T = null;
+  const P = Object.entries(k.pozisyonlar||{}).filter(([s])=>!elleMi(k, s)); let T = null;   // madde 849: yalnız bot
   for (const [s] of P){ const F = FUND[s]; if (F && F.T) T = T==null ? F.T : Math.min(T, F.T); }
   if (T == null) return `<div class="d">—</div><div class="k">akış bekleniyor</div>`;
   let top = 0, n = 0;
@@ -1988,14 +2019,16 @@ function canliBoya(){
   const dc = $("#dcumle"); if (dc) dc.innerHTML = durumCumle(k);
   const fk = $("#fundsure"); if (fk) fk.innerHTML = fundKart(k);
   mumYukle(k);
-  let top = 0; const taraf = {L:[0,0], S:[0,0]};
+  let top = 0; const taraf = {L:[0,0], S:[0,0]}, eT = [0,0];
   for (const [s,p] of Object.entries(k.pozisyonlar||{})){
     const f = FIYAT[s], ok = k.poz_kaynak=="canlı" && f && p.giris>0 && p.miktar;
-    const g = ok ? p.miktar * (f - p.giris) : (p.gerceklesmemis||0); top += g;
-    const t = taraf[p.yon] || taraf.L; t[0] += ok ? Math.abs(p.miktar)*f : (p.usd||0); t[1] += g;
+    const g = ok ? p.miktar * (f - p.giris) : (p.gerceklesmemis||0), el = elleMi(k, s);   // madde 849
+    if (!el){ top += g; const t = taraf[p.yon] || taraf.L; t[0] += ok ? Math.abs(p.miktar)*f : (p.usd||0); t[1] += g; }
+    else { eT[0] += ok ? Math.abs(p.miktar)*f : (p.usd||0); eT[1] += g; }
     const et = document.getElementById("t-"+s); if (et) et.innerHTML = et.classList.contains("drow") ? satirD(s, p, k) : et.classList.contains("sat") ? satirIc(s, p, k) : kutuIc(s, p, k);
   }
   for (const y of ["L","S"]){ const e = document.getElementById("taraf-"+y); if (e) e.innerHTML = `${para(taraf[y][0])} · <span class="${sinif(taraf[y][1])}">${taraf[y][1]>=0?"▲":"▼"} ${isaretli(taraf[y][1])}</span>`; }
+  { const e = document.getElementById("taraf-E"); if (e) e.innerHTML = `${para(eT[0])} · <span class="${sinif(eT[1])}">${eT[1]>=0?"▲":"▼"} ${isaretli(eT[1])}</span>`; }
   if (SHEET){ const si = $("#sheetic"), sp = (k.pozisyonlar||{})[SHEET]; if (si && sp) si.innerHTML = sheetIc(SHEET, sp, k); else if (!sp) sheetKapat(); }
   if (sayfa=="gecmis"){ const gs = $("#gsade"); if (gs) gs.innerHTML = gecmisSade(k); }   // madde 757: geçmiş de saniyelik canlı
   const dn = $("#denge"); if (dn) dn.innerHTML = dengeIc(taraf);
@@ -2114,7 +2147,7 @@ function durumCumle(k){   // madde 758: kısa — bugünkü tutar hemen altta, t
 }
 function daltHtml(k, kar){
   const B = bugunKZ(k), ok = v => v>=0 ? "▲" : "▼", ko = k.kitap_bas ? kar / k.kitap_bas : null;
-  return `${B ? `<span class="${sinif(B.usd)}">${ok(B.usd)} ${isaretli(B.usd)} (${yz(B.oran)}) bugün</span>` : ""}${kar!=null ? `<span class="${sinif(kar)}">${ok(kar)} ${isaretli(kar)}${ko!=null?` (${yz(ko)})`:""} başlangıçtan</span>` : ""}`;
+  return `${B ? `<span class="${sinif(B.usd)}">${ok(B.usd)} ${isaretli(B.usd)} (${yz(B.oran)}) bugün</span>` : ""}${kar!=null ? `<span class="${sinif(kar)}">${ok(kar)} ${isaretli(kar)}${ko!=null?` (${yz(ko)})`:""} başlangıçtan</span>` : ""}${k.elle && Math.abs(k.elle.kz||0) >= 0.01 ? `<span class="k">✋ elle ${isaretli(k.elle.kz)} · bota dahil değil</span>` : ""}`;
 }
 function nerdenHtml(k, poz, kar){
   const D = k.dokum; if (!D || poz==null || kar==null) return "";
@@ -2208,7 +2241,7 @@ function donemHtml(s, f){
 }
 // MADDE 842: elle coin mü (coin_ozet "elle" bayrağı: carry_elle.json + panel işaretleri)
 function elleMi(k, s){ return ((k && k.coin_ozet) || []).some(c => c.elle && (c.s.endsWith("USDT") ? c.s : c.s + "USDT") === s)
-  || (k && k.pozisyonlar && k.pozisyonlar[s] && k.pozisyonlar[s].elle_canli) || false; }
+  || (k && k.pozisyonlar && k.pozisyonlar[s] && (k.pozisyonlar[s].elle_canli || k.pozisyonlar[s].elle)) || false; }
 function elleKutu(s, p, f){   // madde 846: tek cümle + tek düğme
   return `${ellePayHtml(s, p, f)}<div class="elk">✋ <b>Bunu sen yönetiyorsun.</b> Bot bu coine dokunmuyor: kâr al, stop ya da süre yok. Tamamen kapatınca 30 dk sonra coin bota döner.
     ${typeof islAc === "function" && ISL_DURUM && ISL_DURUM.acik ? `<button class="elkb" onclick="sheetKapat();islAc('${s}')">Kapat · TP · stop koy</button>` : ""}</div>`;
@@ -2220,18 +2253,22 @@ function satirD(s, p, k){
     ${minik(s, p, f, renk)}<div class="dv"><b class="${sinif(g)}">${g==null?"—":(g>=0?"▲ ":"▼ ")+isaretli(g)}</b><span class="${sinif(ky)}">${ky==null?"":pc(ky)}</span></div>`;
 }
 function pozSayfa(k){
-  const P = Object.entries(k.pozisyonlar||{}).map(([s,p])=>[s, p, pozDeger(s,p)]);
+  const PT = Object.entries(k.pozisyonlar||{}).map(([s,p])=>[s, p, pozDeger(s,p)]);
+  const P = PT.filter(x=>!elleMi(k, x[0])), PE = PT.filter(x=>elleMi(k, x[0]));   // madde 849: elle pozisyonlar botun toplamına girmez
   const sira = (A) => A.sort((a,b)=> POZ_S=="kz" ? (a[2].g||0) - (b[2].g||0) : (b[2].usd||0) - (a[2].usd||0));
-  const L = sira(P.filter(x=>x[1].yon=="L")), S = sira(P.filter(x=>x[1].yon=="S"));
+  const L = sira(P.filter(x=>x[1].yon=="L")), S = sira(P.filter(x=>x[1].yon=="S")), E = sira(PE);
   const top = (A, i) => A.reduce((a,x)=>a+(i ? (x[2].g||0) : (x[2].usd||0)), 0), tum = top(P,1);
   const bolum = (A, y, ad) => !A.length || (POZ_F!="tum" && POZ_F!=y) ? "" : `<div class="dbol"><span>${ad} · ${A.length} · <span id="taraf-${y}">${para(top(A,0))} · <span class="${sinif(top(A,1))}">${top(A,1)>=0?"▲":"▼"} ${isaretli(top(A,1))}</span></span></span></div>
     <div class="dlis">${A.map(x=>`<div class="drow ${y}" id="t-${x[0]}" onclick="sheetAc('${x[0]}')" role="button">${satirD(x[0], x[1], k)}</div>`).join("")}</div>`;
   const fb = (f, ad) => `<button class="${POZ_F==f?"on":""}" onclick="pozFiltre('${f}')">${ad}</button>`;
+  const elleB = !E.length || (POZ_F!="tum" && POZ_F!="E") ? "" : `<div class="dbol"><span>✋ ELLE (SENİN) · ${E.length} · <span id="taraf-E">${para(top(E,0))} · <span class="${sinif(top(E,1))}">${top(E,1)>=0?"▲":"▼"} ${isaretli(top(E,1))}</span></span></span></div>
+    <div class="k" style="margin:-2px 0 6px">Botun kâr/zararına ve yüzdelerine dahil değil.${k.elle && k.elle.kz!=null ? ` Elle işlemlerin toplamı (kapananlar dahil): <b class="${sinif(k.elle.kz)}">${isaretli(k.elle.kz)}</b>` : ""}</div>
+    <div class="dlis">${E.map(x=>`<div class="drow ${x[1].yon}" id="t-${x[0]}" onclick="sheetAc('${x[0]}')" role="button">${satirD(x[0], x[1], k)}</div>`).join("")}</div>`;
   return `<div class="kart dpoz">
     <div class="dpb"><span class="gb">Pozisyonlar</span>${k.gerceklesmemis!=null?`<b id="gerc" class="${sinif(tum)}">${tum>=0?"▲":"▼"} ${isaretli(tum)}</b>`:""}</div>
     ${P.length?`<div class="denge" id="denge">${dengeIc({L:[top(L,0),0], S:[top(S,0),0]})}</div>`:""}
-    <div class="dfil"><div class="gdon">${fb("tum",`Tümü ${P.length}`)}${fb("L","Long")}${fb("S","Short")}</div><button class="dsir" onclick="pozSira()">Sırala: ${POZ_S=="kz"?"K/Z":"büyüklük"}</button></div>
-    ${bolum(L,"L","LONG") + bolum(S,"S","SHORT") || "<div class='bos'>açık pozisyon yok</div>"}
+    <div class="dfil"><div class="gdon">${fb("tum",`Tümü ${PT.length}`)}${fb("L","Long")}${fb("S","Short")}${E.length ? fb("E","✋ Elle") : ""}</div><button class="dsir" onclick="pozSira()">Sırala: ${POZ_S=="kz"?"K/Z":"büyüklük"}</button></div>
+    ${bolum(L,"L","BOT · LONG") + bolum(S,"S","BOT · SHORT") + elleB || "<div class='bos'>açık pozisyon yok</div>"}
     <div class="k" style="margin-top:10px">${k.poz_kaynak=="canlı"?"liste "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")} · satıra dokun: grafik, giriş, funding, hedef, stop</div></div>`;
 }
 // MADDE 757: pozisyon ayrıntısı — alttan açılan sayfa (bottom sheet); canlı fiyatla saniyede bir güncellenir

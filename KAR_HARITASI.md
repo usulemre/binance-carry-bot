@@ -9565,3 +9565,19 @@ Kullanıcı: "bir coini incelerken aynı sayfada görmeliyim günlük 3 günlük
 - 783 uzatma 7 (2026-11-23, veri 21 Kas UTC sonuna kadar; 22 Kas günlük dosyaları henüz yayınlanmadı): /tmp/m783h, iki hiza rc 0, ≤ 19 Kas parite 0.
   Günlük (×1,15): 20 Kas −4,30 · 21 Kas −0,29. Ekim −4,99 %, Kasım 1-21 −7,86 %, 7-21 Kas (tam kitap) −8,00 %; 9 Ekim zirvesinden düşüş −17,72 %
   (zirve öncesi en derin −15,23 %); 2026 yılbaşından +306 %. Not: sinyal kurulumu VERI_EK=uzun ister (ilk koşu eski sinyalle yapıldı → atıldı, yeniden koşuldu).
+
+## Madde 849 — Elle işlemlerin kâr/zararı botun muhasebesinden ayrıldı (kullanıcı, 2026-11-23: "ana bot bakiyesi 2 bin dolarlık işlemde, ben ekstra kendim elle alımlar yapıyorum; panelde % düşüş 2 bin dolardan sayılıyor, bu yanlış değil mi")
+
+**Sorun.** Bütün muhasebe hesap özkaynağından yürüyordu: panel kârı (özkaynak − başlangıç − transfer) / botun başlangıç kitabı, günlük defter getirisi, botun sermayesi (özkaynak × 0,4007). Elle işlemlerin K/Z'si üçüne de giriyordu: −62 $ elle açık zarar paneldeki bot yüzdesini ~%3 düşürüyor, gece defterine botun kötü günü olarak yazılıyor ve botun boyutunu 0,4 × elle K/Z kadar değiştiriyordu.
+
+**Kullanıcı seçimi.** TAM AYIR (panel + sermaye + günlük getiri); devralınan pozisyonun devir anına kadarki K/Z'si botun.
+
+**Yapılan (carry_elle_kz.py).** Elle aralık = kullanıcının ilk dolumu → carry_elle "birak" olayı. Devralınan adet (aralık sonu adet − aralıktaki dolumlar) ilk dolum fiyatından açılmış lot sayılır, aralıktaki bütün dolumlar ortalama maliyetle yeniden oynatılır: elle_kz = oynatılmış gerçekleşen + açık + funding + komisyon; devir = Binance (gerçekleşen + açık) − oynatılmış. Kapanmış aralık dondurulur. defter/elle_kz.json.
+- carry_bot.sermaye_oku: ELLE açıkken özkaynak − Σelle_kz (kayıt 5 dk'dan eskiyse yeniden hesaplar; hata → hesap özkaynağı).
+- carry_anlik: `ozkaynak` artık BOTUN (`ozkaynak_hesap`, `elle_kz` ayrı); elle pozisyonlar `elle: true`, gerçekleşmemiş toplamına ve gerçek-oran funding'ine girmez; `elle` özeti (R/F/C/U/devir, sembol başına).
+- carry_gunluk_defter: `ozkaynak` botun → gun_getiri elle'siz.
+- panel: döküm ve coin tablosundan elle payı düşülür (devir botun gerçekleşenine), Pozisyonlar'da elle ayrı bölüm ("✋ ELLE (SENİN)", bota dahil değil), başlık toplamı / denge / ısı haritası / sıradaki funding yalnız bot; özet satırında "✋ elle X · bota dahil değil".
+
+**İlk gerçek ölçüm (2026-11-22 21:30 UTC, 14 elle coin).** Elle toplam −21,93 $. BLESS'te Binance açık zararı −45,3 $'ın −29,7 $'ı botun short'unun devirden önceki zararı (botta kalır), elle payı −14,9 $; AKE'de botun long'u devirde −7,6 $ zarardaydı (botun), ICNT'de −6,6 $ (botun).
+
+**Bilinen sınır.** Geçiş anında bugünkü gün içi eğri ~+22 $ sıçrar (önceki noktalar hesap özkaynağıyla). Elle başladıktan sonraki ~5 saatin gerçek-oran funding birikimine elle pozisyonlar girmişti (birkaç sent).

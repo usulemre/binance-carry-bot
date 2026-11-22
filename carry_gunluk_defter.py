@@ -111,6 +111,14 @@ def topla(client=None, simdi: float | None = None, dosya: str = DEFTER_DOSYA) ->
     simdi = simdi or time.time()
     tarih = dt.datetime.fromtimestamp(simdi, dt.timezone.utc).strftime("%Y-%m-%d")
     oz = float(client.get_account_equity_usd())
+    oz_hesap, elle_kz = oz, None
+    try:   # MADDE 849: elle işlemlerin kâr/zararı botun özkaynağından (dolayısıyla günlük getiriden) ayrılır
+        import carry_elle_kz
+        if carry_elle_kz.acik():
+            elle_kz = carry_elle_kz.guncel_toplam(client, simdi=simdi)
+            oz = oz_hesap - elle_kz
+    except Exception as ex:
+        print(f"UYARI: elle K/Z okunamadı, özkaynak hesabın tamamı: {ex}")
     poz = _pozisyonlar(client)
     bit = int(simdi * 1000); bas = bit - 24 * 3600 * 1000
     gel = _gelirler(client, bas, bit)
@@ -136,6 +144,8 @@ def topla(client=None, simdi: float | None = None, dosya: str = DEFTER_DOSYA) ->
         "gelir_coin": {s: {k: round(v, 4) for k, v in c.items()} for s, c in coin.items()},
         "degisim": degisimler(dun["pozisyonlar"] if dun else {}, poz),
     }
+    if elle_kz is not None:
+        kayit.update({"ozkaynak_hesap": round(oz_hesap, 4), "elle_kz": round(elle_kz, 4)})
     # günlük getiri: transferleri ayıkla (yatırma / çekme getiri değildir)
     olcek = float(os.getenv("CARRY_SERMAYE_OLCEK", "1.0") or 1.0)
     kayit["sermaye_olcek"] = olcek

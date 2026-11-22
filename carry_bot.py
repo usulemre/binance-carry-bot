@@ -4550,9 +4550,22 @@ Gerçek hesapta 1,0 dışı değer preflight'ta UYARI verir."""
 
 
 def sermaye_oku(client: ExchangeClient) -> float | None:
-    """Botun sermayesi. None = güvenli değil, tur atlanmalı (madde 141). CARRY_SERMAYE_OLCEK ile çarpılır."""
+    """Botun sermayesi. None = güvenli değil, tur atlanmalı (madde 141). CARRY_SERMAYE_OLCEK ile çarpılır.
+    MADDE 849: ELLE açıkken kullanıcının elle işlemlerinin birikmiş kâr/zararı (carry_elle_kz) özkaynaktan ÇIKARILIR —
+    elle zarar botu küçültmez, elle kâr büyütmez (devralınan pozisyonun devir anına kadarki kâr/zararı botta kalır)."""
     s = _sermaye_oku_ham(client)
-    return None if s is None else s * SERMAYE_OLCEK
+    if s is None:
+        return None
+    if ELLE:
+        try:
+            import carry_elle_kz
+            e = carry_elle_kz.guncel_toplam(client)
+            if abs(e) > 0.005:
+                logger.info("sermaye: hesap özkaynağı %.2f, elle işlemler %+.2f -> botun özkaynağı %.2f (madde 849)", s, e, s - e)
+            s -= e
+        except Exception as ex:
+            logger.warning("elle K/Z okunamadı (%s) — sermaye hesap özkaynağıyla", ex)
+    return s * SERMAYE_OLCEK
 
 
 def _sermaye_oku_ham(client: ExchangeClient) -> float | None:

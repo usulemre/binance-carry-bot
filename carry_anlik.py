@@ -436,15 +436,30 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
         client = ExchangeClient(config.API_KEY, config.API_SECRET, mode=config.BINANCE_MODE)
     simdi = simdi or time.time()
     poz = _pozisyonlar(client)
-    oz = float(client.get_account_equity_usd())
+    oz_hesap = float(client.get_account_equity_usd())
     olcek = float(os.getenv("CARRY_SERMAYE_OLCEK", "1.0") or 1.0)
+    # MADDE 849: elle işlemlerin kâr/zararı botun özkaynağından ayrılır (ozkaynak = BOTUN; ozkaynak_hesap = Binance'teki)
+    elle_st, elle_kz, elle_sem = None, 0.0, set()
+    try:
+        import carry_elle_kz
+        if carry_elle_kz.acik():
+            elle_st = carry_elle_kz.guncelle(client, simdi=simdi)
+            elle_kz = float(elle_st.get("toplam") or 0.0)
+            elle_sem = set(elle_st.get("acik_sembol") or [])
+    except Exception as ex:
+        print(f"UYARI: elle K/Z hesaplanamadı: {ex}", file=sys.stderr)
+    oz = oz_hesap - elle_kz
+    for s_ in elle_sem & set(poz):
+        poz[s_]["elle"] = True
     kayit = {
         "zaman": int(simdi),
         "ozkaynak": round(oz, 4),
         "kitap": round(oz * olcek, 4),
         "pozisyonlar": poz,
-        "gerceklesmemis_top": round(sum(p["gerceklesmemis"] for p in poz.values()), 2),
+        "gerceklesmemis_top": round(sum(p["gerceklesmemis"] for p in poz.values() if not p.get("elle")), 2),
     }
+    if elle_st is not None:
+        kayit.update({"ozkaynak_hesap": round(oz_hesap, 4), "elle_kz": round(elle_kz, 4)})
     try:   # madde 748: demo hesabın sıradaki funding'i (yalnız demo)
         df_ = demo_funding(client, poz, simdi)
         if df_ is not None:
@@ -460,8 +475,14 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
             kayit["gelir_bas"] = {"bas": bas, "son": g["son_ms"] // 1000, **g["toplam"]}
         except Exception as ex:
             print(f"UYARI: gelir birikimi güncellenemedi: {ex}", file=sys.stderr)
+        if elle_st is not None:   # madde 849: panel dökümü / coin tablosu elle payını buradan düşer
+            try:
+                import carry_elle_kz
+                kayit["elle"] = carry_elle_kz.ozet(elle_st, bas)
+            except Exception as ex:
+                print(f"UYARI: elle özeti yazılamadı: {ex}", file=sys.stderr)
         try:   # madde 744: gerçek oranlarla olsaydı (yalnız demo)
-            gf = gercek_funding(client, bas, simdi, poz, os.path.join(os.path.dirname(dosya) or ".", "gercek_funding.json"))
+            gf = gercek_funding(client, bas, simdi, {k: v for k, v in poz.items() if not v.get("elle")}, os.path.join(os.path.dirname(dosya) or ".", "gercek_funding.json"))
             if gf is not None:
                 kayit["gercek_funding"] = {"bas": bas, "toplam": gf["toplam"], "son": gf["son_ms"] // 1000}
         except Exception as ex:
