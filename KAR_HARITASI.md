@@ -9407,3 +9407,21 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   yeniden kurar (eskiden ek adet korumasız kalıyordu).
 - Testler: `test_panel_islem` (120 mum çizimi, plan TP çizgisi, emirden sonra Pozisyon sekmesi, giriş çizgisi + etiketi, kurulu TP çizgisi, ▲ alış işareti,
   uzak likidasyonun kenar hapı, stop yazınca plan stop çizgisi), `test_carry_islem` (dolumlar + likidasyon, TP'siz eklemede TP adedi 200'e yenilenir).
+
+## Madde 836 — Al / sat penceresi modern akış (kullanıcı isteği, 2026-11-22: "daha modern, anlaşılır; araştır")
+- Araştırma (mobil işlem uygulaması tasarım rehberleri, kaynaklar sohbet yanıtında): grafik önde, canlı fiyat en büyük; ana eylem başparmak bölgesinde;
+  varsayılan bilet sade, gelişmiş alanlar açılır; gönderimden önce özet (adet, fiyat, komisyon, nakit etkisi); bilinçli hareketle onay (basılı tut /
+  kaydır); risk ile boyutlandırma (stop'a göre); kaldıraçlı pozisyonda likidasyon uzaklığı renkli; renk tek başına anlam taşımaz (▲▼ ok); bekleyen ile
+  dolan emir ayrı gösterilir; karanlık temada yeterli kontrast.
+- Uygulanan: (1) üstte coin + canlı fiyat + 24 sa (▲▼), altında kenardan kenara grafik (zaman dilimi + mum / çizgi seçici; çizgi modunda alan dolgusu);
+  (2) sabit alt çubuk: pozisyon görünümünde Short / Long, emir görünümünde "Long 100,00 $"; (3) bilet: Long / Short, emir tipi, BOYUT = Tutar ya da
+  RİSK ($; pozisyon = risk × fiyat / |fiyat − stop|, sınırla kırpılır), "TP / stop ekle" anahtarı (varsayılan kapalı), canlı tahmin tablosu (pozisyon, adet,
+  TP'de ▲ / stop'ta ▼ $, risk / ödül, ≈ komisyon %0,05); (4) "Devam" → ONAY EKRANI (sunucu önizlemesi özet tablo + notlar + PIN) → alt düğme
+  "Basılı tut: Long aç" 0,7 sn (fare / dokunuş / Boşluk-Enter; kısa dokunuş göndermez; "Düzenle" ile geri); kapat %25 / %50 / tümü, TP / stop kaydet ve
+  panel emirlerini sil de AYNI onay ekranından geçer (tarayıcı confirm() kalktı); PIN pencere açık kaldıkça bellekte; (5) sonuçta durum rozeti
+  "Doldu" / "Bekliyor"; (6) pozisyon kartında likidasyona uzaklık çubuğu (yeşil ≥ %30, turuncu %10-30, kırmızı < %10); (7) pozisyon varken ters yönlü
+  emirde başlık "long'u azalt / çevir" + tek yönlü hesap uyarısı; (8) karanlık temada dolu yeşil / kırmızı üzerinde koyu yazı (kontrast).
+- Testler (`test_panel_islem`, gerçek Chromium, sahte borsa): pencere, 120 mum, çizgi grafiğe geçiş, alttaki eylem, sade bilet, TP anahtarı, canlı tahmin,
+  plan TP çizgisi, onay özeti, onaya gelmenin emir göndermemesi, 0,25 sn dokunuşun emir göndermemesi, yanlış PIN, basılı tutup emir (Doldu rozeti),
+  pozisyon görünümü + giriş / TP / ▲ / likidasyon hapı, %50 kapat onayı + PIN hatırlama, TP / stop onayı, risk ile boyut (5 $ risk / %5 stop = 100 $; kayan
+  nokta bir kuruş kaybettiriyordu → düzeltildi), long varken short uyarısı, Düzenle ile geri, beklenmeyen dialog / JS hatası yok.
