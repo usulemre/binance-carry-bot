@@ -9520,3 +9520,13 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   ve K/Z'si). Ayrıntı sayfası açıkken elle özeti Piyasa sekmesi dışında da yüklenir.
 - Test: test_carry_islem 11c (bot −100 @ 0,7 + kullanıcı −50 @ 0,8 → senin −50 @ 0,8, devralınan −100 @ 0,7; %20 kapatma sonrası devralınan girişi
   None, senin girişin 0,8); sahte borsa dolumları artık startTime'a uyar ve orderId taşır. test_panel sayfa denetimi; betik `node --check` temiz.
+
+## Madde 844 — Elle açılan pozisyon Pozisyonlar listesinde hemen görünür (kullanıcı, 2026-11-22: "velvet aldım neden gözükmüyor" / "hemen görünsün")
+- Olay: VELVETUSDT panelden 16:17 UTC'de açıldı; Pozisyonlar listesi carry-anlik'in 5 dk'lık görüntüsünden geldiği için (son görüntü 16:16) 16:21'e
+  kadar görünmedi. Panel güvenlik gereği Binance'e bağlanmaz; canlı veri yalnız işlem kapısında (/elle, 127.0.0.1:8051).
+- Düzeltme (yalnız sayfa betiği): `elleBirlestir` — kapının /elle yanıtı (15 sn'de bir; artık Piyasa dışındaki sayfalarda da yüklenir) ana
+  kurulumun pozisyonlarına elle coinler için yazılır: yeni açılan eklenir, adet / giriş / işaret / K/Z canlı olur, kapanan elle coin görüntü
+  yenilenmeden listeden çıkar. Yanıt 90 sn'den eskiyse dokunulmaz; bot coinleri değişmez. Her /api/veri yenilemesinden sonra yeniden uygulanır.
+  `elleMi` kapının listesindeki (coin_ozet'te henüz olmayan) yeni coini de elle sayar → rozet ve açıklama kutusu ilk andan itibaren.
+- Test: test_panel sayfa denetimi; betik `node --check` temiz; node'da birleştirme benzetimi (BLESS güncellenir, VELVET eklenir, kapanmış elle
+  coin çıkar, bot coini durur, ikinci çağrı değişiklik yok).

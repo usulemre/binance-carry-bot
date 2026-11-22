@@ -1384,9 +1384,27 @@ function piyasaSayfa(k){
 // MADDE 839: POZİSYONLARIM — elle yönettiğin açık pozisyonlar (hesabın K/Z'si) + son 30 gün elle sonucu; 15 sn'de bir kapıdan.
 let ELLE_OZ = null;
 async function elleYukle(){
-  if (VERI_GOMULU || !ISL_DURUM || !ISL_DURUM.acik || (sayfa!="piyasa" && !SHEET)) return;   // madde 843: ayrıntı sayfası da kullanır
+  if (VERI_GOMULU || !ISL_DURUM || !ISL_DURUM.acik) return;   // madde 844: her sayfada (Pozisyonlar listesi de kullanır)
   elleYukle.t = Date.now(); const d = await islIstek("elle");
   ELLE_OZ = d.ok ? d : {hata: d.hata}; const el = $("#piyelle"); if (el) el.innerHTML = elleHtml();
+  if (elleBirlestir() && VERI && sayfa != "piyasa" && !ISL) ciz();
+}
+// MADDE 844: elle pozisyonlar Pozisyonlar listesinde HEMEN görünsün. Liste 5 dk'lık anlık görüntüden (carry-anlik) gelir; kapının /elle
+// yanıtı (15 sn'de bir, canlı) elle coinler için onu ezer: yeni açılan eklenir, kapanan çıkarılır, adet / giriş / K/Z canlı olur.
+// Kapı yalnız ana kurulumun hesabına bağlı. Yanıt 90 sn'den eskiyse dokunulmaz. Değişiklik olduysa true.
+function elleBirlestir(){
+  if (!VERI || !ELLE_OZ || !ELLE_OZ.pozisyonlar || Date.now() - (elleYukle.t||0) > 90e3) return false;
+  const K = VERI.kurulumlar || [], k = K.find(x => x.ad == "ana") || K[0]; if (!k) return false;
+  const P = k.pozisyonlar = k.pozisyonlar || {}, once = JSON.stringify(P), canli = new Set();
+  for (const x of ELLE_OZ.pozisyonlar){
+    if (!x.adet) continue;
+    const isaret = x.giris + x.kz / x.adet, uzun = x.adet > 0;
+    P[x.sembol] = {...(P[x.sembol]||{}), yon: uzun ? "L" : "S", miktar: x.adet, giris: x.giris, isaret, usd: Math.round(Math.abs(x.adet) * isaret * 100) / 100,
+                   gerceklesmemis: Math.round(x.kz * 100) / 100, kar_yuzde: x.giris ? Math.round((isaret / x.giris - 1) * (uzun ? 1 : -1) * 1e4) / 100 : 0, elle_canli: true};
+    canli.add(x.sembol);
+  }
+  for (const s of Object.keys(P)) if (!canli.has(s) && elleMi(k, s)) delete P[s];   // elle coin kapandı: görüntü yenilenmeden de listeden çıkar
+  return JSON.stringify(P) !== once;
 }
 // MADDE 843: "kaçtan aldım" — elle pozisyonun senin dolumların ve bottan devralınan kısmı (kapı /elle "pay")
 const elleZaman = t => { const d = new Date(t), b = new Date(); const g = d.toDateString()==b.toDateString() ? "bugün" : d.toLocaleDateString("tr-TR",{day:"numeric",month:"short"});
@@ -1953,6 +1971,7 @@ function fundTakip(){
 function canliBoya(){
   if (ISL && Date.now() - (islGrafikCiz.t||0) > 2000){ islGrafikCiz.t = Date.now(); islGrafikCiz(); if (Date.now() - ((MUMI[ISL.s+"|"+ISL.aralik]||{}).t||0) > 60e3) islMumYukle(); }   // madde 835
   piyasaBoya(false);   // madde 832
+  if (sayfa != "piyasa" && ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle();   // madde 844
   fundTakip();
   const on = canliDurum();
   const k = VERI && VERI.kurulumlar[secili]; if (!k) return;
@@ -2152,7 +2171,8 @@ function minik(s, p, f, renk){   // satır içi mini grafik: yalnız çizgi (60x
   return `<svg class="dsp" viewBox="0 0 60 24" aria-hidden="true"><path d="${d}" fill="none" stroke="${renk}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
 // MADDE 842: elle coin mü (coin_ozet "elle" bayrağı: carry_elle.json + panel işaretleri)
-function elleMi(k, s){ return ((k && k.coin_ozet) || []).some(c => c.elle && (c.s.endsWith("USDT") ? c.s : c.s + "USDT") === s); }
+function elleMi(k, s){ return ((k && k.coin_ozet) || []).some(c => c.elle && (c.s.endsWith("USDT") ? c.s : c.s + "USDT") === s)
+  || (k && k.pozisyonlar && k.pozisyonlar[s] && k.pozisyonlar[s].elle_canli) || false; }
 function elleKutu(s, p, f){
   const ad = s.replace(/USDT$/,""), uzun = p.miktar > 0;
   return `${ellePayHtml(s, p, f)}<div class="elk"><b>✋ ${ad} pozisyonunu sen yönetiyorsun</b>
@@ -2527,7 +2547,8 @@ addEventListener("touchend", e=>{ if (!dokB) return; const t = e.changedTouches[
 let _gen = (innerWidth >= 1000) + "" + MOBIL(); addEventListener("resize", ()=>{ const g = (innerWidth >= 1000) + "" + MOBIL(); if (g !== _gen){ _gen = g; if (VERI) ciz(); } });
 async function yukle(){
   if (VERI_GOMULU){ VERI = gorunum(VERI_GOMULU); ciz(); return; }
-  try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = gorunum(await r.json()); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
+  // madde 844: yeni veri gelince elle pozisyonlar yeniden birleştirilir
+  try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = gorunum(await r.json()); elleBirlestir(); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
 }
 yukle(); if(!VERI_GOMULU){ setInterval(yukle, 60000); setInterval(canliBoya, 1000); }
 if(!VERI_GOMULU && "serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }

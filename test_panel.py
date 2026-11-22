@@ -456,6 +456,8 @@ _s42 = app.get("/").data.decode()
 kontrol("madde 842: elle coin ayrıntısında açıklama kutusu, satırda rozet, bot hedefi / süresi gizli",
         all(x in _s42 for x in ("function elleMi", "function elleKutu", "pozisyonunu sen yönetiyorsun", "elle ? elleKutu(s, p, f) : cikisIc(s, usd, k)",
                                  'kutu("Yöneten"', "✋ elle</span>`", "function ellePayHtml", "Pozisyon kimden, kaçtan", "${elleKisa(x)}")))
+kontrol("madde 844: elle pozisyonlar listeye kapının canlı yanıtıyla hemen eklenir",
+        all(x in _s42 for x in ("function elleBirlestir", "VERI = gorunum(await r.json()); elleBirlestir(); ciz();", "elle_canli: true")))
 _h790 = app.get("/").data.decode()
 kontrol("madde 790: çıkış takvimi tur başına, 'yine seçilirse kalır' açıklaması, kademe + kâr al kutusu",
         "turun hepsini göster" in _h790 and "dilime bölündü" in _h790 and "dilim payı" in _h790 and "yine seçilirse" in _h790 and "Kademe · kâr al" in _h790 and "satılacak</span>" not in _h790)
