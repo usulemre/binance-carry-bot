@@ -9363,3 +9363,8 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   rozet, bağlantı, akışla fiyat / funding / sıralama güncellemesi, izleme listesi (ekle / yenilemede kalır / çıkar), arama, funding modu, sekmeden çıkınca
   akışın kapanıp dönünce açılması, JS hatası yok, 390 px telefonda yatay taşma yok. Playwright yoksa atlanır. `test_panel` geçiyor.
 - Uygulama: yalnız panel yeniden başlatılır (`systemctl restart carry-panel`); bot etkilenmez.
+- 833 (aynı sekme, kullanıcı isteği "1 gün / 3 gün / 1 hafta / 1 ay ne kadar yükseldi"): dönem düğmeleri 24 sa · 3 gün · 1 hafta · 1 ay · Funding.
+  24 sa = Binance'in kayan 24 sa değişimi; diğerleri `/fapi/v1/klines?interval=1d&limit=31` (şimdiki fiyat / N gün önceki günlük kapanış − 1), yalnız
+  listede görünecek coinler için (hacim süzgeci + izleme listesi + arama), 6 paralel istek, 30 dk önbellek; N günden yeni coin "—" (sıralamaya girmez).
+  Seçim cihazda saklanır. Test (`test_panel_piyasa` 5b): 3 gün / 1 hafta sıralamaları bilinen mumlarla doğru, düşük hacimli / USDC coin indirilmiyor,
+  dönem değişince yeniden indirme yok, yeni coin "—", yenilemede korunuyor, 24 sa'te hiç günlük mum isteği yok.

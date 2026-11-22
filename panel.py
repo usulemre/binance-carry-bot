@@ -1197,6 +1197,32 @@ function canliBagla(k){
 let PIY = {}, PIY_WS = null, PIY_ACIK = false, PIY_EVREN = null, PIY_ZAMAN = 0, PIY_ONCEKI = {}, PIY_HATA = "", PIY_SON_CIZ = 0;
 const PIY_DEP = (a, v) => { try { return v===undefined ? JSON.parse(localStorage.getItem(a)) : localStorage.setItem(a, JSON.stringify(v)); } catch(_){ return null; } };
 let PIY_IZLE = new Set(PIY_DEP("carry_izle") || []), PIY_HACIM = PIY_DEP("carry_piy_hacim") ?? 10e6, PIY_MOD = PIY_DEP("carry_piy_mod") || "deg", PIY_ARA = "";
+// madde 833: dönem (1 / 3 / 7 / 30 gün). 1 gün = Binance'in kayan 24 sa değişimi; diğerleri günlük mumlardan (son 31 gün, coin başına
+// bir istek, 30 dk önbellek): şimdiki fiyat / N gün önceki günlük kapanış - 1. Yalnız listede görünecek coinler için (hacim süzgeci +
+// izleme listesi + arama) indirilir; 6 paralel istek. Coin N günden yeniyse "—" (sıralamaya girmez).
+let PIY_DONEM = [1,3,7,30].includes(PIY_DEP("carry_piy_donem")) ? PIY_DEP("carry_piy_donem") : 1, PIY_GUN = {}, PIY_GYUK = {bek: 0, bit: 0, calis: false};
+const PIY_DAD = {1: "24 sa", 3: "3 gün", 7: "1 hafta", 30: "1 ay"};
+function piyDeg(o){
+  if (PIY_DONEM == 1) return o.p;
+  const g = PIY_GUN[o.s]; if (!g || !(o.f > 0)) return null;
+  const i = g.c.length - 1 - PIY_DONEM; return i >= 0 && g.c[i] > 0 ? (o.f / g.c[i] - 1) * 100 : null;
+}
+async function piyGecmisYukle(){
+  if (VERI_GOMULU || PIY_DONEM == 1 || PIY_GYUK.calis || sayfa != "piyasa") return;
+  const A = Object.values(PIY).filter(o => o.f>0 && (!PIY_EVREN || PIY_EVREN.has(o.s)) && o.s.endsWith("USDT"));
+  const S = A.filter(o => (o.q||0) >= PIY_HACIM || PIY_IZLE.has(o.s) || (PIY_ARA && o.s.includes(PIY_ARA))).map(o => o.s)
+    .filter(s => !PIY_GUN[s] || Date.now() - PIY_GUN[s].t > 30 * 60e3);
+  if (!S.length) return;
+  PIY_GYUK = {bek: S.length, bit: 0, calis: true}; piyasaBoya(true);
+  let i = 0;
+  const isci = async () => { while (i < S.length){ const s = S[i++];
+    try { const d = await (await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=1d&limit=31`, {cache:"no-store"})).json();
+      if (Array.isArray(d)) PIY_GUN[s] = {t: Date.now(), c: d.map(x => +x[4])}; } catch(_){}
+    PIY_GYUK.bit++; if (PIY_GYUK.bit % 20 == 0) piyasaBoya(true); } };
+  await Promise.all([1,2,3,4,5,6].map(isci));
+  PIY_GYUK.calis = false; piyasaBoya(true);
+}
+function piyDonem(d){ PIY_DONEM = d; PIY_MOD = "deg"; PIY_DEP("carry_piy_donem", d); PIY_DEP("carry_piy_mod", "deg"); ciz(); piyGecmisYukle(); }
 async function piyasaIlk(){
   try {
     const [t, m, e] = await Promise.all(["ticker/24hr", "premiumIndex", PIY_EVREN ? null : "exchangeInfo"].map(u => u ? fetch("https://fapi.binance.com/fapi/v1/"+u, {cache:"no-store"}).then(r=>r.json()) : null));
@@ -1205,7 +1231,7 @@ async function piyasaIlk(){
     if (Array.isArray(m)) for (const x of m) piyMark({s:x.symbol, r:x.lastFundingRate, T:x.nextFundingTime});
     PIY_HATA = ""; PIY_ZAMAN = Date.now();
   } catch(_){ PIY_HATA = "Binance'e ulaşılamadı"; }
-  piyasaBoya(true);
+  piyasaBoya(true); piyGecmisYukle();
 }
 function piyTicker(d){ if (!d || !d.s) return; const o = PIY[d.s] || (PIY[d.s] = {s: d.s});
   if (+d.c > 0){ if (o.f && +d.c !== o.f) PIY_ONCEKI[d.s] = +d.c > o.f ? 1 : -1; o.f = +d.c; }
@@ -1216,16 +1242,16 @@ function piyasaBagla(ac){
   if (VERI_GOMULU || !window.WebSocket) return;
   if (!ac){ if (PIY_WS){ PIY_WS.onclose = null; PIY_WS.close(); PIY_WS = null; } return; }
   if (PIY_WS && PIY_WS.readyState <= 1) return;
-  if (!PIY_ZAMAN || Date.now() - PIY_ZAMAN > 60e3) piyasaIlk();
+  if (!PIY_ZAMAN || Date.now() - PIY_ZAMAN > 60e3) piyasaIlk(); else setTimeout(piyGecmisYukle, 0);
   PIY_WS = new WebSocket("wss://fstream.binance.com/market/stream?streams=!ticker@arr/!markPrice@arr@1s");
   PIY_WS.onmessage = e => { try { const m = JSON.parse(e.data), d = m.data, A = Array.isArray(d) ? d : [d];
     const tk = String(m.stream||"").startsWith("!ticker"); for (const x of A) tk ? piyTicker(x) : piyMark(x); PIY_ZAMAN = Date.now(); PIY_HATA = ""; } catch(_){} };
   PIY_WS.onclose = () => { PIY_WS = null; if (PIY_ACIK) setTimeout(()=>piyasaBagla(PIY_ACIK), 5000); };
 }
-function piyIzle(s){ PIY_IZLE.has(s) ? PIY_IZLE.delete(s) : PIY_IZLE.add(s); PIY_DEP("carry_izle", [...PIY_IZLE]); piyasaBoya(true); }
-function piyHacim(v){ PIY_HACIM = v; PIY_DEP("carry_piy_hacim", v); ciz(); }
+function piyIzle(s){ PIY_IZLE.has(s) ? PIY_IZLE.delete(s) : PIY_IZLE.add(s); PIY_DEP("carry_izle", [...PIY_IZLE]); piyasaBoya(true); piyGecmisYukle(); }
+function piyHacim(v){ PIY_HACIM = v; PIY_DEP("carry_piy_hacim", v); ciz(); piyGecmisYukle(); }
 function piyMod(v){ PIY_MOD = v; PIY_DEP("carry_piy_mod", v); ciz(); }
-function piyAra(v){ PIY_ARA = String(v||"").toUpperCase().replace(/[^A-Z0-9]/g, ""); piyasaBoya(true); }
+function piyAra(v){ PIY_ARA = String(v||"").toUpperCase().replace(/[^A-Z0-9]/g, ""); piyasaBoya(true); clearTimeout(piyAra.z); piyAra.z = setTimeout(piyGecmisYukle, 400); }
 const piyFiyat = f => f==null ? "—" : f >= 1000 ? f.toLocaleString("tr-TR", {maximumFractionDigits: 1}) : f >= 1 ? f.toLocaleString("tr-TR", {maximumFractionDigits: 4})
   : f.toLocaleString("tr-TR", {maximumSignificantDigits: 4});
 const piyHac = q => q==null ? "—" : q >= 1e9 ? (q/1e9).toFixed(1).replace(".",",")+" Mr" : q >= 1e6 ? (q/1e6).toFixed(1).replace(".",",")+" M" : Math.round(q/1e3)+" B";
@@ -1239,30 +1265,33 @@ function piySatir(o, R){
   const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, "");
   return `<div class="pyr ${fl>0?"fl-a":fl<0?"fl-e":""}"><button class="yd ${yd?"on":""}" title="${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" onclick="piyIzle('${o.s}')">${yd?"★":"☆"}</button>
     <span style="min-width:0;display:flex;align-items:center"><a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}</span>
-    <span class="r">${piyFiyat(o.f)}</span><span class="r ${o.p>0?"art":o.p<0?"eks":""}"><b>${piyYz(o.p)}</b></span>
+    <span class="r">${piyFiyat(o.f)}</span><span class="r ${o.d>0?"art":o.d<0?"eks":""}"><b>${piyYz(o.d)}</b></span>
     <span class="r k2 hc">${piyHac(o.q)}</span><span class="r k2 ${o.r>0?"":o.r<0?"eks":""}" title="son funding oranı (8 sa)">${o.r==null?"—":piyYz(o.r*100, 3)}</span></div>`;
 }
 function piyListe(k){
   const A = Object.values(PIY).filter(o => o.f>0 && o.p!=null && (!PIY_EVREN || PIY_EVREN.has(o.s)) && o.s.endsWith("USDT"));
-  const R = piyRozet(k), ust = `<div class="pyr ust"><span></span><span>coin</span><span class="r">fiyat</span><span class="r">24 sa</span><span class="r hc">hacim</span><span class="r">funding</span></div>`;
+  for (const o of A) o.d = piyDeg(o);
+  const DA = PIY_DAD[PIY_DONEM];
+  const R = piyRozet(k), ust = `<div class="pyr ust"><span></span><span>coin</span><span class="r">fiyat</span><span class="r">${DA}</span><span class="r hc">hacim</span><span class="r">funding</span></div>`;
   const blok = (bas, L, not) => `<div class="pyb"><span>${bas}</span><span>${not||""}</span></div><div class="pyl">${L.length ? ust + L.map(o=>piySatir(o, R)).join("") : "<div class='bos'>—</div>"}</div>`;
   if (PIY_ARA){
     const L = A.filter(o => o.s.includes(PIY_ARA)).sort((a,b)=>(b.q||0)-(a.q||0)).slice(0, 40);
     return blok(`Arama: ${PIY_ARA}`, L, `${L.length} coin`);
   }
-  const izl = A.filter(o => PIY_IZLE.has(o.s)).sort((a,b)=>(b.p||0)-(a.p||0));
+  const izl = A.filter(o => PIY_IZLE.has(o.s)).sort((a,b)=>(b.d??-1e9)-(a.d??-1e9));
   const H = A.filter(o => (o.q||0) >= PIY_HACIM), n = 15;
   const ana = PIY_MOD=="fund"
     ? blok("En yüksek funding (short'a ödeniyor)", H.filter(o=>o.r>0).sort((a,b)=>b.r-a.r).slice(0,n)) + blok("En negatif funding (long'a ödeniyor)", H.filter(o=>o.r<0).sort((a,b)=>a.r-b.r).slice(0,n))
-    : blok("En çok yükselen (24 sa)", H.filter(o=>o.p>0).sort((a,b)=>b.p-a.p).slice(0,n)) + blok("En çok düşen (24 sa)", H.filter(o=>o.p<0).sort((a,b)=>a.p-b.p).slice(0,n));
+    : blok(`En çok yükselen (${DA})`, H.filter(o=>o.d>0).sort((a,b)=>b.d-a.d).slice(0,n), piyYukNot()) + blok(`En çok düşen (${DA})`, H.filter(o=>o.d<0).sort((a,b)=>a.d-b.d).slice(0,n));
   return (izl.length ? blok("★ İzleme listem", izl, `${izl.length} coin`) : "") + ana;
 }
+function piyYukNot(){ return PIY_DONEM > 1 && PIY_GYUK.calis ? `geçmiş yükleniyor ${PIY_GYUK.bit}/${PIY_GYUK.bek}` : ""; }
 function piyasaSayfa(k){
   const hb = (v, ad) => `<button class="${PIY_HACIM==v?"on":""}" onclick="piyHacim(${v})">${ad}</button>`, mb = (v, ad) => `<button class="${PIY_MOD==v?"on":""}" onclick="piyMod('${v}')">${ad}</button>`;
   return `<div class="kart">
     <div class="dpb"><span class="gb">Piyasa</span><span class="k" id="piyd"></span></div>
     <div class="pya"><input id="piyara" type="search" placeholder="coin ara (örn. AKE)" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value)">
-      <div class="gdon">${mb("deg","24 sa değişim")}${mb("fund","Funding")}</div></div>
+      <div class="gdon">${[1,3,7,30].map(d=>`<button class="${PIY_MOD=="deg"&&PIY_DONEM==d?"on":""}" onclick="piyDonem(${d})">${PIY_DAD[d]}</button>`).join("")}${mb("fund","Funding")}</div></div>
     <div class="pya"><span class="k">hacim ≥</span><div class="gdon">${hb(1e6,"1 M$")}${hb(10e6,"10 M$")}${hb(50e6,"50 M$")}${hb(200e6,"200 M$")}</div></div>
     <div id="piyic">${piyListe(k)}</div>
     <div class="k" style="margin-top:10px">Gerçek Binance piyasası, saniyede bir güncellenir. ☆ ile izleme listene ekle (yalnız bu cihazda saklanır). Coin adına dokununca Binance'te açılır; panel işlem yapmaz.</div>
@@ -1270,6 +1299,7 @@ function piyasaSayfa(k){
 }
 function piyasaBoya(zorla){
   if (sayfa!="piyasa") return;
+  if (PIY_DONEM > 1 && Date.now() - (piyasaBoya.g||0) > 60e3){ piyasaBoya.g = Date.now(); setTimeout(piyGecmisYukle, 0); }   // 30 dk'yı geçen önbellek yenilenir
   const el = $("#piyic"), d = $("#piyd"); if (!el) return;
   if (d) d.textContent = PIY_HATA || (PIY_ZAMAN ? (Date.now()-PIY_ZAMAN < 10e3 ? "● canlı" : "bağlantı bekleniyor…") : "yükleniyor…");
   if (!zorla && Date.now() - PIY_SON_CIZ < 900) return;

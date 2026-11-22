@@ -59,12 +59,32 @@ EI = {"symbols": [{"symbol": s, "contractType": "CURRENT_QUARTER" if s == "GGGUS
 T24 = [{"symbol": s, "lastPrice": str(f), "priceChangePercent": str(p), "quoteVolume": str(q)} for s, f, p, q, r in COIN]
 PI = [{"symbol": s, "lastFundingRate": str(r), "nextFundingTime": 1_800_000_000_000} for s, f, p, q, r in COIN]
 wss = []
+kline_istek = []
+
+
+def mumlar(sem):
+    """31 günlük kapanış: 3 gün önce (indeks 27) ve 7 gün önce (indeks 23) belirli değerler; BTC yeni listelenmiş (2 mum)."""
+    taban = {s: f for s, f, *_ in COIN}[sem]
+    c = [taban] * 31
+    if sem == "AAAUSDT":
+        c[27] = 0.5; c[23] = 2.0          # 3 gün: +%100, 1 hafta: -%50
+    if sem == "CCCUSDT":
+        c[27] = 6.0; c[23] = 1.0          # 3 gün: -%50, 1 hafta: +%200
+    if sem == "BTCUSDT":
+        c = [90000.0, 90000.0]
+    return [[0, "0", "0", "0", str(x)] for x in c]
 
 
 def kur(page):
     def fapi(route):
         u = route.request.url
-        body = EI if "exchangeInfo" in u else T24 if "ticker/24hr" in u else PI if "premiumIndex" in u else []
+        if "klines" in u:
+            sem = u.split("symbol=")[1].split("&")[0]
+            if "interval=1d" in u:
+                kline_istek.append(sem)
+            body = mumlar(sem)
+        else:
+            body = EI if "exchangeInfo" in u else T24 if "ticker/24hr" in u else PI if "premiumIndex" in u else []
         route.fulfill(status=200, content_type="application/json", body=json.dumps(body),
                       headers={"Access-Control-Allow-Origin": "*"})
     page.route("https://fapi.binance.com/**", fapi)
@@ -128,7 +148,32 @@ with sync_playwright() as pw:
     page.locator(".gdon button", has_text="Funding").click()
     f1 = satirlar(page, "En yüksek funding"); f2 = satirlar(page, "En negatif funding")
     kontrol("funding modu: en yüksek BBB, en negatif CCC", f1[0] == "BBB" and f2[0] == "CCC", f"({f1}, {f2})")
-    page.locator(".gdon button", has_text="24 sa değişim").click()
+    page.locator(".gdon button", has_text="24 sa").click()
+    print("5b) dönem: 3 gün / 1 hafta / 1 ay")
+    kontrol("24 sa'te günlük mum indirilmedi", kline_istek == [], f"({kline_istek})")
+    page.locator(".gdon button", has_text="3 gün").click()
+    page.wait_for_function("() => !PIY_GYUK.calis && Object.keys(PIY_GUN).length > 0", timeout=10000)
+    y3 = satirlar(page, "En çok yükselen (3 gün)"); d3 = satirlar(page, "En çok düşen (3 gün)")
+    kontrol("3 gün: AAA +%100 yükselenlerde, CCC -%50 düşenlerde", y3 == ["AAA"] and d3 == ["CCC"], f"({y3}, {d3})")
+    kontrol("3 gün: sütun başlığı ve değer", "+100,00%" in page.locator(".pyr", has_text="AAA").first.inner_text()
+            and page.locator(".pyr.ust").first.inner_text().find("3 gün") >= 0)
+    kontrol("yalnız listede görünecek coinler indirildi (düşük hacimli EEE yok, USDC yok)",
+            "EEEUSDT" not in kline_istek and "FFFUSDC" not in kline_istek and "AAAUSDT" in kline_istek, f"({kline_istek})")
+    n0 = len(kline_istek)
+    page.locator(".gdon button", has_text="1 hafta").click(); time.sleep(0.5)
+    y7 = satirlar(page, "En çok yükselen (1 hafta)"); d7 = satirlar(page, "En çok düşen (1 hafta)")
+    kontrol("1 hafta: CCC +%200 yükselenlerde, AAA -%50 düşenlerde", y7 == ["CCC"] and d7 == ["AAA"], f"({y7}, {d7})")
+    kontrol("dönem değişince yeniden indirmedi (30 dk önbellek)", len(kline_istek) == n0, f"({len(kline_istek)} vs {n0})")
+    page.locator(".gdon button", has_text="1 ay").click(); time.sleep(0.3)
+    kontrol("1 ay: 30 günde değişmeyen coinler yükselen / düşen listesinde yok",
+            satirlar(page, "En çok yükselen (1 ay)") == [] and satirlar(page, "En çok düşen (1 ay)") == [],
+            f"({satirlar(page, 'En çok yükselen (1 ay)')}, {satirlar(page, 'En çok düşen (1 ay)')})")
+    page.fill("#piyara", "btc"); time.sleep(0.8)
+    kontrol("yeni listelenmiş coinde 1 ay değişimi '—'", "—" in page.locator(".pyr", has_text="BTC").first.inner_text())
+    page.fill("#piyara", "")
+    page.reload(); page.wait_for_selector("#piyic")
+    kontrol("dönem seçimi yenilemede korunur", page.locator(".gdon button.on", has_text="1 ay").count() == 1)
+    page.locator(".gdon button", has_text="24 sa").click()
     print("6) sekmeden çıkınca akış kapanır")
     w0 = len(wss)
     page.locator("#nav button", has_text="Özet").click(); time.sleep(0.5)
