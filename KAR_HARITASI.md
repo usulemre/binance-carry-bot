@@ -9329,3 +9329,14 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   sermaye o dilim yenilenene kadar boş kalır (stop / kâr al çıkışıyla aynı); (d) backtest bu müdahaleleri bilmez → demo–backtest karşılaştırmasında
   elle coinler ayrıca düşülür (olay defterinden).
 - Uygulama kullanıcı onayıyla: sunucu `.env` → `CARRY_ELLE=1`, bot yeniden başlatılır.
+
+## Madde 831 — Elle müdahale için turlar arası saatlik hafif kontrol (kullanıcı isteği, 2026-11-22; yalnız CARRY_ELLE=1 iken)
+- Sorun (830'un sınırı): bot müdahaleyi yalnız tur başında (8 sa'te bir) görüyordu; arada botun eski kâr al / kademe / felaket emirleri borsada kalıyordu.
+  Kullanıcı short'a geçtiyse ya da kapattıysa bunlar reduceOnly olduğu için işlemez; ama KISMİ satışta kalan long'u botun eski TP'si kapatabilirdi.
+- Çözüm: `ara_bekle` — turlar arası bekleme ELLE_ARA_SN (3.600 sn) parçalara bölünür, her parçadan sonra `elle_guncelle` (830'un aynı fonksiyonu):
+  müdahale görülürse işaret + botun o coindeki emirleri HEMEN iptal + bildirim. Dilim defteri ara kontrolde DEĞİŞMEZ (sıradaki tur başında temizlenir);
+  işlem turu, tur ızgarası ve toplam bekleme süresi aynı. Tura < 60 sn kalmışsa kontrol yapılmaz. ELLE kapalı / kuru çalışma / ELLE_ARA_SN=0 → tek uyku
+  (eski davranış). Gecikme en kötü 8 sa → 1 sa.
+- Testler (`test_carry_elle` B10-B11): 8 sa'te 7 kontrol, toplam bekleme aynı; kapalı / kuru / 0 → tek uyku; kontrol patlasa da bekleme tam;
+  gerçek akışta ara kontrol botun emrini iptal ediyor, defter tura kadar değişmiyor, sonraki turda coin defterden çıkıyor ve emir gitmiyor.
+  `test_carry_bot`, `preflight`, `panel`, `delist`, `acil_kapat`, `olay`, `saglik`, `parite`, `onerilen` geçiyor.

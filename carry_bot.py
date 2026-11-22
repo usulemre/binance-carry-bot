@@ -2920,6 +2920,9 @@ ELLE_OLAY_DOSYA = os.getenv("CARRY_ELLE_OLAY", "carry_elle_olay.jsonl")
 ELLE_BEKLEME_SN = float(os.getenv("CARRY_ELLE_BEKLEME_SN", "1800"))
 """MADDE 830 (altyapı): adet 0 olduktan sonra son kullanıcı dolumundan bu kadar saniye geçmeden coin bota dönmez (long'u kapatıp
 short açarken arada tur denk gelirse sembol bota geri geçmesin). Strateji parametresi değil, ölçülmedi."""
+ELLE_ARA_SN = float(os.getenv("CARRY_ELLE_ARA_SN", "3600"))
+"""MADDE 831 (altyapı): turlar arasında (8 sa) bu kadar saniyede bir hafif elle müdahale kontrolü — müdahale görülünce botun o coindeki
+kâr al / kademe / stop emirleri hemen iptal edilir (tur beklenmez). İşlem turu DEĞİŞMEZ. 0 = yalnız tur başında (madde 830)."""
 _ELLE: set = set()
 """Bu turda kullanıcıda olan semboller (ELLE kapalıyken hep boş -> hiçbir filtre etkisiz)."""
 
@@ -2945,6 +2948,29 @@ def elle_guncelle(client, dry_run: bool = False) -> set:
     if _ELLE:
         logger.info("elle yönetimde (bot dokunmuyor): %s", ", ".join(sorted(_ELLE)))
     return _ELLE
+
+
+def ara_bekle(client, sure: float, dry_run: bool = False) -> int:
+    """MADDE 831: turlar arası bekleme. ELLE açıkken bekleme ELLE_ARA_SN'lik parçalara bölünür, her parçadan sonra elle müdahale
+    kontrolü yapılır (sıradaki tura 60 sn'den az kaldıysa yapılmaz; tur başı zaten bakar). Toplam bekleme süresi DEĞİŞMEZ.
+    Kapalıysa / kuru çalışmada tek uyku (eski davranış). Yapılan kontrol sayısını döner."""
+    if not ELLE or ELLE_ARA_SN <= 0 or dry_run:
+        time.sleep(max(0.0, sure))
+        return 0
+    bitis = time.time() + max(0.0, sure)
+    n = 0
+    while True:
+        kalan = bitis - time.time()
+        if kalan <= 0:
+            break
+        time.sleep(min(ELLE_ARA_SN, kalan))
+        if bitis - time.time() > 60:
+            try:
+                elle_guncelle(client)
+                n += 1
+            except Exception as e:      # elle_guncelle kendi hatasını yutar; bu yalnız emniyet
+                logger.warning("ara elle kontrolü atlandı: %s", e)
+    return n
 
 
 TUR_IZGARA = os.getenv("CARRY_TUR_IZGARA", "1") not in ("0", "false", "False")
@@ -5276,7 +5302,7 @@ def main():
         if 0 < _bek <= _aralik:
             logger.info("son tur %.0f dk önce başlamıştı - sıradaki tur %.0f dk sonra (yeniden başlatma ek tur açmaz)",
                         (time.time() - _son) / 60, _bek / 60)
-            time.sleep(_bek)
+            ara_bekle(client, _bek)   # madde 831
     while True:
         _t0 = time.time()
         if TUR_IZGARA and not args.dry_run:
@@ -5315,7 +5341,8 @@ def main():
         # Her dilim REBALANCE_HOURS'ta bir yenilenir; N dilim varsa
         # bot bunun 1/N'i kadar sıklıkta çalışır.
         # MADDE 770: aralık turun BAŞLANGICINDAN sayılır (eskiden bitişinden: her tur ~8 dk kayıyordu, günde ~25 dk).
-        time.sleep(max(0.0, _t0 + _aralik - time.time()) if TUR_IZGARA else _aralik)
+        ara_bekle(client, max(0.0, _t0 + _aralik - time.time()) if TUR_IZGARA else _aralik,
+                  dry_run=args.dry_run)   # madde 831: ELLE kapalıyken tek uyku (eski davranış)
 
 
 if __name__ == "__main__":

@@ -411,6 +411,68 @@ kontrol("kullanıcının coinine kâr al / felaket konmadı",
         and all(c9.client.felaket_emirleri[k][0] != "C45USDT" for k in set(c9.client.felaket_emirleri) - _f0))
 cb._ELLE.clear()
 
+
+print("B10) turlar arası saatlik hafif kontrol (madde 831)")
+_gt, _gs = cb.time.time, cb.time.sleep
+_saat = [1_000_000.0]; _uyku = []; _kontrol = []
+cb.time.time = lambda: _saat[0]
+def _sl(x):
+    _uyku.append(x); _saat[0] += x
+cb.time.sleep = _sl
+_eg = cb.elle_guncelle
+cb.elle_guncelle = lambda client, dry_run=False: _kontrol.append(_saat[0]) or set()
+try:
+    cb.ELLE, cb.ELLE_ARA_SN = True, 3600.0
+    n = cb.ara_bekle(None, 8 * 3600.0)
+    kontrol("8 sa beklemede 7 kontrol (1..7. saat; tur başı zaten bakar)", n == 7 and len(_kontrol) == 7, f"({n}, {_kontrol})")
+    kontrol("toplam bekleme süresi DEĞİŞMEDİ (8 sa)", abs(sum(_uyku) - 8 * 3600.0) < 1e-6, f"({sum(_uyku)})")
+    _uyku.clear(); _kontrol.clear()
+    n = cb.ara_bekle(None, 3600.0 + 30)
+    kontrol("tura 60 sn'den az kala kontrol yapılmaz", n == 0 and abs(sum(_uyku) - 3630.0) < 1e-6, f"({n}, {_uyku})")
+    _uyku.clear(); _kontrol.clear()
+    cb.ELLE = False
+    n = cb.ara_bekle(None, 8 * 3600.0)
+    kontrol("ELLE kapalı: tek uyku, kontrol yok (eski davranış)", n == 0 and _uyku == [8 * 3600.0] and not _kontrol, f"({_uyku})")
+    _uyku.clear(); cb.ELLE = True
+    n = cb.ara_bekle(None, 8 * 3600.0, dry_run=True)
+    kontrol("kuru çalışma: tek uyku, kontrol yok", n == 0 and _uyku == [8 * 3600.0])
+    _uyku.clear(); cb.ELLE_ARA_SN = 0.0
+    n = cb.ara_bekle(None, 8 * 3600.0)
+    kontrol("ELLE_ARA_SN=0: yalnız tur başı (tek uyku)", n == 0 and _uyku == [8 * 3600.0])
+    _uyku.clear(); cb.ELLE_ARA_SN = 3600.0
+    def _patla(client, dry_run=False):
+        raise RuntimeError("bilerek")
+    cb.elle_guncelle = _patla
+    n = cb.ara_bekle(None, 3 * 3600.0)
+    kontrol("kontrol patlasa da bekleme tam sürer", abs(sum(_uyku) - 3 * 3600.0) < 1e-6, f"({sum(_uyku)})")
+    _uyku.clear()
+    n = cb.ara_bekle(None, -5.0)
+    kontrol("negatif süre: bekleme yok", n == 0 and sum(_uyku) == 0)
+finally:
+    cb.time.time, cb.time.sleep = _gt, _gs
+    cb.elle_guncelle = _eg
+    cb.ELLE = False
+
+print("B11) ara kontrol gerçek akışta: müdahale görülünce botun emirleri TUR BEKLENMEDEN iptal, dilim defteri tura kadar değişmez")
+ortam(True)
+c11 = ElleClient(); cb.bir_tur(c11, dry_run=False)
+c11.pozisyonlari_ayarla(cb.toplam_hedef_tut(cb.dilim_durum_oku(), dict(c11.client._fiyat)))
+d11 = cb.dilim_durum_oku()
+S11 = sorted(s for s, v in cb.toplam_hedef_tut(d11, dict(c11.client._fiyat)).items() if v > 0)[0]
+_n11 = int(time.time() * 1000)
+c11.client.gecmis[S11] = [emir(901, "ios_sat", _n11 - 1000)]
+c11.client.kullanici_acik[S11] = [emir(902, "x-Cb7ytekJtp", _n11 - 5000, dolan="0", tip="LIMIT")]
+_defter_once = json.dumps(cb.dilim_durum_oku(), sort_keys=True)
+cb.elle_guncelle(c11)     # ara_bekle'nin çağırdığı fonksiyonun kendisi
+kontrol("ara kontrolde coin işaretlendi", S11 in cb._ELLE)
+kontrol("botun o coindeki emri hemen iptal edildi", (S11, 902) in c11.client.tek_iptal, f"({c11.client.tek_iptal})")
+kontrol("dilim defteri ara kontrolde DEĞİŞMEDİ (tur içinde temizlenir)", json.dumps(cb.dilim_durum_oku(), sort_keys=True) == _defter_once)
+g11 = len(c11.client.gonderilen)
+cb.bir_tur(c11, dry_run=False)
+kontrol("sonraki turda coin defterden çıktı ve emir gitmedi",
+        all(S11 not in h for h in cb.dilim_durum_oku()["dilimler"].values()) and all(x[0] != S11 for x in c11.client.gonderilen[g11:]))
+cb.ELLE = False; cb._ELLE.clear()
+
 print("B6) varsayılan KAPALI")
 import importlib
 _eski = os.environ.pop("CARRY_ELLE", None)
