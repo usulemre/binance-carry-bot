@@ -9539,3 +9539,11 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   eskiyse tazelenir.
 - Ders: iki kez tek satırlık JS'nin sonuna `// yorum` eklenip aynı satırdaki kod yorum içinde kaldı (844 try/catch, 845 sheetAc) — `node --check`
   ikisini de yayından önce yakaladı. Sunucuda node yok; sözdizimi denetimi yayından önce Mac'te koşulur.
+
+## Madde 846 — elle ayrıntı sadeleştirme
+
+Kullanıcı: "şimdi geliyor ama karışık, kolaylaştır". Elle coin ayrıntı sayfası sadeleştirildi:
+- Tek satır özet: "Senin pozisyonun · 100 $ short · giriş X → K/Z ve %". Bottan devralınan kısım varsa iki satır (Senin aldığın / Bottan gelen) + küçük toplam satırı.
+- Kâr al · stop durumu tek satır; stop yoksa uyarı rengiyle "stop yok".
+- Dolum listesi "İşlem geçmişi (n)" altında katlanır (details).
+- Dört maddelik açıklama tek cümleye indi; düğme "Kapat · TP · stop koy".

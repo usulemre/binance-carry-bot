@@ -1122,7 +1122,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .ibtn.L{background:var(--fa)}.isl .ibtn.S{background:var(--fe)}.isl .ibtn.tehlike{background:var(--fe)}.isl .ibtn.vurgu{background:var(--vurgu)}.isl .ibtn:disabled{opacity:.5;cursor:default}
 .isl .ibtn.geri{flex:0 0 108px;background:var(--kart2);color:var(--yazi)}
 .isl .ibtn.tut::before{content:"";position:absolute;inset:0;width:0;background:rgba(255,255,255,.28);transition:width 0s}.isl .ibtn.tut.dolu::before{width:100%;transition:width .7s linear}
-.elp{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--kart2);font-size:13.5px}.elh{font-weight:700;margin-bottom:6px}.elr{display:flex;justify-content:space-between;gap:10px;padding:5px 0;line-height:1.4}.elr .r{text-align:right}
+.elp{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--kart2);font-size:13.5px}.elh{font-weight:700;margin-bottom:6px}.elr{display:flex;justify-content:space-between;gap:10px;padding:5px 0;line-height:1.4}.elr .r{text-align:right}.eld{margin-top:8px}.eld summary{cursor:pointer;color:var(--soluk);font-size:13px;padding:4px 0}
 .elk{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:13.5px;line-height:1.5;background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.elk li{margin:3px 0}.elkb{margin-top:10px;width:100%;min-height:44px;border:0;border-radius:10px;font:inherit;font-weight:600;background:var(--vurgu);color:var(--bg);cursor:pointer}
 .isl .ibtn.tut span{position:relative}.isl .isah{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45}.isl .isah.sen{background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.isl .isah.bot{background:color-mix(in srgb,var(--uyari) 14%,transparent)}
 .isl .ibek{align-items:center}.isl .ibx{height:36px;padding:0 14px;border-radius:10px;border:1px solid color-mix(in srgb,var(--eks) 45%,transparent);background:var(--kart);color:var(--fe);font:inherit;font-weight:650;cursor:pointer}.isl .iacil.kucuk2{height:auto;min-height:44px;padding:8px 14px;margin-top:8px}.isl .iacil.kucuk2 i{text-align:right}.isl .art,.pyk .art{color:var(--fa)}.isl .eks,.pyk .eks{color:var(--fe)}.isl .shx{width:44px;height:44px}.isl .iuyr{color:var(--uyari);font-size:12.5px;margin:8px 0 0}
@@ -1415,20 +1415,20 @@ function elleKisa(x){   // Pozisyonlarım satırı: "senin 5.963 @ 0,01677 · bo
   const P = x.pay; if (!P || !P.devralinan) return `${elleAdet(x.adet)} adet @ ${piyFiyat(x.giris)}`;
   return `senin ${elleAdet(P.benim_adet)}${P.benim_giris?` @ ${piyFiyat(P.benim_giris)}`:""} · bottan ${elleAdet(P.devralinan)}${P.devralinan_giris?` @ ${piyFiyat(P.devralinan_giris)}`:""}`;
 }
-function ellePayHtml(s, p, f){   // ayrıntı sayfası: dolumlar + parça parça giriş ve K/Z
-  const x = elleBul(s), P = x && x.pay, yonA = p.miktar > 0 ? "long" : "short";
+function ellePayHtml(s, p, f){   // madde 846: sade özet — ne aldın, kaçtan, şu an ne durumda; dolumlar katlanır
+  const x = elleBul(s), P = x && x.pay, yon = p.miktar > 0 ? "long" : "short";
   if (!x) { if (ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle(); return ISL_DURUM && ISL_DURUM.acik ? `<div class="elp k">işlemlerin yükleniyor…</div>` : ""; }
-  if (!P) return "";
-  const kz = (q, g) => g && f ? q * (f - g) : null;   // q işaretli adet
-  const sat = (ad, q, g, not) => { const v = kz(q, g); return `<div class="elr"><span><b>${ad}</b><br><span class="k">${elleAdet(q)} adet ${yonA}${not?" · "+not:""}</span></span>
-    <span class="r"><b>${g ? fiyatYaz(g) : "—"}</b><br>${v==null ? "" : `<span class="${sinif(v)}">${isaretli(v)}</span>`}</span></div>`; };
-  const D = (P.dolum || []).map(d => `<div class="elr"><span>${elleZaman(d.t)}</span><span class="r"><b class="${d.yon=="AL"?"art":"eks"}">${d.yon}</b> ${elleAdet(d.adet)} @ <b>${fiyatYaz(d.fiyat)}</b> <span class="k">≈ ${para(d.adet * d.fiyat)}</span></span></div>`).join("");
-  return `<div class="elp"><div class="elh">Senin işlemlerin</div>${D || `<div class="k">bu sahiplik döneminde dolum bulunamadı</div>`}
-    <div class="elh" style="margin-top:10px">Pozisyon kimden, kaçtan</div>
-    ${P.benim_adet ? sat("Senin payın", P.benim_adet, P.benim_giris, "ortalama giriş") : ""}
-    ${P.devralinan ? sat("Bottan devralınan", P.devralinan, P.devralinan_giris, P.devralinan_giris ? "botun girişi" : "giriş ayrıştırılamadı") : ""}
-    <div class="elr" style="border-top:1px solid var(--cizgi);padding-top:8px"><span><b>Borsadaki toplam</b><br><span class="k">${elleAdet(p.miktar)} adet · Binance tek ortalama gösterir</span></span>
-      <span class="r"><b>${fiyatYaz(x.giris)}</b><br><span class="${sinif(x.kz)}">${isaretli(x.kz)}</span></span></div></div>`;
+  const sat = (ad, q, g, kz) => { const v = kz != null ? kz : (g && f ? q * (f - g) : null), y = g && f ? (f / g - 1) * (q > 0 ? 1 : -1) * 100 : null;
+    return `<div class="elr"><span><b>${ad}</b><br><span class="k">${para(Math.abs(q) * (g || f))} ${yon} · giriş ${g ? fiyatYaz(g) : "bilinmiyor"}</span></span>
+      <span class="r">${v == null ? "—" : `<b class="${sinif(v)}">${isaretli(v)}</b>${y == null ? "" : `<br><span class="k">${(y>=0?"+":"−")}%${Math.abs(y).toFixed(1).replace(".",",")}</span>`}`}</span></div>`; };
+  const ikili = P && P.devralinan && P.benim_adet;
+  const govde = ikili
+    ? sat("Senin aldığın", P.benim_adet, P.benim_giris) + sat("Bottan gelen", P.devralinan, P.devralinan_giris)
+      + `<div class="elr k" style="border-top:1px solid var(--cizgi);padding-top:6px"><span>Toplam (Binance ortalaması ${fiyatYaz(x.giris)})</span><span class="r ${sinif(x.kz)}">${isaretli(x.kz)}</span></div>`
+    : sat(P && P.devralinan && !P.benim_adet ? "Bottan gelen" : "Senin pozisyonun", p.miktar, x.giris, x.kz);
+  const koruma = `<div class="elr" style="border-top:1px solid var(--cizgi);padding-top:6px"><span class="k">Kâr al · stop</span><span class="r">${x.tp ? `TP ${fiyatYaz(x.tp)}` : "TP yok"} · ${x.sl ? `stop ${fiyatYaz(x.sl)}` : `<b class="uyr">stop yok</b>`}</span></div>`;
+  const D = (P && P.dolum || []).map(d => `<div class="elr"><span class="k">${elleZaman(d.t)}</span><span class="r"><b class="${d.yon=="AL"?"art":"eks"}">${d.yon}</b> ${para(d.adet * d.fiyat)} · ${fiyatYaz(d.fiyat)}</span></div>`).join("");
+  return `<div class="elp">${govde}${koruma}${D ? `<details class="eld"><summary>İşlem geçmişi (${P.dolum.length})</summary>${D}</details>` : ""}</div>`;
 }
 function elleHtml(){
   const E = ELLE_OZ; if (!E) return `<div class="pyb"><span>Pozisyonlarım</span><span>yükleniyor…</span></div>`;
@@ -2173,16 +2173,9 @@ function minik(s, p, f, renk){   // satır içi mini grafik: yalnız çizgi (60x
 // MADDE 842: elle coin mü (coin_ozet "elle" bayrağı: carry_elle.json + panel işaretleri)
 function elleMi(k, s){ return ((k && k.coin_ozet) || []).some(c => c.elle && (c.s.endsWith("USDT") ? c.s : c.s + "USDT") === s)
   || (k && k.pozisyonlar && k.pozisyonlar[s] && k.pozisyonlar[s].elle_canli) || false; }
-function elleKutu(s, p, f){
-  const ad = s.replace(/USDT$/,""), uzun = p.miktar > 0;
-  return `${ellePayHtml(s, p, f)}<div class="elk"><b>✋ ${ad} pozisyonunu sen yönetiyorsun</b>
-    <ul style="margin:6px 0 0;padding-left:18px">
-      <li>Bot bu coine <b>ekleme, kapatma, kâr al, stop ya da süre dolunca yenileme</b> yapmıyor. Bu yüzden çıkış süresi ve bot kâr al hedefi yok.</li>
-      <li>Pozisyon sen kapatana kadar olduğu gibi kalır. ${uzun ? "Satmak" : "Geri alıp kapatmak"}, TP ya da stop koymak senin elinde.</li>
-      <li>İşlem yaptığın anda botun bu coindeki payı da sana geçti (borsada coin başına tek pozisyon var).</li>
-      <li>Tamamen kapattıktan 30 dk sonra coin bota döner; bot uygun görürse kendi dilimleriyle yeniden açar.</li>
-    </ul>
-    ${typeof islAc === "function" && ISL_DURUM && ISL_DURUM.acik ? `<button class="elkb" onclick="sheetKapat();islAc('${s}')">İşlem penceresini aç (kapat · TP · stop)</button>` : ""}</div>`;
+function elleKutu(s, p, f){   // madde 846: tek cümle + tek düğme
+  return `${ellePayHtml(s, p, f)}<div class="elk">✋ <b>Bunu sen yönetiyorsun.</b> Bot bu coine dokunmuyor: kâr al, stop ya da süre yok. Tamamen kapatınca 30 dk sonra coin bota döner.
+    ${typeof islAc === "function" && ISL_DURUM && ISL_DURUM.acik ? `<button class="elkb" onclick="sheetKapat();islAc('${s}')">Kapat · TP · stop koy</button>` : ""}</div>`;
 }
 function satirD(s, p, k){
   const {f, ky, g, usd} = pozDeger(s, p), renk = css((g||0) >= 0 ? "--art" : "--eks"), sv = stopYakin(k, s, p), ec = (k.stop_durum||{}).esik_coin;
