@@ -9562,3 +9562,6 @@ Kullanıcı: "şimdi geliyor ama karışık, kolaylaştır". Elle coin ayrıntı
 ## Madde 848 — coin incelerken tüm dönemler tek sayfada
 
 Kullanıcı: "bir coini incelerken aynı sayfada görmeliyim günlük 3 günlük haftalık aylık herşeyi". Piyasa'daki coin penceresine (grafiğin altı) ve pozisyon ayrıntısına dönem şeridi eklendi: 24 sa / 3 gün / 1 hafta / 1 ay / 3 ay. Her satırda değişim yüzdesi, dönemin en düşük–en yüksek aralığı ve fiyatın bu aralıktaki yeri, minik kapanış grafiği. Veri: coin başına 1 sa × 168 ve 1 gün × 90 Binance mumu, 5 dk önbellek; işlem penceresinde 5 sn'de bir canlı fiyatla tazelenir. Yeni listelenmiş coinlerde dönem kısaysa gerçek gün sayısı yazılır.
+- 783 uzatma 7 (2026-11-23, veri 21 Kas UTC sonuna kadar; 22 Kas günlük dosyaları henüz yayınlanmadı): /tmp/m783h, iki hiza rc 0, ≤ 19 Kas parite 0.
+  Günlük (×1,15): 20 Kas −4,30 · 21 Kas −0,29. Ekim −4,99 %, Kasım 1-21 −7,86 %, 7-21 Kas (tam kitap) −8,00 %; 9 Ekim zirvesinden düşüş −17,72 %
+  (zirve öncesi en derin −15,23 %); 2026 yılbaşından +306 %. Not: sinyal kurulumu VERI_EK=uzun ister (ilk koşu eski sinyalle yapıldı → atıldı, yeniden koşuldu).
