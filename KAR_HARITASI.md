@@ -9340,3 +9340,11 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
 - Testler (`test_carry_elle` B10-B11): 8 sa'te 7 kontrol, toplam bekleme aynı; kapalı / kuru / 0 → tek uyku; kontrol patlasa da bekleme tam;
   gerçek akışta ara kontrol botun emrini iptal ediyor, defter tura kadar değişmiyor, sonraki turda coin defterden çıkıyor ve emir gitmiyor.
   `test_carry_bot`, `preflight`, `panel`, `delist`, `acil_kapat`, `olay`, `saglik`, `parite`, `onerilen` geçiyor; `test_carry_entegrasyon` 180/180 [OK] (830 öncesiyle aynı).
+- 831 ek (kullanıcının sorduğu senaryolar, `test_carry_elle` C1-C5, uçtan uca sahte borsada): (C1) botun tutmadığı coinde KADEMELİ alım — ilk dolumda
+  ara kontrolde işaret; sıradaki kademe limiti + kullanıcının TP limiti + uygulamadan koyduğu STOP (algo) iki tur ve ara kontrollerde yerinde; 2. kademe
+  dolunca hâlâ kullanıcıda; coin bot portföyüne / defterine hiç girmiyor. (C2) botun long'unda yarısını satma → işaret, kalan yarıya emir / TP / stop yok,
+  defterden çıkıyor; sonra ekleme ve azaltma → hâlâ kullanıcıda, bot dokunmuyor. (C3) kullanıcının stop'u tetiklenip adet 0 → 30 dk içinde kullanıcıda,
+  sonra bota dönüyor (diğer işaretli coin etkilenmiyor). (C4) TP kısmi dolumu → kullanıcıda kalıyor. (C5) pozisyonu olmayan coinde dolmamış limit + stop
+  bayat temizlikte silinmiyor, müdahale sayılmıyor. Sahte borsada toplu iptal en kötü varsayımla algo emirleri de siliyor — bot hiçbir senaryoda
+  kullanıcının algo emrini iptal etmedi. Açık sınır: (C5) gibi dolmamış emir bekleyen bir coini bot o arada yeni dilimde seçerse, emir dolunca coin
+  kullanıcıya geçer ama o ana kadar bot da o coinde pozisyon açmış olabilir (sonraki kontrolde botun kısmı defterden çıkar, pozisyon birleşik kalır).

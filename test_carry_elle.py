@@ -236,7 +236,9 @@ class ElleIc(_ns["SahteIcClient"]):
         super().__init__(**kw)
         self.gecmis = {}
         self.kullanici_acik = {}     # sem -> [emir]  (kullanıcının açık emri)
+        self.kullanici_algo = {}     # sem -> [algo]  (kullanıcının uygulamadan koyduğu TP / stop; Binance'te algo emir)
         self.tek_iptal = []
+        self.algo_iptal = []
 
     def futures_get_all_orders(self, symbol, startTime=None, limit=500):
         return [o for o in self.gecmis.get(symbol, []) if startTime is None or o["updateTime"] >= startTime]
@@ -255,7 +257,13 @@ class ElleIc(_ns["SahteIcClient"]):
         return super().futures_cancel_order(symbol, orderId)
 
     def futures_get_open_algo_orders(self, symbol=None):
-        return []
+        return [dict(o, symbol=s) for s, L in self.kullanici_algo.items() if symbol is None or s == symbol for o in L]
+
+    def futures_cancel_algo_order(self, symbol, algoId):
+        self.algo_iptal.append((symbol, algoId))
+        for s in self.kullanici_algo:
+            self.kullanici_algo[s] = [o for o in self.kullanici_algo[s] if o["algoId"] != algoId]
+        return super().futures_cancel_algo_order(symbol, algoId)
 
 
 class ElleClient(_ns["SahteClient"]):
@@ -265,6 +273,7 @@ class ElleClient(_ns["SahteClient"]):
 
     def cancel_all_open_orders(self, symbol):
         self.client.kullanici_acik.pop(symbol, None)     # gerçek borsada toplu iptal kullanıcı emrini de siler
+        self.client.kullanici_algo.pop(symbol, None)     # en kötü varsayım: koşullu (algo) emirleri de siler
         return super().cancel_all_open_orders(symbol)
 
 
@@ -471,6 +480,130 @@ g11 = len(c11.client.gonderilen)
 cb.bir_tur(c11, dry_run=False)
 kontrol("sonraki turda coin defterden çıktı ve emir gitmedi",
         all(S11 not in h for h in cb.dilim_durum_oku()["dilimler"].values()) and all(x[0] != S11 for x in c11.client.gonderilen[g11:]))
+cb.ELLE = False; cb._ELLE.clear()
+
+
+# ---------------------------------------------------------------- C) KULLANICININ SORDUĞU SENARYOLAR
+print("\nC) kullanıcı senaryoları: kademeli alım, ekleme / çıkarma, kendi TP / stop'u, stop tetiklenmesi")
+
+
+def _bot_pozisyonlari(cl, kullanici: dict):
+    """Botun defterine göre pozisyonları kurar, kullanıcının pozisyonlarını (sem -> adet) üstüne koyar."""
+    cl.pozisyonlari_ayarla(cb.toplam_hedef_tut(cb.dilim_durum_oku(), dict(cl.client._fiyat)))
+    cl._pozisyonlar = [p for p in cl._pozisyonlar if p["symbol"] not in kullanici]
+    for s_, a_ in kullanici.items():
+        if a_:
+            cl._pozisyonlar.append({"symbol": s_, "positionAmt": str(a_), "entryPrice": str(cl.client._fiyat[s_]),
+                                    "marginType": "cross"})
+
+
+def _kullanici_emirlerine_dokunuldu_mu(cl, sem, oidler, aidler):
+    kalan_o = {o["orderId"] for o in cl.client.kullanici_acik.get(sem, [])}
+    kalan_a = {o["algoId"] for o in cl.client.kullanici_algo.get(sem, [])}
+    return not (set(oidler) <= kalan_o and set(aidler) <= kalan_a)
+
+
+def _yeni_emir_var_mi(cl, sem, g0, tp0, fe0):
+    return (any(x[0] == sem for x in cl.client.gonderilen[g0:])
+            or any(v[0] == sem for k_, v in cl.client.kar_al_emirleri.items() if k_ not in tp0)
+            or any(v[0] == sem for k_, v in cl.client.felaket_emirleri.items() if k_ not in fe0))
+
+
+def _tur(cl, kullanici):
+    _bot_pozisyonlari(cl, kullanici)
+    g0, tp0, fe0 = len(cl.client.gonderilen), set(cl.client.kar_al_emirleri), set(cl.client.felaket_emirleri)
+    cb.bir_tur(cl, dry_run=False)
+    return g0, tp0, fe0
+
+
+ortam(True)
+cc = ElleClient(); cb.bir_tur(cc, dry_run=False)
+hedef0 = cb.toplam_hedef_tut(cb.dilim_durum_oku(), dict(cc.client._fiyat))
+YENI = sorted(s_ for s_ in cc.client._fiyat if s_ not in hedef0)[0]          # botun hiç tutmadığı coin
+BOTC = sorted(s_ for s_, v in hedef0.items() if v > 0)[1]                   # botun long'u
+_t = lambda dk: int(time.time() * 1000) - dk * 60000   # dolumlar son kontrolden SONRA olmalı (gerçekte de öyle)
+
+print("C1) yeni coinde KADEMELİ ALIM + kendi TP / stop'un")
+cc.client.gecmis[YENI] = [emir(1001, "android_al1", _t(0), yon="BUY")]
+cc.client.kullanici_acik[YENI] = [emir(1002, "android_al2", _t(0), dolan="0", tip="LIMIT", yon="BUY"),   # sıradaki kademe
+                                  emir(1003, "android_tp", _t(0), dolan="0", tip="LIMIT", yon="SELL")]  # TP
+cc.client.kullanici_algo[YENI] = [{"algoId": 7001, "clientAlgoId": "android_sl", "orderType": "STOP_MARKET"}]  # stop
+kul = {YENI: 2.0}
+_bot_pozisyonlari(cc, kul)
+cb.elle_guncelle(cc)                                    # saatlik ara kontrol
+kontrol("ilk alımdan sonra ara kontrolde işaretlendi", YENI in cb._ELLE)
+kontrol("ara kontrol kullanıcının kademe / TP / stop emrine dokunmadı",
+        not _kullanici_emirlerine_dokunuldu_mu(cc, YENI, [1002, 1003], [7001]))
+for i in range(2):
+    g0, tp0, fe0 = _tur(cc, kul)
+    kontrol(f"tur {i + 1}: coine bot emri / kâr al / stop yok", not _yeni_emir_var_mi(cc, YENI, g0, tp0, fe0))
+    kontrol(f"tur {i + 1}: kademe + TP + stop emirlerin yerinde",
+            not _kullanici_emirlerine_dokunuldu_mu(cc, YENI, [1002, 1003], [7001]),
+            f"({cc.client.kullanici_acik.get(YENI)}, {cc.client.kullanici_algo.get(YENI)}, iptal {cc.client.tek_iptal[-5:]})")
+# kademe 2 doldu
+cc.client.kullanici_acik[YENI] = [o for o in cc.client.kullanici_acik[YENI] if o["orderId"] != 1002]
+cc.client.gecmis[YENI].append(emir(1002, "android_al2", _t(0), yon="BUY"))
+kul[YENI] = 4.0
+cb.elle_guncelle(cc)
+g0, tp0, fe0 = _tur(cc, kul)
+kontrol("2. kademe dolunca hâlâ sende, bot dokunmuyor", YENI in cb._ELLE and not _yeni_emir_var_mi(cc, YENI, g0, tp0, fe0))
+kontrol("TP + stop hâlâ yerinde", not _kullanici_emirlerine_dokunuldu_mu(cc, YENI, [1003], [7001]))
+kontrol("coin bot portföyüne / defterine hiç girmedi",
+        YENI not in cb.mevcut_portfoy(cc) and all(YENI not in h for h in cb.dilim_durum_oku()["dilimler"].values()))
+
+print("C2) botun coininde EKLEME / ÇIKARMA")
+kontrol("senaryo: botun long'u var", cb.toplam_hedef_tut(cb.dilim_durum_oku(), dict(cc.client._fiyat)).get(BOTC, 0) > 0)
+P = cc.client._fiyat[BOTC]
+bot_adet0 = cb.toplam_hedef_tut(cb.dilim_durum_oku(), dict(cc.client._fiyat))[BOTC] / P
+cc.client.gecmis[BOTC] = [emir(2001, "web_yarisini_sat", _t(0), yon="SELL")]   # yarısını sattı (kısmi)
+kul[BOTC] = bot_adet0 / 2
+cb.elle_guncelle(cc)
+kontrol("kısmi satışta coin sana geçti", BOTC in cb._ELLE)
+g0, tp0, fe0 = _tur(cc, kul)
+kontrol("tur: kalan yarıya bot dokunmadı (emir / kâr al / stop yok)", not _yeni_emir_var_mi(cc, BOTC, g0, tp0, fe0))
+kontrol("tur: coin defterden çıktı", all(BOTC not in h for h in cb.dilim_durum_oku()["dilimler"].values()))
+cc.client.gecmis[BOTC].append(emir(2002, "web_ekle", _t(0), yon="BUY"))          # geri ekledi
+kul[BOTC] = bot_adet0 * 1.5
+g0, tp0, fe0 = _tur(cc, kul)
+kontrol("ekleme sonrası tur: hâlâ sende, bot dokunmuyor", BOTC in cb._ELLE and not _yeni_emir_var_mi(cc, BOTC, g0, tp0, fe0))
+cc.client.gecmis[BOTC].append(emir(2003, "web_azalt", _t(0), yon="SELL"))         # biraz azalttı
+kul[BOTC] = bot_adet0 * 0.3
+g0, tp0, fe0 = _tur(cc, kul)
+kontrol("azaltma sonrası tur: hâlâ sende, bot dokunmuyor", BOTC in cb._ELLE and not _yeni_emir_var_mi(cc, BOTC, g0, tp0, fe0))
+
+print("C3) kendi stop'un tetiklendi -> pozisyon kapandı -> bekleme sonrası bota döner")
+cc.client.kullanici_algo[YENI] = []                                               # stop tetiklendi, algo kapandı
+cc.client.kullanici_acik[YENI] = []                                               # TP'yi iptal ettin
+cc.client.gecmis[YENI].append(emir(1004, "android_sl_tetik", _t(0), tip="STOP_MARKET", yon="SELL"))
+kul[YENI] = 0.0
+g0, tp0, fe0 = _tur(cc, kul)
+kontrol("stop'tan hemen sonra: hâlâ sende (30 dk bekleme)", YENI in cb._ELLE)
+st = ce.kayit_oku(cb.ELLE_DOSYA)
+_n = int(time.time() * 1000)
+for o in cc.client.gecmis[YENI]:
+    o["time"] = o["updateTime"] = _n - 3 * 3600 * 1000
+st["elle"][YENI]["son_el"] = _n - 2 * 3600 * 1000; st["son_kontrol_ms"] = _n - 3600 * 1000
+ce.kayit_yaz(cb.ELLE_DOSYA, st)
+cb.elle_guncelle(cc)
+kontrol("bekleme sonrası bota döndü", YENI not in cb._ELLE)
+kontrol("botun coininde (C2) işaret sürüyor", BOTC in cb._ELLE)
+
+print("C4) kendi TP'nin bir kısmı doldu -> hâlâ sende")
+cc.client.gecmis[BOTC].append(emir(2004, "web_tp", _t(0), dolan="0.1", tip="LIMIT", yon="SELL"))
+kul[BOTC] = bot_adet0 * 0.2
+g0, tp0, fe0 = _tur(cc, kul)
+kontrol("TP kısmi dolumunda sende kalır, bot dokunmaz", BOTC in cb._ELLE and not _yeni_emir_var_mi(cc, BOTC, g0, tp0, fe0))
+
+print("C5) dolmamış limit emrin (henüz pozisyon yok) bayat temizlikte silinmez")
+BOS = sorted(s_ for s_ in cc.client._fiyat if s_ not in hedef0 and s_ != YENI)[0]
+cc.client.kullanici_acik[BOS] = [emir(3001, "ios_limit_al", _t(0), dolan="0", tip="LIMIT", yon="BUY")]
+cc.client.kullanici_algo[BOS] = [{"algoId": 7101, "clientAlgoId": "ios_sl", "orderType": "STOP_MARKET"}]
+_tur(cc, kul)
+kontrol("dolmamış limit + stop'un yerinde", not _kullanici_emirlerine_dokunuldu_mu(cc, BOS, [3001], [7101]),
+        f"({cc.client.kullanici_acik.get(BOS)}, {cc.client.kullanici_algo.get(BOS)})")
+kontrol("dolmamış emir müdahale sayılmadı (pozisyon yok)", BOS not in cb._ELLE)
+kontrol("bot hiçbir senaryoda kullanıcının algo emrini iptal etmedi",
+        not any(a in (7001, 7101) for _, a in cc.client.algo_iptal), f"({cc.client.algo_iptal})")
 cb.ELLE = False; cb._ELLE.clear()
 
 print("B6) varsayılan KAPALI")
