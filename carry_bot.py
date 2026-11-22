@@ -4361,6 +4361,14 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
         except Exception as ex:
             if _reduceonly_red_mi(ex):   # madde 838: yetim emir temizlenir; tek seferlik yeniden deneme temiz sayfayla kurar
                 bot_emirlerini_temizle(client, durum, sem)
+                # MADDE 840: temizlik felaket stop'unu da siler. Yeniden denemeyi beklemeden hemen geri konur; ikinci deneme
+                # de -2022 alırsa burası yine çalışır -> pozisyon tur sonunda stop'suz kalmaz. Konamazsa felaket_basarisiz
+                # (ERROR "SİGORTASIZ") raporlanır. Eskiden iki -2022'de stop sessizce kayboluyordu.
+                if sem not in stop_kapandi and "adet" in locals() and adet > 0:
+                    if miktar < 0 and SHORT_FELAKET > 0:
+                        _felaket_koy(sem, giris, adet, pr)
+                    elif miktar > 0 and (LONG_FELAKET > 0 or LONG_24S > 0):
+                        _felaket_koy(sem, giris, adet, pr, long_mu=True)
             return (sem, False, str(ex)[:80])
 
     kurulan = 0

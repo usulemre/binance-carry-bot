@@ -190,6 +190,16 @@ try:
     kontrol("AKE senaryosu: stop yetim emre rağmen KAPATTI", c.client.poz["AKEUSDT"] == 0 and "AKEUSDT" not in d["dilimler"]["0"])
     kontrol("kapanan pozisyona TP denenmedi (sahte 'KONULAMADI' yok)", not [g for g in c.client.gonderilen if g["type"] == "LIMIT"]
             and "AKEUSDT" not in d["kar_al"])
+
+    # MADDE 840: TP iki denemede de -2022 (kullanıcının reduceOnly emri yer kaplıyor, bot ona dokunmaz). Temizlik botun felaket
+    # stop'unu da siler; eskiden pozisyon tur sonunda stop'suz kalıyordu ve hiçbir yerde raporlanmıyordu.
+    c = Cl({"SUSDT": -100.0}); yetim(c, "SUSDT", 100, cid="android_tp", side="BUY")
+    d = {"dilimler": {}, "kar_al": {}, "merdiven": {}, "felaket": {}}
+    n = cb.kar_al_kur(c, d)
+    bot_algo = [o for o in c.client.algo.get("SUSDT", []) if o["clientAlgoId"].startswith("x-Cb7ytekJ")]
+    kontrol("madde 840: TP iki kez -2022 -> TP yok ama felaket stop'u borsada ve kayıtta duruyor",
+            n == 0 and len(bot_algo) == 1 and d["felaket"].get("SUSDT"), (n, c.client.algo, d["felaket"]))
+    kontrol("madde 840: kullanıcının emrine dokunulmadı", [o["clientOrderId"] for o in c.client.acik["SUSDT"]] == ["android_tp"])
 finally:
     os.chdir(_cwd)
     (cb.KAR_AL_ORAN, cb.LONG_24S, cb.LONG_24S_PIYASA, cb.LONG_FELAKET, cb.MERDIVEN, cb._kapanis_24s, cb.piyasa_24s, cb.GIRIS_DILIM, _) = _ayar

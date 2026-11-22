@@ -9478,3 +9478,14 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
 - Testler: `test_carry_islem` 11b (bot coini bayrağı, panelden alınınca elle, Pozisyonlarım satırı, 30 gün sonucu 1 kapanış / kârlı / net = K/Z − komisyon,
   tek emir iptali: başkasının emri reddedilir, olmayan emir, PIN); `test_panel_islem` (botun coini bandı, onayda "sana geçer" notu, emir sonrası "sende"
   bandı, stop'u girişe çek, tek emir iptali — uygulama emrine dokunmaz, Pozisyonlarım'da AKE ve dokununca pencere; axe ihlali 0).
+
+## Madde 840 — Kâr al iki kez -2022 alınca felaket stop'u sessizce kayboluyordu (kullanıcı isteği, 2026-11-22: "o açığı da düzelt")
+- Bulgu (838 denetimi): `kar_al_kur` içinde TP -2022 ile reddedilince `bot_emirlerini_temizle` botun o coindeki BÜTÜN emirlerini, felaket
+  STOP_MARKET'i dahil, iptal edip kaydını (`durum["felaket"]`) düşüyor. Tek seferlik yeniden deneme felaketi yeniden koyuyordu; ama yeniden deneme
+  de -2022 alırsa (ör. kullanıcının reduceOnly emri yer kaplıyor; bot ona dokunmaz) temizlik felaketi İKİNCİ kez siliyor ve geri konmuyordu.
+  `felaket_basarisiz` yalnız koyma HATASINDA dolduğundan "SİGORTASIZ" ERROR'u da çıkmıyordu: pozisyon bir sonraki tura (8 sa) kadar stop'suz, habersiz.
+- Düzeltme: -2022 temizliğinden hemen sonra felaket stop'u aynı kurallarla (short: SHORT_FELAKET; long: LONG_FELAKET / LONG_24S) geri konur;
+  stop'la kapanan (`stop_kapandi`) coine konmaz. Her temizlikten sonra geri konduğu için tur sonunda stop mutlaka yerinde; konamazsa
+  `felaket_basarisiz` → mevcut "FELAKET STOP'U KONULAMADI … SİGORTASIZ" ERROR'u. Normal akış (-2022 yok) değişmez.
+- Test: `test_carry_kapanis` 3) short −100, kullanıcının 100'lük reduceOnly BUY emri → TP iki kez -2022: botun felaket algo emri borsada 1 adet ve
+  kayıtta; kullanıcının emri yerinde. Düzeltmesiz kodda bu test DÜŞÜYOR (algo listesi boş, kayıt boş), düzeltmeyle geçiyor.
