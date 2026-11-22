@@ -1033,6 +1033,21 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .yil{overflow-x:auto;padding-bottom:4px}.yil .ic{display:grid;grid-template-rows:repeat(7,9px);grid-auto-flow:column;grid-auto-columns:9px;gap:2px;width:max-content}
 .yil i{display:block;border-radius:2px;background:var(--kart2)}.yil i.x{visibility:hidden}
 .bekle{color:var(--soluk);font-size:13px;text-align:center;padding:26px 0}
+/* MADDE 832: Piyasa sekmesi */
+.pya{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
+.pya input{flex:1 1 160px;min-width:0;height:34px;border:1px solid var(--cizgi);border-radius:10px;background:var(--kart);color:var(--yazi);padding:0 10px;font:inherit}
+.pyb{font-size:12px;color:var(--soluk);margin:14px 2px 6px;display:flex;justify-content:space-between;gap:8px}
+.pyl{display:flex;flex-direction:column;gap:2px}
+.pyr{display:grid;grid-template-columns:28px minmax(0,1.3fr) minmax(0,1fr) 74px minmax(0,.9fr) 66px;gap:6px;align-items:center;padding:7px 8px;border-radius:10px;background:var(--kart)}
+.pyr .yd{border:0;background:none;color:var(--soluk);font-size:17px;cursor:pointer;padding:0;line-height:1}.pyr .yd.on{color:var(--uyari)}
+.pyr a{color:var(--yazi);text-decoration:none;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.pyr .r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.pyr .k2{color:var(--soluk);font-size:12px}
+.pyr .rz{font-size:10.5px;font-weight:650;padding:1px 5px;border-radius:6px;margin-left:5px;background:var(--kart2);color:var(--soluk)}
+.pyr .art{color:var(--art)}.pyr .eks{color:var(--eks)}
+.pyr.ust{background:none;color:var(--soluk);font-size:11.5px;padding-top:0;padding-bottom:0}
+.fl-a{animation:fla .8s}.fl-e{animation:fle .8s}
+@keyframes fla{from{background:color-mix(in srgb,var(--art) 22%,transparent)}}@keyframes fle{from{background:color-mix(in srgb,var(--eks) 22%,transparent)}}
+@media (max-width:600px){.pyr{grid-template-columns:24px minmax(0,1.2fr) minmax(0,1fr) 64px 58px}.pyr .hc{display:none}}
 </style></head><body><div class="kap">
 <header id="ust"><div><h1><img src="ikon-192.png" alt="">Carry</h1><div class="k" id="alt"></div><div id="ustkitap"></div></div>
   <div class="sag"><span class="canli" id="canliust"><i></i><span>bağlanıyor</span></span><button class="tema" id="tema" onclick="temaDegis()" aria-label="tema">◐</button></div></header>
@@ -1064,10 +1079,10 @@ function temaUygula(){
 function temaDegis(){ tema = TEMALAR[(TEMALAR.indexOf(tema)+1) % 3]; localStorage.setItem("carry_tema", tema); temaUygula(); if (VERI) ciz(); }
 temaUygula();
 // MADDE 737: sekmeler (telefonda altta sabit). Seçim adres çubuğunda (#poz) saklanır, yenilemede korunur.
-const SAYFALAR = [["ozet","Özet"],["poz","Pozisyonlar"],["gecmis","Geçmiş"],["olay","Olaylar"]];
+const SAYFALAR = [["ozet","Özet"],["poz","Pozisyonlar"],["piyasa","Piyasa"],["gecmis","Geçmiş"],["olay","Olaylar"]];
 // MADDE 757: D tasarımı — alt menü simgeleri
 const NAV_SVG = {ozet:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>', poz:'<rect x="3" y="4" width="18" height="5" rx="1.5"/><rect x="3" y="11" width="18" height="5" rx="1.5"/><path d="M3 20h12"/>',
-  gecmis:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', olay:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/>'};
+  gecmis:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', piyasa:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 13l2-2 2 2 3-3"/>', olay:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/>'};
 let sayfa = (location.hash||"").slice(1); if (!SAYFALAR.some(x=>x[0]==sayfa)) sayfa = "ozet";
 const MOBIL = () => innerWidth < 700;   // madde 754: telefonda sıkı liste ve sade metinler
 function sayfaSec(a){ if (a==sayfa) return; sayfa = a; history.replaceState(null, "", "#"+a); ciz(); scrollTo(0,0); }
@@ -1174,6 +1189,92 @@ function canliBagla(k){
   WS.onmessage = e => { try { const d = JSON.parse(e.data).data; if (d && d.s && +d.p>0){ FIYAT[d.s] = +d.p; wsZaman = Date.now();
     if (d.r!=null && d.T) FUND[d.s] = {r: +d.r, T: +d.T}; } } catch(_){} };
   WS.onclose = () => { WS = null; WSK = ""; setTimeout(()=>canliBagla(VERI && VERI.kurulumlar[secili]), 5000); };
+}
+// MADDE 832: PİYASA — kullanıcının kendi işlemleri için bütün USDⓈ-M perpetual coinlerin canlı listesi (en çok yükselen / düşen,
+// funding, izleme listesi). Veri tarayıcıdan Binance'in HERKESE AÇIK uçlarından gelir (gerçek piyasa; anahtarsız): ilk görüntü REST
+// (/fapi/v1/ticker/24hr + premiumIndex + exchangeInfo), sonra saniyelik akış (!ticker@arr + !markPrice@arr@1s). Panel yine emir
+// veremez; coin adı Binance'te o coinin sayfasını açar. İzleme listesi yalnız bu tarayıcıda (localStorage).
+let PIY = {}, PIY_WS = null, PIY_ACIK = false, PIY_EVREN = null, PIY_ZAMAN = 0, PIY_ONCEKI = {}, PIY_HATA = "", PIY_SON_CIZ = 0;
+const PIY_DEP = (a, v) => { try { return v===undefined ? JSON.parse(localStorage.getItem(a)) : localStorage.setItem(a, JSON.stringify(v)); } catch(_){ return null; } };
+let PIY_IZLE = new Set(PIY_DEP("carry_izle") || []), PIY_HACIM = PIY_DEP("carry_piy_hacim") ?? 10e6, PIY_MOD = PIY_DEP("carry_piy_mod") || "deg", PIY_ARA = "";
+async function piyasaIlk(){
+  try {
+    const [t, m, e] = await Promise.all(["ticker/24hr", "premiumIndex", PIY_EVREN ? null : "exchangeInfo"].map(u => u ? fetch("https://fapi.binance.com/fapi/v1/"+u, {cache:"no-store"}).then(r=>r.json()) : null));
+    if (e && Array.isArray(e.symbols)) PIY_EVREN = new Set(e.symbols.filter(x=>x.contractType=="PERPETUAL" && x.quoteAsset=="USDT" && x.status=="TRADING").map(x=>x.symbol));
+    if (Array.isArray(t)) for (const x of t) piyTicker({s:x.symbol, c:x.lastPrice, P:x.priceChangePercent, q:x.quoteVolume});
+    if (Array.isArray(m)) for (const x of m) piyMark({s:x.symbol, r:x.lastFundingRate, T:x.nextFundingTime});
+    PIY_HATA = ""; PIY_ZAMAN = Date.now();
+  } catch(_){ PIY_HATA = "Binance'e ulaşılamadı"; }
+  piyasaBoya(true);
+}
+function piyTicker(d){ if (!d || !d.s) return; const o = PIY[d.s] || (PIY[d.s] = {s: d.s});
+  if (+d.c > 0){ if (o.f && +d.c !== o.f) PIY_ONCEKI[d.s] = +d.c > o.f ? 1 : -1; o.f = +d.c; }
+  if (d.P!=null) o.p = +d.P; if (d.q!=null) o.q = +d.q; }
+function piyMark(d){ if (!d || !d.s) return; const o = PIY[d.s] || (PIY[d.s] = {s: d.s}); if (d.r!=null && d.r!=="") o.r = +d.r; if (d.T) o.T = +d.T; }
+function piyasaBagla(ac){
+  PIY_ACIK = ac;
+  if (VERI_GOMULU || !window.WebSocket) return;
+  if (!ac){ if (PIY_WS){ PIY_WS.onclose = null; PIY_WS.close(); PIY_WS = null; } return; }
+  if (PIY_WS && PIY_WS.readyState <= 1) return;
+  if (!PIY_ZAMAN || Date.now() - PIY_ZAMAN > 60e3) piyasaIlk();
+  PIY_WS = new WebSocket("wss://fstream.binance.com/market/stream?streams=!ticker@arr/!markPrice@arr@1s");
+  PIY_WS.onmessage = e => { try { const m = JSON.parse(e.data), d = m.data, A = Array.isArray(d) ? d : [d];
+    const tk = String(m.stream||"").startsWith("!ticker"); for (const x of A) tk ? piyTicker(x) : piyMark(x); PIY_ZAMAN = Date.now(); PIY_HATA = ""; } catch(_){} };
+  PIY_WS.onclose = () => { PIY_WS = null; if (PIY_ACIK) setTimeout(()=>piyasaBagla(PIY_ACIK), 5000); };
+}
+function piyIzle(s){ PIY_IZLE.has(s) ? PIY_IZLE.delete(s) : PIY_IZLE.add(s); PIY_DEP("carry_izle", [...PIY_IZLE]); piyasaBoya(true); }
+function piyHacim(v){ PIY_HACIM = v; PIY_DEP("carry_piy_hacim", v); ciz(); }
+function piyMod(v){ PIY_MOD = v; PIY_DEP("carry_piy_mod", v); ciz(); }
+function piyAra(v){ PIY_ARA = String(v||"").toUpperCase().replace(/[^A-Z0-9]/g, ""); piyasaBoya(true); }
+const piyFiyat = f => f==null ? "—" : f >= 1000 ? f.toLocaleString("tr-TR", {maximumFractionDigits: 1}) : f >= 1 ? f.toLocaleString("tr-TR", {maximumFractionDigits: 4})
+  : f.toLocaleString("tr-TR", {maximumSignificantDigits: 4});
+const piyHac = q => q==null ? "—" : q >= 1e9 ? (q/1e9).toFixed(1).replace(".",",")+" Mr" : q >= 1e6 ? (q/1e6).toFixed(1).replace(".",",")+" M" : Math.round(q/1e3)+" B";
+const piyYz = (v, b=2) => v==null || isNaN(v) ? "—" : (v>0?"+":"") + v.toFixed(b).replace(".",",") + "%";
+function piyRozet(k){   // botun / senin bu coindeki durumun
+  const R = {}; for (const [s,p] of Object.entries((k && k.pozisyonlar) || {})) R[s] = "bot " + (p.yon=="S" ? "S" : "L");
+  for (const c of (k && k.coin_ozet) || []) if (c.elle) R[c.s.endsWith("USDT") ? c.s : c.s+"USDT"] = "✋ elle";
+  return R;
+}
+function piySatir(o, R){
+  const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, "");
+  return `<div class="pyr ${fl>0?"fl-a":fl<0?"fl-e":""}"><button class="yd ${yd?"on":""}" title="${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" onclick="piyIzle('${o.s}')">${yd?"★":"☆"}</button>
+    <span style="min-width:0;display:flex;align-items:center"><a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}</span>
+    <span class="r">${piyFiyat(o.f)}</span><span class="r ${o.p>0?"art":o.p<0?"eks":""}"><b>${piyYz(o.p)}</b></span>
+    <span class="r k2 hc">${piyHac(o.q)}</span><span class="r k2 ${o.r>0?"":o.r<0?"eks":""}" title="son funding oranı (8 sa)">${o.r==null?"—":piyYz(o.r*100, 3)}</span></div>`;
+}
+function piyListe(k){
+  const A = Object.values(PIY).filter(o => o.f>0 && o.p!=null && (!PIY_EVREN || PIY_EVREN.has(o.s)) && o.s.endsWith("USDT"));
+  const R = piyRozet(k), ust = `<div class="pyr ust"><span></span><span>coin</span><span class="r">fiyat</span><span class="r">24 sa</span><span class="r hc">hacim</span><span class="r">funding</span></div>`;
+  const blok = (bas, L, not) => `<div class="pyb"><span>${bas}</span><span>${not||""}</span></div><div class="pyl">${L.length ? ust + L.map(o=>piySatir(o, R)).join("") : "<div class='bos'>—</div>"}</div>`;
+  if (PIY_ARA){
+    const L = A.filter(o => o.s.includes(PIY_ARA)).sort((a,b)=>(b.q||0)-(a.q||0)).slice(0, 40);
+    return blok(`Arama: ${PIY_ARA}`, L, `${L.length} coin`);
+  }
+  const izl = A.filter(o => PIY_IZLE.has(o.s)).sort((a,b)=>(b.p||0)-(a.p||0));
+  const H = A.filter(o => (o.q||0) >= PIY_HACIM), n = 15;
+  const ana = PIY_MOD=="fund"
+    ? blok("En yüksek funding (short'a ödeniyor)", H.filter(o=>o.r>0).sort((a,b)=>b.r-a.r).slice(0,n)) + blok("En negatif funding (long'a ödeniyor)", H.filter(o=>o.r<0).sort((a,b)=>a.r-b.r).slice(0,n))
+    : blok("En çok yükselen (24 sa)", H.filter(o=>o.p>0).sort((a,b)=>b.p-a.p).slice(0,n)) + blok("En çok düşen (24 sa)", H.filter(o=>o.p<0).sort((a,b)=>a.p-b.p).slice(0,n));
+  return (izl.length ? blok("★ İzleme listem", izl, `${izl.length} coin`) : "") + ana;
+}
+function piyasaSayfa(k){
+  const hb = (v, ad) => `<button class="${PIY_HACIM==v?"on":""}" onclick="piyHacim(${v})">${ad}</button>`, mb = (v, ad) => `<button class="${PIY_MOD==v?"on":""}" onclick="piyMod('${v}')">${ad}</button>`;
+  return `<div class="kart">
+    <div class="dpb"><span class="gb">Piyasa</span><span class="k" id="piyd"></span></div>
+    <div class="pya"><input id="piyara" type="search" placeholder="coin ara (örn. AKE)" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value)">
+      <div class="gdon">${mb("deg","24 sa değişim")}${mb("fund","Funding")}</div></div>
+    <div class="pya"><span class="k">hacim ≥</span><div class="gdon">${hb(1e6,"1 M$")}${hb(10e6,"10 M$")}${hb(50e6,"50 M$")}${hb(200e6,"200 M$")}</div></div>
+    <div id="piyic">${piyListe(k)}</div>
+    <div class="k" style="margin-top:10px">Gerçek Binance piyasası, saniyede bir güncellenir. ☆ ile izleme listene ekle (yalnız bu cihazda saklanır). Coin adına dokununca Binance'te açılır; panel işlem yapmaz.</div>
+  </div>`;
+}
+function piyasaBoya(zorla){
+  if (sayfa!="piyasa") return;
+  const el = $("#piyic"), d = $("#piyd"); if (!el) return;
+  if (d) d.textContent = PIY_HATA || (PIY_ZAMAN ? (Date.now()-PIY_ZAMAN < 10e3 ? "● canlı" : "bağlantı bekleniyor…") : "yükleniyor…");
+  if (!zorla && Date.now() - PIY_SON_CIZ < 900) return;
+  PIY_SON_CIZ = Date.now();
+  const k = VERI && VERI.kurulumlar[secili]; el.innerHTML = piyListe(k); PIY_ONCEKI = {};
 }
 // MADDE 739: GÜNLÜK grafik (TradingView "bugün" gibi). Gün Binance gün başında (00:00 UTC = 03:00 TR) başlar; yatay eksen
 // tam gün (03:00 -> ertesi 03:00), çizgi gün ilerledikçe soldan sağa uzar. 15 dk mumlar her 15 dk sınırında yeniden alınır,
@@ -1401,6 +1502,7 @@ function fundTakip(){
   FUND_T = T;
 }
 function canliBoya(){
+  piyasaBoya(false);   // madde 832
   fundTakip();
   const on = canliDurum();
   const k = VERI && VERI.kurulumlar[secili]; if (!k) return;
@@ -1922,8 +2024,11 @@ function ciz(){
   $("#ustkitap").innerHTML = `<span id="ustk">${para(AKIS.ustk.v)}</span><span id="ustkar" class="${sinif(k.kar_usd)}"> ${yz(k.kar_oran)}</span>`;
   // MADDE 740: geniş ekran (tablet / yatay): Özet sekmesinde solda özet, sağda pozisyonlar
   const genis = innerWidth >= 1000;
-  $("#icerik").innerHTML = sayfa=="poz" ? pozSayfa(k) : sayfa=="gecmis" ? gecmisSayfa(k) : sayfa=="olay" ? olaySayfa(k)
+  piyasaBagla(sayfa=="piyasa");   // madde 832: akış yalnız Piyasa sekmesi açıkken
+  const piyOdak = document.activeElement && document.activeElement.id=="piyara";
+  $("#icerik").innerHTML = sayfa=="poz" ? pozSayfa(k) : sayfa=="piyasa" ? piyasaSayfa(k) : sayfa=="gecmis" ? gecmisSayfa(k) : sayfa=="olay" ? olaySayfa(k)
     : (genis ? `<div class="genis"><div>${ozetSayfa(k, svc, sv)}</div><div>${pozSayfa(k)}</div></div>` : ozetSayfa(k, svc, sv));
+  if (piyOdak){ const i = $("#piyara"); if (i){ i.focus(); i.setSelectionRange(i.value.length, i.value.length); } }   // 60 sn yenilemede yazı kesilmesin
   const yl = $("#yil"); if (yl) yl.scrollLeft = yl.scrollWidth;
   isiSigdir();
   const kt = document.querySelector(".kutu"); if (kt){ const w = Math.round(kt.clientWidth - 20); if (w > 80 && Math.abs(w - KUTU_W) > 4){ KUTU_W = w; canliBoya(); } }

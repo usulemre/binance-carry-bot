@@ -9348,3 +9348,18 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   bayat temizlikte silinmiyor, müdahale sayılmıyor. Sahte borsada toplu iptal en kötü varsayımla algo emirleri de siliyor — bot hiçbir senaryoda
   kullanıcının algo emrini iptal etmedi. Açık sınır: (C5) gibi dolmamış emir bekleyen bir coini bot o arada yeni dilimde seçerse, emir dolunca coin
   kullanıcıya geçer ama o ana kadar bot da o coinde pozisyon açmış olabilir (sonraki kontrolde botun kısmı defterden çıkar, pozisyon birleşik kalır).
+
+## Madde 832 — Panel "Piyasa" sekmesi: kullanıcının kendi işlemleri için canlı coin listesi (kullanıcı isteği, 2026-11-22)
+- İstek: "kendi alacağım işlemler için coin listesi; en çok yükselenler, en çok düşenler, anlık izlemek, eklemek."
+- Panelde 5. sekme (Özet · Pozisyonlar · **Piyasa** · Geçmiş · Olaylar). Bütün USDⓈ-M USDT perpetual coinler (exchangeInfo: PERPETUAL + USDT + TRADING),
+  GERÇEK Binance piyasası (demo değil). İlk görüntü REST (`/fapi/v1/ticker/24hr`, `premiumIndex`, `exchangeInfo`), sonra saniyelik herkese açık akış
+  `wss://fstream.binance.com/market/stream?streams=!ticker@arr/!markPrice@arr@1s` (Binance'in yeni /market yolu; ikisi de /market akışı).
+  Akış YALNIZ Piyasa sekmesi açıkken bağlı; çıkınca kapanır. Anahtarsız, tarayıcıdan; sunucuya yük yok.
+- Listeler: ★ izleme listem · en çok yükselen (24 sa, yalnız artıda) · en çok düşen (yalnız ekside), 15'er; "Funding" modunda en yüksek / en negatif funding.
+  Hacim süzgeci ≥ 1 / 10 (varsayılan) / 50 / 200 M$. Arama kutusu (hacme göre 40 sonuç). Satır: fiyat (değişince yeşil / kırmızı yanıp söner), 24 sa %,
+  hacim (telefonda gizli), son funding; botun pozisyonu "bot L / bot S", elle yönetilen "✋ elle" rozeti. Coin adı Binance'te o coinin sayfasını açar —
+  panel yine EMİR VEREMEZ, salt okur kalır. İzleme listesi ve süzgeç seçimi yalnız o cihazda (localStorage). 60 sn veri yenilemesi arama yazısını kesmez.
+- Testler: `test_panel_piyasa.py` — gerçek Chromium'da (Playwright), Binance uçları ve akış SAHTE: sıralama, hacim süzgeci, USDC / vadeli sözleşme elemesi,
+  rozet, bağlantı, akışla fiyat / funding / sıralama güncellemesi, izleme listesi (ekle / yenilemede kalır / çıkar), arama, funding modu, sekmeden çıkınca
+  akışın kapanıp dönünce açılması, JS hatası yok, 390 px telefonda yatay taşma yok. Playwright yoksa atlanır. `test_panel` geçiyor.
+- Uygulama: yalnız panel yeniden başlatılır (`systemctl restart carry-panel`); bot etkilenmez.
