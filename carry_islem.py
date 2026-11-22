@@ -129,8 +129,9 @@ class Kapi:
         for p in self.c.get_open_positions():
             if p.get("symbol") == sem and abs(float(p.get("positionAmt") or 0)) > 0:
                 return {"adet": float(p["positionAmt"]), "giris": float(p.get("entryPrice") or 0),
-                        "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0)}
-        return {"adet": 0.0, "giris": 0.0, "kz": 0.0}
+                        "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0),
+                        "likidasyon": float(p.get("liquidationPrice") or 0)}
+        return {"adet": 0.0, "giris": 0.0, "kz": 0.0, "likidasyon": 0.0}
 
     @staticmethod
     def _fiyat_yuvarla(f: float, b: dict) -> str:
@@ -265,6 +266,11 @@ class Kapi:
                     sonuc["tpsl"] = self._tpsl_kur(sem, poz["adet"], o["tp"], o["sl"], b)
                 except Exception as ex:
                     sonuc["tpsl_hata"] = f"emir doldu ama TP/SL konamadı: {ex}"
+            elif o["tip"] == "MARKET":   # madde 835: eklemede mevcut panel TP / stop'u TOPLAM adede göre aynı fiyatlarla yeniden kur
+                try:
+                    self._tpsl_yeniden(sem, b)
+                except Exception as ex:
+                    sonuc["tpsl_hata"] = f"emir doldu ama mevcut TP/SL yeni adede göre güncellenemedi: {ex}"
             self._kaydet({"olay": "emir", **{k: o[k] for k in ("sembol", "yon", "tip", "adet", "fiyat", "usd", "tp", "sl")},
                           "orderId": e.get("orderId"), "durum": e.get("status"), "tpsl_hata": sonuc.get("tpsl_hata")})
             ad = sem.replace("USDT", "")
@@ -374,7 +380,16 @@ class Kapi:
                                  "adet": float(o.get("origQty") or 0), "panel": str(o.get("clientOrderId") or "").startswith(ONEK)})
         except Exception as e:
             logger.warning("pozisyon emirleri okunamadı %s: %s", sem, e)
-        return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"]}
+        islemler = []   # madde 835: grafikte giriş / çıkış işaretleri (son 7 gün, en çok 100 dolum; hesabın kendi işlemleri)
+        try:
+            for t in self.ic.futures_account_trades(symbol=sem, startTime=int((self.saat() - 7 * 86400) * 1000), limit=100) or []:
+                islemler.append({"t": int(t.get("time") or 0), "yon": "AL" if t.get("side") == "BUY" else "SAT",
+                                 "fiyat": float(t.get("price") or 0), "adet": float(t.get("qty") or 0),
+                                 "kz": float(t.get("realizedPnl") or 0)})
+        except Exception as e:
+            logger.warning("işlem geçmişi okunamadı %s: %s", sem, e)
+        return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"],
+                "islemler": islemler}
 
 
 def uygulama(kapi_fabrika=None):

@@ -1048,15 +1048,53 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .fl-a{animation:fla .8s}.fl-e{animation:fle .8s}
 @keyframes fla{from{background:color-mix(in srgb,var(--art) 22%,transparent)}}@keyframes fle{from{background:color-mix(in srgb,var(--eks) 22%,transparent)}}
 @media (max-width:600px){.pyr{grid-template-columns:24px minmax(0,1.2fr) minmax(0,1fr) 64px 58px}.pyr .hc{display:none}}
-/* MADDE 834: panelden işlem penceresi */
-.isl .ib{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.isl .ib button{flex:1 1 0;min-width:0;height:38px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-weight:600;cursor:pointer}
-.isl .ib button.on{background:var(--yazi);color:var(--bg);border-color:var(--yazi)}.isl .ib button.L.on{background:var(--art);border-color:var(--art);color:#fff}.isl .ib button.S.on{background:var(--eks);border-color:var(--eks);color:#fff}
-.isl label{display:block;font-size:12px;color:var(--soluk);margin:10px 0 4px}.isl input{width:100%;height:40px;border:1px solid var(--cizgi);border-radius:12px;background:var(--kart);color:var(--yazi);padding:0 12px;font:inherit;font-size:16px}
-.isl .iki{display:grid;grid-template-columns:1fr 1fr;gap:8px}.isl .hz{display:flex;gap:4px;margin-top:4px}.isl .hz button{flex:1;height:28px;border-radius:8px;border:0;background:var(--kart2);color:var(--soluk);font:inherit;font-size:12px;cursor:pointer}
-.isl .ana{width:100%;height:46px;border-radius:14px;border:0;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;background:var(--vurgu);color:#fff}.isl .ana:disabled{opacity:.5;cursor:default}
-.isl .ana.L{background:var(--art)}.isl .ana.S{background:var(--eks)}.isl .ozt{background:var(--kart2);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:13px;line-height:1.6}
-.isl .msj{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:13px}.isl .msj.ok{background:color-mix(in srgb,var(--art) 15%,transparent)}.isl .msj.hata{background:color-mix(in srgb,var(--eks) 15%,transparent)}
-.isl .bol{border-top:1px solid var(--cizgi);margin-top:14px;padding-top:6px}
+/* MADDE 834-835: panelden işlem penceresi (profesyonel bilet + grafik) */
+.isl{padding-left:16px;padding-right:16px}
+.isl .ihd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:10px}.isl .iad{display:flex;align-items:center;gap:6px}.isl .iad b{font-size:20px;letter-spacing:-.3px}
+.isl .irz{font-size:10.5px;font-weight:650;color:var(--soluk);background:var(--kart2);border-radius:6px;padding:2px 6px}
+.isl .ifr{display:flex;align-items:baseline;gap:8px;margin-top:2px;font-variant-numeric:tabular-nums}.isl .ifr #islfiy{font-size:26px;font-weight:700;letter-spacing:-.5px}.isl .ifr .art,.isl .ifr .eks{font-weight:650}
+.isl .igk{background:var(--kart2);border-radius:16px;padding:8px 8px 6px}.isl .igb{display:flex;justify-content:space-between;align-items:center;margin-bottom:4px}
+.isl .igr{width:100%;min-height:210px}.isl .igr svg{display:block;width:100%;height:auto;overflow:visible}.isl .igbos{height:210px;display:grid;place-items:center;color:var(--soluk);font-size:13px}
+.isl .igiz{stroke:var(--cizgi);stroke-width:1}.isl .igt{fill:var(--soluk);font-size:10px}
+.isl .igu{stroke:var(--art);stroke-width:1}.isl .igd{stroke:var(--eks);stroke-width:1}.isl .igub{fill:var(--art)}.isl .igdb{fill:var(--eks)}
+.isl .igl{stroke-width:1.4}.isl .igl.gir{stroke:var(--vurgu);stroke-width:1.8}.isl .igl.tp{stroke:var(--art)}.isl .igl.sl{stroke:var(--eks)}.isl .igl.lik{stroke:var(--uyari)}.isl .igl.lim{stroke:var(--mor)}
+.isl .igl.plan{opacity:.65}.isl .igl.simdi{stroke:var(--yazi);opacity:.55;stroke-width:1}
+.isl .ige rect{fill:var(--soluk)}.isl .ige text{fill:#fff;font-size:10.5px;font-weight:650;font-variant-numeric:tabular-nums}
+.isl .ige.gir rect{fill:var(--vurgu)}.isl .ige.tp rect{fill:var(--art)}.isl .ige.sl rect{fill:var(--eks)}.isl .ige.lik rect{fill:var(--uyari)}.isl .ige.lim rect{fill:var(--mor)}.isl .ige.simdi rect{fill:var(--yazi)}.isl .ige.simdi text{fill:var(--bg)}
+.isl .ige.plan rect{opacity:.7}
+.isl .igad rect{fill:var(--kart);stroke-width:1.2}.isl .igad text{font-size:10px;font-weight:700}
+.isl .igad.gir rect{stroke:var(--vurgu)}.isl .igad.gir text{fill:var(--vurgu)}.isl .igad.tp rect{stroke:var(--art)}.isl .igad.tp text{fill:var(--art)}
+.isl .igad.sl rect{stroke:var(--eks)}.isl .igad.sl text{fill:var(--eks)}.isl .igad.lik rect{stroke:var(--uyari)}.isl .igad.lik text{fill:var(--uyari)}
+.isl .igad.lim rect{stroke:var(--mor)}.isl .igad.lim text{fill:var(--mor)}.isl .igad.plan{opacity:.8}
+.isl .igal{fill:var(--art);color:var(--art)}.isl .igsat{fill:var(--eks);color:var(--eks)}
+.isl .igl2{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:11px;color:var(--soluk);padding:4px 4px 0}.isl .igl2 i{display:inline-block;width:14px;height:0;border-top:2px solid;vertical-align:middle;margin-right:4px}
+.isl .igl2 i.gir{border-color:var(--vurgu)}.isl .igl2 i.tp{border-color:var(--art);border-top-style:dashed}.isl .igl2 i.sl{border-color:var(--eks);border-top-style:dashed}.isl .igl2 i.lik{border-color:var(--uyari);border-top-style:dashed}
+.isl .ichip{display:flex;gap:4px;margin-top:6px}.isl .ichip button{flex:1;min-width:0;height:30px;border-radius:9px;border:0;background:var(--kart2);color:var(--soluk);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer}
+.isl .ichip button.on{background:var(--yazi);color:var(--bg)}.isl .ichip.ar{margin:0;flex:0 1 240px}.isl .igk .ichip button{background:var(--kart);height:26px}.isl .igk .ichip button.on{background:var(--yazi)}
+.isl .itab{display:flex;gap:18px;border-bottom:1px solid var(--cizgi);margin:14px 0 10px}.isl .itab button{border:0;background:none;color:var(--soluk);font:inherit;font-weight:650;font-size:14px;padding:8px 0;cursor:pointer;border-bottom:2px solid transparent;margin-bottom:-1px}
+.isl .itab button.on{color:var(--yazi);border-bottom-color:var(--yazi)}
+.isl .iseg{display:flex;gap:6px;margin-top:8px}.isl .iseg button{flex:1;min-width:0;height:40px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);font:inherit;font-weight:650;cursor:pointer}
+.isl .iseg button.on{background:var(--yazi);color:var(--bg);border-color:var(--yazi)}.isl .iseg.yon button{height:46px;font-size:15px}
+.isl .iseg button.L.on{background:var(--art);border-color:var(--art);color:#fff}.isl .iseg button.S.on{background:var(--eks);border-color:var(--eks);color:#fff}
+.isl .iseg.kucuk button{height:34px;font-size:13px}.isl .iseg button.tehlike{color:var(--eks);border-color:color-mix(in srgb,var(--eks) 45%,transparent)}.isl .iseg button.birincil{background:var(--vurgu);border-color:var(--vurgu);color:#fff}
+.isl .ibas{display:block;font-size:12px;font-weight:600;color:var(--soluk);margin:14px 0 6px}
+.isl input{width:100%;height:44px;border:1px solid var(--cizgi);border-radius:12px;background:var(--kart);color:var(--yazi);padding:0 12px;font:inherit;font-size:16px;font-variant-numeric:tabular-nums}
+.isl input:focus{outline:none;border-color:var(--vurgu);box-shadow:0 0 0 3px color-mix(in srgb,var(--vurgu) 18%,transparent)}
+.isl .ipara{position:relative}.isl .ipara span{position:absolute;right:14px;top:50%;transform:translateY(-50%);color:var(--soluk);font-weight:600}
+.isl .iki{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.isl .itah{min-height:20px;margin-top:12px;font-size:13px;line-height:1.5;font-variant-numeric:tabular-nums}
+.isl .ibtn{width:100%;height:50px;border-radius:14px;border:0;font:inherit;font-size:15.5px;font-weight:700;cursor:pointer;margin-top:12px;background:var(--vurgu);color:#fff}
+.isl .ibtn.ikinci{background:var(--kart2);color:var(--yazi);height:44px}.isl .ibtn.L{background:var(--art)}.isl .ibtn.S{background:var(--eks)}.isl .ibtn:disabled{opacity:.45;cursor:default}
+.isl .iozt{display:grid;grid-template-columns:1fr 1fr;gap:8px 14px;background:var(--kart2);border-radius:14px;padding:12px 14px;margin-top:10px;font-variant-numeric:tabular-nums}
+.isl .iozt div{display:flex;flex-direction:column;gap:1px}.isl .iozt .k{font-size:11.5px}.isl .iozt p{grid-column:1/-1;margin:2px 0 0;font-size:12.5px}
+.isl .ipoz{background:var(--kart2);border-radius:16px;padding:12px 14px}.isl .iph{display:flex;justify-content:space-between;align-items:center}
+.isl .iyon{font-size:11px;font-weight:700;padding:3px 8px;border-radius:7px;color:#fff;margin-right:4px}.isl .iyon.L{background:var(--art)}.isl .iyon.S{background:var(--eks)}
+.isl .ikz{font-size:22px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;line-height:1.1}.isl .ikz small{display:block;font-size:12px;font-weight:600}
+.isl .ikg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px 12px;margin-top:12px;font-size:13.5px;font-variant-numeric:tabular-nums}.isl .iku .k{font-size:11.5px}
+.isl .ibek{display:flex;justify-content:space-between;font-size:13px;padding:8px 2px;border-bottom:1px solid var(--cizgi)}
+.isl .ipin{border-top:1px solid var(--cizgi);margin-top:16px}
+.isl .imsj{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:13px}.isl .imsj.ok{background:color-mix(in srgb,var(--art) 15%,transparent)}.isl .imsj.hata{background:color-mix(in srgb,var(--eks) 15%,transparent)}
+@media (max-width:420px){.isl .ikg{grid-template-columns:repeat(2,minmax(0,1fr))}}
 </style></head><body><div class="kap">
 <header id="ust"><div><h1><img src="ikon-192.png" alt="">Carry</h1><div class="k" id="alt"></div><div id="ustkitap"></div></div>
   <div class="sag"><span class="canli" id="canliust"><i></i><span>bağlanıyor</span></span><button class="tema" id="tema" onclick="temaDegis()" aria-label="tema">◐</button></div></header>
@@ -1335,76 +1373,181 @@ async function islIstek(yol, govde){
   return d;
 }
 function islAc(s){
-  ISL = {s, yon:"L", usd: Math.min(50, (ISL_DURUM||{}).max_usd||50), tip:"MARKET", fiyat:"", tp:"", sl:"", pin:"", poz:null, oniz:null, msj:null, mesgul:false};
+  ISL = {s, yon:"L", usd: Math.min(50, (ISL_DURUM||{}).max_usd||50), tip:"MARKET", fiyat:"", tp:"", sl:"", pin:"", poz:null, oniz:null, msj:null, mesgul:false,
+         sekme: "islem", aralik: (()=>{ try { return localStorage.getItem("carry_isl_ar") || "1h"; } catch(_){ return "1h"; } })()};
   const el = $("#sheet"); el.hidden = false;
   el.innerHTML = `<div class="shb" onclick="islKapat()"></div><div class="shp isl" role="dialog" aria-label="${s.replace(/USDT$/,"")} al / sat"><div class="shh"></div><div id="islic"></div></div>`;
-  document.body.style.overflow = "hidden"; islCiz(); islPozYukle();
+  document.body.style.overflow = "hidden"; islCiz(); islPozYukle(); islMumYukle();
 }
 function islKapat(){ ISL = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; }
 addEventListener("keydown", e=>{ if (e.key === "Escape" && ISL) islKapat(); });
-async function islPozYukle(){ if (!ISL) return; const s = ISL.s; const d = await islIstek("pozisyon/" + s); if (ISL && ISL.s==s){ ISL.poz = d.ok ? d : {hata: d.hata}; islCiz(); } }
+async function islPozYukle(){ if (!ISL) return; const s = ISL.s; const d = await islIstek("pozisyon/" + s);
+  if (ISL && ISL.s==s){ const ilk = !ISL.poz; ISL.poz = d.ok ? d : {hata: d.hata};
+    if (ilk && d.ok && d.pozisyon && d.pozisyon.adet){ ISL.sekme = "poz";   // pozisyon varsa önce o; TP / stop kutuları mevcut emirlerle dolar
+      const t = (d.tpsl||[]).find(x=>x.tur=="TP"), l = (d.tpsl||[]).find(x=>x.tur=="SL"); if (t) ISL.tp = t.fiyat; if (l) ISL.sl = l.fiyat; }
+    islCiz(); } }
+// MADDE 835: GRAFİK — mumlar gerçek Binance'ten (herkese açık klines); üstüne giriş fiyatı, TP / stop (mevcut emirler), likidasyon,
+// planlanan TP / stop / limit (kesik çizgi) ve hesabın dolumları (▲ alış / ▼ satış) çizilir. Saniyede bir son mum canlı fiyatla güncellenir.
+const ISL_AR = {"15m": ["15 dk", 96], "1h": ["1 sa", 120], "4h": ["4 sa", 120], "1d": ["1 gün", 120]};
+let MUMI = {};
+async function islMumYukle(zorla){
+  if (!ISL || VERI_GOMULU) return; const s = ISL.s, a = ISL.aralik, k = s + "|" + a, M = MUMI[k];
+  if (!zorla && M && Date.now() - M.t < 60e3) { islGrafikCiz(); return; }
+  try { const d = await (await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=${a}&limit=${ISL_AR[a][1]}`, {cache:"no-store"})).json();
+    if (Array.isArray(d)) MUMI[k] = {t: Date.now(), d: d.map(x=>[+x[0], +x[1], +x[2], +x[3], +x[4], +x[6]])}; } catch(_){}
+  islGrafikCiz();
+}
+function islAralik(a){ if (!ISL) return; ISL.aralik = a; try { localStorage.setItem("carry_isl_ar", a); } catch(_){} islCiz(); islMumYukle(); }
+function islGrafik(W, H){
+  const I = ISL, M = MUMI[I.s + "|" + I.aralik]; if (!M || !M.d.length) return `<div class="igbos">grafik yükleniyor…</div>`;
+  const D = M.d.map(x=>x.slice()), f = (PIY[I.s]||{}).f;
+  if (f > 0){ const z = D[D.length-1]; if (Date.now() < z[5]){ z[4] = f; z[2] = Math.max(z[2], f); z[3] = Math.min(z[3], f); } }
+  const P = I.poz && I.poz.pozisyon, T = (I.poz && I.poz.tpsl) || [], cizgi = [];
+  const ekle = (v, ad, cls, kesik) => { v = +v; if (v > 0) cizgi.push({v, ad, cls, kesik}); };
+  if (P && P.adet){ ekle(P.giris, "Giriş", "gir"); if (P.likidasyon > 0) ekle(P.likidasyon, "Likidasyon", "lik", true); }
+  for (const t of T) ekle(t.fiyat, t.tur=="TP" ? "TP" : "Stop", t.tur=="TP" ? "tp" : "sl", true);
+  const varTP = T.some(t=>t.tur=="TP" && Math.abs(t.fiyat - I.tp) < 1e-12), varSL = T.some(t=>t.tur=="SL" && Math.abs(t.fiyat - I.sl) < 1e-12);
+  if (+I.tp > 0 && !varTP) ekle(I.tp, "plan TP", "tp plan", true);
+  if (+I.sl > 0 && !varSL) ekle(I.sl, "plan stop", "sl plan", true);
+  if (I.sekme=="islem" && I.tip=="LIMIT" && +I.fiyat > 0) ekle(I.fiyat, "limit", "lim plan", true);
+  const sag = 66, alt = 18, w = W - sag, h = H - alt, n = D.length, t0 = D[0][0], adimT = n > 1 ? (D[1][0] - D[0][0]) : 3600e3, t1 = D[n-1][0] + adimT;
+  let lo = Math.min(...D.map(x=>x[3])), hi = Math.max(...D.map(x=>x[2]));
+  for (const c of cizgi) if (c.v > lo * 0.7 && c.v < hi * 1.3){ lo = Math.min(lo, c.v); hi = Math.max(hi, c.v); }   // çok uzak çizgi ekseni ezmesin
+  const pad = (hi - lo) * 0.08 || hi * 0.01; lo -= pad; hi += pad;
+  const Y = v => h - (v - lo) / (hi - lo) * h, X = t => (t - t0) / (t1 - t0) * w, bw = Math.max(1, w / n * 0.66);
+  let g = "";
+  for (let i = 0; i <= 4; i++){ const v = lo + (hi - lo) * i / 4, y = Y(v); g += `<line x1="0" x2="${w}" y1="${y}" y2="${y}" class="igiz"/>`; }
+  const TZ = a => { const d = new Date(a); return I.aralik=="1d" || I.aralik=="4h" ? `${d.getDate()}.${d.getMonth()+1}` : `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; };
+  for (let i = 1; i <= 3; i++){ const t = t0 + (t1 - t0) * i / 4; g += `<text x="${X(t)}" y="${H - 4}" class="igt" text-anchor="middle">${TZ(t)}</text>`; }
+  for (const [t, o, hh, l, c] of D){ const x = X(t) + (w / n) / 2, yu = c >= o; const y1 = Y(Math.max(o, c)), y2 = Y(Math.min(o, c));
+    g += `<line x1="${x}" x2="${x}" y1="${Y(hh)}" y2="${Y(l)}" class="${yu?"igu":"igd"}"/><rect x="${x - bw/2}" y="${y1}" width="${bw}" height="${Math.max(1, y2 - y1)}" class="${yu?"igub":"igdb"}"/>`; }
+  for (const tr of (I.poz && I.poz.islemler) || []){ if (tr.t < t0 || tr.t > t1 || !(tr.fiyat > 0)) continue;
+    const x = X(tr.t), y = Y(tr.fiyat), al = tr.yon=="AL";
+    g += `<path d="${al ? `M${x-5},${y+12} L${x+5},${y+12} L${x},${y+4} Z` : `M${x-5},${y-12} L${x+5},${y-12} L${x},${y-4} Z`}" class="${al?"igal":"igsat"}"><title>${tr.yon} ${tr.adet} @ ${piyFiyat(tr.fiyat)}</title></path>`; }
+  const et = [];
+  for (const c of cizgi){ const y = Y(c.v); if (y < -2 || y > h + 2){ et.push({y: y < 0 ? 6 : h - 6, c, disari: true}); continue; }
+    g += `<line x1="0" x2="${w}" y1="${y}" y2="${y}" class="igl ${c.cls}" ${c.kesik?'stroke-dasharray="5 4"':""}/>`; et.push({y, c});
+    const tw = c.ad.length * 6 + 10; g += `<g class="igad ${c.cls}"><rect x="2" y="${y - 8}" width="${tw}" height="16" rx="4"/><text x="7" y="${y + 4}">${c.ad}</text></g>`; }
+  if (f > 0){ const y = Y(f); g += `<line x1="0" x2="${w}" y1="${y}" y2="${y}" class="igl simdi" stroke-dasharray="2 3"/>`; et.push({y, c: {v: f, ad: "", cls: "simdi"}}); }
+  et.sort((a,b)=>a.y-b.y); for (let i = 1; i < et.length; i++) if (et[i].y - et[i-1].y < 15) et[i].y = et[i-1].y + 15;
+  for (let i = et.length - 1; i >= 0; i--){ if (et[i].y > h - 7) et[i].y = h - 7; if (i < et.length - 1 && et[i+1].y - et[i].y < 15) et[i].y = et[i+1].y - 15; }
+  for (const e of et){ const c = e.c; g += `<g class="ige ${c.cls}"><rect x="${w + 2}" y="${e.y - 7.5}" width="${sag - 3}" height="15" rx="3"/><text x="${w + 6}" y="${e.y + 4}">${e.disari ? (e.y < h/2 ? "↑" : "↓") : ""}${piyFiyat(c.v)}</text>${e.disari ? `<title>${c.ad} ${piyFiyat(c.v)} (grafik dışında)</title>` : ""}</g>`; }
+  return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${I.s} fiyat grafiği">${g}</svg>`;
+}
+function islGrafikCiz(){ const el = $("#islgraf"); if (!el || !ISL) return; const W = Math.round(el.clientWidth || 320); el.innerHTML = islGrafik(W, 210);
+  const fe = $("#islfiy"); if (fe){ const f = (PIY[ISL.s]||{}).f; if (f) fe.textContent = piyFiyat(f); } }
 function islAyar(k, v){   // PIN dışındaki her değişiklik önizlemeyi geçersiz kılar (gönderilen emir hep önizlenenle aynı olsun)
   if (!ISL) return; ISL[k] = v; if (k!="pin") ISL.oniz = null;
-  if (k!="pin" && k!="usd" && k!="fiyat" && k!="tp" && k!="sl") islCiz(); else islDugme(); }
-function islYuzde(alan, y){   // TP / SL'yi şu anki fiyattan yüzdeyle doldur (hesabın işaret fiyatı; yoksa piyasa fiyatı)
-  if (!ISL) return; const ref = (ISL.tip=="LIMIT" && +ISL.fiyat>0) ? +ISL.fiyat : ((ISL.poz && ISL.poz.isaret) || (PIY[ISL.s]||{}).f);
-  if (!(ref>0)) return; const yon = alan=="tp" ? 1 : -1, isr = ISL.yon=="L" ? 1 : -1;
-  ISL[alan] = +(ref * (1 + yon * isr * y / 100)).toPrecision(6); ISL.oniz = null; islCiz();
+  if (k!="pin" && k!="usd" && k!="fiyat" && k!="tp" && k!="sl") islCiz(); else { islDugme(); islTahmin(); islGrafikCiz(); } }
+function islSekme(t){ if (!ISL) return; ISL.sekme = t; ISL.msj = null; islCiz(); }
+function islRef(){ const I = ISL; return (I.tip=="LIMIT" && +I.fiyat>0 && I.sekme=="islem") ? +I.fiyat : ((I.poz && I.poz.isaret) || (PIY[I.s]||{}).f); }
+function islYuzde(alan, y){   // TP / stop'u fiyattan yüzdeyle doldur (pozisyon sekmesinde giriş yönü, emir sekmesinde seçili yön)
+  if (!ISL) return; const P = ISL.poz && ISL.poz.pozisyon, uzun = ISL.sekme=="poz" && P && P.adet ? P.adet > 0 : ISL.yon=="L", ref = islRef();
+  if (!(ref>0)) return; const yon = alan=="tp" ? 1 : -1;
+  ISL[alan] = +(ref * (1 + yon * (uzun?1:-1) * y / 100)).toPrecision(6); ISL.oniz = null; islCiz();
 }
-function islDugme(){ const b = $("#islgonder"); if (b){ b.disabled = !ISL || ISL.mesgul || !ISL.oniz || String(ISL.pin).length < 6; if (!ISL.oniz) b.textContent = "önce önizle"; }
+function islTPSL(){ const P = ISL.poz && ISL.poz.pozisyon; return P && P.adet ? {tp:"", sl:""} : {tp: ISL.tp, sl: ISL.sl}; }   // pozisyon varken TP / stop Pozisyon sekmesinden
+function islTahminMetin(){   // önizlemeden ÖNCE de canlı tahmin: adet, TP'de / stop'ta kâr-zarar, risk / ödül
+  const I = ISL, ref = islRef(), u = +I.usd; if (!(ref>0) || !(u>0)) return "";
+  const q = u / ref, sg = I.yon=="L" ? 1 : -1, tp = +islTPSL().tp, sl = +islTPSL().sl;
+  const kTP = tp>0 ? q * (tp - ref) * sg : null, kSL = sl>0 ? q * (sl - ref) * sg : null;
+  const pct = v => (v>=0?"+":"") + (v / u * 100).toFixed(1).replace(".",",") + "%";
+  return `≈ ${q >= 100 ? Math.round(q).toLocaleString("tr-TR") : (+q.toPrecision(4)).toLocaleString("tr-TR")} adet`
+    + (kTP!=null ? ` · TP'de <b class="${sinif(kTP)}">${isaretli(kTP)}</b> <span class="k">${pct(kTP)}</span>` : "")
+    + (kSL!=null ? ` · stop'ta <b class="${sinif(kSL)}">${isaretli(kSL)}</b> <span class="k">${pct(kSL)}</span>` : "")
+    + (kTP>0 && kSL<0 ? ` · risk/ödül <b>1 : ${(kTP / -kSL).toFixed(1).replace(".",",")}</b>` : "");
+}
+function islTahmin(){ const e = $("#isltah"); if (e) e.innerHTML = islTahminMetin(); }
+function islDugme(){ const b = $("#islgonder"); if (b){ b.disabled = !ISL || ISL.mesgul || !ISL.oniz || String(ISL.pin).length < 6; if (!ISL.oniz) b.textContent = "Önce önizle"; }
   const o = $("#isloniz"); if (o && !ISL.oniz) o.innerHTML = ""; }
 async function islOnizle(){
   if (!ISL || ISL.mesgul) return; ISL.mesgul = true; ISL.msj = null; islCiz();
-  const d = await islIstek("onizle", {sembol: ISL.s, yon: ISL.yon, usd: +ISL.usd, tip: ISL.tip, fiyat: ISL.fiyat, tp: ISL.tp, sl: ISL.sl});
+  const d = await islIstek("onizle", {sembol: ISL.s, yon: ISL.yon, usd: +ISL.usd, tip: ISL.tip, fiyat: ISL.fiyat, ...islTPSL()});
   if (!ISL) return; ISL.mesgul = false; ISL.oniz = d.ok ? d : null; if (!d.ok) ISL.msj = {hata: d.hata}; islCiz();
 }
 async function islGonder(){
   if (!ISL || !ISL.oniz || ISL.mesgul) return; ISL.mesgul = true; islCiz();
-  const d = await islIstek("emir", {sembol: ISL.s, yon: ISL.yon, usd: +ISL.usd, tip: ISL.tip, fiyat: ISL.fiyat, tp: ISL.tp, sl: ISL.sl, pin: ISL.pin});
+  const d = await islIstek("emir", {sembol: ISL.s, yon: ISL.yon, usd: +ISL.usd, tip: ISL.tip, fiyat: ISL.fiyat, ...islTPSL(), pin: ISL.pin});
   if (!ISL) return; ISL.mesgul = false;
-  ISL.msj = d.ok ? {ok: `Emir gönderildi: ${d.emir.tip} ${d.emir.adet} adet (${d.emir.durum||"?"})` + (d.tpsl && d.tpsl.length ? ` · ${d.tpsl.map(x=>x.tur+" "+x.fiyat).join(" · ")}` : "") + (d.tpsl_hata ? ` · ⚠️ ${d.tpsl_hata}` : "")} : {hata: d.hata};
-  if (d.ok) ISL.oniz = null; islCiz(); if (d.ok) setTimeout(islPozYukle, 1200);
+  ISL.msj = d.ok ? {ok: `Emir gönderildi: ${d.emir.tip=="LIMIT"?"limit":"piyasa"} ${d.emir.adet} adet (${d.emir.durum||"?"})` + (d.tpsl && d.tpsl.length ? ` · ${d.tpsl.map(x=>(x.tur=="SL"?"Stop":x.tur)+" "+piyFiyat(x.fiyat)).join(" · ")}` : "") + (d.tpsl_hata ? ` · ⚠️ ${d.tpsl_hata}` : "")} : {hata: d.hata};
+  if (d.ok) ISL.oniz = null; islCiz(); if (d.ok) setTimeout(()=>{ if (ISL){ ISL.poz = ISL.poz && {...ISL.poz}; islPozYukle().then(()=>{ if (ISL && ISL.poz && ISL.poz.pozisyon && ISL.poz.pozisyon.adet){ ISL.sekme = "poz"; islCiz(); } }); } }, 1200);
 }
 async function islIslem(yol, ek, onay){
   if (!ISL || ISL.mesgul) return;
-  if (String(ISL.pin).length < 6){ ISL.msj = {hata:"önce PIN'i yaz"}; islCiz(); return; }
+  if (String(ISL.pin).length < 6){ ISL.msj = {hata:"Önce aşağıya işlem PIN'ini yaz"}; islCiz(); const p = $("#islpin"); if (p) p.focus(); return; }
   if (onay && !confirm(onay)) return;
   ISL.mesgul = true; islCiz();
   const d = await islIstek(yol, {sembol: ISL.s, pin: ISL.pin, ...ek});
   if (!ISL) return; ISL.mesgul = false;
-  ISL.msj = d.ok ? {ok: yol=="kapat" ? `Kapatıldı: ${d.kapat.adet} adet` : yol=="tpsl" ? "TP / SL güncellendi" : `İptal edildi: ${d.iptal} emir`} : {hata: d.hata};
+  ISL.msj = d.ok ? {ok: yol=="kapat" ? `Kapatıldı: ${d.kapat.adet} adet` : yol=="tpsl" ? "TP / stop kaydedildi" : `Silindi: ${d.iptal} emir`} : {hata: d.hata};
   islCiz(); if (d.ok) setTimeout(islPozYukle, 1200);
 }
 function islCiz(){
   const el = $("#islic"); if (!el || !ISL) return;
-  const I = ISL, ad = I.s.replace(/USDT$/,""), D = ISL_DURUM || {}, P = I.poz, pz = P && P.pozisyon, f = (PIY[I.s]||{}).f, fg = v => v==null||v===""||isNaN(v) ? "—" : piyFiyat(+v);
-  const b = (alan, v, ad2, cls="") => `<button class="${cls} ${I[alan]==v?"on":""}" onclick="islAyar('${alan}','${v}')">${ad2}</button>`;
-  const hz = (alan, L) => `<div class="hz">${L.map(y=>`<button onclick="islYuzde('${alan}',${y})">${alan=="tp"?"+":"−"}%${y}</button>`).join("")}</div>`;
-  const pozHtml = !P ? `<div class="k">pozisyon okunuyor…</div>` : P.hata ? `<div class="k">pozisyon okunamadı: ${ea(P.hata)}</div>` : !pz.adet ? `<div class="k">Bu coinde açık pozisyon yok.</div>`
-    : `<div class="ozt"><b class="${pz.adet>0?"art":"eks"}">${pz.adet>0?"LONG":"SHORT"}</b> ${Math.abs(pz.adet)} adet · giriş ${fg(pz.giris)} · K/Z <b class="${sinif(pz.kz)}">${isaretli(pz.kz)}</b>
-       ${P.tpsl.length ? `<br>${P.tpsl.map(x=>`${x.tur} ${fg(x.fiyat)}${x.panel?"":" (bot)"}`).join(" · ")}` : "<br>TP / SL yok"}${P.bekleyen.length ? `<br>bekleyen: ${P.bekleyen.map(x=>`${x.tip} ${x.yon} ${x.adet} @ ${fg(x.fiyat)}`).join(" · ")}` : ""}</div>
-       <div class="ib"><button onclick="islIslem('kapat',{oran:0.25},'${ad} pozisyonunun %25\'i kapatılsın mı?')">%25 kapat</button><button onclick="islIslem('kapat',{oran:0.5},'${ad} pozisyonunun yarısı kapatılsın mı?')">%50 kapat</button><button onclick="islIslem('kapat',{oran:1},'${ad} pozisyonunun TAMAMI kapatılsın mı?')">Tümünü kapat</button></div>
-       <div class="iki"><div><label>TP fiyatı</label><input inputmode="decimal" value="${ea(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div><div><label>Stop fiyatı</label><input inputmode="decimal" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>
-       <div class="ib"><button onclick="islIslem('tpsl',{tp:ISL.tp,sl:ISL.sl})">TP / stop kur</button>${P.bekleyen.some(x=>x.panel)||P.tpsl.some(x=>x.panel)?`<button onclick="islIslem('iptal',{},'${ad} için panelden konan bütün emirler iptal edilsin mi?')">Panel emirlerini sil</button>`:""}</div>`;
-  const O = I.oniz;
-  el.innerHTML = `<div class="shu"><div><div style="display:flex;align-items:center;gap:8px"><span class="gb">${ad}</span><span class="dst">${D.mod=="live"?"CANLI":"DEMO"}</span></div>
-      <div class="shf">${fg(f)}</div><div class="k">${piyYz((PIY[I.s]||{}).p)} 24 sa · <a href="https://www.binance.com/tr/futures/${I.s}" target="_blank" rel="noopener noreferrer">Binance'te aç ↗</a></div></div>
-      <button class="shx" onclick="islKapat()" aria-label="Kapat">✕</button></div>
-    <div class="bol"><div class="pyb"><span>Pozisyonun</span></div>${pozHtml}</div>
-    <div class="bol"><div class="pyb"><span>${pz && pz.adet ? "Ekle / yeni emir" : "Yeni emir"}</span><span>en fazla ${D.max_usd} $</span></div>
-      <div class="ib">${b("yon","L","Long (al)","L")}${b("yon","S","Short (sat)","S")}</div>
-      <label>Tutar ($, pozisyon büyüklüğü)</label><input inputmode="decimal" value="${ea(I.usd)}" oninput="islAyar('usd',this.value)">
-      <div class="hz">${[25,50,100,200].filter(v=>v<=(D.max_usd||200)).map(v=>`<button onclick="islAyar('usd',${v});islCiz()">${v} $</button>`).join("")}</div>
-      <div class="ib">${b("tip","MARKET","Piyasa")}${b("tip","LIMIT","Limit")}</div>
-      ${I.tip=="LIMIT" ? `<label>Limit fiyatı</label><input inputmode="decimal" value="${ea(I.fiyat)}" oninput="islAyar('fiyat',this.value)">` : ""}
-      ${pz && pz.adet ? "" : `<div class="iki"><div><label>TP (isteğe bağlı)</label><input inputmode="decimal" value="${ea(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div><div><label>Stop (isteğe bağlı)</label><input inputmode="decimal" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>`}
-      <button class="ana" onclick="islOnizle()" ${I.mesgul?"disabled":""}>Önizle</button>
-      <div id="isloniz">${O ? `<div class="ozt">${O.yon=="L"?"LONG":"SHORT"} · ${O.tip=="LIMIT"?"limit "+fg(O.fiyat):"piyasa"} · <b>${O.adet} adet ≈ ${O.usd.toFixed(2).replace(".",",")} $</b><br>hesabın fiyatı ${fg(O.isaret)}${f && Math.abs(O.isaret/f-1) > 0.005 ? ` <span class="uyr">(listedeki gerçek fiyattan %${(Math.abs(O.isaret/f-1)*100).toFixed(1).replace(".",",")} farklı — ${O.mod=="live"?"":"demo hesap fiyatı"})</span>` : ""}${O.tp?`<br>TP ${fg(O.tp)}`:""}${O.sl?` · Stop ${fg(O.sl)}`:""}${O.not?`<br>${O.not}`:""}</div>` : ""}</div>
-    </div>
-    <div class="bol"><label>İşlem PIN'i</label><input id="islpin" type="password" inputmode="numeric" autocomplete="off" value="${ea(I.pin)}" oninput="islAyar('pin',this.value)" placeholder="sunucuda belirlediğin PIN"></div>
-    <button id="islgonder" class="ana ${I.yon}" onclick="islGonder()" ${!O||I.mesgul||String(I.pin).length<6?"disabled":""}>${I.mesgul?"…":O?`${O.yon=="L"?"AL (Long)":"SAT (Short)"} · ${O.usd.toFixed(0)} $`:"önce önizle"}</button>
-    ${I.msj ? `<div class="msj ${I.msj.ok?"ok":"hata"}">${ea(I.msj.ok||I.msj.hata)}</div>` : ""}`;
-  const pi = $("#islpin"); if (pi && document.activeElement !== pi && I._pinOdak){ pi.focus(); }
+  const I = ISL, ad = I.s.replace(/USDT$/,""), D = ISL_DURUM || {}, PR = I.poz, pz = PR && PR.pozisyon, o = PIY[I.s] || {}, f = o.f;
+  const fg = v => v==null||v===""||isNaN(v)||!(+v>0) ? "—" : piyFiyat(+v);
+  const seg = (alan, v, ad2, cls="") => `<button class="${cls} ${I[alan]==v?"on":""}" onclick="islAyar('${alan}','${v}')">${ad2}</button>`;
+  const hz = (alan, L) => `<div class="ichip">${L.map(y=>`<button onclick="islYuzde('${alan}',${y})">${alan=="tp"?"+":"−"}${y}%</button>`).join("")}</div>`;
+  const uzak = (v, ref) => v>0 && ref>0 ? `<span class="k"> ${((v/ref-1)*100>=0?"+":"")}${((v/ref-1)*100).toFixed(1).replace(".",",")}%</span>` : "";
+  const varPoz = pz && pz.adet, uzun = varPoz && pz.adet > 0;
+  // --- üst bilgi
+  let h = `<div class="ihd"><div><div class="iad"><b>${ad}</b><span class="irz">${D.mod=="live"?"CANLI":"DEMO"}</span><span class="irz">USDT · perpetual</span></div>
+      <div class="ifr"><span id="islfiy">${fg(f)}</span><span class="${sinif(o.p)}">${piyYz(o.p)}</span><span class="k">24 sa</span></div></div>
+      <button class="shx" onclick="islKapat()" aria-label="Kapat">✕</button></div>`;
+  // --- grafik
+  h += `<div class="igk"><div class="igb"><div class="ichip ar">${Object.entries(ISL_AR).map(([a,[t]])=>`<button class="${I.aralik==a?"on":""}" onclick="islAralik('${a}')">${t}</button>`).join("")}</div>
+      <a class="k" href="https://www.binance.com/tr/futures/${I.s}" target="_blank" rel="noopener noreferrer">Binance ↗</a></div>
+      <div id="islgraf" class="igr"></div>
+      <div class="igl2"><span><i class="gir"></i>giriş</span><span><i class="tp"></i>TP</span><span><i class="sl"></i>stop</span>${varPoz && pz.likidasyon>0?`<span><i class="lik"></i>likidasyon</span>`:""}<span><b class="igal">▲</b> alış</span><span><b class="igsat">▼</b> satış</span></div></div>`;
+  // --- sekmeler
+  h += `<div class="itab">${varPoz?`<button class="${I.sekme=="poz"?"on":""}" onclick="islSekme('poz')">Pozisyon</button>`:""}<button class="${I.sekme=="islem"||!varPoz?"on":""}" onclick="islSekme('islem')">${varPoz?"Ekle / yeni emir":"Yeni emir"}</button></div>`;
+  if (!PR) h += `<div class="k" style="padding:8px 2px">pozisyon okunuyor…</div>`;
+  else if (PR.hata) h += `<div class="imsj hata">Pozisyon okunamadı: ${ea(PR.hata)}</div>`;
+  if (varPoz && I.sekme=="poz"){
+    const deger = Math.abs(pz.adet) * (PR.isaret || pz.giris), kzp = pz.giris>0 ? pz.kz / (Math.abs(pz.adet) * pz.giris) * 100 : null;
+    const tTP = PR.tpsl.find(x=>x.tur=="TP"), tSL = PR.tpsl.find(x=>x.tur=="SL");
+    const kut = (e, d) => `<div class="iku"><div class="k">${e}</div><div>${d}</div></div>`;
+    h += `<div class="ipoz"><div class="iph"><div><span class="iyon ${uzun?"L":"S"}">${uzun?"LONG":"SHORT"}</span> <b>${Math.abs(pz.adet).toLocaleString("tr-TR")}</b> <span class="k">adet</span></div>
+        <div class="ikz ${sinif(pz.kz)}">${isaretli(pz.kz)}<small>${kzp==null?"":(kzp>=0?"+":"")+kzp.toFixed(2).replace(".",",")+"%"}</small></div></div>
+      <div class="ikg">${kut("Giriş", fg(pz.giris))}${kut("Hesap fiyatı", fg(PR.isaret) + uzak(PR.isaret, pz.giris))}${kut("Değer", para(deger))}
+        ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) + (tTP.panel?"":" <span class='k'>(bot)</span>") : "<span class='k'>yok</span>")}
+        ${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) + (tSL.panel?"":" <span class='k'>(bot)</span>") : "<span class='uyr'>yok</span>")}
+        ${kut("Likidasyon", pz.likidasyon>0 ? fg(pz.likidasyon) + uzak(pz.likidasyon, PR.isaret) : "—")}</div></div>
+      <div class="ibas">Kapat</div><div class="iseg">
+        <button onclick="islIslem('kapat',{oran:0.25},'${ad}: pozisyonun %25\'i piyasa fiyatından kapatılsın mı?')">%25</button>
+        <button onclick="islIslem('kapat',{oran:0.5},'${ad}: pozisyonun yarısı piyasa fiyatından kapatılsın mı?')">%50</button>
+        <button class="tehlike" onclick="islIslem('kapat',{oran:1},'${ad}: pozisyonun TAMAMI piyasa fiyatından kapatılsın mı?')">Tümünü kapat</button></div>
+      <div class="ibas">TP / stop <span class="k">· pozisyonun tamamı için</span></div>
+      <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" value="${ea(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
+        <div><input inputmode="decimal" placeholder="Stop fiyatı" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>
+      <div class="iseg"><button class="birincil" onclick="islIslem('tpsl',{tp:ISL.tp,sl:ISL.sl})">TP / stop kaydet</button>${PR.bekleyen.some(x=>x.panel)||PR.tpsl.some(x=>x.panel)?`<button onclick="islIslem('iptal',{},'${ad}: panelden konan bütün emirler (TP / stop / limit) silinsin mi?')">Panel emirlerini sil</button>`:""}</div>
+      ${PR.bekleyen.length ? `<div class="ibas">Bekleyen emirler</div>${PR.bekleyen.map(x=>`<div class="ibek"><span>${x.tip=="LIMIT"?"Limit":x.tip} ${x.yon=="BUY"?"alış":"satış"} · ${x.adet}</span><span>${fg(x.fiyat)}${x.panel?"":" <span class='k'>(bot)</span>"}</span></div>`).join("")}` : ""}`;
+  } else if (PR && !PR.hata){
+    const O = I.oniz;
+    h += `<div class="iseg yon">${seg("yon","L","Long · al","L")}${seg("yon","S","Short · sat","S")}</div>
+      <div class="iseg kucuk">${seg("tip","MARKET","Piyasa")}${seg("tip","LIMIT","Limit")}</div>
+      ${I.tip=="LIMIT" ? `<label class="ibas">Limit fiyatı</label><input inputmode="decimal" placeholder="${fg(PR.isaret)}" value="${ea(I.fiyat)}" oninput="islAyar('fiyat',this.value)">` : ""}
+      <label class="ibas">Tutar <span class="k">· pozisyon büyüklüğü, en fazla ${D.max_usd} $</span></label>
+      <div class="ipara"><input inputmode="decimal" value="${ea(I.usd)}" oninput="islAyar('usd',this.value)"><span>$</span></div>
+      <div class="ichip">${[25,50,100,200].filter(v=>v<=(D.max_usd||200)).map(v=>`<button class="${+I.usd==v?"on":""}" onclick="islAyar('usd',${v});islCiz()">${v} $</button>`).join("")}</div>
+      ${varPoz ? `<div class="k" style="margin-top:8px">Mevcut TP / stop'un eklemeden sonra toplam adede göre kendiliğinden güncellenir; fiyatlarını Pozisyon sekmesinden değiştirirsin.</div>`
+        : `<div class="iki" style="margin-top:6px"><div><label class="ibas">TP <span class="k">· isteğe bağlı</span></label><input inputmode="decimal" placeholder="kâr al fiyatı" value="${ea(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
+          <div><label class="ibas">Stop <span class="k">· önerilir</span></label><input inputmode="decimal" placeholder="zarar durdur" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>`}
+      <div class="itah" id="isltah">${islTahminMetin()}</div>
+      <button class="ibtn ikinci" onclick="islOnizle()" ${I.mesgul?"disabled":""}>Önizle</button>
+      <div id="isloniz">${O ? `<div class="iozt"><div><span class="k">Emir</span><b>${O.yon=="L"?"Long":"Short"} · ${O.tip=="LIMIT"?"limit":"piyasa"}</b></div>
+          <div><span class="k">Adet</span><b>${O.adet.toLocaleString("tr-TR")}</b></div><div><span class="k">Değer</span><b>${para(O.usd)}</b></div>
+          <div><span class="k">${O.tip=="LIMIT"?"Limit fiyatı":"Hesap fiyatı"}</span><b>${fg(O.fiyat)}</b></div>
+          ${O.tp?`<div><span class="k">TP</span><b>${fg(O.tp)} <span class="art">${isaretli(O.adet*(O.tp-O.fiyat)*(O.yon=="L"?1:-1))}</span></b></div>`:""}
+          ${O.sl?`<div><span class="k">Stop</span><b>${fg(O.sl)} <span class="eks">${isaretli(O.adet*(O.sl-O.fiyat)*(O.yon=="L"?1:-1))}</span></b></div>`:""}
+          ${f && Math.abs(O.isaret/f-1) > 0.005 ? `<p class="uyr">Hesabın fiyatı listedeki gerçek fiyattan %${(Math.abs(O.isaret/f-1)*100).toFixed(1).replace(".",",")} farklı${O.mod=="live"?"":" (demo hesap)"}.</p>` : ""}${O.not?`<p class="k">${ea(O.not)}</p>`:""}</div>` : ""}</div>`;
+  }
+  // --- PIN + gönder (pozisyon işlemleri de bu PIN'i kullanır)
+  h += `<div class="ipin"><label class="ibas" for="islpin">İşlem PIN'i</label><input id="islpin" type="password" inputmode="numeric" autocomplete="off" value="${ea(I.pin)}" oninput="islAyar('pin',this.value)" placeholder="••••••"></div>`;
+  if (!(varPoz && I.sekme=="poz") && PR && !PR.hata){ const O = I.oniz;
+    h += `<button id="islgonder" class="ibtn ${I.yon}" onclick="islGonder()" ${!O||I.mesgul||String(I.pin).length<6?"disabled":""}>${I.mesgul?"Gönderiliyor…":O?`${O.yon=="L"?"Long aç":"Short aç"} · ${para(O.usd)}`:"Önce önizle"}</button>`; }
+  if (I.msj) h += `<div class="imsj ${I.msj.ok?"ok":"hata"}">${ea(I.msj.ok||I.msj.hata)}</div>`;
+  el.innerHTML = h; islGrafikCiz();
 }
 // MADDE 739: GÜNLÜK grafik (TradingView "bugün" gibi). Gün Binance gün başında (00:00 UTC = 03:00 TR) başlar; yatay eksen
 // tam gün (03:00 -> ertesi 03:00), çizgi gün ilerledikçe soldan sağa uzar. 15 dk mumlar her 15 dk sınırında yeniden alınır,
@@ -1632,6 +1775,7 @@ function fundTakip(){
   FUND_T = T;
 }
 function canliBoya(){
+  if (ISL && Date.now() - (islGrafikCiz.t||0) > 2000){ islGrafikCiz.t = Date.now(); islGrafikCiz(); if (Date.now() - ((MUMI[ISL.s+"|"+ISL.aralik]||{}).t||0) > 60e3) islMumYukle(); }   // madde 835
   piyasaBoya(false);   // madde 832
   fundTakip();
   const on = canliDurum();

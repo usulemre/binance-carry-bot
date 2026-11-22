@@ -9392,3 +9392,18 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   %50 kapat, stop kurma, CSRF 403'leri, kapı yokken eski davranış). İlk tarayıcı testinde bulunan hata: PIN yazmak önizlemeyi siliyordu → düzeltildi.
 - Tam takım: 63 dosyadan 56 geçti; düşen 6 dosya 830 öncesiyle aynı (veri / ortam), `test_carry_entegrasyon` bu koşucuda 900 sn sınırına takıldı (önceki uzun koşuda 180/180; carry_bot.py 832-834 arasında değişmedi).
 - AÇIK: gerçek Binance'e karşı denenmedi (sahte borsa). Demo hesapta ilk işlemler küçük tutarla izlenmeli.
+
+## Madde 835 — Panel al / sat penceresi yeniden tasarım + grafik (kullanıcı isteği, 2026-11-22: "daha profesyonel, anlaşılır; grafikte nerede girdiğimi göreyim")
+- GRAFİK: gerçek Binance mumları (15 dk / 1 sa / 4 sa / 1 gün; seçim cihazda saklanır), son mum saniyede bir canlı fiyatla güncellenir. Üstüne:
+  GİRİŞ fiyatı (mavi düz çizgi), kurulu TP / stop (yeşil / kırmızı kesik), likidasyon (turuncu kesik), yazılan ama kaydedilmemiş "plan TP / plan stop" ve
+  limit fiyatı (soluk kesik), şimdiki fiyat; hesabın son 7 gün dolumları ▲ alış / ▼ satış işaretleri (üstüne gelince adet @ fiyat). Sağda fiyat hapları
+  (çakışmayacak şekilde kaydırılır), solda çizgi adı; grafik aralığının çok dışındaki çizgi (ör. uzak likidasyon) ekseni ezmez, kenarda ↑/↓ hap.
+  Kapı (`carry_islem.pozisyon`) artık dolumları (`futures_account_trades`) ve likidasyon fiyatını da döner.
+- BİLET: üstte coin, canlı fiyat, 24 sa; sekmeler "Pozisyon" (varsa, önce o açılır) / "Ekle · yeni emir". Pozisyon kartı: yön + adet, büyük K/Z ($ ve %),
+  giriş, hesap fiyatı (girişe uzaklık), değer, TP / stop / likidasyon (fiyata uzaklık %), kapat %25 / %50 / tümü, TP / stop kaydet (kutular mevcut
+  emirlerle dolu gelir), bekleyen emirler. Yeni emir: büyük Long / Short, piyasa / limit, tutar + kısayollar, TP / stop + yüzde kısayolları; ÖNİZLEMEDEN
+  ÖNCE canlı tahmin: ≈ adet, TP'de / stop'ta $ ve %, risk / ödül oranı; önizleme kartı tablo halinde (TP / stop'ta $ kâr-zarar dahil).
+- Davranış düzeltmesi: pozisyon varken "ekle" emri TP / stop GÖNDERMEZ; kapı eklemeden sonra mevcut panel TP / stop'unu aynı fiyatlarla TOPLAM adede göre
+  yeniden kurar (eskiden ek adet korumasız kalıyordu).
+- Testler: `test_panel_islem` (120 mum çizimi, plan TP çizgisi, emirden sonra Pozisyon sekmesi, giriş çizgisi + etiketi, kurulu TP çizgisi, ▲ alış işareti,
+  uzak likidasyonun kenar hapı, stop yazınca plan stop çizgisi), `test_carry_islem` (dolumlar + likidasyon, TP'siz eklemede TP adedi 200'e yenilenir).

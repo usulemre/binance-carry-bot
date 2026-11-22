@@ -46,6 +46,11 @@ class SahteIc:
                             s("ONDOUSDT", "0.0001", "0.1", "0.1"), s("ESKIUSDT", "0.01", "1", "1", st="SETTLING"),
                             s("BTCUSDT_261225", "0.1", "0.001", "0.001", tur="CURRENT_QUARTER"), s("XUSDC", "0.01", "1", "1", q="USDC")]}
 
+    def futures_account_trades(self, symbol, startTime=None, limit=100):
+        import time as _t
+        return [{"time": int(_t.time() * 1000) - 3_600_000 * (3 - i), "side": e["side"], "price": str(self.fiyat[symbol]), "qty": str(e["quantity"]),
+                 "realizedPnl": "0"} for i, e in enumerate(self.emirler) if e["symbol"] == symbol and e["type"] == "MARKET"]
+
     def futures_mark_price(self, symbol):
         return {"markPrice": str(self.fiyat[symbol])}
 
@@ -91,7 +96,8 @@ class SahteClient:
         self.client = SahteIc()
 
     def get_open_positions(self):
-        return [{"symbol": s, "positionAmt": str(a), "entryPrice": str(self.client.fiyat.get(s, 1)), "unRealizedProfit": "1.5"}
+        return [{"symbol": s, "positionAmt": str(a), "entryPrice": str(self.client.fiyat.get(s, 1)), "unRealizedProfit": "1.5",
+                 "liquidationPrice": "0.21"}
                 for s, a in self.client.poz.items() if a]
 
 
@@ -179,6 +185,12 @@ kontrol("eski panel TP / SL iptal, yeni TP 150 adet", len(pan) == 1 and ic.algol
         and ic.algolar[-1]["triggerPrice"] == "0.70000", (pan, ic.algolar[-1]))
 kontrol("botun stop'u yerinde", any(a["algoId"] == 9 for a in ic.algo_acik["AKEUSDT"]) and (("AKEUSDT", 9) not in ic.algo_iptaller))
 
+k.emir({**o, "usd": 25, "pin": "482913"})       # TP / SL VERMEDEN ekleme
+pan = [a_ for a_ in ic.algo_acik["AKEUSDT"] if a_["clientAlgoId"].startswith("panel_")]
+kontrol("madde 835: TP vermeden eklemede mevcut panel TP aynı fiyatla TOPLAM adede (200) yeniden kuruldu",
+        len(pan) == 1 and ic.algolar[-1]["quantity"] == 200 and ic.algolar[-1]["triggerPrice"] == "0.70000", (pan, ic.algolar[-1]))
+kontrol("botun stop'u yine yerinde", any(a_["algoId"] == 9 for a_ in ic.algo_acik["AKEUSDT"]))
+
 print("6) TP / SL hatası emri geri almaz, açıkça söylenir")
 k2, ic2, bil2 = yeni(); ic2.algo_patlat = True
 r2 = k2.emir({**o, "tp": 0.6, "pin": "482913"})
@@ -234,6 +246,12 @@ print("11) pozisyon okuma")
 p6 = k6.pozisyon("akeusdt")
 kontrol("pozisyon + bekleyen + TP/SL + işaret; panel olmayanlar panel=False", p6["isaret"] == 0.5
         and [b_["panel"] for b_ in p6["bekleyen"]] == [False, False] and [t_["panel"] for t_ in p6["tpsl"]] == [False], p6)
+
+k8, ic8, _ = yeni()
+k8.emir({"sembol": "AKEUSDT", "yon": "L", "usd": 50, "pin": "482913"})
+p8 = k8.pozisyon("AKEUSDT")
+kontrol("madde 835: pozisyon yanıtında dolumlar (grafik işaretleri) ve likidasyon fiyatı",
+        p8["islemler"] and p8["islemler"][0]["yon"] == "AL" and p8["islemler"][0]["adet"] == 100 and p8["pozisyon"]["likidasyon"] == 0.21, p8)
 
 print("12) Flask uygulaması")
 app = ci.uygulama(lambda: yeni()[0]).test_client()
