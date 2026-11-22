@@ -35,6 +35,7 @@ class SahteIc:
         self.algo_acik = {}      # sem -> [algo]
         self.poz = {}            # sem -> adet
         self.algo_patlat = False
+        self.giris = {}
         self._oid = 100
 
     def futures_exchange_info(self):
@@ -48,18 +49,21 @@ class SahteIc:
 
     def futures_account_trades(self, symbol, startTime=None, limit=100):
         import time as _t
-        return [{"time": int(_t.time() * 1000) - 3_600_000 * (3 - i), "side": e["side"], "price": str(self.fiyat[symbol]), "qty": str(e["quantity"]),
-                 "realizedPnl": "0"} for i, e in enumerate(self.emirler) if e["symbol"] == symbol and e["type"] == "MARKET"]
+        return [{"time": e["_t"], "side": e["side"], "price": str(self.fiyat[symbol]), "qty": str(e["quantity"]),
+                 "realizedPnl": str(e.get("_kz", 0)), "commission": "0.02"} for i, e in enumerate(self.emirler) if e["symbol"] == symbol and e["type"] == "MARKET"]
 
     def futures_mark_price(self, symbol):
         return {"markPrice": str(self.fiyat[symbol])}
 
     def futures_create_order(self, **kw):
         self._oid += 1
-        kw = dict(kw); kw["orderId"] = self._oid
+        import time as _t
+        kw = dict(kw); kw["orderId"] = self._oid; kw["_t"] = int(_t.time() * 1000)
         self.emirler.append(kw)
         if kw["type"] == "MARKET":
             q = float(kw["quantity"]) * (1 if kw["side"] == "BUY" else -1)
+            if not self.poz.get(kw["symbol"]):
+                self.giris[kw["symbol"]] = self.fiyat[kw["symbol"]]
             self.poz[kw["symbol"]] = round(self.poz.get(kw["symbol"], 0.0) + q, 10)
             return {"orderId": self._oid, "status": "FILLED"}
         self.acik.setdefault(kw["symbol"], []).append({"orderId": self._oid, "clientOrderId": kw.get("newClientOrderId"),
@@ -96,7 +100,7 @@ class SahteClient:
         self.client = SahteIc()
 
     def get_open_positions(self):
-        return [{"symbol": s, "positionAmt": str(a), "entryPrice": str(self.client.fiyat.get(s, 1)), "unRealizedProfit": "1.5",
+        return [{"symbol": s, "positionAmt": str(a), "entryPrice": str(self.client.giris.get(s, self.client.fiyat.get(s, 1))), "unRealizedProfit": "1.5",
                  "liquidationPrice": "0.21"}
                 for s, a in self.client.poz.items() if a]
 
@@ -253,6 +257,38 @@ k8.emir({"sembol": "AKEUSDT", "yon": "L", "usd": 50, "pin": "482913"})
 p8 = k8.pozisyon("AKEUSDT")
 kontrol("madde 835: pozisyon yanıtında dolumlar (grafik işaretleri) ve likidasyon fiyatı",
         p8["islemler"] and p8["islemler"][0]["yon"] == "AL" and p8["islemler"][0]["adet"] == 100 and p8["pozisyon"]["likidasyon"] == 0.21, p8)
+
+print("11b) madde 839: elle özeti, tek emir iptali, sahiplik bayrakları")
+import time as _zaman
+SAAT[0] = _zaman.time()          # dolum zamanları gerçek saatte
+d9 = tempfile.mkdtemp()
+k9, ic9, _ = yeni(elle_dosya=os.path.join(d9, "e.json"), elle_panel=os.path.join(d9, "p.json"), elle_olay=os.path.join(d9, "o.jsonl"),
+                  dilim=os.path.join(d9, "dil.json"))
+json.dump({"dilimler": {"0": {"ONDOUSDT": 50.0}}}, open(os.path.join(d9, "dil.json"), "w"))
+p9 = k9.pozisyon("ONDOUSDT")
+kontrol("botun coini: bot_tutuyor=True, elle=False", p9["bot_tutuyor"] is True and p9["elle"] is False)
+k9.emir({"sembol": "AKEUSDT", "yon": "L", "usd": 50, "sl": 0.45, "pin": "482913"})
+p9 = k9.pozisyon("AKEUSDT")
+kontrol("panelden alınan coin: elle=True (bot bir sonraki kontrolü yapmadan)", p9["elle"] is True and p9["bot_tutuyor"] is False)
+oz = k9.elle_ozet()
+kontrol("Pozisyonlarım: AKE long 100 adet, giriş 0,5, stop 0,45", len(oz["pozisyonlar"]) == 1 and oz["pozisyonlar"][0]["adet"] == 100
+        and oz["pozisyonlar"][0]["sl"] == 0.45 and oz["pozisyonlar"][0]["giris"] == 0.5, oz)
+ic9.emirler[-1]["_kz"] = 0      # açılış
+ic9.fiyat["AKEUSDT"] = 0.6
+k9.kapat({"sembol": "AKEUSDT", "oran": 1, "pin": "482913"}); ic9.emirler[-1]["_kz"] = 10.0
+oz = k9.elle_ozet()
+kontrol("30 gün sonucu: 1 kapanış, kârlı, net = 10 − komisyon", oz["sonuc"]["kapanis"] == 1 and oz["sonuc"]["kazanan"] == 1
+        and abs(oz["sonuc"]["net"] - (10 - 0.04)) < 1e-9 and oz["pozisyonlar"] == [], oz["sonuc"])
+ic9.fiyat["AKEUSDT"] = 0.5
+k9.emir({"sembol": "AKEUSDT", "yon": "L", "usd": 50, "tip": "LIMIT", "fiyat": 0.45, "pin": "482913"})
+oid = ic9.acik["AKEUSDT"][-1]["orderId"]
+ic9.acik["AKEUSDT"].append({"orderId": 4242, "clientOrderId": "android_x", "type": "LIMIT", "side": "BUY", "price": "0.4", "origQty": "5"})
+kontrol("başkasının emri buradan iptal edilmez", hata_mi(lambda: k9.iptal({"sembol": "AKEUSDT", "orderId": 4242, "pin": "482913"}), "yalnız panelden"))
+kontrol("olmayan emir", hata_mi(lambda: k9.iptal({"sembol": "AKEUSDT", "orderId": 1, "pin": "482913"}), "açık değil"))
+r9 = k9.iptal({"sembol": "AKEUSDT", "orderId": oid, "pin": "482913"})
+kontrol("tek panel emri iptal edildi, diğerleri yerinde", r9["iptal"] == 1 and [o_["orderId"] for o_ in ic9.acik["AKEUSDT"]] == [4242])
+kontrol("tek emir iptali de PIN ister", hata_mi(lambda: k9.iptal({"sembol": "AKEUSDT", "orderId": 4242, "pin": "0"}), "PIN"))
+kontrol("bekleyen emirde orderId döner", all("orderId" in b_ for b_ in k9.pozisyon("AKEUSDT")["bekleyen"]))
 
 print("12) Flask uygulaması")
 app = ci.uygulama(lambda: yeni()[0]).test_client()

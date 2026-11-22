@@ -1042,6 +1042,10 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .bekle{color:var(--soluk);font-size:13px;text-align:center;padding:26px 0}
 /* MADDE 832: Piyasa sekmesi */
 .pyk .gdon button{height:36px}
+.pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
+.pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+#piyelle{border-bottom:1px solid var(--cizgi);padding-bottom:12px;margin-bottom:10px}#piyelle .pyeb{margin-top:4px}
+.pybos{padding:14px 12px;border-radius:10px;background:var(--kart2);color:var(--soluk);font-size:13px}
 .pyk{--fa:#0a7d45;--fe:#c42b20}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pyk{--fa:var(--art);--fe:var(--eks)}}:root[data-theme="dark"] .pyk{--fa:var(--art);--fe:var(--eks)}
 .pya{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
 .pya input{flex:1 1 160px;min-width:0;height:44px;font-size:16px;border:1px solid var(--cizgi);border-radius:10px;background:var(--kart);color:var(--yazi);padding:0 10px;font:inherit}
@@ -1115,7 +1119,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .ibtn.L{background:var(--fa)}.isl .ibtn.S{background:var(--fe)}.isl .ibtn.tehlike{background:var(--fe)}.isl .ibtn.vurgu{background:var(--vurgu)}.isl .ibtn:disabled{opacity:.5;cursor:default}
 .isl .ibtn.geri{flex:0 0 108px;background:var(--kart2);color:var(--yazi)}
 .isl .ibtn.tut::before{content:"";position:absolute;inset:0;width:0;background:rgba(255,255,255,.28);transition:width 0s}.isl .ibtn.tut.dolu::before{width:100%;transition:width .7s linear}
-.isl .ibtn.tut span{position:relative}.isl .art,.pyk .art{color:var(--fa)}.isl .eks,.pyk .eks{color:var(--fe)}.isl .shx{width:44px;height:44px}.isl .iuyr{color:var(--uyari);font-size:12.5px;margin:8px 0 0}
+.isl .ibtn.tut span{position:relative}.isl .isah{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45}.isl .isah.sen{background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.isl .isah.bot{background:color-mix(in srgb,var(--uyari) 14%,transparent)}
+.isl .ibek{align-items:center}.isl .ibx{height:36px;padding:0 14px;border-radius:10px;border:1px solid color-mix(in srgb,var(--eks) 45%,transparent);background:var(--kart);color:var(--fe);font:inherit;font-weight:650;cursor:pointer}.isl .iacil.kucuk2{height:auto;min-height:44px;padding:8px 14px;margin-top:8px}.isl .iacil.kucuk2 i{text-align:right}.isl .art,.pyk .art{color:var(--fa)}.isl .eks,.pyk .eks{color:var(--fe)}.isl .shx{width:44px;height:44px}.isl .iuyr{color:var(--uyari);font-size:12.5px;margin:8px 0 0}
 .isl .igl3{display:flex;gap:14px;font-size:11.5px;color:var(--soluk);padding:2px 8px 6px}.isl .ibtn:focus-visible,.isl button:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.isl .ibtn.tut.dolu::before{transition:none}}
 @media (max-width:420px){.isl .ikg{grid-template-columns:repeat(2,minmax(0,1fr))}.isl .ichip.kisa{flex-basis:150px}}
@@ -1346,7 +1351,7 @@ function piyListe(k){
   for (const o of A) o.d = piyDeg(o);
   const DA = PIY_DAD[PIY_DONEM];
   const R = piyRozet(k), ust = `<div class="pyr ust"><span></span><span>coin</span><span class="r">fiyat</span><span class="r">${DA}</span><span class="r hc">hacim</span><span class="r">funding</span></div>`;
-  const blok = (bas, L, not) => `<div class="pyb"><span>${bas}</span><span>${not||""}</span></div><div class="pyl">${L.length ? ust + L.map(o=>piySatir(o, R)).join("") : "<div class='bos'>—</div>"}</div>`;
+  const blok = (bas, L, not) => `<div class="pyb"><span>${bas}</span><span>${not||""}</span></div><div class="pyl">${L.length ? ust + L.map(o=>piySatir(o, R)).join("") : `<div class="pybos">${Object.keys(PIY).length ? "Bu süzgeçte coin yok. Hacim sınırını düşürmeyi dene." : "Piyasa verisi yükleniyor…"}</div>`}</div>`;
   if (PIY_ARA){
     const L = A.filter(o => o.s.includes(PIY_ARA)).sort((a,b)=>(b.q||0)-(a.q||0)).slice(0, 40);
     return blok(`Arama: ${PIY_ARA}`, L, `${L.length} coin`);
@@ -1363,6 +1368,7 @@ function piyasaSayfa(k){
   const hb = (v, ad) => `<button class="${PIY_HACIM==v?"on":""}" onclick="piyHacim(${v})">${ad}</button>`, mb = (v, ad) => `<button class="${PIY_MOD==v?"on":""}" onclick="piyMod('${v}')">${ad}</button>`;
   return `<div class="kart pyk">
     <div class="dpb"><span class="gb">Piyasa</span><span class="k" id="piyd" role="status"></span></div>
+    ${ISL_DURUM && ISL_DURUM.acik ? `<div id="piyelle">${elleHtml()}</div>` : ""}
     <div class="pya"><input id="piyara" type="search" aria-label="Coin ara" placeholder="Coin ara, örn. AKE" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value)">
       <div class="gdon">${[1,3,7,30].map(d=>`<button class="${PIY_MOD=="deg"&&PIY_DONEM==d?"on":""}" onclick="piyDonem(${d})">${PIY_DAD[d]}</button>`).join("")}${mb("fund","Funding")}</div></div>
     <div class="pya"><span class="k">hacim ≥</span><div class="gdon">${hb(1e6,"1 M$")}${hb(10e6,"10 M$")}${hb(50e6,"50 M$")}${hb(200e6,"200 M$")}</div></div>
@@ -1370,8 +1376,29 @@ function piyasaSayfa(k){
     <div class="k" style="margin-top:10px">Gerçek Binance piyasası, saniyede bir güncellenir. ☆ ile izleme listene ekle (yalnız bu cihazda saklanır). ${ISL_DURUM && ISL_DURUM.acik ? `Coin adına dokununca <b>al / sat</b> penceresi açılır (${ISL_DURUM.mod=="live"?"CANLI hesap":"demo hesap"}, tek emir en fazla ${ISL_DURUM.max_usd} $, her emirde PIN).` : `Coin adına dokununca Binance'te açılır.${ISL_DURUM && ISL_DURUM.neden ? ` <span title="${ea(ISL_DURUM.neden)}">Panelden işlem kapalı.</span>` : ""}`}</div>
   </div>`;
 }
+// MADDE 839: POZİSYONLARIM — elle yönettiğin açık pozisyonlar (hesabın K/Z'si) + son 30 gün elle sonucu; 15 sn'de bir kapıdan.
+let ELLE_OZ = null;
+async function elleYukle(){
+  if (VERI_GOMULU || !ISL_DURUM || !ISL_DURUM.acik || sayfa!="piyasa") return;
+  elleYukle.t = Date.now(); const d = await islIstek("elle");
+  ELLE_OZ = d.ok ? d : {hata: d.hata}; const el = $("#piyelle"); if (el) el.innerHTML = elleHtml();
+}
+function elleHtml(){
+  const E = ELLE_OZ; if (!E) return `<div class="pyb"><span>Pozisyonlarım</span><span>yükleniyor…</span></div>`;
+  if (E.hata) return `<div class="pyb"><span>Pozisyonlarım</span><span class="eks">${ea(E.hata)}</span></div>`;
+  const S = E.sonuc || {}, P = E.pozisyonlar || [], top = P.reduce((a,x)=>a + x.kz, 0);
+  const sonuc = S.kapanis ? `son 30 gün <b class="${sinif(S.net)}">${S.net>=0?"▲":"▼"} ${isaretli(S.net)}</b>, ${S.kapanis} kapanış, %${Math.round(S.kazanan / S.kapanis * 100)} kârlı` : "son 30 günde kapanan elle işlem yok";
+  const satir = x => { const ad = x.sembol.replace(/USDT$/,""), uz = x.adet > 0, deger = Math.abs(x.adet) * x.giris, kp = deger ? x.kz / deger * 100 : 0;
+    return `<div class="pyr pye"><span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
+      <span style="min-width:0;display:flex;flex-direction:column"><a href="#piyasa" onclick="islAc('${x.sembol}');return false">${ad}</a><span class="k2">${Math.abs(x.adet).toLocaleString("tr-TR")} adet @ ${piyFiyat(x.giris)}</span></span>
+      <span class="r k2">${x.tp?`TP ${piyFiyat(x.tp)}`:""}${x.tp&&x.sl?"<br>":""}${x.sl?`stop ${piyFiyat(x.sl)}`:`<span class="uyr">stop yok</span>`}</span>
+      <span class="r ${sinif(x.kz)}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")}%</span></span></div>`; };
+  return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div></div>
+    <div class="pyl">${P.length ? P.map(satir).join("") : `<div class="pybos">Elle açık pozisyonun yok. Aşağıdaki listeden bir coine dokunup işlem açabilirsin.</div>`}</div>`;
+}
 function piyasaBoya(zorla){
   if (sayfa!="piyasa") return;
+  if (ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle();
   if (PIY_DONEM > 1 && Date.now() - (piyasaBoya.g||0) > 60e3){ piyasaBoya.g = Date.now(); setTimeout(piyGecmisYukle, 0); }   // 30 dk'yı geçen önbellek yenilenir
   const el = $("#piyic"), d = $("#piyd"); if (!el) return;
   if (d) d.textContent = PIY_HATA || (PIY_ZAMAN ? (Date.now()-PIY_ZAMAN < 10e3 ? "● canlı" : "bağlantı bekleniyor…") : "yükleniyor…");
@@ -1535,6 +1562,7 @@ async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
   const P0 = ISL.poz && ISL.poz.pozisyon, ters = islPozVar() && ((P0.adet > 0) != (O.yon=="L"));
   if (ters) not.push(`Hesap tek yönlü çalışır: bu emir önce mevcut ${P0.adet > 0 ? "long" : "short"} pozisyonu (${Math.abs(P0.adet).toLocaleString("tr-TR")} adet) azaltır; adet daha büyükse fazlası ters yönde pozisyon açar.`);
   else if (islPozVar()) not.push("Mevcut TP / stop toplam adede göre kendiliğinden güncellenir.");
+  if (ISL.poz && ISL.poz.bot_tutuyor && !ISL.poz.elle) not.push("Bu coin şu an botun: emir gidince coin sana geçer, bot bu coindeki kendi emirlerini iptal eder ve coini bırakır.");
   ISL.adim = {tur: "emir", baslik: `${ISL.s.replace(/USDT$/,"")} ${ters ? (P0.adet > 0 ? "long'u azalt / çevir" : "short'u azalt / çevir") : O.yon=="L" ? "long aç" : "short aç"}`, satir: S, not, dugme: O.yon=="L" ? "Long aç" : "Short aç", renk: O.yon,
               govde: {sembol: ISL.s, yon: O.yon, usd: u, tip: ISL.tip, fiyat: ISL.fiyat, ...islTPSL()}};
   islCiz();
@@ -1554,6 +1582,13 @@ function islTPSLOnay(){
     not: [], dugme: "Kaydet", renk: "vurgu", yol: "tpsl", govde: {sembol: ISL.s, tp: ISL.tp, sl: ISL.sl}};
   ISL.msj = null; islCiz();
 }
+function islEmirIptalOnay(oid, yon, adet, fiyat){
+  if (!ISL) return;
+  ISL.adim = {tur: "iptal", baslik: `${ISL.s.replace(/USDT$/,"")} bekleyen emri iptal`, satir: [["Emir", `limit ${yon=="BUY"?"alış":"satış"}`], ["Adet", (+adet).toLocaleString("tr-TR")], ["Fiyat", piyFiyat(+fiyat)]],
+    not: [], dugme: "İptal et", renk: "tehlike", yol: "iptal", govde: {sembol: ISL.s, orderId: oid}};
+  ISL.msj = null; islCiz();
+}
+function islBasaBas(){ if (!ISL || !islPozVar()) return; ISL.sl = ISL.poz.pozisyon.giris; ISL.oniz = null; islCiz(); }
 function islSilOnay(){
   if (!ISL) return;
   ISL.adim = {tur: "iptal", baslik: `${ISL.s.replace(/USDT$/,"")} panel emirlerini sil`, satir: [["Silinecek", "panelden konan TP / stop / limit emirleri"], ["Dokunulmayan", "botun ve Binance uygulamasının emirleri"]],
@@ -1604,6 +1639,11 @@ function islCiz(){
   h += `<div class="igk"><div class="igb"><div class="ichip ar">${Object.entries(ISL_AR).map(([a,[t]])=>`<button class="${I.aralik==a?"on":""}" onclick="islAralik('${a}')">${t}</button>`).join("")}</div>
       <div class="ichip gt"><button class="${I.gtur!="cizgi"?"on":""}" onclick="islGTur('mum')" aria-label="mum grafik" title="mum">▮▯</button><button class="${I.gtur=="cizgi"?"on":""}" onclick="islGTur('cizgi')" aria-label="çizgi grafik" title="çizgi">∿</button></div></div>
       <div id="islgraf" class="igr"></div>${(PR && PR.islemler && PR.islemler.length) ? `<div class="igl3"><span><b class="igal">▲</b> alışların</span><span><b class="igsat">▼</b> satışların</span><span>son 7 gün</span></div>` : ""}</div>`;
+  // madde 839: kimin coini? (bot / sen) — işlemden önce net
+  if (PR && !PR.hata && !I.adim){
+    if (PR.elle) h += `<div class="isah sen">✋ Bu coin sende. Bot ekleme, kapatma, TP ya da stop yapmıyor; pozisyonu tamamen kapatınca bota döner.</div>`;
+    else if (PR.bot_tutuyor) h += `<div class="isah bot">Bu coin şu an botun. İşlem yaparsan coin sana geçer ve bot bu coini bırakır.</div>`;
+  }
   // ONAY ekranı
   if (I.adim){ const A = I.adim;
     h += `<div class="ionay"><div class="iob">${A.baslik}</div><div class="iozt">${A.satir.map(([a,b])=>`<div><span class="k">${a}</span><b>${b}</b></div>`).join("")}</div>
@@ -1629,9 +1669,10 @@ function islCiz(){
         <div class="ibas">TP / stop</div>
         <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
           <div><input inputmode="decimal" placeholder="Stop fiyatı" aria-label="Stop fiyatı" value="${islGos(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>
+        ${(uzun ? PR.isaret > pz.giris : PR.isaret < pz.giris) ? `<button class="iacil kucuk2" onclick="islBasaBas()"><span>Stop'u girişe çek</span><i>kârdayken zararsız çıkış · ${fg(pz.giris)}</i></button>` : ""}
         <div id="isluyr">${islUyari()}</div>
         <div class="iseg kucuk"><button class="birincil" onclick="islTPSLOnay()">TP / stop kaydet</button>${PR.bekleyen.some(x=>x.panel)||PR.tpsl.some(x=>x.panel)?`<button onclick="islSilOnay()">Panel emirlerini sil</button>`:""}</div>
-        ${PR.bekleyen.length ? `<div class="ibas">Bekleyen emirler</div>${PR.bekleyen.map(x=>`<div class="ibek"><span>${x.tip=="LIMIT"?"Limit":x.tip} ${x.yon=="BUY"?"alış":"satış"}, ${x.adet}</span><span>${fg(x.fiyat)}${x.panel?"":" <span class='k'>(bot)</span>"}</span></div>`).join("")}` : ""}`;
+        ${PR.bekleyen.length ? `<div class="ibas">Bekleyen emirler</div>${PR.bekleyen.map(x=>`<div class="ibek"><span>${x.tip=="LIMIT"?"Limit":x.tip} ${x.yon=="BUY"?"alış":"satış"}, ${x.adet} @ ${fg(x.fiyat)}</span>${x.panel ? `<button class="ibx" onclick="islEmirIptalOnay('${x.orderId}','${x.yon}',${x.adet},${x.fiyat})">İptal</button>` : "<span class='k'>bot / uygulama</span>"}</div>`).join("")}` : ""}`;
     } else if (PR && !PR.hata){
       const riskMod = I.boyut=="risk", tpslAcik = I.tpsl || riskMod;
       h += `<div class="iseg yon">${seg("yon","L","Long","L")}${seg("yon","S","Short","S")}</div>
@@ -2550,6 +2591,10 @@ def uygulama(klasorler: list[str]):
     @app.get("/api/islem/durum")
     def islem_durum():
         return _islem_ilet("GET", "durum")
+
+    @app.get("/api/islem/elle")
+    def islem_elle():
+        return _islem_ilet("GET", "elle")
 
     @app.get("/api/islem/pozisyon/<sem>")
     def islem_poz(sem):

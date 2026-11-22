@@ -9462,3 +9462,19 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
 - Tam takım: 64 dosyadan 58 geçti; düşen 6 dosya 830 öncesiyle aynı (veri / ortam). `test_carry_entegrasyon` 180/180 [OK] (bot kodu değiştiği için tam süre koşuldu).
 - AÇIK: -2022'nin kesin kök nedeni sunucu teşhisi (teshis_reduceonly.py) çalıştırılmadan bilinemez; düzeltme iki olasılığı (yetim emir / borsa tuhaflığı)
   da kapsıyor.
+
+## Madde 839 — Elle kısmı: Pozisyonlarım, sahiplik bandı, tek emir iptali, stop'u girişe çek (kullanıcı isteği, 2026-11-22: "elle kısmını iyileştir, tasarıma bak, eksikleri tamamla")
+- Eksikler (gözden geçirme): (1) elle pozisyonların TOPLU görünümü yoktu (her coini tek tek açmak gerekiyordu); (2) elle işlemlerin SONUCU ölçülmüyordu
+  (bot mu ben mi sorusu cevapsız); (3) pencerede coinin KİMDE olduğu belli değildi (botun coinine işlem yapınca coinin kullanıcıya geçtiği yazmıyordu);
+  (4) bekleyen limit emri TEK TEK iptal edilemiyordu (yalnız "hepsini sil"); (5) kârdaki pozisyonda zararsız çıkış (stop'u girişe çekme) kısayolu yoktu.
+- Kapı (`carry_islem`): `GET /elle` → elle işaretli açık pozisyonlar (adet, giriş, hesabın K/Z'si, likidasyon, TP / stop) + son 30 gün ELLE SONUCU: yalnız
+  kullanıcının coine sahip olduğu aralıklardaki (carry_elle_olay.jsonl işaret → bırak; panel işaretleri) dolumların gerçekleşen K/Z'si − komisyon,
+  kapanış sayısı, kârlı oran (bot dönemleri karışmaz). `pozisyon` yanıtına `elle` / `bot_tutuyor` bayrakları ve bekleyen emirlerde orderId.
+  `iptal` + orderId → yalnız o emir, yalnız `panel_` önekliyse (bot / uygulama emirleri reddedilir), PIN'li.
+- Panel: Piyasa sekmesinin EN ÜSTÜNDE "Pozisyonlarım" (toplam K/Z ▲▼, son 30 gün sonucu, her satırda yön, adet @ giriş, TP / stop ya da "stop yok"
+  uyarısı, K/Z $ ve %; dokununca pencere), boş durumda yönlendirici metin; 15 sn'de bir yenilenir. Pencerede sahiplik bandı: "✋ Bu coin sende…" /
+  "Bu coin şu an botun. İşlem yaparsan coin sana geçer…"; onay ekranında da not. Bekleyen emir satırında "İptal" (onay + basılı tut), uygulamadan
+  konanlarda düğme yok. Kârdayken "Stop'u girişe çek" (stop kutusunu girişle doldurur, kaydetme yine onaylı). Liste boşken "—" yerine açıklama.
+- Testler: `test_carry_islem` 11b (bot coini bayrağı, panelden alınınca elle, Pozisyonlarım satırı, 30 gün sonucu 1 kapanış / kârlı / net = K/Z − komisyon,
+  tek emir iptali: başkasının emri reddedilir, olmayan emir, PIN); `test_panel_islem` (botun coini bandı, onayda "sana geçer" notu, emir sonrası "sende"
+  bandı, stop'u girişe çek, tek emir iptali — uygulama emrine dokunmaz, Pozisyonlarım'da AKE ve dokununca pencere; axe ihlali 0).

@@ -47,7 +47,10 @@ def ayarlar() -> dict:
             "max_usd": float(os.getenv("CARRY_ISLEM_MAX_USD", "200") or 200), "mod": os.getenv("BINANCE_MODE", "demo"),
             "canli_izin": _env_bool("CARRY_ISLEM_CANLI"), "elle": os.getenv("CARRY_ELLE", "0") not in ("0", "false", "False", ""),
             "defter": os.getenv("CARRY_ISLEM_DEFTER", os.path.join("defter", "panel_islem.jsonl")),
-            "elle_panel": os.getenv("CARRY_ELLE_PANEL", os.path.join("defter", "carry_elle_panel.json"))}
+            "elle_panel": os.getenv("CARRY_ELLE_PANEL", os.path.join("defter", "carry_elle_panel.json")),
+            "elle_dosya": os.getenv("CARRY_ELLE_DOSYA", "carry_elle.json"),
+            "elle_olay": os.getenv("CARRY_ELLE_OLAY", "carry_elle_olay.jsonl"),
+            "dilim": os.getenv("CARRY_DILIM_LOG", "carry_dilimler.json")}
 
 
 class Hata(Exception):
@@ -373,6 +376,17 @@ class Kapi:
             self._pin(d.get("pin"))
             sem = str(d.get("sembol") or "").upper()
             self._sembol_bilgi(sem)
+            if d.get("orderId") not in (None, ""):      # madde 839: tek bekleyen emir (yalnız panelden konan)
+                oid = str(d.get("orderId"))
+                hedef = [o for o in self.ic.futures_get_open_orders(symbol=sem) or [] if str(o.get("orderId")) == oid]
+                if not hedef:
+                    raise Hata("bu emir artık açık değil")
+                if not str(hedef[0].get("clientOrderId") or "").startswith(ONEK):
+                    raise Hata("yalnız panelden konan emirler buradan iptal edilir")
+                self.ic.futures_cancel_order(symbol=sem, orderId=hedef[0]["orderId"])
+                self._kaydet({"olay": "iptal", "sembol": sem, "orderId": oid, "adet": 1})
+                self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} bekleyen emir iptal edildi")
+                return {"iptal": 1}
             n = self._panel_acik_iptal(sem) + self._panel_tpsl_iptal(sem)
             self._kaydet({"olay": "iptal", "sembol": sem, "adet": n})
             self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} panel emirleri iptal edildi ({n})")
@@ -392,7 +406,7 @@ class Kapi:
                 tpsl.append({"tur": "TP" if t.startswith("TAKE_PROFIT") else "SL" if t.startswith("STOP") else t,
                              "fiyat": float(o.get("triggerPrice") or 0), "panel": str(o.get("clientAlgoId") or "").startswith(ONEK)})
             for o in self.ic.futures_get_open_orders(symbol=sem) or []:
-                bekleyen.append({"tip": o.get("type"), "yon": o.get("side"), "fiyat": float(o.get("price") or 0),
+                bekleyen.append({"orderId": o.get("orderId"), "tip": o.get("type"), "yon": o.get("side"), "fiyat": float(o.get("price") or 0),
                                  "adet": float(o.get("origQty") or 0), "panel": str(o.get("clientOrderId") or "").startswith(ONEK)})
         except Exception as e:
             logger.warning("pozisyon emirleri okunamadı %s: %s", sem, e)
@@ -405,7 +419,94 @@ class Kapi:
         except Exception as e:
             logger.warning("işlem geçmişi okunamadı %s: %s", sem, e)
         return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"],
-                "islemler": islemler}
+                "islemler": islemler, "elle": sem in self._elle_kumesi(), "bot_tutuyor": self._bot_tutuyor(sem)}
+
+    # ------------------------------------------------------------ madde 839: elle özeti
+    def _elle_kumesi(self) -> set:
+        try:
+            import carry_elle
+            return carry_elle.isaretliler(self.ayar.get("elle_dosya") or "carry_elle.json") | carry_elle.panel_isaretleri(
+                self.ayar.get("elle_panel"), self.ayar.get("elle_dosya"), int(self.saat() * 1000))
+        except Exception:
+            return set()
+
+    def _bot_tutuyor(self, sem: str) -> bool:
+        try:
+            with open(self.ayar.get("dilim") or "carry_dilimler.json", encoding="utf-8") as f:
+                d = json.load(f)
+            return any(sem in (h or {}) for h in (d.get("dilimler") or {}).values())
+        except (OSError, ValueError, AttributeError):
+            return False
+
+    def _elle_araliklar(self, gun: int = 30) -> dict:
+        """{sembol: [(baş_ms, bit_ms), ...]} — kullanıcının coine sahip olduğu aralıklar (olay defteri + panel işaretleri), son `gun` gün."""
+        simdi = int(self.saat() * 1000); alt = simdi - gun * 86400 * 1000
+        acik, A = {}, {}
+        try:
+            with open(self.ayar.get("elle_olay") or "carry_elle_olay.jsonl", encoding="utf-8") as f:
+                for satir in f:
+                    try:
+                        o = json.loads(satir)
+                    except ValueError:
+                        continue
+                    sem, t = o.get("sembol"), int(o.get("t") or 0)
+                    if o.get("olay") == "isaret":
+                        acik.setdefault(sem, t)
+                    elif o.get("olay") == "birak" and sem in acik:
+                        A.setdefault(sem, []).append((acik.pop(sem), t))
+        except OSError:
+            pass
+        try:
+            import carry_elle
+            for sem, t in carry_elle.panel_okuma(self.ayar.get("elle_panel")).items():
+                if sem not in acik and not any(a <= t <= b for a, b in A.get(sem, [])):
+                    acik[sem] = min(t, acik.get(sem, t))
+        except Exception:
+            pass
+        for sem, t in acik.items():
+            A.setdefault(sem, []).append((t - 60_000, simdi + 60_000))   # açık aralık: saat kayması payı
+        return {s: [(max(a, alt), b) for a, b in L if b >= alt] for s, L in A.items() if any(b >= alt for a, b in L)}
+
+    def elle_ozet(self) -> dict:
+        """Elle pozisyonların (açık) ve son 30 gün elle sonucunun (gerçekleşen K/Z + komisyon, yalnız elle aralıklarındaki dolumlar)."""
+        elle = self._elle_kumesi()
+        pozlar = []
+        for p in self.c.get_open_positions():
+            sem = p.get("symbol")
+            a = float(p.get("positionAmt") or 0)
+            if sem in elle and a:
+                tp = sl = None
+                try:
+                    f = getattr(self.ic, "futures_get_open_algo_orders", None)
+                    r = f(symbol=sem) if f else []
+                    r = r.get("orders", r) if isinstance(r, dict) else r
+                    for o in r or []:
+                        t = str(o.get("orderType") or o.get("type") or "")
+                        if t.startswith("TAKE_PROFIT"):
+                            tp = float(o.get("triggerPrice") or 0) or None
+                        elif t.startswith("STOP"):
+                            sl = float(o.get("triggerPrice") or 0) or None
+                except Exception:
+                    pass
+                pozlar.append({"sembol": sem, "adet": a, "giris": float(p.get("entryPrice") or 0),
+                               "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0),
+                               "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl})
+        kz = kom = 0.0; kapanis = kazanan = 0
+        for sem, L in list(self._elle_araliklar().items())[:25]:
+            try:
+                for t in self.ic.futures_account_trades(symbol=sem, startTime=min(a for a, _ in L), limit=500) or []:
+                    zt = int(t.get("time") or 0)
+                    if not any(a <= zt <= b for a, b in L):
+                        continue
+                    r = float(t.get("realizedPnl") or 0)
+                    kz += r; kom += float(t.get("commission") or 0)
+                    if r:
+                        kapanis += 1; kazanan += r > 0
+            except Exception as e:
+                logger.warning("elle sonucu okunamadı %s: %s", sem, e)
+        pozlar.sort(key=lambda x: x["kz"])
+        return {"pozisyonlar": pozlar, "sonuc": {"gun": 30, "kz": round(kz, 4), "komisyon": round(kom, 4), "net": round(kz - kom, 4),
+                                                  "kapanis": kapanis, "kazanan": kazanan}, "mod": self.ayar["mod"]}
 
 
 def uygulama(kapi_fabrika=None):
@@ -450,6 +551,10 @@ def uygulama(kapi_fabrika=None):
     @app.get("/durum")
     def r_durum():
         return calistir(lambda: kapi().durum())
+
+    @app.get("/elle")
+    def r_elle():
+        return calistir(lambda: kapi().elle_ozet())
 
     @app.get("/pozisyon/<sem>")
     def r_poz(sem):

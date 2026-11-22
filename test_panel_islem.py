@@ -52,7 +52,10 @@ from waitress import create_server
 SC = SahteClient()
 bil = []
 KAPI = ci.Kapi(SC, {"acik": True, "pin": "482913", "max_usd": 200.0, "mod": "demo", "canli_izin": False, "elle": True,
-                    "defter": os.path.join(tmp, "panel_islem.jsonl")}, bildir=bil.append)
+                    "defter": os.path.join(tmp, "panel_islem.jsonl"), "elle_panel": os.path.join(tmp, "elle_panel.json"),
+                    "elle_dosya": os.path.join(tmp, "elle.json"), "elle_olay": os.path.join(tmp, "elle_olay.jsonl"),
+                    "dilim": os.path.join(tmp, "dilim.json")}, bildir=bil.append)
+json.dump({"dilimler": {"0": {"AKEUSDT": 40.0}}}, open(os.path.join(tmp, "dilim.json"), "w"))   # AKE başta botun coini
 P_KAPI, P_PANEL = bos_port(), bos_port()
 s_kapi = create_server(ci.uygulama(lambda: KAPI), host="127.0.0.1", port=P_KAPI, threads=2)
 threading.Thread(target=s_kapi.run, daemon=True).start()
@@ -109,6 +112,8 @@ with sync_playwright() as pw:
     kontrol("satırın fiyat hücresine dokununca da pencere açılır", page.locator(".isl").count() == 1)
     kontrol("pencere erişilebilir diyalog (aria-modal) ve odak pencerede",
             page.locator(".shp[aria-modal='true']").count() == 1 and page.evaluate("() => document.activeElement.classList.contains('shp')"))
+    page.wait_for_selector(".isl .isah", timeout=5000)
+    kontrol("madde 839: botun coini uyarısı (işlem yaparsan sana geçer)", "botun" in page.locator(".isl .isah").inner_text())
     kontrol("pozisyon yok -> doğrudan yeni emir; Demo rozeti; sekme seçici yok", "Demo" in page.locator("#islic").inner_text()
             and page.locator(".isl .iseg.gor").count() == 0)
     page.wait_for_selector("#islgraf svg rect", timeout=5000)
@@ -133,6 +138,7 @@ with sync_playwright() as pw:
     kontrol("onay ekranı özeti: adet 200, TP kârı, komisyon", all(x in page.locator(".ionay").inner_text() for x in ("200", "TP", "Komisyon")),
             page.locator(".ionay").inner_text())
     kontrol("onay ekranına gelmek emir göndermedi", SC.client.emirler == [])
+    kontrol("onay ekranında 'coin sana geçer' notu", "sana geçer" in page.locator(".ionay").inner_text())
     page.fill("#islpin", "482913")
     tut(page, 250)
     page.wait_for_timeout(400)
@@ -155,6 +161,7 @@ with sync_playwright() as pw:
     kontrol("emirden sonra Pozisyon görünümü: Long 200 adet, TP 0,525", all(x in page.locator(".ipoz").inner_text() for x in ("Long", "200", "0,525")),
             page.locator(".ipoz").inner_text())
     kontrol("alt çubukta Short / Long", page.locator(".isl .ialt .ibtn.S").count() == 1 and page.locator(".isl .ialt .ibtn.L").count() == 1)
+    kontrol("madde 839: artık 'bu coin sende' bandı", "sende" in page.locator(".isl .isah").inner_text(), page.locator(".isl .isah").inner_text())
     page.evaluate("() => islGrafikCiz()")
     kontrol("grafikte GİRİŞ çizgisi + etiketi", page.locator("#islgraf line.igl.gir").count() == 1 and page.locator("#islgraf g.igad.gir").count() == 1)
     kontrol("grafikte TP çizgisi (kurulu emir)", page.locator("#islgraf line.igl.tp").count() >= 1)
@@ -181,6 +188,21 @@ with sync_playwright() as pw:
     page.wait_for_function("() => document.querySelector('.isl .imsj') && document.querySelector('.isl .imsj').innerText.includes('kaydedildi')", timeout=6000)
     kontrol("stop 0.45 kuruldu (100 adet)", any(x["type"] == "STOP_MARKET" and x["triggerPrice"] == "0.45000" and x["quantity"] == 100
                                                for x in SC.client.algolar))
+    print("4a) madde 839: stop'u girişe çek + tek bekleyen emri iptal")
+    SC.client.fiyat["AKEUSDT"] = 0.55                       # kârda (giriş 0,5)
+    SC.client.acik["AKEUSDT"] = [{"orderId": 5150, "clientOrderId": "panel_limit1", "type": "LIMIT", "side": "BUY", "price": "0.48", "origQty": "40"},
+                                 {"orderId": 5151, "clientOrderId": "android_x", "type": "LIMIT", "side": "BUY", "price": "0.47", "origQty": "10"}]
+    page.evaluate("() => islPozYukle()"); page.wait_for_selector(".isl .ibx", timeout=5000)
+    page.locator(".isl .iacil.kucuk2").click()
+    kontrol("'Stop'u girişe çek' stop kutusunu girişle (0,5) doldurur", page.locator(".isl input[aria-label='Stop fiyatı']").input_value() in ("0,5", "0.5"))
+    kontrol("uygulamadan konan emirde iptal düğmesi yok", page.locator(".isl .ibx").count() == 1)
+    page.locator(".isl .ibx").click(); page.wait_for_selector(".isl .ionay")
+    kontrol("iptal onayı: limit alış 40 @ 0,48", all(x in page.locator(".ionay").inner_text() for x in ("40", "0,48")))
+    tut(page)
+    page.wait_for_function("() => document.querySelector('.isl .imsj') && document.querySelector('.isl .imsj').innerText.includes('Silindi')", timeout=6000)
+    kontrol("yalnız o emir iptal edildi", ("AKEUSDT", 5150) in SC.client.iptaller and ("AKEUSDT", 5151) not in SC.client.iptaller)
+    SC.client.fiyat["AKEUSDT"] = 0.5
+    page.evaluate("() => { ISL.sl = ''; islPozYukle(); }"); page.wait_for_timeout(500)
     print("4b) risk ile boyut")
     page.locator(".isl .iseg.gor button", has_text="Yeni emir").click()
     page.locator(".isl .ichip.kisa button", has_text="Risk").click()
@@ -222,6 +244,17 @@ with sync_playwright() as pw:
         pd_.wait_for_function("() => ISL_DURUM && ISL_DURUM.acik", timeout=5000); pd_.evaluate("() => piyasaBoya(true)")
         pd_.locator(".pyr a", has_text="AKE").first.click(); pd_.wait_for_selector(".isl .ipoz", timeout=6000); pd_.wait_for_timeout(1200)
         pd_.evaluate("() => islGrafikCiz()"); pd_.screenshot(path=kok + "_karanlik.png"); kd.close()
+    print("4d) madde 839: Piyasa'da Pozisyonlarım")
+    page.keyboard.press("Escape"); page.keyboard.press("Escape"); page.wait_for_timeout(300)
+    page.evaluate("() => { elleYukle.t = 0; piyasaBoya(true); }")
+    page.wait_for_function("() => document.querySelector('#piyelle') && document.querySelector('#piyelle').innerText.includes('AKE')", timeout=6000)
+    kontrol("Pozisyonlarım'da AKE long görünüyor (adet, K/Z)", all(x in page.locator("#piyelle").inner_text() for x in ("AKE", "adet")),
+            page.locator("#piyelle").inner_text())
+    if kok:
+        page.evaluate("() => window.scrollTo(0, 0)"); page.screenshot(path=kok + "_piyasa.png")
+    page.locator("#piyelle .pye a").first.click(); page.wait_for_selector(".isl .ipoz", timeout=6000)
+    kontrol("Pozisyonlarım'dan dokununca pozisyon penceresi açılır", page.locator(".isl .ipoz").count() == 1)
+    page.keyboard.press("Escape")
     print("5) CSRF")
     r = page.request.post(URL + "/api/islem/emir", data=json.dumps({"sembol": "AKEUSDT", "yon": "L", "usd": 50, "pin": "482913"}),
                           headers={"Content-Type": "application/json"})
