@@ -1048,6 +1048,15 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .fl-a{animation:fla .8s}.fl-e{animation:fle .8s}
 @keyframes fla{from{background:color-mix(in srgb,var(--art) 22%,transparent)}}@keyframes fle{from{background:color-mix(in srgb,var(--eks) 22%,transparent)}}
 @media (max-width:600px){.pyr{grid-template-columns:24px minmax(0,1.2fr) minmax(0,1fr) 64px 58px}.pyr .hc{display:none}}
+/* MADDE 834: panelden işlem penceresi */
+.isl .ib{display:flex;gap:6px;flex-wrap:wrap;margin:8px 0}.isl .ib button{flex:1 1 0;min-width:0;height:38px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-weight:600;cursor:pointer}
+.isl .ib button.on{background:var(--yazi);color:var(--bg);border-color:var(--yazi)}.isl .ib button.L.on{background:var(--art);border-color:var(--art);color:#fff}.isl .ib button.S.on{background:var(--eks);border-color:var(--eks);color:#fff}
+.isl label{display:block;font-size:12px;color:var(--soluk);margin:10px 0 4px}.isl input{width:100%;height:40px;border:1px solid var(--cizgi);border-radius:12px;background:var(--kart);color:var(--yazi);padding:0 12px;font:inherit;font-size:16px}
+.isl .iki{display:grid;grid-template-columns:1fr 1fr;gap:8px}.isl .hz{display:flex;gap:4px;margin-top:4px}.isl .hz button{flex:1;height:28px;border-radius:8px;border:0;background:var(--kart2);color:var(--soluk);font:inherit;font-size:12px;cursor:pointer}
+.isl .ana{width:100%;height:46px;border-radius:14px;border:0;font:inherit;font-size:15px;font-weight:700;cursor:pointer;margin-top:12px;background:var(--vurgu);color:#fff}.isl .ana:disabled{opacity:.5;cursor:default}
+.isl .ana.L{background:var(--art)}.isl .ana.S{background:var(--eks)}.isl .ozt{background:var(--kart2);border-radius:12px;padding:10px 12px;margin-top:10px;font-size:13px;line-height:1.6}
+.isl .msj{margin-top:10px;padding:10px 12px;border-radius:12px;font-size:13px}.isl .msj.ok{background:color-mix(in srgb,var(--art) 15%,transparent)}.isl .msj.hata{background:color-mix(in srgb,var(--eks) 15%,transparent)}
+.isl .bol{border-top:1px solid var(--cizgi);margin-top:14px;padding-top:6px}
 </style></head><body><div class="kap">
 <header id="ust"><div><h1><img src="ikon-192.png" alt="">Carry</h1><div class="k" id="alt"></div><div id="ustkitap"></div></div>
   <div class="sag"><span class="canli" id="canliust"><i></i><span>bağlanıyor</span></span><button class="tema" id="tema" onclick="temaDegis()" aria-label="tema">◐</button></div></header>
@@ -1243,6 +1252,7 @@ function piyasaBagla(ac){
   if (!ac){ if (PIY_WS){ PIY_WS.onclose = null; PIY_WS.close(); PIY_WS = null; } return; }
   if (PIY_WS && PIY_WS.readyState <= 1) return;
   if (!PIY_ZAMAN || Date.now() - PIY_ZAMAN > 60e3) piyasaIlk(); else setTimeout(piyGecmisYukle, 0);
+  if (!ISL_DURUM || Date.now() - (islDurum.t||0) > 60e3){ islDurum.t = Date.now(); islDurum(); }   // madde 834
   PIY_WS = new WebSocket("wss://fstream.binance.com/market/stream?streams=!ticker@arr/!markPrice@arr@1s");
   PIY_WS.onmessage = e => { try { const m = JSON.parse(e.data), d = m.data, A = Array.isArray(d) ? d : [d];
     const tk = String(m.stream||"").startsWith("!ticker"); for (const x of A) tk ? piyTicker(x) : piyMark(x); PIY_ZAMAN = Date.now(); PIY_HATA = ""; } catch(_){} };
@@ -1264,7 +1274,7 @@ function piyRozet(k){   // botun / senin bu coindeki durumun
 function piySatir(o, R){
   const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, "");
   return `<div class="pyr ${fl>0?"fl-a":fl<0?"fl-e":""}"><button class="yd ${yd?"on":""}" title="${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" onclick="piyIzle('${o.s}')">${yd?"★":"☆"}</button>
-    <span style="min-width:0;display:flex;align-items:center"><a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}</span>
+    <span style="min-width:0;display:flex;align-items:center">${ISL_DURUM && ISL_DURUM.acik ? `<a href="#piyasa" onclick="islAc('${o.s}');return false" title="al / sat">${ad}</a>` : `<a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>`}${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}</span>
     <span class="r">${piyFiyat(o.f)}</span><span class="r ${o.d>0?"art":o.d<0?"eks":""}"><b>${piyYz(o.d)}</b></span>
     <span class="r k2 hc">${piyHac(o.q)}</span><span class="r k2 ${o.r>0?"":o.r<0?"eks":""}" title="son funding oranı (8 sa)">${o.r==null?"—":piyYz(o.r*100, 3)}</span></div>`;
 }
@@ -1294,7 +1304,7 @@ function piyasaSayfa(k){
       <div class="gdon">${[1,3,7,30].map(d=>`<button class="${PIY_MOD=="deg"&&PIY_DONEM==d?"on":""}" onclick="piyDonem(${d})">${PIY_DAD[d]}</button>`).join("")}${mb("fund","Funding")}</div></div>
     <div class="pya"><span class="k">hacim ≥</span><div class="gdon">${hb(1e6,"1 M$")}${hb(10e6,"10 M$")}${hb(50e6,"50 M$")}${hb(200e6,"200 M$")}</div></div>
     <div id="piyic">${piyListe(k)}</div>
-    <div class="k" style="margin-top:10px">Gerçek Binance piyasası, saniyede bir güncellenir. ☆ ile izleme listene ekle (yalnız bu cihazda saklanır). Coin adına dokununca Binance'te açılır; panel işlem yapmaz.</div>
+    <div class="k" style="margin-top:10px">Gerçek Binance piyasası, saniyede bir güncellenir. ☆ ile izleme listene ekle (yalnız bu cihazda saklanır). ${ISL_DURUM && ISL_DURUM.acik ? `Coin adına dokununca <b>al / sat</b> penceresi açılır (${ISL_DURUM.mod=="live"?"CANLI hesap":"demo hesap"}, tek emir en fazla ${ISL_DURUM.max_usd} $, her emirde PIN).` : `Coin adına dokununca Binance'te açılır.${ISL_DURUM && ISL_DURUM.neden ? ` <span title="${ea(ISL_DURUM.neden)}">Panelden işlem kapalı.</span>` : ""}`}</div>
   </div>`;
 }
 function piyasaBoya(zorla){
@@ -1305,6 +1315,96 @@ function piyasaBoya(zorla){
   if (!zorla && Date.now() - PIY_SON_CIZ < 900) return;
   PIY_SON_CIZ = Date.now();
   const k = VERI && VERI.kurulumlar[secili]; el.innerHTML = piyListe(k); PIY_ONCEKI = {};
+}
+// MADDE 834: PANELDEN İŞLEM. Panel anahtarsız; istekler panel sunucusu üzerinden yalnız 127.0.0.1'deki carry-islem servisine gider.
+// Her emir / kapat / TP-SL / iptal PIN ister (PIN yalnız bu pencere açıkken bellekte; kaydedilmez). Emirler `panel_` önekli gider ->
+// bot coini kullanıcıya bırakır (madde 830). Hesap fiyatı (demo) piyasa listesindeki gerçek fiyattan farklı olabilir: önizleme hesabın
+// işaret fiyatını gösterir.
+let ISL_DURUM = null, ISL = null;
+const ea = v => String(v==null?"":v).replace(/[&"<>']/g, c=>({"&":"&amp;",'"':"&quot;","<":"&lt;",">":"&gt;","'":"&#39;"}[c]));
+async function islDurum(){
+  if (VERI_GOMULU) return;
+  try { const r = await fetch("api/islem/durum", {cache:"no-store"}); const d = await r.json(); ISL_DURUM = d && d.ok ? d : {acik:false, neden: d && d.hata}; }
+  catch(_){ ISL_DURUM = {acik:false, neden:"işlem servisine ulaşılamadı"}; }
+  if (sayfa=="piyasa" && VERI && !ISL) ciz();   // alt not + coin bağlantıları işlem durumuna göre
+}
+async function islIstek(yol, govde){
+  const r = await fetch("api/islem/" + yol, govde ? {method:"POST", headers:{"Content-Type":"application/json","X-Carry-Islem":"1"}, body: JSON.stringify(govde), cache:"no-store"} : {cache:"no-store"});
+  let d = null; try { d = await r.json(); } catch(_){}
+  if (!d) d = {ok:false, hata:`sunucu yanıtı okunamadı (${r.status})`};
+  return d;
+}
+function islAc(s){
+  ISL = {s, yon:"L", usd: Math.min(50, (ISL_DURUM||{}).max_usd||50), tip:"MARKET", fiyat:"", tp:"", sl:"", pin:"", poz:null, oniz:null, msj:null, mesgul:false};
+  const el = $("#sheet"); el.hidden = false;
+  el.innerHTML = `<div class="shb" onclick="islKapat()"></div><div class="shp isl" role="dialog" aria-label="${s.replace(/USDT$/,"")} al / sat"><div class="shh"></div><div id="islic"></div></div>`;
+  document.body.style.overflow = "hidden"; islCiz(); islPozYukle();
+}
+function islKapat(){ ISL = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; }
+addEventListener("keydown", e=>{ if (e.key === "Escape" && ISL) islKapat(); });
+async function islPozYukle(){ if (!ISL) return; const s = ISL.s; const d = await islIstek("pozisyon/" + s); if (ISL && ISL.s==s){ ISL.poz = d.ok ? d : {hata: d.hata}; islCiz(); } }
+function islAyar(k, v){   // PIN dışındaki her değişiklik önizlemeyi geçersiz kılar (gönderilen emir hep önizlenenle aynı olsun)
+  if (!ISL) return; ISL[k] = v; if (k!="pin") ISL.oniz = null;
+  if (k!="pin" && k!="usd" && k!="fiyat" && k!="tp" && k!="sl") islCiz(); else islDugme(); }
+function islYuzde(alan, y){   // TP / SL'yi şu anki fiyattan yüzdeyle doldur (hesabın işaret fiyatı; yoksa piyasa fiyatı)
+  if (!ISL) return; const ref = (ISL.tip=="LIMIT" && +ISL.fiyat>0) ? +ISL.fiyat : ((ISL.poz && ISL.poz.isaret) || (PIY[ISL.s]||{}).f);
+  if (!(ref>0)) return; const yon = alan=="tp" ? 1 : -1, isr = ISL.yon=="L" ? 1 : -1;
+  ISL[alan] = +(ref * (1 + yon * isr * y / 100)).toPrecision(6); ISL.oniz = null; islCiz();
+}
+function islDugme(){ const b = $("#islgonder"); if (b){ b.disabled = !ISL || ISL.mesgul || !ISL.oniz || String(ISL.pin).length < 6; if (!ISL.oniz) b.textContent = "önce önizle"; }
+  const o = $("#isloniz"); if (o && !ISL.oniz) o.innerHTML = ""; }
+async function islOnizle(){
+  if (!ISL || ISL.mesgul) return; ISL.mesgul = true; ISL.msj = null; islCiz();
+  const d = await islIstek("onizle", {sembol: ISL.s, yon: ISL.yon, usd: +ISL.usd, tip: ISL.tip, fiyat: ISL.fiyat, tp: ISL.tp, sl: ISL.sl});
+  if (!ISL) return; ISL.mesgul = false; ISL.oniz = d.ok ? d : null; if (!d.ok) ISL.msj = {hata: d.hata}; islCiz();
+}
+async function islGonder(){
+  if (!ISL || !ISL.oniz || ISL.mesgul) return; ISL.mesgul = true; islCiz();
+  const d = await islIstek("emir", {sembol: ISL.s, yon: ISL.yon, usd: +ISL.usd, tip: ISL.tip, fiyat: ISL.fiyat, tp: ISL.tp, sl: ISL.sl, pin: ISL.pin});
+  if (!ISL) return; ISL.mesgul = false;
+  ISL.msj = d.ok ? {ok: `Emir gönderildi: ${d.emir.tip} ${d.emir.adet} adet (${d.emir.durum||"?"})` + (d.tpsl && d.tpsl.length ? ` · ${d.tpsl.map(x=>x.tur+" "+x.fiyat).join(" · ")}` : "") + (d.tpsl_hata ? ` · ⚠️ ${d.tpsl_hata}` : "")} : {hata: d.hata};
+  if (d.ok) ISL.oniz = null; islCiz(); if (d.ok) setTimeout(islPozYukle, 1200);
+}
+async function islIslem(yol, ek, onay){
+  if (!ISL || ISL.mesgul) return;
+  if (String(ISL.pin).length < 6){ ISL.msj = {hata:"önce PIN'i yaz"}; islCiz(); return; }
+  if (onay && !confirm(onay)) return;
+  ISL.mesgul = true; islCiz();
+  const d = await islIstek(yol, {sembol: ISL.s, pin: ISL.pin, ...ek});
+  if (!ISL) return; ISL.mesgul = false;
+  ISL.msj = d.ok ? {ok: yol=="kapat" ? `Kapatıldı: ${d.kapat.adet} adet` : yol=="tpsl" ? "TP / SL güncellendi" : `İptal edildi: ${d.iptal} emir`} : {hata: d.hata};
+  islCiz(); if (d.ok) setTimeout(islPozYukle, 1200);
+}
+function islCiz(){
+  const el = $("#islic"); if (!el || !ISL) return;
+  const I = ISL, ad = I.s.replace(/USDT$/,""), D = ISL_DURUM || {}, P = I.poz, pz = P && P.pozisyon, f = (PIY[I.s]||{}).f, fg = v => v==null||v===""||isNaN(v) ? "—" : piyFiyat(+v);
+  const b = (alan, v, ad2, cls="") => `<button class="${cls} ${I[alan]==v?"on":""}" onclick="islAyar('${alan}','${v}')">${ad2}</button>`;
+  const hz = (alan, L) => `<div class="hz">${L.map(y=>`<button onclick="islYuzde('${alan}',${y})">${alan=="tp"?"+":"−"}%${y}</button>`).join("")}</div>`;
+  const pozHtml = !P ? `<div class="k">pozisyon okunuyor…</div>` : P.hata ? `<div class="k">pozisyon okunamadı: ${ea(P.hata)}</div>` : !pz.adet ? `<div class="k">Bu coinde açık pozisyon yok.</div>`
+    : `<div class="ozt"><b class="${pz.adet>0?"art":"eks"}">${pz.adet>0?"LONG":"SHORT"}</b> ${Math.abs(pz.adet)} adet · giriş ${fg(pz.giris)} · K/Z <b class="${sinif(pz.kz)}">${isaretli(pz.kz)}</b>
+       ${P.tpsl.length ? `<br>${P.tpsl.map(x=>`${x.tur} ${fg(x.fiyat)}${x.panel?"":" (bot)"}`).join(" · ")}` : "<br>TP / SL yok"}${P.bekleyen.length ? `<br>bekleyen: ${P.bekleyen.map(x=>`${x.tip} ${x.yon} ${x.adet} @ ${fg(x.fiyat)}`).join(" · ")}` : ""}</div>
+       <div class="ib"><button onclick="islIslem('kapat',{oran:0.25},'${ad} pozisyonunun %25\'i kapatılsın mı?')">%25 kapat</button><button onclick="islIslem('kapat',{oran:0.5},'${ad} pozisyonunun yarısı kapatılsın mı?')">%50 kapat</button><button onclick="islIslem('kapat',{oran:1},'${ad} pozisyonunun TAMAMI kapatılsın mı?')">Tümünü kapat</button></div>
+       <div class="iki"><div><label>TP fiyatı</label><input inputmode="decimal" value="${ea(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div><div><label>Stop fiyatı</label><input inputmode="decimal" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>
+       <div class="ib"><button onclick="islIslem('tpsl',{tp:ISL.tp,sl:ISL.sl})">TP / stop kur</button>${P.bekleyen.some(x=>x.panel)||P.tpsl.some(x=>x.panel)?`<button onclick="islIslem('iptal',{},'${ad} için panelden konan bütün emirler iptal edilsin mi?')">Panel emirlerini sil</button>`:""}</div>`;
+  const O = I.oniz;
+  el.innerHTML = `<div class="shu"><div><div style="display:flex;align-items:center;gap:8px"><span class="gb">${ad}</span><span class="dst">${D.mod=="live"?"CANLI":"DEMO"}</span></div>
+      <div class="shf">${fg(f)}</div><div class="k">${piyYz((PIY[I.s]||{}).p)} 24 sa · <a href="https://www.binance.com/tr/futures/${I.s}" target="_blank" rel="noopener noreferrer">Binance'te aç ↗</a></div></div>
+      <button class="shx" onclick="islKapat()" aria-label="Kapat">✕</button></div>
+    <div class="bol"><div class="pyb"><span>Pozisyonun</span></div>${pozHtml}</div>
+    <div class="bol"><div class="pyb"><span>${pz && pz.adet ? "Ekle / yeni emir" : "Yeni emir"}</span><span>en fazla ${D.max_usd} $</span></div>
+      <div class="ib">${b("yon","L","Long (al)","L")}${b("yon","S","Short (sat)","S")}</div>
+      <label>Tutar ($, pozisyon büyüklüğü)</label><input inputmode="decimal" value="${ea(I.usd)}" oninput="islAyar('usd',this.value)">
+      <div class="hz">${[25,50,100,200].filter(v=>v<=(D.max_usd||200)).map(v=>`<button onclick="islAyar('usd',${v});islCiz()">${v} $</button>`).join("")}</div>
+      <div class="ib">${b("tip","MARKET","Piyasa")}${b("tip","LIMIT","Limit")}</div>
+      ${I.tip=="LIMIT" ? `<label>Limit fiyatı</label><input inputmode="decimal" value="${ea(I.fiyat)}" oninput="islAyar('fiyat',this.value)">` : ""}
+      ${pz && pz.adet ? "" : `<div class="iki"><div><label>TP (isteğe bağlı)</label><input inputmode="decimal" value="${ea(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div><div><label>Stop (isteğe bağlı)</label><input inputmode="decimal" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>`}
+      <button class="ana" onclick="islOnizle()" ${I.mesgul?"disabled":""}>Önizle</button>
+      <div id="isloniz">${O ? `<div class="ozt">${O.yon=="L"?"LONG":"SHORT"} · ${O.tip=="LIMIT"?"limit "+fg(O.fiyat):"piyasa"} · <b>${O.adet} adet ≈ ${O.usd.toFixed(2).replace(".",",")} $</b><br>hesabın fiyatı ${fg(O.isaret)}${f && Math.abs(O.isaret/f-1) > 0.005 ? ` <span class="uyr">(listedeki gerçek fiyattan %${(Math.abs(O.isaret/f-1)*100).toFixed(1).replace(".",",")} farklı — ${O.mod=="live"?"":"demo hesap fiyatı"})</span>` : ""}${O.tp?`<br>TP ${fg(O.tp)}`:""}${O.sl?` · Stop ${fg(O.sl)}`:""}${O.not?`<br>${O.not}`:""}</div>` : ""}</div>
+    </div>
+    <div class="bol"><label>İşlem PIN'i</label><input id="islpin" type="password" inputmode="numeric" autocomplete="off" value="${ea(I.pin)}" oninput="islAyar('pin',this.value)" placeholder="sunucuda belirlediğin PIN"></div>
+    <button id="islgonder" class="ana ${I.yon}" onclick="islGonder()" ${!O||I.mesgul||String(I.pin).length<6?"disabled":""}>${I.mesgul?"…":O?`${O.yon=="L"?"AL (Long)":"SAT (Short)"} · ${O.usd.toFixed(0)} $`:"önce önizle"}</button>
+    ${I.msj ? `<div class="msj ${I.msj.ok?"ok":"hata"}">${ea(I.msj.ok||I.msj.hata)}</div>` : ""}`;
+  const pi = $("#islpin"); if (pi && document.activeElement !== pi && I._pinOdak){ pi.focus(); }
 }
 // MADDE 739: GÜNLÜK grafik (TradingView "bugün" gibi). Gün Binance gün başında (00:00 UTC = 03:00 TR) başlar; yatay eksen
 // tam gün (03:00 -> ertesi 03:00), çizgi gün ilerledikçe soldan sağa uzar. 15 dk mumlar her 15 dk sınırında yeniden alınır,
@@ -2114,6 +2214,28 @@ def statik_html(v: dict) -> str:
     return SAYFA.replace("/*VERI*/null", json.dumps(v, ensure_ascii=False).replace("</", "<\\/"))
 
 
+ISLEM_URL = os.getenv("CARRY_ISLEM_URL", "http://127.0.0.1:8051")
+"""MADDE 834: işlem kapısı (carry-islem servisi). Yalnız yerel adres kabul edilir."""
+
+
+def _islem_ilet(metod: str, yol: str, govde: bytes | None = None):
+    """İsteği yerel işlem kapısına iletir; yanıtı aynen döner. Kapı çalışmıyorsa anlaşılır hata."""
+    import urllib.error
+    import urllib.request
+    from flask import Response, jsonify
+    if not re.match(r"^http://(127\.0\.0\.1|localhost|\[::1\]):\d+$", ISLEM_URL):
+        return jsonify({"ok": False, "hata": "işlem kapısı yalnız yerel adreste olabilir"}), 500
+    req = urllib.request.Request(f"{ISLEM_URL}/{yol}", data=govde, method=metod,
+                                 headers={"Content-Type": "application/json"} if govde is not None else {})
+    try:
+        with urllib.request.urlopen(req, timeout=25) as r:
+            return Response(r.read(), status=r.status, mimetype="application/json")
+    except urllib.error.HTTPError as e:
+        return Response(e.read(), status=e.code, mimetype="application/json")
+    except (urllib.error.URLError, OSError, TimeoutError):
+        return jsonify({"ok": False, "hata": "işlem servisi çalışmıyor (sunucuda carry-islem)"}), 503
+
+
 def uygulama(klasorler: list[str]):
     from flask import Flask, Response, jsonify, request
     app = Flask(__name__)
@@ -2172,6 +2294,29 @@ def uygulama(klasorler: list[str]):
     @app.get("/api/veri")
     def api():
         return jsonify(veri(klasorler))
+
+    # MADDE 834: panelden işlem — panel ANAHTARSIZ kalır; istekler yalnız 127.0.0.1'deki carry-islem servisine iletilir (carry_islem.py).
+    # POST'larda özel başlık (X-Carry-Islem) + aynı köken şartı: başka bir siteden tarayıcı üzerinden emir tetiklenemez (CSRF).
+    @app.get("/api/islem/durum")
+    def islem_durum():
+        return _islem_ilet("GET", "durum")
+
+    @app.get("/api/islem/pozisyon/<sem>")
+    def islem_poz(sem):
+        if not re.match(r"^[A-Z0-9]{2,20}USDT$", sem or ""):
+            return jsonify({"ok": False, "hata": "geçersiz sembol"}), 400
+        return _islem_ilet("GET", f"pozisyon/{sem}")
+
+    @app.post("/api/islem/<yol>")
+    def islem_post(yol):
+        if yol not in ("onizle", "emir", "tpsl", "kapat", "iptal"):
+            return jsonify({"ok": False, "hata": "bilinmeyen işlem"}), 404
+        if request.headers.get("X-Carry-Islem") != "1" or not request.is_json:
+            return jsonify({"ok": False, "hata": "geçersiz istek"}), 403
+        org = request.headers.get("Origin")
+        if org and org.split("://", 1)[-1].rstrip("/") != request.host:
+            return jsonify({"ok": False, "hata": "başka kökenden istek reddedildi"}), 403
+        return _islem_ilet("POST", yol, request.get_data(cache=False)[:4096])
 
     @app.get("/paket/<ad>")
     def paket(ad):

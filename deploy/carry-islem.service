@@ -1,0 +1,30 @@
+# MADDE 834: PANELDEN ELLE İŞLEM KAPISI (carry_islem.py). YALNIZ 127.0.0.1:8051 — internete / Tailscale'e açık DEĞİL; panel
+# /api/islem/* isteklerini buraya iletir. Botla aynı anahtar (EnvironmentFile + şifreli ImportCredential); panel anahtarsız kalır.
+# Kapalı başlar: .env'de CARRY_PANEL_ISLEM=1, CARRY_ISLEM_PIN=<en az 6 karakter>, CARRY_ELLE=1 olmadan hiçbir emir kabul etmez.
+# Kurulum:  sudo cp /opt/carry/deploy/carry-islem.service /etc/systemd/system/ && sudo systemctl daemon-reload && sudo systemctl enable --now carry-islem
+[Unit]
+Description=Carry panel islem kapisi (yalniz yerel, PIN'li)
+After=network-online.target
+Wants=network-online.target
+
+[Service]
+Type=simple
+User=carry
+Group=carry
+WorkingDirectory=/opt/carry
+EnvironmentFile=/opt/carry/.env
+ImportCredential=carry.env
+ExecStart=/opt/carry/.venv/bin/python carry_islem.py --port 8051
+Restart=on-failure
+RestartSec=10
+NoNewPrivileges=true
+PrivateTmp=true
+ProtectHome=true
+ProtectSystem=strict
+ProtectKernelTunables=true
+ProtectControlGroups=true
+RestrictSUIDSGID=true
+ReadWritePaths=/opt/carry/defter
+
+[Install]
+WantedBy=multi-user.target

@@ -9368,3 +9368,26 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   listede görünecek coinler için (hacim süzgeci + izleme listesi + arama), 6 paralel istek, 30 dk önbellek; N günden yeni coin "—" (sıralamaya girmez).
   Seçim cihazda saklanır. Test (`test_panel_piyasa` 5b): 3 gün / 1 hafta sıralamaları bilinen mumlarla doğru, düşük hacimli / USDC coin indirilmiyor,
   dönem değişince yeniden indirme yok, yeni coin "—", yenilemede korunuyor, 24 sa'te hiç günlük mum isteği yok.
+
+## Madde 834 — PANELDEN ELLE İŞLEM (kullanıcı isteği, 2026-11-22; kullanıcı kararları: tek emir ≤ 200 $, her emirde PIN; varsayılan KAPALI)
+- İstek: "listeden panelden almak istiyorum, Binance sitesi karışık." Önceki karar (panel salt okur, madde 671) kullanıcıyla yeniden konuşuldu; riskler
+  anlatıldı, kullanıcı panelden işlemi seçti. Tasarım riskin büyük kısmını korur:
+- MİMARİ: panel YİNE ANAHTARSIZ. Yeni servis `carry-islem` (`carry_islem.py`, deploy/carry-islem.service) botla aynı anahtarı kullanır
+  (EnvironmentFile + şifreli ImportCredential), YALNIZ 127.0.0.1:8051'de dinler. Panel `/api/islem/*` isteklerini oraya iletir (adres yalnız yerel olabilir).
+  POST'larda özel başlık (X-Carry-Islem) + aynı köken şartı (CSRF). Kapı çalışmıyorsa panel eski haliyle (coin adı Binance'e gider) kalır.
+- KORUMALAR: CARRY_PANEL_ISLEM=1 + CARRY_ISLEM_PIN (≥ 6) yoksa emir yok; canlı hesapta ayrıca CARRY_ISLEM_CANLI=1; CARRY_ELLE=1 değilse emir yok (bot
+  geri alırdı). Her emir / kapat / TP-SL / iptal PIN ister (sabit zamanlı karşılaştırma; 5 yanlış → 15 dk kilit). Tek emir ≤ CARRY_ISLEM_MAX_USD (200 $),
+  ≥ Binance alt sınırı; yalnız USDT perpetual TRADING; limit fiyatı işaret fiyatının ±%20'si; TP / stop yön denetimi. Kaldıraç / teminat tipi değişmez.
+  Bütün emirler `panel_` önekli (python-binance'in bot öneki ezilir) → bot coini kullanıcıya bırakır (830/831). Kapat / sil yalnız `panel_` emirlerine
+  dokunur (botun ve Binance uygulamasından konan emirler yerinde). Her işlem defter/panel_islem.jsonl + Telegram; yanıtlarda / defterde / logda
+  anahtar, imza, PIN yok (Binance hata metninden imza ayıklanır).
+- İŞLEVLER (Piyasa sekmesinde coin adına dokununca açılan pencere): pozisyon (adet, giriş, K/Z, TP/SL, bekleyen); %25 / %50 / tümünü kapat (onaylı);
+  TP / stop kur-güncelle-kaldır (pozisyonun TAMAMI için; kısmi kapanış ve eklemeden sonra kalan adede göre yeniden kurulur); yeni emir / ekleme:
+  Long / Short, tutar (25 / 50 / 100 / 200 $), piyasa / limit, TP / stop (fiyat ya da ±%3/5/10 kısayolu); ÖNİZLE zorunlu (adet, hesabın fiyatı; demo
+  fiyatı gerçekten %0,5'ten çok saparsa uyarı), sonra PIN + gönder. PIN dışındaki her değişiklik önizlemeyi geçersiz kılar (gönderilen = önizlenen).
+  Limit emirde TP / stop dolduktan sonra konur.
+- Testler: `test_carry_islem.py` (açık/kapalı 5 neden, PIN + kilit, bütün denetimler, emir parametreleri ve önekler, ekleme sonrası TP/SL adedi,
+  TP/SL hatası emri geri almaz, limit, short TP/SL, kısmi / tam kapanış, yalnız panel emirlerinin silinmesi, Flask uçları, hata metninde imza gizleme,
+  .env okuma); `test_panel_islem.py` (gerçek Chromium → panel → kapı, sahte borsa: pencere, önizleme, PIN'siz kapalı düğme, yanlış PIN, emir + TP,
+  %50 kapat, stop kurma, CSRF 403'leri, kapı yokken eski davranış). İlk tarayıcı testinde bulunan hata: PIN yazmak önizlemeyi siliyordu → düzeltildi.
+- AÇIK: gerçek Binance'e karşı denenmedi (sahte borsa). Demo hesapta ilk işlemler küçük tutarla izlenmeli.
