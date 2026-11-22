@@ -9459,5 +9459,6 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   rağmen TP kurulur, AKE senaryosu (coin −%48 / piyasa −%10, yetim TP) stop kapatır ve TP denenmez. `test_carry_elle` A11 (panel işaretleri) + B12
   (KONTROL GRUBU: panel işlemi yokken bot o coine emir gönderiyor; tur ortasında panel işlemiyle göndermiyor, kâr al konmuyor, sonraki turda kayıtlı
   işaret). `test_carry_islem`: emir anında panel işareti.
+- Tam takım: 64 dosyadan 58 geçti; düşen 6 dosya 830 öncesiyle aynı (veri / ortam). `test_carry_entegrasyon` 180/180 [OK] (bot kodu değiştiği için tam süre koşuldu).
 - AÇIK: -2022'nin kesin kök nedeni sunucu teşhisi (teshis_reduceonly.py) çalıştırılmadan bilinemez; düzeltme iki olasılığı (yetim emir / borsa tuhaflığı)
   da kapsıyor.
