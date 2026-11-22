@@ -9339,4 +9339,4 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   (eski davranış). Gecikme en kötü 8 sa → 1 sa.
 - Testler (`test_carry_elle` B10-B11): 8 sa'te 7 kontrol, toplam bekleme aynı; kapalı / kuru / 0 → tek uyku; kontrol patlasa da bekleme tam;
   gerçek akışta ara kontrol botun emrini iptal ediyor, defter tura kadar değişmiyor, sonraki turda coin defterden çıkıyor ve emir gitmiyor.
-  `test_carry_bot`, `preflight`, `panel`, `delist`, `acil_kapat`, `olay`, `saglik`, `parite`, `onerilen` geçiyor.
+  `test_carry_bot`, `preflight`, `panel`, `delist`, `acil_kapat`, `olay`, `saglik`, `parite`, `onerilen` geçiyor; `test_carry_entegrasyon` 180/180 [OK] (830 öncesiyle aynı).
