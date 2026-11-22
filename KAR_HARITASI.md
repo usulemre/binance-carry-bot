@@ -9506,3 +9506,17 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   pozisyon sen kapatana kadar kalır, işlem anında botun payı da sana geçti (coin başına tek pozisyon), tamamen kapatınca 30 dk sonra bota döner;
   işlem kapısı açıksa "İşlem penceresini aç (kapat · TP · stop)" düğmesi. Elle bilgisi coin_ozet "elle" bayrağından (carry_elle.json + panel işaretleri).
 - Test: test_panel sayfa denetimi; sayfa betiği `node --check` ile sözdizimi temiz.
+
+## Madde 843 — Elle pozisyonda "kaçtan aldım" net değildi (kullanıcı, 2026-11-22: "kaçtan aldım çok net görünmüyor")
+- Olay: BLESSUSDT'de botun −8331 short'u varken kullanıcı panelden ~100 $ (5963 adet, ~0,0168) short ekledi. Binance coin başına TEK pozisyon ve TEK
+  ortalama giriş tutar (0,01465); panel yalnız bunu gösteriyordu: kullanıcının kendi giriş fiyatı ve bottan devralınan kısım görünmüyordu.
+  (`panel_islem.jsonl`'daki "fiyat" piyasa emrinde ÖNİZLEME işaret fiyatıdır, gerçek dolum değil; bu yüzden kaynak hesabın dolumları.)
+- Kapı (`carry_islem._payim`, /elle "pay"): sahiplik başından (panel işareti ya da işaret olayı, hangisi önceyse; −60 sn pay) bu yana hesabın
+  dolumları kullanıcınındır (bot elle coine emir göndermez). Emir başına ortalama dolum fiyatı; senin net adedin ve büyüten dolumların ortalaması;
+  kalan adet bottan devralınan. Devralınanın girişi borsa ortalamasından geri çözülür, YALNIZ bütün dolumlar pozisyonu büyüttüyse (azaltma
+  ortalamayı değiştirmez ama hangi parçadan düştüğü bilinmez → verilmez, uydurulmaz).
+- Panel: Pozisyonlarım satırında "senin 5.963 @ … · bottan 8.331 @ …"; ayrıntı sayfasında "Senin işlemlerin" (zaman, AL/SAT, adet @ dolum fiyatı,
+  ≈ $) ve "Pozisyon kimden, kaçtan": senin payın / bottan devralınan (giriş + şu anki fiyatla K/Z) / borsadaki toplam (Binance'in tek ortalaması
+  ve K/Z'si). Ayrıntı sayfası açıkken elle özeti Piyasa sekmesi dışında da yüklenir.
+- Test: test_carry_islem 11c (bot −100 @ 0,7 + kullanıcı −50 @ 0,8 → senin −50 @ 0,8, devralınan −100 @ 0,7; %20 kapatma sonrası devralınan girişi
+  None, senin girişin 0,8); sahte borsa dolumları artık startTime'a uyar ve orderId taşır. test_panel sayfa denetimi; betik `node --check` temiz.

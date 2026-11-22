@@ -1122,6 +1122,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .ibtn.L{background:var(--fa)}.isl .ibtn.S{background:var(--fe)}.isl .ibtn.tehlike{background:var(--fe)}.isl .ibtn.vurgu{background:var(--vurgu)}.isl .ibtn:disabled{opacity:.5;cursor:default}
 .isl .ibtn.geri{flex:0 0 108px;background:var(--kart2);color:var(--yazi)}
 .isl .ibtn.tut::before{content:"";position:absolute;inset:0;width:0;background:rgba(255,255,255,.28);transition:width 0s}.isl .ibtn.tut.dolu::before{width:100%;transition:width .7s linear}
+.elp{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--kart2);font-size:13.5px}.elh{font-weight:700;margin-bottom:6px}.elr{display:flex;justify-content:space-between;gap:10px;padding:5px 0;line-height:1.4}.elr .r{text-align:right}
 .elk{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:13.5px;line-height:1.5;background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.elk li{margin:3px 0}.elkb{margin-top:10px;width:100%;min-height:44px;border:0;border-radius:10px;font:inherit;font-weight:600;background:var(--vurgu);color:var(--bg);cursor:pointer}
 .isl .ibtn.tut span{position:relative}.isl .isah{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45}.isl .isah.sen{background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.isl .isah.bot{background:color-mix(in srgb,var(--uyari) 14%,transparent)}
 .isl .ibek{align-items:center}.isl .ibx{height:36px;padding:0 14px;border-radius:10px;border:1px solid color-mix(in srgb,var(--eks) 45%,transparent);background:var(--kart);color:var(--fe);font:inherit;font-weight:650;cursor:pointer}.isl .iacil.kucuk2{height:auto;min-height:44px;padding:8px 14px;margin-top:8px}.isl .iacil.kucuk2 i{text-align:right}.isl .art,.pyk .art{color:var(--fa)}.isl .eks,.pyk .eks{color:var(--fe)}.isl .shx{width:44px;height:44px}.isl .iuyr{color:var(--uyari);font-size:12.5px;margin:8px 0 0}
@@ -1383,9 +1384,33 @@ function piyasaSayfa(k){
 // MADDE 839: POZİSYONLARIM — elle yönettiğin açık pozisyonlar (hesabın K/Z'si) + son 30 gün elle sonucu; 15 sn'de bir kapıdan.
 let ELLE_OZ = null;
 async function elleYukle(){
-  if (VERI_GOMULU || !ISL_DURUM || !ISL_DURUM.acik || sayfa!="piyasa") return;
+  if (VERI_GOMULU || !ISL_DURUM || !ISL_DURUM.acik || (sayfa!="piyasa" && !SHEET)) return;   // madde 843: ayrıntı sayfası da kullanır
   elleYukle.t = Date.now(); const d = await islIstek("elle");
   ELLE_OZ = d.ok ? d : {hata: d.hata}; const el = $("#piyelle"); if (el) el.innerHTML = elleHtml();
+}
+// MADDE 843: "kaçtan aldım" — elle pozisyonun senin dolumların ve bottan devralınan kısmı (kapı /elle "pay")
+const elleZaman = t => { const d = new Date(t), b = new Date(); const g = d.toDateString()==b.toDateString() ? "bugün" : d.toLocaleDateString("tr-TR",{day:"numeric",month:"short"});
+  return g + " " + d.toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"}); };
+const elleAdet = q => Math.abs(q).toLocaleString("tr-TR", {maximumFractionDigits: 4});
+function elleBul(s){ return ((ELLE_OZ && ELLE_OZ.pozisyonlar) || []).find(x => x.sembol === s); }
+function elleKisa(x){   // Pozisyonlarım satırı: "senin 5.963 @ 0,01677 · bottan 8.331 @ 0,01332"
+  const P = x.pay; if (!P || !P.devralinan) return `${elleAdet(x.adet)} adet @ ${piyFiyat(x.giris)}`;
+  return `senin ${elleAdet(P.benim_adet)}${P.benim_giris?` @ ${piyFiyat(P.benim_giris)}`:""} · bottan ${elleAdet(P.devralinan)}${P.devralinan_giris?` @ ${piyFiyat(P.devralinan_giris)}`:""}`;
+}
+function ellePayHtml(s, p, f){   // ayrıntı sayfası: dolumlar + parça parça giriş ve K/Z
+  const x = elleBul(s), P = x && x.pay, yonA = p.miktar > 0 ? "long" : "short";
+  if (!x) { if (ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle(); return ISL_DURUM && ISL_DURUM.acik ? `<div class="elp k">işlemlerin yükleniyor…</div>` : ""; }
+  if (!P) return "";
+  const kz = (q, g) => g && f ? q * (f - g) : null;   // q işaretli adet
+  const sat = (ad, q, g, not) => { const v = kz(q, g); return `<div class="elr"><span><b>${ad}</b><br><span class="k">${elleAdet(q)} adet ${yonA}${not?" · "+not:""}</span></span>
+    <span class="r"><b>${g ? fiyatYaz(g) : "—"}</b><br>${v==null ? "" : `<span class="${sinif(v)}">${isaretli(v)}</span>`}</span></div>`; };
+  const D = (P.dolum || []).map(d => `<div class="elr"><span>${elleZaman(d.t)}</span><span class="r"><b class="${d.yon=="AL"?"art":"eks"}">${d.yon}</b> ${elleAdet(d.adet)} @ <b>${fiyatYaz(d.fiyat)}</b> <span class="k">≈ ${para(d.adet * d.fiyat)}</span></span></div>`).join("");
+  return `<div class="elp"><div class="elh">Senin işlemlerin</div>${D || `<div class="k">bu sahiplik döneminde dolum bulunamadı</div>`}
+    <div class="elh" style="margin-top:10px">Pozisyon kimden, kaçtan</div>
+    ${P.benim_adet ? sat("Senin payın", P.benim_adet, P.benim_giris, "ortalama giriş") : ""}
+    ${P.devralinan ? sat("Bottan devralınan", P.devralinan, P.devralinan_giris, P.devralinan_giris ? "botun girişi" : "giriş ayrıştırılamadı") : ""}
+    <div class="elr" style="border-top:1px solid var(--cizgi);padding-top:8px"><span><b>Borsadaki toplam</b><br><span class="k">${elleAdet(p.miktar)} adet · Binance tek ortalama gösterir</span></span>
+      <span class="r"><b>${fiyatYaz(x.giris)}</b><br><span class="${sinif(x.kz)}">${isaretli(x.kz)}</span></span></div></div>`;
 }
 function elleHtml(){
   const E = ELLE_OZ; if (!E) return `<div class="pyb"><span>Pozisyonlarım</span><span>yükleniyor…</span></div>`;
@@ -1394,7 +1419,7 @@ function elleHtml(){
   const sonuc = S.kapanis ? `son 30 gün <b class="${sinif(S.net)}">${S.net>=0?"▲":"▼"} ${isaretli(S.net)}</b>, ${S.kapanis} kapanış, %${Math.round(S.kazanan / S.kapanis * 100)} kârlı` : "son 30 günde kapanan elle işlem yok";
   const satir = x => { const ad = x.sembol.replace(/USDT$/,""), uz = x.adet > 0, deger = Math.abs(x.adet) * x.giris, kp = deger ? x.kz / deger * 100 : 0;
     return `<div class="pyr pye"><span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
-      <span style="min-width:0;display:flex;flex-direction:column"><a href="#piyasa" onclick="islAc('${x.sembol}');return false">${ad}</a><span class="k2">${Math.abs(x.adet).toLocaleString("tr-TR")} adet @ ${piyFiyat(x.giris)}</span></span>
+      <span style="min-width:0;display:flex;flex-direction:column"><a href="#piyasa" onclick="islAc('${x.sembol}');return false">${ad}</a><span class="k2">${elleKisa(x)}</span></span>
       <span class="r k2">${x.tp?`TP ${piyFiyat(x.tp)}`:""}${x.tp&&x.sl?"<br>":""}${x.sl?`stop ${piyFiyat(x.sl)}`:`<span class="uyr">stop yok</span>`}</span>
       <span class="r ${sinif(x.kz)}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")}%</span></span></div>`; };
   return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div></div>
@@ -2128,9 +2153,9 @@ function minik(s, p, f, renk){   // satır içi mini grafik: yalnız çizgi (60x
 }
 // MADDE 842: elle coin mü (coin_ozet "elle" bayrağı: carry_elle.json + panel işaretleri)
 function elleMi(k, s){ return ((k && k.coin_ozet) || []).some(c => c.elle && (c.s.endsWith("USDT") ? c.s : c.s + "USDT") === s); }
-function elleKutu(s, p){
+function elleKutu(s, p, f){
   const ad = s.replace(/USDT$/,""), uzun = p.miktar > 0;
-  return `<div class="elk"><b>✋ ${ad} pozisyonunu sen yönetiyorsun</b>
+  return `${ellePayHtml(s, p, f)}<div class="elk"><b>✋ ${ad} pozisyonunu sen yönetiyorsun</b>
     <ul style="margin:6px 0 0;padding-left:18px">
       <li>Bot bu coine <b>ekleme, kapatma, kâr al, stop ya da süre dolunca yenileme</b> yapmıyor. Bu yüzden çıkış süresi ve bot kâr al hedefi yok.</li>
       <li>Pozisyon sen kapatana kadar olduğu gibi kalır. ${uzun ? "Satmak" : "Geri alıp kapatmak"}, TP ya da stop koymak senin elinde.</li>
@@ -2185,7 +2210,7 @@ function sheetIc(s, p, k){
       <button class="shx" onclick="sheetKapat()" aria-label="Kapat">✕</button></div>
     <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>
     <div class="shkg">${kutu("Giriş", fiyatYaz(p.giris))}${kutu("Büyüklük", para(usd))}${kutu("Funding", F ? `%${(F.r*100).toFixed(4).replace(".",",")} · <span class="${sinif(fr)}">${fr>=0?"alıyor":"ödüyor"}</span>` : "—")}${elle ? kutu("Yöneten", "✋ sen") : kutu(h1 ? "Kademe · kâr al" : "Kâr al hedefi", h0 ? `${fiyatYaz(h0)} <span class="k">${uzun?"+":"−"}%${Math.round(H[0]*100)}</span>${h1 ? `<br>${fiyatYaz(h1)} <span class="k">${uzun?"+":"−"}%${Math.round(H[1]*100)}</span>` : ""}` : "—")}</div>
-    ${stop}${neden}${elle ? elleKutu(s, p) : cikisIc(s, usd, k)}`;
+    ${stop}${neden}${elle ? elleKutu(s, p, f) : cikisIc(s, usd, k)}`;
 }
 // MADDE 787: çıkış takvimi (A tasarımı) — parça parça: ne zaman alındı → ne zaman satılacak, şu anki değer ve kâr/zarar
 let CIKIS_TUM = false;

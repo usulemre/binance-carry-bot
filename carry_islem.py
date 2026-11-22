@@ -467,6 +467,47 @@ class Kapi:
             A.setdefault(sem, []).append((t - 60_000, simdi + 60_000))   # açık aralık: saat kayması payı
         return {s: [(max(a, alt), b) for a, b in L if b >= alt] for s, L in A.items() if any(b >= alt for a, b in L)}
 
+    def _payim(self, sem: str, adet: float, giris: float) -> dict | None:
+        """MADDE 843: elle pozisyonun KULLANICIYA ait kısmı. Sahiplik başından (panel işareti ya da işaret olayı, hangisi önceyse) bu yana
+        hesabın dolumları kullanıcınındır (bot elle coine emir göndermez). Emir başına ortalama dolum fiyatı; kalan adet bottan devralınandır.
+        Devralınanın girişi borsa ortalamasından geri çözülür: yalnız bütün dolumlar pozisyonu BÜYÜTTÜYSE (azaltma ortalamayı değiştirmez ama
+        hangi parçadan düştüğü bilinmez -> o zaman verilmez)."""
+        L = self._elle_araliklar().get(sem) or []
+        simdi = int(self.saat() * 1000)
+        acik = [a for a, b in L if b >= simdi]
+        if not acik:
+            return None
+        bas = min(acik)
+        try:
+            import carry_elle
+            pt = carry_elle.panel_okuma(self.ayar.get("elle_panel")).get(sem)
+            if pt and pt - 60_000 < bas and not any(a <= pt <= b for a, b in L if b < simdi):
+                bas = pt - 60_000
+        except Exception:
+            pass
+        try:
+            T = self.ic.futures_account_trades(symbol=sem, startTime=int(bas), limit=500) or []
+        except Exception as e:
+            logger.warning("elle payı okunamadı %s: %s", sem, e)
+            return None
+        E = {}
+        for t in T:
+            o = E.setdefault(t.get("orderId"), {"t": int(t.get("time") or 0), "yon": "AL" if t.get("side") == "BUY" else "SAT", "adet": 0.0, "tut": 0.0})
+            q = float(t.get("qty") or 0); o["adet"] += q; o["tut"] += q * float(t.get("price") or 0); o["t"] = min(o["t"], int(t.get("time") or 0))
+        dolum = sorted(({"t": o["t"], "yon": o["yon"], "adet": round(o["adet"], 10), "fiyat": o["tut"] / o["adet"]} for o in E.values() if o["adet"] > 0),
+                       key=lambda x: x["t"])
+        isaret = 1 if adet > 0 else -1
+        net = sum(x["adet"] * (1 if x["yon"] == "AL" else -1) for x in dolum)
+        devr = round(adet - net, 10)
+        buyuten = [x for x in dolum if (x["yon"] == "AL") == (adet > 0)]
+        benim_giris = (sum(x["adet"] * x["fiyat"] for x in buyuten) / sum(x["adet"] for x in buyuten)) if buyuten else None
+        devr_giris = None
+        if devr * isaret > 1e-12 and len(buyuten) == len(dolum) and giris > 0:
+            g = (giris * abs(adet) - sum(x["adet"] * x["fiyat"] for x in dolum)) / abs(devr)
+            devr_giris = g if g > 0 else None
+        return {"bas": int(bas + 60_000), "dolum": dolum[-20:], "benim_adet": round(net, 10), "benim_giris": benim_giris,
+                "devralinan": devr if abs(devr) > 1e-12 else 0.0, "devralinan_giris": devr_giris}
+
     def elle_ozet(self) -> dict:
         """Elle pozisyonların (açık) ve son 30 gün elle sonucunun (gerçekleşen K/Z + komisyon, yalnız elle aralıklarındaki dolumlar)."""
         elle = self._elle_kumesi()
@@ -490,7 +531,8 @@ class Kapi:
                     pass
                 pozlar.append({"sembol": sem, "adet": a, "giris": float(p.get("entryPrice") or 0),
                                "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0),
-                               "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl})
+                               "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl,
+                               "pay": self._payim(sem, a, float(p.get("entryPrice") or 0))})   # madde 843
         kz = kom = 0.0; kapanis = kazanan = 0
         for sem, L in list(self._elle_araliklar().items())[:25]:
             try:

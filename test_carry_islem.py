@@ -49,8 +49,9 @@ class SahteIc:
 
     def futures_account_trades(self, symbol, startTime=None, limit=100):
         import time as _t
-        return [{"time": e["_t"], "side": e["side"], "price": str(self.fiyat[symbol]), "qty": str(e["quantity"]),
-                 "realizedPnl": str(e.get("_kz", 0)), "commission": "0.02"} for i, e in enumerate(self.emirler) if e["symbol"] == symbol and e["type"] == "MARKET"]
+        return [{"time": e["_t"], "side": e["side"], "price": str(e.get("_fiyat", self.fiyat[symbol])), "qty": str(e["quantity"]),
+                 "realizedPnl": str(e.get("_kz", 0)), "commission": "0.02", "orderId": e["orderId"]}
+                for i, e in enumerate(self.emirler) if e["symbol"] == symbol and e["type"] == "MARKET" and (startTime is None or e["_t"] >= startTime)]
 
     def futures_mark_price(self, symbol):
         return {"markPrice": str(self.fiyat[symbol])}
@@ -289,6 +290,25 @@ r9 = k9.iptal({"sembol": "AKEUSDT", "orderId": oid, "pin": "482913"})
 kontrol("tek panel emri iptal edildi, diğerleri yerinde", r9["iptal"] == 1 and [o_["orderId"] for o_ in ic9.acik["AKEUSDT"]] == [4242])
 kontrol("tek emir iptali de PIN ister", hata_mi(lambda: k9.iptal({"sembol": "AKEUSDT", "orderId": 4242, "pin": "0"}), "PIN"))
 kontrol("bekleyen emirde orderId döner", all("orderId" in b_ for b_ in k9.pozisyon("AKEUSDT")["bekleyen"]))
+
+print("11c) madde 843: elle pozisyonda senin dolumların / bottan devralınan (kaçtan aldım)")
+d43 = tempfile.mkdtemp()
+k43, ic43, _ = yeni(elle_dosya=os.path.join(d43, "e.json"), elle_panel=os.path.join(d43, "p.json"), elle_olay=os.path.join(d43, "o.jsonl"),
+                    dilim=os.path.join(d43, "dil.json"))
+ic43.poz["ONDOUSDT"] = -100.0; ic43.giris["ONDOUSDT"] = 0.7          # botun eski short'u (dolumu sahiplikten önce)
+k43.emir({"sembol": "ONDOUSDT", "yon": "S", "usd": 40, "pin": "482913"})   # kullanıcı 0,8'den 50 adet ekledi
+ic43.emirler[-1]["_fiyat"] = 0.8
+ic43.giris["ONDOUSDT"] = (100 * 0.7 + 50 * 0.8) / 150                    # Binance tek ortalama
+x43 = [p_ for p_ in k43.elle_ozet()["pozisyonlar"] if p_["sembol"] == "ONDOUSDT"][0]
+P43 = x43["pay"] or {}
+kontrol("senin payın: −50 adet, giriş 0,8 (borsa ortalaması 0,733 değil)", P43.get("benim_adet") == -50 and abs(P43.get("benim_giris", 0) - 0.8) < 1e-9, P43)
+kontrol("bottan devralınan: −100 adet, girişi geri çözüldü 0,7", P43.get("devralinan") == -100 and abs((P43.get("devralinan_giris") or 0) - 0.7) < 1e-9, P43)
+kontrol("dolum listesi: 1 SAT 50 @ 0,8", [(d_["yon"], d_["adet"], round(d_["fiyat"], 6)) for d_ in P43.get("dolum", [])] == [("SAT", 50.0, 0.8)], P43)
+ic43.fiyat["ONDOUSDT"] = 0.75
+k43.kapat({"sembol": "ONDOUSDT", "oran": 0.2, "pin": "482913"})          # azaltma: hangi parçadan düştüğü bilinmez
+P43 = [p_ for p_ in k43.elle_ozet()["pozisyonlar"] if p_["sembol"] == "ONDOUSDT"][0]["pay"]
+kontrol("azaltmadan sonra devralınan girişi verilmez (uydurulmaz), senin girişin yine 0,8", P43["devralinan_giris"] is None
+        and abs(P43["benim_giris"] - 0.8) < 1e-9 and len(P43["dolum"]) == 2, P43)
 
 print("12) Flask uygulaması")
 app = ci.uygulama(lambda: yeni()[0]).test_client()
