@@ -2909,6 +2909,40 @@ değişince bütün dilimleri yeniden boyutlama (madde 205). Backtest (T7K, AGIR
 short yenilemesi, kademe / kâr al / stop / delist ve short tavanı kırpmasından doğar. 0 → eski (dolar hedefi) davranış."""
 
 
+ELLE = os.getenv("CARRY_ELLE", "0") not in ("0", "false", "False")
+"""MADDE 830: ELLE MÜDAHALE (carry_elle.py). 1 = kullanıcı Binance'ten bir coinde işlem yaparsa (botun emir öneki olmayan dolum)
+o coin işaretlenir; bot onu evrene almaz, dilimlerden çıkarır, emir / kâr al / stop / delist kapatması yapmaz, emirlerine dokunmaz.
+Pozisyon kapanınca (ve ELLE_BEKLEME_SN sonra) bota geri döner. 0 (varsayılan) = eski davranış, modül hiç çağrılmaz."""
+ELLE_DOSYA = os.getenv("CARRY_ELLE_DOSYA", "carry_elle.json")
+ELLE_OLAY_DOSYA = os.getenv("CARRY_ELLE_OLAY", "carry_elle_olay.jsonl")
+ELLE_BEKLEME_SN = float(os.getenv("CARRY_ELLE_BEKLEME_SN", "1800"))
+_ELLE: set = set()
+"""Bu turda kullanıcıda olan semboller (ELLE kapalıyken hep boş -> hiçbir filtre etkisiz)."""
+
+
+def elle_guncelle(client, dry_run: bool = False) -> set:
+    """MADDE 830: turun başında kullanıcı müdahalelerini bul; `_ELLE`'yi yerinde günceller. Hata akışı bozmaz: tespit
+    çalışmazsa kayıttaki işaretler korunur."""
+    if not ELLE:
+        _ELLE.clear()
+        return _ELLE
+    try:
+        import carry_elle
+        k = carry_elle.guncelle(client, dilim_durum_oku(), ELLE_DOSYA, bildir=None if dry_run else _bildir,
+                                dry_run=dry_run, bekleme_sn=ELLE_BEKLEME_SN, olay_dosya=ELLE_OLAY_DOSYA)
+    except Exception as e:
+        logger.error("elle müdahale kontrolü başarısız (%s) - kayıttaki işaretler kullanılıyor", e)
+        try:
+            import carry_elle
+            k = carry_elle.isaretliler(ELLE_DOSYA)
+        except Exception:
+            k = set(_ELLE)
+    _ELLE.clear(); _ELLE.update(k)
+    if _ELLE:
+        logger.info("elle yönetimde (bot dokunmuyor): %s", ", ".join(sorted(_ELLE)))
+    return _ELLE
+
+
 TUR_IZGARA = os.getenv("CARRY_TUR_IZGARA", "1") not in ("0", "false", "False")
 """MADDE 770: turlar sabit ızgarada (son tur başlangıcı + aralık); yeniden başlatma ek tur açmaz. 0 → eski davranış."""
 TUR_ZAMAN_DOSYA = os.getenv("CARRY_TUR_ZAMAN", "carry_tur_zaman.json")
@@ -3330,6 +3364,12 @@ def delist_kapat(client: ExchangeClient, durum: dict, dry_run: bool = False) -> 
         sem = p["symbol"]; adet = float(p["positionAmt"])
         if not delist_yakin_mi(bilgi.get(sem), DELIST_KAPAT_SAAT):
             continue
+        if sem in _ELLE:     # madde 830: kullanıcının pozisyonu - kapatılmaz, haber verilir
+            logger.error("DELİST: %s listeden çıkıyor ama pozisyon ELLE yönetimde - bot kapatmıyor", sem)
+            if not dry_run:
+                _bildir(f"DELİST: {sem} listeden çıkıyor (elle yönettiğin pozisyon) — Binance'te kendin kapat",
+                        acil=True, anahtar=f"delist_elle_{sem}", kisma_sn=6 * 3600)
+            continue
         dd = (bilgi.get(sem) or {}).get("deliveryDate")
         if dry_run:
             logger.info("  [DRY] DELİST: %s kapatılırdı (adet %s, deliveryDate %s)", sem, adet, dd)
@@ -3475,6 +3515,8 @@ def evren_sec(client: ExchangeClient) -> list[str]:
             continue
         if delist_mi(bilgi.get(s)):
             elenen_delist += 1
+            continue
+        if s in _ELLE:      # madde 830: kullanıcıda
             continue
         if TRADFI_HARIC and tradfi_mi(s, bilgi.get(s)):
             elenen_tradfi += 1
@@ -4062,7 +4104,7 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
         return 0
     kar_al_iptal(client, durum)
     try:
-        pozisyonlar = list(client.get_open_positions())
+        pozisyonlar = [p for p in client.get_open_positions() if p.get("symbol") not in _ELLE]   # madde 830
     except Exception as ex:
         logger.error("kâr al: açık pozisyonlar OKUNAMADI (%s) - hiçbir TP "
                      "konulamadı, pozisyonlar korumasız", ex)
@@ -4266,6 +4308,8 @@ def mevcut_portfoy(client: ExchangeClient) -> dict[str, float]:
             if abs(miktar) < 1e-12:
                 continue
             sem = p["symbol"]
+            if sem in _ELLE:     # madde 830: kullanıcının pozisyonu bot portföyü değildir
+                continue
             nominal = p.get("notional")
             deger = None
             if nominal not in (None, "", 0, "0"):
@@ -4545,6 +4589,7 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
         logger.info("olay modülünün penceresi açık - bu tur ATLANDI "
                     "(birkaç dakika sonra tekrar denenmeli)")
         return {"atlandi": "olay_kilidi"}
+    elle_guncelle(client, dry_run=dry_run)   # madde 830 (kapalıyken no-op)
     semboller = evren_sec(client)
     _SON_EVREN[:] = list(semboller)   # madde 622: koşullu 24 sa stop'un piyasa medyanı bu evrenden
     if not semboller:
@@ -4686,6 +4731,11 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
     # hedeflerini korur. Böylece tek bir rebalance zamanlamasına
     # bağımlılık (ve onun şans faktörü) ortadan kalkar.
     durum = dilim_durum_oku()
+    if _ELLE:   # madde 830: kullanıcıdaki semboller dilim defterinden çıkar (idempotent)
+        import carry_elle
+        _cik = carry_elle.dilimden_cikar(durum, _ELLE)
+        if _cik:
+            logger.info("elle: %s dilim defterinden çıkarıldı", ", ".join(_cik))
     # MADDE 207: durum kayıpsa borsadaki pozisyonları sahiplen - yoksa
     # kitabın ~%93'ü bu turda tasfiye edilirdi.
     if not durum.get("dilimler"):
@@ -4749,6 +4799,8 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
         hedef = toplam_hedef_tut(durum, _fiyat)
     else:
         hedef = toplam_hedef(durum, bakiye)
+    for _s in _ELLE & set(hedef):   # madde 830: emniyet (evren + defter zaten dışarıda tutar)
+        hedef.pop(_s, None)
     if not hedef:
         return {}
     # MADDE 211: ELLE DEĞİŞTİRİLEN AYARLAR. İkisi de backtest'te yok ve
@@ -4815,6 +4867,11 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
             "dilim": sira, "saglik": s_durum}
 
 
+def _bot_emri_mi(emir: dict) -> bool:
+    """MADDE 830: emir botun mu (python-binance öneki)? Olay modülü ayrıca `_olay_emri_mi` ile korunur."""
+    return str(emir.get("clientOrderId") or "").startswith("x-Cb7ytekJ")
+
+
 def _olay_emri_mi(emir: dict) -> bool:
     """Emir, olay modülüne (carry_olay.py) mi ait? Madde 166.
 
@@ -4865,6 +4922,9 @@ def bayat_emirleri_temizle(client: ExchangeClient, emirler: list) -> int:
         # sembollerde toplu iptal yerine TEK TEK iptal yapılır.
         for o in acik:
             if _olay_emri_mi(o) and o.get("symbol"):
+                korunan.setdefault(o["symbol"], set()).add(o.get("orderId"))
+            # MADDE 830: ELLE açıkken kullanıcının (bot öneki olmayan) emirleri ve elle semboldeki her emir korunur
+            elif ELLE and o.get("symbol") and (o["symbol"] in _ELLE or not _bot_emri_mi(o)):
                 korunan.setdefault(o["symbol"], set()).add(o.get("orderId"))
         if korunan:
             logger.info("bayat emir: %d sembolde olay modülünün emri var, "
@@ -5167,6 +5227,12 @@ def main():
 
     client = ExchangeClient(config.API_KEY, config.API_SECRET,
                             mode=getattr(config, "MODE", "demo"))
+    if ELLE and not args.dry_run:   # madde 830: açılıştan sonraki elle işlemler ilk turda tanınsın
+        try:
+            import carry_elle
+            carry_elle.baslat(ELLE_DOSYA)
+        except Exception as e:
+            logger.warning("elle takip başlangıcı yazılamadı: %s", e)
     # MADDE 656: CARRY_PROFIL boş / ONERILEN -> bakiyeye göre önerilen ayar, sonra yeni ortamla yeniden başla
     import onerilen
     if onerilen.gerekli():

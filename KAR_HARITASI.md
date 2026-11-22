@@ -9303,3 +9303,29 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
 - Teşhis aracı: `teshis_reduceonly.py` (SALT OKUR; yetim emirler, reduceOnly toplamı > pozisyon, AKE 20-21 Kas emir ve işlem geçmişi).
 - Önerilecek düzeltme (KULLANICI ONAYI BEKLER, test yazılmadan uygulanmaz): -2022'de o sembolün açık emirlerini `futures_cancel_all_open_orders` ile iptal edip
   güncel pozisyon adediyle bir kez yeniden kapat; başarısızsa her tur yeniden dene ve acil bildir.
+
+## Madde 830 — ELLE MÜDAHALE: kullanıcı Binance'ten bir coinde işlem yaparsa bot o coini kullanıcıya bırakır (kullanıcı isteği, 2026-11-22; varsayılan KAPALI)
+- İstek: "bot aynen çalışsın; bot AKE'ye long açtı, ben satıp short'a çevirirsem müdahale ettiğim için işaretlesin, ben kapatana kadar dilimlerde ona
+  dokunmasın." Kâr / zarar panelde BİRLEŞİK (kullanıcı ayrı gösterim istemedi); coin listesinde yalnız "✋ elle" rozeti.
+- Ayırt etme: botun bütün emirleri python-binance'ten `x-Cb7ytekJ…` önekli clientOrderId / clientAlgoId ile gider (kütüphanenin CONTRACT_ORDER_PREFIX'i),
+  olay modülü `OLAY`; Binance kapanışları `autoclose` / `adl_` / `settlement` / `delivery`. Bunların dışında DOLAN emir = kullanıcı (uygulama `android_` /
+  `ios_` / `web_` …). Felaket stop'u tetiklenince doğan emir ayrıca algo kaydındaki `actualOrderId` ile bot sayılır.
+- Akış (`carry_elle.py`, `bir_tur` başında): son kontrolden (−5 dk pay) beri pozisyonu / dilimi / işareti olan her sembolün `allOrders` geçmişi okunur.
+  Kullanıcı dolumu → işaret + sembolde botun KENDİ açık emirleri (TP / kademe / felaket algo) iptal, kullanıcının ve olay modülünün emirlerine dokunulmaz,
+  Telegram bildirimi, `carry_elle_olay.jsonl`'a işaret satırı (botun o anki adedi dahil — ileride "müdahale ne kazandırdı" ölçümü için).
+  İşaretli sembol: evrene girmez, dilim defterinin bütün bölümlerinden çıkar, `mevcut_portfoy` saymaz (emir / sağlık kapısı kapanışı / durum kurtarma),
+  kâr al / felaket kurulmaz, delist kapatması yapılmaz (acil uyarı), bayat emir temizliği o sembolün emirlerine dokunmaz. ELLE açıkken bayat temizlik
+  BAŞKA coinlerdeki kullanıcı emirlerini de korur (yalnız bot önekli emirler silinir).
+- Bırakma: borsada adet 0 VE son kullanıcı dolumundan 30 dk (CARRY_ELLE_BEKLEME_SN) geçince işaret kalkar (long'u kapatıp short açarken arada tur denk gelirse
+  bota dönmesin); bırakmadan önceki dolumlar yeniden işaret sebebi sayılmaz. Bota dönen coin yalnız yeni dilim seçerse yeniden alınır.
+- Güvenlik: varsayılan `CARRY_ELLE=0` → modül hiç çağrılmaz. Açılışta kayıt yoksa takip zamanı "şimdi"ye kurulur; geçmiş emirler işaret sebebi değildir.
+  Pozisyon okunamazsa işaretler değişmez; bir sembolün geçmişi okunamazsa o sembol için yeni karar yok. Tespit tümden patlarsa kayıttaki işaretler kullanılır
+  (yeni müdahale o tur tanınmaz → eski davranış).
+- Testler: `test_carry_elle.py` (birim 40+; uçtan uca: ELLE kapalı ile ELLE açık + müdahale yok 4 turda emirler ve dilim defteri BİREBİR AYNI; long→short
+  çevirme sonrası 4 turda o coine emir / kâr al / stop yok, kullanıcı emri korunuyor; kapatınca bekleme sonrası dönüyor; sağlık kapısı "durdur" kullanıcı
+  pozisyonunu kapatmıyor; delist kullanıcınınkini kapatmıyor, botunkini kapatıyor), `test_panel` rozet. Tam takım önce / sonra karşılaştırması sürüyor (sonuç bu maddeye eklenecek).
+- Bilinen sınırlar: (a) kullanıcı bot coininde UYGULAMADAN bir stop koyar ve o stop botun felaket stop'uyla aynı sembolde tetiklenirse tanınmayabilir (nadir);
+  (b) aynı coinde bot ile kullanıcı aynı anda sahip olamaz (hesap tek yönlü modda) — kısmi satış da coini tamamen kullanıcıya geçirir; (c) dilimden çıkan
+  sermaye o dilim yenilenene kadar boş kalır (stop / kâr al çıkışıyla aynı); (d) backtest bu müdahaleleri bilmez → demo–backtest karşılaştırmasında
+  elle coinler ayrıca düşülür (olay defterinden).
+- Uygulama kullanıcı onayıyla: sunucu `.env` → `CARRY_ELLE=1`, bot yeniden başlatılır.

@@ -134,7 +134,7 @@ def _env(klasor: str) -> dict:
                 if k.strip() in ("BINANCE_MODE", "CARRY_PROFIL", "CARRY_BILDIRIM_AD", "CARRY_SERMAYE_OLCEK", "CARRY_LONG_24S",
                                  "CARRY_REBALANCE_H", "CARRY_N_DILIM", "CARRY_DILIM_LOG",
                                  "CARRY_MERDIVEN", "CARRY_MERDIVEN_SHORT", "CARRY_KAR_AL", "CARRY_KAR_AL_SHORT",
-                                 "CARRY_GIRIS_DILIM", "CARRY_SHORT_ARA_SAAT"):   # madde 790: 788 bayrağı panelde okunmuyordu   # anahtarlar OKUNMAZ
+                                 "CARRY_GIRIS_DILIM", "CARRY_SHORT_ARA_SAAT", "CARRY_ELLE_DOSYA"):   # madde 790: 788 bayrağı panelde okunmuyordu   # anahtarlar OKUNMAZ
                     d[k.strip()] = v.split("#")[0].strip()
     except OSError:
         pass
@@ -678,6 +678,17 @@ def stop_oku(klasor: str, simdi: float | None = None) -> dict | None:
     return d
 
 
+def elle_semboller(klasor: str) -> set:
+    """MADDE 830: kullanıcının elle yönettiği semboller (carry_elle.json); yoksa boş."""
+    yol = _env(klasor).get("CARRY_ELLE_DOSYA") or "carry_elle.json"
+    yol = yol if os.path.isabs(yol) else os.path.join(klasor, yol)
+    try:
+        with open(yol, encoding="utf-8") as f:
+            return set((json.load(f) or {}).get("elle") or {})
+    except (OSError, ValueError, AttributeError, TypeError):
+        return set()
+
+
 def coin_ozet(klasor: str, an: dict | None) -> list[dict] | None:
     """MADDE 753: coin başına başlangıçtan beri kâr / zarar — kapanan (REALIZED_PNL), funding, komisyon (borsa gelir kayıtları,
     carry_anlik gelir_birikim 'coin') + şu an açık pozisyonun gerçekleşmemiş kârı. Kayıt yoksa None."""
@@ -696,12 +707,15 @@ def coin_ozet(klasor: str, an: dict | None) -> list[dict] | None:
         gc = gc if isinstance(gc, dict) and gc else None
     except (OSError, ValueError, AttributeError):
         gc = None
+    elle = elle_semboller(klasor)   # madde 830
     out = []
     for s_ in set(c) | set(poz) | set(gc or {}):
         g = c.get(s_) or {}; p = poz.get(s_) or {}
         k = {"s": s_.removesuffix("USDT"), "kapanan": round(g.get("REALIZED_PNL", 0.0), 4), "funding": round(g.get("FUNDING_FEE", 0.0), 4),
              "komisyon": round(g.get("COMMISSION", 0.0), 4), "acik": round(float(p.get("gerceklesmemis") or 0.0), 4),
              "yon": p.get("yon")}
+        if s_ in elle:
+            k["elle"] = True
         if gc is not None:
             k["funding_demo"] = k["funding"]; k["funding"] = round(float(gc.get(s_, 0.0)), 4)
         k["toplam"] = round(k["kapanan"] + k["funding"] + k["komisyon"] + k["acik"], 4)
@@ -1745,7 +1759,7 @@ function coinTablo(k){
   const C = k.coin_ozet; if (!C || !C.length) return "";
   const id = "coinler", ac = ACIK.has(id), L = ac ? C : [...C.slice(0,5), ...C.slice(-5).filter(x=>!C.slice(0,5).includes(x))];
   const h = v => Math.abs(v) < 0.005 ? `<span class="k">0</span>` : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
-  const sat = L.map(x=>`<tr><td class="l"><b>${x.s}</b>${x.yon?`<span class="yon">${MOBIL() ? x.yon : (x.yon=="L"?"long açık":"short açık")}</span>`:""}</td><td>${h(x.kapanan)}</td><td>${h(x.funding)}</td><td>${h(x.komisyon)}</td><td>${h(x.acik)}</td><td><b>${h(x.toplam)}</b></td></tr>`).join("");
+  const sat = L.map(x=>`<tr><td class="l"><b>${x.s}</b>${x.elle?`<span class="yon" title="elle yönetiyorsun — bot dokunmuyor">✋ elle</span>`:""}${x.yon?`<span class="yon">${MOBIL() ? x.yon : (x.yon=="L"?"long açık":"short açık")}</span>`:""}</td><td>${h(x.kapanan)}</td><td>${h(x.funding)}</td><td>${h(x.komisyon)}</td><td>${h(x.acik)}</td><td><b>${h(x.toplam)}</b></td></tr>`).join("");
   const T = C.reduce((a,x)=>({kp:a.kp+x.kapanan, f:a.f+x.funding, km:a.km+x.komisyon, a:a.a+x.acik, t:a.t+x.toplam}), {kp:0,f:0,km:0,a:0,t:0});
   return `<div class="kart"><h2>Coin bazında kâr / zarar <span class="k">· başlangıçtan beri, en kötüden en iyiye</span></h2>
     <div class="tablo yatay"><table class="coin"><tr class="k"><td class="l">coin</td><td>kapanan</td><td>funding</td><td>komisyon</td><td>açık</td><td>toplam</td></tr>${sat}

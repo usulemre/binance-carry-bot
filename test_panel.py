@@ -391,6 +391,14 @@ kontrol("madde 784: coin özeti funding'i GERÇEK oranlı (demo ayrı alanda), t
         _cg["AKE"]["funding"] == 0.5 and _cg["AKE"]["funding_demo"] == 0.1 and abs(_cg["AKE"]["toplam"] - (-5.26 + 0.5 - 0.02 - 28.0)) < 1e-9
         and _cg["INIT"]["funding"] == 2.0 and _cg["HYPE"]["funding"] == 0.0, _cg)
 os.remove(os.path.join(_k53, "defter", "gercek_funding.json"))
+kontrol("madde 830: elle kaydı yokken hiçbir coinde elle işareti yok", not any(x.get("elle") for x in panel.coin_ozet(_k53, None)))
+json.dump({"elle": {"AKEUSDT": {"t": 1}}, "birakilan": {}}, open(os.path.join(_k53, "carry_elle.json"), "w"))
+_ce = {x["s"]: x for x in panel.coin_ozet(_k53, {"pozisyonlar": {"AKEUSDT": {"gerceklesmemis": -28.0, "yon": "S"}}})}
+kontrol("madde 830: elle yönetilen coin işaretli, toplam birleşik hesapta aynı formülle",
+        _ce["AKE"].get("elle") is True and "elle" not in _ce["HYPE"]
+        and abs(_ce["AKE"]["toplam"] - (_ce["AKE"]["kapanan"] + _ce["AKE"]["funding"] + _ce["AKE"]["komisyon"] + _ce["AKE"]["acik"])) < 1e-9, _ce)
+kontrol("madde 830: sayfa elle rozetini çiziyor", "✋ elle" in panel.SAYFA)
+os.remove(os.path.join(_k53, "carry_elle.json"))
 _db53 = os.path.join(_k53, "defter", "carry.db"); _t53 = __import__("time").time() - 3600
 _DB.emir_kaydet("GIRIS", "KOMAUSDT", "BUY", 100, db=_db53, simdi=_t53, oid="a", ref=1.0)
 _DB.emir_kaydet("PIYASA_YEDEK", "KOMAUSDT", "BUY", 100, db=_db53, simdi=_t53 + 370, oid="b", ref=1.0)
