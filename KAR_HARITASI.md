@@ -9323,7 +9323,7 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   (yeni müdahale o tur tanınmaz → eski davranış).
 - Testler: `test_carry_elle.py` (birim 40+; uçtan uca: ELLE kapalı ile ELLE açık + müdahale yok 4 turda emirler ve dilim defteri BİREBİR AYNI; long→short
   çevirme sonrası 4 turda o coine emir / kâr al / stop yok, kullanıcı emri korunuyor; kapatınca bekleme sonrası dönüyor; sağlık kapısı "durdur" kullanıcı
-  pozisyonunu kapatmıyor; delist kullanıcınınkini kapatmıyor, botunkini kapatıyor), `test_panel` rozet. Tam takım önce / sonra karşılaştırması sürüyor (sonuç bu maddeye eklenecek).
+  pozisyonunu kapatmıyor; delist kullanıcınınkini kapatmıyor, botunkini kapatıyor), `test_panel` rozet. Tam takım önce / sonra (temiz HEAD çalışma ağacına karşı): 60 dosyanın sonucu birebir aynı; değişiklikten ÖNCE de düşen 6 dosya (accounting, compound_mode, core_modules, doc_accuracy, flags_effective, parameter_effect — veri / ortam) aynı hatayla düşüyor; `test_carry_entegrasyon` iki sürümde de 180/180 [OK], satır satır aynı. İlk koşuda `test_carry_preflight` yeni ELLE_* sabitlerinin madde atfı olmadığı için düştü → docstring eklendi, geçiyor.
 - Bilinen sınırlar: (a) kullanıcı bot coininde UYGULAMADAN bir stop koyar ve o stop botun felaket stop'uyla aynı sembolde tetiklenirse tanınmayabilir (nadir);
   (b) aynı coinde bot ile kullanıcı aynı anda sahip olamaz (hesap tek yönlü modda) — kısmi satış da coini tamamen kullanıcıya geçirir; (c) dilimden çıkan
   sermaye o dilim yenilenene kadar boş kalır (stop / kâr al çıkışıyla aynı); (d) backtest bu müdahaleleri bilmez → demo–backtest karşılaştırmasında

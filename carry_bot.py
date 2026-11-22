@@ -2914,8 +2914,12 @@ ELLE = os.getenv("CARRY_ELLE", "0") not in ("0", "false", "False")
 o coin işaretlenir; bot onu evrene almaz, dilimlerden çıkarır, emir / kâr al / stop / delist kapatması yapmaz, emirlerine dokunmaz.
 Pozisyon kapanınca (ve ELLE_BEKLEME_SN sonra) bota geri döner. 0 (varsayılan) = eski davranış, modül hiç çağrılmaz."""
 ELLE_DOSYA = os.getenv("CARRY_ELLE_DOSYA", "carry_elle.json")
+"""MADDE 830 (altyapı): elle işaret kaydı (işaretli semboller, son kontrol zamanı, bırakılanlar). Panel rozeti de buradan okur."""
 ELLE_OLAY_DOSYA = os.getenv("CARRY_ELLE_OLAY", "carry_elle_olay.jsonl")
+"""MADDE 830 (altyapı): işaret / bırakma olay defteri (botun o anki adedi dahil; müdahalenin ölçümü için)."""
 ELLE_BEKLEME_SN = float(os.getenv("CARRY_ELLE_BEKLEME_SN", "1800"))
+"""MADDE 830 (altyapı): adet 0 olduktan sonra son kullanıcı dolumundan bu kadar saniye geçmeden coin bota dönmez (long'u kapatıp
+short açarken arada tur denk gelirse sembol bota geri geçmesin). Strateji parametresi değil, ölçülmedi."""
 _ELLE: set = set()
 """Bu turda kullanıcıda olan semboller (ELLE kapalıyken hep boş -> hiçbir filtre etkisiz)."""
 
