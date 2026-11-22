@@ -46,7 +46,8 @@ def ayarlar() -> dict:
     return {"acik": _env_bool("CARRY_PANEL_ISLEM"), "pin": os.getenv("CARRY_ISLEM_PIN", "").strip(),
             "max_usd": float(os.getenv("CARRY_ISLEM_MAX_USD", "200") or 200), "mod": os.getenv("BINANCE_MODE", "demo"),
             "canli_izin": _env_bool("CARRY_ISLEM_CANLI"), "elle": os.getenv("CARRY_ELLE", "0") not in ("0", "false", "False", ""),
-            "defter": os.getenv("CARRY_ISLEM_DEFTER", os.path.join("defter", "panel_islem.jsonl"))}
+            "defter": os.getenv("CARRY_ISLEM_DEFTER", os.path.join("defter", "panel_islem.jsonl")),
+            "elle_panel": os.getenv("CARRY_ELLE_PANEL", os.path.join("defter", "carry_elle_panel.json"))}
 
 
 class Hata(Exception):
@@ -207,6 +208,18 @@ class Kapi:
         except OSError as e:
             logger.warning("panel işlem defteri yazılamadı: %s", e)
 
+    def _elle_isaret(self, sem: str) -> None:
+        """MADDE 838: bot bir sonraki kontrolü beklemeden coini kullanıcıya bıraksın (tur sırasında emir gitmez)."""
+        yol = self.ayar.get("elle_panel")
+        if not yol:
+            return
+        try:
+            import carry_elle
+            os.makedirs(os.path.dirname(yol) or ".", exist_ok=True)
+            carry_elle.panel_yaz(yol, sem, int(self.saat() * 1000))
+        except Exception as e:
+            logger.warning("elle panel işareti yazılamadı %s: %s", sem, e)
+
     def _haber(self, metin: str) -> None:
         if self.bildir:
             try:
@@ -252,6 +265,7 @@ class Kapi:
             self._pin(d.get("pin"))
             o = self.onizle(d)
             sem, b = o["sembol"], self._sembol_bilgi(o["sembol"])
+            self._elle_isaret(sem)      # emirden ÖNCE: tur sürüyorsa bot bu coine dokunmasın
             yon = "BUY" if o["yon"] == "L" else "SELL"
             kw = dict(symbol=sem, side=yon, quantity=o["adet"], newClientOrderId=_cid())
             if o["tip"] == "LIMIT":
@@ -289,6 +303,7 @@ class Kapi:
                 raise Hata(f"{sem} için açık pozisyon yok")
             y = "L" if poz["adet"] > 0 else "S"
             tp, sl = self._tpsl_denetle(y, self._isaret(sem), d.get("tp"), d.get("sl"))
+            self._elle_isaret(sem)
             out = self._tpsl_kur(sem, poz["adet"], tp, sl, b)
             self._kaydet({"olay": "tpsl", "sembol": sem, "tp": tp, "sl": sl, "adet": poz["adet"]})
             self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} TP/SL güncellendi" + (f" · TP {tp:g}" if tp else "")
@@ -313,6 +328,7 @@ class Kapi:
             q = abs(poz["adet"]) if oran >= 1 else adet_yuvarla(abs(poz["adet"]) * oran, b, piyasa=True, asagi=True)
             if q <= 0:
                 raise Hata("bu oran en küçük adımın altında")
+            self._elle_isaret(sem)
             e = self.ic.futures_create_order(symbol=sem, side="SELL" if poz["adet"] > 0 else "BUY", type="MARKET", quantity=q,
                                              reduceOnly="true", newClientOrderId=_cid())
             iptal = 0

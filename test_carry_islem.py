@@ -107,7 +107,7 @@ SAAT = [1_000_000.0]
 
 def yeni(**ek):
     a = {"acik": True, "pin": "482913", "max_usd": 200.0, "mod": "demo", "canli_izin": False, "elle": True,
-         "defter": os.path.join(d, "panel_islem.jsonl")}
+         "defter": os.path.join(d, "panel_islem.jsonl"), "elle_panel": os.path.join(d, "elle_panel.json")}
     a.update(ek)
     bil = []
     k = ci.Kapi(SahteClient(), a, bildir=bil.append, saat=lambda: SAAT[0])
@@ -174,6 +174,7 @@ kontrol("TP: SELL, reduceOnly, adet = pozisyon, tetik tick'e göre", tp["side"] 
 kontrol("SL: SELL STOP_MARKET 0.45000, işaret fiyatıyla", sl["triggerPrice"] == "0.45000" and sl["workingType"] == "MARK_PRICE")
 kontrol("yanıtta TP + SL", [x["tur"] for x in r["tpsl"]] == ["TP", "SL"])
 kontrol("deftere yazıldı", '"emir"' in open(os.path.join(d, "panel_islem.jsonl"), encoding="utf-8").read())
+kontrol("madde 838: emir anında elle panel işareti yazıldı", "AKEUSDT" in ce.panel_okuma(os.path.join(d, "elle_panel.json")))
 kontrol("Telegram bildirimi", len(bil) == 1 and "AKE LONG" in bil[0], bil)
 kontrol("yanıtta / defterde PIN yok", "482913" not in json.dumps(r) and "482913" not in open(os.path.join(d, "panel_islem.jsonl")).read())
 

@@ -2927,6 +2927,23 @@ _ELLE: set = set()
 """Bu turda kullanıcıda olan semboller (ELLE kapalıyken hep boş -> hiçbir filtre etkisiz)."""
 
 
+ELLE_PANEL_DOSYA = os.getenv("CARRY_ELLE_PANEL", os.path.join("defter", "carry_elle_panel.json"))
+"""MADDE 838 (altyapı): panel işlem kapısının (carry_islem) emir anında yazdığı işaretler — bot bir sonraki kontrolü beklemeden coini bırakır."""
+
+
+def elle_tazele() -> set:
+    """MADDE 838: API çağrısı OLMADAN işaret kümesini tazeler (kayıt + panel işaretleri) ve `_ELLE`'ye ekler. Kapalıyken boş."""
+    if not ELLE:
+        return set()
+    try:
+        import carry_elle
+        k = carry_elle.isaretliler(ELLE_DOSYA) | carry_elle.panel_isaretleri(ELLE_PANEL_DOSYA)
+    except Exception:
+        k = set()
+    _ELLE.update(k)
+    return set(_ELLE)
+
+
 def elle_guncelle(client, dry_run: bool = False) -> set:
     """MADDE 830: turun başında kullanıcı müdahalelerini bul; `_ELLE`'yi yerinde günceller. Hata akışı bozmaz: tespit
     çalışmazsa kayıttaki işaretler korunur."""
@@ -2936,7 +2953,8 @@ def elle_guncelle(client, dry_run: bool = False) -> set:
     try:
         import carry_elle
         k = carry_elle.guncelle(client, dilim_durum_oku(), ELLE_DOSYA, bildir=None if dry_run else _bildir,
-                                dry_run=dry_run, bekleme_sn=ELLE_BEKLEME_SN, olay_dosya=ELLE_OLAY_DOSYA)
+                                dry_run=dry_run, bekleme_sn=ELLE_BEKLEME_SN, olay_dosya=ELLE_OLAY_DOSYA,
+                                panel_dosya=ELLE_PANEL_DOSYA)
     except Exception as e:
         logger.error("elle müdahale kontrolü başarısız (%s) - kayıttaki işaretler kullanılıyor", e)
         try:
@@ -3928,20 +3946,106 @@ def piyasa_24s(client: ExchangeClient) -> float | None:
     return v
 
 
-def felaket_simdi_kapat(client: ExchangeClient, durum: dict, sem: str, adet: float) -> None:
-    """Fiyat stop seviyesini turlar arasında geçmişse long'u hemen kapatır ve
-    sembolü dilimlerden çıkarır (yeniden açılmasın)."""
+def _reduceonly_red_mi(ex) -> bool:
+    """MADDE 838: Binance -2022 "ReduceOnly Order is rejected"."""
+    return getattr(ex, "code", None) == -2022 or "-2022" in str(ex)
+
+
+def bot_emirlerini_temizle(client: ExchangeClient, durum: dict | None, sem: str) -> int:
+    """MADDE 838: sembolde botun (python-binance öneki) BÜTÜN açık emirlerini borsadan listeleyip iptal eder — yalnız kayıtlı olanları
+    değil (kar_al_iptal kayıtlı kimliklerle çalışır; kaydı düşmüş YETİM emir -2022'ye yol açar: açık reduceOnly toplamı pozisyonu
+    doldurunca yeni reduceOnly kapanış / kâr al reddedilir — AKE 20 Kas, madde 829). Kullanıcının ve olay modülünün emirlerine dokunmaz.
+    Kayıtları da düşer (sonraki deneme yeniden kursun). İptal sayısını döner."""
+    n = 0
     try:
-        client.close_position(sem, "SELL", adet)
+        for o in client.client.futures_get_open_orders(symbol=sem) or []:
+            if _bot_emri_mi(o):
+                try:
+                    client.client.futures_cancel_order(symbol=sem, orderId=o["orderId"]); n += 1
+                except Exception:
+                    pass
+    except Exception as e:
+        logger.warning("%s açık emirleri listelenemedi (%s)", sem, e)
+    f = getattr(client.client, "futures_get_open_algo_orders", None)
+    if f is not None:
+        try:
+            r = f(symbol=sem)
+            r = r.get("orders", r) if isinstance(r, dict) else r
+            for o in r or []:
+                if str(o.get("clientAlgoId") or "").startswith("x-Cb7ytekJ"):
+                    try:
+                        client.client.futures_cancel_algo_order(symbol=sem, algoId=o["algoId"]); n += 1
+                    except Exception:
+                        pass
+        except Exception as e:
+            logger.warning("%s algo emirleri listelenemedi (%s)", sem, e)
+    if durum is not None:
+        for k in ("kar_al", "merdiven", "felaket"):
+            (durum.get(k) or {}).pop(sem, None)
+    if n:
+        logger.warning("%s: botun %d açık emri temizlendi (reduceOnly reddi sonrası)", sem, n)
+    return n
+
+
+def _pozisyon_adedi(client: ExchangeClient, sem: str) -> float | None:
+    try:
+        for p in client.get_open_positions():
+            if p.get("symbol") == sem:
+                return float(p.get("positionAmt") or 0)
+        return 0.0
+    except Exception:
+        return None
+
+
+def guvenli_kapat(client: ExchangeClient, durum: dict | None, sem: str, yon: str, adet: float) -> str:
+    """MADDE 838: reduceOnly piyasa kapanışı; -2022 gelirse (1) botun bütün açık emirlerini temizler, (2) pozisyonu BORSADAN yeniden okur
+    (yoksa / ters yöndeyse 'yok'), (3) TAM adetle reduceOnly yeniden dener, (4) yine -2022 ise aynı TAM adetle reduceOnly OLMADAN piyasa
+    emri (emirler temizlendiği için ters pozisyona geçemez; adet borsadan taze). Dönüş: 'kapandi' / 'temizlikle' / 'reduceonlysuz' / 'yok'.
+    Başka hata yükselir."""
+    try:
+        client.close_position(sem, yon, adet)
+        return "kapandi"
+    except Exception as ex:
+        if not _reduceonly_red_mi(ex):
+            raise
+        logger.error("%s kapanışı -2022 ile reddedildi - botun emirleri temizlenip yeniden deneniyor", sem)
+    bot_emirlerini_temizle(client, durum, sem)
+    a = _pozisyon_adedi(client, sem)
+    if a is None:
+        raise RuntimeError(f"{sem} pozisyonu yeniden okunamadı")
+    if a == 0 or (a > 0) != (yon == "SELL"):
+        logger.warning("%s: kapatılacak pozisyon borsada yok (adet %s) - zaten kapanmış", sem, a)
+        return "yok"
+    q = abs(a)
+    try:
+        client.close_position(sem, yon, q)
+        return "temizlikle"
+    except Exception as ex:
+        if not _reduceonly_red_mi(ex):
+            raise
+    logger.error("%s: reduceOnly yine reddedildi - TAM adet (%s) reduceOnly'siz piyasa emriyle kapatılıyor", sem, q)
+    client.client.futures_create_order(symbol=sem, side=yon, type="MARKET", quantity=q)
+    return "reduceonlysuz"
+
+
+def felaket_simdi_kapat(client: ExchangeClient, durum: dict, sem: str, adet: float) -> bool:
+    """Fiyat stop seviyesini turlar arasında geçmişse long'u hemen kapatır ve
+    sembolü dilimlerden çıkarır (yeniden açılmasın). Kapandıysa (ya da zaten yoksa) True.
+    MADDE 838: -2022'de guvenli_kapat (temizle + taze adet + gerekirse reduceOnly'siz)."""
+    try:
+        sonuc = guvenli_kapat(client, durum, sem, "SELL", adet)
         for hedef in durum.get("dilimler", {}).values():
             hedef.pop(sem, None)
         logger.error("24 SA DÜŞÜŞ STOP'U: %s seviyenin altında bulundu - long piyasa "
-                     "emriyle kapatıldı, dilimlerden çıkarıldı", sem)
-        _bildir(f"🛑 STOP: {sem} long piyasa emriyle kapatıldı (24 sa düşüş stop'u)")
+                     "emriyle kapatıldı, dilimlerden çıkarıldı (%s)", sem, sonuc)
+        _bildir(f"🛑 STOP: {sem} long piyasa emriyle kapatıldı (24 sa düşüş stop'u)"
+                + ("" if sonuc == "kapandi" else f" — ilk deneme reddedildi, {sonuc}"))
+        return True
     except Exception as ex:
         logger.error("24 SA DÜŞÜŞ STOP'U: %s seviyenin altında ama KAPATILAMADI (%s)", sem, ex)
         _bildir(f"STOP: {sem} kapatılmalıydı ama KAPATILAMADI ({type(ex).__name__}) — Binance'te elle kontrol edin",
                 acil=True, anahtar=f"stop_hata_{sem}", kisma_sn=3600)
+        return False
 
 
 def felaket_tetiklendi_mi(e: dict) -> bool:
@@ -4134,12 +4238,15 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
         return 0
     kar_al_iptal(client, durum)
     try:
+        elle_tazele()   # madde 838: tur sırasında panelden alınan coin
         pozisyonlar = [p for p in client.get_open_positions() if p.get("symbol") not in _ELLE]   # madde 830
     except Exception as ex:
         logger.error("kâr al: açık pozisyonlar OKUNAMADI (%s) - hiçbir TP "
                      "konulamadı, pozisyonlar korumasız", ex)
         _tp_kurulum_kaydet(-1, 0, -1)
         return 0
+
+    stop_kapandi: set = set()   # madde 838: bu turda stop'la kapanan -> kâr al KONMAZ (eskiden kapalı pozisyona TP deneniyordu)
 
     def _felaket_koy(sem, giris, adet, pr, long_mu=False) -> None:
         """Felaket STOP_MARKET (reduceOnly, MARK). Hata kâr al'ı bozmaz ama
@@ -4160,7 +4267,8 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                         if _p is None or _p <= -LONG_24S_PIYASA:
                             logger.warning("KOŞULLU 24 SA STOP: %s 24 sa %+.1f%%, piyasa %s -> kapatılıyor", sem, _g * 100,
                                            "ölçülemedi" if _p is None else f"{_p * 100:+.1f}%")
-                            felaket_simdi_kapat(client, durum, sem, adet)
+                            if felaket_simdi_kapat(client, durum, sem, adet):
+                                stop_kapandi.add(sem)
                             return
                         logger.info("KOŞULLU 24 SA STOP: %s 24 sa %+.1f%% ama piyasa %+.1f%% (eşik −%.0f%%) -> tutuluyor",
                                     sem, _g * 100, _p * 100, LONG_24S_PIYASA * 100)
@@ -4178,7 +4286,8 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                 if _fiyat is not None and _fiyat <= _tetik:
                     # Çöküş turlar arasında seviyeyi zaten geçmiş: bekleyen stop
                     # hemen tetiklenir/reddedilir (-2021). Motor bu barda çıkardı.
-                    felaket_simdi_kapat(client, durum, sem, adet)
+                    if felaket_simdi_kapat(client, durum, sem, adet):
+                        stop_kapandi.add(sem)
                     return
             else:
                 _tetik = giris * (1 + SHORT_FELAKET)
@@ -4217,6 +4326,8 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
                 _felaket_koy(sem, giris, adet, pr)
             if miktar > 0 and (LONG_FELAKET > 0 or LONG_24S > 0) and sem not in durum.get("felaket", {}):
                 _felaket_koy(sem, giris, adet, pr, long_mu=True)
+            if sem in stop_kapandi:
+                return (None, False, "stop ile kapandı")
             if (KAR_AL_ORAN if miktar > 0 else KAR_AL_SHORT) <= 0:
                 return (sem, True, "")
             _pp = pr.get('price_precision', 2)
@@ -4248,6 +4359,8 @@ def kar_al_kur(client: ExchangeClient, durum: dict) -> int:
             _emir_kaydet("TP", sem, yon, adet, limit=fiyat, oid=_oid(e), giris=giris)
             return (sem, True, "")
         except Exception as ex:
+            if _reduceonly_red_mi(ex):   # madde 838: yetim emir temizlenir; tek seferlik yeniden deneme temiz sayfayla kurar
+                bot_emirlerini_temizle(client, durum, sem)
             return (sem, False, str(ex)[:80])
 
     kurulan = 0
@@ -4866,6 +4979,14 @@ def bir_tur(client: ExchangeClient, dry_run: bool = False) -> dict:
         return {"bakiye": bakiye, "emir": len(emirler), "hedef": hedef,
                 "dilim": sira, "saglik": s_durum}
 
+    if ELLE:   # madde 838: tur sürerken panelden / kayıttan gelen yeni işaret -> o coine emir GİTMEZ (yarış penceresi)
+        _yeni = elle_tazele() - set()
+        _at = [e for e in emirler if e[0] in _yeni]
+        if _at:
+            logger.warning("elle: tur sırasında işaretlenen %s - emirleri atlandı", ", ".join(sorted({e[0] for e in _at})))
+            emirler = [e for e in emirler if e[0] not in _yeni]
+            for _s in {e[0] for e in _at}:
+                hedef.pop(_s, None); mevcut.pop(_s, None)
     basarili = _emirleri_gonder(client, emirler, mevcut, kapat_adet=tam_kapanis_adetleri(client, hedef, emirler))
     logger.info("%d/%d emir gönderildi", basarili, len(emirler))
     # MADDE 208: KÂR AL, DİLİM DEFTERİNİ REHİN ALAMAZ. Eskiden sıra

@@ -9439,3 +9439,25 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   (8) grafik altında ▲ / ▼ açıklaması (yalnız dolum varsa). (9) basılı tutma tamamlanınca kısa titreşim (destekleyen telefonda).
 - Testler: `test_panel_islem` (satır hücresine dokunma, aria-modal + odak, virgüllü limit 0,48 → 0.48, ±%20 uyarısı, yanlış taraf TP uyarısı ve kalkması,
   isteğe bağlı AXE_JS=… ile pencerede axe ihlali 0), `test_panel_piyasa` (yıldız aria-pressed, ≥ 40 px). Panel / kapı / elle testleri geçiyor.
+
+## Madde 838 — Bot ve elle kısmının eksikleri giderildi (kullanıcı isteği, 2026-11-22: "eksikleri gider bot ve elle kısmının")
+- BOT, -2022 (AKE 20 Kas, madde 829): `guvenli_kapat` — reduceOnly kapanış -2022 ile reddedilirse (1) sembolde botun BÜTÜN açık emirleri borsadan listelenip
+  iptal edilir (kayıtlı olmayan YETİM emirler dahil; kullanıcının ve olay modülünün emirlerine dokunulmaz; kayıtlar düşülür), (2) pozisyon borsadan taze
+  okunur (yoksa / ters yöndeyse "yok", emir gönderilmez), (3) TAM adetle reduceOnly yeniden denenir, (4) yine -2022 ise aynı TAM adetle reduceOnly'siz piyasa
+  emri. Başka hata (ör. -1003) yükselir, reduceOnly'siz emir gönderilmez. `felaket_simdi_kapat` artık bunu kullanır ve True/False döner; bildirim ilk
+  denemenin reddedildiğini söyler; kapanamazsa ACİL.
+- BOT, kâr al: stop'la kapanan pozisyona TP deneniyordu (kapalı pozisyona reduceOnly → sahte "KÂR AL EMRİ KONULAMADI") → artık atlanır.
+  TP -2022 alırsa aynı yetim temizliği yapılır, mevcut tek seferlik yeniden deneme temiz sayfayla kurar.
+- ELLE, yarış penceresi: kullanıcı tur SÜRERKEN panelden işlem yaparsa bot o tur coine emir gönderebiliyordu (işaret yalnız tur başında okunuyordu).
+  Panel kapısı emir / kapat / TP-stop anında `defter/carry_elle_panel.json`'a yazar; bot emir göndermeden hemen önce ve kâr al kurulumunda bu dosyayı
+  (API çağrısı olmadan) okur, o coinin emirlerini atar; `carry_elle.guncelle` panel işaretini emir geçmişi görünmese de işaret sayar (son kullanıcı
+  zamanı olarak da: bırakma bekler). Bırakmadan önceki panel kaydı yeniden saymaz; 24 sa'ten eski panel kaydı tek başına sayılmaz. Panel rozeti de bu
+  dosyayı okur.
+- Testler: `test_carry_kapanis.py` (YENİ; sahte borsa Binance'in reduceOnly kuralını uygular: açık reduceOnly toplamı + yeni > pozisyon → -2022):
+  normal kapanış, yetim emir → temizle + tam adet, kullanıcı / olay emirleri yerinde, kullanıcının reduceOnly'si yer kaplıyorsa reduceOnly'siz kapanış,
+  iki kez nedensiz red, pozisyon yok / ters, taze adet, başka hata yükselir; `felaket_simdi_kapat` True/False + bildirim; `kar_al_kur`: yetim emre
+  rağmen TP kurulur, AKE senaryosu (coin −%48 / piyasa −%10, yetim TP) stop kapatır ve TP denenmez. `test_carry_elle` A11 (panel işaretleri) + B12
+  (KONTROL GRUBU: panel işlemi yokken bot o coine emir gönderiyor; tur ortasında panel işlemiyle göndermiyor, kâr al konmuyor, sonraki turda kayıtlı
+  işaret). `test_carry_islem`: emir anında panel işareti.
+- AÇIK: -2022'nin kesin kök nedeni sunucu teşhisi (teshis_reduceonly.py) çalıştırılmadan bilinemez; düzeltme iki olasılığı (yetim emir / borsa tuhaflığı)
+  da kapsıyor.

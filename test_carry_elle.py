@@ -219,6 +219,24 @@ kontrol("açılıştan 10 dk sonraki elle işlem ilk turda yakalanır",
         ce.guncelle(c4, {"dilimler": {}}, DOS4, simdi_ms=T0 + H) == {"YUSDT"})
 
 
+print("A11) panel işaretleri (madde 838)")
+d5 = tempfile.mkdtemp(); K5 = os.path.join(d5, "e.json"); P5 = os.path.join(d5, "p.json")
+ce.kayit_yaz(K5, {"elle": {}, "birakilan": {}, "son_kontrol_ms": T0})
+ce.panel_yaz(P5, "PNLUSDT", T0 + H)
+kontrol("panel_yaz / panel_isaretleri", ce.panel_isaretleri(P5, K5, simdi_ms=T0 + 2 * H) == {"PNLUSDT"})
+kontrol("24 sa sonra panel işareti tek başına sayılmaz", ce.panel_isaretleri(P5, K5, simdi_ms=T0 + 30 * H) == set())
+c5 = Cl(); c5.poz = {"PNLUSDT": 3.0}
+k = ce.guncelle(c5, {"dilimler": {}}, K5, simdi_ms=T0 + 2 * H, panel_dosya=P5)
+kontrol("panel işlemi emir geçmişinde görünmese de coin işaretlenir", k == {"PNLUSDT"} and ce.kayit_oku(K5)["elle"]["PNLUSDT"]["ilk_emir"] == "panel")
+c5.poz = {}
+k = ce.guncelle(c5, {"dilimler": {}}, K5, simdi_ms=T0 + 4 * H, panel_dosya=P5)
+kontrol("kapatınca bekleme sonrası bırakılır", k == set())
+kontrol("bırakmadan önceki panel işareti yeniden saymaz", ce.panel_isaretleri(P5, K5, simdi_ms=T0 + 5 * H) == set()
+        and ce.guncelle(c5, {"dilimler": {}}, K5, simdi_ms=T0 + 5 * H, panel_dosya=P5) == set())
+ce.panel_yaz(P5, "PNLUSDT", T0 + 6 * H)
+kontrol("bırakmadan SONRAKİ panel işlemi yeniden işaretler", ce.panel_isaretleri(P5, K5, simdi_ms=T0 + 6 * H + 1) == {"PNLUSDT"})
+
+
 # ---------------------------------------------------------------- B) UÇTAN UCA
 print("\nB) bir_tur uçtan uca (test_carry_entegrasyon sahte borsası)")
 _src = open("test_carry_entegrasyon.py", encoding="utf-8").read()
@@ -604,6 +622,47 @@ kontrol("dolmamış limit + stop'un yerinde", not _kullanici_emirlerine_dokunuld
 kontrol("dolmamış emir müdahale sayılmadı (pozisyon yok)", BOS not in cb._ELLE)
 kontrol("bot hiçbir senaryoda kullanıcının algo emrini iptal etmedi",
         not any(a in (7001, 7101) for _, a in cc.client.algo_iptal), f"({cc.client.algo_iptal})")
+cb.ELLE = False; cb._ELLE.clear()
+
+print("B12) tur SIRASINDA panelden işlem: o coine emir gitmez, kâr al konmaz (madde 838)")
+
+
+def _b12(panel_isle: bool):
+    ortam(True)
+    cb.ELLE_PANEL_DOSYA = os.path.join(os.path.dirname(cb.ELLE_DOSYA), "panel.json")
+    c = ElleClient(); cb.bir_tur(c, dry_run=False)
+    c.pozisyonlari_ayarla(cb.toplam_hedef_tut(cb.dilim_durum_oku(), dict(c.client._fiyat))); cb.bir_tur(c, dry_run=False)
+    c.pozisyonlari_ayarla(cb.toplam_hedef_tut(cb.dilim_durum_oku(), dict(c.client._fiyat)))
+    sem = sorted(p_["symbol"] for p_ in c._pozisyonlar)[0]
+    for p_ in c._pozisyonlar:                          # bot bu coine emir göndermek zorunda kalsın: pozisyonu yarıya indir
+        if p_["symbol"] == sem:
+            p_["positionAmt"] = str(float(p_["positionAmt"]) / 2)
+    orj = cb.elle_guncelle
+
+    def arada(client, dry_run=False):              # tur başı kontrol BİTTİ; tam o sırada kullanıcı panelden işlem yapıyor
+        r = orj(client, dry_run=dry_run)
+        if panel_isle:
+            ce.panel_yaz(cb.ELLE_PANEL_DOSYA, sem)
+        return r
+    cb.elle_guncelle = arada
+    g0, tp0 = len(c.client.gonderilen), set(c.client.kar_al_emirleri)
+    try:
+        cb.bir_tur(c, dry_run=False)
+    finally:
+        cb.elle_guncelle = orj
+    emir = [x for x in c.client.gonderilen[g0:] if x[0] == sem]
+    tp = [k_ for k_ in set(c.client.kar_al_emirleri) - tp0 if c.client.kar_al_emirleri[k_][0] == sem]
+    return c, sem, emir, tp, len(c.client.gonderilen) - g0
+
+
+_, s0, e0, t0_, _ = _b12(False)
+kontrol("kontrol grubu: panel işlemi yokken bot bu coine emir gönderiyor (senaryo geçerli)", len(e0) > 0, s0)
+c12, S12, e1, t1, n1 = _b12(True)
+kontrol("tur sırasında panelden alınan coine emir GİTMEDİ", e1 == [], e1)
+kontrol("o coine kâr al konmadı", t1 == [])
+kontrol("diğer coinlerde tur normal işledi", n1 > 0)
+cb.bir_tur(c12, dry_run=False)
+kontrol("bir sonraki turda coin kayıtlı işaret olur", S12 in ce.isaretliler(cb.ELLE_DOSYA))
 cb.ELLE = False; cb._ELLE.clear()
 
 print("B6) varsayılan KAPALI")

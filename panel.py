@@ -134,7 +134,7 @@ def _env(klasor: str) -> dict:
                 if k.strip() in ("BINANCE_MODE", "CARRY_PROFIL", "CARRY_BILDIRIM_AD", "CARRY_SERMAYE_OLCEK", "CARRY_LONG_24S",
                                  "CARRY_REBALANCE_H", "CARRY_N_DILIM", "CARRY_DILIM_LOG",
                                  "CARRY_MERDIVEN", "CARRY_MERDIVEN_SHORT", "CARRY_KAR_AL", "CARRY_KAR_AL_SHORT",
-                                 "CARRY_GIRIS_DILIM", "CARRY_SHORT_ARA_SAAT", "CARRY_ELLE_DOSYA"):   # madde 790: 788 bayrağı panelde okunmuyordu   # anahtarlar OKUNMAZ
+                                 "CARRY_GIRIS_DILIM", "CARRY_SHORT_ARA_SAAT", "CARRY_ELLE_DOSYA", "CARRY_ELLE_PANEL"):   # madde 790: 788 bayrağı panelde okunmuyordu   # anahtarlar OKUNMAZ
                     d[k.strip()] = v.split("#")[0].strip()
     except OSError:
         pass
@@ -684,9 +684,16 @@ def elle_semboller(klasor: str) -> set:
     yol = yol if os.path.isabs(yol) else os.path.join(klasor, yol)
     try:
         with open(yol, encoding="utf-8") as f:
-            return set((json.load(f) or {}).get("elle") or {})
+            k = set((json.load(f) or {}).get("elle") or {})
     except (OSError, ValueError, AttributeError, TypeError):
-        return set()
+        k = set()
+    try:      # madde 838: panelden yeni alınan coin, bot bir sonraki kontrolü yapmadan da rozetli görünsün
+        import carry_elle
+        py = _env(klasor).get("CARRY_ELLE_PANEL") or os.path.join("defter", "carry_elle_panel.json")
+        k |= carry_elle.panel_isaretleri(py if os.path.isabs(py) else os.path.join(klasor, py), yol)
+    except Exception:
+        pass
+    return k
 
 
 def coin_ozet(klasor: str, an: dict | None) -> list[dict] | None:

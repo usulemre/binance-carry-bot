@@ -106,6 +106,38 @@ def baslat(dosya: str, simdi_ms: int | None = None) -> bool:
     return True
 
 
+def panel_yaz(dosya: str, sem: str, simdi_ms: int | None = None) -> None:
+    """MADDE 838: panel işlem kapısı emir anında yazar: {sembol: zaman_ms}. 2 günden eski kayıtlar atılır."""
+    t = int(simdi_ms if simdi_ms is not None else time.time() * 1000)
+    try:
+        with open(dosya, encoding="utf-8") as fh:
+            d = json.load(fh)
+        d = d if isinstance(d, dict) else {}
+    except (OSError, ValueError):
+        d = {}
+    d = {k: v for k, v in d.items() if t - int(v) < 2 * 86400 * 1000}
+    d[sem] = t
+    kayit_yaz(dosya, d)
+
+
+def panel_okuma(dosya: str | None) -> dict:
+    if not dosya:
+        return {}
+    try:
+        with open(dosya, encoding="utf-8") as fh:
+            d = json.load(fh)
+        return {k: int(v) for k, v in d.items()} if isinstance(d, dict) else {}
+    except (OSError, ValueError, TypeError):
+        return {}
+
+
+def panel_isaretleri(dosya: str | None, kayit_dosya: str | None = None, simdi_ms: int | None = None) -> set:
+    """MADDE 838: son 24 sa içinde panelden işlem görmüş ve o zamandan beri bota BIRAKILMAMIŞ semboller (API çağrısı yok)."""
+    t = int(simdi_ms if simdi_ms is not None else time.time() * 1000)
+    birak = kayit_oku(kayit_dosya).get("birakilan", {}) if kayit_dosya else {}
+    return {s for s, v in panel_okuma(dosya).items() if t - v < 86400 * 1000 and v > int(birak.get(s, 0))}
+
+
 def isaretliler(dosya: str) -> set:
     return set(kayit_oku(dosya).get("elle") or {})
 
@@ -181,7 +213,7 @@ def _bot_emirlerini_iptal(ic, sem: str) -> int:
 
 
 def guncelle(client, durum: dict, dosya: str, simdi_ms: int | None = None, bildir=None, dry_run: bool = False,
-             bekleme_sn: float = 1800.0, olay_dosya: str | None = None) -> set:
+             bekleme_sn: float = 1800.0, olay_dosya: str | None = None, panel_dosya: str | None = None) -> set:
     """Kullanıcı müdahalelerini bulur, işaretler / bırakır. İşaretli sembol kümesini döner.
 
     `durum` yalnız OKUNUR (felaket algo kimlikleri, dilim sembolleri, botun adedi); dilimden çıkarma `dilimden_cikar` ile
@@ -207,7 +239,8 @@ def guncelle(client, durum: dict, dosya: str, simdi_ms: int | None = None, bildi
             kayit_yaz(dosya, st)
         return set(elle)
     dilim_sem = {s for h in (durum.get("dilimler") or {}).values() for s in (h or {})}
-    aday = sorted(set(pozlar) | dilim_sem | set(elle))
+    panel = panel_okuma(panel_dosya)          # madde 838: panelden işlem = kesin kullanıcı işareti (dolum beklenmez)
+    aday = sorted(set(pozlar) | dilim_sem | set(elle) | {s for s, v in panel.items() if v >= int(son) - ARALIK_PAYI_MS})
     bot_gercek = set()
     for sem, aid in (durum.get("felaket") or {}).items():
         if sem in aday and aid is not None:
@@ -228,6 +261,9 @@ def guncelle(client, durum: dict, dosya: str, simdi_ms: int | None = None, bildi
         esik = int(birak.get(sem, 0))
         el = [o for o in emirler if _dolan(o) > 0 and _zaman(o) >= bas and _zaman(o) > esik
               and emir_sahibi(o, bot_gercek) == "kullanici"]
+        pt = panel.get(sem, 0)
+        if pt >= bas and pt > esik:     # panel işlemi: emir geçmişi henüz göstermese de işaret
+            el = el + [{"clientOrderId": "panel", "updateTime": pt, "time": pt, "side": None}]
         if not el:
             continue
         son_el = max(_zaman(o) for o in el)
