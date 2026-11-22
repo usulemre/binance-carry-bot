@@ -9530,3 +9530,12 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   `elleMi` kapının listesindeki (coin_ozet'te henüz olmayan) yeni coini de elle sayar → rozet ve açıklama kutusu ilk andan itibaren.
 - Test: test_panel sayfa denetimi; betik `node --check` temiz; node'da birleştirme benzetimi (BLESS güncellenir, VELVET eklenir, kapanmış elle
   coin çıkar, bot coini durur, ikinci çağrı değişiklik yok).
+
+## Madde 845 — Elle pozisyonun alış fiyatı Piyasa sekmesi açılmadan gelmiyordu (kullanıcı, 2026-11-22: "aldığım fiyat anında gelmiyor, illa piyasa açıp girdikten sonra geliyor")
+- Kök neden: işlem kapısı durumu (`islDurum`, ISL_DURUM) yalnız `piyasaBagla` içinde, yani Piyasa sekmesi açılınca soruluyordu. ISL_DURUM boşken
+  `elleYukle` hiç çalışmıyor; Pozisyonlar → elle coin ayrıntısında "senin işlemlerin / kimden, kaçtan" (madde 843) ve 844'ün canlı birleştirmesi
+  Piyasa'ya bir kez girilene kadar boş kalıyordu.
+- Düzeltme: `yukle` (açılışta ve dakikada bir) kapı durumunu da sorar, açıksa elle özetini hemen yükler; elle coin ayrıntısı açılınca özet 5 sn'den
+  eskiyse tazelenir.
+- Ders: iki kez tek satırlık JS'nin sonuna `// yorum` eklenip aynı satırdaki kod yorum içinde kaldı (844 try/catch, 845 sheetAc) — `node --check`
+  ikisini de yayından önce yakaladı. Sunucuda node yok; sözdizimi denetimi yayından önce Mac'te koşulur.

@@ -2207,7 +2207,10 @@ function pozSayfa(k){
 }
 // MADDE 757: pozisyon ayrıntısı — alttan açılan sayfa (bottom sheet); canlı fiyatla saniyede bir güncellenir
 let SHEET = null;
-function sheetAc(s){ SHEET = s; const k = VERI.kurulumlar[secili]; if (!k.pozisyonlar[s]) return; const el = $("#sheet"); el.hidden = false; el.innerHTML = `<div class="shb" onclick="sheetKapat()"></div><div class="shp" role="dialog" aria-label="${s.replace(/USDT$/,"")} ayrıntı"><div class="shh"></div><div id="sheetic">${sheetIc(s, k.pozisyonlar[s], k)}</div></div>`; document.body.style.overflow = "hidden"; }
+function sheetAc(s){ SHEET = s; const k = VERI.kurulumlar[secili]; if (!k.pozisyonlar[s]) return;
+  // madde 845: elle coin ayrıntısı açılınca alış fiyatı / dolumlar hemen tazelenir
+  if (elleMi(k, s) && ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 5e3) elleYukle();
+  const el = $("#sheet"); el.hidden = false; el.innerHTML = `<div class="shb" onclick="sheetKapat()"></div><div class="shp" role="dialog" aria-label="${s.replace(/USDT$/,"")} ayrıntı"><div class="shh"></div><div id="sheetic">${sheetIc(s, k.pozisyonlar[s], k)}</div></div>`; document.body.style.overflow = "hidden"; }
 function sheetKapat(){ SHEET = null; CIKIS_TUM = false; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; }
 addEventListener("keydown", e=>{ if (e.key === "Escape" && SHEET) sheetKapat(); });
 function sheetIc(s, p, k){
@@ -2549,6 +2552,9 @@ async function yukle(){
   if (VERI_GOMULU){ VERI = gorunum(VERI_GOMULU); ciz(); return; }
   // madde 844: yeni veri gelince elle pozisyonlar yeniden birleştirilir
   try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = gorunum(await r.json()); elleBirlestir(); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
+  // madde 845: işlem kapısı durumu sayfa açılışında da sorulur (eskiden yalnız Piyasa sekmesinde) — yoksa elle pozisyonların alış fiyatı /
+  // dolumları Piyasa açılmadan hiç yüklenmiyordu. Açıksa elle özeti hemen yüklenir.
+  if (!VERI_GOMULU && (!ISL_DURUM || Date.now() - (islDurum.t||0) > 60e3)){ islDurum.t = Date.now(); islDurum().then(()=>{ if (ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle(); }); }
 }
 yukle(); if(!VERI_GOMULU){ setInterval(yukle, 60000); setInterval(canliBoya, 1000); }
 if(!VERI_GOMULU && "serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }
