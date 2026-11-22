@@ -9497,3 +9497,12 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
 - Düzeltme: `veri()` çıkış takvimini `elle_semboller` (carry_elle.json + panel işaretleri) ile süzer; aynı süzme `tp_giris`'i de kapsar
   (ondan sonra hesaplanıyor). Bot coinlerinin takvimi değişmez.
 - Test: `test_panel` — kayıtta elle olan ve yalnız panel işareti olan coin için /api/veri `cikis`'inde yok, bot coini duruyor.
+
+## Madde 842 — Elle coinin pozisyon ayrıntısı açıklayıcı hale getirildi (kullanıcı, 2026-11-22: "şimdi görünüyor ama çok açıklayıcı değil")
+- 841'den sonra elle coinin ayrıntı sayfasında çıkış takvimi kayboldu ama yerine bir şey gelmedi; "Kâr al hedefi" kutusu ve koşullu stop bölümü hâlâ
+  botun kurallarını gösteriyordu (elle coine uygulanmıyor). Listede coinin elle olduğu yalnız Piyasa sekmesinde görünüyordu.
+- Pozisyonlar listesinde satıra "✋ elle" rozeti (bot stop çipi gizli). Ayrıntı sayfasında: "Kâr al hedefi" yerine "Yöneten: ✋ sen"; koşullu stop
+  bölümü ve "neden hâlâ açık" gizli; çıkış takvimi yerine açıklama kutusu: bot ekleme / kapatma / kâr al / stop / süre dolunca yenileme yapmıyor,
+  pozisyon sen kapatana kadar kalır, işlem anında botun payı da sana geçti (coin başına tek pozisyon), tamamen kapatınca 30 dk sonra bota döner;
+  işlem kapısı açıksa "İşlem penceresini aç (kapat · TP · stop)" düğmesi. Elle bilgisi coin_ozet "elle" bayrağından (carry_elle.json + panel işaretleri).
+- Test: test_panel sayfa denetimi; sayfa betiği `node --check` ile sözdizimi temiz.

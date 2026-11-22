@@ -452,6 +452,10 @@ os.makedirs(os.path.join(_k87, "defter"), exist_ok=True)
 import time as _zm41; json.dump({"XUSDT": int(_zm41.time() * 1000)}, open(os.path.join(_k87, "defter", "carry_elle_panel.json"), "w"))
 _v41 = panel.uygulama([_k87]).test_client().get("/api/veri").get_json()["kurulumlar"][0].get("cikis") or {}
 kontrol("madde 841: panelden yeni alınan coin (yalnız panel işareti) de süre göstermez", "XUSDT" not in _v41 and "AUSDT" in _v41, _v41)
+_s42 = app.get("/").data.decode()
+kontrol("madde 842: elle coin ayrıntısında açıklama kutusu, satırda rozet, bot hedefi / süresi gizli",
+        all(x in _s42 for x in ("function elleMi", "function elleKutu", "pozisyonunu sen yönetiyorsun", "elle ? elleKutu(s, p) : cikisIc(s, usd, k)",
+                                 'kutu("Yöneten"', "✋ elle</span>`")))
 _h790 = app.get("/").data.decode()
 kontrol("madde 790: çıkış takvimi tur başına, 'yine seçilirse kalır' açıklaması, kademe + kâr al kutusu",
         "turun hepsini göster" in _h790 and "dilime bölündü" in _h790 and "dilim payı" in _h790 and "yine seçilirse" in _h790 and "Kademe · kâr al" in _h790 and "satılacak</span>" not in _h790)
