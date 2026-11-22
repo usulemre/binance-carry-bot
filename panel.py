@@ -1059,7 +1059,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyr .yd{position:relative;z-index:1;width:40px;height:40px;margin:0 -8px 0 -10px;border:0;background:none;color:var(--soluk);font-size:18px;cursor:pointer;padding:0;line-height:1;border-radius:10px}.pyr .yd:focus-visible{outline:2px solid var(--vurgu)}.pyr .yd.on{color:var(--uyari)}
 .pyr a{color:var(--yazi);text-decoration:none;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pyr .r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.pyr .k2{color:var(--soluk);font-size:12px}
-.pyr .rz{font-size:10.5px;font-weight:650;padding:1px 5px;border-radius:6px;margin-left:5px;background:var(--kart2);color:var(--soluk)}
+.pyr .rz{font-size:10.5px;font-weight:650;padding:1px 5px;border-radius:6px;margin-left:5px;background:var(--kart2);color:var(--soluk)}.pyr .rz.yok{background:none;border:1px dashed var(--cizgi);font-weight:600}
 .pyr .art{color:var(--art)}.pyr .eks{color:var(--eks)}
 .pyr.ust{background:none;color:var(--soluk);font-size:11.5px;padding-top:0;padding-bottom:0}
 .fl-a{animation:fla .8s}.fl-e{animation:fle .8s}
@@ -1124,7 +1124,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .ibtn.tut::before{content:"";position:absolute;inset:0;width:0;background:rgba(255,255,255,.28);transition:width 0s}.isl .ibtn.tut.dolu::before{width:100%;transition:width .7s linear}
 .elp{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--kart2);font-size:13.5px}.elh{font-weight:700;margin-bottom:6px}.elr{display:flex;justify-content:space-between;gap:10px;padding:5px 0;line-height:1.4}.elr .r{text-align:right}.eld{margin-top:8px}.eld summary{cursor:pointer;color:var(--soluk);font-size:13px;padding:4px 0}
 .elk{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:13.5px;line-height:1.5;background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.elk li{margin:3px 0}.elkb{margin-top:10px;width:100%;min-height:44px;border:0;border-radius:10px;font:inherit;font-weight:600;background:var(--vurgu);color:var(--bg);cursor:pointer}
-.isl .ibtn.tut span{position:relative}.isl .isah{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45}.isl .isah.sen{background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.isl .isah.bot{background:color-mix(in srgb,var(--uyari) 14%,transparent)}
+.isl .ibtn.tut span{position:relative}.isl .isah{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45}.isl .isah.sen{background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.isl .isah.bot{background:color-mix(in srgb,var(--uyari) 14%,transparent)}.isl .isah.yok{background:var(--kart2);font-size:13.5px}.isl .ibtn.ikinci,.isl .ibtn.ikinci:disabled{background:var(--kart2);color:var(--soluk);opacity:1}
 .isl .ibek{align-items:center}.isl .ibx{height:36px;padding:0 14px;border-radius:10px;border:1px solid color-mix(in srgb,var(--eks) 45%,transparent);background:var(--kart);color:var(--fe);font:inherit;font-weight:650;cursor:pointer}.isl .iacil.kucuk2{height:auto;min-height:44px;padding:8px 14px;margin-top:8px}.isl .iacil.kucuk2 i{text-align:right}.isl .art,.pyk .art{color:var(--fa)}.isl .eks,.pyk .eks{color:var(--fe)}.isl .shx{width:44px;height:44px}.isl .iuyr{color:var(--uyari);font-size:12.5px;margin:8px 0 0}
 .isl .igl3{display:flex;gap:14px;font-size:11.5px;color:var(--soluk);padding:2px 8px 6px}.isl .ibtn:focus-visible,.isl button:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.isl .ibtn.tut.dolu::before{transition:none}}
@@ -1347,7 +1347,7 @@ function piyRozet(k){   // botun / senin bu coindeki durumun
 function piySatir(o, R){
   const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, "");
   return `<div class="pyr ${fl>0?"fl-a":fl<0?"fl-e":""}"><button class="yd ${yd?"on":""}" title="${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" aria-label="${ad} ${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" aria-pressed="${yd}" onclick="piyIzle('${o.s}')">${yd?"★":"☆"}</button>
-    <span style="min-width:0;display:flex;align-items:center">${ISL_DURUM && ISL_DURUM.acik ? `<a href="#piyasa" onclick="islAc('${o.s}');return false" title="al / sat">${ad}</a>` : `<a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>`}${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}</span>
+    <span style="min-width:0;display:flex;align-items:center">${ISL_DURUM && ISL_DURUM.acik ? `<a href="#piyasa" onclick="islAc('${o.s}');return false" title="al / sat">${ad}</a>` : `<a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>`}${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}${ISL_DURUM && ISL_DURUM.acik && islYok(o.s) ? `<span class="rz yok" title="bu hesapta işlem görmüyor">${ISL_DURUM.mod=="live"?"hesapta yok":"demoda yok"}</span>` : ""}</span>
     <span class="r">${piyFiyat(o.f)}</span><span class="r ${o.d>0?"art":o.d<0?"eks":""}"><b>${piyYz(o.d)}</b></span>
     <span class="r k2 hc">${piyHac(o.q)}</span><span class="r k2 ${o.r>0?"":o.r<0?"eks":""}" title="son funding oranı (8 sa)">${o.r==null?"—":piyYz(o.r*100, 3)}</span></div>`;
 }
@@ -1458,11 +1458,13 @@ function piyasaBoya(zorla){
 // Her emir / kapat / TP-SL / iptal PIN ister (PIN yalnız bu pencere açıkken bellekte; kaydedilmez). Emirler `panel_` önekli gider ->
 // bot coini kullanıcıya bırakır (madde 830). Hesap fiyatı (demo) piyasa listesindeki gerçek fiyattan farklı olabilir: önizleme hesabın
 // işaret fiyatını gösterir.
-let ISL_DURUM = null, ISL = null;
+let ISL_DURUM = null, ISL = null, ISL_SEM = null;   // ISL_SEM: hesapta işlem gören sözleşmeler (madde 847)
+const islYok = s => !!(ISL_SEM && !ISL_SEM.has(s));
 const ea = v => String(v==null?"":v).replace(/[&"<>']/g, c=>({"&":"&amp;",'"':"&quot;","<":"&lt;",">":"&gt;","'":"&#39;"}[c]));
 async function islDurum(){
   if (VERI_GOMULU) return;
-  try { const r = await fetch("api/islem/durum", {cache:"no-store"}); const d = await r.json(); ISL_DURUM = d && d.ok ? d : {acik:false, neden: d && d.hata}; }
+  try { const r = await fetch("api/islem/durum", {cache:"no-store"}); const d = await r.json(); ISL_DURUM = d && d.ok ? d : {acik:false, neden: d && d.hata};
+    ISL_SEM = ISL_DURUM.semboller && ISL_DURUM.semboller.length ? new Set(ISL_DURUM.semboller) : null; }
   catch(_){ ISL_DURUM = {acik:false, neden:"işlem servisine ulaşılamadı"}; }
   if (sayfa=="piyasa" && VERI && !ISL) ciz();   // alt not + coin bağlantıları işlem durumuna göre
 }
@@ -1485,7 +1487,7 @@ function islAc(s, yon){
 function islKapat(){ const d = ISL && ISL.donus; ISL = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; if (d && d.focus) try { d.focus({preventScroll: true}); } catch(_){} }
 addEventListener("keydown", e=>{ if (e.key === "Escape" && ISL){ if (ISL.adim){ ISL.adim = null; islCiz(); } else islKapat(); } });
 async function islPozYukle(){ if (!ISL) return; const s = ISL.s; const d = await islIstek("pozisyon/" + s);
-  if (ISL && ISL.s==s){ const ilk = !ISL.poz; ISL.poz = d.ok ? d : {hata: d.hata};
+  if (ISL && ISL.s==s){ const ilk = !ISL.poz; ISL.poz = d.ok ? d : {hata: d.hata, kod: d.kod};
     if (ilk && d.ok){ const t = (d.tpsl||[]).find(x=>x.tur=="TP"), l = (d.tpsl||[]).find(x=>x.tur=="SL");
       if (d.pozisyon && d.pozisyon.adet){ if (t) ISL.tp = t.fiyat; if (l) ISL.sl = l.fiyat; } else if (ISL.gor=="poz") ISL.gor = "emir"; }
     islCiz(); } }
@@ -1668,6 +1670,7 @@ function islAlt(){   // sabit alt çubuk: başparmak bölgesinde ana eylem
       <button id="isltut" class="ibtn tut ${I.adim.renk}" ${I.mesgul?"disabled":""} onpointerdown="islTutBasla(event)" onpointerup="islTutBirak()" onpointerleave="islTutBirak()" onpointercancel="islTutBirak()"
         onkeydown="if(event.key==' '||event.key=='Enter')islTutBasla(event)" onkeyup="islTutBirak()" oncontextmenu="return false"><span>${I.mesgul ? "Gönderiliyor…" : "Basılı tut: " + I.adim.dugme}</span></button></div>`;
   if (I.gor=="poz" && islPozVar()) return `<div class="ialt" id="islalt"><button class="ibtn S" onclick="islYonSec('S')">Short</button><button class="ibtn L" onclick="islYonSec('L')">Long</button></div>`;
+  if ((I.poz && I.poz.kod == 404) || (!islPozVar() && islYok(I.s))) return `<div class="ialt" id="islalt"><button class="ibtn ikinci" disabled>${(ISL_DURUM||{}).mod=="live"?"Bu hesapta işlem görmüyor":"Demo hesapta işlem görmüyor"}</button></div>`;
   const u = islBoyutUsd();
   return `<div class="ialt" id="islalt"><button id="isldevam" class="ibtn ${I.yon}" onclick="islDevam()" ${I.mesgul?"disabled":""}>${I.mesgul ? "Kontrol ediliyor…" : `${I.yon=="L"?"Long":"Short"} ${u>0 ? para(u) : ""}`}</button></div>`;
 }
@@ -1700,6 +1703,7 @@ function islCiz(){
   } else {
     if (varPoz) h += `<div class="iseg gor"><button class="${I.gor=="poz"?"on":""}" onclick="islGor('poz')">Pozisyon</button><button class="${I.gor=="emir"?"on":""}" onclick="islGor('emir')">Yeni emir</button></div>`;
     if (!PR) h += `<div class="k" style="padding:12px 2px">Pozisyon okunuyor…</div>`;
+    else if (PR.hata && PR.kod == 404) h += `<div class="isah yok"><b>${ad} ${D.mod=="live"?"bu hesapta":"demo hesapta"} işlem görmüyor.</b><br>${D.mod=="live" ? "" : "Binance'in demo ortamında gerçek piyasadaki her coin yok, özellikle yeni listelenenler. "}Grafiği ve fiyatı izleyebilirsin; işlem açılamaz.</div>`;
     else if (PR.hata) h += `<div class="imsj hata">Pozisyon okunamadı: ${ea(PR.hata)}</div>`;
     if (varPoz && I.gor=="poz"){
       const deger = Math.abs(pz.adet) * (PR.isaret || pz.giris), kzp = pz.giris>0 ? pz.kz / (Math.abs(pz.adet) * pz.giris) * 100 : null;

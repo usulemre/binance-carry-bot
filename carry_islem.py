@@ -78,7 +78,14 @@ class Kapi:
     def durum(self) -> dict:
         a = self.ayar
         neden = self._kapali_neden()
-        return {"acik": neden is None, "neden": neden, "mod": a["mod"], "max_usd": a["max_usd"], "pin_var": bool(a["pin"])}
+        sem = []
+        if neden is None:      # madde 847: hesapta işlem gören sözleşmeler (demo ortamında gerçek piyasadaki her coin yok)
+            try:
+                self._sembol_bilgi("BTCUSDT", sessiz=True)
+                sem = sorted(self._bilgi or {})
+            except Exception:
+                sem = []
+        return {"acik": neden is None, "neden": neden, "mod": a["mod"], "max_usd": a["max_usd"], "pin_var": bool(a["pin"]), "semboller": sem}
 
     def _kapali_neden(self) -> str | None:
         a = self.ayar
@@ -105,10 +112,13 @@ class Kapi:
             raise Hata(f"PIN yanlış ({KILIT_DENEME - len(self._yanlis)} deneme kaldı)", 403)
         self._yanlis.clear()
 
-    def _sembol_bilgi(self, sem: str) -> dict:
+    def _sembol_bilgi(self, sem: str, sessiz: bool = False) -> dict:
         if not SEMBOL_RE.match(sem or ""):
             raise Hata("geçersiz sembol")
-        if self._bilgi is None or self.saat() - self._bilgi_t > 600:
+        eski = self._bilgi is None or self.saat() - self._bilgi_t > 600
+        if not eski and sem not in self._bilgi and self.saat() - self._bilgi_t > 60:
+            eski = True       # madde 847: yeni listelenen coin için önbelleği bir kez tazele
+        if eski:
             from exchange_client import _adim, _tick_ondalik
             b = {}
             for s in self.ic.futures_exchange_info()["symbols"]:
@@ -120,7 +130,13 @@ class Kapi:
                                       "min_usd": max(MIN_USD, mn)}
             self._bilgi, self._bilgi_t = b, self.saat()
         if sem not in self._bilgi:
-            raise Hata(f"{sem} işlem gören bir USDT perpetual sözleşme değil")
+            if sessiz:
+                return {}
+            ad = sem.replace("USDT", "")
+            if self.ayar["mod"] != "live":
+                raise Hata(f"{ad} demo hesapta işlem görmüyor. Binance'in demo ortamında gerçek piyasadaki her coin yok "
+                           f"(özellikle yeni listelenenler); grafik ve fiyat gerçek piyasadan geliyor.", 404)
+            raise Hata(f"{ad} bu hesapta işlem gören bir USDT perpetual sözleşme değil.", 404)
         return self._bilgi[sem]
 
     def _isaret(self, sem: str) -> float:
@@ -578,7 +594,7 @@ def uygulama(kapi_fabrika=None):
         try:
             return jsonify({"ok": True, **f()})
         except Hata as e:
-            return jsonify({"ok": False, "hata": e.mesaj}), e.kod
+            return jsonify({"ok": False, "hata": e.mesaj, "kod": e.kod}), e.kod
         except Exception as e:           # Binance hatası vb. — mesaj kullanıcıya (anahtar içermez)
             m = re.sub(r"(signature|apiKey|api_key|X-MBX-APIKEY)=?\S*", "[gizli]", str(e))[:300]
             logger.error("panel işlem hatası: %s", m)

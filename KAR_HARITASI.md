@@ -9547,3 +9547,14 @@ Kullanıcı: "şimdi geliyor ama karışık, kolaylaştır". Elle coin ayrıntı
 - Kâr al · stop durumu tek satır; stop yoksa uyarı rengiyle "stop yok".
 - Dolum listesi "İşlem geçmişi (n)" altında katlanır (details).
 - Dört maddelik açıklama tek cümleye indi; düğme "Kapat · TP · stop koy".
+
+## Madde 847 — Gerçek piyasada olup demo hesapta olmayan coin (kullanıcı ekranı ELSA, 2026-11-22: "bu neden böyle")
+- Neden: Piyasa listesi ve grafik GERÇEK Binance'ten (fapi), işlem ise demo hesaptan (demo ortamının kendi sözleşme listesi). Binance'in demo ortamında
+  gerçek piyasadaki her coin yok (özellikle yeni listelenenler; ELSA +%27). Kapı (`_sembol_bilgi`) demo listesinde bulamayınca "işlem gören bir USDT perpetual
+  sözleşme değil" diyordu; pencere bunu kırmızı "Pozisyon okunamadı" hatası olarak gösteriyor, Long düğmesi yine basılabilir duruyordu.
+- Düzeltme: kapı `durum` yanıtında hesapta işlem gören sözleşme listesini (`semboller`) verir; listede olmayan sembol için açık mesaj + kod 404
+  ("ELSA demo hesapta işlem görmüyor…"); bilinmeyen sembol gelirse ve önbellek 60 sn'den eskiyse bir kez tazelenir (yeni listelenen coin 10 dk beklemez).
+  Panel: Piyasa satırında "demoda yok" rozeti; pencerede kırmızı hata yerine açıklama kutusu ("grafiği ve fiyatı izleyebilirsin; işlem açılamaz"), alt düğme
+  kapalı "Demo hesapta işlem görmüyor". Canlı hesapta metin "bu hesapta".
+- Testler: `test_carry_islem` 3b (liste, 404 + mesaj, 60 sn tazeleme, canlı metni, Flask kodu); `test_panel_islem` 0 (rozet, açıklama kutusu, kırmızı hata
+  yok, düğme kapalı + neden, axe 0).

@@ -65,9 +65,10 @@ threading.Thread(target=s_panel.run, daemon=True).start()
 time.sleep(0.5)
 URL = f"http://127.0.0.1:{P_PANEL}"
 
-EI = {"symbols": [{"symbol": "AKEUSDT", "contractType": "PERPETUAL", "quoteAsset": "USDT", "status": "TRADING"}]}
-T24 = [{"symbol": "AKEUSDT", "lastPrice": "0.5", "priceChangePercent": "-12.0", "quoteVolume": "50000000"}]
-PI = [{"symbol": "AKEUSDT", "lastFundingRate": "-0.001", "nextFundingTime": 1}]
+EI = {"symbols": [{"symbol": s_, "contractType": "PERPETUAL", "quoteAsset": "USDT", "status": "TRADING"} for s_ in ("AKEUSDT", "ELSAUSDT")]}
+T24 = [{"symbol": "AKEUSDT", "lastPrice": "0.5", "priceChangePercent": "-12.0", "quoteVolume": "50000000"},
+       {"symbol": "ELSAUSDT", "lastPrice": "0.08649", "priceChangePercent": "27.15", "quoteVolume": "60000000"}]   # gerçek piyasada var, demo hesapta YOK
+PI = [{"symbol": "AKEUSDT", "lastFundingRate": "-0.001", "nextFundingTime": 1}, {"symbol": "ELSAUSDT", "lastFundingRate": "0.0001", "nextFundingTime": 1}]
 
 
 def kur(page):
@@ -102,6 +103,19 @@ with sync_playwright() as pw:
     page.on("dialog", lambda d: (hatalar.append("beklenmeyen dialog: " + d.message), d.dismiss()))
     page.goto(URL + "/#piyasa"); page.wait_for_selector(".pyr a")
     page.wait_for_function("() => ISL_DURUM && ISL_DURUM.acik", timeout=5000)
+    print("0) madde 847: gerçek piyasada olup demo hesapta olmayan coin (ELSA)")
+    page.evaluate("() => piyasaBoya(true)")
+    kontrol("listede 'demoda yok' rozeti", "demoda yok" in page.locator(".pyr", has_text="ELSA").first.inner_text())
+    kontrol("AKE'de rozet yok", "demoda yok" not in page.locator(".pyr:not(.ust)", has_text="AKE").first.inner_text())
+    page.locator(".pyr a", has_text="ELSA").first.click(); page.wait_for_selector(".isl .isah.yok", timeout=6000)
+    kontrol("pencere: kırmızı hata değil, açıklayıcı bilgi", "demo hesapta işlem görmüyor" in page.locator(".isl .isah.yok").inner_text()
+            and page.locator(".isl .imsj.hata").count() == 0)
+    kontrol("işlem düğmesi kapalı ve nedenini söylüyor", page.locator(".isl .ialt button").is_disabled()
+            and "Demo hesapta işlem görmüyor" in page.locator(".isl .ialt").inner_text())
+    kontrol("grafik yine çiziliyor", page.locator("#islgraf svg").count() == 1 or page.locator("#islgraf").count() == 1)
+    if kok:
+        page.wait_for_timeout(800); page.evaluate("() => islGrafikCiz()"); page.screenshot(path=kok + "_demoyok.png")
+    page.keyboard.press("Escape"); page.wait_for_timeout(300)
     print("1) pencere")
     page.evaluate("() => piyasaBoya(true)")
     a = page.locator(".pyr a", has_text="AKE").first

@@ -146,7 +146,7 @@ print("3) önizleme denetimleri")
 k, ic, _ = yeni()
 o = {"sembol": "AKEUSDT", "yon": "L", "usd": 50}
 kontrol("geçersiz sembol", hata_mi(lambda: k.onizle({**o, "sembol": "ake; rm"}), "geçersiz"))
-kontrol("işlem görmeyen / vadeli / USDC reddedilir", all(hata_mi(lambda s=s: k.onizle({**o, "sembol": s}), "perpetual")
+kontrol("işlem görmeyen / vadeli / USDC reddedilir (404, 'demo hesapta işlem görmüyor')", all(hata_mi(lambda s=s: k.onizle({**o, "sembol": s}), "demo hesapta işlem görmüyor", 404)
                                                         for s in ("ESKIUSDT", "YOKUSDT")))
 kontrol("yön L/S dışı", hata_mi(lambda: k.onizle({**o, "yon": "X"}), "yön"))
 kontrol("200 $ üstü reddedilir", hata_mi(lambda: k.onizle({**o, "usd": 200.01}), "en fazla 200"))
@@ -164,6 +164,20 @@ kontrol("short: TP fiyatın üstündeyse reddedilir", hata_mi(lambda: k.onizle({
 kontrol("short: stop fiyatın altındaysa reddedilir", hata_mi(lambda: k.onizle({**o, "yon": "S", "sl": 0.49}), "ÜSTÜNDE"))
 kontrol("geçerli TP / SL kabul", k.onizle({**o, "tp": 0.6, "sl": 0.45})["tp"] == 0.6)
 kontrol("önizleme emir GÖNDERMEZ", ic.emirler == [] and ic.algolar == [])
+
+print("3b) madde 847: hesapta olmayan coin")
+kontrol("durum: hesapta işlem gören sözleşme listesi (AKE var, kapanmış ESKI yok)", "AKEUSDT" in k.durum()["semboller"] and "ESKIUSDT" not in k.durum()["semboller"])
+kontrol("kapalıyken liste boş", yeni(acik=False)[0].durum()["semboller"] == [])
+_eski_ei = ic.futures_exchange_info
+ic.futures_exchange_info = lambda: {"symbols": _eski_ei()["symbols"] + [dict(_eski_ei()["symbols"][0], symbol="YENIUSDT")]}
+kontrol("yeni listelenen coin: önbellek 60 sn'den tazeyse henüz yok", hata_mi(lambda: k.onizle({**o, "sembol": "YENIUSDT"}), "işlem görmüyor"))
+SAAT[0] += 61; ic.fiyat["YENIUSDT"] = 1.0
+kontrol("60 sn sonra önbellek tazelenir, yeni coin bulunur", k.onizle({**o, "sembol": "YENIUSDT"})["adet"] > 0)
+ic.futures_exchange_info = _eski_ei
+k_c, _, _ = yeni(mod="live", canli_izin=True)
+kontrol("canlı hesapta mesaj 'bu hesapta'", hata_mi(lambda: k_c.onizle({**o, "sembol": "YOKUSDT"}), "bu hesapta", 404))
+r404 = ci.uygulama(lambda: yeni()[0]).test_client().post("/onizle", json={**o, "sembol": "YOKUSDT"})
+kontrol("Flask yanıtında kod 404", r404.status_code == 404 and r404.get_json()["kod"] == 404)
 
 print("4) piyasa emri + TP / SL")
 k, ic, bil = yeni()
