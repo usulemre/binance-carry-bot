@@ -488,5 +488,9 @@ kontrol("devir: dosya yoksa dokunmaz", panel.devir_uygula(tempfile.mkdtemp(), {"
 kontrol("devir: veri() dökümde Kapanan'dan düşer", "devir_uygula(kl, an)" in open(panel.__file__, encoding="utf-8").read()
         and 'o["dokum"]["gerceklesen"] - sum(_devir.values())' in open(panel.__file__, encoding="utf-8").read())
 
+_s48 = open(panel.__file__, encoding="utf-8").read()
+kontrol("madde 848: coin penceresi ve pozisyon ayrıntısında 24 sa / 3 gün / hafta / ay / 3 ay özeti",
+        all(x in _s48 for x in ("function donemHtml", '["3 gün", 72, "s"]', '["1 ay", 30, "g"]', "h += donemHtml(I.s, f)", "${donemHtml(s, f)}", "donemBoya(ISL.s)")))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

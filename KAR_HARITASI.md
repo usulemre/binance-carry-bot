@@ -9558,3 +9558,7 @@ Kullanıcı: "şimdi geliyor ama karışık, kolaylaştır". Elle coin ayrıntı
   kapalı "Demo hesapta işlem görmüyor". Canlı hesapta metin "bu hesapta".
 - Testler: `test_carry_islem` 3b (liste, 404 + mesaj, 60 sn tazeleme, canlı metni, Flask kodu); `test_panel_islem` 0 (rozet, açıklama kutusu, kırmızı hata
   yok, düğme kapalı + neden, axe 0).
+
+## Madde 848 — coin incelerken tüm dönemler tek sayfada
+
+Kullanıcı: "bir coini incelerken aynı sayfada görmeliyim günlük 3 günlük haftalık aylık herşeyi". Piyasa'daki coin penceresine (grafiğin altı) ve pozisyon ayrıntısına dönem şeridi eklendi: 24 sa / 3 gün / 1 hafta / 1 ay / 3 ay. Her satırda değişim yüzdesi, dönemin en düşük–en yüksek aralığı ve fiyatın bu aralıktaki yeri, minik kapanış grafiği. Veri: coin başına 1 sa × 168 ve 1 gün × 90 Binance mumu, 5 dk önbellek; işlem penceresinde 5 sn'de bir canlı fiyatla tazelenir. Yeni listelenmiş coinlerde dönem kısaysa gerçek gün sayısı yazılır.

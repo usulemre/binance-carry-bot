@@ -1122,6 +1122,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .ibtn.L{background:var(--fa)}.isl .ibtn.S{background:var(--fe)}.isl .ibtn.tehlike{background:var(--fe)}.isl .ibtn.vurgu{background:var(--vurgu)}.isl .ibtn:disabled{opacity:.5;cursor:default}
 .isl .ibtn.geri{flex:0 0 108px;background:var(--kart2);color:var(--yazi)}
 .isl .ibtn.tut::before{content:"";position:absolute;inset:0;width:0;background:rgba(255,255,255,.28);transition:width 0s}.isl .ibtn.tut.dolu::before{width:100%;transition:width .7s linear}
+.dnm{margin-top:12px;padding:6px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.dnh,.dnr{display:grid;grid-template-columns:62px 58px minmax(0,1fr) 54px;gap:8px;align-items:center}.dnh{font-size:11px;color:var(--soluk);padding:4px 0}.dnr{padding:7px 0;border-top:1px solid var(--cizgi)}.dna{font-weight:600;line-height:1.2}.dnz{min-width:0}.dnb{position:relative;display:block;height:6px;border-radius:3px;background:var(--cizgi)}.dnb i{position:absolute;top:-3px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--vurgu);border:2px solid var(--kart2)}.dnu{display:flex;justify-content:space-between;font-size:11px;color:var(--soluk);margin-top:3px;gap:4px}.dns{width:54px;height:22px}
 .elp{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--kart2);font-size:13.5px}.elh{font-weight:700;margin-bottom:6px}.elr{display:flex;justify-content:space-between;gap:10px;padding:5px 0;line-height:1.4}.elr .r{text-align:right}.eld{margin-top:8px}.eld summary{cursor:pointer;color:var(--soluk);font-size:13px;padding:4px 0}
 .elk{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:13.5px;line-height:1.5;background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.elk li{margin:3px 0}.elkb{margin-top:10px;width:100%;min-height:44px;border:0;border-radius:10px;font:inherit;font-weight:600;background:var(--vurgu);color:var(--bg);cursor:pointer}
 .isl .ibtn.tut span{position:relative}.isl .isah{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45}.isl .isah.sen{background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.isl .isah.bot{background:color-mix(in srgb,var(--uyari) 14%,transparent)}.isl .isah.yok{background:var(--kart2);font-size:13.5px}.isl .ibtn.ikinci,.isl .ibtn.ikinci:disabled{background:var(--kart2);color:var(--soluk);opacity:1}
@@ -1689,6 +1690,7 @@ function islCiz(){
   h += `<div class="igk"><div class="igb"><div class="ichip ar">${Object.entries(ISL_AR).map(([a,[t]])=>`<button class="${I.aralik==a?"on":""}" onclick="islAralik('${a}')">${t}</button>`).join("")}</div>
       <div class="ichip gt"><button class="${I.gtur!="cizgi"?"on":""}" onclick="islGTur('mum')" aria-label="mum grafik" title="mum">▮▯</button><button class="${I.gtur=="cizgi"?"on":""}" onclick="islGTur('cizgi')" aria-label="çizgi grafik" title="çizgi">∿</button></div></div>
       <div id="islgraf" class="igr"></div>${(PR && PR.islemler && PR.islemler.length) ? `<div class="igl3"><span><b class="igal">▲</b> alışların</span><span><b class="igsat">▼</b> satışların</span><span>son 7 gün</span></div>` : ""}</div>`;
+  if (!I.adim) h += donemHtml(I.s, f);   // madde 848
   // madde 839: kimin coini? (bot / sen) — işlemden önce net
   if (PR && !PR.hata && !I.adim){
     if (PR.elle) h += `<div class="isah sen">✋ Bu coin sende. Bot ekleme, kapatma, TP ya da stop yapmıyor; pozisyonu tamamen kapatınca bota döner.</div>`;
@@ -1974,6 +1976,7 @@ function fundTakip(){
 }
 function canliBoya(){
   if (ISL && Date.now() - (islGrafikCiz.t||0) > 2000){ islGrafikCiz.t = Date.now(); islGrafikCiz(); if (Date.now() - ((MUMI[ISL.s+"|"+ISL.aralik]||{}).t||0) > 60e3) islMumYukle(); }   // madde 835
+  if (ISL && !ISL.adim && Date.now() - (donemBoya.t||0) > 5000){ donemBoya.t = Date.now(); donemBoya(ISL.s); }   // madde 848
   piyasaBoya(false);   // madde 832
   if (sayfa != "piyasa" && ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle();   // madde 844
   fundTakip();
@@ -2174,6 +2177,35 @@ function minik(s, p, f, renk){   // satır içi mini grafik: yalnız çizgi (60x
   const d = v.map((x,i)=>`${i?"L":"M"}${(1 + i/(v.length-1)*58).toFixed(1)} ${(22 - (x-lo)/(hi-lo)*20).toFixed(1)}`).join("");
   return `<svg class="dsp" viewBox="0 0 60 24" aria-hidden="true"><path d="${d}" fill="none" stroke="${renk}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg>`;
 }
+// MADDE 848: dönem özeti — 24 sa / 3 gün / 1 hafta / 1 ay / 3 ay tek bakışta (değişim, en düşük–en yüksek aralığında fiyatın yeri, minik grafik)
+let DONEM = {};
+const DONEM_L = [["24 sa", 24, "s"], ["3 gün", 72, "s"], ["1 hafta", 168, "s"], ["1 ay", 30, "g"], ["3 ay", 90, "g"]];
+async function donemYukle(s){
+  if (VERI_GOMULU) return; const D = DONEM[s]; if (D && (D.yuk || Date.now() - D.t < 300e3)) return;
+  DONEM[s] = {...(D||{}), yuk: true};
+  try { const [h, d] = await Promise.all(["1h&limit=168", "1d&limit=90"].map(q => fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=${q}`, {cache:"no-store"}).then(r => r.json())));
+    DONEM[s] = Array.isArray(h) && Array.isArray(d) ? {t: Date.now(), s: h.map(x => [+x[1], +x[2], +x[3], +x[4]]), g: d.map(x => [+x[1], +x[2], +x[3], +x[4]])} : {t: Date.now() - 240e3, hata: true};
+  } catch(_){ DONEM[s] = {t: Date.now() - 240e3, hata: true}; }
+  donemBoya(s);
+}
+function donemBoya(s){ const el = document.getElementById("dnm-" + s); if (el) el.outerHTML = donemHtml(s); }
+function donemHtml(s, f){
+  f = f || (PIY[s]||{}).f; const D = DONEM[s];
+  if (!D || !D.s){ donemYukle(s); return `<div class="dnm k" id="dnm-${s}">${D && D.hata ? "dönem verisi alınamadı" : "günlük · haftalık · aylık yükleniyor…"}</div>`; }
+  if (Date.now() - D.t > 300e3) donemYukle(s);
+  const satir = ([ad, n, tur]) => {
+    const B = D[tur].slice(-n); if (!B.length) return "";
+    const son = f > 0 ? f : B[B.length-1][3], acl = B[0][0], hi = Math.max(son, ...B.map(x => x[1])), lo = Math.min(son, ...B.map(x => x[2]));
+    const deg = acl > 0 ? (son / acl - 1) * 100 : null, yer = hi > lo ? (son - lo) / (hi - lo) * 100 : 50;
+    const kisa = B.length < n * 0.9 ? ` <span class="k">(${tur == "g" ? B.length + " gün" : Math.round(B.length / 24) + " gün"})</span>` : "";
+    const C = B.map(x => x[3]); C[C.length-1] = son; const cl = Math.min(...C), ch = Math.max(...C);
+    const yol = C.map((v, i) => `${i ? "L" : "M"}${(1 + i / Math.max(1, C.length - 1) * 58).toFixed(1)} ${(21 - (ch > cl ? (v - cl) / (ch - cl) : .5) * 18).toFixed(1)}`).join("");
+    return `<div class="dnr"><span class="dna">${ad}${kisa}</span>
+      <b class="${sinif(deg)}">${deg == null ? "—" : (deg >= 0 ? "+" : "−") + "%" + Math.abs(deg).toFixed(1).replace(".", ",")}</b>
+      <span class="dnz"><span class="dnb"><i style="left:${yer.toFixed(0)}%"></i></span><span class="dnu"><span>${piyFiyat(lo)}</span><span>${piyFiyat(hi)}</span></span></span>
+      <svg viewBox="0 0 60 24" class="dns" aria-hidden="true"><path d="${yol}" fill="none" stroke="${css(deg >= 0 ? "--art" : "--eks")}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`; };
+  return `<div class="dnm" id="dnm-${s}"><div class="dnh"><span>Dönem</span><span>değişim</span><span>en düşük · <b>şimdi</b> · en yüksek</span><span></span></div>${DONEM_L.map(satir).join("")}</div>`;
+}
 // MADDE 842: elle coin mü (coin_ozet "elle" bayrağı: carry_elle.json + panel işaretleri)
 function elleMi(k, s){ return ((k && k.coin_ozet) || []).some(c => c.elle && (c.s.endsWith("USDT") ? c.s : c.s + "USDT") === s)
   || (k && k.pozisyonlar && k.pozisyonlar[s] && k.pozisyonlar[s].elle_canli) || false; }
@@ -2228,7 +2260,7 @@ function sheetIc(s, p, k){
   return `<div class="shu"><div><div style="display:flex;align-items:center;gap:8px"><span class="gb">${s.replace(/USDT$/,"")}</span><span class="dst ${uzun?"l":"s"}">${uzun?"LONG":"SHORT"}</span></div>
       <div class="shf">${fiyatYaz(f)}</div><div class="${sinif(g)}" style="font-weight:600;font-size:13.5px">${g>=0?"▲":"▼"} ${ky==null?"":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"} · ${isaretli(g)}${bg!=null?` <span class="k">· bugün ${yz(bg)}</span>`:""}</div></div>
       <button class="shx" onclick="sheetKapat()" aria-label="Kapat">✕</button></div>
-    <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>
+    <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>${donemHtml(s, f)}
     <div class="shkg">${kutu("Giriş", fiyatYaz(p.giris))}${kutu("Büyüklük", para(usd))}${kutu("Funding", F ? `%${(F.r*100).toFixed(4).replace(".",",")} · <span class="${sinif(fr)}">${fr>=0?"alıyor":"ödüyor"}</span>` : "—")}${elle ? kutu("Yöneten", "✋ sen") : kutu(h1 ? "Kademe · kâr al" : "Kâr al hedefi", h0 ? `${fiyatYaz(h0)} <span class="k">${uzun?"+":"−"}%${Math.round(H[0]*100)}</span>${h1 ? `<br>${fiyatYaz(h1)} <span class="k">${uzun?"+":"−"}%${Math.round(H[1]*100)}</span>` : ""}` : "—")}</div>
     ${stop}${neden}${elle ? elleKutu(s, p, f) : cikisIc(s, usd, k)}`;
 }
