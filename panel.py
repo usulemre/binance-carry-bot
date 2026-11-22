@@ -786,6 +786,9 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
             o["fundingler"] = [x for x in o["fundingler"] if x["zaman"] >= kes]
         o["stop_durum"] = stop_oku(kl)
         o["cikis"] = cikis_takvimi(kl, e, o.get("dilim"))   # madde 787
+        if o["cikis"]:   # madde 841: elle coinin çıkış süresi / kâr al girişi yoktur (bot dilimden çıkarmadan önce de gösterilmez)
+            _elle = elle_semboller(kl)
+            o["cikis"] = {s: L for s, L in o["cikis"].items() if s not in _elle}
         if (e.get("CARRY_GIRIS_DILIM") or "0") not in ("0", "false", "False") and o["cikis"]:   # madde 788: kâr al kendi dilim girişinden
             o["tp_giris"] = {sem: round(sum(x["pay"] * x["giris"] for x in L) / sum(x["pay"] for x in L), 10)
                              for sem, L in o["cikis"].items() if L and all(x.get("giris") for x in L)}

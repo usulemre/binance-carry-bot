@@ -9489,3 +9489,11 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   `felaket_basarisiz` → mevcut "FELAKET STOP'U KONULAMADI … SİGORTASIZ" ERROR'u. Normal akış (-2022 yok) değişmez.
 - Test: `test_carry_kapanis` 3) short −100, kullanıcının 100'lük reduceOnly BUY emri → TP iki kez -2022: botun felaket algo emri borsada 1 adet ve
   kayıtta; kullanıcının emri yerinde. Düzeltmesiz kodda bu test DÜŞÜYOR (algo listesi boş, kayıt boş), düzeltmeyle geçiyor.
+
+## Madde 841 — Elle coinde botun çıkış süresi gösteriliyordu (kullanıcı, 2026-11-22: "süresi dolanlarda neden süre verdi elle işlemine")
+- Olay: panelden BLESSUSDT'de işlem yapılınca (botun da short'u olan coin) coin elle işaretlendi ama panel hâlâ botun dilim çıkış takvimini
+  (madde 787) gösteriyordu: `cikis_takvimi` carry_dilimler.json'dan okur; bot coini dilimden ancak bir sonraki elle kontrolde (saatlik, madde 831)
+  ya da tur başında çıkarıyor. Elle coinde bot çıkışı / yenilemesi olmadığı için süre yanıltıcı.
+- Düzeltme: `veri()` çıkış takvimini `elle_semboller` (carry_elle.json + panel işaretleri) ile süzer; aynı süzme `tp_giris`'i de kapsar
+  (ondan sonra hesaplanıyor). Bot coinlerinin takvimi değişmez.
+- Test: `test_panel` — kayıtta elle olan ve yalnız panel işareti olan coin için /api/veri `cikis`'inde yok, bot coini duruyor.

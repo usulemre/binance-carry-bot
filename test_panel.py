@@ -443,6 +443,15 @@ kontrol("çıkış takvimi: giriş fiyatı ve alış zamanı (long 15 tur, short
 kontrol("çıkış takvimi: short ara dengelemeyle (dilim 1 → 3 tur sonra sira 6, 6−1=5)", [x["k"] for x in _c["XUSDT"]] == [0, 3], _c["XUSDT"])
 kontrol("çıkış takvimi: dosya yoksa None", panel.cikis_takvimi(tempfile.mkdtemp(), {}) is None)
 kontrol("sayfada çıkış takvimi", "function cikisIc" in app.get("/").data.decode())
+# MADDE 841: elle coin (kayıtta ya da panel işaretinde) çıkış süresi göstermez — bot dilimden çıkarmadan önce de
+json.dump({"elle": {"XUSDT": {"t": 1}}}, open(os.path.join(_k87, "carry_elle.json"), "w"))
+_v41 = panel.uygulama([_k87]).test_client().get("/api/veri").get_json()["kurulumlar"][0].get("cikis") or {}
+kontrol("madde 841: elle coinin çıkış süresi yok, bot coininki duruyor", "XUSDT" not in _v41 and "AUSDT" in _v41, _v41)
+os.remove(os.path.join(_k87, "carry_elle.json"))
+os.makedirs(os.path.join(_k87, "defter"), exist_ok=True)
+import time as _zm41; json.dump({"XUSDT": int(_zm41.time() * 1000)}, open(os.path.join(_k87, "defter", "carry_elle_panel.json"), "w"))
+_v41 = panel.uygulama([_k87]).test_client().get("/api/veri").get_json()["kurulumlar"][0].get("cikis") or {}
+kontrol("madde 841: panelden yeni alınan coin (yalnız panel işareti) de süre göstermez", "XUSDT" not in _v41 and "AUSDT" in _v41, _v41)
 _h790 = app.get("/").data.decode()
 kontrol("madde 790: çıkış takvimi tur başına, 'yine seçilirse kalır' açıklaması, kademe + kâr al kutusu",
         "turun hepsini göster" in _h790 and "dilime bölündü" in _h790 and "dilim payı" in _h790 and "yine seçilirse" in _h790 and "Kademe · kâr al" in _h790 and "satılacak</span>" not in _h790)
