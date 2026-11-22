@@ -9390,4 +9390,5 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   TP/SL hatası emri geri almaz, limit, short TP/SL, kısmi / tam kapanış, yalnız panel emirlerinin silinmesi, Flask uçları, hata metninde imza gizleme,
   .env okuma); `test_panel_islem.py` (gerçek Chromium → panel → kapı, sahte borsa: pencere, önizleme, PIN'siz kapalı düğme, yanlış PIN, emir + TP,
   %50 kapat, stop kurma, CSRF 403'leri, kapı yokken eski davranış). İlk tarayıcı testinde bulunan hata: PIN yazmak önizlemeyi siliyordu → düzeltildi.
+- Tam takım: 63 dosyadan 56 geçti; düşen 6 dosya 830 öncesiyle aynı (veri / ortam), `test_carry_entegrasyon` bu koşucuda 900 sn sınırına takıldı (önceki uzun koşuda 180/180; carry_bot.py 832-834 arasında değişmedi).
 - AÇIK: gerçek Binance'e karşı denenmedi (sahte borsa). Demo hesapta ilk işlemler küçük tutarla izlenmeli.
