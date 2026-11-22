@@ -9425,3 +9425,17 @@ zirveden −17,5. BTW 7-20 toplamı −1,52 → BTW hariç ≈ −5,3. Demo (pan
   plan TP çizgisi, onay özeti, onaya gelmenin emir göndermemesi, 0,25 sn dokunuşun emir göndermemesi, yanlış PIN, basılı tutup emir (Doldu rozeti),
   pozisyon görünümü + giriş / TP / ▲ / likidasyon hapı, %50 kapat onayı + PIN hatırlama, TP / stop onayı, risk ile boyut (5 $ risk / %5 stop = 100 $; kayan
   nokta bir kuruş kaybettiriyordu → düzeltildi), long varken short uyarısı, Düzenle ile geri, beklenmeyen dialog / JS hatası yok.
+
+## Madde 837 — Al / sat penceresi + Piyasa sekmesi UI/UX denetimi ve düzeltmeler (kullanıcı isteği, 2026-11-22: "UI/UX açısından da bak")
+- Yöntem: axe-core 4.10 (WCAG otomatik denetim) açık + karanlık temada Piyasa / bilet / onay ekranları; dokunma hedefi ölçümü (390 px telefon); elle sezgisel
+  inceleme (Nielsen: durum görünürlüğü, hata önleme, tutarlılık, tanıma, geri dönüş).
+- Bulunan ve düzeltilen: (1) açık temada soluk yazı kontrastı 4,39 (< 4,5) → --soluk #5d6472 (panel geneli); (2) yeşil düğmede beyaz yazı 3,5 → açık temada
+  koyu dolgu (#0a7d45 / #c42b20), karanlıkta parlak dolgu + koyu yazı; yeşil / kırmızı küçük metin de aynı koyu tonda; demo rozeti 4,27 → koyulaştırıldı.
+  Sonrası: 6 ekranın hepsinde axe ihlali 0. (3) dokunma hedefleri: yıldız 24×17 → 40×40, coin adı 29×20 → SATIRIN TAMAMI (48 px, gerilmiş bağlantı),
+  arama 34 → 44 px, çipler 28-32 → 36-40 px, kapat 38 → 44 px; ana eylemler 48-52 px. (4) liste saniyede bir yeniden çiziliyordu: parmak listedeyken
+  600 ms çizim durur (dokunuş kaybolmasın). (5) TÜRKÇE ONDALIK: "0,45" yazınca fiyat 0 sayılıyordu (sunucu da reddederdi) → virgül kabul, kutularda virgülle
+  gösterim. (6) satır içi doğrulama: TP / stop yanlış tarafta, limit ±%20 dışı, tutar sınır üstü → yazarken uyarı (sunucu yine denetler). (7) erişilebilirlik:
+  pencere role=dialog + aria-modal, açılınca odak pencerede, kapanınca geri döner; yıldız aria-pressed + aria-label; arama aria-label; durum role=status.
+  (8) grafik altında ▲ / ▼ açıklaması (yalnız dolum varsa). (9) basılı tutma tamamlanınca kısa titreşim (destekleyen telefonda).
+- Testler: `test_panel_islem` (satır hücresine dokunma, aria-modal + odak, virgüllü limit 0,48 → 0.48, ±%20 uyarısı, yanlış taraf TP uyarısı ve kalkması,
+  isteğe bağlı AXE_JS=… ile pencerede axe ihlali 0), `test_panel_piyasa` (yıldız aria-pressed, ≥ 40 px). Panel / kapı / elle testleri geçiyor.

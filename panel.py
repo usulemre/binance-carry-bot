@@ -821,7 +821,7 @@ SAYFA = r"""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta nam
   unicode-range:U+0100-02BA,U+02BD-02C5,U+02C7-02CC,U+02CE-02D7,U+02DD-02FF,U+0304,U+0308,U+0329,U+1D00-1DBF,U+1E00-1E9F,U+1EF2-1EFF,U+2020,U+20A0-20AB,U+20AD-20C4,U+2113,U+2C60-2C7F,U+A720-A7FF}
 @font-face{font-family:Inter;font-style:normal;font-weight:400 800;font-display:swap;src:url(font/inter-latin.woff2) format("woff2");
   unicode-range:U+0000-00FF,U+0131,U+0152-0153,U+02BB-02BC,U+02C6,U+02DA,U+02DC,U+0304,U+0308,U+0329,U+2000-206F,U+20AC,U+2122,U+2191,U+2193,U+2212,U+2215,U+FEFF,U+FFFD}
-:root{--bg:#f3f4f6;--kart:#fff;--kart2:#f3f4f7;--yazi:#111318;--soluk:#6b7280;--cizgi:#e5e7eb;--art:#0f9d58;--eks:#d93025;--vurgu:#2563eb;--uyari:#c2410c;--mor:#7c3aed;--ust:rgba(243,244,246,.86)}
+:root{--bg:#f3f4f6;--kart:#fff;--kart2:#f3f4f7;--yazi:#111318;--soluk:#5d6472;--cizgi:#e5e7eb;--art:#0f9d58;--eks:#d93025;--vurgu:#2563eb;--uyari:#c2410c;--mor:#7c3aed;--ust:rgba(243,244,246,.86)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]){--bg:#0F1115;--kart:#15181D;--kart2:#1C2027;--yazi:#E8EAED;--soluk:#9AA0A9;--cizgi:#22262E;--art:#3DD68C;--eks:#F2675F;--vurgu:#7AA7FF;--uyari:#F5A524;--mor:#B197FC;--ust:rgba(15,17,21,.86)}}
 :root[data-theme="dark"]{--bg:#0F1115;--kart:#15181D;--kart2:#1C2027;--yazi:#E8EAED;--soluk:#9AA0A9;--cizgi:#22262E;--art:#3DD68C;--eks:#F2675F;--vurgu:#7AA7FF;--uyari:#F5A524;--mor:#B197FC;--ust:rgba(15,17,21,.86)}
 *{box-sizing:border-box}html{-webkit-text-size-adjust:100%}
@@ -1034,12 +1034,15 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .yil i{display:block;border-radius:2px;background:var(--kart2)}.yil i.x{visibility:hidden}
 .bekle{color:var(--soluk);font-size:13px;text-align:center;padding:26px 0}
 /* MADDE 832: Piyasa sekmesi */
+.pyk .gdon button{height:36px}
+.pyk{--fa:#0a7d45;--fe:#c42b20}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pyk{--fa:var(--art);--fe:var(--eks)}}:root[data-theme="dark"] .pyk{--fa:var(--art);--fe:var(--eks)}
 .pya{display:flex;gap:8px;flex-wrap:wrap;align-items:center;margin-bottom:10px}
-.pya input{flex:1 1 160px;min-width:0;height:34px;border:1px solid var(--cizgi);border-radius:10px;background:var(--kart);color:var(--yazi);padding:0 10px;font:inherit}
+.pya input{flex:1 1 160px;min-width:0;height:44px;font-size:16px;border:1px solid var(--cizgi);border-radius:10px;background:var(--kart);color:var(--yazi);padding:0 10px;font:inherit}
 .pyb{font-size:12px;color:var(--soluk);margin:14px 2px 6px;display:flex;justify-content:space-between;gap:8px}
 .pyl{display:flex;flex-direction:column;gap:2px}
-.pyr{display:grid;grid-template-columns:28px minmax(0,1.3fr) minmax(0,1fr) 74px minmax(0,.9fr) 66px;gap:6px;align-items:center;padding:7px 8px;border-radius:10px;background:var(--kart)}
-.pyr .yd{border:0;background:none;color:var(--soluk);font-size:17px;cursor:pointer;padding:0;line-height:1}.pyr .yd.on{color:var(--uyari)}
+.pyr{position:relative;display:grid;grid-template-columns:28px minmax(0,1.3fr) minmax(0,1fr) 74px minmax(0,.9fr) 66px;gap:6px;align-items:center;min-height:48px;padding:4px 8px;border-radius:10px;background:var(--kart)}
+.pyr:not(.ust) a::after{content:"";position:absolute;inset:0;border-radius:10px}.pyr:not(.ust):active{background:var(--kart2)}.pyr a:focus-visible{outline:none}.pyr a:focus-visible::after{outline:2px solid var(--vurgu);outline-offset:-2px}
+.pyr .yd{position:relative;z-index:1;width:40px;height:40px;margin:0 -8px 0 -10px;border:0;background:none;color:var(--soluk);font-size:18px;cursor:pointer;padding:0;line-height:1;border-radius:10px}.pyr .yd:focus-visible{outline:2px solid var(--vurgu)}.pyr .yd.on{color:var(--uyari)}
 .pyr a{color:var(--yazi);text-decoration:none;font-weight:650;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .pyr .r{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.pyr .k2{color:var(--soluk);font-size:12px}
 .pyr .rz{font-size:10.5px;font-weight:650;padding:1px 5px;border-radius:6px;margin-left:5px;background:var(--kart2);color:var(--soluk)}
@@ -1049,10 +1052,10 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 @keyframes fla{from{background:color-mix(in srgb,var(--art) 22%,transparent)}}@keyframes fle{from{background:color-mix(in srgb,var(--eks) 22%,transparent)}}
 @media (max-width:600px){.pyr{grid-template-columns:24px minmax(0,1.2fr) minmax(0,1fr) 64px 58px}.pyr .hc{display:none}}
 /* MADDE 834-836: panelden işlem penceresi — grafik önde, ayarla -> onayla (basılı tut), eylem başparmak bölgesinde */
-.isl{padding:10px 16px 0 !important;--dy:#fff}
-@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .isl{--dy:#0F1115}}:root[data-theme="dark"] .isl{--dy:#0F1115}
+.isl{padding:10px 16px 0 !important;--dy:#fff;--fa:#0a7d45;--fe:#c42b20}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .isl{--dy:#0F1115;--fa:var(--art);--fe:var(--eks)}}:root[data-theme="dark"] .isl{--dy:#0F1115;--fa:var(--art);--fe:var(--eks)}
 .isl .ihd{display:flex;justify-content:space-between;align-items:flex-start;margin-bottom:12px}.isl .iad{display:flex;align-items:center;gap:8px}.isl .iad b{font-size:19px;font-weight:700;letter-spacing:-.2px}
-.isl .irz{font-size:11.5px;font-weight:600;color:var(--uyari);background:color-mix(in srgb,var(--uyari) 13%,transparent);border-radius:999px;padding:2px 9px}
+.isl .irz{font-size:12px;font-weight:650;color:color-mix(in srgb,var(--uyari) 78%,var(--yazi));background:color-mix(in srgb,var(--uyari) 13%,transparent);border-radius:999px;padding:2px 9px}
 .isl .ifr{display:flex;align-items:baseline;gap:8px;margin-top:2px;font-variant-numeric:tabular-nums}.isl .ifr #islfiy{font-size:30px;font-weight:700;letter-spacing:-.6px}.isl .ifr .art,.isl .ifr .eks{font-weight:650;font-size:14px}
 .isl .igk{margin:0 -16px;padding:0 8px 4px;border-bottom:1px solid var(--cizgi)}.isl .igb{display:flex;justify-content:space-between;align-items:center;gap:8px;padding:0 8px 6px}
 .isl .igr{width:100%;min-height:220px}.isl .igr svg{display:block;width:100%;height:auto;overflow:visible}.isl .igbos{height:220px;display:grid;place-items:center;color:var(--soluk);font-size:13px}
@@ -1069,13 +1072,13 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .igad.sl rect{stroke:var(--eks)}.isl .igad.sl text{fill:var(--eks)}.isl .igad.lik rect{stroke:var(--uyari)}.isl .igad.lik text{fill:var(--uyari)}
 .isl .igad.lim rect{stroke:var(--mor)}.isl .igad.lim text{fill:var(--mor)}.isl .igad.plan{opacity:.8}
 .isl .igal{fill:var(--art);color:var(--art)}.isl .igsat{fill:var(--eks);color:var(--eks)}
-.isl .ichip{display:flex;gap:4px;margin-top:8px}.isl .ichip button{flex:1;min-width:0;height:32px;border-radius:10px;border:0;background:var(--kart2);color:var(--soluk);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
-.isl .ichip button.on{background:var(--yazi);color:var(--bg)}.isl .igb .ichip{margin:0}.isl .ichip.ar{flex:0 1 250px}.isl .ichip.gt{flex:0 0 72px}.isl .igb .ichip button{height:28px;font-size:12px;background:none}.isl .igb .ichip button.on{background:var(--kart2);color:var(--yazi)}
-.isl .ichip.kisa{margin:0;flex:0 0 168px}.isl .ichip.kisa button{height:30px}
+.isl .ichip{display:flex;gap:4px;margin-top:8px}.isl .ichip button{flex:1;min-width:0;height:40px;border-radius:10px;border:0;background:var(--kart2);color:var(--soluk);font:inherit;font-size:13px;font-weight:600;cursor:pointer}
+.isl .ichip button.on{background:var(--yazi);color:var(--bg)}.isl .igb .ichip{margin:0}.isl .ichip.ar{flex:0 1 250px}.isl .ichip.gt{flex:0 0 84px}.isl .igb .ichip button{height:36px;font-size:12.5px;background:none}.isl .igb .ichip button.on{background:var(--kart2);color:var(--yazi)}
+.isl .ichip.kisa{margin:0;flex:0 0 168px}.isl .ichip.kisa button{height:40px}
 .isl .iseg{display:flex;gap:8px;margin-top:14px}.isl .iseg button{flex:1;min-width:0;height:42px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);font:inherit;font-weight:650;cursor:pointer}
 .isl .iseg button.on{background:var(--yazi);color:var(--bg);border-color:var(--yazi)}.isl .iseg.yon button{height:48px;font-size:16px}
 .isl .iseg.gor{background:var(--kart2);border-radius:12px;padding:3px;gap:3px}.isl .iseg.gor button{border:0;background:none;color:var(--soluk);height:36px}.isl .iseg.gor button.on{background:var(--kart);color:var(--yazi);box-shadow:0 1px 3px rgba(0,0,0,.12)}
-.isl .iseg button.L.on{background:var(--art);border-color:var(--art);color:var(--dy)}.isl .iseg button.S.on{background:var(--eks);border-color:var(--eks);color:var(--dy)}
+.isl .iseg button.L.on{background:var(--fa);border-color:var(--fa);color:var(--dy)}.isl .iseg button.S.on{background:var(--fe);border-color:var(--fe);color:var(--dy)}
 .isl .iseg.kucuk button{height:38px;font-size:13.5px}.isl .iseg button.tehlike{color:var(--eks);border-color:color-mix(in srgb,var(--eks) 45%,transparent)}.isl .iseg button.birincil{background:var(--vurgu);border-color:var(--vurgu);color:var(--dy)}
 .isl .isat{display:flex;justify-content:space-between;align-items:center;margin-top:14px}.isl .isat .ibas{margin:0}
 .isl .ibas{display:block;font-size:12.5px;font-weight:600;color:var(--soluk);margin:16px 0 6px}
@@ -1092,20 +1095,21 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .iozt{display:grid;grid-template-columns:1fr 1fr;gap:10px 16px;background:var(--kart2);border-radius:14px;padding:12px 14px;font-variant-numeric:tabular-nums}
 .isl .iozt div{display:flex;flex-direction:column;gap:2px}.isl .iozt .k{font-size:12px}
 .isl .ipoz{background:var(--kart2);border-radius:16px;padding:14px;margin-top:14px}.isl .iph{display:flex;justify-content:space-between;align-items:center}
-.isl .iyon{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;color:var(--dy);margin-right:8px}.isl .iyon.L{background:var(--art)}.isl .iyon.S{background:var(--eks)}.isl .iadet{font-weight:600}
+.isl .iyon{font-size:12px;font-weight:700;padding:3px 10px;border-radius:999px;color:var(--dy);margin-right:8px}.isl .iyon.L{background:var(--fa)}.isl .iyon.S{background:var(--fe)}.isl .iadet{font-weight:600}
 .isl .ikz{font-size:22px;font-weight:700;text-align:right;font-variant-numeric:tabular-nums;line-height:1.15}.isl .ikz small{display:block;font-size:12.5px;font-weight:600}
 .isl .ikg{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin-top:14px;font-size:14px;font-variant-numeric:tabular-nums}.isl .iku{display:flex;flex-direction:column;gap:2px}.isl .iku .k{font-size:12px}.isl .iku b{font-weight:600}
 .isl .ilik{display:flex;align-items:center;gap:10px;margin-top:12px}.isl .ilikb{flex:1;height:6px;border-radius:99px;background:var(--cizgi);overflow:hidden}.isl .ilikb span{display:block;height:100%;border-radius:99px}
 .isl .ilikb .ye{background:var(--art)}.isl .ilikb .tu{background:var(--uyari)}.isl .ilikb .kr{background:var(--eks)}
 .isl .ibek{display:flex;justify-content:space-between;font-size:13px;padding:9px 2px;border-bottom:1px solid var(--cizgi)}
 .isl .imsj{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13.5px;display:flex;align-items:center;gap:8px}.isl .imsj.ok{background:color-mix(in srgb,var(--art) 14%,transparent)}.isl .imsj.hata{background:color-mix(in srgb,var(--eks) 14%,transparent)}
-.isl .idur{font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 8px;color:var(--dy)}.isl .idur.ok{background:var(--art)}.isl .idur.bek{background:var(--uyari)}
+.isl .idur{font-size:11.5px;font-weight:700;border-radius:999px;padding:2px 8px;color:var(--dy)}.isl .idur.ok{background:var(--fa)}.isl .idur.bek{background:var(--uyari)}
 .isl .ialt{position:sticky;bottom:0;display:flex;gap:8px;margin:16px -16px 0;padding:10px 16px calc(12px + env(safe-area-inset-bottom));background:var(--kart);border-top:1px solid var(--cizgi);z-index:2}
 .isl .ibtn{flex:1;height:52px;border-radius:14px;border:0;font:inherit;font-size:16px;font-weight:700;cursor:pointer;background:var(--vurgu);color:var(--dy);position:relative;overflow:hidden;touch-action:none;-webkit-user-select:none;user-select:none}
-.isl .ibtn.L{background:var(--art)}.isl .ibtn.S{background:var(--eks)}.isl .ibtn.tehlike{background:var(--eks)}.isl .ibtn.vurgu{background:var(--vurgu)}.isl .ibtn:disabled{opacity:.5;cursor:default}
+.isl .ibtn.L{background:var(--fa)}.isl .ibtn.S{background:var(--fe)}.isl .ibtn.tehlike{background:var(--fe)}.isl .ibtn.vurgu{background:var(--vurgu)}.isl .ibtn:disabled{opacity:.5;cursor:default}
 .isl .ibtn.geri{flex:0 0 108px;background:var(--kart2);color:var(--yazi)}
 .isl .ibtn.tut::before{content:"";position:absolute;inset:0;width:0;background:rgba(255,255,255,.28);transition:width 0s}.isl .ibtn.tut.dolu::before{width:100%;transition:width .7s linear}
-.isl .ibtn.tut span{position:relative}.isl .ibtn:focus-visible,.isl button:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px}
+.isl .ibtn.tut span{position:relative}.isl .art,.pyk .art{color:var(--fa)}.isl .eks,.pyk .eks{color:var(--fe)}.isl .shx{width:44px;height:44px}.isl .iuyr{color:var(--uyari);font-size:12.5px;margin:8px 0 0}
+.isl .igl3{display:flex;gap:14px;font-size:11.5px;color:var(--soluk);padding:2px 8px 6px}.isl .ibtn:focus-visible,.isl button:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.isl .ibtn.tut.dolu::before{transition:none}}
 @media (max-width:420px){.isl .ikg{grid-template-columns:repeat(2,minmax(0,1fr))}.isl .ichip.kisa{flex-basis:150px}}
 </style></head><body><div class="kap">
@@ -1254,6 +1258,7 @@ function canliBagla(k){
 // funding, izleme listesi). Veri tarayıcıdan Binance'in HERKESE AÇIK uçlarından gelir (gerçek piyasa; anahtarsız): ilk görüntü REST
 // (/fapi/v1/ticker/24hr + premiumIndex + exchangeInfo), sonra saniyelik akış (!ticker@arr + !markPrice@arr@1s). Panel yine emir
 // veremez; coin adı Binance'te o coinin sayfasını açar. İzleme listesi yalnız bu tarayıcıda (localStorage).
+let PIY_DOKUN = 0; addEventListener("pointerdown", e=>{ if (e.target.closest && e.target.closest("#piyic")) PIY_DOKUN = Date.now(); }, {passive: true});
 let PIY = {}, PIY_WS = null, PIY_ACIK = false, PIY_EVREN = null, PIY_ZAMAN = 0, PIY_ONCEKI = {}, PIY_HATA = "", PIY_SON_CIZ = 0;
 const PIY_DEP = (a, v) => { try { return v===undefined ? JSON.parse(localStorage.getItem(a)) : localStorage.setItem(a, JSON.stringify(v)); } catch(_){ return null; } };
 let PIY_IZLE = new Set(PIY_DEP("carry_izle") || []), PIY_HACIM = PIY_DEP("carry_piy_hacim") ?? 10e6, PIY_MOD = PIY_DEP("carry_piy_mod") || "deg", PIY_ARA = "";
@@ -1324,7 +1329,7 @@ function piyRozet(k){   // botun / senin bu coindeki durumun
 }
 function piySatir(o, R){
   const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, "");
-  return `<div class="pyr ${fl>0?"fl-a":fl<0?"fl-e":""}"><button class="yd ${yd?"on":""}" title="${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" onclick="piyIzle('${o.s}')">${yd?"★":"☆"}</button>
+  return `<div class="pyr ${fl>0?"fl-a":fl<0?"fl-e":""}"><button class="yd ${yd?"on":""}" title="${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" aria-label="${ad} ${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" aria-pressed="${yd}" onclick="piyIzle('${o.s}')">${yd?"★":"☆"}</button>
     <span style="min-width:0;display:flex;align-items:center">${ISL_DURUM && ISL_DURUM.acik ? `<a href="#piyasa" onclick="islAc('${o.s}');return false" title="al / sat">${ad}</a>` : `<a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>`}${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}</span>
     <span class="r">${piyFiyat(o.f)}</span><span class="r ${o.d>0?"art":o.d<0?"eks":""}"><b>${piyYz(o.d)}</b></span>
     <span class="r k2 hc">${piyHac(o.q)}</span><span class="r k2 ${o.r>0?"":o.r<0?"eks":""}" title="son funding oranı (8 sa)">${o.r==null?"—":piyYz(o.r*100, 3)}</span></div>`;
@@ -1349,9 +1354,9 @@ function piyListe(k){
 function piyYukNot(){ return PIY_DONEM > 1 && PIY_GYUK.calis ? `geçmiş yükleniyor ${PIY_GYUK.bit}/${PIY_GYUK.bek}` : ""; }
 function piyasaSayfa(k){
   const hb = (v, ad) => `<button class="${PIY_HACIM==v?"on":""}" onclick="piyHacim(${v})">${ad}</button>`, mb = (v, ad) => `<button class="${PIY_MOD==v?"on":""}" onclick="piyMod('${v}')">${ad}</button>`;
-  return `<div class="kart">
-    <div class="dpb"><span class="gb">Piyasa</span><span class="k" id="piyd"></span></div>
-    <div class="pya"><input id="piyara" type="search" placeholder="coin ara (örn. AKE)" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value)">
+  return `<div class="kart pyk">
+    <div class="dpb"><span class="gb">Piyasa</span><span class="k" id="piyd" role="status"></span></div>
+    <div class="pya"><input id="piyara" type="search" aria-label="Coin ara" placeholder="Coin ara, örn. AKE" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value)">
       <div class="gdon">${[1,3,7,30].map(d=>`<button class="${PIY_MOD=="deg"&&PIY_DONEM==d?"on":""}" onclick="piyDonem(${d})">${PIY_DAD[d]}</button>`).join("")}${mb("fund","Funding")}</div></div>
     <div class="pya"><span class="k">hacim ≥</span><div class="gdon">${hb(1e6,"1 M$")}${hb(10e6,"10 M$")}${hb(50e6,"50 M$")}${hb(200e6,"200 M$")}</div></div>
     <div id="piyic">${piyListe(k)}</div>
@@ -1364,6 +1369,7 @@ function piyasaBoya(zorla){
   const el = $("#piyic"), d = $("#piyd"); if (!el) return;
   if (d) d.textContent = PIY_HATA || (PIY_ZAMAN ? (Date.now()-PIY_ZAMAN < 10e3 ? "● canlı" : "bağlantı bekleniyor…") : "yükleniyor…");
   if (!zorla && Date.now() - PIY_SON_CIZ < 900) return;
+  if (!zorla && Date.now() - PIY_DOKUN < 600) return;   // madde 837: parmak listedeyken yeniden çizme (dokunuş kaybolmasın)
   PIY_SON_CIZ = Date.now();
   const k = VERI && VERI.kurulumlar[secili]; el.innerHTML = piyListe(k); PIY_ONCEKI = {};
 }
@@ -1391,10 +1397,11 @@ function islAc(s, yon){
          pin:"", poz:null, oniz:null, msj:null, mesgul:false, gor: yon ? "emir" : "poz", adim: null,
          aralik: yer("carry_isl_ar") || "1h", gtur: yer("carry_isl_gt") || "mum"};
   const el = $("#sheet"); el.hidden = false;
-  el.innerHTML = `<div class="shb" onclick="islKapat()"></div><div class="shp isl" role="dialog" aria-label="${s.replace(/USDT$/,"")} işlem"><div class="shh"></div><div id="islic"></div></div>`;
+  el.innerHTML = `<div class="shb" onclick="islKapat()"></div><div class="shp isl" role="dialog" aria-modal="true" tabindex="-1" aria-label="${s.replace(/USDT$/,"")} işlem"><div class="shh"></div><div id="islic"></div></div>`;
   document.body.style.overflow = "hidden"; islCiz(); islPozYukle(); islMumYukle();
+  ISL.donus = document.activeElement; const sp = el.querySelector(".shp"); if (sp) sp.focus({preventScroll: true});   // ekran okuyucu / klavye pencereye
 }
-function islKapat(){ ISL = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; }
+function islKapat(){ const d = ISL && ISL.donus; ISL = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; if (d && d.focus) try { d.focus({preventScroll: true}); } catch(_){} }
 addEventListener("keydown", e=>{ if (e.key === "Escape" && ISL){ if (ISL.adim){ ISL.adim = null; islCiz(); } else islKapat(); } });
 async function islPozYukle(){ if (!ISL) return; const s = ISL.s; const d = await islIstek("pozisyon/" + s);
   if (ISL && ISL.s==s){ const ilk = !ISL.poz; ISL.poz = d.ok ? d : {hata: d.hata};
@@ -1458,8 +1465,10 @@ function islGrafikCiz(){ const el = $("#islgraf"); if (!el || !ISL) return; cons
 // MADDE 836: AKIŞ — 1) ayarla (canlı tahmin)  2) ONAY ekranı: özet + PIN + BASILI TUT (yanlışlıkla dokunuşla emir gitmez). Kapat / TP-stop / sil
 // da aynı onay ekranından geçer. PIN pencere açık kaldıkça bellekte kalır (kaydedilmez). Boyut iki yolla: tutar ($) ya da RİSK ($): stop'a kadar
 // kaybetmeyi göze aldığın tutar -> pozisyon büyüklüğü = risk × fiyat / |fiyat − stop| (en fazla izin verilen sınır).
+function islSayi(v){ return String(v==null?"":v).trim().replace(/\s/g, "").replace(",", "."); }   // "0,45" -> "0.45" (Türkçe klavye)
+const islGos = v => v===""||v==null ? "" : ea(String(v).replace(".", ","));   // kutuda Türkçe ondalık
 function islAyar(k, v){
-  if (!ISL) return; ISL[k] = v; if (k!="pin") ISL.oniz = null;
+  if (!ISL) return; if (["usd","fiyat","tp","sl","risk"].includes(k)) v = islSayi(v); ISL[k] = v; if (k!="pin") ISL.oniz = null;
   if (["pin","usd","fiyat","tp","sl","risk"].includes(k)){ islTahmin(); islGrafikCiz(); islAltGuncelle(); } else islCiz(); }
 function islGor(g){ if (!ISL) return; ISL.gor = g; ISL.msj = null; ISL.adim = null; islCiz(); }
 function islYonSec(y){ if (!ISL) return; ISL.yon = y; ISL.gor = "emir"; ISL.adim = null; ISL.msj = null; ISL.oniz = null; islCiz(); }
@@ -1488,7 +1497,17 @@ function islTahminMetin(){
     ${kTP!=null ? sat("TP'de", "▲ " + isaretli(kTP), "art") : ""}${kSL!=null ? sat("Stop'ta", "▼ " + isaretli(kSL), "eks") : ""}
     ${kTP>0 && kSL<0 ? sat("Risk / ödül", "1 : " + (kTP / -kSL).toFixed(1).replace(".",",")) : ""}${sat("Komisyon", "≈ " + para(kom))}</div>`;
 }
-function islTahmin(){ const e = $("#isltah"); if (e) e.innerHTML = islTahminMetin(); }
+function islUyari(){   // sunucuya gitmeden önce yazarken uyar (sunucu yine de denetler)
+  const I = ISL, P = I.poz && I.poz.pozisyon, uzun = I.gor=="poz" && islPozVar() ? P.adet > 0 : I.yon=="L", ref = I.gor=="poz" ? (I.poz && I.poz.isaret) : islRef(), m = (I.poz && I.poz.isaret) || ref;
+  const tp = +I.tp, sl = +I.sl, U = [];
+  if (!(ref > 0)) return "";
+  if (tp > 0 && (uzun ? tp <= ref : tp >= ref)) U.push(`TP fiyatın ${uzun ? "üstünde" : "altında"} olmalı (şimdi ${piyFiyat(ref)}).`);
+  if (sl > 0 && (uzun ? sl >= ref : sl <= ref)) U.push(`Stop fiyatın ${uzun ? "altında" : "üstünde"} olmalı (şimdi ${piyFiyat(ref)}).`);
+  if (I.gor=="emir" && I.tip=="LIMIT" && +I.fiyat > 0 && m > 0 && Math.abs(+I.fiyat / m - 1) > 0.2) U.push("Limit fiyatı şimdiki fiyatın ±%20'si içinde olmalı.");
+  if (I.gor=="emir" && I.boyut!="risk" && +I.usd > ((ISL_DURUM||{}).max_usd||200)) U.push(`Tek emir en fazla ${(ISL_DURUM||{}).max_usd||200} $.`);
+  return U.map(x=>`<p class="iuyr" role="alert">⚠ ${x}</p>`).join("");
+}
+function islTahmin(){ const e = $("#isltah"); if (e) e.innerHTML = islTahminMetin(); const u = $("#isluyr"); if (u) u.innerHTML = islUyari(); }
 function islAltGuncelle(){ const b = $("#islalt"); if (b) b.outerHTML = islAlt(); }
 async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
   if (!ISL || ISL.mesgul) return; const u = islBoyutUsd();
@@ -1552,7 +1571,7 @@ async function islOnayla(){   // basılı tutma tamamlanınca
 let ISL_TUT = null;
 function islTutBasla(e){ if (!ISL || !ISL.adim || ISL.mesgul || ISL_TUT) return; if (e && e.type=="keydown" && e.repeat) return; if (e && e.cancelable) e.preventDefault();
   const b = $("#isltut"); if (!b) return; b.classList.add("dolu");
-  ISL_TUT = setTimeout(()=>{ ISL_TUT = null; b.classList.remove("dolu"); islOnayla(); }, 700); }
+  ISL_TUT = setTimeout(()=>{ ISL_TUT = null; b.classList.remove("dolu"); try { navigator.vibrate && navigator.vibrate(18); } catch(_){} islOnayla(); }, 700); }
 function islTutBirak(){ if (!ISL_TUT) return; clearTimeout(ISL_TUT); ISL_TUT = null; const b = $("#isltut"); if (b) b.classList.remove("dolu"); }
 function islAlt(){   // sabit alt çubuk: başparmak bölgesinde ana eylem
   const I = ISL; if (!I) return "";
@@ -1577,7 +1596,7 @@ function islCiz(){
   // grafik
   h += `<div class="igk"><div class="igb"><div class="ichip ar">${Object.entries(ISL_AR).map(([a,[t]])=>`<button class="${I.aralik==a?"on":""}" onclick="islAralik('${a}')">${t}</button>`).join("")}</div>
       <div class="ichip gt"><button class="${I.gtur!="cizgi"?"on":""}" onclick="islGTur('mum')" aria-label="mum grafik" title="mum">▮▯</button><button class="${I.gtur=="cizgi"?"on":""}" onclick="islGTur('cizgi')" aria-label="çizgi grafik" title="çizgi">∿</button></div></div>
-      <div id="islgraf" class="igr"></div></div>`;
+      <div id="islgraf" class="igr"></div>${(PR && PR.islemler && PR.islemler.length) ? `<div class="igl3"><span><b class="igal">▲</b> alışların</span><span><b class="igsat">▼</b> satışların</span><span>son 7 gün</span></div>` : ""}</div>`;
   // ONAY ekranı
   if (I.adim){ const A = I.adim;
     h += `<div class="ionay"><div class="iob">${A.baslik}</div><div class="iozt">${A.satir.map(([a,b])=>`<div><span class="k">${a}</span><b>${b}</b></div>`).join("")}</div>
@@ -1601,27 +1620,28 @@ function islCiz(){
         ${likU!=null ? `<div class="ilik"><div class="ilikb"><span style="width:${Math.max(4, Math.min(100, likU / 50 * 100)).toFixed(0)}%" class="${likU<10?"kr":likU<30?"tu":"ye"}"></span></div><span class="k">likidasyona %${likU.toFixed(0)} uzak</span></div>` : ""}</div>
         <div class="ibas">Kapat</div><div class="iseg kucuk"><button onclick="islKapatOnay(0.25)">%25</button><button onclick="islKapatOnay(0.5)">%50</button><button class="tehlike" onclick="islKapatOnay(1)">Tümü</button></div>
         <div class="ibas">TP / stop</div>
-        <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${ea(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
-          <div><input inputmode="decimal" placeholder="Stop fiyatı" aria-label="Stop fiyatı" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>
+        <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
+          <div><input inputmode="decimal" placeholder="Stop fiyatı" aria-label="Stop fiyatı" value="${islGos(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>
+        <div id="isluyr">${islUyari()}</div>
         <div class="iseg kucuk"><button class="birincil" onclick="islTPSLOnay()">TP / stop kaydet</button>${PR.bekleyen.some(x=>x.panel)||PR.tpsl.some(x=>x.panel)?`<button onclick="islSilOnay()">Panel emirlerini sil</button>`:""}</div>
         ${PR.bekleyen.length ? `<div class="ibas">Bekleyen emirler</div>${PR.bekleyen.map(x=>`<div class="ibek"><span>${x.tip=="LIMIT"?"Limit":x.tip} ${x.yon=="BUY"?"alış":"satış"}, ${x.adet}</span><span>${fg(x.fiyat)}${x.panel?"":" <span class='k'>(bot)</span>"}</span></div>`).join("")}` : ""}`;
     } else if (PR && !PR.hata){
       const riskMod = I.boyut=="risk", tpslAcik = I.tpsl || riskMod;
       h += `<div class="iseg yon">${seg("yon","L","Long","L")}${seg("yon","S","Short","S")}</div>
         <div class="isat"><span class="ibas">Emir tipi</span><div class="ichip kisa">${seg("tip","MARKET","Piyasa")}${seg("tip","LIMIT","Limit")}</div></div>
-        ${I.tip=="LIMIT" ? `<input inputmode="decimal" placeholder="Limit fiyatı (şimdi ${fg(PR.isaret)})" aria-label="Limit fiyatı" value="${ea(I.fiyat)}" oninput="islAyar('fiyat',this.value)">` : ""}
+        ${I.tip=="LIMIT" ? `<input inputmode="decimal" placeholder="Limit fiyatı (şimdi ${fg(PR.isaret)})" aria-label="Limit fiyatı" value="${islGos(I.fiyat)}" oninput="islAyar('fiyat',this.value)">` : ""}
         <div class="isat"><span class="ibas">Boyut</span><div class="ichip kisa">${seg("boyut","usd","Tutar")}${seg("boyut","risk","Risk")}</div></div>
-        ${riskMod ? `<div class="ipara"><input inputmode="decimal" aria-label="Risk tutarı" value="${ea(I.risk)}" oninput="islAyar('risk',this.value)"><span>$ risk</span></div>
+        ${riskMod ? `<div class="ipara"><input inputmode="decimal" aria-label="Risk tutarı" value="${islGos(I.risk)}" oninput="islAyar('risk',this.value)"><span>$ risk</span></div>
             <div class="ichip">${[2,5,10,20].map(v=>`<button class="${+I.risk==v?"on":""}" onclick="islAyar('risk',${v});islCiz()">${v} $</button>`).join("")}</div>
             <p class="ion k">Stop'a kadar en fazla bu kadar kaybedersin; pozisyon büyüklüğü buna göre hesaplanır.</p>`
-          : `<div class="ipara"><input inputmode="decimal" aria-label="Tutar" value="${ea(I.usd)}" oninput="islAyar('usd',this.value)"><span>$</span></div>
+          : `<div class="ipara"><input inputmode="decimal" aria-label="Tutar" value="${islGos(I.usd)}" oninput="islAyar('usd',this.value)"><span>$</span></div>
             <div class="ichip">${[25,50,100,200].filter(v=>v<=(D.max_usd||200)).map(v=>`<button class="${+I.usd==v?"on":""}" onclick="islAyar('usd',${v});islCiz()">${v} $</button>`).join("")}</div>`}
-        ${varPoz ? (riskMod ? `<input inputmode="decimal" placeholder="Stop fiyatı (risk buna göre)" aria-label="Stop fiyatı" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}` : "")
+        ${varPoz ? (riskMod ? `<input inputmode="decimal" placeholder="Stop fiyatı (risk buna göre)" aria-label="Stop fiyatı" value="${islGos(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}` : "")
             + `<p class="ion k">Ekleme sonrası mevcut TP / stop toplam adede göre güncellenir; fiyatlarını Pozisyon'dan değiştirirsin.</p>`
           : `<button class="iacil ${tpslAcik?"on":""}" onclick="ISL.tpsl=!ISL.tpsl;ISL.oniz=null;islCiz()" ${riskMod?"disabled":""}><span>TP / stop ekle</span><i>${tpslAcik?"açık":"kapalı"}</i></button>
-            ${tpslAcik ? `<div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${ea(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
-              <div><input inputmode="decimal" placeholder="Stop fiyatı" aria-label="Stop fiyatı" value="${ea(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>` : ""}`}
-        <div id="isltah">${islTahminMetin()}</div>`;
+            ${tpslAcik ? `<div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
+              <div><input inputmode="decimal" placeholder="Stop fiyatı" aria-label="Stop fiyatı" value="${islGos(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>` : ""}`}
+        <div id="isluyr">${islUyari()}</div><div id="isltah">${islTahminMetin()}</div>`;
     }
   }
   if (I.msj) h += `<div class="imsj ${I.msj.ok?"ok":"hata"}" role="status">${I.msj.durum=="FILLED"?'<span class="idur ok">Doldu</span>':I.msj.durum=="NEW"?'<span class="idur bek">Bekliyor</span>':""}${ea(I.msj.ok||I.msj.hata)}</div>`;

@@ -136,6 +136,8 @@ with sync_playwright() as pw:
     page.locator(".gdon button", has_text="10 M$").click()
     print("4) izleme listesi")
     page.locator(".pyr", has_text="CCC").first.locator("button.yd").click()
+    kontrol("madde 837: yıldız düğmesi aria-pressed ve 40 px", page.locator(".pyr", has_text="CCC").first.locator("button.yd").get_attribute("aria-pressed") == "true"
+            and page.locator(".pyr", has_text="CCC").first.locator("button.yd").bounding_box()["height"] >= 40)
     kontrol("☆ ile CCC izleme listesine eklendi", satirlar(page, "İzleme listem") == ["CCC"])
     page.reload(); page.wait_for_selector(".pyr a")
     kontrol("yenilemeden sonra izleme listesi duruyor", satirlar(page, "İzleme listem") == ["CCC"])
