@@ -126,7 +126,8 @@ with sync_playwright() as pw:
     page.fill("#islpin", "482913")
     kontrol("doğru uzunlukta PIN ile gönder açık", not page.locator("#islgonder").is_disabled())
     page.locator("#islgonder").click()
-    page.wait_for_selector(".isl .imsj.ok", timeout=5000)
+    page.wait_for_selector(".isl .imsj", timeout=8000)
+    kontrol("emir başarı mesajı", page.locator(".isl .imsj").get_attribute("class").endswith("ok"), page.locator(".isl .imsj").inner_text())
     e = SC.client.emirler[-1]
     kontrol("borsaya MARKET BUY 200 adet gitti", e["type"] == "MARKET" and e["side"] == "BUY" and e["quantity"] == 200, e)
     kontrol("emir panel_ önekli -> bot coini kullanıcıya bırakır", ce.emir_sahibi({"clientOrderId": e["newClientOrderId"]}) == "kullanici")
