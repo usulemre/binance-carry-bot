@@ -82,6 +82,8 @@ class SahteIc:
         return {"algoId": self._oid}
 
     def futures_get_open_algo_orders(self, symbol=None):
+        if symbol is None:   # madde 856: toplu sorgu (her emirde symbol alanı, Binance gibi)
+            return [{**o, "symbol": s} for s, L in self.algo_acik.items() for o in L]
         return list(self.algo_acik.get(symbol, []))
 
     def futures_cancel_algo_order(self, symbol, algoId):

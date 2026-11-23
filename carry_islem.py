@@ -597,15 +597,30 @@ class Kapi:
         ayri = bool(self.ayar.get("ayri"))   # madde 851: ayrı hesapta bütün pozisyonlar kullanıcının
         elle = set() if ayri else self._elle_kumesi()
         pozlar = []
+        tum_algo = None   # madde 856: bütün açık TP/stop emirleri TEK sorguda (coin başına sorgu 15 pozisyonda ~5 sn sürüyordu)
+        try:
+            f = getattr(self.ic, "futures_get_open_algo_orders", None)
+            if f:
+                r = f()
+                r = r.get("orders", r) if isinstance(r, dict) else r
+                tum_algo = {}
+                for o in r or []:
+                    tum_algo.setdefault(o.get("symbol"), []).append(o)
+        except Exception as e:
+            logger.info("toplu TP/stop okunamadı (%s) — coin başına", str(e)[:120])
+            tum_algo = None
         for p in self.c.get_open_positions():
             sem = p.get("symbol")
             a = float(p.get("positionAmt") or 0)
             if (ayri or sem in elle) and a:
                 tp = sl = None
                 try:
-                    f = getattr(self.ic, "futures_get_open_algo_orders", None)
-                    r = f(symbol=sem) if f else []
-                    r = r.get("orders", r) if isinstance(r, dict) else r
+                    if tum_algo is not None:
+                        r = tum_algo.get(sem, [])
+                    else:
+                        f = getattr(self.ic, "futures_get_open_algo_orders", None)
+                        r = f(symbol=sem) if f else []
+                        r = r.get("orders", r) if isinstance(r, dict) else r
                     for o in r or []:
                         t = str(o.get("orderType") or o.get("type") or "")
                         if t.startswith("TAKE_PROFIT"):

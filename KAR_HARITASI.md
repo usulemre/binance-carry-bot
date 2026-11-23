@@ -9616,3 +9616,4 @@ Al-Sat → Geçmiş artık botun bileşenleriyle: Hafta / Ay / Tümü seçimli b
 
 ## Madde 856 — Al-Sat canlı fiyat / K/Z, Geçmiş'te takılma giderildi (kullanıcı, 2026-11-24: "anında fiyat değişmiyor sanki, geçmişte elle de takılma var gibi")
 Pozisyonlarım K/Z'si sunucudan 15 sn'de bir geliyordu → artık al-sat pozisyonlarının işaret fiyatı akışı (markPrice@1s), K/Z = adet × (işaret − giriş) saniyede bir, yalnız rakamlar yerinde güncellenir (liste baştan çizilmez, dokunuş kaçmaz); üstteki hesap değeri de canlı. Takılma: botun 60 sn'lik veri yenilemesi Al-Sat sayfasını da baştan çiziyordu (masaüstünde ~80 ms, telefonda daha uzun) → Al-Sat alanında çizmez; Geçmiş verisi yalnız değişince ve kaydırma yeri korunarak güncellenir.
+Ek: Pozisyonlarım verisi (/elle) 4,9 sn sürüyordu — coin başına TP/stop sorgusu (15 pozisyon); artık bütün açık TP/stop TEK sorguda (futures_get_open_algo_orders(), her emirde symbol var; hata olursa coin başına).
