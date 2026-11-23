@@ -513,12 +513,14 @@ _o51 = panel.giris_duzelt(_d51, _an51)
 kontrol("madde 852: Al-Sat geçmiş sekmesi (eğri + günlük çubuk + gün tablosu, /api/islem/gecmis)",
         all(x in _s49 for x in ("function asGecmisSayfa", "function asEgri", '@app.get("/api/islem/gecmis")', 'islIstek("gecmis")')))
 kontrol("madde 855: Al-Sat geçmişi bottakiyle aynı bileşenler (hafta/ay/tümü, takvim, son 1 yıl, coin tablosu)",
-        all(x in _s49 for x in ("function asK(A)", "${gecmisSade(K)}", "${takvim(K)}", "${yillik(K)}", "${coinTablo(K)}", 'k._baslik || "Geçmiş"')))
+        all(x in _s49 for x in ("function asK(A)", "ust: gecmisSade(K)", "tak: takvim(K)", "${yillik(asK(A || AS_GEC))}", "coin: coinTablo(K)", 'k._baslik || "Geçmiş"')))
+kontrol("madde 857: Al-Sat geçmişi canlı (işaret akışıyla açık K/Z; yalnız değişen bölümler 2 sn'de bir)",
+        all(x in _s49 for x in ("function asGecmisCanliVeri", "function asGecmisCanli", "asGecmisCanli();   // madde 857", 'id="as-coin"')))
 kontrol("madde 853: coin penceresinde fiyat hemen (REST) + coinin kendi akışı, kapanınca kapanır",
         all(x in _s49 for x in ("function islFiyatGetir", "fapi/v1/ticker/24hr?symbol=", "market/stream?streams=${s.toLowerCase()}@ticker",
                                  "islFiyatGetir(s); islAkisBagla(s);", "function islKapat(){ islAkisKapat();")))
-kontrol("madde 854: Al-Sat'ta taşıma öncesi kesinleşen kâr + toplam",
-        all(x in _s49 for x in ("taşımadan önce kesinleşen", "const On = E.onceki", "A.onceki ? ", "Elle toplamı")))
+kontrol("madde 857: 'taşımadan önce' bilgisi Al-Sat'tan kaldırıldı (kafa karıştırıyordu)",
+        all(x not in _s49 for x in ("taşımadan önce kesinleşen", "const On = E.onceki", "Elle toplamı")))
 kontrol("madde 856: Al-Sat canlı K/Z (işaret akışı, yerinde güncelleme), Al-Sat'ta 60 sn yenilemesi sayfayı baştan çizmez",
         all(x in _s49 for x in ("function asAkisBagla", "@markPrice@1s", "const asKz = x =>", "asCanliBoya();   // madde 856", 'id="askz-${x.sembol}"',
                                  'if (ilk || ALAN != "alsat" || ISL) ciz();')))

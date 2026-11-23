@@ -1518,23 +1518,45 @@ function asK(A){
   return {seri, kitap_canli: null, aylik, coin_ozet: A.coin_ozet || [], mod: (ISL_DURUM||{}).mod, _baslik: "Al-Sat geçmişi",
           _canliNot: "canlı · gece 00:00'da kesinleşir", _bosMetin: "Al-sat hesabında henüz gün yok."};
 }
-function asGecmisSayfa(){
+function asGecmisSayfa(A){
   const D = ISL_DURUM;
   if (D && !D.ayri) return `<div class="kart bos">Geçmiş, al-sat ayrı hesabı bağlıyken görünür.</div>`;
   if (!AS_GEC || Date.now() - (AS_GEC._t||0) > 60e3) asGecmisYukle();
   if (!AS_GEC) return `<div class="kart"><div class="iskelet" style="height:34px;width:60%"></div><div class="iskelet" style="height:150px;margin-top:14px"></div></div>`;
   if (AS_GEC.hata) return `<div class="kart bos">${ea(AS_GEC.hata)}</div>`;
-  const A = AS_GEC, O = A.ozet || {}, K = asK(A);
-  const yzd = v => v==null ? "" : ` (${(v>=0?"+":"−")}%${Math.abs(v*100).toFixed(2).replace(".",",")})`;
-  const ozet = `<div class="kart"><div class="asoz"><div><div class="k">Bu hesap · başlangıçtan beri</div><div class="asb ${sinif(A.toplam)}">${A.toplam>=0?"▲":"▼"} ${isaretli(A.toplam)}<span class="k">${yzd(A.oran)}</span></div></div>
-      ${A.onceki ? `<div><div class="k">Elle toplamı (taşıma öncesi dahil)</div><div class="asb ${sinif(A.onceki.toplam + A.toplam)}">${isaretli(A.onceki.toplam + A.toplam)}</div></div>` : ""}</div>
-    <div class="k" style="margin-top:6px">${para(A.baslangic)} → ${para(A.ozkaynak)} · kapanan ${isaretli(O.gerceklesen||0)} · funding ${isaretli(O.funding||0)} · komisyon ${isaretli(O.komisyon||0)} · açık ${isaretli(A.acik||0)}${A.onceki ? ` · taşımadan önce kesinleşen ${isaretli(A.onceki.toplam)}` : ""}</div>
-    <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}</div>`;
-  return `<div>${gecmisSade(K)}</div>${ozet}
-    <div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2>${takvim(K)}
+  const P = asGecmisParca(A || asGecmisCanliVeri());
+  return `<div id="as-ust">${P.ust}</div><div id="as-oz">${P.oz}</div>
+    <div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2><div id="as-tak">${P.tak}</div>
       <div class="k" style="margin-top:4px">Gün, Türkiye saatiyle 00:00 – 00:00. ● işaretli gün bugün (canlı).</div></div>
-    <div class="kart"><h2>Son 1 yıl</h2>${yillik(K)}</div>
-    ${coinTablo(K)}`;
+    <div class="kart"><h2>Son 1 yıl</h2>${yillik(asK(A || AS_GEC))}</div>
+    <div id="as-coin">${P.coin}</div>`;
+}
+function asGecmisParca(A){
+  const O = A.ozet || {}, K = asK(A);
+  const yzd = v => v==null ? "" : ` (${(v>=0?"+":"−")}%${Math.abs(v*100).toFixed(2).replace(".",",")})`;
+  const oz = `<div class="kart"><div class="k">Başlangıçtan beri</div><div class="asb ${sinif(A.toplam)}">${A.toplam>=0?"▲":"▼"} ${isaretli(A.toplam)}<span class="k">${yzd(A.oran)}</span></div>
+    <div class="k" style="margin-top:6px">${para(A.baslangic)} → ${para(A.ozkaynak)} · kapanan ${isaretli(O.gerceklesen||0)} · funding ${isaretli(O.funding||0)} · komisyon ${isaretli(O.komisyon||0)} · açık ${isaretli(A.acik||0)}</div>
+    <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}</div>`;
+  return {ust: gecmisSade(K), oz, tak: takvim(K), coin: coinTablo(K)};
+}
+// madde 857: Geçmiş CANLI — açık K/Z'yi Pozisyonlarım'ın işaret fiyatı akışıyla yeniden hesaplar (özkaynak = cüzdan + canlı açık K/Z)
+function asGecmisCanliVeri(){
+  const A = AS_GEC, P = (ELLE_OZ && !ELLE_OZ.hata && ELLE_OZ.pozisyonlar) || null;
+  if (!A || A.hata || !P) return A;
+  const ac = {}; for (const x of P) ac[x.sembol.replace(/USDT$/,"")] = asKz(x);
+  const acik = Object.values(ac).reduce((a,v)=>a+v, 0), fark = acik - (A.acik||0);
+  if (Math.abs(fark) < 1e-9) return A;
+  const G = (A.gunler||[]).map((g,i,arr)=> i == arr.length-1 ? {...g, kz: g.kz + fark, oz: g.oz + fark} : g);
+  const coin = (A.coin_ozet||[]).map(c=>{ const a = ac[c.s] != null ? ac[c.s] : c.acik; return {...c, acik: a, toplam: c.kapanan + c.funding + c.komisyon + a}; }).sort((a,b)=>a.toplam-b.toplam);
+  const oz = A.ozkaynak + fark, toplam = A.toplam + fark;
+  return {...A, acik, ozkaynak: oz, toplam, oran: A.baslangic > 0 ? toplam / A.baslangic : A.oran, gunler: G, coin_ozet: coin,
+          egri: [...(A.egri||[]).slice(0, -1), [Date.now(), oz]]};
+}
+function asGecmisCanli(){   // 2 sn'de bir: yalnız değişen bölümler (sayfa baştan çizilmez)
+  if (sayfa != "asgecmis" || !AS_GEC || AS_GEC.hata || Date.now() - (asGecmisCanli.t||0) < 2000) return;
+  asGecmisCanli.t = Date.now();
+  const P = asGecmisParca(asGecmisCanliVeri());
+  for (const [id, h] of [["as-ust", P.ust], ["as-oz", P.oz], ["as-tak", P.tak], ["as-coin", P.coin]]){ const el = document.getElementById(id); if (el && el.innerHTML !== h) el.innerHTML = h; }
 }
 // MADDE 839: POZİSYONLARIM — elle yönettiğin açık pozisyonlar (hesabın K/Z'si) + son 30 gün elle sonucu; 15 sn'de bir kapıdan.
 let ELLE_OZ = null;
@@ -1615,25 +1637,24 @@ function asCanliBoya(){   // canliBoya her saniye: Pozisyonlarım satırları + 
   asAkisBagla();
   if (sayfa == "alsat"){   // yalnız rakamlar yerinde (her saniye listeyi baştan çizmek dokunuşu kaçırtırdı)
     const tmp = document.createElement("div"); tmp.innerHTML = elleHtml();
-    for (const id of ["astop", "asonc", ...ELLE_OZ.pozisyonlar.map(x=>"askz-" + x.sembol)]){
+    for (const id of ["astop", ...ELLE_OZ.pozisyonlar.map(x=>"askz-" + x.sembol)]){
       const a = document.getElementById(id), b = tmp.querySelector("#" + CSS.escape(id));
       if (a && b && a.innerHTML !== b.innerHTML){ a.innerHTML = b.innerHTML; a.className = b.className; } } }
   const H = ELLE_OZ.hesap, u = $("#ustkitap");
+  asGecmisCanli();   // madde 857
   if (u && H && H.ozkaynak != null){ const fark = ELLE_OZ.pozisyonlar.reduce((a,x)=>a + asKz(x) - x.kz, 0); u.innerHTML = `<span>${para(H.ozkaynak + fark)}</span>`; }
 }
 function elleHtml(){
   const E = ELLE_OZ; if (!E) return `<div class="pyb"><span>Pozisyonlarım</span><span>yükleniyor…</span></div>`;
   if (E.hata) return `<div class="pyb"><span>Pozisyonlarım</span><span class="eks">${ea(E.hata)}</span></div>`;
   const S = E.sonuc || {}, P = (E.pozisyonlar || []).map(x=>({...x, kz: asKz(x)})), top = P.reduce((a,x)=>a + x.kz, 0);   // madde 856: canlı
-  const On = E.onceki, onS = (On && On.sembol) || {};   // madde 854: taşımadan önce bot hesabında kesinleşen
-  const onceki = On ? `<div class="k2" id="asonc" style="margin-top:3px">taşımadan önce kesinleşen <b class="${sinif(On.toplam)}">${isaretli(On.toplam)}</b> · şimdiki ${isaretli(top)} → <b>toplam <span class="${sinif(On.toplam + top)}">${isaretli(On.toplam + top)}</span></b></div>` : "";
   const sonuc = S.kapanis ? `son 30 gün <b class="${sinif(S.net)}">${S.net>=0?"▲":"▼"} ${isaretli(S.net)}</b>, ${S.kapanis} kapanış, %${Math.round(S.kazanan / S.kapanis * 100)} kârlı` : "son 30 günde kapanan elle işlem yok";
   const satir = x => { const ad = x.sembol.replace(/USDT$/,""), uz = x.adet > 0, deger = Math.abs(x.adet) * x.giris, kp = deger ? x.kz / deger * 100 : 0;
     return `<div class="pyr pye"><span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
       <span style="min-width:0;display:flex;flex-direction:column"><a href="#piyasa" onclick="islAc('${x.sembol}');return false">${ad}</a><span class="k2">${elleKisa(x)}</span></span>
       <span class="r k2">${x.tp?`TP ${piyFiyat(x.tp)}`:""}${x.tp&&x.sl?"<br>":""}${x.sl?`stop ${piyFiyat(x.sl)}`:`<span class="uyr">stop yok</span>`}</span>
-      <span class="r ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${onS[x.sembol]!=null ? `önce ${isaretli(onS[x.sembol])}` : (kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></div>`; };
-  return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div>${onceki}</div>
+      <span class="r ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></div>`; };
+  return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div></div>
     <div class="pyl">${P.length ? P.map(satir).join("") : `<div class="pybos">Elle açık pozisyonun yok. Aşağıdaki listeden bir coine dokunup işlem açabilirsin.</div>`}</div>`;
 }
 function piyasaBoya(zorla){
