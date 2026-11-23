@@ -512,6 +512,9 @@ _an51 = {"gerceklesmemis_top": -15.0, "pozisyonlar": {"BUSDT": {"miktar": -100.0
 _o51 = panel.giris_duzelt(_d51, _an51)
 kontrol("madde 852: Al-Sat geçmiş sekmesi (eğri + günlük çubuk + gün tablosu, /api/islem/gecmis)",
         all(x in _s49 for x in ("function asGecmisSayfa", "function asEgri", "function asCubuk", '@app.get("/api/islem/gecmis")', 'islIstek("gecmis")')))
+kontrol("madde 853: coin penceresinde fiyat hemen (REST) + coinin kendi akışı, kapanınca kapanır",
+        all(x in _s49 for x in ("function islFiyatGetir", "fapi/v1/ticker/24hr?symbol=", "market/stream?streams=${s.toLowerCase()}@ticker",
+                                 "islFiyatGetir(s); islAkisBagla(s);", "function islKapat(){ islAkisKapat();")))
 kontrol("madde 851: giriş düzeltmesi — botun kendi girişi (−100 @ 0,5 → açık −20, −10 taşındı), adet değişen coine dokunulmaz",
         abs(_an51["pozisyonlar"]["BUSDT"]["giris"] - 0.5) < 1e-12 and abs(_an51["pozisyonlar"]["BUSDT"]["gerceklesmemis"] + 20) < 1e-9
         and _o51 == {"BUSDT": -10.0} and _an51["pozisyonlar"]["CUSDT"]["giris"] == 0.9 and abs(_an51["gerceklesmemis_top"] + 25) < 1e-9)

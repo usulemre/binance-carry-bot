@@ -9604,3 +9604,6 @@ Al-sat demo anahtarı (ayrı hesap) şifreli kimlik olarak `carry-alsat.env`; Ed
 
 ## Madde 852 — Al-Sat geçmişi: günlük kazanç / kayıp ve hesap eğrisi (kullanıcı, 2026-11-23: "al sata da günlük geçmiş grafiği, kazanç kayıp grafiği ekle")
 Al-Sat alanına üçüncü sekme **Geçmiş**: toplam ve bugünkü K/Z, başlangıç → şimdi, kapanan / funding / komisyon / açık; hesap eğrisi (saatlik), son 30 günün günlük kazanç/kayıp çubukları (yeşil/kırmızı, üstüne gelince ayrıntı), gün tablosu. carry-islem ayrı hesapta 5 dk'da bir özkaynak noktası yazar (defter/alsat_anlik.jsonl, 60 gün); /gecmis: başlangıç = cüzdan − işlem gelirleri (transfer hariç), gün sonu = günün son noktası (yoksa başlangıç + gelirler), gün sınırı TR saati. İlk ölçüm: başlangıç 5.000 $, şimdi 5.001,96 $ (funding +2,47, komisyon −1,16, açık +0,65).
+
+## Madde 853 — Coine basınca fiyat hemen gelir (kullanıcı, 2026-11-23: "coine basınca direkt fiyatı gelmiyor")
+Coin penceresi fiyatı yalnız Piyasa sekmesinin piyasa akışından alıyordu; akış yalnız o sekmede bağlı → Pozisyonlarım'dan açınca "—", Piyasa'da ilk akış verisine kadar boş. Artık pencere açılınca fiyat ve 24 sa değişimi REST'ten (ticker/24hr) hemen gelir; pencere açıkken o coinin kendi akışı (market/stream?streams=<coin>@ticker) bağlanır, kapanınca kapanır.

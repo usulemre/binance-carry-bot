@@ -1646,9 +1646,10 @@ function islAc(s, yon){
   const el = $("#sheet"); el.hidden = false;
   el.innerHTML = `<div class="shb" onclick="islKapat()"></div><div class="shp isl" role="dialog" aria-modal="true" tabindex="-1" aria-label="${s.replace(/USDT$/,"")} işlem"><div class="shh"></div><div id="islic"></div></div>`;
   document.body.style.overflow = "hidden"; islCiz(); islPozYukle(); islMumYukle();
+  islFiyatGetir(s); islAkisBagla(s);   // madde 853
   ISL.donus = document.activeElement; const sp = el.querySelector(".shp"); if (sp) sp.focus({preventScroll: true});   // ekran okuyucu / klavye pencereye
 }
-function islKapat(){ const d = ISL && ISL.donus; ISL = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; if (d && d.focus) try { d.focus({preventScroll: true}); } catch(_){} }
+function islKapat(){ islAkisKapat(); const d = ISL && ISL.donus; ISL = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; if (d && d.focus) try { d.focus({preventScroll: true}); } catch(_){} }
 addEventListener("keydown", e=>{ if (e.key === "Escape" && ISL){ if (ISL.adim){ ISL.adim = null; islCiz(); } else islKapat(); } });
 async function islPozYukle(){ if (!ISL) return; const s = ISL.s; const d = await islIstek("pozisyon/" + s);
   if (ISL && ISL.s==s){ const ilk = !ISL.poz; ISL.poz = d.ok ? d : {hata: d.hata, kod: d.kod};
@@ -1707,8 +1708,25 @@ function islGrafik(W, H){
   for (const e of et){ const c = e.c; g += `<g class="ige ${c.cls}"><rect x="${w + 2}" y="${e.y - 7.5}" width="${sag - 3}" height="15" rx="3"/><text x="${w + 6}" y="${e.y + 4}">${e.disari ? (e.y < h/2 ? "↑" : "↓") : ""}${piyFiyat(c.v)}</text>${e.disari ? `<title>${c.ad} ${piyFiyat(c.v)} (grafik dışında)</title>` : ""}</g>`; }
   return `<svg viewBox="0 0 ${W} ${H}" width="${W}" height="${H}" role="img" aria-label="${I.s} fiyat grafiği">${g}</svg>`;
 }
+// MADDE 853: pencere açılınca fiyat HEMEN (REST) ve pencere açıkken o coinin kendi canlı akışı — Piyasa sekmesi açık olmasa da
+let ISL_WS = null;
+function islFiyatBoya(){ if (!ISL) return; const o = PIY[ISL.s] || {}, fe = $("#islfiy"), ye = $("#islyz");
+  if (fe && o.f > 0) fe.textContent = piyFiyat(o.f);
+  if (ye && o.p != null){ ye.className = sinif(o.p); ye.textContent = `${o.p>0?"▲":o.p<0?"▼":""} ${piyYz(o.p)}`; } }
+async function islFiyatGetir(s){
+  if (VERI_GOMULU) return;
+  try { const d = await (await fetch(`https://fapi.binance.com/fapi/v1/ticker/24hr?symbol=${s}`, {cache:"no-store"})).json();
+    if (d && d.symbol) { piyTicker({s: d.symbol, c: d.lastPrice, P: d.priceChangePercent, q: d.quoteVolume}); if (ISL && ISL.s == s){ islFiyatBoya(); islTahmin && islTahmin(); } } } catch(_){}
+}
+function islAkisBagla(s){
+  islAkisKapat(); if (VERI_GOMULU || !window.WebSocket || !s) return;
+  const ws = new WebSocket(`wss://fstream.binance.com/market/stream?streams=${s.toLowerCase()}@ticker`); ISL_WS = ws;   // madde 832: /market adresi
+  ws.onmessage = e => { try { const m = JSON.parse(e.data), d = m.data || m; if (d && d.s){ piyTicker(d); if (ISL && ISL.s == d.s) islFiyatBoya(); } } catch(_){} };
+  ws.onclose = () => { if (ISL_WS === ws){ ISL_WS = null; if (ISL && ISL.s == s) setTimeout(()=>{ if (ISL && ISL.s == s && !ISL_WS) islAkisBagla(s); }, 4000); } };
+}
+function islAkisKapat(){ if (ISL_WS){ const w = ISL_WS; ISL_WS = null; w.onclose = null; try { w.close(); } catch(_){} } }
 function islGrafikCiz(){ const el = $("#islgraf"); if (!el || !ISL) return; const W = Math.round(el.clientWidth || 320); el.innerHTML = islGrafik(W, 220);
-  const fe = $("#islfiy"); if (fe){ const f = (PIY[ISL.s]||{}).f; if (f) fe.textContent = piyFiyat(f); } }
+  islFiyatBoya(); }
 // MADDE 836: AKIŞ — 1) ayarla (canlı tahmin)  2) ONAY ekranı: özet + PIN + BASILI TUT (yanlışlıkla dokunuşla emir gitmez). Kapat / TP-stop / sil
 // da aynı onay ekranından geçer. PIN pencere açık kaldıkça bellekte kalır (kaydedilmez). Boyut iki yolla: tutar ($) ya da RİSK ($): stop'a kadar
 // kaybetmeyi göze aldığın tutar -> pozisyon büyüklüğü = risk × fiyat / |fiyat − stop| (en fazla izin verilen sınır).
@@ -1847,7 +1865,7 @@ function islCiz(){
   const uzak = (v, ref) => v>0 && ref>0 ? ` <span class="k">${((v/ref-1)*100>=0?"+":"")}${((v/ref-1)*100).toFixed(1).replace(".",",")}%</span>` : "";
   const varPoz = islPozVar(), uzun = varPoz && pz.adet > 0;
   let h = `<div class="ihd"><div><div class="iad"><b>${ad}</b><span class="irz">${D.mod=="live"?"Canlı":"Demo"}</span></div>
-      <div class="ifr"><span id="islfiy">${fg(f)}</span><span class="${sinif(o.p)}">${o.p>0?"▲":o.p<0?"▼":""} ${piyYz(o.p)}</span><span class="k">24 sa</span></div></div>
+      <div class="ifr"><span id="islfiy">${f>0 ? fg(f) : `<span class="k" style="font-size:16px">fiyat geliyor…</span>`}</span><span id="islyz" class="${sinif(o.p)}">${o.p!=null ? `${o.p>0?"▲":o.p<0?"▼":""} ${piyYz(o.p)}` : ""}</span><span class="k">24 sa</span></div></div>
       <button class="shx" onclick="islKapat()" aria-label="Kapat">✕</button></div>`;
   // grafik
   h += `<div class="igk"><div class="igb"><div class="ichip ar">${Object.entries(ISL_AR).map(([a,[t]])=>`<button class="${I.aralik==a?"on":""}" onclick="islAralik('${a}')">${t}</button>`).join("")}</div>
