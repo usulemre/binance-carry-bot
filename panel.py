@@ -406,6 +406,39 @@ ANLIK_TAZE_SN = int(os.getenv("CARRY_PANEL_ANLIK_TAZE_SN", "900"))
 """MADDE 728: defter/anlik.json (carry_anlik.py, 5 dk'da bir) bu kadar saniyeden tazeyse pozisyon tablosu ondan gösterilir."""
 
 
+def giris_duzelt(klasor: str, an: dict | None) -> dict:
+    """MADDE 851: taşımada (elle → ayrı al-sat hesabı) kullanıcının payı bot hesabında kapatıldı; Binance azaltmada ortalama girişi
+    DEĞİŞTİRMEZ, botun kalan payı karışık ortalamayla görünürdü. defter/giris_duzeltme.json {"coin": {sembol: {"giris", "adet"}}}:
+    borsadaki adet kayıttakine EŞİTKEN pozisyon botun kendi girişiyle gösterilir; fark "Kapanan"dan "Açık"a taşınır (toplam aynı).
+    Adet değişince (bot ekledi / azalttı) düzeltme kendiliğinden biter. `an` yerinde değişir. Döner: {sembol: taşınan $}."""
+    try:
+        with open(os.path.join(klasor, "defter", "giris_duzeltme.json"), encoding="utf-8") as f:
+            coin = json.load(f)["coin"]
+    except (OSError, ValueError, KeyError, TypeError):
+        return {}
+    if not an or not isinstance(an.get("pozisyonlar"), dict):
+        return {}
+    out = {}
+    for s, d in coin.items():
+        p = an["pozisyonlar"].get(s)
+        try:
+            g, adet = float(d["giris"]), float(d["adet"])
+        except (KeyError, TypeError, ValueError):
+            continue
+        if not p or g <= 0 or abs(float(p.get("miktar") or 0) - adet) > 1e-9 * max(1.0, abs(adet)) or not p.get("isaret"):
+            continue
+        yeni = adet * (float(p["isaret"]) - g)
+        adj = yeni - float(p.get("gerceklesmemis") or 0)
+        p["giris_borsa"] = p.get("giris")
+        p["giris"] = g
+        p["gerceklesmemis"] = round(yeni, 4)
+        p["kar_yuzde"] = round((float(p["isaret"]) / g - 1) * (1 if adet > 0 else -1) * 100, 2)
+        out[s] = round(adj, 4)
+    if an.get("gerceklesmemis_top") is not None and out:
+        an["gerceklesmemis_top"] = round(float(an["gerceklesmemis_top"]) + sum(out.values()), 2)
+    return out
+
+
 def devir_uygula(klasor: str, an: dict | None) -> dict:
     """MADDE 828: zorunlu kapatıp aynı adetle yeniden açma (madde 827) borsada açık kârı GERÇEKLEŞMİŞE çevirdi. Panel bunu
     kapanış hiç olmamış gibi gösterir: coin başına kapanışta gerçekleşen `r` (defter/devir_duzeltme.json), pozisyon hâlâ
@@ -826,6 +859,8 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
             o["icra"]["karar"] = kk
         an = anlik_oku(kl)
         _devir = devir_uygula(kl, an)   # madde 828: an yerinde (giriş / gerçekleşmemiş) düzeltilir
+        for _s, _v in giris_duzelt(kl, an).items():   # madde 851: taşıma sonrası botun kendi girişi (aynı "Kapanan → Açık" taşıması)
+            _devir[_s] = round(_devir.get(_s, 0.0) + _v, 4)
         o["coin_ozet"] = coin_ozet(kl, an)
         o.update(hesap_ozet(df, an))
         if _devir:   # taşınan tutar "Kapanan"dan düşer (Açık'a eklendi; toplam aynı)
