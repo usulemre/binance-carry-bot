@@ -753,11 +753,14 @@ def gecmis(kapi: "Kapi", gun: int = 90) -> dict:
     tur = lambda g: str(g.get("incomeType") or "")
     islem = [g for g in G if tur(g) != "TRANSFER"]
     top = {"gerceklesen": 0.0, "funding": 0.0, "komisyon": 0.0, "diger": 0.0}
-    gunluk = {}
+    gunluk, coin = {}, {}
     for g in islem:
         v = float(g.get("income") or 0); t = tur(g)
         k = "gerceklesen" if t == "REALIZED_PNL" else "funding" if t == "FUNDING_FEE" else "komisyon" if t == "COMMISSION" else "diger"
         top[k] += v
+        if g.get("symbol"):   # madde 855: coin bazında (bottaki Geçmiş tablosu gibi)
+            cc = coin.setdefault(g["symbol"], {"kapanan": 0.0, "funding": 0.0, "komisyon": 0.0})
+            cc["kapanan" if k == "gerceklesen" else k if k in ("funding", "komisyon") else "kapanan"] += v
         d = gunluk.setdefault(_gun(int(g.get("time") or 0)), {"gerceklesen": 0.0, "funding": 0.0, "komisyon": 0.0, "diger": 0.0})
         d[k] += v
     bas = h["cuzdan"] - sum(top.values())
@@ -801,7 +804,21 @@ def gecmis(kapi: "Kapi", gun: int = 90) -> dict:
             egri[-1] = [t_, round(v, 4)]
     egri.append([simdi, round(h["ozkaynak"], 4)])
     toplam = h["ozkaynak"] - bas
-    return {"onceki": onceki_elle(kapi),
+    acik_poz = {}
+    try:
+        for p in kapi.c.get_open_positions():
+            a_ = float(p.get("positionAmt") or 0)
+            if a_:
+                acik_poz[p["symbol"]] = (a_, float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0))
+    except Exception as e:
+        logger.warning("al-sat pozisyonları okunamadı: %s", e)
+    coin_ozet = []
+    for s in set(coin) | set(acik_poz):
+        cc = coin.get(s, {"kapanan": 0.0, "funding": 0.0, "komisyon": 0.0}); a_, u = acik_poz.get(s, (0.0, 0.0))
+        coin_ozet.append({"s": s.removesuffix("USDT"), **{k: round(v, 4) for k, v in cc.items()}, "acik": round(u, 4),
+                          "toplam": round(sum(cc.values()) + u, 4), "yon": ("L" if a_ > 0 else "S") if a_ else None})
+    coin_ozet.sort(key=lambda x: x["toplam"])
+    return {"onceki": onceki_elle(kapi), "coin_ozet": coin_ozet,
             "baslangic": round(bas, 2), "ozkaynak": round(h["ozkaynak"], 2), "acik": round(h["acik"], 2), "toplam": round(toplam, 2),
             "oran": round(toplam / bas, 6) if bas > 0 else None, "ozet": {k: round(v, 2) for k, v in top.items()},
             "gunler": gunler[-gun:], "egri": egri}

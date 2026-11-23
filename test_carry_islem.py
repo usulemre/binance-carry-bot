@@ -408,6 +408,7 @@ kz52 = os.path.join(d52, "kz.json")
 json.dump({"donduruldu": 1, "toplam": 14.29, "aralik": {"BUSDT": [{"kz": 37.2}], "XUSDT": [{"kz": -22.91}]}}, open(kz52, "w"))
 k52.ayar["elle_kz"] = kz52
 o52 = ci.gecmis(k52)["onceki"]
+kontrol("madde 855: coin bazında döküm", isinstance(ci.gecmis(k52).get("coin_ozet"), list))
 kontrol("madde 854: taşıma öncesi kesinleşen elle K/Z", o52 and o52["toplam"] == 14.29 and o52["sembol"] == {"BUSDT": 37.2, "XUSDT": -22.91}, o52)
 kontrol("ayrı hesap yoksa geçmiş yok", hata_mi(lambda: ci.gecmis(yeni()[0]), "ayrı hesabı", 409))
 

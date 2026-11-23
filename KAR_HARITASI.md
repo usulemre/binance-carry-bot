@@ -9610,3 +9610,6 @@ Coin penceresi fiyatı yalnız Piyasa sekmesinin piyasa akışından alıyordu; 
 
 ## Madde 854 — Al-Sat'ta taşıma öncesi kesinleşen elle kârı da görünür (kullanıcı, 2026-11-23: "ellede sanki kârlar daha büyüktü, küçülmüş gibi")
 Taşımada pozisyonlar bot hesabında kapanıp ayrı hesapta güncel fiyattan yeniden açıldı; Al-Sat yalnız yeni hesabın K/Z'sini gösteriyordu (BLESS +37,2 → +7,2 gibi görünüyordu). Artık Pozisyonlarım başlığında "taşımadan önce kesinleşen +14,29 $ · şimdiki X → toplam", satırlarda coin başına "önce ±", Geçmiş'te "elle toplamı". Kaynak: dondurulmuş defter/elle_kz.json (carry_islem onceki_elle). O an: önce +14,29, şimdi +25,94, toplam +40,23 $.
+
+## Madde 855 — Al-Sat geçmişi bottaki Geçmiş gibi (kullanıcı, 2026-11-23: "elleye geçmişi bottaki gibi yap, daha güzel")
+Al-Sat → Geçmiş artık botun bileşenleriyle: Hafta / Ay / Tümü seçimli büyük toplam + günlük çubuklar + gün listesi (gecmisSade), aylık takvim, son 1 yıl ısı haritası, coin bazında kâr/zarar tablosu; altında hesap eğrisi ve "elle toplamı (taşıma öncesi dahil)". Al-sat günleri botun beklediği seri biçimine çevrilir (asK: tarih / kitap = gün sonu özkaynak / gün getirisi). /gecmis coin_ozet döner (gelir kayıtları sembol başına + açık K/Z).

@@ -1504,16 +1504,16 @@ function asEgri(E){
     <circle cx="${X(t1).toFixed(1)}" cy="${Y(v[v.length-1]).toFixed(1)}" r="4" fill="${renk}" stroke="${css("--kart")}" stroke-width="2"/>
     <text x="${sol}" y="${H - 4}" class="asgt">${tz(t0)}</text><text x="${W - sol}" y="${H - 4}" class="asgt" text-anchor="end">şimdi</text>${hit}</svg>`;
 }
-function asCubuk(G){
-  if (!G || !G.length) return "";
-  const W = 600, H = 140, alt = 18, n = G.length, m = Math.max(...G.map(g=>Math.abs(g.kz)), 0.01), sifir = (H - alt) / 2;
-  const bw = Math.max(3, Math.min(28, (W / n) - 4)), adim = W / n;
-  const bars = G.map((g,i)=>{ const h = Math.max(2, Math.abs(g.kz) / m * (sifir - 4)), x = i * adim + (adim - bw) / 2, y = g.kz >= 0 ? sifir - h : sifir;
-    const d = new Date(g.t + "T12:00:00");
-    return `<g><rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${css(g.kz >= 0 ? "--art" : "--eks")}"/>
-      <rect x="${(i * adim).toFixed(1)}" y="0" width="${adim.toFixed(1)}" height="${H - alt}" fill="transparent"><title>${d.toLocaleDateString("tr-TR",{day:"numeric",month:"long"})}: ${isaretli(g.kz)} (kapanan ${isaretli(g.gerceklesen)}, funding ${isaretli(g.funding)}, komisyon ${isaretli(g.komisyon)})</title></rect></g>`; }).join("");
-  const etk = G.map((g,i)=> (n <= 10 || i % Math.ceil(n / 8) == 0 || i == n-1) ? `<text x="${(i * adim + adim / 2).toFixed(1)}" y="${H - 4}" class="asgt" text-anchor="middle">${+g.t.slice(8)}.${+g.t.slice(5,7)}</text>` : "").join("");
-  return `<svg viewBox="0 0 ${W} ${H}" class="asg" role="img" aria-label="Günlük kazanç ve kayıp"><line x1="0" x2="${W}" y1="${sifir}" y2="${sifir}" stroke="${css("--cizgi")}"/>${bars}${etk}</svg>`;
+// madde 855: al-sat verisini botun Geçmiş bileşenlerinin beklediği biçime çevirir (seri: tarih / kitap / gün getirisi)
+function asK(A){
+  const G = A.gunler || [], bugun = G.length ? G[G.length-1].t : null, seri = [], aylik = {};
+  if (G.length) seri.push({tarih: new Date(Date.parse(G[0].t + "T00:00:00Z") - 864e5).toISOString().slice(0,10), kitap: A.baslangic});
+  let onc = A.baslangic;
+  for (const g of G){ seri.push({tarih: g.t, kitap: g.oz, gun: onc > 0 ? g.kz / onc : null, canli: g.t === bugun}); onc = g.oz; }
+  for (let i = 1; i < seri.length; i++){ const a = seri[i].tarih.slice(0,7), bas = seri.slice(0, i).reverse().find(x=>x.tarih.slice(0,7) < a);
+    const b0 = bas ? bas.kitap : seri[0].kitap; if (b0 > 0) aylik[a] = seri[i].kitap / b0 - 1; }
+  return {seri, kitap_canli: null, aylik, coin_ozet: A.coin_ozet || [], mod: (ISL_DURUM||{}).mod, _baslik: "Al-Sat geçmişi",
+          _canliNot: "canlı · gece 00:00'da kesinleşir", _bosMetin: "Al-sat hesabında henüz gün yok."};
 }
 function asGecmisSayfa(){
   const D = ISL_DURUM;
@@ -1521,18 +1521,17 @@ function asGecmisSayfa(){
   if (!AS_GEC || Date.now() - (AS_GEC._t||0) > 60e3) asGecmisYukle();
   if (!AS_GEC) return `<div class="kart"><div class="iskelet" style="height:34px;width:60%"></div><div class="iskelet" style="height:150px;margin-top:14px"></div></div>`;
   if (AS_GEC.hata) return `<div class="kart bos">${ea(AS_GEC.hata)}</div>`;
-  const A = AS_GEC, G = A.gunler || [], B = G.length ? G[G.length-1] : null, O = A.ozet || {};
+  const A = AS_GEC, O = A.ozet || {}, K = asK(A);
   const yzd = v => v==null ? "" : ` (${(v>=0?"+":"−")}%${Math.abs(v*100).toFixed(2).replace(".",",")})`;
-  const satir = G.slice().reverse().map(g=>`<div class="elr"><span>${new Date(g.t+"T12:00:00").toLocaleDateString("tr-TR",{day:"numeric",month:"short",weekday:"short"})}<br><span class="k">kapanan ${isaretli(g.gerceklesen)} · funding ${isaretli(g.funding)} · kom. ${isaretli(g.komisyon)}</span></span>
-      <span class="r"><b class="${sinif(g.kz)}">${isaretli(g.kz)}</b><br><span class="k">${para(g.oz)}</span></span></div>`).join("");
-  return `<div class="kart"><div class="dpb"><span class="gb">Al-Sat geçmişi</span><span class="k">bottan ayrı hesap</span></div>
-      <div class="asoz"><div><div class="k">Toplam</div><div class="asb ${sinif(A.toplam)}">${A.toplam>=0?"▲":"▼"} ${isaretli(A.toplam)}<span class="k">${yzd(A.oran)}</span></div></div>
-        <div><div class="k">Bugün</div><div class="asb ${sinif(B && B.kz)}">${B ? `${B.kz>=0?"▲":"▼"} ${isaretli(B.kz)}` : "—"}</div></div></div>
-      ${A.onceki ? `<div class="k" style="margin-top:6px">Taşımadan önce (bot hesabında kesinleşen) <b class="${sinif(A.onceki.toplam)}">${isaretli(A.onceki.toplam)}</b> · <b>elle toplamı <span class="${sinif(A.onceki.toplam + A.toplam)}">${isaretli(A.onceki.toplam + A.toplam)}</span></b></div>` : ""}
-      <div class="k" style="margin:4px 0 10px">Bu hesap: başlangıç ${para(A.baslangic)} → şimdi ${para(A.ozkaynak)} · kapanan ${isaretli(O.gerceklesen||0)} · funding ${isaretli(O.funding||0)} · komisyon ${isaretli(O.komisyon||0)} · açık ${isaretli(A.acik||0)}</div>
-      <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}
-      <div class="ash">Günlük kazanç / kayıp</div>${asCubuk(G.slice(-30))}
-      <div class="ash">Günler</div><div class="elp" style="margin-top:4px">${satir || `<div class="k">henüz gün yok</div>`}</div></div>`;
+  const ozet = `<div class="kart"><div class="asoz"><div><div class="k">Bu hesap · başlangıçtan beri</div><div class="asb ${sinif(A.toplam)}">${A.toplam>=0?"▲":"▼"} ${isaretli(A.toplam)}<span class="k">${yzd(A.oran)}</span></div></div>
+      ${A.onceki ? `<div><div class="k">Elle toplamı (taşıma öncesi dahil)</div><div class="asb ${sinif(A.onceki.toplam + A.toplam)}">${isaretli(A.onceki.toplam + A.toplam)}</div></div>` : ""}</div>
+    <div class="k" style="margin-top:6px">${para(A.baslangic)} → ${para(A.ozkaynak)} · kapanan ${isaretli(O.gerceklesen||0)} · funding ${isaretli(O.funding||0)} · komisyon ${isaretli(O.komisyon||0)} · açık ${isaretli(A.acik||0)}${A.onceki ? ` · taşımadan önce kesinleşen ${isaretli(A.onceki.toplam)}` : ""}</div>
+    <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}</div>`;
+  return `<div>${gecmisSade(K)}</div>${ozet}
+    <div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2>${takvim(K)}
+      <div class="k" style="margin-top:4px">Gün, Türkiye saatiyle 00:00 – 00:00. ● işaretli gün bugün (canlı).</div></div>
+    <div class="kart"><h2>Son 1 yıl</h2>${yillik(K)}</div>
+    ${coinTablo(K)}`;
 }
 // MADDE 839: POZİSYONLARIM — elle yönettiğin açık pozisyonlar (hesabın K/Z'si) + son 30 gün elle sonucu; 15 sn'de bir kapıdan.
 let ELLE_OZ = null;
@@ -2512,7 +2511,7 @@ function gecGunler(k){
 }
 function gecmisSade(k){
   const G = gecGunler(k);
-  if (!G.length) return `<div class="kart bos">Henüz tamamlanmış gün yok. İlk gün sonu kaydı 03:05'te.</div>`;
+  if (!G.length) return `<div class="kart bos">${k._bosMetin || "Henüz tamamlanmış gün yok. İlk gün sonu kaydı 03:05'te."}</div>`;
   const son = G[G.length-1].t, ay = son.slice(0,7);
   const kes = GEC_DONEM=="hafta" ? new Date(Date.parse(son+"T00:00:00Z") - 6*864e5).toISOString().slice(0,10) : GEC_DONEM=="ay" ? ay+"-01" : "";
   let D = G.filter(g=>g.t >= kes);
@@ -2524,7 +2523,7 @@ function gecmisSade(k){
   const top = D.reduce((a,g)=>a+g.usd, 0), bas = D[0].bas, oran = bas > 0 ? top / bas : null;
   const ad = g => birim=="ay" ? `${AYAD[+g.t.slice(5,7)-1]} ${g.t.slice(0,4)}` : g.canli ? "Bugün" : `${GUN_AD[new Date(g.t+"T00:00:00Z").getUTCDay()]} ${+g.t.slice(8,10)} ${AYAD[+g.t.slice(5,7)-1]}`;
   const kisa = g => birim=="ay" ? AYAD[+g.t.slice(5,7)-1].slice(0,3) : g.canli ? "bugün" : String(+g.t.slice(8,10));
-  const not = g => g.canli ? "canlı · yarın 03:05'te kesinleşir" : g.kesinlesiyor ? "gün kapandı · kayıt 03:05'te yazılıyor" : (g.ilk && birim=="gün") ? "başlangıç günü" : "";
+  const not = g => g.canli ? (k._canliNot || "canlı · yarın 03:05'te kesinleşir") : g.kesinlesiyor ? "gün kapandı · kayıt 03:05'te yazılıyor" : (g.ilk && birim=="gün") ? "başlangıç günü" : "";
   const baslik = GEC_DONEM=="hafta" ? "Son 7 gün" : GEC_DONEM=="ay" ? `${AYAD[+ay.slice(5,7)-1]}` : "Başlangıçtan beri";
   // çubuklar: sıfır çizgisi en büyük kazanç / kayıp oranına göre; 170 px
   const H = 170, mp = Math.max(0, ...D.map(g=>g.usd)), mn = Math.max(0, ...D.map(g=>-g.usd)), et = D.length <= 12;
@@ -2539,7 +2538,7 @@ function gecmisSade(k){
     <div style="text-align:right"><div class="gv n ${sinif(g.usd)}">${isaretli(g.usd)}</div><div class="gn n">${yz(g.oran)}</div></div></div>`).join("");
   const dk = d => `<button class="${GEC_DONEM==d?"on":""}" onclick="gecDonem('${d}')">${{hafta:"Hafta", ay:"Ay", tum:"Tümü"}[d]}</button>`;
   return `<div class="kart gsade">
-    <div class="gust"><span class="gb">Geçmiş</span><div class="gdon">${dk("hafta")}${dk("ay")}${dk("tum")}</div></div>
+    <div class="gust"><span class="gb">${k._baslik || "Geçmiş"}</span><div class="gdon">${dk("hafta")}${dk("ay")}${dk("tum")}</div></div>
     <div class="gk">${baslik} · toplam kâr / zarar</div>
     <div class="gt n">${top<0?"−":"+"}${Math.abs(top).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})} <small>$</small></div>
     <div class="go n ${sinif(top)}">${top>=0?"▲":"▼"} %${Math.abs((oran||0)*100).toFixed(2).replace(".",",")} · ${D.length} ${birim}</div>
