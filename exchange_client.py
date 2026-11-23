@@ -138,7 +138,7 @@ def ozel_anahtar_oku():
 
 
 class ExchangeClient:
-    def __init__(self, api_key: str, api_secret: str, mode: str = "demo"):
+    def __init__(self, api_key: str, api_secret: str, mode: str = "demo", ozel_anahtar: bool = True):
         """
         mode:
           - "demo"    : YENİ Binance Futures Demo Trading (demo-fapi.binance.com).
@@ -168,7 +168,7 @@ class ExchangeClient:
         # MADDE 680: Ed25519 anahtarı (önerilen). BINANCE_PRIVATE_KEY_PATH verilirse istekler sunucuda üretilmiş özel anahtarla
         # imzalanır; Binance'e yalnız AÇIK anahtar verilir (gizli anahtar hiçbir zaman Binance'te / ekranda görünmez). O zaman
         # BINANCE_API_SECRET gerekmez. Yoksa eski HMAC (API_KEY + API_SECRET) yolu, değişmeden.
-        ozel = ozel_anahtar_oku()
+        ozel = ozel_anahtar_oku() if ozel_anahtar else None   # madde 851: al-sat ayrı hesabı kendi HMAC secret'ıyla (botun Ed25519'u değil)
         kw = {"private_key": ozel[0], "private_key_pass": ozel[1]} if ozel else {}
         if ozel:
             api_secret = None

@@ -697,7 +697,8 @@ def uygulama(kapi_fabrika=None):
                 a = ayarlar()
                 if a["ayri"]:   # madde 851: al-sat AYRI hesap (ALSAT_API_KEY / SECRET — şifreli kimlik carry-alsat.env)
                     a["mod"] = a["alsat_mod"]
-                    ist = ExchangeClient(os.getenv("ALSAT_API_KEY", "").strip(), os.getenv("ALSAT_API_SECRET", "").strip(), mode=a["alsat_mod"])
+                    ist = ExchangeClient(os.getenv("ALSAT_API_KEY", "").strip(), os.getenv("ALSAT_API_SECRET", "").strip(), mode=a["alsat_mod"],
+                                         ozel_anahtar=False)
                 else:
                     ist = ExchangeClient(config.API_KEY, config.API_SECRET, mode=config.BINANCE_MODE)
                 durum["kapi"] = Kapi(ist, ayar=a, bildir=_b)
