@@ -1,5 +1,7 @@
 # -*- coding: utf-8 -*-
 """MADDE 849 — ELLE KÂR / ZARAR botun muhasebesinden AYRILIR.
+MADDE 851 (2026-11-23) KURAL DEĞİŞTİ: kullanıcı "blessi yapmamış gibi geri al" → botun aralık başındaki adedi BOTTA kalır (devir yok);
+kullanıcının payı yalnız kendi dolumları (bkz. aralik_hesapla). Aşağıdaki "devir" anlatımı eski kuraldır (849), artık devir = 0.
 
 Kullanıcı (2026-11-23): "ana bot bakiyesi 2 bin dolarlık işlemde, ben ekstra kendim elle alımlar yapıyorum; panelde % düşüş
 2 bin dolardan sayılıyor, bu yanlış değil mi" → seçim: TAM AYIR (panel + botun sermayesi + günlük getiri), devralınan kısım
@@ -135,44 +137,56 @@ def _ilk_kullanici_dolumu(ic, sem: str, alt: int, ust: int) -> tuple[int, float]
 
 
 def aralik_hesapla(ic, sem: str, a: dict, poz: tuple | None, simdi_ms: int) -> dict:
-    """Bir aralığın elle K/Z'si. poz = (adet, binance_açık_kz, işaret_fiyatı) — açık aralıkta borsadaki pozisyon (yoksa None=düz)."""
+    """Bir aralığın elle K/Z'si. poz = (adet, binance_açık_kz, işaret_fiyatı, binance_giriş) — açık aralıkta borsadaki pozisyon.
+
+    MADDE 851 kuralı (kullanıcı: "blessi yapmamış gibi geri al", bota geri ver): botun aralık başındaki adedi BOTTA KALIR — kullanıcıya
+    geçmez. Kullanıcının payı yalnız aralıktaki dolumların sıfırdan oynatılmasıdır (bot elle coine emir göndermez). Botun payı =
+    borsadaki adet − kullanıcının adedi; açık K/Z'si borsanınkinden kullanıcınınki düşülerek. Funding adet oranıyla bölünür."""
     bit = int(a["bit"]) if a.get("bit") else simdi_ms
     T = _dolumlar(ic, sem, int(a["bas"]), bit)
-    adet_son = float(poz[0]) if (poz and not a.get("bit")) else 0.0
-    toplam_s = sum(float(t.get("qty") or 0) * (1 if t.get("side") == "BUY" else -1) for t in T)
-    devr = adet_son - toplam_s
-    if abs(devr) < 1e-9:
-        devr = 0.0
-    q, ort, gercek = devr, float(a["ilk_fiyat"]), 0.0
-    R = C = 0.0
+    acik_ = bool(poz) and not a.get("bit")
+    adet_son = float(poz[0]) if acik_ else 0.0
+    q, ort, gercek, R, C = 0.0, 0.0, 0.0, 0.0, 0.0
     for t in T:
-        s = float(t.get("qty") or 0) * (1 if t.get("side") == "BUY" else -1)
+        s_ = float(t.get("qty") or 0) * (1 if t.get("side") == "BUY" else -1)
         p = float(t.get("price") or 0)
         R += float(t.get("realizedPnl") or 0)
         kom = float(t.get("commission") or 0)
         if str(t.get("commissionAsset") or "USDT").upper() in ("USDT", "USDC", "BUSD", "FDUSD", ""):
             C -= kom
-        if abs(q) < 1e-12 or (s > 0) == (q > 0):
-            ort = (abs(q) * ort + abs(s) * p) / (abs(q) + abs(s)) if abs(q) + abs(s) > 0 else p
-            q += s
+        if abs(q) < 1e-12 or (s_ > 0) == (q > 0):
+            ort = (abs(q) * ort + abs(s_) * p) / (abs(q) + abs(s_)) if abs(q) + abs(s_) > 0 else p
+            q += s_
         else:
-            kap = min(abs(s), abs(q))
+            kap = min(abs(s_), abs(q))
             gercek += kap * (p - ort) * (1 if q > 0 else -1)
-            yeni = q + s
+            yeni = q + s_
             if abs(yeni) > 1e-12 and (yeni > 0) != (q > 0):
                 ort = p
             q = yeni
+    if abs(q) < 1e-9:
+        q = 0.0
+    q_bot = adet_son - q if acik_ else 0.0
+    if abs(q_bot) < 1e-9:
+        q_bot = 0.0
     U = Uo = 0.0
-    if poz and not a.get("bit"):
+    e_bot = None
+    if acik_:
         U = float(poz[1])
-        isaret = float(poz[2] or 0)
-        if isaret <= 0 and abs(float(poz[0])) > 1e-12:
-            isaret = None
-        Uo = q * (isaret - ort) if isaret else U
+        isaret = float(poz[2] or 0) or None
+        Uo = q * (isaret - ort) if (isaret and q) else (U if q_bot == 0 else 0.0)
+        g = float(poz[3]) if len(poz) > 3 and poz[3] else 0.0
+        if q_bot and g > 0:
+            e_bot = (adet_son * g - q * ort) / q_bot
+            e_bot = e_bot if e_bot > 0 else None
     F = _funding(ic, sem, int(a["bas"]), bit)
-    kz = gercek + Uo + F + C
-    return {**a, "R": round(R, 6), "F": round(F, 6), "C": round(C, 6), "U": round(U, 6), "devr_adet": round(devr, 10),
-            "kz": round(kz, 6), "devir": round((R + U) - (gercek + Uo), 6)}
+    pay = 1.0 if not (acik_ and adet_son) else q / adet_son
+    Fk = F * pay
+    kz = gercek + Uo + Fk + C
+    return {**a, "R": round(R, 6), "F": round(F, 6), "C": round(C, 6), "U": round(U, 6),
+            "Rk": round(gercek, 6), "Fk": round(Fk, 6), "Uk": round(Uo, 6), "q_k": round(q, 10), "ort_k": ort if q else None,
+            "q_bot": round(q_bot, 10), "e_bot": e_bot, "U_bot": round(U - Uo, 6), "devr_adet": round(q_bot, 10),
+            "kz": round(kz, 6), "devir": 0.0, "kural": "bota_geri"}
 
 
 def guncelle(client, simdi: float | None = None, dosya: str = DOSYA, elle_dosya: str | None = None,
@@ -194,7 +208,7 @@ def guncelle(client, simdi: float | None = None, dosya: str = DOSYA, elle_dosya:
                 m = float(p.get("markPrice") or 0)
                 if m <= 0 and float(p.get("entryPrice") or 0) > 0:
                     m = float(p["entryPrice"]) + u / a
-                pozlar[p["symbol"]] = (a, u, m)
+                pozlar[p["symbol"]] = (a, u, m, float(p.get("entryPrice") or 0))
     except Exception as e:
         logger.warning("elle K/Z: pozisyonlar okunamadı (%s) — son bilinen değer", e)
         return st
@@ -234,7 +248,7 @@ def guncelle(client, simdi: float | None = None, dosya: str = DOSYA, elle_dosya:
     # 3) hesapla (kapanmışlar bir kez)
     for sem, L in A.items():
         for i, a in enumerate(L):
-            if a.get("son"):
+            if a.get("son") and a.get("kural") == "bota_geri":
                 continue
             try:
                 L[i] = aralik_hesapla(ic, sem, a, pozlar.get(sem), simdi_ms)
@@ -252,7 +266,7 @@ def guncelle(client, simdi: float | None = None, dosya: str = DOSYA, elle_dosya:
 def ozet(st: dict, bas_s: int | None = None) -> dict:
     """Panel için: bas_s (başlangıç) sonrası aralıkların toplamları — kz, gerçekleşen (Binance), funding, komisyon,
     açık (Binance), devir; ayrıca sembol başına."""
-    T = {"kz": 0.0, "R": 0.0, "F": 0.0, "C": 0.0, "U": 0.0, "devir": 0.0}
+    T = {"kz": 0.0, "Rk": 0.0, "Fk": 0.0, "C": 0.0, "Uk": 0.0}
     S = {}
     for sem, L in (st.get("aralik") or {}).items():
         for a in L:

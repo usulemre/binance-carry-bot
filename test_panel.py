@@ -494,11 +494,15 @@ kontrol("madde 848: coin penceresi ve pozisyon ayrıntısında 24 sa / 3 gün / 
 
 _s49 = open(panel.__file__, encoding="utf-8").read()
 kontrol("madde 849: elle pozisyon botun toplamlarına girmez, ayrı bölüm ve özet satırı",
-        all(x in _s49 for x in ("def elle_ayir", "elle_ayir(o, an)", "PE = PT.filter(x=>elleMi(k, x[0]))", "✋ ELLE (SENİN)", "bota dahil değil",
+        all(x in _s49 for x in ("def elle_ayir", "elle_ayir(o, an)", "PE = PT.filter(x=>elleMi(k, x[0]))", "function alsatSayfa",
                                  "if (elleMi(k, s)) continue;", "k.pozisyonlar[s].elle)")))
 
 kontrol("madde 850: elle kartı muhasebeden (senin K/Z, devraldığın, botun payı sabit)",
-        all(x in _s49 for x in ("const M = x.muhasebe;", "Botun payı", "artık değişmez", "Bottan devraldığın")))
+        all(x in _s49 for x in ("const M = x.muhasebe;", "Botun payı", "botta kalıyor, sana geçmedi")))
+kontrol("madde 851: ☰ menü, Bot / Al-Sat ayrı alanlar, bot listesine al-sat birleştirilmez",
+        all(x in _s49 for x in ('id="hmb"', "function menuAc", "function alanSec", 'const SAYFA_BOT = [["ozet","Özet"],["poz","Pozisyonlar"],["gecmis","Geçmiş"],["olay","Olaylar"]]',
+                                 'const SAYFA_AS = [["alsat","Pozisyonlarım"],["piyasa","Piyasa"]]', 'sayfa=="alsat" ? alsatSayfa(k)',
+                                 "return false;   // madde 851: al-sat kendi alanında")))
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

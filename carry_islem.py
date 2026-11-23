@@ -50,7 +50,13 @@ def ayarlar() -> dict:
             "elle_panel": os.getenv("CARRY_ELLE_PANEL", os.path.join("defter", "carry_elle_panel.json")),
             "elle_dosya": os.getenv("CARRY_ELLE_DOSYA", "carry_elle.json"),
             "elle_olay": os.getenv("CARRY_ELLE_OLAY", "carry_elle_olay.jsonl"),
-            "dilim": os.getenv("CARRY_DILIM_LOG", "carry_dilimler.json")}
+            "dilim": os.getenv("CARRY_DILIM_LOG", "carry_dilimler.json"),
+            # MADDE 851: AL-SAT AYRI HESAP — anahtar varsa bütün işlemler o hesapta; botla hiçbir bağ yok (elle işareti yazılmaz).
+            # Yoksa GEÇİŞ: bot hesabında yalnız mevcut elle pozisyonlar küçültülür / kapatılır, TP-SL konur; yeni pozisyon açılmaz.
+            "ayri": bool(os.getenv("ALSAT_API_KEY", "").strip() and os.getenv("ALSAT_API_SECRET", "").strip()),
+            "alsat_mod": os.getenv("ALSAT_MODE", "").strip() or os.getenv("BINANCE_MODE", "demo"),
+            "gecis_kisit": os.getenv("CARRY_ALSAT_GECIS", "1").strip() not in ("0", "false", "False"),
+            "ayni_anahtar": bool(os.getenv("ALSAT_API_KEY", "").strip()) and os.getenv("ALSAT_API_KEY", "").strip() == os.getenv("BINANCE_API_KEY", "").strip()}
 
 
 class Hata(Exception):
@@ -85,7 +91,8 @@ class Kapi:
                 sem = sorted(self._bilgi or {})
             except Exception:
                 sem = []
-        return {"acik": neden is None, "neden": neden, "mod": a["mod"], "max_usd": a["max_usd"], "pin_var": bool(a["pin"]), "semboller": sem}
+        return {"acik": neden is None, "neden": neden, "mod": a["mod"], "max_usd": a["max_usd"], "pin_var": bool(a["pin"]), "semboller": sem,
+                "ayri": bool(a.get("ayri")), "gecis": not a.get("ayri") and bool(a.get("gecis_kisit"))}
 
     def _kapali_neden(self) -> str | None:
         a = self.ayar
@@ -95,7 +102,9 @@ class Kapi:
             return "işlem PIN'i ayarlı değil (CARRY_ISLEM_PIN, en az 6 karakter)"
         if a["mod"] == "live" and not a["canli_izin"]:
             return "canlı hesapta panelden işlem için ayrıca CARRY_ISLEM_CANLI=1 gerekir"
-        if not a["elle"]:
+        if a.get("ayni_anahtar"):
+            return "al-sat anahtarı botun anahtarıyla AYNI — ayrı bir hesabın anahtarı gerekir"
+        if not a.get("ayri") and not a["elle"]:
             return "elle takip kapalı (CARRY_ELLE=1 değil) — bot işlemini bir sonraki turda geri alırdı"
         return None
 
@@ -227,10 +236,32 @@ class Kapi:
         except OSError as e:
             logger.warning("panel işlem defteri yazılamadı: %s", e)
 
+    def _gecis_denetle(self, sem: str, yon: str | None = None, adet: float | None = None) -> None:
+        """MADDE 851: ayrı hesap yokken bot hesabında yalnız ELLE coinlerde, pozisyonu BÜYÜTMEYEN işlem (CARRY_ALSAT_GECIS=1, varsayılan)."""
+        if self.ayar.get("ayri") or not self.ayar.get("gecis_kisit"):
+            return
+        if sem not in self._elle_kumesi():
+            raise Hata(f"{sem.replace('USDT', '')} botun coini. Al-sat hesabı bağlanana kadar bot hesabında yalnız mevcut elle pozisyonlarına "
+                       f"işlem yapılabilir.", 403)
+        if yon is None:
+            return
+        p = self._kullanici_adet(sem)
+        kucultur = p != 0 and ((yon == "S") == (p > 0)) and adet is not None and adet <= abs(p) + 1e-12
+        if not kucultur:
+            raise Hata("Al-sat hesabı bağlanana kadar yeni pozisyon açılmıyor ve mevcut pozisyon büyütülmüyor; yalnız küçültebilir / "
+                       "kapatabilirsin.", 403)
+
+    def _kullanici_adet(self, sem: str) -> float:
+        """Geçişte kullanıcının bu coindeki payı (muhasebe: kendi dolumları); muhasebe yoksa borsadaki adedin tamamı."""
+        m = self._muhasebe(sem)
+        if m and m.get("q_k") is not None:
+            return float(m["q_k"])
+        return float(self._pozisyon(sem)["adet"] or 0)
+
     def _elle_isaret(self, sem: str) -> None:
         """MADDE 838: bot bir sonraki kontrolü beklemeden coini kullanıcıya bıraksın (tur sırasında emir gitmez)."""
         yol = self.ayar.get("elle_panel")
-        if not yol:
+        if not yol or self.ayar.get("ayri"):
             return
         try:
             import carry_elle
@@ -284,6 +315,7 @@ class Kapi:
             self._pin(d.get("pin"))
             o = self.onizle(d)
             sem, b = o["sembol"], self._sembol_bilgi(o["sembol"])
+            self._gecis_denetle(sem, o["yon"], o["adet"])
             self._elle_isaret(sem)      # emirden ÖNCE: tur sürüyorsa bot bu coine dokunmasın
             yon = "BUY" if o["yon"] == "L" else "SELL"
             kw = dict(symbol=sem, side=yon, quantity=o["adet"], newClientOrderId=_cid())
@@ -321,6 +353,11 @@ class Kapi:
             if not poz["adet"]:
                 raise Hata(f"{sem} için açık pozisyon yok")
             y = "L" if poz["adet"] > 0 else "S"
+            self._gecis_denetle(sem)
+            m = None if self.ayar.get("ayri") else self._muhasebe(sem)
+            if m and float(m.get("q_bot") or 0):
+                raise Hata("Bu coinde botun da payı var; TP / stop taşımadan sonra (al-sat hesabında) konabilir. Şimdilik yalnız kendi payını "
+                           "kapatabilirsin.", 403)
             tp, sl = self._tpsl_denetle(y, self._isaret(sem), d.get("tp"), d.get("sl"))
             self._elle_isaret(sem)
             out = self._tpsl_kur(sem, poz["adet"], tp, sl, b)
@@ -344,12 +381,19 @@ class Kapi:
             poz = self._pozisyon(sem)
             if not poz["adet"]:
                 raise Hata(f"{sem} için açık pozisyon yok")
-            q = abs(poz["adet"]) if oran >= 1 else adet_yuvarla(abs(poz["adet"]) * oran, b, piyasa=True, asagi=True)
+            self._gecis_denetle(sem)
+            hedef = poz["adet"] if self.ayar.get("ayri") else self._kullanici_adet(sem)   # madde 851: geçişte botun payına dokunulmaz
+            if not hedef:
+                raise Hata(f"{sem.replace('USDT', '')} coininde senin payın yok (kalan adet botun)")
+            q = abs(hedef) if oran >= 1 else adet_yuvarla(abs(hedef) * oran, b, piyasa=True, asagi=True)
             if q <= 0:
                 raise Hata("bu oran en küçük adımın altında")
             self._elle_isaret(sem)
-            e = self.ic.futures_create_order(symbol=sem, side="SELL" if poz["adet"] > 0 else "BUY", type="MARKET", quantity=q,
-                                             reduceOnly="true", newClientOrderId=_cid())
+            ro = (hedef > 0) == (poz["adet"] > 0) and q <= abs(poz["adet"]) + 1e-12
+            kw = dict(symbol=sem, side="SELL" if hedef > 0 else "BUY", type="MARKET", quantity=q, newClientOrderId=_cid())
+            if ro:
+                kw["reduceOnly"] = "true"
+            e = self.ic.futures_create_order(**kw)
             iptal = 0
             if oran >= 1:
                 iptal = self._panel_tpsl_iptal(sem) + self._panel_acik_iptal(sem)
@@ -412,6 +456,15 @@ class Kapi:
         sem = str(sem or "").upper()
         self._sembol_bilgi(sem)
         poz = self._pozisyon(sem)
+        bot_pay = 0.0
+        if not self.ayar.get("ayri") and poz["adet"]:   # madde 851: geçişte pencere yalnız KULLANICININ payını gösterir
+            m = self._muhasebe(sem)
+            if m and m.get("q_k") is not None:
+                qk, ok_ = float(m["q_k"]), float(m.get("ort_k") or 0)
+                isr = poz["giris"] + poz["kz"] / poz["adet"]
+                bot_pay = float(m.get("q_bot") or 0)
+                poz = {"adet": qk, "giris": ok_, "kz": round(qk * (isr - ok_), 4) if qk and ok_ else 0.0, "likidasyon": poz["likidasyon"],
+                       "borsa": dict(poz)}
         tpsl, bekleyen = [], []
         try:
             f = getattr(self.ic, "futures_get_open_algo_orders", None)
@@ -435,7 +488,8 @@ class Kapi:
         except Exception as e:
             logger.warning("işlem geçmişi okunamadı %s: %s", sem, e)
         return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"],
-                "islemler": islemler, "elle": sem in self._elle_kumesi(), "bot_tutuyor": self._bot_tutuyor(sem)}
+                "islemler": islemler, "elle": bool(self.ayar.get("ayri")) or sem in self._elle_kumesi(),
+                "bot_tutuyor": False if self.ayar.get("ayri") else self._bot_tutuyor(sem), "bot_pay": bot_pay}
 
     # ------------------------------------------------------------ madde 839: elle özeti
     def _elle_kumesi(self) -> set:
@@ -539,12 +593,13 @@ class Kapi:
 
     def elle_ozet(self) -> dict:
         """Elle pozisyonların (açık) ve son 30 gün elle sonucunun (gerçekleşen K/Z + komisyon, yalnız elle aralıklarındaki dolumlar)."""
-        elle = self._elle_kumesi()
+        ayri = bool(self.ayar.get("ayri"))   # madde 851: ayrı hesapta bütün pozisyonlar kullanıcının
+        elle = set() if ayri else self._elle_kumesi()
         pozlar = []
         for p in self.c.get_open_positions():
             sem = p.get("symbol")
             a = float(p.get("positionAmt") or 0)
-            if sem in elle and a:
+            if (ayri or sem in elle) and a:
                 tp = sl = None
                 try:
                     f = getattr(self.ic, "futures_get_open_algo_orders", None)
@@ -561,15 +616,47 @@ class Kapi:
                 pozlar.append({"sembol": sem, "adet": a, "giris": float(p.get("entryPrice") or 0),
                                "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0),
                                "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl,
-                               "pay": self._payim(sem, a, float(p.get("entryPrice") or 0))})   # madde 843
+                               "pay": None if ayri else self._payim(sem, a, float(p.get("entryPrice") or 0))})   # madde 843
                 m = self._muhasebe(sem)
-                if m:
+                if m and not self.ayar.get("ayri") and m.get("q_k") is not None:   # madde 851: geçişte yalnız kullanıcının payı
+                    P_ = pozlar[-1]; isr = P_["giris"] + P_["kz"] / P_["adet"] if P_["adet"] else 0
+                    qk, ok_ = float(m["q_k"]), float(m.get("ort_k") or 0)
+                    if not qk:
+                        pozlar.pop(); continue
+                    uk = qk * (isr - ok_) if ok_ and isr else 0.0
+                    P_["borsa"] = {"adet": P_["adet"], "giris": P_["giris"], "kz": P_["kz"]}
+                    P_.update(adet=qk, giris=ok_, kz=round(uk, 4), pay=None)
+                    P_["muhasebe"] = {"kz": round(float(m.get("Rk") or 0) + float(m.get("Fk") or 0) + float(m.get("C") or 0) + uk, 4),
+                                      "q_bot": float(m.get("q_bot") or 0), "e_bot": m.get("e_bot"), "funding": round(float(m.get("Fk") or 0), 4),
+                                      "komisyon": round(float(m.get("C") or 0), 4), "bas": int(m.get("bas") or 0), "kural": "bota_geri"}
+                elif m:
                     u = pozlar[-1]["kz"]
                     pozlar[-1]["muhasebe"] = {"kz": round(float(m["kz"]) + u - float(m.get("U") or 0), 4), "devir": round(float(m.get("devir") or 0), 4),
                                               "devr_adet": float(m.get("devr_adet") or 0), "ilk_fiyat": float(m.get("ilk_fiyat") or 0),
                                               "funding": round(float(m.get("F") or 0), 4), "komisyon": round(float(m.get("C") or 0), 4),
                                               "bas": int(m.get("bas") or 0)}
         kz = kom = 0.0; kapanis = kazanan = 0
+        if ayri:   # ayrı hesap: son 30 günün bütün gelir kayıtları
+            hesap = {}
+            try:
+                hesap = {"ozkaynak": round(float(self.c.get_account_equity_usd()), 2)}
+            except Exception as e:
+                logger.warning("al-sat hesap özkaynağı okunamadı: %s", e)
+            try:
+                bas = int((self.saat() - 30 * 86400) * 1000)
+                for x in self.ic.futures_income_history(startTime=bas, limit=1000) or []:
+                    t, v = x.get("incomeType"), float(x.get("income") or 0)
+                    if t == "REALIZED_PNL":
+                        kz += v; kapanis += 1; kazanan += v > 0
+                    elif t == "COMMISSION":
+                        kom -= v
+                    elif t == "FUNDING_FEE":
+                        kz += v
+            except Exception as e:
+                logger.warning("al-sat sonucu okunamadı: %s", e)
+            pozlar.sort(key=lambda x: x["kz"])
+            return {"pozisyonlar": pozlar, "sonuc": {"gun": 30, "kz": round(kz, 4), "komisyon": round(kom, 4), "net": round(kz - kom, 4),
+                                                      "kapanis": kapanis, "kazanan": kazanan}, "mod": self.ayar["mod"], "hesap": hesap, "ayri": True}
         for sem, L in list(self._elle_araliklar().items())[:25]:
             try:
                 for t in self.ic.futures_account_trades(symbol=sem, startTime=min(a for a, _ in L), limit=500) or []:
@@ -607,7 +694,13 @@ def uygulama(kapi_fabrika=None):
                         bildirim.gonder(m)
                     except Exception:
                         pass
-                durum["kapi"] = Kapi(ExchangeClient(config.API_KEY, config.API_SECRET, mode=config.BINANCE_MODE), bildir=_b)
+                a = ayarlar()
+                if a["ayri"]:   # madde 851: al-sat AYRI hesap (ALSAT_API_KEY / SECRET — şifreli kimlik carry-alsat.env)
+                    a["mod"] = a["alsat_mod"]
+                    ist = ExchangeClient(os.getenv("ALSAT_API_KEY", "").strip(), os.getenv("ALSAT_API_SECRET", "").strip(), mode=a["alsat_mod"])
+                else:
+                    ist = ExchangeClient(config.API_KEY, config.API_SECRET, mode=config.BINANCE_MODE)
+                durum["kapi"] = Kapi(ist, ayar=a, bildir=_b)
         return durum["kapi"]
 
     def calistir(f):

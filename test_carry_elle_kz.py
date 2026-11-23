@@ -43,8 +43,8 @@ class Istemci:
         self.client = Ic(); self.poz = {}
 
     def get_open_positions(self):
-        return [{"symbol": s, "positionAmt": str(a), "unRealizedProfit": str(u), "markPrice": str(m), "entryPrice": "0"}
-                for s, (a, u, m) in self.poz.items() if a]
+        return [{"symbol": s, "positionAmt": str(a), "unRealizedProfit": str(u), "markPrice": str(m),
+                 "entryPrice": str(m - u / a) if a else "0"} for s, (a, u, m) in self.poz.items() if a]
 
 
 _id = [0]
@@ -86,7 +86,7 @@ kontrol("kz = açık 10 + funding 0,10 − komisyon 0,04", yakin(a["kz"], 10.06)
 kontrol("devir 0 (bottan bir şey alınmadı)", yakin(a["devir"], 0.0) and yakin(a["devr_adet"], 0.0))
 kontrol("toplam", yakin(st["toplam"], 10.06, 1e-3))
 
-print("2) botun short'una ekleme (devralınan kısım devir anına kadar botun)")
+print("2) botun short'una ekleme (madde 851: botun payı botta kalır)")
 c = Istemci(); ic = c.client
 emir(ic, "BUSDT", T0 - 86400_000, "SELL", 100, 0.5, cid="x-Cb7ytekJbot1", kom=0)   # botun girişi (aralık dışında)
 emir(ic, "BUSDT", T0, "SELL", 50, 0.8, kom=0)
@@ -94,10 +94,9 @@ c.poz["BUSDT"] = (-150, -15.0, 0.7)   # Binance ort. 0,6 → açık −15
 elle_yaz({"BUSDT": T0 + 600_000})
 st = guncelle(c, T0 + 3600_000)
 a = st["aralik"]["BUSDT"][0]
-kontrol("devralınan adet −100", yakin(a["devr_adet"], -100))
-kontrol("elle kz = −150 × (0,7 − 0,8) = +15", yakin(a["kz"], 15.0))
-kontrol("devir = botun −100 × (0,8 − 0,5) = −30", yakin(a["devir"], -30.0))
-kontrol("R + F + C + U − devir = kz", yakin(a["R"] + a["F"] + a["C"] + a["U"] - a["devir"], a["kz"]))
+kontrol("botun payı −100 adet, girişi 0,5 (borsa ortalamasından)", yakin(a["q_bot"], -100) and yakin(a["e_bot"], 0.5))
+kontrol("kullanıcının payı −50 @ 0,8 → açık +5", yakin(a["q_k"], -50) and yakin(a["ort_k"], 0.8) and yakin(a["Uk"], 5.0) and yakin(a["kz"], 5.0))
+kontrol("botun açık K/Z'si −100 × (0,7 − 0,5) = −20", yakin(a["U_bot"], -20.0))
 
 print("3) botun long'unu kapatıp yeni long (AKE gibi)")
 c = Istemci(); ic = c.client
@@ -107,9 +106,9 @@ c.poz["CUSDT"] = (30000, -3.0, 0.0027)
 elle_yaz({"CUSDT": T0 + 900_000})
 st = guncelle(c, T0 + 3600_000)
 a = st["aralik"]["CUSDT"][0]
-kontrol("devralınan 3000 long", yakin(a["devr_adet"], 3000))
-kontrol("botun kapanış zararı (−7,5) devirde, elleye yazılmaz", yakin(a["devir"], -7.5))
-kontrol("elle kz yalnız yeni long: 30000 × (0,0027 − 0,0028) = −3", yakin(a["kz"], -3.0))
+kontrol("botun payı 3000 long botta kalır", yakin(a["q_bot"], 3000))
+kontrol("kullanıcı: −3000 sat + 30000 al → 27000 long, açık −2,7", yakin(a["q_k"], 27000) and yakin(a["kz"], -2.7))
+kontrol("botun gerçekleşen zararı (−7,5) elleye yazılmaz", yakin(a["Rk"], 0.0))
 
 print("4) kapatılan aralık dondurulur, coin bota döner")
 with open(OLAY, "w") as f:
@@ -150,12 +149,13 @@ print("7) panel elle_ayir: döküm parçaları botun kârına eşit kalır")
 import panel
 o = {"dokum": {"gerceklesen": 100.0, "funding": 20.0, "komisyon": -5.0, "diger_gelir": 0.0},
      "coin_ozet": [{"s": "B", "kapanan": 0.0, "funding": 0.0, "komisyon": 0.0, "acik": -15.0, "toplam": -15.0}]}
-an = {"ozkaynak_hesap": 1000, "elle": K.ozet({"aralik": {"BUSDT": [{"bas": T0, "R": 0, "F": 0, "C": 0, "U": -15.0, "kz": 15.0, "devir": -30.0}]}})}
+an = {"ozkaynak_hesap": 1000, "elle": K.ozet({"aralik": {"BUSDT": [{"bas": T0, "Rk": 2.0, "Fk": 0.5, "C": -0.25, "Uk": 5.0, "kz": 7.25}]}})}
 panel.elle_ayir(o, an)
-kontrol("döküm: gerçekleşene botun devir payı (−30) eklendi", yakin(o["dokum"]["gerceklesen"], 70.0))
+kontrol("döküm: kullanıcının bileşenleri düşüldü", yakin(o["dokum"]["gerceklesen"], 98.0) and yakin(o["dokum"]["funding"], 19.5)
+        and yakin(o["dokum"]["komisyon"], -4.75))
 k = o["coin_ozet"][0]
-kontrol("coin satırı: bot payı = −30 (açık 0, kapanan −30)", yakin(k["toplam"], -30.0) and yakin(k["acik"], 0.0) and yakin(k["elle_kz"], 15.0))
-kontrol("o['elle'] özeti", o["elle"]["kz"] == 15.0)
+kontrol("coin satırı: botun payı kalır (açık −15 − 5 = −20)", yakin(k["acik"], -20.0) and yakin(k["elle_kz"], 7.25))
+kontrol("o['elle'] özeti", o["elle"]["kz"] == 7.25)
 
 print("8) bot sermayesi elle K/Z'yi düşer")
 import carry_bot

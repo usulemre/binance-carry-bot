@@ -449,8 +449,16 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
     except Exception as ex:
         print(f"UYARI: elle K/Z hesaplanamadı: {ex}", file=sys.stderr)
     oz = oz_hesap - elle_kz
-    for s_ in elle_sem & set(poz):
-        poz[s_]["elle"] = True
+    for s_ in elle_sem & set(poz):   # madde 851: botun payı botta kalır — pozisyon botun adedi / girişiyle; payı yoksa tamamen elle
+        a_ = next((x for x in reversed((elle_st or {}).get("aralik", {}).get(s_) or []) if not x.get("bit")), None)
+        qb = float((a_ or {}).get("q_bot") or 0); eb = (a_ or {}).get("e_bot")
+        if qb and eb:
+            p_ = poz[s_]; isr = float(p_.get("isaret") or 0) or eb
+            poz[s_] = {**p_, "yon": "L" if qb > 0 else "S", "miktar": qb, "giris": eb, "usd": round(abs(qb) * isr, 2),
+                       "gerceklesmemis": round(qb * (isr - eb), 2), "kar_yuzde": round((isr / eb - 1) * (1 if qb > 0 else -1) * 100, 2),
+                       "elle_pay": a_.get("q_k")}
+        else:
+            poz[s_]["elle"] = True
     kayit = {
         "zaman": int(simdi),
         "ozkaynak": round(oz, 4),

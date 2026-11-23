@@ -349,6 +349,45 @@ for v in ("CARRY_PANEL_ISLEM", "CARRY_ISLEM_PIN", "CARRY_ISLEM_MAX_USD", "CARRY_
     os.environ.pop(v, None)
 kontrol("varsayılan KAPALI", ci.ayarlar()["acik"] is False)
 
+print("14) madde 851: geçiş (ayrı hesap yok) ve ayrı hesap")
+d51 = tempfile.mkdtemp()
+kz51 = os.path.join(d51, "elle_kz.json")
+k51, ic51, _ = yeni(gecis_kisit=True, elle_dosya=os.path.join(d51, "e.json"), elle_panel=os.path.join(d51, "p.json"),
+                    elle_olay=os.path.join(d51, "o.jsonl"), dilim=os.path.join(d51, "dil.json"), elle_kz=kz51)
+kontrol("geçiş: elle olmayan (botun) coinde emir yok", hata_mi(lambda: k51.emir({"sembol": "AKEUSDT", "yon": "L", "usd": 50, "pin": "482913"}), "botun coini", 403))
+kontrol("geçiş: botun coinini kapatamaz", hata_mi(lambda: k51.kapat({"sembol": "AKEUSDT", "oran": 1, "pin": "482913"})))
+json.dump({"elle": {"ONDOUSDT": {"t": 1}}, "birakilan": {}}, open(os.path.join(d51, "e.json"), "w"))
+ic51.poz["ONDOUSDT"] = -150.0; ic51.giris["ONDOUSDT"] = 0.6
+json.dump({"aralik": {"ONDOUSDT": [{"bas": 1, "bit": None, "kz": 5.0, "q_k": -50.0, "ort_k": 0.8, "q_bot": -100.0, "e_bot": 0.5,
+                                     "Rk": 0, "Fk": 0, "C": 0, "Uk": 5.0}]}}, open(kz51, "w"))
+kontrol("geçiş: elle coinde pozisyonu büyüten emir yok", hata_mi(lambda: k51.emir({"sembol": "ONDOUSDT", "yon": "S", "usd": 20, "pin": "482913"}), "yeni pozisyon açılmıyor"))
+kontrol("geçiş: botun payı olan coinde TP/stop yok", hata_mi(lambda: k51.tpsl({"sembol": "ONDOUSDT", "sl": 0.95, "pin": "482913"}), "botun da payı"))
+p51 = k51.pozisyon("ONDOUSDT")
+kontrol("geçiş: pencere yalnız kullanıcının payını gösterir (−50 @ 0,8), botun payı −100", p51["pozisyon"]["adet"] == -50
+        and abs(p51["pozisyon"]["giris"] - 0.8) < 1e-9 and p51["bot_pay"] == -100 and p51["pozisyon"]["borsa"]["adet"] == -150, p51)
+n0 = len(ic51.emirler)
+k51.kapat({"sembol": "ONDOUSDT", "oran": 1, "pin": "482913"})
+e51 = ic51.emirler[-1]
+kontrol("geçiş: kapat yalnız kullanıcının 50 adedini alır, botun 100'ü kalır", len(ic51.emirler) == n0 + 1 and e51["side"] == "BUY"
+        and float(e51["quantity"]) == 50 and ic51.poz["ONDOUSDT"] == -100.0, e51)
+ka, ica, _ = yeni(ayri=True, gecis_kisit=True, elle_dosya=os.path.join(d51, "e.json"), elle_panel=os.path.join(d51, "pa.json"),
+                  elle_olay=os.path.join(d51, "o.jsonl"), dilim=os.path.join(d51, "dil.json"), elle_kz=kz51)
+ka.emir({"sembol": "AKEUSDT", "yon": "L", "usd": 50, "pin": "482913"})
+kontrol("ayrı hesap: her coinde serbest emir", ica.poz.get("AKEUSDT") == 100)
+kontrol("ayrı hesap: bota elle işareti YAZILMAZ", not os.path.exists(os.path.join(d51, "pa.json")))
+pa = ka.pozisyon("AKEUSDT")
+kontrol("ayrı hesap: elle=True, bot_tutuyor=False", pa["elle"] is True and pa["bot_tutuyor"] is False)
+ica.poz["ONDOUSDT"] = -10.0
+oza = ka.elle_ozet()
+kontrol("ayrı hesap: Pozisyonlarım hesabın bütün pozisyonları", {x["sembol"] for x in oza["pozisyonlar"]} == {"AKEUSDT", "ONDOUSDT"} and oza.get("ayri") is True, oza)
+os.environ.update({"ALSAT_API_KEY": "k1", "ALSAT_API_SECRET": "s1", "BINANCE_API_KEY": "k1"})
+kontrol("ayrı hesap anahtarı botunkiyle aynıysa kapı KAPALI", "AYNI" in (ci.Kapi(SahteClient(), {**ci.ayarlar(), "acik": True, "pin": "482913"})._kapali_neden() or ""))
+os.environ["BINANCE_API_KEY"] = "k0"
+kontrol("farklı anahtar: ayri=True", ci.ayarlar()["ayri"] is True and ci.ayarlar()["ayni_anahtar"] is False)
+for v in ("ALSAT_API_KEY", "ALSAT_API_SECRET", "BINANCE_API_KEY"):
+    os.environ.pop(v, None)
+kontrol("anahtar yoksa ayri=False, geçiş kısıtı varsayılan açık", ci.ayarlar()["ayri"] is False and ci.ayarlar()["gecis_kisit"] is True)
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:

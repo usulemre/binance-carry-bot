@@ -9585,3 +9585,16 @@ Kullanıcı: "bir coini incelerken aynı sayfada görmeliyim günlük 3 günlük
 ## Madde 850 — Elle kartı botun muhasebesiyle aynı kaynaktan (kullanıcı ekranı BLESS, 2026-11-23: "bu bellede botun pozisyonu da var, bu pozisyon paneldeki botun kâr zararından düşüyor mu")
 
 Kart "Bottan gelen 209 $ · −24,20 $" gösteriyordu: (1) _payim sahiplik başını saatlik işaret anından alıyordu, ondan ~1 sa önceki ilk BLESS satışı botunki sayılmıştı; (2) bottan gelen kısmın K/Z'si botun girişinden bugüne ölçülüyordu — madde 849 muhasebesiyle (devir anına kadar bot, sonrası kullanıcı) çelişiyordu. Artık kart carry_elle_kz kaydından: "Senin kâr/zararın" (canlı fiyatla; funding/komisyon dahil), "Bottan devraldığın N adet, devir fiyatı", "Botun payı (devirden önce, sabit)", "Borsada görünen". _payim başlangıcı da muhasebenin ilk kullanıcı dolumundan. BLESS anlık: senin +25,41 $, botun −29,72 $ (sabit), borsada −6,98 $ (fark = funding + komisyon).
+
+## Madde 851 — Bot ve Al-Sat iki ayrı alan; al-sat ayrı hesaba hazırlandı; botun payı botta kalır (kullanıcı, 2026-11-23: "bless ve bota eklediğimiz her şeyi blessi yapmamış gibi geri al … bot eskisi gibi olsun, ellenin botla alakası olmasın … yukarı hamburger menü koy, bot ve al-sat diye seçim yapayım, tamamen farklı iki alan olsun")
+
+Kullanıcı seçimleri: **ayrı hesap** (al-sat için ayrı Binance hesabı / alt hesap API anahtarı) ve **bota geri ver** (BLESS 8.331 short, AKE 3.092 long, ICNT 75 long botta kalır).
+
+1. aşama (bu madde, anahtar beklenmeden):
+- **Panel:** üstte ☰ menü → **Bot** (Özet · Pozisyonlar · Geçmiş · Olaylar; elle izi yok) / **Al-Sat** (Pozisyonlarım · Piyasa). Seçim hatırlanır. Bot listesine al-sat pozisyonları birleştirilmez (844 birleştirmesi kapalı).
+- **Muhasebe kuralı değişti (carry_elle_kz):** devir yok. Kullanıcının payı = elle aralıktaki dolumların sıfırdan oynatılması; botun payı = borsadaki adet − kullanıcınınki, girişi borsa ortalamasından geri çözülür; funding adet oranıyla. Anlık görüntüde botun payı olan coin botun adedi / girişiyle bot listesinde görünür (BLESS −8.331 @ 0,01316), payı olmayan elle coin listeden çıkar. Panel dökümü yalnız kullanıcı bileşenlerini (Rk, Fk, C, Uk) düşer.
+- **carry_islem:** `ALSAT_API_KEY` / `ALSAT_API_SECRET` (şifreli kimlik carry-alsat.env, `ALSAT_MODE`) varsa bütün işlemler o hesapta, bota elle işareti yazılmaz, Pozisyonlarım = o hesabın bütün pozisyonları + hesap özkaynağı. Anahtar botunkiyle aynıysa kapı kapalı. Anahtar yokken **geçiş** (CARRY_ALSAT_GECIS=1): yalnız elle coinlerde ve yalnız kullanıcının payını küçülten / kapatan emir; botun payı olan coinde TP/stop yok; pencere ve liste kullanıcının payını gösterir.
+
+İlk ölçüm (2026-11-23 ~19 UTC, 15 elle coin): kullanıcının toplam elle K/Z'si +13,78 $; BLESS kullanıcı −20.624 @ 0,01694 (+31,1 $), bot −8.331 @ 0,01316 (−19,6 $ açık).
+
+2. aşama (anahtar gelince): kullanıcı pozisyonlarını al-sat hesabında aç, bot hesabında yalnız botun payı kalsın; BLESS / AKE / ICNT'yi dilimlere + kâr al / felaket'e geri koy; CARRY_ELLE=0; elle K/Z sabitlenir (bot özkaynağından kalıcı düşülür).
