@@ -388,6 +388,24 @@ for v in ("ALSAT_API_KEY", "ALSAT_API_SECRET", "BINANCE_API_KEY"):
     os.environ.pop(v, None)
 kontrol("anahtar yoksa ayri=False, geçiş kısıtı varsayılan açık", ci.ayarlar()["ayri"] is False and ci.ayarlar()["gecis_kisit"] is True)
 
+print("15) madde 852: al-sat geçmişi")
+d52 = tempfile.mkdtemp()
+k52, ic52, _ = yeni(ayri=True, anlik=os.path.join(d52, "a.jsonl"))
+ic52.futures_account = lambda: {"totalMarginBalance": "1012", "totalWalletBalance": "1010", "totalUnrealizedProfit": "2"}
+G52 = [{"time": int((SAAT[0] - 86400) * 1000), "incomeType": "REALIZED_PNL", "income": "15", "asset": "USDT"},
+       {"time": int((SAAT[0] - 86400) * 1000), "incomeType": "COMMISSION", "income": "-1", "asset": "USDT"},
+       {"time": int(SAAT[0] * 1000) - 1000, "incomeType": "REALIZED_PNL", "income": "-4", "asset": "USDT"},
+       {"time": int(SAAT[0] * 1000) - 900, "incomeType": "TRANSFER", "income": "500", "asset": "USDT"}]
+ic52.futures_income_history = lambda **kw: [g for g in G52 if kw.get("startTime", 0) <= g["time"] <= kw.get("endTime", 1e18)]
+n52 = ci.anlik_kaydet(k52)
+kontrol("anlık nokta yazıldı", n52["ozkaynak"] == 1012 and os.path.exists(os.path.join(d52, "a.jsonl")))
+g52 = ci.gecmis(k52)
+kontrol("başlangıç = cüzdan − işlem gelirleri (transfer hariç) = 1000", g52["baslangic"] == 1000.0, g52)
+kontrol("toplam = 1012 − 1000 = 12", g52["toplam"] == 12.0 and g52["ozet"]["gerceklesen"] == 11.0)
+kontrol("günler: dün +14 (nokta yok → gelirle), bugün 1012 − 1014 = −2", [round(x["kz"], 4) for x in g52["gunler"]] == [14.0, -2.0], g52["gunler"])
+kontrol("eğri başlangıçtan şimdiye", g52["egri"][0][1] == 1000.0 and g52["egri"][-1][1] == 1012.0)
+kontrol("ayrı hesap yoksa geçmiş yok", hata_mi(lambda: ci.gecmis(yeni()[0]), "ayrı hesabı", 409))
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:

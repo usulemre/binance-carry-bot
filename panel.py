@@ -1194,6 +1194,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .ibtn.geri{flex:0 0 108px;background:var(--kart2);color:var(--yazi)}
 .isl .ibtn.tut::before{content:"";position:absolute;inset:0;width:0;background:rgba(255,255,255,.28);transition:width 0s}.isl .ibtn.tut.dolu::before{width:100%;transition:width .7s linear}
 .dnm{margin-top:12px;padding:6px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.dnh,.dnr{display:grid;grid-template-columns:62px 58px minmax(0,1fr) 54px;gap:8px;align-items:center}.dnh{font-size:11px;color:var(--soluk);padding:4px 0}.dnr{padding:7px 0;border-top:1px solid var(--cizgi)}.dna{font-weight:600;line-height:1.2}.dnz{min-width:0}.dnb{position:relative;display:block;height:6px;border-radius:3px;background:var(--cizgi)}.dnb i{position:absolute;top:-3px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--vurgu);border:2px solid var(--kart2)}.dnu{display:flex;justify-content:space-between;font-size:11px;color:var(--soluk);margin-top:3px;gap:4px}.dns{width:54px;height:22px}
+.asg{width:100%;height:auto;display:block;margin:4px 0 6px}.asgt{font-size:11px;fill:var(--soluk)}.ash{font-size:12.5px;font-weight:600;color:var(--soluk);margin-top:12px}
+.asoz{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.asb{font-size:20px;font-weight:700;margin-top:2px}.asb .k{font-size:12px;font-weight:500}
 .elp{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--kart2);font-size:13.5px}.elh{font-weight:700;margin-bottom:6px}.elr{display:flex;justify-content:space-between;gap:10px;padding:5px 0;line-height:1.4}.elr .r{text-align:right}.eld{margin-top:8px}.eld summary{cursor:pointer;color:var(--soluk);font-size:13px;padding:4px 0}
 .elk{margin-top:12px;padding:12px 14px;border-radius:12px;font-size:13.5px;line-height:1.5;background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.elk li{margin:3px 0}.elkb{margin-top:10px;width:100%;min-height:44px;border:0;border-radius:10px;font:inherit;font-weight:600;background:var(--vurgu);color:var(--bg);cursor:pointer}
 .isl .ibtn.tut span{position:relative}.isl .isah{margin-top:12px;padding:10px 12px;border-radius:12px;font-size:13px;line-height:1.45}.isl .isah.sen{background:color-mix(in srgb,var(--vurgu) 12%,transparent)}.isl .isah.bot{background:color-mix(in srgb,var(--uyari) 14%,transparent)}.isl .isah.yok{background:var(--kart2);font-size:13.5px}.isl .ibtn.ikinci,.isl .ibtn.ikinci:disabled{background:var(--kart2);color:var(--soluk);opacity:1}
@@ -1235,7 +1237,7 @@ temaUygula();
 // MADDE 737: sekmeler (telefonda altta sabit). Seçim adres çubuğunda (#poz) saklanır, yenilemede korunur.
 // MADDE 851: iki ayrı alan — BOT (eski panel, elle yok) ve AL-SAT (bottan ayrı hesap). Üstteki ☰ menüden seçilir.
 const SAYFA_BOT = [["ozet","Özet"],["poz","Pozisyonlar"],["gecmis","Geçmiş"],["olay","Olaylar"]];
-const SAYFA_AS = [["alsat","Pozisyonlarım"],["piyasa","Piyasa"]];
+const SAYFA_AS = [["alsat","Pozisyonlarım"],["piyasa","Piyasa"],["asgecmis","Geçmiş"]];
 let ALAN = (()=>{ const h = (location.hash||"").slice(1); if (SAYFA_AS.some(x=>x[0]==h)) return "alsat"; if (SAYFA_BOT.some(x=>x[0]==h)) return "bot";
   try { return localStorage.getItem("carry_alan") == "alsat" ? "alsat" : "bot"; } catch(_){ return "bot"; } })();
 let SAYFALAR = ALAN == "alsat" ? SAYFA_AS : SAYFA_BOT;
@@ -1250,7 +1252,7 @@ function menuKapat(){ const m = $("#menu"); if (m){ m.hidden = true; m.innerHTML
 addEventListener("keydown", e=>{ if (e.key === "Escape" && !$("#menu").hidden) menuKapat(); });
 // MADDE 757: D tasarımı — alt menü simgeleri
 const NAV_SVG = {ozet:'<path d="M3 17l6-6 4 4 8-8"/><path d="M15 7h6v6"/>', poz:'<rect x="3" y="4" width="18" height="5" rx="1.5"/><rect x="3" y="11" width="18" height="5" rx="1.5"/><path d="M3 20h12"/>',
-  gecmis:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', alsat:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/>', piyasa:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 13l2-2 2 2 3-3"/>', olay:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/>'};
+  gecmis:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', alsat:'<rect x="3" y="6" width="18" height="13" rx="2"/><path d="M3 10h18"/><path d="M16 15h2"/>', asgecmis:'<path d="M4 20V10M10 20V4M16 20v-7M22 20H2"/>', piyasa:'<circle cx="11" cy="11" r="7"/><path d="M21 21l-4.3-4.3"/><path d="M8 13l2-2 2 2 3-3"/>', olay:'<path d="M6 8a6 6 0 0 1 12 0c0 7 3 8 3 8H3s3-1 3-8"/><path d="M10 20a2 2 0 0 0 4 0"/>'};
 let sayfa = (location.hash||"").slice(1); if (!SAYFALAR.some(x=>x[0]==sayfa)) sayfa = SAYFALAR[0][0];
 const MOBIL = () => innerWidth < 700;   // madde 754: telefonda sıkı liste ve sade metinler
 function sayfaSec(a){ if (a==sayfa) return; sayfa = a; history.replaceState(null, "", "#"+a); ciz(); scrollTo(0,0); }
@@ -1477,6 +1479,59 @@ function alsatSayfa(k){
   return `<div class="kart pyk"><div class="dpb"><span class="gb">Pozisyonlarım</span><span class="k">${D.ayri ? `${D.mod=="live"?"canlı":"demo"} · bottan ayrı hesap` : ""}</span></div>${gecis}
     ${D.acik ? `<div id="piyelle">${elleHtml()}</div>` : `<div class="bos">${D.neden ? ea(D.neden) : "işlem kapalı"}</div>`}
     ${D.acik && !D.gecis ? `<button class="elkb" onclick="sayfaSec('piyasa')">Piyasadan coin seç · al / sat</button>` : ""}</div>`;
+}
+// MADDE 852: AL-SAT GEÇMİŞİ — günlük kazanç / kayıp çubukları + hesap eğrisi + gün tablosu (ayrı hesap; kapı /gecmis, 60 sn önbellek)
+let AS_GEC = null;
+async function asGecmisYukle(){
+  if (VERI_GOMULU || asGecmisYukle.calis) return; asGecmisYukle.calis = true;
+  try { const d = await islIstek("gecmis"); AS_GEC = d.ok ? {...d, _t: Date.now()} : {hata: d.hata, _t: Date.now()}; }
+  finally { asGecmisYukle.calis = false; }
+  if (sayfa == "asgecmis" && VERI && !ISL) ciz();
+}
+function asEgri(E){
+  if (!E || E.length < 2) return `<div class="k">Hesap eğrisi birkaç saat içinde oluşur (özkaynak 5 dk'da bir kaydediliyor).</div>`;
+  const W = 600, H = 150, sol = 4, alt = 18, t0 = E[0][0], t1 = E[E.length-1][0], v = E.map(x=>x[1]);
+  let lo = Math.min(...v), hi = Math.max(...v); const pad = (hi - lo) * 0.12 || Math.max(1, hi * 0.002); lo -= pad; hi += pad;
+  const X = t => sol + (t - t0) / Math.max(1, t1 - t0) * (W - sol * 2), Y = y => (H - alt) - (y - lo) / (hi - lo) * (H - alt - 6);
+  const yuk = v[v.length-1] >= v[0], renk = css(yuk ? "--art" : "--eks"), ilk = Y(v[0]);
+  const yol = E.map((x,i)=>`${i?"L":"M"}${X(x[0]).toFixed(1)} ${Y(x[1]).toFixed(1)}`).join("");
+  const tz = t => new Date(t).toLocaleString("tr-TR", {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"});
+  const hit = E.map((x,i)=>{ const a = i ? (X(E[i-1][0]) + X(x[0])) / 2 : sol, b = i < E.length-1 ? (X(x[0]) + X(E[i+1][0])) / 2 : W - sol;
+    return `<rect x="${a.toFixed(1)}" y="0" width="${Math.max(1, b - a).toFixed(1)}" height="${H - alt}" fill="transparent"><title>${tz(x[0])} · ${para(x[1])}</title></rect>`; }).join("");
+  return `<svg viewBox="0 0 ${W} ${H}" class="asg" role="img" aria-label="Al-sat hesap eğrisi">
+    <line x1="${sol}" x2="${W - sol}" y1="${ilk.toFixed(1)}" y2="${ilk.toFixed(1)}" stroke="${css("--cizgi")}" stroke-dasharray="3 4"/>
+    <path d="${yol}" fill="none" stroke="${renk}" stroke-width="2" stroke-linejoin="round" stroke-linecap="round"/>
+    <circle cx="${X(t1).toFixed(1)}" cy="${Y(v[v.length-1]).toFixed(1)}" r="4" fill="${renk}" stroke="${css("--kart")}" stroke-width="2"/>
+    <text x="${sol}" y="${H - 4}" class="asgt">${tz(t0)}</text><text x="${W - sol}" y="${H - 4}" class="asgt" text-anchor="end">şimdi</text>${hit}</svg>`;
+}
+function asCubuk(G){
+  if (!G || !G.length) return "";
+  const W = 600, H = 140, alt = 18, n = G.length, m = Math.max(...G.map(g=>Math.abs(g.kz)), 0.01), sifir = (H - alt) / 2;
+  const bw = Math.max(3, Math.min(28, (W / n) - 4)), adim = W / n;
+  const bars = G.map((g,i)=>{ const h = Math.max(2, Math.abs(g.kz) / m * (sifir - 4)), x = i * adim + (adim - bw) / 2, y = g.kz >= 0 ? sifir - h : sifir;
+    const d = new Date(g.t + "T12:00:00");
+    return `<g><rect x="${x.toFixed(1)}" y="${y.toFixed(1)}" width="${bw.toFixed(1)}" height="${h.toFixed(1)}" rx="3" fill="${css(g.kz >= 0 ? "--art" : "--eks")}"/>
+      <rect x="${(i * adim).toFixed(1)}" y="0" width="${adim.toFixed(1)}" height="${H - alt}" fill="transparent"><title>${d.toLocaleDateString("tr-TR",{day:"numeric",month:"long"})}: ${isaretli(g.kz)} (kapanan ${isaretli(g.gerceklesen)}, funding ${isaretli(g.funding)}, komisyon ${isaretli(g.komisyon)})</title></rect></g>`; }).join("");
+  const etk = G.map((g,i)=> (n <= 10 || i % Math.ceil(n / 8) == 0 || i == n-1) ? `<text x="${(i * adim + adim / 2).toFixed(1)}" y="${H - 4}" class="asgt" text-anchor="middle">${+g.t.slice(8)}.${+g.t.slice(5,7)}</text>` : "").join("");
+  return `<svg viewBox="0 0 ${W} ${H}" class="asg" role="img" aria-label="Günlük kazanç ve kayıp"><line x1="0" x2="${W}" y1="${sifir}" y2="${sifir}" stroke="${css("--cizgi")}"/>${bars}${etk}</svg>`;
+}
+function asGecmisSayfa(){
+  const D = ISL_DURUM;
+  if (D && !D.ayri) return `<div class="kart bos">Geçmiş, al-sat ayrı hesabı bağlıyken görünür.</div>`;
+  if (!AS_GEC || Date.now() - (AS_GEC._t||0) > 60e3) asGecmisYukle();
+  if (!AS_GEC) return `<div class="kart"><div class="iskelet" style="height:34px;width:60%"></div><div class="iskelet" style="height:150px;margin-top:14px"></div></div>`;
+  if (AS_GEC.hata) return `<div class="kart bos">${ea(AS_GEC.hata)}</div>`;
+  const A = AS_GEC, G = A.gunler || [], B = G.length ? G[G.length-1] : null, O = A.ozet || {};
+  const yzd = v => v==null ? "" : ` (${(v>=0?"+":"−")}%${Math.abs(v*100).toFixed(2).replace(".",",")})`;
+  const satir = G.slice().reverse().map(g=>`<div class="elr"><span>${new Date(g.t+"T12:00:00").toLocaleDateString("tr-TR",{day:"numeric",month:"short",weekday:"short"})}<br><span class="k">kapanan ${isaretli(g.gerceklesen)} · funding ${isaretli(g.funding)} · kom. ${isaretli(g.komisyon)}</span></span>
+      <span class="r"><b class="${sinif(g.kz)}">${isaretli(g.kz)}</b><br><span class="k">${para(g.oz)}</span></span></div>`).join("");
+  return `<div class="kart"><div class="dpb"><span class="gb">Al-Sat geçmişi</span><span class="k">bottan ayrı hesap</span></div>
+      <div class="asoz"><div><div class="k">Toplam</div><div class="asb ${sinif(A.toplam)}">${A.toplam>=0?"▲":"▼"} ${isaretli(A.toplam)}<span class="k">${yzd(A.oran)}</span></div></div>
+        <div><div class="k">Bugün</div><div class="asb ${sinif(B && B.kz)}">${B ? `${B.kz>=0?"▲":"▼"} ${isaretli(B.kz)}` : "—"}</div></div></div>
+      <div class="k" style="margin:4px 0 10px">Başlangıç ${para(A.baslangic)} → şimdi ${para(A.ozkaynak)} · kapanan ${isaretli(O.gerceklesen||0)} · funding ${isaretli(O.funding||0)} · komisyon ${isaretli(O.komisyon||0)} · açık ${isaretli(A.acik||0)}</div>
+      <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}
+      <div class="ash">Günlük kazanç / kayıp</div>${asCubuk(G.slice(-30))}
+      <div class="ash">Günler</div><div class="elp" style="margin-top:4px">${satir || `<div class="k">henüz gün yok</div>`}</div></div>`;
 }
 // MADDE 839: POZİSYONLARIM — elle yönettiğin açık pozisyonlar (hesabın K/Z'si) + son 30 gün elle sonucu; 15 sn'de bir kapıdan.
 let ELLE_OZ = null;
@@ -2657,7 +2712,7 @@ function ciz(){
   const genis = innerWidth >= 1000;
   piyasaBagla(sayfa=="piyasa");   // madde 832: akış yalnız Piyasa sekmesi açıkken
   const piyOdak = document.activeElement && document.activeElement.id=="piyara";
-  $("#icerik").innerHTML = sayfa=="poz" ? pozSayfa(k) : sayfa=="piyasa" ? piyasaSayfa(k) : sayfa=="alsat" ? alsatSayfa(k) : sayfa=="gecmis" ? gecmisSayfa(k) : sayfa=="olay" ? olaySayfa(k)
+  $("#icerik").innerHTML = sayfa=="poz" ? pozSayfa(k) : sayfa=="piyasa" ? piyasaSayfa(k) : sayfa=="alsat" ? alsatSayfa(k) : sayfa=="asgecmis" ? asGecmisSayfa() : sayfa=="gecmis" ? gecmisSayfa(k) : sayfa=="olay" ? olaySayfa(k)
     : (genis ? `<div class="genis"><div>${ozetSayfa(k, svc, sv)}</div><div>${pozSayfa(k)}</div></div>` : ozetSayfa(k, svc, sv));
   if (piyOdak){ const i = $("#piyara"); if (i){ i.focus(); i.setSelectionRange(i.value.length, i.value.length); } }   // 60 sn yenilemede yazı kesilmesin
   const yl = $("#yil"); if (yl) yl.scrollLeft = yl.scrollWidth;
@@ -2809,6 +2864,10 @@ def uygulama(klasorler: list[str]):
     @app.get("/api/islem/elle")
     def islem_elle():
         return _islem_ilet("GET", "elle")
+
+    @app.get("/api/islem/gecmis")
+    def islem_gecmis():
+        return _islem_ilet("GET", "gecmis")
 
     @app.get("/api/islem/pozisyon/<sem>")
     def islem_poz(sem):

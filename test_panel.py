@@ -501,7 +501,7 @@ kontrol("madde 850: elle kartı muhasebeden (senin K/Z, devraldığın, botun pa
         all(x in _s49 for x in ("const M = x.muhasebe;", "Botun payı", "botta kalıyor, sana geçmedi")))
 kontrol("madde 851: ☰ menü, Bot / Al-Sat ayrı alanlar, bot listesine al-sat birleştirilmez",
         all(x in _s49 for x in ('id="hmb"', "function menuAc", "function alanSec", 'const SAYFA_BOT = [["ozet","Özet"],["poz","Pozisyonlar"],["gecmis","Geçmiş"],["olay","Olaylar"]]',
-                                 'const SAYFA_AS = [["alsat","Pozisyonlarım"],["piyasa","Piyasa"]]', 'sayfa=="alsat" ? alsatSayfa(k)',
+                                 'const SAYFA_AS = [["alsat","Pozisyonlarım"],["piyasa","Piyasa"],["asgecmis","Geçmiş"]]', 'sayfa=="alsat" ? alsatSayfa(k)',
                                  "return false;   // madde 851: al-sat kendi alanında")))
 
 import tempfile as _tf51, json as _js51, os as _os51
@@ -510,6 +510,8 @@ _js51.dump({"coin": {"BUSDT": {"giris": 0.5, "adet": -100}, "CUSDT": {"giris": 1
 _an51 = {"gerceklesmemis_top": -15.0, "pozisyonlar": {"BUSDT": {"miktar": -100.0, "giris": 0.6, "isaret": 0.7, "gerceklesmemis": -10.0},
                                                     "CUSDT": {"miktar": 12.0, "giris": 0.9, "isaret": 1.1, "gerceklesmemis": 2.4}}}
 _o51 = panel.giris_duzelt(_d51, _an51)
+kontrol("madde 852: Al-Sat geçmiş sekmesi (eğri + günlük çubuk + gün tablosu, /api/islem/gecmis)",
+        all(x in _s49 for x in ("function asGecmisSayfa", "function asEgri", "function asCubuk", '@app.get("/api/islem/gecmis")', 'islIstek("gecmis")')))
 kontrol("madde 851: giriş düzeltmesi — botun kendi girişi (−100 @ 0,5 → açık −20, −10 taşındı), adet değişen coine dokunulmaz",
         abs(_an51["pozisyonlar"]["BUSDT"]["giris"] - 0.5) < 1e-12 and abs(_an51["pozisyonlar"]["BUSDT"]["gerceklesmemis"] + 20) < 1e-9
         and _o51 == {"BUSDT": -10.0} and _an51["pozisyonlar"]["CUSDT"]["giris"] == 0.9 and abs(_an51["gerceklesmemis_top"] + 25) < 1e-9)

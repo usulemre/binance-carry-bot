@@ -55,6 +55,7 @@ def ayarlar() -> dict:
             # Yoksa GEÇİŞ: bot hesabında yalnız mevcut elle pozisyonlar küçültülür / kapatılır, TP-SL konur; yeni pozisyon açılmaz.
             "ayri": bool(os.getenv("ALSAT_API_KEY", "").strip() and os.getenv("ALSAT_API_SECRET", "").strip()),
             "alsat_mod": os.getenv("ALSAT_MODE", "").strip() or os.getenv("BINANCE_MODE", "demo"),
+            "anlik": os.getenv("CARRY_ALSAT_ANLIK", os.path.join("defter", "alsat_anlik.jsonl")),
             "gecis_kisit": os.getenv("CARRY_ALSAT_GECIS", "1").strip() not in ("0", "false", "False"),
             "ayni_anahtar": bool(os.getenv("ALSAT_API_KEY", "").strip()) and os.getenv("ALSAT_API_KEY", "").strip() == os.getenv("BINANCE_API_KEY", "").strip()}
 
@@ -674,6 +675,119 @@ class Kapi:
                                                   "kapanis": kapanis, "kazanan": kazanan}, "mod": self.ayar["mod"]}
 
 
+# ------------------------------------------------------------------ madde 852: AL-SAT GEÇMİŞİ (ayrı hesap)
+TR_SAAT = 3 * 3600          # gün sınırı Türkiye saatiyle
+ANLIK_ARA_SN = 300
+
+
+def _gun(ms: int) -> str:
+    return time.strftime("%Y-%m-%d", time.gmtime(ms / 1000 + TR_SAAT))
+
+
+def _hesap_ozet(ic) -> dict:
+    h = ic.futures_account()
+    return {"ozkaynak": float(h.get("totalMarginBalance") or 0), "cuzdan": float(h.get("totalWalletBalance") or 0),
+            "acik": float(h.get("totalUnrealizedProfit") or 0)}
+
+
+def anlik_kaydet(kapi: "Kapi", simdi: float | None = None) -> dict | None:
+    """MADDE 852: al-sat hesabının özkaynak noktası → defter/alsat_anlik.jsonl (5 dk'da bir; yalnız ayrı hesapta)."""
+    if not kapi.ayar.get("ayri"):
+        return None
+    h = _hesap_ozet(kapi.ic)
+    nokta = {"t": int((simdi or kapi.saat()) * 1000), **{k: round(v, 4) for k, v in h.items()}}
+    yol = kapi.ayar.get("anlik") or os.path.join("defter", "alsat_anlik.jsonl")
+    os.makedirs(os.path.dirname(yol) or ".", exist_ok=True)
+    with open(yol, "a", encoding="utf-8") as f:
+        f.write(json.dumps(nokta) + "\n")
+    try:   # 60 günden eskiler atılır
+        if os.path.getsize(yol) > 3_000_000:
+            alt = nokta["t"] - 60 * 86400 * 1000
+            L = [l for l in open(yol, encoding="utf-8") if l.strip() and json.loads(l).get("t", 0) >= alt]
+            with open(yol + ".tmp", "w", encoding="utf-8") as f:
+                f.writelines(L)
+            os.replace(yol + ".tmp", yol)
+    except (OSError, ValueError):
+        pass
+    return nokta
+
+
+def _gelirler(ic, bas_ms: int, bit_ms: int) -> list:
+    out, s = [], int(bas_ms)
+    for _ in range(200):
+        r = ic.futures_income_history(startTime=s, endTime=bit_ms, limit=1000) or []
+        out += r
+        if len(r) < 1000:
+            break
+        s = int(r[-1].get("time") or s) + 1
+    return out
+
+
+def gecmis(kapi: "Kapi", gun: int = 90) -> dict:
+    """MADDE 852: al-sat hesabının günlük kazanç / kayıp ve hesap eğrisi.
+    Başlangıç sermayesi = cüzdan − bütün işlem gelirleri (gerçekleşen + funding + komisyon; transfer hariç).
+    Gün sonu özkaynağı: o günün son anlık noktası; nokta yoksa başlangıç + o güne kadarki gelirler (açık K/Z bilinmez)."""
+    if not kapi.ayar.get("ayri"):
+        raise Hata("al-sat ayrı hesabı bağlı değil", 409)
+    simdi = int(kapi.saat() * 1000)
+    h = _hesap_ozet(kapi.ic)
+    G = [g for g in _gelirler(kapi.ic, simdi - gun * 86400 * 1000, simdi) if str(g.get("asset") or "USDT") == "USDT"]
+    tur = lambda g: str(g.get("incomeType") or "")
+    islem = [g for g in G if tur(g) != "TRANSFER"]
+    top = {"gerceklesen": 0.0, "funding": 0.0, "komisyon": 0.0, "diger": 0.0}
+    gunluk = {}
+    for g in islem:
+        v = float(g.get("income") or 0); t = tur(g)
+        k = "gerceklesen" if t == "REALIZED_PNL" else "funding" if t == "FUNDING_FEE" else "komisyon" if t == "COMMISSION" else "diger"
+        top[k] += v
+        d = gunluk.setdefault(_gun(int(g.get("time") or 0)), {"gerceklesen": 0.0, "funding": 0.0, "komisyon": 0.0, "diger": 0.0})
+        d[k] += v
+    bas = h["cuzdan"] - sum(top.values())
+    N = []
+    try:
+        with open(kapi.ayar.get("anlik") or os.path.join("defter", "alsat_anlik.jsonl"), encoding="utf-8") as f:
+            for l in f:
+                try:
+                    x = json.loads(l)
+                    N.append((int(x["t"]), float(x["ozkaynak"])))
+                except (ValueError, KeyError, TypeError):
+                    continue
+    except OSError:
+        pass
+    N.sort()
+    son_nokta = {}
+    for t, v in N:
+        son_nokta[_gun(t)] = v
+    ilk = min([int(g.get("time") or simdi) for g in islem] + [t for t, _ in N] + [simdi])
+    gunler, onceki, birikim = [], bas, 0.0
+    d0 = time.strftime("%Y-%m-%d", time.gmtime(ilk / 1000 + TR_SAAT))
+    bugun = _gun(simdi)
+    import calendar
+    t = calendar.timegm(time.strptime(d0, "%Y-%m-%d"))
+    while True:
+        g = time.strftime("%Y-%m-%d", time.gmtime(t))
+        if g > bugun:
+            break
+        b = gunluk.get(g, {"gerceklesen": 0.0, "funding": 0.0, "komisyon": 0.0, "diger": 0.0})
+        birikim += sum(b.values())
+        son = h["ozkaynak"] if g == bugun else son_nokta.get(g, bas + birikim)
+        gunler.append({"t": g, "kz": round(son - onceki, 4), "oz": round(son, 4), **{k: round(v, 4) for k, v in b.items()}})
+        onceki = son
+        t += 86400
+    egri, son_saat = [[ilk - 1, round(bas, 4)]], None
+    for t_, v in N:                       # saatte bir nokta
+        s_ = t_ // 3600000
+        if s_ != son_saat:
+            egri.append([t_, round(v, 4)]); son_saat = s_
+        else:
+            egri[-1] = [t_, round(v, 4)]
+    egri.append([simdi, round(h["ozkaynak"], 4)])
+    toplam = h["ozkaynak"] - bas
+    return {"baslangic": round(bas, 2), "ozkaynak": round(h["ozkaynak"], 2), "acik": round(h["acik"], 2), "toplam": round(toplam, 2),
+            "oran": round(toplam / bas, 6) if bas > 0 else None, "ozet": {k: round(v, 2) for k, v in top.items()},
+            "gunler": gunler[-gun:], "egri": egri}
+
+
 def uygulama(kapi_fabrika=None):
     """Flask uygulaması. `kapi_fabrika` testte sahte borsalı Kapi verir; yoksa gerçek anahtarla (config) ilk istekte kurulur."""
     from flask import Flask, jsonify, request
@@ -728,6 +842,10 @@ def uygulama(kapi_fabrika=None):
     def r_elle():
         return calistir(lambda: kapi().elle_ozet())
 
+    @app.get("/gecmis")
+    def r_gecmis():
+        return calistir(lambda: gecmis(kapi()))
+
     @app.get("/pozisyon/<sem>")
     def r_poz(sem):
         return calistir(lambda: kapi().pozisyon(sem))
@@ -752,7 +870,21 @@ def uygulama(kapi_fabrika=None):
     def r_iptal():
         return calistir(lambda: kapi().iptal(govde()))
 
+    app.config["kapi"] = kapi
     return app
+
+
+def _anlik_dongu(app) -> None:
+    """MADDE 852: arka planda 5 dk'da bir al-sat özkaynak noktası (yalnız ayrı hesap)."""
+    while True:
+        try:
+            k = app.config["kapi"]()
+            if not k.ayar.get("ayri"):
+                return
+            anlik_kaydet(k)
+        except Exception as e:
+            logger.warning("al-sat anlık noktası yazılamadı: %s", str(e)[:200])
+        time.sleep(ANLIK_ARA_SN)
 
 
 def main(argv=None) -> int:
@@ -763,7 +895,9 @@ def main(argv=None) -> int:
     logging.basicConfig(level=logging.INFO, format="%(asctime)s [%(levelname)s] %(message)s")
     from waitress import serve
     print(f"carry-islem: http://127.0.0.1:{a.port} (yalnız yerel; panel /api/islem/* buraya iletir)")
-    serve(uygulama(), host="127.0.0.1", port=a.port, threads=2)
+    app = uygulama()
+    threading.Thread(target=_anlik_dongu, args=(app,), daemon=True).start()   # madde 852
+    serve(app, host="127.0.0.1", port=a.port, threads=2)
     return 0
 
 
