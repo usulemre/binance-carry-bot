@@ -4556,10 +4556,15 @@ def sermaye_oku(client: ExchangeClient) -> float | None:
     s = _sermaye_oku_ham(client)
     if s is None:
         return None
-    if ELLE:
+    try:
+        import carry_elle_kz
+        _e = carry_elle_kz.etkin_toplam(client) if (ELLE or carry_elle_kz.sabit_mi()) else None   # madde 851: taşıma sonrası sabit
+    except Exception as ex:
+        _e = None
+        logger.warning("elle K/Z okunamadı (%s) — sermaye hesap özkaynağıyla", ex)
+    if _e is not None:
         try:
-            import carry_elle_kz
-            e = carry_elle_kz.guncel_toplam(client)
+            e = float(_e)
             if abs(e) > 0.005:
                 logger.info("sermaye: hesap özkaynağı %.2f, elle işlemler %+.2f -> botun özkaynağı %.2f (madde 849)", s, e, s - e)
             s -= e

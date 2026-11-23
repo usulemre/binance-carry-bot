@@ -444,6 +444,9 @@ def yaz(client=None, simdi: float | None = None, dosya: str = ANLIK_DOSYA,
         import carry_elle_kz
         if carry_elle_kz.acik():
             elle_st = carry_elle_kz.guncelle(client, simdi=simdi)
+        elif carry_elle_kz.sabit_mi():   # madde 851: taşıma sonrası — sabit düzeltme (API yok)
+            elle_st = carry_elle_kz._oku(carry_elle_kz.DOSYA)
+        if elle_st is not None:
             elle_kz = float(elle_st.get("toplam") or 0.0)
             elle_sem = set(elle_st.get("acik_sembol") or [])
     except Exception as ex:

@@ -295,3 +295,30 @@ def guncel_toplam(client, en_eski_sn: float = 300.0, dosya: str = DOSYA, simdi: 
 def acik(ortam: dict | None = None) -> bool:
     """Elle takip açık mı (CARRY_ELLE=1)? Kapalıysa elle K/Z hiç hesaplanmaz (eski davranış)."""
     return str((ortam or os.environ).get("CARRY_ELLE", "0")).strip() == "1"
+
+
+def sabit_mi(dosya: str = DOSYA) -> bool:
+    """MADDE 851: elle takip kapalı (CARRY_ELLE=0) ama geçmiş elle K/Z kaydı var mı? (taşıma sonrası: al-sat ayrı hesapta; bot hesabında
+    kalan elle K/Z SABİT bir düzeltme olarak botun özkaynağından düşülmeye devam eder)"""
+    st = _oku(dosya)
+    return bool(st.get("aralik")) and st.get("toplam") is not None
+
+
+def etkin_toplam(client, dosya: str = DOSYA, simdi: float | None = None) -> float | None:
+    """Bot / defter için: elle açıkken güncel toplam, kapalıyken sabit kayıt; ikisi de yoksa None (düzeltme yok)."""
+    if acik():
+        return guncel_toplam(client, dosya=dosya, simdi=simdi)
+    return toplam_oku(dosya) if sabit_mi(dosya) else None
+
+
+def dondur(st: dict, simdi_ms: int, dosya: str = DOSYA) -> dict:
+    """MADDE 851 taşıma: bütün açık aralıklar ŞU AN kapanır, son hesaplanan değerleriyle dondurulur (yeniden hesaplanmaz)."""
+    for L in (st.get("aralik") or {}).values():
+        for a in L:
+            if not a.get("bit"):
+                a["bit"] = simdi_ms; a["son"] = True; a["kural"] = "bota_geri"; a["tasindi"] = True
+    st["toplam"] = round(sum(float(a.get("kz") or 0) for L in st["aralik"].values() for a in L), 4)
+    st["acik_sembol"] = []
+    st["donduruldu"] = int(simdi_ms / 1000)
+    _yaz(dosya, st)
+    return st

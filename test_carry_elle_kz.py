@@ -163,17 +163,32 @@ cb_ham, cb_elle = carry_bot._sermaye_oku_ham, carry_bot.ELLE
 try:
     carry_bot._sermaye_oku_ham = lambda c: 1000.0
     carry_bot.ELLE = True
-    K_eski = K.guncel_toplam
-    K.guncel_toplam = lambda c, **kw: -50.0
+    K_eski = K.etkin_toplam
+    K.etkin_toplam = lambda c, **kw: -50.0
     kontrol("ELLE açık: (1000 − (−50)) × ölçek", yakin(carry_bot.sermaye_oku(None), 1050.0 * carry_bot.SERMAYE_OLCEK))
     carry_bot.ELLE = False
-    kontrol("ELLE kapalı: eski davranış", yakin(carry_bot.sermaye_oku(None), 1000.0 * carry_bot.SERMAYE_OLCEK))
-    K.guncel_toplam = lambda c, **kw: (_ for _ in ()).throw(RuntimeError("x"))
+    _sm = K.sabit_mi; K.sabit_mi = lambda *a, **kw: False
+    kontrol("ELLE kapalı, kayıt yok: eski davranış", yakin(carry_bot.sermaye_oku(None), 1000.0 * carry_bot.SERMAYE_OLCEK))
+    K.sabit_mi = lambda *a, **kw: True
+    kontrol("madde 851: ELLE kapalı ama sabit kayıt var: yine düşülür", yakin(carry_bot.sermaye_oku(None), 1050.0 * carry_bot.SERMAYE_OLCEK))
+    K.sabit_mi = _sm
+    K.etkin_toplam = lambda c, **kw: (_ for _ in ()).throw(RuntimeError("x"))
     carry_bot.ELLE = True
     kontrol("elle K/Z okunamazsa hesap özkaynağı", yakin(carry_bot.sermaye_oku(None), 1000.0 * carry_bot.SERMAYE_OLCEK))
 finally:
     carry_bot._sermaye_oku_ham, carry_bot.ELLE = cb_ham, cb_elle
-    K.guncel_toplam = K_eski
+    K.etkin_toplam = K_eski
+
+print("9) madde 851: dondur + sabit kayıt")
+st9 = {"aralik": {"XUSDT": [{"bas": 1, "bit": None, "kz": 4.0}, {"bas": 0, "bit": 5, "son": True, "kural": "bota_geri", "kz": 1.0}]}}
+K9 = os.path.join(d, "kz9.json")
+K.dondur(st9, 999, dosya=K9)
+a9 = K._oku(K9)
+kontrol("açık aralık kapandı ve donduruldu", a9["aralik"]["XUSDT"][0]["bit"] == 999 and a9["aralik"]["XUSDT"][0]["son"] and a9["acik_sembol"] == [])
+kontrol("toplam = 5", yakin(a9["toplam"], 5.0) and K.sabit_mi(K9))
+os.environ.pop("CARRY_ELLE", None)
+kontrol("ELLE kapalı: etkin_toplam sabit kayıttan (API yok)", yakin(K.etkin_toplam(None, dosya=K9), 5.0))
+kontrol("kayıt yoksa None", K.etkin_toplam(None, dosya=os.path.join(d, "yok.json")) is None)
 
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

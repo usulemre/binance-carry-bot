@@ -114,8 +114,8 @@ def topla(client=None, simdi: float | None = None, dosya: str = DEFTER_DOSYA) ->
     oz_hesap, elle_kz = oz, None
     try:   # MADDE 849: elle işlemlerin kâr/zararı botun özkaynağından (dolayısıyla günlük getiriden) ayrılır
         import carry_elle_kz
-        if carry_elle_kz.acik():
-            elle_kz = carry_elle_kz.guncel_toplam(client, simdi=simdi)
+        elle_kz = carry_elle_kz.etkin_toplam(client, simdi=simdi)   # madde 851: taşıma sonrası sabit kayıt
+        if elle_kz is not None:
             oz = oz_hesap - elle_kz
     except Exception as ex:
         print(f"UYARI: elle K/Z okunamadı, özkaynak hesabın tamamı: {ex}")
