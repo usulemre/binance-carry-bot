@@ -404,6 +404,11 @@ kontrol("başlangıç = cüzdan − işlem gelirleri (transfer hariç) = 1000", 
 kontrol("toplam = 1012 − 1000 = 12", g52["toplam"] == 12.0 and g52["ozet"]["gerceklesen"] == 11.0)
 kontrol("günler: dün +14 (nokta yok → gelirle), bugün 1012 − 1014 = −2", [round(x["kz"], 4) for x in g52["gunler"]] == [14.0, -2.0], g52["gunler"])
 kontrol("eğri başlangıçtan şimdiye", g52["egri"][0][1] == 1000.0 and g52["egri"][-1][1] == 1012.0)
+kz52 = os.path.join(d52, "kz.json")
+json.dump({"donduruldu": 1, "toplam": 14.29, "aralik": {"BUSDT": [{"kz": 37.2}], "XUSDT": [{"kz": -22.91}]}}, open(kz52, "w"))
+k52.ayar["elle_kz"] = kz52
+o52 = ci.gecmis(k52)["onceki"]
+kontrol("madde 854: taşıma öncesi kesinleşen elle K/Z", o52 and o52["toplam"] == 14.29 and o52["sembol"] == {"BUSDT": 37.2, "XUSDT": -22.91}, o52)
 kontrol("ayrı hesap yoksa geçmiş yok", hata_mi(lambda: ci.gecmis(yeni()[0]), "ayrı hesabı", 409))
 
 if basarisiz:

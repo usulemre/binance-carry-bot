@@ -657,7 +657,8 @@ class Kapi:
                 logger.warning("al-sat sonucu okunamadı: %s", e)
             pozlar.sort(key=lambda x: x["kz"])
             return {"pozisyonlar": pozlar, "sonuc": {"gun": 30, "kz": round(kz, 4), "komisyon": round(kom, 4), "net": round(kz - kom, 4),
-                                                      "kapanis": kapanis, "kazanan": kazanan}, "mod": self.ayar["mod"], "hesap": hesap, "ayri": True}
+                                                      "kapanis": kapanis, "kazanan": kazanan}, "mod": self.ayar["mod"], "hesap": hesap, "ayri": True,
+                    "onceki": onceki_elle(self)}
         for sem, L in list(self._elle_araliklar().items())[:25]:
             try:
                 for t in self.ic.futures_account_trades(symbol=sem, startTime=min(a for a, _ in L), limit=500) or []:
@@ -723,6 +724,23 @@ def _gelirler(ic, bas_ms: int, bit_ms: int) -> list:
     return out
 
 
+def onceki_elle(kapi: "Kapi") -> dict | None:
+    """MADDE 854: taşımadan (madde 851) önce bot hesabında kesinleşen elle K/Z — dondurulmuş carry_elle_kz kaydı. Yoksa None."""
+    try:
+        import carry_elle_kz
+        st = carry_elle_kz._oku(kapi.ayar.get("elle_kz") or carry_elle_kz.DOSYA)
+    except Exception:
+        return None
+    if not st.get("donduruldu"):
+        return None
+    S = {}
+    for s, L in (st.get("aralik") or {}).items():
+        v = sum(float(a.get("kz") or 0) for a in L)
+        if abs(v) >= 0.005:
+            S[s] = round(v, 2)
+    return {"toplam": round(float(st.get("toplam") or 0), 2), "sembol": S, "t": int(st["donduruldu"])}
+
+
 def gecmis(kapi: "Kapi", gun: int = 90) -> dict:
     """MADDE 852: al-sat hesabının günlük kazanç / kayıp ve hesap eğrisi.
     Başlangıç sermayesi = cüzdan − bütün işlem gelirleri (gerçekleşen + funding + komisyon; transfer hariç).
@@ -783,7 +801,8 @@ def gecmis(kapi: "Kapi", gun: int = 90) -> dict:
             egri[-1] = [t_, round(v, 4)]
     egri.append([simdi, round(h["ozkaynak"], 4)])
     toplam = h["ozkaynak"] - bas
-    return {"baslangic": round(bas, 2), "ozkaynak": round(h["ozkaynak"], 2), "acik": round(h["acik"], 2), "toplam": round(toplam, 2),
+    return {"onceki": onceki_elle(kapi),
+            "baslangic": round(bas, 2), "ozkaynak": round(h["ozkaynak"], 2), "acik": round(h["acik"], 2), "toplam": round(toplam, 2),
             "oran": round(toplam / bas, 6) if bas > 0 else None, "ozet": {k: round(v, 2) for k, v in top.items()},
             "gunler": gunler[-gun:], "egri": egri}
 

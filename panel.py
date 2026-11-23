@@ -1528,7 +1528,8 @@ function asGecmisSayfa(){
   return `<div class="kart"><div class="dpb"><span class="gb">Al-Sat geçmişi</span><span class="k">bottan ayrı hesap</span></div>
       <div class="asoz"><div><div class="k">Toplam</div><div class="asb ${sinif(A.toplam)}">${A.toplam>=0?"▲":"▼"} ${isaretli(A.toplam)}<span class="k">${yzd(A.oran)}</span></div></div>
         <div><div class="k">Bugün</div><div class="asb ${sinif(B && B.kz)}">${B ? `${B.kz>=0?"▲":"▼"} ${isaretli(B.kz)}` : "—"}</div></div></div>
-      <div class="k" style="margin:4px 0 10px">Başlangıç ${para(A.baslangic)} → şimdi ${para(A.ozkaynak)} · kapanan ${isaretli(O.gerceklesen||0)} · funding ${isaretli(O.funding||0)} · komisyon ${isaretli(O.komisyon||0)} · açık ${isaretli(A.acik||0)}</div>
+      ${A.onceki ? `<div class="k" style="margin-top:6px">Taşımadan önce (bot hesabında kesinleşen) <b class="${sinif(A.onceki.toplam)}">${isaretli(A.onceki.toplam)}</b> · <b>elle toplamı <span class="${sinif(A.onceki.toplam + A.toplam)}">${isaretli(A.onceki.toplam + A.toplam)}</span></b></div>` : ""}
+      <div class="k" style="margin:4px 0 10px">Bu hesap: başlangıç ${para(A.baslangic)} → şimdi ${para(A.ozkaynak)} · kapanan ${isaretli(O.gerceklesen||0)} · funding ${isaretli(O.funding||0)} · komisyon ${isaretli(O.komisyon||0)} · açık ${isaretli(A.acik||0)}</div>
       <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}
       <div class="ash">Günlük kazanç / kayıp</div>${asCubuk(G.slice(-30))}
       <div class="ash">Günler</div><div class="elp" style="margin-top:4px">${satir || `<div class="k">henüz gün yok</div>`}</div></div>`;
@@ -1598,13 +1599,15 @@ function elleHtml(){
   const E = ELLE_OZ; if (!E) return `<div class="pyb"><span>Pozisyonlarım</span><span>yükleniyor…</span></div>`;
   if (E.hata) return `<div class="pyb"><span>Pozisyonlarım</span><span class="eks">${ea(E.hata)}</span></div>`;
   const S = E.sonuc || {}, P = E.pozisyonlar || [], top = P.reduce((a,x)=>a + x.kz, 0);
+  const On = E.onceki, onS = (On && On.sembol) || {};   // madde 854: taşımadan önce bot hesabında kesinleşen
+  const onceki = On ? `<div class="k2" style="margin-top:3px">taşımadan önce kesinleşen <b class="${sinif(On.toplam)}">${isaretli(On.toplam)}</b> · şimdiki ${isaretli(top)} → <b>toplam <span class="${sinif(On.toplam + top)}">${isaretli(On.toplam + top)}</span></b></div>` : "";
   const sonuc = S.kapanis ? `son 30 gün <b class="${sinif(S.net)}">${S.net>=0?"▲":"▼"} ${isaretli(S.net)}</b>, ${S.kapanis} kapanış, %${Math.round(S.kazanan / S.kapanis * 100)} kârlı` : "son 30 günde kapanan elle işlem yok";
   const satir = x => { const ad = x.sembol.replace(/USDT$/,""), uz = x.adet > 0, deger = Math.abs(x.adet) * x.giris, kp = deger ? x.kz / deger * 100 : 0;
     return `<div class="pyr pye"><span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
       <span style="min-width:0;display:flex;flex-direction:column"><a href="#piyasa" onclick="islAc('${x.sembol}');return false">${ad}</a><span class="k2">${elleKisa(x)}</span></span>
       <span class="r k2">${x.tp?`TP ${piyFiyat(x.tp)}`:""}${x.tp&&x.sl?"<br>":""}${x.sl?`stop ${piyFiyat(x.sl)}`:`<span class="uyr">stop yok</span>`}</span>
-      <span class="r ${sinif(x.kz)}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")}%</span></span></div>`; };
-  return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div></div>
+      <span class="r ${sinif(x.kz)}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${onS[x.sembol]!=null ? `önce ${isaretli(onS[x.sembol])}` : (kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></div>`; };
+  return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div>${onceki}</div>
     <div class="pyl">${P.length ? P.map(satir).join("") : `<div class="pybos">Elle açık pozisyonun yok. Aşağıdaki listeden bir coine dokunup işlem açabilirsin.</div>`}</div>`;
 }
 function piyasaBoya(zorla){

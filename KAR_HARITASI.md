@@ -9607,3 +9607,6 @@ Al-Sat alanına üçüncü sekme **Geçmiş**: toplam ve bugünkü K/Z, başlang
 
 ## Madde 853 — Coine basınca fiyat hemen gelir (kullanıcı, 2026-11-23: "coine basınca direkt fiyatı gelmiyor")
 Coin penceresi fiyatı yalnız Piyasa sekmesinin piyasa akışından alıyordu; akış yalnız o sekmede bağlı → Pozisyonlarım'dan açınca "—", Piyasa'da ilk akış verisine kadar boş. Artık pencere açılınca fiyat ve 24 sa değişimi REST'ten (ticker/24hr) hemen gelir; pencere açıkken o coinin kendi akışı (market/stream?streams=<coin>@ticker) bağlanır, kapanınca kapanır.
+
+## Madde 854 — Al-Sat'ta taşıma öncesi kesinleşen elle kârı da görünür (kullanıcı, 2026-11-23: "ellede sanki kârlar daha büyüktü, küçülmüş gibi")
+Taşımada pozisyonlar bot hesabında kapanıp ayrı hesapta güncel fiyattan yeniden açıldı; Al-Sat yalnız yeni hesabın K/Z'sini gösteriyordu (BLESS +37,2 → +7,2 gibi görünüyordu). Artık Pozisyonlarım başlığında "taşımadan önce kesinleşen +14,29 $ · şimdiki X → toplam", satırlarda coin başına "önce ±", Geçmiş'te "elle toplamı". Kaynak: dondurulmuş defter/elle_kz.json (carry_islem onceki_elle). O an: önce +14,29, şimdi +25,94, toplam +40,23 $.
