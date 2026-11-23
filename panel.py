@@ -1484,9 +1484,12 @@ function alsatSayfa(k){
 let AS_GEC = null;
 async function asGecmisYukle(){
   if (VERI_GOMULU || asGecmisYukle.calis) return; asGecmisYukle.calis = true;
+  const once = AS_GEC ? JSON.stringify({...AS_GEC, _t: 0, egri: null}) : null;
   try { const d = await islIstek("gecmis"); AS_GEC = d.ok ? {...d, _t: Date.now()} : {hata: d.hata, _t: Date.now()}; }
   finally { asGecmisYukle.calis = false; }
-  if (sayfa == "asgecmis" && VERI && !ISL) ciz();
+  // madde 856: değişmediyse çizme; değiştiyse yalnız içerik (kaydırma yeri korunur)
+  if (sayfa == "asgecmis" && VERI && !ISL && JSON.stringify({...AS_GEC, _t: 0, egri: null}) !== once){
+    const y = scrollY, el = $("#icerik"); if (el) el.innerHTML = asGecmisSayfa(); scrollTo(0, y); }
 }
 function asEgri(E){
   if (!E || E.length < 2) return `<div class="k">Hesap eğrisi birkaç saat içinde oluşur (özkaynak 5 dk'da bir kaydediliyor).</div>`;
@@ -1594,19 +1597,43 @@ function ellePayHtml(s, p, f){   // madde 846: sade özet — ne aldın, kaçtan
   const D = (P && P.dolum || []).map(d => `<div class="elr"><span class="k">${elleZaman(d.t)}</span><span class="r"><b class="${d.yon=="AL"?"art":"eks"}">${d.yon}</b> ${para(d.adet * d.fiyat)} · ${fiyatYaz(d.fiyat)}</span></div>`).join("");
   return `<div class="elp">${govde}${koruma}${D ? `<details class="eld"><summary>İşlem geçmişi (${P.dolum.length})</summary>${D}</details>` : ""}</div>`;
 }
+// MADDE 856: Al-Sat pozisyonları CANLI — kendi işaret fiyatı akışı (saniyede bir); K/Z = adet × (işaret − giriş) (Binance açık K/Z tanımı)
+let AS_WS = null, AS_WSK = "", AS_F = {};
+function asAkisBagla(){
+  const S = ALAN == "alsat" && !VERI_GOMULU && window.WebSocket ? ((ELLE_OZ && ELLE_OZ.pozisyonlar) || []).map(x=>x.sembol).sort() : [];
+  const k = S.join(",");
+  if (!S.length){ if (AS_WS){ AS_WS.onclose = null; AS_WS.close(); AS_WS = null; AS_WSK = ""; } return; }
+  if (k === AS_WSK && AS_WS && AS_WS.readyState <= 1) return;
+  if (AS_WS){ AS_WS.onclose = null; AS_WS.close(); }
+  AS_WSK = k; const ws = new WebSocket("wss://fstream.binance.com/market/stream?streams=" + S.map(s=>s.toLowerCase()+"@markPrice@1s").join("/")); AS_WS = ws;
+  ws.onmessage = e => { try { const d = JSON.parse(e.data).data; if (d && d.s && +d.p > 0) AS_F[d.s] = +d.p; } catch(_){} };
+  ws.onclose = () => { if (AS_WS === ws){ AS_WS = null; AS_WSK = ""; setTimeout(asAkisBagla, 4000); } };
+}
+const asKz = x => { const f = AS_F[x.sembol]; return f > 0 && x.adet && x.giris > 0 ? x.adet * (f - x.giris) : x.kz; };
+function asCanliBoya(){   // canliBoya her saniye: Pozisyonlarım satırları + üstteki hesap değeri
+  if (ALAN != "alsat" || !ELLE_OZ || !ELLE_OZ.pozisyonlar) return;
+  asAkisBagla();
+  if (sayfa == "alsat"){   // yalnız rakamlar yerinde (her saniye listeyi baştan çizmek dokunuşu kaçırtırdı)
+    const tmp = document.createElement("div"); tmp.innerHTML = elleHtml();
+    for (const id of ["astop", "asonc", ...ELLE_OZ.pozisyonlar.map(x=>"askz-" + x.sembol)]){
+      const a = document.getElementById(id), b = tmp.querySelector("#" + CSS.escape(id));
+      if (a && b && a.innerHTML !== b.innerHTML){ a.innerHTML = b.innerHTML; a.className = b.className; } } }
+  const H = ELLE_OZ.hesap, u = $("#ustkitap");
+  if (u && H && H.ozkaynak != null){ const fark = ELLE_OZ.pozisyonlar.reduce((a,x)=>a + asKz(x) - x.kz, 0); u.innerHTML = `<span>${para(H.ozkaynak + fark)}</span>`; }
+}
 function elleHtml(){
   const E = ELLE_OZ; if (!E) return `<div class="pyb"><span>Pozisyonlarım</span><span>yükleniyor…</span></div>`;
   if (E.hata) return `<div class="pyb"><span>Pozisyonlarım</span><span class="eks">${ea(E.hata)}</span></div>`;
-  const S = E.sonuc || {}, P = E.pozisyonlar || [], top = P.reduce((a,x)=>a + x.kz, 0);
+  const S = E.sonuc || {}, P = (E.pozisyonlar || []).map(x=>({...x, kz: asKz(x)})), top = P.reduce((a,x)=>a + x.kz, 0);   // madde 856: canlı
   const On = E.onceki, onS = (On && On.sembol) || {};   // madde 854: taşımadan önce bot hesabında kesinleşen
-  const onceki = On ? `<div class="k2" style="margin-top:3px">taşımadan önce kesinleşen <b class="${sinif(On.toplam)}">${isaretli(On.toplam)}</b> · şimdiki ${isaretli(top)} → <b>toplam <span class="${sinif(On.toplam + top)}">${isaretli(On.toplam + top)}</span></b></div>` : "";
+  const onceki = On ? `<div class="k2" id="asonc" style="margin-top:3px">taşımadan önce kesinleşen <b class="${sinif(On.toplam)}">${isaretli(On.toplam)}</b> · şimdiki ${isaretli(top)} → <b>toplam <span class="${sinif(On.toplam + top)}">${isaretli(On.toplam + top)}</span></b></div>` : "";
   const sonuc = S.kapanis ? `son 30 gün <b class="${sinif(S.net)}">${S.net>=0?"▲":"▼"} ${isaretli(S.net)}</b>, ${S.kapanis} kapanış, %${Math.round(S.kazanan / S.kapanis * 100)} kârlı` : "son 30 günde kapanan elle işlem yok";
   const satir = x => { const ad = x.sembol.replace(/USDT$/,""), uz = x.adet > 0, deger = Math.abs(x.adet) * x.giris, kp = deger ? x.kz / deger * 100 : 0;
     return `<div class="pyr pye"><span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
       <span style="min-width:0;display:flex;flex-direction:column"><a href="#piyasa" onclick="islAc('${x.sembol}');return false">${ad}</a><span class="k2">${elleKisa(x)}</span></span>
       <span class="r k2">${x.tp?`TP ${piyFiyat(x.tp)}`:""}${x.tp&&x.sl?"<br>":""}${x.sl?`stop ${piyFiyat(x.sl)}`:`<span class="uyr">stop yok</span>`}</span>
-      <span class="r ${sinif(x.kz)}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${onS[x.sembol]!=null ? `önce ${isaretli(onS[x.sembol])}` : (kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></div>`; };
-  return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div>${onceki}</div>
+      <span class="r ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${onS[x.sembol]!=null ? `önce ${isaretli(onS[x.sembol])}` : (kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></div>`; };
+  return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div>${onceki}</div>
     <div class="pyl">${P.length ? P.map(satir).join("") : `<div class="pybos">Elle açık pozisyonun yok. Aşağıdaki listeden bir coine dokunup işlem açabilirsin.</div>`}</div>`;
 }
 function piyasaBoya(zorla){
@@ -2162,6 +2189,7 @@ function fundTakip(){
 function canliBoya(){
   if (ISL && Date.now() - (islGrafikCiz.t||0) > 2000){ islGrafikCiz.t = Date.now(); islGrafikCiz(); if (Date.now() - ((MUMI[ISL.s+"|"+ISL.aralik]||{}).t||0) > 60e3) islMumYukle(); }   // madde 835
   if (ISL && !ISL.adim && Date.now() - (donemBoya.t||0) > 5000){ donemBoya.t = Date.now(); donemBoya(ISL.s); }   // madde 848
+  asCanliBoya();   // madde 856
   piyasaBoya(false);   // madde 832
   if (sayfa != "piyasa" && ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle();   // madde 844
   fundTakip();
@@ -2770,7 +2798,8 @@ let _gen = (innerWidth >= 1000) + "" + MOBIL(); addEventListener("resize", ()=>{
 async function yukle(){
   if (VERI_GOMULU){ VERI = gorunum(VERI_GOMULU); ciz(); return; }
   // madde 844: yeni veri gelince elle pozisyonlar yeniden birleştirilir
-  try { const r = await fetch("api/veri", {cache:"no-store"}); VERI = gorunum(await r.json()); elleBirlestir(); ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }
+  try { const r = await fetch("api/veri", {cache:"no-store"}); const ilk = !VERI; VERI = gorunum(await r.json()); elleBirlestir();
+    if (ilk || ALAN != "alsat" || ISL) ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }   // madde 856: Al-Sat'ta 60 sn'lik bot yenilemesi sayfayı baştan çizmez
   // madde 845: işlem kapısı durumu sayfa açılışında da sorulur (eskiden yalnız Piyasa sekmesinde) — yoksa elle pozisyonların alış fiyatı /
   // dolumları Piyasa açılmadan hiç yüklenmiyordu. Açıksa elle özeti hemen yüklenir.
   if (!VERI_GOMULU && (!ISL_DURUM || Date.now() - (islDurum.t||0) > 60e3)){ islDurum.t = Date.now(); islDurum().then(()=>{ if (ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle(); }); }

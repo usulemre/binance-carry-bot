@@ -457,7 +457,7 @@ kontrol("madde 842: elle coin ayrıntısında açıklama kutusu, satırda rozet,
         all(x in _s42 for x in ("function elleMi", "function elleKutu", "Bunu sen yönetiyorsun.", "elle ? elleKutu(s, p, f) : cikisIc(s, usd, k)",
                                  'kutu("Yöneten"', "✋ elle</span>`", "function ellePayHtml", "Senin aldığın", "İşlem geçmişi (", "stop yok</b>", "${elleKisa(x)}")))
 kontrol("madde 844: elle pozisyonlar listeye kapının canlı yanıtıyla hemen eklenir",
-        all(x in _s42 for x in ("function elleBirlestir", "VERI = gorunum(await r.json()); elleBirlestir(); ciz();", "elle_canli: true")))
+        all(x in _s42 for x in ("function elleBirlestir", "VERI = gorunum(await r.json()); elleBirlestir();", "elle_canli: true")))
 kontrol("madde 845: işlem kapısı durumu sayfa açılışında sorulur, elle coin ayrıntısı açılınca özet tazelenir",
         "islDurum().then(()=>{ if (ISL_DURUM && ISL_DURUM.acik" in _s42 and "if (elleMi(k, s) && ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 5e3) elleYukle();" in _s42)
 _h790 = app.get("/").data.decode()
@@ -519,6 +519,9 @@ kontrol("madde 853: coin penceresinde fiyat hemen (REST) + coinin kendi akışı
                                  "islFiyatGetir(s); islAkisBagla(s);", "function islKapat(){ islAkisKapat();")))
 kontrol("madde 854: Al-Sat'ta taşıma öncesi kesinleşen kâr + toplam",
         all(x in _s49 for x in ("taşımadan önce kesinleşen", "const On = E.onceki", "A.onceki ? ", "Elle toplamı")))
+kontrol("madde 856: Al-Sat canlı K/Z (işaret akışı, yerinde güncelleme), Al-Sat'ta 60 sn yenilemesi sayfayı baştan çizmez",
+        all(x in _s49 for x in ("function asAkisBagla", "@markPrice@1s", "const asKz = x =>", "asCanliBoya();   // madde 856", 'id="askz-${x.sembol}"',
+                                 'if (ilk || ALAN != "alsat" || ISL) ciz();')))
 kontrol("madde 851: giriş düzeltmesi — botun kendi girişi (−100 @ 0,5 → açık −20, −10 taşındı), adet değişen coine dokunulmaz",
         abs(_an51["pozisyonlar"]["BUSDT"]["giris"] - 0.5) < 1e-12 and abs(_an51["pozisyonlar"]["BUSDT"]["gerceklesmemis"] + 20) < 1e-9
         and _o51 == {"BUSDT": -10.0} and _an51["pozisyonlar"]["CUSDT"]["giris"] == 0.9 and abs(_an51["gerceklesmemis_top"] + 25) < 1e-9)
