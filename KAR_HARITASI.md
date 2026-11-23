@@ -9581,3 +9581,7 @@ Kullanıcı: "bir coini incelerken aynı sayfada görmeliyim günlük 3 günlük
 **İlk gerçek ölçüm (2026-11-22 21:30 UTC, 14 elle coin).** Elle toplam −21,93 $. BLESS'te Binance açık zararı −45,3 $'ın −29,7 $'ı botun short'unun devirden önceki zararı (botta kalır), elle payı −14,9 $; AKE'de botun long'u devirde −7,6 $ zarardaydı (botun), ICNT'de −6,6 $ (botun).
 
 **Bilinen sınır.** Geçiş anında bugünkü gün içi eğri ~+22 $ sıçrar (önceki noktalar hesap özkaynağıyla). Elle başladıktan sonraki ~5 saatin gerçek-oran funding birikimine elle pozisyonlar girmişti (birkaç sent).
+
+## Madde 850 — Elle kartı botun muhasebesiyle aynı kaynaktan (kullanıcı ekranı BLESS, 2026-11-23: "bu bellede botun pozisyonu da var, bu pozisyon paneldeki botun kâr zararından düşüyor mu")
+
+Kart "Bottan gelen 209 $ · −24,20 $" gösteriyordu: (1) _payim sahiplik başını saatlik işaret anından alıyordu, ondan ~1 sa önceki ilk BLESS satışı botunki sayılmıştı; (2) bottan gelen kısmın K/Z'si botun girişinden bugüne ölçülüyordu — madde 849 muhasebesiyle (devir anına kadar bot, sonrası kullanıcı) çelişiyordu. Artık kart carry_elle_kz kaydından: "Senin kâr/zararın" (canlı fiyatla; funding/komisyon dahil), "Bottan devraldığın N adet, devir fiyatı", "Botun payı (devirden önce, sabit)", "Borsada görünen". _payim başlangıcı da muhasebenin ilk kullanıcı dolumundan. BLESS anlık: senin +25,41 $, botun −29,72 $ (sabit), borsada −6,98 $ (fark = funding + komisyon).

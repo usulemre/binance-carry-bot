@@ -483,6 +483,16 @@ class Kapi:
             A.setdefault(sem, []).append((t - 60_000, simdi + 60_000))   # açık aralık: saat kayması payı
         return {s: [(max(a, alt), b) for a, b in L if b >= alt] for s, L in A.items() if any(b >= alt for a, b in L)}
 
+    def _muhasebe(self, sem: str) -> dict | None:
+        """MADDE 850: carry_elle_kz kaydındaki AÇIK elle aralık (botun muhasebesiyle aynı kaynak) ya da None."""
+        try:
+            import carry_elle_kz
+            L = (carry_elle_kz._oku(self.ayar.get("elle_kz") or carry_elle_kz.DOSYA).get("aralik") or {}).get(sem) or []
+            A = [a for a in L if not a.get("bit") and a.get("kz") is not None]
+            return A[-1] if A else None
+        except Exception:
+            return None
+
     def _payim(self, sem: str, adet: float, giris: float) -> dict | None:
         """MADDE 843: elle pozisyonun KULLANICIYA ait kısmı. Sahiplik başından (panel işareti ya da işaret olayı, hangisi önceyse) bu yana
         hesabın dolumları kullanıcınındır (bot elle coine emir göndermez). Emir başına ortalama dolum fiyatı; kalan adet bottan devralınandır.
@@ -501,6 +511,9 @@ class Kapi:
                 bas = pt - 60_000
         except Exception:
             pass
+        m = self._muhasebe(sem)   # madde 850: muhasebe (carry_elle_kz) ilk kullanıcı dolumunu bilir — saatlik işaret ondan geç olabilir
+        if m and m.get("bas") and int(m["bas"]) - 1000 < bas:
+            bas = int(m["bas"]) - 1000
         try:
             T = self.ic.futures_account_trades(symbol=sem, startTime=int(bas), limit=500) or []
         except Exception as e:
@@ -549,6 +562,13 @@ class Kapi:
                                "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0),
                                "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl,
                                "pay": self._payim(sem, a, float(p.get("entryPrice") or 0))})   # madde 843
+                m = self._muhasebe(sem)
+                if m:
+                    u = pozlar[-1]["kz"]
+                    pozlar[-1]["muhasebe"] = {"kz": round(float(m["kz"]) + u - float(m.get("U") or 0), 4), "devir": round(float(m.get("devir") or 0), 4),
+                                              "devr_adet": float(m.get("devr_adet") or 0), "ilk_fiyat": float(m.get("ilk_fiyat") or 0),
+                                              "funding": round(float(m.get("F") or 0), 4), "komisyon": round(float(m.get("C") or 0), 4),
+                                              "bas": int(m.get("bas") or 0)}
         kz = kom = 0.0; kapanis = kazanan = 0
         for sem, L in list(self._elle_araliklar().items())[:25]:
             try:

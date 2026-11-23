@@ -497,5 +497,8 @@ kontrol("madde 849: elle pozisyon botun toplamlarına girmez, ayrı bölüm ve �
         all(x in _s49 for x in ("def elle_ayir", "elle_ayir(o, an)", "PE = PT.filter(x=>elleMi(k, x[0]))", "✋ ELLE (SENİN)", "bota dahil değil",
                                  "if (elleMi(k, s)) continue;", "k.pozisyonlar[s].elle)")))
 
+kontrol("madde 850: elle kartı muhasebeden (senin K/Z, devraldığın, botun payı sabit)",
+        all(x in _s49 for x in ("const M = x.muhasebe;", "Botun payı", "artık değişmez", "Bottan devraldığın")))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

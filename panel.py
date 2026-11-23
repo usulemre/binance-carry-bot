@@ -1452,6 +1452,18 @@ function ellePayHtml(s, p, f){   // madde 846: sade özet — ne aldın, kaçtan
   const sat = (ad, q, g, kz) => { const v = kz != null ? kz : (g && f ? q * (f - g) : null), y = g && f ? (f / g - 1) * (q > 0 ? 1 : -1) * 100 : null;
     return `<div class="elr"><span><b>${ad}</b><br><span class="k">${para(Math.abs(q) * (g || f))} ${yon} · giriş ${g ? fiyatYaz(g) : "bilinmiyor"}</span></span>
       <span class="r">${v == null ? "—" : `<b class="${sinif(v)}">${isaretli(v)}</b>${y == null ? "" : `<br><span class="k">${(y>=0?"+":"−")}%${Math.abs(y).toFixed(1).replace(".",",")}</span>`}`}</span></div>`; };
+  const M = x.muhasebe;   // madde 850: botun muhasebesiyle aynı hesap (carry_elle_kz) — devralınan kısım devir anından sonra senin
+  if (M){
+    const kzc = f && x.adet ? M.kz + (x.adet * f - x.adet * (x.giris + x.kz / x.adet)) : M.kz;   // canlı fiyatla
+    const rows = `<div class="elr"><span><b>Senin kâr/zararın</b><br><span class="k">${para(Math.abs(p.miktar) * (f || x.giris))} ${yon} · ${elleZaman(M.bas)} itibarıyla · funding ${isaretli(M.funding)} · komisyon ${isaretli(M.komisyon)}</span></span>
+        <span class="r"><b class="${sinif(kzc)}" style="font-size:16px">${isaretli(kzc)}</b></span></div>`
+      + (M.devr_adet ? `<div class="elr"><span><b>Bottan devraldığın</b><br><span class="k">${elleAdet(M.devr_adet)} adet, ${fiyatYaz(M.ilk_fiyat)} fiyatından sana geçti. O andan sonraki hareketi yukarıdaki senin K/Z'nde.</span></span><span class="r"></span></div>
+        <div class="elr"><span><b>Botun payı</b><br><span class="k">devirden önceki kâr/zarar · botun hesabına yazıldı, artık değişmez</span></span><span class="r"><b class="${sinif(M.devir)}">${isaretli(M.devir)}</b></span></div>` : "")
+      + `<div class="elr k" style="border-top:1px solid var(--cizgi);padding-top:6px"><span>Borsada görünen (Binance ortalaması ${fiyatYaz(x.giris)})</span><span class="r ${sinif(x.kz)}">${isaretli(x.kz)}</span></div>`;
+    const koruma2 = `<div class="elr" style="border-top:1px solid var(--cizgi);padding-top:6px"><span class="k">Kâr al · stop</span><span class="r">${x.tp ? `TP ${fiyatYaz(x.tp)}` : "TP yok"} · ${x.sl ? `stop ${fiyatYaz(x.sl)}` : `<b class="uyr">stop yok</b>`}</span></div>`;
+    const D2 = (P && P.dolum || []).map(d => `<div class="elr"><span class="k">${elleZaman(d.t)}</span><span class="r"><b class="${d.yon=="AL"?"art":"eks"}">${d.yon}</b> ${para(d.adet * d.fiyat)} · ${fiyatYaz(d.fiyat)}</span></div>`).join("");
+    return `<div class="elp">${rows}${koruma2}${D2 ? `<details class="eld"><summary>İşlem geçmişi (${P.dolum.length})</summary>${D2}</details>` : ""}</div>`;
+  }
   const ikili = P && P.devralinan && P.benim_adet;
   const govde = ikili
     ? sat("Senin aldığın", P.benim_adet, P.benim_giris) + sat("Bottan gelen", P.devralinan, P.devralinan_giris)
