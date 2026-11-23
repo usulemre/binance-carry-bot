@@ -2797,12 +2797,14 @@ addEventListener("touchend", e=>{ if (!dokB) return; const t = e.changedTouches[
 let _gen = (innerWidth >= 1000) + "" + MOBIL(); addEventListener("resize", ()=>{ const g = (innerWidth >= 1000) + "" + MOBIL(); if (g !== _gen){ _gen = g; if (VERI) ciz(); } });
 async function yukle(){
   if (VERI_GOMULU){ VERI = gorunum(VERI_GOMULU); ciz(); return; }
+  // madde 856: işlem kapısı durumu + Pozisyonlarım bot verisini (≈2 sn) BEKLEMEDEN, onunla aynı anda istenir
+  if (!ISL_DURUM || Date.now() - (islDurum.t||0) > 60e3){ islDurum.t = Date.now(); islDurum().then(()=>{ if (ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle(); }); }
   // madde 844: yeni veri gelince elle pozisyonlar yeniden birleştirilir
   try { const r = await fetch("api/veri", {cache:"no-store"}); const ilk = !VERI; VERI = gorunum(await r.json()); elleBirlestir();
     if (ilk || ALAN != "alsat" || ISL) ciz(); } catch(e){ $("#alt").textContent = "veri alınamadı"; }   // madde 856: Al-Sat'ta 60 sn'lik bot yenilemesi sayfayı baştan çizmez
   // madde 845: işlem kapısı durumu sayfa açılışında da sorulur (eskiden yalnız Piyasa sekmesinde) — yoksa elle pozisyonların alış fiyatı /
   // dolumları Piyasa açılmadan hiç yüklenmiyordu. Açıksa elle özeti hemen yüklenir.
-  if (!VERI_GOMULU && (!ISL_DURUM || Date.now() - (islDurum.t||0) > 60e3)){ islDurum.t = Date.now(); islDurum().then(()=>{ if (ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle(); }); }
+  if (ALAN == "alsat" && !ISL && VERI && ELLE_OZ && !$("#piyelle") && sayfa == "alsat") ciz();
 }
 yukle(); if(!VERI_GOMULU){ setInterval(yukle, 60000); setInterval(canliBoya, 1000); }
 if(!VERI_GOMULU && "serviceWorker" in navigator){ try{ navigator.serviceWorker.register("sw.js"); }catch(e){} }

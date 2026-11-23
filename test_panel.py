@@ -459,7 +459,7 @@ kontrol("madde 842: elle coin ayrıntısında açıklama kutusu, satırda rozet,
 kontrol("madde 844: elle pozisyonlar listeye kapının canlı yanıtıyla hemen eklenir",
         all(x in _s42 for x in ("function elleBirlestir", "VERI = gorunum(await r.json()); elleBirlestir();", "elle_canli: true")))
 kontrol("madde 845: işlem kapısı durumu sayfa açılışında sorulur, elle coin ayrıntısı açılınca özet tazelenir",
-        "islDurum().then(()=>{ if (ISL_DURUM && ISL_DURUM.acik" in _s42 and "if (elleMi(k, s) && ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 5e3) elleYukle();" in _s42)
+        "islDurum().then(()=>{ if (ISL_DURUM && ISL_DURUM.acik" in _s42 and "BEKLEMEDEN, onunla aynı anda" in _s42 and "if (elleMi(k, s) && ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 5e3) elleYukle();" in _s42)
 _h790 = app.get("/").data.decode()
 kontrol("madde 790: çıkış takvimi tur başına, 'yine seçilirse kalır' açıklaması, kademe + kâr al kutusu",
         "turun hepsini göster" in _h790 and "dilime bölündü" in _h790 and "dilim payı" in _h790 and "yine seçilirse" in _h790 and "Kademe · kâr al" in _h790 and "satılacak</span>" not in _h790)
