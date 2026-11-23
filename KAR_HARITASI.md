@@ -9620,3 +9620,13 @@ Ek: Pozisyonlarım verisi (/elle) 4,9 sn sürüyordu — coin başına TP/stop s
 
 ## Madde 857 — "Taşımadan önce" kaldırıldı; Al-Sat geçmişi canlı (kullanıcı, 2026-11-24: "kaldır o zaman, kafa karıştırıyor; ayrıca ellede geçmişte fiyat anlık değişmiyor")
 Pozisyonlarım ve Geçmiş'ten taşıma öncesi kesinleşen +14,29 $ satırları kaldırıldı (muhasebe aynen sürüyor: bot sermayesinden düşülmeye devam). Geçmiş: açık K/Z, Pozisyonlarım'ın işaret fiyatı akışıyla yeniden hesaplanır (özkaynak = cüzdan + canlı açık K/Z); üst özet, toplam, bugün, takvim, coin tablosu ve eğrinin son noktası 2 sn'de bir, yalnız değişen bölüm yerinde güncellenir (son 1 yıl haritası 60 sn'de bir).
+
+## Madde 858 — TP / stop kısayolları yöne göre; görünüm / yön değişince eski TP-stop taşınmaz (kullanıcı ekranı, 2026-11-24)
+- Ekran: short pozisyonda stop kutusunda 0,00680571 (fiyatın %10 ALTI) ve "Stop fiyatın üstünde olmalı" uyarısı. Neden: TP / stop kutuları "Yeni emir" (varsayılan
+  Long) ile "Pozisyon" görünümü arasında ORTAKTI; Long bilette −%10 ile doldurulan stop short pozisyonun kutusuna taşındı. Ayrıca kısayol etiketleri sabitti
+  (TP hep "+", stop hep "−"), short'ta hesap doğru yöne yapılsa da etiket ters görünüyordu.
+- Düzeltme: görünüm (Pozisyon ↔ Yeni emir) ya da yön değişince TP / stop sıfırlanır — Pozisyon görünümünde mevcut emirlerle, yeni emirde boş; etiketler yöne
+  göre (short'ta TP "−%", stop "+%").
+- Test: `test_panel_islem`'e short kısayol etiketi + yön değişince temizlenme kontrolü eklendi. DİKKAT: `test_panel_islem` ve `test_panel_piyasa` bu
+  değişiklikten ÖNCE de (HEAD 32d5169, madde 851-857 Al-Sat yeniden düzenlemesi) düşüyor — "bu coin sende" metni ("Bu pozisyon senin…") ve Piyasa satır tıklaması;
+  testlerin Al-Sat düzenine güncellenmesi gerekiyor (o oturumun işi). `test_panel`, `test_carry_islem` geçiyor.

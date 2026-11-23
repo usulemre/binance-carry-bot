@@ -245,6 +245,11 @@ with sync_playwright() as pw:
         kontrol("axe: pencerede erişilebilirlik ihlali yok", ihl == [], ihl)
     page.locator(".isl .iseg.gor button", has_text="Yeni emir").click()
     page.locator(".isl .iseg.yon button", has_text="Short").click()
+    page.evaluate("() => { ISL.tpsl = true; islCiz(); }")
+    if page.locator(".isl input[aria-label='Stop fiyatı']").count():
+        st = page.locator(".isl input[aria-label='Stop fiyatı']").locator("xpath=following-sibling::div[1]").inner_text()
+        kontrol("madde 858: short'ta stop kısayolları yukarı (+%), TP aşağı (−%)", "+3%" in st, st)
+        kontrol("madde 858: yön değişince eski TP / stop silindi", page.evaluate("() => ISL.sl") == "" and page.evaluate("() => ISL.tp") == "")
     page.locator(".isl .ichip button", has_text="25 $").click()
     page.locator("#isldevam").click(); page.wait_for_selector(".isl .ionay")
     kontrol("long varken short: onay başlığı 'azalt / çevir' ve tek yönlü hesap uyarısı",

@@ -1783,10 +1783,16 @@ function islGrafikCiz(){ const el = $("#islgraf"); if (!el || !ISL) return; cons
 function islSayi(v){ return String(v==null?"":v).trim().replace(/\s/g, "").replace(",", "."); }   // "0,45" -> "0.45" (Türkçe klavye)
 const islGos = v => v===""||v==null ? "" : ea(String(v).replace(".", ","));   // kutuda Türkçe ondalık
 function islAyar(k, v){
+  if (k=="yon" && ISL && ISL.yon != v){ ISL.tp = ""; ISL.sl = ""; }   // madde 858: yön değişince eski TP / stop ters tarafta kalırdı
   if (!ISL) return; if (["usd","fiyat","tp","sl","risk"].includes(k)) v = islSayi(v); ISL[k] = v; if (k!="pin") ISL.oniz = null;
   if (["pin","usd","fiyat","tp","sl","risk"].includes(k)){ islTahmin(); islGrafikCiz(); islAltGuncelle(); } else islCiz(); }
-function islGor(g){ if (!ISL) return; ISL.gor = g; ISL.msj = null; ISL.adim = null; islCiz(); }
-function islYonSec(y){ if (!ISL) return; ISL.yon = y; ISL.gor = "emir"; ISL.adim = null; ISL.msj = null; ISL.oniz = null; islCiz(); }
+function islTPSLSifirla(){   // madde 858: TP / stop kutuları görünüm değişince taşınmasın (yeni emirdeki long stop'u short pozisyona yazılmasın)
+  const T = (ISL.poz && ISL.poz.tpsl) || [], t = T.find(x=>x.tur=="TP"), l = T.find(x=>x.tur=="SL");
+  if (ISL.gor=="poz" && islPozVar()){ ISL.tp = t ? t.fiyat : ""; ISL.sl = l ? l.fiyat : ""; } else { ISL.tp = ""; ISL.sl = ""; }
+  ISL.oniz = null;
+}
+function islGor(g){ if (!ISL) return; const d = ISL.gor != g; ISL.gor = g; ISL.msj = null; ISL.adim = null; if (d) islTPSLSifirla(); islCiz(); }
+function islYonSec(y){ if (!ISL) return; const d = ISL.gor != "emir" || ISL.yon != y; ISL.yon = y; ISL.gor = "emir"; ISL.adim = null; ISL.msj = null; if (d) islTPSLSifirla(); islCiz(); }
 function islRef(){ const I = ISL; return (I.tip=="LIMIT" && +I.fiyat>0 && I.gor=="emir") ? +I.fiyat : ((I.poz && I.poz.isaret) || (PIY[I.s]||{}).f); }
 function islPozVar(){ const P = ISL.poz && ISL.poz.pozisyon; return !!(P && P.adet); }
 function islYuzde(alan, y){
@@ -1911,7 +1917,8 @@ function islCiz(){
   const I = ISL, ad = I.s.replace(/USDT$/,""), D = ISL_DURUM || {}, PR = I.poz, pz = PR && PR.pozisyon, o = PIY[I.s] || {}, f = o.f;
   const fg = v => v==null||v===""||isNaN(v)||!(+v>0) ? "—" : piyFiyat(+v);
   const seg = (alan, v, ad2, cls="") => `<button class="${cls} ${I[alan]==v?"on":""}" onclick="islAyar('${alan}','${v}')">${ad2}</button>`;
-  const hz = (alan, L) => `<div class="ichip">${L.map(y=>`<button onclick="islYuzde('${alan}',${y})">${alan=="tp"?"+":"−"}${y}%</button>`).join("")}</div>`;
+  const _uz = I.gor=="poz" && islPozVar() ? I.poz.pozisyon.adet > 0 : I.yon=="L";   // madde 858: kısayol işareti yöne göre (short'ta TP aşağı, stop yukarı)
+  const hz = (alan, L) => `<div class="ichip">${L.map(y=>`<button onclick="islYuzde('${alan}',${y})">${(alan=="tp") == _uz ? "+" : "−"}${y}%</button>`).join("")}</div>`;
   const uzak = (v, ref) => v>0 && ref>0 ? ` <span class="k">${((v/ref-1)*100>=0?"+":"")}${((v/ref-1)*100).toFixed(1).replace(".",",")}%</span>` : "";
   const varPoz = islPozVar(), uzun = varPoz && pz.adet > 0;
   let h = `<div class="ihd"><div><div class="iad"><b>${ad}</b><span class="irz">${D.mod=="live"?"Canlı":"Demo"}</span></div>
