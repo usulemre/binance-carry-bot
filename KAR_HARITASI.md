@@ -9630,3 +9630,7 @@ Pozisyonlarım ve Geçmiş'ten taşıma öncesi kesinleşen +14,29 $ satırları
 - Test: `test_panel_islem`'e short kısayol etiketi + yön değişince temizlenme kontrolü eklendi. DİKKAT: `test_panel_islem` ve `test_panel_piyasa` bu
   değişiklikten ÖNCE de (HEAD 32d5169, madde 851-857 Al-Sat yeniden düzenlemesi) düşüyor — "bu coin sende" metni ("Bu pozisyon senin…") ve Piyasa satır tıklaması;
   testlerin Al-Sat düzenine güncellenmesi gerekiyor (o oturumun işi). `test_panel`, `test_carry_islem` geçiyor.
+- 783 uzatma 8 (2026-11-25, veri 24 Kas UTC sonuna kadar): /tmp/m783i, iki hiza rc 0, ≤ 20 Kas parite 0 (21 Kas artık tam gün: −0,29 → −0,53).
+  Günlük (×1,15): 21 −0,53 · 22 −2,47 · 23 −0,04 · 24 +0,98. Kasım 1-24 −9,50 %; 7-24 Kas tam kitap −9,64 % (rampa düzeltmesiyle ≈ −8,4); 9 Ekim zirvesinden
+  −19,19 %. 7-24 Kas toplamsal: fiyat −15,33 puan, funding +6,21 puan; BTW −1,52 puan (demoda yok). Demo (kullanıcı) ≈ −14 %: fark ≈ 5,5 puan ≈ AKE
+  kapanmayan stop (≈ 4,4; madde 838'de düzeltildi) + 18 Kas sağlık kapısı yanlış alarmı kapat/geri kur maliyeti + kayma / komisyon.
