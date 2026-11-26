@@ -1177,6 +1177,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .igl.alm{stroke:var(--mor)}.isl .ige.alm rect{fill:var(--mor)}.isl .igad.alm rect{stroke:var(--mor)}.isl .igad.alm text{fill:var(--mor)}
 .apfn{display:block;font-size:11.5px;color:var(--soluk);margin-top:1px}.apfn b{font-weight:600;font-variant-numeric:tabular-nums}.apfn b.art{color:var(--art)}.apfn b.eks{color:var(--eks)}
 .igel{margin-top:12px;padding-top:10px;border-top:1px solid var(--cizgi);font-size:13px}.igel>div{display:flex;justify-content:space-between;gap:8px;padding:3px 0}.igel b{font-variant-numeric:tabular-nums}.igel b.art{color:var(--art)}.igel b.eks{color:var(--eks)}.igelb{font-weight:650}.igelt{border-top:1px dashed var(--cizgi);margin-top:4px;padding-top:6px!important;font-weight:700;font-size:14px}
+.ruk{margin-top:6px;border-top:1px solid var(--cizgi)}.ruh{display:flex;align-items:center;gap:8px}.ruh .gayr{flex:1;padding:12px 0}.rus{flex:none;width:46px;height:28px;border-radius:999px;border:1px solid var(--cizgi);background:var(--kart2);position:relative;cursor:pointer;padding:0}.rus i{position:absolute;top:3px;left:3px;width:20px;height:20px;border-radius:50%;background:var(--soluk);transition:left .15s}.rus.on{background:var(--art);border-color:var(--art)}.rus.on i{left:21px;background:#fff}
+.rua{display:flex;align-items:center;justify-content:space-between;gap:10px;padding:8px 0;border-top:1px solid var(--cizgi)}.rua>span:first-child{display:flex;flex-direction:column;font-size:13.5px;min-width:0}.rua small{color:var(--soluk);font-size:11.5px}.ruv{display:flex;align-items:center;gap:3px;font-variant-numeric:tabular-nums;color:var(--soluk)}.ruv input{width:78px;height:38px;border-radius:10px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:15px;text-align:right;padding:0 10px}
 .assr{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:8px 0 2px}.assr select{height:36px;padding:0 30px 0 12px;border-radius:10px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:13.5px;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--soluk) 50%),linear-gradient(135deg,var(--soluk) 50%,transparent 50%);background-position:calc(100% - 15px) 15px,calc(100% - 10px) 15px;background-size:5px 5px;background-repeat:no-repeat}
 .inot{margin-top:12px;padding:12px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.inoth{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:650;font-size:14px}.inoth button{background:none;border:0;color:var(--vurgu);font:inherit;font-size:13px;padding:6px 2px;cursor:pointer}.inotm{margin-top:6px;font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.isl .inot textarea,.isl .ionay textarea{width:100%;box-sizing:border-box;margin-top:8px;padding:10px 12px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);font:inherit;font-size:15px;line-height:1.4;resize:vertical}.isl .ionay textarea{background:var(--kart2)}.inot .iseg{margin-top:8px}
 .apn{font-size:12px;line-height:1}.acnt{grid-column:1/-1;font-size:12.5px;color:var(--soluk);margin-top:3px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer}.acnt.acik{-webkit-line-clamp:unset;display:block}
@@ -1842,7 +1844,7 @@ function ellePayHtml(s, p, f){   // madde 846: sade özet — ne aldın, kaçtan
 // MADDE 856: Al-Sat pozisyonları CANLI — kendi işaret fiyatı akışı (saniyede bir); K/Z = adet × (işaret − giriş) (Binance açık K/Z tanımı)
 let AS_WS = null, AS_WSK = "", AS_F = {}, AS_ZAMAN = 0, AS_FR = {};
 function asAkisBagla(){
-  const S = ALAN == "alsat" && !VERI_GOMULU && window.WebSocket ? ((ELLE_OZ && ELLE_OZ.pozisyonlar) || []).map(x=>x.sembol).sort() : [];
+  const S = (ALAN == "alsat" || (RU.acik && (ISL_DURUM||{}).ayri)) && !VERI_GOMULU && window.WebSocket ? ((ELLE_OZ && ELLE_OZ.pozisyonlar) || []).map(x=>x.sembol).sort() : [];   // madde 906: risk uyarısı açıksa her sayfada
   const k = S.join(",");
   if (!S.length){ if (AS_WS){ AS_WS.onclose = null; AS_WS.close(); AS_WS = null; AS_WSK = ""; } return; }
   if (k === AS_WSK && AS_WS && AS_WS.readyState <= 1) return;
@@ -2252,17 +2254,74 @@ function islAlmHtml(){
       ${ISL.almMsj ? `<div class="imsj hata">${ea(ISL.almMsj)}</div>` : ""}
       <p class="k" style="margin:6px 2px 0;line-height:1.4">Gerçek piyasa işaret fiyatı hedefi geçince sayfada uyarı${bil=="granted" ? ", tarayıcı bildirimi" : ""} ve ses. Panel açıkken çalışır (bu tarayıcıda saklanır).${bil=="denied" ? " Tarayıcı bildirimleri kapalı." : bil=="default" ? " İlk alarmda bildirim izni istenir." : ""}</p>`}</div>`;
 }
+// MADDE 906: RİSK UYARILARI — panel tarafında (emir değil), fiyat alarmıyla aynı uyarı yolu (sayfa uyarısı + bildirim + titreşim + ses).
+// 1) pozisyon zararı her `kz` $ kademesini aşınca  2) fiyat 15 dk içinde pozisyona karşı %`hiz` gidince (30 dk'da bir)
+// 3) hesabın açık K/Z'si her `hesap` $ kademesini aşınca  4) likidasyona %`lik`, yarısı ve beşte biri kala.
+// Kademe durumu tarayıcıda saklanır; ilk görülen durum sessizce taban olur (sayfa açılınca mevcut zararlar için uyarı yağmaz).
+const RU_VAR = {acik: true, kz: 250, hiz: 10, hesap: 1000, lik: 50};
+let RU = (()=>{ try { return {...RU_VAR, ...(JSON.parse(localStorage.getItem("carry_risk_uyari") || "{}") || {})}; } catch(_){ return {...RU_VAR}; } })();
+let RU_D = (()=>{ try { return JSON.parse(localStorage.getItem("carry_risk_durum") || "{}") || {}; } catch(_){ return {}; } })(), RU_IZ = {};
+function ruKaydet(){ try { localStorage.setItem("carry_risk_uyari", JSON.stringify(RU)); localStorage.setItem("carry_risk_durum", JSON.stringify(RU_D)); } catch(_){} }
+function ruAyar(k, v){ if (k == "acik") RU.acik = !!v; else { v = parseFloat(islSayi(v)); if (!(v > 0)) return; RU[k] = v; } RU_D = {}; ruKaydet(); almCanliBoya.k = null; }
+function ruCal(s, baslik, metin, tur){
+  ALM_CAL.unshift({id: "r" + Date.now().toString(36), s: s || "", tur: "risk", baslik, metin, tc: Date.now()}); ALM_CAL = ALM_CAL.slice(0, 10); almKaydet();
+  const ad = s ? s.replace(/USDT$/,"") : "";
+  let el = $("#almtoast"); if (!el){ el = document.createElement("div"); el.id = "almtoast"; el.setAttribute("role", "alert"); document.body.appendChild(el); }
+  const d = document.createElement("div"); d.className = "almt dus";
+  d.innerHTML = `<span>⚠️</span><span><b>${ea(baslik)}</b><span class="k">${ea(metin)}${s ? " · dokun: penceresini aç" : ""}</span></span><button aria-label="Kapat">✕</button>`;
+  d.onclick = e => { d.remove(); if (!e.target.closest("button") && s) islAc(s); };
+  el.prepend(d); setTimeout(()=>d.remove(), 90e3);
+  try { navigator.vibrate && navigator.vibrate([300, 120, 300, 120, 300]); } catch(_){}
+  try { const C = new (window.AudioContext || window.webkitAudioContext)(); for (const [i, fr] of [[0, 660], [0.25, 440]]){ const o = C.createOscillator(), g = C.createGain();
+    o.frequency.value = fr; g.gain.setValueAtTime(0.14, C.currentTime + i); g.gain.exponentialRampToValueAtTime(0.001, C.currentTime + i + 0.22); o.connect(g).connect(C.destination); o.start(C.currentTime + i); o.stop(C.currentTime + i + 0.24); } } catch(_){}
+  try { if (window.Notification && Notification.permission == "granted"){ const n = new Notification("⚠️ " + baslik, {body: metin, tag: "ru-" + tur + "-" + ad, icon: "panel_varlik/ikon-192.png"}); n.onclick = () => { focus(); if (s) islAc(s); n.close(); }; } } catch(_){}
+}
+function ruKademe(anahtar, k, cal){   // k: şu anki kademe (0 = eşik altı). Yükselince uyar; iki kademe düşünce taban iner (yeniden uyarabilsin)
+  const o = RU_D[anahtar];
+  if (o == null){ RU_D[anahtar] = k; return true; }
+  if (k > o){ RU_D[anahtar] = k; cal(); return true; }
+  if (k < o - 1){ RU_D[anahtar] = k + 1; return true; }
+  return false;
+}
+function riskDenetle(){
+  const E = ELLE_OZ; if (!RU.acik || !E || E.hata || !E.pozisyonlar || !(ISL_DURUM||{}).ayri) return;
+  const P = E.pozisyonlar.filter(x=>x.adet), simdi = Date.now(); let deg = false;
+  for (const x of P){
+    const s = x.sembol, ad = s.replace(/USDT$/,""), f = AS_F[s] > 0 ? AS_F[s] : null, kz = asKz(x), sh = x.adet < 0;
+    if (RU.kz > 0) deg = ruKademe("kz:" + s, kz < 0 ? Math.floor(-kz / RU.kz) : 0, () => ruCal(s, `${ad} zararı ${isaretli(kz)}`, `${sh ? "short" : "long"} · eşik her ${para(RU.kz)} · ${f ? "fiyat " + piyFiyat(f) : ""}`, "kz")) || deg;
+    if (f){
+      const L = RU_IZ[s] = (RU_IZ[s] || []).filter(o=>simdi - o[0] < 15 * 60e3); if (!L.length || simdi - L[L.length-1][0] > 5e3) L.push([simdi, f]);
+      const uc = sh ? Math.min(...L.map(o=>o[1])) : Math.max(...L.map(o=>o[1])), ters = sh ? f / uc - 1 : 1 - f / uc;
+      if (RU.hiz > 0 && L.length > 3 && ters * 100 >= RU.hiz && simdi - (RU_D["hiz:" + s] || 0) > 30 * 60e3){ RU_D["hiz:" + s] = simdi; deg = true;
+        ruCal(s, `${ad} 15 dk'da %${(ters * 100).toFixed(1).replace(".",",")} ${sh ? "yükseldi" : "düştü"}`, `pozisyonuna karşı · ${piyFiyat(uc)} → ${piyFiyat(f)} · K/Z ${isaretli(kz)}`, "hiz"); }
+      if (RU.lik > 0 && x.likidasyon > 0){ const u = Math.abs(x.likidasyon / f - 1) * 100, k = u <= RU.lik / 5 ? 3 : u <= RU.lik / 2 ? 2 : u <= RU.lik ? 1 : 0;
+        deg = ruKademe("lik:" + s, k, () => ruCal(s, `${ad} likidasyona %${Math.round(u)} kaldı`, `likidasyon ${piyFiyat(x.likidasyon)} · fiyat ${piyFiyat(f)}`, "lik")) || deg; }
+    }
+  }
+  for (const k of Object.keys(RU_D)) if (/^(kz|lik):/.test(k) && !P.some(x=>k.endsWith(":" + x.sembol))){ delete RU_D[k]; deg = true; }   // kapanan pozisyon
+  if (RU.hesap > 0 && P.length){ const T = P.reduce((a,x)=>a + asKz(x), 0);
+    deg = ruKademe("hesap", T < 0 ? Math.floor(-T / RU.hesap) : 0, () => ruCal("", `Hesabın açık zararı ${isaretli(T)}`, `${P.length} pozisyon · eşik her ${para(RU.hesap)}`, "hesap")) || deg; }
+  if (deg) ruKaydet();
+}
+function ruHtml(){
+  const ac = ACIK.has("asru"), g = (k, ad, birim, alt) => `<label class="rua"><span>${ad}<small>${alt}</small></span><span class="ruv">${birim == "%" ? "%" : ""}<input inputmode="decimal" value="${islGos(RU[k])}" onchange="ruAyar('${k}',this.value)" aria-label="${ad}">${birim == "$" ? " $" : ""}</span></label>`;
+  return `<div class="ruk"><div class="ruh"><button class="gayr" onclick="olayAc('asru')" aria-expanded="${ac}">${ac?"▾":"▸"} Risk uyarıları <span class="k">${RU.acik ? `açık · zarar her ${para(RU.kz)}, %${islGos(RU.hiz)} / 15 dk` : "kapalı"}</span></button>
+      <button class="rus ${RU.acik?"on":""}" role="switch" aria-checked="${RU.acik}" aria-label="Risk uyarıları" onclick="ruAyar('acik',${!RU.acik});ciz()"><i></i></button></div>
+    ${!ac ? "" : `${g("kz", "Pozisyon zararı", "$", "her bu kadar zararda bir kez")}${g("hiz", "Hızlı ters hareket", "%", "15 dakika içinde, pozisyonuna karşı")}${g("hesap", "Hesabın toplam zararı", "$", "açık K/Z, her bu kadarda bir kez")}${g("lik", "Likidasyona yaklaşma", "%", "bu kadar, yarısı ve beşte biri kala")}
+      <p class="k" style="margin:6px 2px 0;line-height:1.4">Emir değil, haber verir. Panel açıkken çalışır; sayfa açıldığında mevcut durum taban alınır, ondan sonraki kötüleşmelerde uyarır.</p>`}</div>`;
+}
 function asAlarmHtml(){   // Al-Sat ana sayfasında tüm alarmlar + son çalanlar
-  if (!ALM.length && !ALM_CAL.length) return "";
+  if (!(ISL_DURUM||{}).ayri && !ALM.length && !ALM_CAL.length) return "";
   const L = ALM.slice().sort((a,b)=>Math.abs(almUzak(a) ?? 1e9) - Math.abs(almUzak(b) ?? 1e9)), ac = ACIK.has("asalm");
   const sat = a => { const ad = a.s.replace(/USDT$/,"");
     return `<div class="ialr">${coinIkon(ad, "kucuk")}<span role="button" tabindex="0" onclick="islAc('${a.s}')"><b>${ea(ad)} <span class="${a.yon>0?"art":"eks"}">${a.yon>0?"▲":"▼"} ${piyFiyat(a.f)}</span></b><span class="k" id="asalu-${a.id}">${almUzakMetin(a)}</span></span><button onclick="almSil('${a.id}')" aria-label="${ea(ad)} alarmını sil">✕</button></div>`; };
   return `<div class="kart asalm" id="asalm"><div class="apkh"><div><b>🔔 Alarmlar</b>${ALM.length ? `<span class="say">${ALM.length}</span>` : ""}</div></div>
-    ${ALM.length ? L.map(sat).join("") : `<div class="k" style="padding:6px 0">Bekleyen alarm yok. Coin penceresinden kurabilirsin.</div>`}
-    ${ALM_CAL.length ? `<button class="gayr" onclick="olayAc('asalm')">${ac?"▾":"▸"} Son çalanlar <span class="k">${ALM_CAL.length}</span></button>${!ac ? "" : ALM_CAL.map(a=>`<div class="ialr cal">${coinIkon(a.s.replace(/USDT$/,""), "kucuk")}<span><b>${ea(a.s.replace(/USDT$/,""))} ${a.yon>0?"▲":"▼"} ${piyFiyat(a.f)}</b><span class="k">${new Date(a.tc).toLocaleString("tr-TR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})} · ${piyFiyat(a.p)}</span></span></div>`).join("")}` : ""}</div>`;
+    ${ALM.length ? L.map(sat).join("") : `<div class="k" style="padding:6px 0">Bekleyen fiyat alarmı yok. Coin penceresinden kurabilirsin.</div>`}
+    ${(ISL_DURUM||{}).ayri ? ruHtml() : ""}
+    ${ALM_CAL.length ? `<button class="gayr" onclick="olayAc('asalm')">${ac?"▾":"▸"} Son çalanlar <span class="k">${ALM_CAL.length}</span></button>${!ac ? "" : ALM_CAL.map(a=>a.tur == "risk" ? `<div class="ialr cal">${a.s ? coinIkon(a.s.replace(/USDT$/,""), "kucuk") : `<span>⚠️</span>`}<span><b>${ea(a.baslik)}</b><span class="k">${new Date(a.tc).toLocaleString("tr-TR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})} · ${ea(a.metin)}</span></span></div>` : `<div class="ialr cal">${coinIkon(a.s.replace(/USDT$/,""), "kucuk")}<span><b>${ea(a.s.replace(/USDT$/,""))} ${a.yon>0?"▲":"▼"} ${piyFiyat(a.f)}</b><span class="k">${new Date(a.tc).toLocaleString("tr-TR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})} · ${piyFiyat(a.p)}</span></span></div>`).join("")}` : ""}</div>`;
 }
 function almCanliBoya(){ almBagla();
-  const k = ALM.map(a=>a.id).join(",") + "|" + ALM_CAL.length + "|" + ACIK.has("asalm");   // alarm kur / çal / sil sonrası Al-Sat kartı yerinde yenilenir
+  const k = ALM.map(a=>a.id).join(",") + "|" + ALM_CAL.length + "|" + ACIK.has("asalm") + "|" + ACIK.has("asru") + "|" + JSON.stringify(RU) + "|" + !!(ISL_DURUM||{}).ayri;   // alarm kur / çal / sil sonrası Al-Sat kartı yerinde yenilenir
   if (sayfa == "alsat" && k !== almCanliBoya.k){ const el = $("#asalm"), h = asAlarmHtml(), apk = document.querySelector("#piyelle .apk");
     if (el) el.outerHTML = h; else if (h && apk) apk.insertAdjacentHTML("afterend", h);
     if (el || !h || apk) almCanliBoya.k = k; }
@@ -2927,6 +2986,8 @@ function canliBoya(){
   if (ISL && !ISL.adim && Date.now() - (donemBoya.t||0) > 5000){ donemBoya.t = Date.now(); donemBoya(ISL.s); }   // madde 848
   asCanliBoya();   // madde 856
   almCanliBoya();   // madde 900
+  if (ALAN != "alsat") asAkisBagla();   // madde 906 (Al-Sat'ta asCanliBoya bağlar)
+  riskDenetle();   // madde 906
   piyasaBoya(false);   // madde 832
   if (sayfa != "piyasa" && ISL_DURUM && ISL_DURUM.acik && Date.now() - (elleYukle.t||0) > 15e3) elleYukle();   // madde 844
   fundTakip();
