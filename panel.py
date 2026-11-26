@@ -1889,7 +1889,7 @@ function asFunding(P){
   if (!FON_ARA) fonAraYukle();
   const gun = L.reduce((a,o)=>a + tut(o) * 24 / ((FON_ARA||{})[o.x.sembol] || 8), 0);
   return `<div class="asfn"><span>Sıradaki funding <span class="k">· ${sa ? sa + " sa " : ""}${dk} dk sonra · ${S.length} coin</span></span><b class="${sinif(sira)}">${sira>=0?"alırsın":"ödersin"} ${isaretli(sira)}</b>
-    <span class="k" style="grid-column:1/-1">bugünkü oranlarla 24 saatte ≈ <b class="${sinif(gun)}">${isaretli(gun)}</b>${FON_ARA ? "" : " (ödeme aralıkları yükleniyor)"}</span></div>`;
+    <span class="k" style="grid-column:1/-1">gerçek piyasanın şu anki oranlarıyla 24 saatte ≈ <b class="${sinif(gun)}">${isaretli(gun)}</b>${FON_ARA ? "" : " (ödeme aralıkları yükleniyor)"}</span></div>`;
 }
 // ödeme aralığı: /fapi/v1/fundingInfo yalnız 8 saatten farklı olanları listeler (1 / 4 sa); günde bir kez
 let FON_ARA = null;
