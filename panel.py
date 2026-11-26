@@ -2699,7 +2699,7 @@ function fundMetin(k){
 }
 function ozetSayfa(k, svc, sv){   // madde 758: sade — kahraman alan kartsız, bölümler ayrı kartlarda, tekrar yok
   const kitap = k.kitap_canli!=null ? k.kitap_canli : k.kitap; AKIS.kitapd = AKIS.kitapd || {v: kitap};
-  const A = k.ayar, ayar = A ? `profil ${A.profil||k.profil||"—"} · ${A.gross.toFixed(2).replace(".",",")}x brüt` : (k.profil||"");
+  const A = k.ayar, ayar = A ? `profil ${A.profil||k.profil||"—"} · ${A.gross.toFixed(2).replace(".",",")}x hedef` : (k.profil||"");
   const ch = (m, ad) => `<button data-m="${m}" class="${egriMod==m?"on":""}" onclick="egriSec('${m}')">${ad}</button>`;
   return `<div class="dhero">
     <div class="dcumle" id="dcumle">${durumCumle(k)}</div>
