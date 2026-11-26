@@ -1070,7 +1070,7 @@ nav.alt .nok{position:absolute;top:6px;right:calc(50% - 22px);width:8px;height:8
 .sat .det .fund,.sat .det .hedef .t{white-space:normal;font-size:11.5px}
 .fgac{cursor:pointer;color:var(--vurgu)}.fgacik{flex-basis:100%;font-size:12px;color:var(--soluk);line-height:1.4}
 @media(max-width:699px){.isi{height:230px}.coin td,.coin th{padding:6px 4px;font-size:12px;white-space:nowrap}.coin td:nth-child(4){display:none}
-  .coin .yon{font-size:10px;color:var(--soluk);font-weight:700;margin-left:4px}}
+  .coin .yon{font-size:11px;color:var(--soluk);font-weight:700;margin-left:4px}}
 @media(min-width:700px){.coin .yon{font-size:11px;color:var(--soluk);margin-left:4px}}.takvim .g.canlig{outline:1.5px dashed var(--vurgu);outline-offset:-2px}
 .fund{font-size:10.5px;margin-top:6px;font-variant-numeric:tabular-nums;color:var(--soluk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .hedef{margin-top:6px}.hedef .c{height:4px;border-radius:9px;background:var(--kart2);overflow:hidden}.hedef .c span{display:block;height:100%;background:var(--art);border-radius:9px;transition:width .4s}
@@ -1132,10 +1132,11 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
   .abr{grid-column:1/-1;margin-top:4px}.abkz span{display:block}}
 .ipr{grid-template-columns:26px minmax(0,1fr) auto!important;grid-template-areas:"n m k" "n t s";row-gap:4px!important}
 .ipr .iprn{grid-area:n}.ipr .iprm{grid-area:m}.ipr .iprk{grid-area:k;align-self:start}.ipr .iprtp{grid-area:t;margin-top:0!important}.ipr .iprs{grid-area:s;justify-self:end;padding:6px 14px!important}
-@media (max-width:360px){.apr .k2{white-space:normal}.ipr{grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"m k" "t s"}.ipr .iprn{display:none}}
+@media (max-width:360px){.apr .k2{white-space:normal!important;text-overflow:clip!important}.ipr{grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"m k" "t s"}.ipr .iprn{display:none}}
 .tema{width:36px!important;height:36px!important;flex:none}.hmb{flex:none}
 .gdon button,.mod button{min-height:34px}.aygez button{min-width:40px;min-height:36px}.dgr .mod button,.dozet .mod button{padding:6px 12px!important}
 .abh2{font-size:10.5px!important}
+.pyl .pyr>span:nth-child(2)>a{padding:8px 0;margin:-8px 0}.ipr .iprtp{min-height:32px}
 #piyelle.as-sayfa{border:0;padding:0;margin:0}
 .asbak.kart{margin:0 0 12px}
 .apk{padding:14px}.apkh{display:flex;justify-content:space-between;align-items:center;font-size:16px}.apkh>div{display:flex;align-items:center;gap:8px}.apkh .say{font-size:12px;font-weight:700;color:var(--soluk);background:var(--kart2);border-radius:999px;padding:1px 8px}.apkh .art{color:var(--art)}.apkh .eks{color:var(--eks)}
