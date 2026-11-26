@@ -1345,6 +1345,9 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 @media (max-width:420px){.isl .ikg{grid-template-columns:repeat(2,minmax(0,1fr))}.isl .ichip.kisa{flex-basis:150px}}
 /* iOS Safari 16 px altı kutuya dokununca sayfayı büyütür ve geri küçültmez: tüm form öğeleri en az 16 px */
 input,select,textarea{font-size:max(16px,1em)}.tsor input,.ruv input,.pkara input,.isl .inot textarea,.isl .ionay textarea,.assr select,.pkhac select{font-size:16px}.assr select{min-width:0;max-width:100%;text-overflow:ellipsis}.assr label{flex:none}
+/* Piyasa: sekmeler yana kaymasın, alt satıra geçsin; dönem + hacim satırı dar ekranda kırılsın */
+.pksek{flex-wrap:wrap;overflow:visible;margin:12px 0 0;padding:0;-webkit-mask-image:none;mask-image:none}.pksek button{flex:1 1 auto;padding:0 12px}.pkay{flex-wrap:wrap;row-gap:8px}.pkdon{flex:1 1 auto;min-width:0;max-width:100%}.pkdon button{flex:1 1 0;min-width:0;padding:0 4px}.pkhac{margin-left:auto}
+@media (max-width:340px){.pk2{padding:12px 10px}.pkr{grid-template-columns:minmax(0,1fr) auto 28px;gap:6px;padding-left:10px}.pkr>.pkav{display:none}.pkd{min-width:0;font-size:12.5px;padding:6px 5px}.pky{width:28px}.pks{font-size:11.5px}}
 </style></head><body><div class="kap">
 <header id="ust"><div><h1><button class="hmb" id="hmb" onclick="menuAc()" aria-label="Menü: Bot / Al-Sat" aria-haspopup="true">☰</button><img src="ikon-192.png" alt=""><span id="baslik">Carry</span></h1><div class="k" id="alt"></div><div id="ustkitap"></div></div>
   <div class="sag"><span class="canli" id="canliust"><i></i><span>bağlanıyor</span></span><button class="tema" id="tema" onclick="temaDegis()" aria-label="tema">◐</button></div></header>
@@ -1642,7 +1645,7 @@ function piyasaSayfa(k){   // madde 866: sade — arama, tek sekme satırı, tek
   const donemli = PIY_SEKME=="yuk" || PIY_SEKME=="dus" || PIY_SEKME=="izle";
   const D = ISL_DURUM;
   return `<div class="kart pyk pk2">
-    <div class="pkara"><span aria-hidden="true">⌕</span><input id="piyara" type="search" aria-label="Coin ara" placeholder="Coin ara (örn. BTC)" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value);piySekmeGoster()">
+    <div class="pkara"><span aria-hidden="true">⌕</span><input id="piyara" type="search" aria-label="Coin ara" placeholder="Coin ara" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value);piySekmeGoster()">
       <span class="k" id="piyd" role="status"></span></div>
     <div id="piysk" ${PIY_ARA ? "hidden" : ""}>
     <div class="pksek" role="tablist">${SK.map(([v,ad])=>`<button role="tab" aria-selected="${PIY_SEKME==v}" class="${PIY_SEKME==v?"on":""}" onclick="piySekme('${v}')">${ad}</button>`).join("")}</div>
