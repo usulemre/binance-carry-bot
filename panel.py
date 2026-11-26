@@ -2225,6 +2225,32 @@ function islUyari(){   // sunucuya gitmeden önce yazarken uyar (sunucu yine de 
 }
 function islTahmin(){ const e = $("#isltah"); if (e) e.innerHTML = islTahminMetin(); const u = $("#isluyr"); if (u) u.innerHTML = islUyari(); }
 function islAltGuncelle(){ const b = $("#islalt"); if (b) b.outerHTML = islAlt(); }
+// MADDE 899: EMİR SONRASI ETKİ — onay ekranında aynı yöne eklemede yeni ortalama giriş ve toplam adet; zarardaki pozisyona
+// eklemede uyarı (şu anki zarar, kaçıncı alım); her emirde "Ne olur?" kartının (madde 898) emir öncesi / sonrası karşılaştırması:
+// piyasa %AS_SEN ters giderse K/Z ve hesabın likide olduğu ortak hareket. Yalnız gösterim; emir akışına dokunmaz.
+function islEkEtki(O){
+  const sg = O.yon == "L" ? 1 : -1, P0 = ISL.poz && ISL.poz.pozisyon, var0 = islPozVar(), satir = [], not = [];
+  const a0 = var0 ? P0.adet : 0, a1 = a0 + sg * O.adet, ayni = var0 && (a0 > 0) == (sg > 0);
+  const g1 = !a1 ? 0 : ayni ? (a0 * P0.giris + sg * O.adet * O.fiyat) / a1 : var0 && (a0 > 0) == (a1 > 0) ? P0.giris : O.fiyat;
+  if (ayni){
+    satir.push(["Ortalama giriş", `${piyFiyat(P0.giris)} → <b>${piyFiyat(g1)}</b>`], ["Toplam", `${elleAdet(a0)} → <b>${elleAdet(a1)}</b> adet <span class="k">≈ ${para(Math.abs(a1) * O.isaret)}</span>`]);
+    const kz0 = a0 * (O.isaret - P0.giris), n = (ISL.poz.parcalar || []).length || 1;
+    if (kz0 < 0 && P0.giris > 0) not.push(`Zarardaki pozisyona ekliyorsun: şu an ${isaretli(kz0)} (%${(Math.abs(kz0) / (Math.abs(a0) * P0.giris) * 100).toFixed(1).replace(".",",")}). Bu ${n + 1}. alım olur; fiyat aynı yöne gitmeye devam ederse zarar daha büyük adetle büyür.`);
+  }
+  const E = ELLE_OZ, H = E && E.hesap;
+  if (H && H.ozkaynak != null && E.pozisyonlar){
+    const P = E.pozisyonlar.map(x=>({...x, kz: asKz(x)})), oz = H.ozkaynak + P.reduce((a,x,i)=>a + x.kz - E.pozisyonlar[i].kz, 0);
+    const P2 = P.filter(x=>x.sembol != O.sembol);
+    if (a1) P2.push({sembol: O.sembol, adet: a1, giris: g1, kz: a1 * ((AS_F[O.sembol] > 0 ? AS_F[O.sembol] : O.isaret) - g1), likidasyon: 0});
+    const R1 = asRiskHesap(oz, P), R2 = asRiskHesap(oz, P2), X = AS_SEN / 100, yuk = R2.A < 0 || (!R2.A && R1.A < 0);
+    if (R2.L.length){
+      const k = R => (yuk ? 1 : -1) * R.A * X, e = R => yuk ? R.yuk : R.dus, yz = v => v == null ? "yok" : "%" + Math.round(v * 100);
+      satir.push([`Piyasa %${AS_SEN} ${yuk ? "yükselirse" : "düşerse"}`, `<span class="${sinif(k(R1))}">${R1.L.length ? isaretli(k(R1)) : "—"}</span> → <b class="${sinif(k(R2))}">${isaretli(k(R2))}</b>`],
+                 ["Hesap likide olur", `${yz(e(R1))} ${yuk ? "yükselişte" : "düşüşte"} → <b class="${e(R2) != null && (e(R1) == null || e(R2) < e(R1) - 0.005) ? "eks" : ""}">${yz(e(R2))}</b>`]);
+    }
+  }
+  return satir.length || not.length ? {satir, not} : null;
+}
 async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
   if (!ISL || ISL.mesgul) return; const u = islBoyutUsd();
   if (!(u>0)){ ISL.msj = {hata: ISL.boyut=="risk" ? "Risk ile boyut için stop fiyatı ve risk tutarı gerekli." : "Tutar gir."}; islCiz(); return; }
@@ -2238,7 +2264,8 @@ async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
   if (O.tp) S.push(["TP", `${piyFiyat(O.tp)} <span class="art">▲ ${isaretli(O.adet*(O.tp-O.fiyat)*sg)}</span>`]);
   if (O.sl) S.push(["Stop", `${piyFiyat(O.sl)} <span class="eks">▼ ${isaretli(O.adet*(O.sl-O.fiyat)*sg)}</span>`]);
   S.push(["Komisyon", "≈ " + para(O.usd * 0.0005)]);
-  const not = [];
+  const not = [], Ek = islEkEtki(O);   // madde 899
+  if (Ek){ S.push(...Ek.satir); not.push(...Ek.not); }
   if (f && Math.abs(O.isaret/f-1) > 0.005) not.push(`Hesabın fiyatı piyasadaki gerçek fiyattan %${(Math.abs(O.isaret/f-1)*100).toFixed(1).replace(".",",")} farklı${O.mod=="live"?"":" (demo hesap)"}.`);
   if (O.not) not.push(O.not);
   const P0 = ISL.poz && ISL.poz.pozisyon, ters = islPozVar() && ((P0.adet > 0) != (O.yon=="L"));
