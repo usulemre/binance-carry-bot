@@ -1147,12 +1147,12 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .acn{grid-area:n;display:flex;align-items:center;gap:6px;font-size:14.5px}.aca{grid-area:a;font-size:11.5px;color:var(--soluk);font-variant-numeric:tabular-nums}.aca .nw{white-space:nowrap}.aca .art{color:var(--art)}.aca .eks{color:var(--eks)}
 .act{grid-area:t;font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.act.art{color:var(--art)}.act.eks{color:var(--eks)}
 .acay{text-align:center;color:var(--soluk);font-size:12px;padding:4px 0 0;letter-spacing:3px}
-.icg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ick{background:var(--kart2);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;border-left:3px solid transparent}
+.icg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ick{background:var(--kart2);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;box-shadow:inset 3px 0 0 transparent}
 .ick span{font-size:12px;color:var(--soluk)}.ick b{font-size:19px;font-variant-numeric:tabular-nums}.ick i{font-style:normal;font-size:11.5px;color:var(--soluk)}
-.ick.iyi{border-left-color:var(--art)}.ick.iyi b{color:var(--art)}.ick.kotu{border-left-color:var(--eks)}.ick.kotu b{color:var(--eks)}.ick.orta{border-left-color:var(--uyari)}
+.ick.iyi{box-shadow:inset 3px 0 0 var(--art)}.ick.iyi b{color:var(--art)}.ick.kotu{box-shadow:inset 3px 0 0 var(--eks)}.ick.kotu b{color:var(--eks)}.ick.orta{box-shadow:inset 3px 0 0 var(--uyari)}
 .icy{margin-top:12px}.icyb{display:flex;height:10px;border-radius:6px;overflow:hidden;gap:2px}.icyb i,.icyl i{background:var(--soluk)}.icy .ia{background:var(--art)}.icy .ib{background:var(--vurgu)}.icy .ic{background:var(--eks)}
 .icyl{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px}.icyl>span{white-space:nowrap;display:inline-flex;align-items:center;gap:5px}.icyl>span>i{width:8px;height:8px;border-radius:2px;display:inline-block}
-.icd{margin-top:8px}.icd>div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--cizgi);font-size:13px}.icd>div span{color:var(--soluk)}.icd>div b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}.icd p{margin:8px 0 0;line-height:1.45}
+.icd{margin-top:8px}.icd>div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--cizgi);font-size:13px}.icd>div>span{color:var(--soluk);flex:0 1 45%}.icd>div b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}.icd p{margin:8px 0 0;line-height:1.45}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
@@ -2604,7 +2604,7 @@ function icraKart(k){
   const ac = ACIK.has("icra");
   return `<div class="icg">
       ${kutu("TP dolumu", yzd(dr), dr==null ? "" : dr>=0.9 ? "iyi" : dr<=0.8 ? "kotu" : "orta", dr==null ? "ölçüm yok" : dr>=0.9 ? "güvenli (≥ %90)" : dr<=0.8 ? "alarm (≤ %80)" : "izle")}
-      ${kutu("Maker payı", yzd(G.maker_pay), "", "girişlerin limitte dolanı")}
+      ${kutu("Maker payı", yzd(G.maker_pay), "", "limitte dolan giriş")}
       ${kutu("Toplam kayma", bp(kay), kay==null ? "" : kay>5 ? "kotu" : kay<=0 ? "iyi" : "orta", "karar fiyatına göre · eksi iyi")}
       ${kutu("Komisyon", bp(G.komisyon_bp), G.komisyon_bp==null ? "" : G.komisyon_bp>6 ? "kotu" : "iyi", "model 5 bp")}
     </div>
