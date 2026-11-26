@@ -9634,3 +9634,18 @@ Pozisyonlarım ve Geçmiş'ten taşıma öncesi kesinleşen +14,29 $ satırları
   Günlük (×1,15): 21 −0,53 · 22 −2,47 · 23 −0,04 · 24 +0,98. Kasım 1-24 −9,50 %; 7-24 Kas tam kitap −9,64 % (rampa düzeltmesiyle ≈ −8,4); 9 Ekim zirvesinden
   −19,19 %. 7-24 Kas toplamsal: fiyat −15,33 puan, funding +6,21 puan; BTW −1,52 puan (demoda yok). Demo (kullanıcı) ≈ −14 %: fark ≈ 5,5 puan ≈ AKE
   kapanmayan stop (≈ 4,4; madde 838'de düzeltildi) + 18 Kas sağlık kapısı yanlış alarmı kapat/geri kur maliyeti + kayma / komisyon.
+
+## Madde 859 ÖN KAYIT (2026-11-26, Ekim–Kasım verisi kurulmadan, sonuçlar görülmeden; kullanıcı: "bu dönemi stratejiyi kâra nasıl geçireceğiz" → "Başlat") — İKİ KOL
+Ön kontrol (tekrar YOK): basit hâlleri zaten RED — long'u küçült (566 short payı, 801 ML ×0,5 / ×0,75), long'a momentum vetosu (383), long kalabalık filtresini kapat (773),
+ML long vetosu (800 / 806), carry + momentum harmanı (813 w 0,20 / 0,35; 821; 822 dinamik). Bu yüzden iki kol da bunların TEKRARI değil.
+Veri: arşiv (`veri` dalı, sha256 OK) + Ekim 2026 (`indir_ek_ay`) + 1-25 Kasım (`indir_ek_gun`), VERI_EK=uzun, BAS_YIL=2020; m783 koşusu GK_BAS=2020-01-01 (`/tmp/m783k`).
+Parite (analizden ÖNCE): Kasım günlükleri (×1,15) 783 uzatma 8 ile (20 Kas −4,30 · 21 −0,53 · 22 −2,47 · 23 −0,04 · 24 +0,98; Kasım 1-24 −9,50) en çok 0,05 puan fark;
+tutmazsa analiz yapılmaz.
+**Kol A — HİBRİT: short tarafı carry (P3T2 aynen), long tarafı kesitsel momentum.** r_A = P − L + M_L. L = P3T2'nin günlük long katkısı (GK defteri, iki hiza ort., 801 yöntemi).
+M_L = 821'in tasarımla seçilmiş (dondurulmuş) varyantı k 7 / tut 3 / n 5'in YALNIZ long bacağı: evrende 7 g getirisi en yüksek 5 coin, 0,5 brüt, 3 g örtüşen tutuş, 1 g gecikme,
+funding ödenir, 10 bp / devir. Gerekçe: 819 short tarafı her yıl artı, kayıp long'da; 811 / 821 momentum 2025-26'da sağlam. Yaklaşım: çıkarılan long'un TP / rezerv etkileşimi yok sayılır.
+**Kol B — MOMENTUM AYRI MOTOR (iki bacak, 821 dondurulmuş varyant), ayrı hesap.** Botta harman DEĞİL; iki hesap 80 / 20 sermaye (matematikte 813 w 0,20'ye eşit).
+Dürüstlük notu: ≤ 16 Kas sonuçları 813 / 821'den BİLİNİYOR (eşit risk −30 → ölçüt 1'i büyük ihtimalle geçemez); YENİ bilgi yalnız 17-25 Kas (hiç görülmemiş) ve tam Ekim-Kasım.
+**Ölçüt (iki kol için aynı, ×1,15):** (1) uzun dönem bozulmuyor: eşit risk (Z.esit) ≥ taban − 8 VE Sharpe ≤ 2024 ve 2025+ tabandan en çok 0,1 düşük VE maks düşüş tabandan derin değil;
+(2) bu dönem: 2026-10-01 → 11-25 kaybı tabandan EN AZ 5 puan küçük. İkisi de → "AYRI DEMO ADAYI" (ayrı alt hesap, kullanıcı onayı; carry botu DEĞİŞMEZ, 2 Aralık
+değerlendirmesinde (797) raporlanır). Aksi RED. Ek rapor: kolların 17-25 Kas tek başına, yıllık tablo, Ekim / Kasım ayrı.
