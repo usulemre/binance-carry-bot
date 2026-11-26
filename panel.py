@@ -1119,6 +1119,14 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+/* madde 872: bot özet / ayrıntı */
+.nrd{display:flex;flex-direction:column;gap:2px}.nrr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) auto;gap:10px;align-items:center;min-height:30px}
+.nrl{font-size:13px;color:var(--soluk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nrr b{font-size:13.5px;font-variant-numeric:tabular-nums;text-align:right;min-width:86px}
+.nrb{position:relative;height:10px;border-radius:5px;background:var(--kart2)}.nrb::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--soluk);opacity:.5}
+.nrb i{position:absolute;top:0;bottom:0;border-radius:5px}.nrb i.p{left:50%;background:var(--art)}.nrb i.n{right:50%;background:var(--eks)}
+.nrt{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--cizgi);margin-top:6px;padding-top:8px;font-size:13.5px;font-weight:600}.nrt b{font-size:15px;font-variant-numeric:tabular-nums}
+.nrr b.art,.nrt b.art{color:var(--art)}.nrr b.eks,.nrt b.eks{color:var(--eks)}
+.nsor{flex:none;height:30px;padding:0 10px;border-radius:999px;border:1px solid var(--cizgi);background:var(--kart);color:var(--vurgu);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
 /* madde 870: coin logoları */
 .pkav{position:relative;overflow:hidden;flex:none}.pkav img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;opacity:0;transition:opacity .2s}
 .pkav.ik{color:transparent!important;background:#fff!important}.pkav.ik img{opacity:1}
@@ -2610,15 +2618,16 @@ function daltHtml(k, kar){
   const B = bugunKZ(k), ok = v => v>=0 ? "▲" : "▼", ko = k.kitap_bas ? kar / k.kitap_bas : null;
   return `${B ? `<span class="${sinif(B.usd)}">${ok(B.usd)} ${isaretli(B.usd)} (${yz(B.oran)}) bugün</span>` : ""}${kar!=null ? `<span class="${sinif(kar)}">${ok(kar)} ${isaretli(kar)}${ko!=null?` (${yz(ko)})`:""} başlangıçtan</span>` : ""}`;
 }
-function nerdenHtml(k, poz, kar){
+function nerdenHtml(k, poz, kar){   // madde 872: her kalem kendi satırında, sıfır çizgisinden kazanç sağa (yeşil) kayıp sola (kırmızı)
   const D = k.dokum; if (!D || poz==null || kar==null) return "";
   const gz = FG && k.gercek && D.funding_gercek!=null, F = gz ? D.funding_gercek : D.funding, dg = D.diger_gelir||0;
   const fark = kar - poz - D.gerceklesen - F - D.komisyon - dg;
-  const K = [["Kapanan", D.gerceklesen, "--vurgu"], ["Funding", F, "--art"], ["Açık", poz, "--eks"], ["Komisyon", D.komisyon, "--uyari"]];
-  const tm = K.reduce((a,x)=>a+Math.abs(x[1]), 0) || 1;
-  return `<div class="dnb">${K.map(x=>`<span style="flex:${Math.max(0.6, Math.abs(x[1])/tm*100).toFixed(1)};background:${css(x[2])}"></span>`).join("")}</div>
-    <div class="dng">${K.map(x=>`<span><span class="k"><i style="background:${css(x[2])}"></i>${x[0]}</span><b class="${sinif(x[1])}">${isaretli(x[1])}</b></span>`).join("")}</div>
-    ${Math.abs(fark) >= 3 || dg ? `<div class="k" style="margin-top:8px" title="Başlangıç kaydı anı ve demo / gerçek fiyat farkı">başlangıç farkı ${isaretli(fark)}${dg?` · diğer ${isaretli(dg)}`:""}</div>` : ""}`;
+  const K = [["Kapanan işlemler", D.gerceklesen], ["Funding", F], ["Açık pozisyonlar", poz], ["Komisyon", D.komisyon]];
+  const mx = Math.max(...K.map(x=>Math.abs(x[1])), 1e-9);
+  return `<div class="nrd">${K.map(([a,v])=>{ const w = Math.max(Math.abs(v) / mx * 50, Math.abs(v) >= 0.005 ? 1.5 : 0);
+      return `<div class="nrr"><span class="nrl">${a}</span><span class="nrb"><i class="${v>=0?"p":"n"}" style="width:${w.toFixed(1)}%"></i></span><b class="${sinif(v)}">${isaretli(v)}</b></div>`; }).join("")}
+    <div class="nrt"><span>Toplam</span><b class="${sinif(kar)}">${isaretli(kar)}</b></div></div>
+    ${Math.abs(fark) >= 3 || dg ? `<div class="k" style="margin-top:6px" title="Başlangıç kaydı anı ve demo / gerçek fiyat farkı">başlangıç farkı ${isaretli(fark)}${dg?` · diğer ${isaretli(dg)}`:""}</div>` : ""}`;
 }
 function fgKucuk(k){   // madde 758: gerçek / demo funding seçici — küçük, ayrıntı dokununca
   if (!k.gercek) return "";
@@ -2759,7 +2768,8 @@ function sheetIc(s, p, k){
     ${stop}${neden}${elle ? elleKutu(s, p, f) : cikisIc(s, usd, k)}`;
 }
 // MADDE 787: çıkış takvimi (A tasarımı) — parça parça: ne zaman alındı → ne zaman satılacak, şu anki değer ve kâr/zarar
-let CIKIS_TUM = false;
+let CIKIS_TUM = false, CIKIS_ACK = false;
+function cikisAck(){ CIKIS_ACK = !CIKIS_ACK; CIKIS_TUM = !CIKIS_TUM; cikisTum(); }
 function cikisTum(){ CIKIS_TUM = !CIKIS_TUM; if (SHEET) { const k = VERI.kurulumlar[secili]; const el = $("#sheetic"); if (el && k.pozisyonlar[SHEET]) el.innerHTML = sheetIc(SHEET, k.pozisyonlar[SHEET], k); } }
 function cikisIc(s, usd, k){
   // MADDE 790: kullanıcı "tasarımdan dolayı pek anlaşılır değil". Parçalar TUR başına tek satır (aynı turda yenilenen 2-3 parça ayrı satır
@@ -2790,18 +2800,20 @@ function cikisIc(s, usd, k){
   const sinir = CIKIS_TUM ? 1e9 : 4, gor = turlar.slice(0, sinir), kalan = turlar.slice(sinir);
   const kalanDeg = kalan.reduce((a,t)=>a+t.deg,0), kalanKz = kalan.reduce((a,t)=>a+(t.kz||0),0);
   return `<div class="shs" style="margin-top:12px;padding:14px">
-    <div style="font-size:16px;font-weight:700">Alımların süresi ne zaman doluyor?</div>
-    <p class="shn" style="margin-top:6px">${ad} pozisyonu <b>${turlar.length} alımdan</b>${P.length > turlar.length ? ` (${P.length} dilim payı)` : ""} oluşuyor. ${P.length > turlar.length ? `Her alım borsaya <b>tek emir</b> olarak gider; bot onu kendi defterinde o turda yenilenen ${uzun ? "dilimlere" : "3 dilime (sıradaki + short ara dengelemesiyle 5 ve 10 tur önceki)"} paylaştırır. ` : ""}${uzun ? "Long alımların süresi <b>5 günde</b>" : "Short alımların süresi <b>40 saatte</b>"} dolar. Süresi dolan alım için bot o turda karar verir:</p>
+    <div style="display:flex;justify-content:space-between;align-items:center;gap:8px"><div style="font-size:16px;font-weight:700">Alımların süresi ne zaman doluyor?</div>
+      <button class="nsor" onclick="cikisAck()" aria-expanded="${CIKIS_ACK}">${CIKIS_ACK ? "kapat" : "nasıl? ⓘ"}</button></div>
+    ${CIKIS_ACK ? `<p class="shn" style="margin-top:6px">${ad} pozisyonu <b>${turlar.length} alımdan</b>${P.length > turlar.length ? ` (${P.length} dilim payı)` : ""} oluşuyor. ${P.length > turlar.length ? `Her alım borsaya <b>tek emir</b> olarak gider; bot onu kendi defterinde o turda yenilenen ${uzun ? "dilimlere" : "3 dilime (sıradaki + short ara dengelemesiyle 5 ve 10 tur önceki)"} paylaştırır. ` : ""}${uzun ? "Long alımların süresi <b>5 günde</b>" : "Short alımların süresi <b>40 saatte</b>"} dolar. Süresi dolan alım için bot o turda karar verir:</p>
     <div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin-top:8px">
       <div class="shk"><div style="font-weight:700;font-size:13px;color:var(--art)">${ad} yine seçilirse</div><div class="k" style="margin-top:3px">alım <b>kalır</b>, hiçbir işlem olmaz, olaylarda görünmez</div></div>
       <div class="shk"><div style="font-weight:700;font-size:13px;color:var(--uyari)">seçilmezse</div><div class="k" style="margin-top:3px">o alım ${kapanis}; olaylarda "${uzun?"long":"short"} azaltıldı" yazar</div></div></div>
+      <p class="shn" style="background:var(--kart);border-radius:12px;padding:10px 12px">Fiyat kademe ya da kâr al seviyesine gelirse borsadaki emir turu beklemeden, o an dolar (yukarıdaki kutu).</p>` : `<div class="k" style="margin-top:4px">${turlar.length} alım · her biri kendi turunda yeniden seçilmezse kapanır</div>`}
     <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px">${kut("Sıradaki tur", ilk.zaman ? gunAd(turT(ilk.zaman)).toLowerCase()+" "+saat(ilk.zaman) : "—", `1 alım · ${para(ilk.deg)}`)}${kut("24 saatte", g24.length+" alım", para(g24.reduce((a,t)=>a+t.deg,0)))}${kut("Hiç seçilmezse biter", son.zaman ? gunAd(turT(son.zaman)) : "—", son.zaman ? saat(son.zaman) : "")}</div>
     <div style="height:1px;background:var(--cizgi);margin:14px 0 2px"></div>
     <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--soluk)"><span>SÜRESİ DOLAN ALIM</span><span>DEĞER · K/Z</span></div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${gor.map(satir).join("")}</div>
     ${kalan.length ? `<div class="k" style="margin-top:10px">+${kalan.length} tur daha · ${para(kalanDeg)} · <span class="${sinif(kalanKz)}">${isaretli(kalanKz)}</span></div>` : ""}
     ${turlar.length>4 ? `<button onclick="cikisTum()" style="width:100%;height:44px;margin-top:10px;border-radius:12px;border:0;background:var(--kart);color:var(--vurgu);font:inherit;font-size:14px;font-weight:600">${CIKIS_TUM ? "Daha az göster" : `${turlar.length} turun hepsini göster`}</button>` : ""}
-    <p class="shn" style="background:var(--kart);border-radius:12px;padding:10px 12px">Fiyat kademe ya da kâr al seviyesine gelirse borsadaki emir turu beklemeden, o an dolar (yukarıdaki kutu).</p></div>`;
+</div>`;
 }
 // MADDE 756: SADE GEÇMİŞ — büyük toplam, Hafta / Ay / Tümü, tek grafik (günlük çubuklar), gün listesi. Tutarlar kitap
 // zincirinden (gün = gün sonu kitabı − önceki gün sonu; bugün = şimdiki kitap − dünkü gün sonu): liste toplamı = büyük toplam.
