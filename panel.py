@@ -1118,6 +1118,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+.iprtp{display:flex;flex-wrap:wrap;gap:4px 8px;align-items:center;margin-top:6px;padding:3px 0;border:0;background:none;font:inherit;font-size:11.5px;cursor:pointer;color:var(--soluk);text-align:left}.iprtp .art{color:var(--art)}.iprtp .eks{color:var(--eks)}.iprtp i{font-style:normal;color:var(--vurgu)}.ipd{padding:14px;border-radius:14px;border:1px solid var(--vurgu);background:var(--kart2);margin:4px 0 12px}.ipdh{display:flex;justify-content:space-between;align-items:center;font-size:15px;margin-bottom:4px}.ipd .k2{color:var(--soluk);font-size:12px}.ipd input{width:100%;box-sizing:border-box}.ipdb{width:100%;margin-top:10px}
 .iprl{display:flex;flex-direction:column;gap:6px;margin:4px 0 12px}.ipr{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px;border-radius:12px;background:var(--kart2);border-left:3px solid var(--cizgi)}.ipr.art{border-left-color:var(--art)}.ipr.eks{border-left-color:var(--eks)}.iprn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--kart);color:var(--soluk)}.iprm{min-width:0}.iprt{color:var(--yazi);font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iprr{font-size:10.5px;font-weight:600;color:var(--art);background:color-mix(in srgb,var(--art) 14%,transparent);border-radius:999px;padding:1px 6px;margin-left:4px}.ipr .k2{color:var(--soluk);font-size:12px;font-variant-numeric:tabular-nums}.ipr .k2 b{color:var(--yazi);font-weight:600}.iprb{height:3px;border-radius:2px;background:var(--cizgi);margin-top:5px;overflow:hidden}.iprb span{display:block;height:100%;background:var(--soluk);opacity:.6}.iprk{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.iprk b{display:block;font-size:14px}.iprk span{font-size:11.5px;opacity:.85}.ipr.art .iprk{color:var(--art)}.ipr.eks .iprk{color:var(--eks)}.iprs{border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);border-radius:10px;padding:8px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:36px}.iprs:active{transform:scale(.97)}.pyn{display:inline-block;font-size:10.5px;font-weight:600;color:var(--vurgu);background:color-mix(in srgb,var(--vurgu) 12%,transparent);border-radius:999px;padding:0 6px;margin-left:4px}
 .asbak{display:grid;grid-template-columns:118px minmax(0,1fr);gap:6px 16px;align-items:center;margin:8px 0 6px;padding:14px;border-radius:16px;background:linear-gradient(135deg,var(--kart2),var(--kart));border:1px solid var(--cizgi)}.abh{width:118px;height:118px}.abh1{font-size:20px;font-weight:700;fill:var(--yazi);font-variant-numeric:tabular-nums}.abh2{font-size:9px;fill:var(--soluk)}.abk{min-width:0}.abu{font-size:12px;color:var(--soluk);text-transform:uppercase;letter-spacing:.06em}.abt{font-size:26px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}.abkz{font-size:13px;font-weight:600;margin:2px 0 8px;font-variant-numeric:tabular-nums}.abkz span{color:var(--soluk);font-weight:400}.abkz.art{color:var(--art)}.abkz.eks{color:var(--eks)}.abs{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--cizgi)}.abs i{width:10px;height:10px;border-radius:3px;flex:none}.abs span{flex:1;min-width:0;font-size:13.5px;display:flex;flex-direction:column}.abs small{color:var(--soluk);font-size:11px}.abs b{font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.abc{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.abc span{font-size:11.5px;color:var(--soluk);background:var(--bg);border:1px solid var(--cizgi);border-radius:999px;padding:3px 9px;font-variant-numeric:tabular-nums}
 @media (max-width:380px){.asbak{grid-template-columns:92px minmax(0,1fr);gap:6px 12px;padding:12px}.abh{width:92px;height:92px}.abt{font-size:22px}}
@@ -1679,7 +1680,7 @@ function elleHtml(){
   const satir = x => { const ad = x.sembol.replace(/USDT$/,""), uz = x.adet > 0, deger = Math.abs(x.adet) * x.giris, kp = deger ? x.kz / deger * 100 : 0;
     return `<div class="pyr pye"><span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
       <span style="min-width:0;display:flex;flex-direction:column"><a href="#piyasa" onclick="islAc('${x.sembol}');return false">${ad}</a><span class="k2">${elleKisa(x)}</span></span>
-      <span class="r k2">${x.tp?`TP ${piyFiyat(x.tp)}`:""}${x.tp&&x.sl?"<br>":""}${x.sl?`stop ${piyFiyat(x.sl)}`:`<span class="uyr">stop yok</span>`}</span>
+      <span class="r k2">${x.tp?`TP ${piyFiyat(x.tp)}`:x.parca_tp?`TP ${x.parca_tp}/${(x.parcalar||[]).length} alım`:""}${(x.tp||x.parca_tp)?"<br>":""}${x.sl?`stop ${piyFiyat(x.sl)}`:x.parca_sl?`<span class="${x.parca_sl >= (x.parcalar||[]).length ? "" : "uyr"}">stop ${x.parca_sl}/${(x.parcalar||[]).length} alım</span>`:`<span class="uyr">stop yok</span>`}</span>
       <span class="r ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></div>`; };
   return `${asBakiye(E, P)}<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div></div>
     <div class="pyl">${P.length ? P.map(satir).join("") : `<div class="pybos">Elle açık pozisyonun yok. Aşağıdaki listeden bir coine dokunup işlem açabilirsin.</div>`}</div>`;
@@ -1899,7 +1900,10 @@ function islParcaHtml(){
     const k = parcaKz(x, m), uz = x.adet > 0, w = Math.max(3, Math.abs(x.adet) / top * 100);
     return `<div class="ipr ${k==null?"":sinif(k)}"><div class="iprn">${i+1}</div>
       <div class="iprm"><div class="iprt">${x.eski ? "önceki alımlar" : parcaZaman(x.t)}${k!=null && k === enIyi && L.length > 2 ? ` <span class="iprr">en kârlı</span>` : ""}</div>
-        <div class="k2">${elleAdet(x.adet)} adet @ <b>${piyFiyat(x.fiyat)}</b></div><div class="iprb"><span style="width:${w.toFixed(0)}%"></span></div></div>
+        <div class="k2">${elleAdet(x.adet)} adet @ <b>${piyFiyat(x.fiyat)}</b></div><div class="iprb"><span style="width:${w.toFixed(0)}%"></span></div>
+        <button class="iprtp" onclick="islParcaTpslAc('${ea(x.id)}')" aria-label="${i+1}. alımın TP ve stop'u">${x.tp||x.sl
+          ? `${x.tp?`<span class="art">TP ${piyFiyat(x.tp)}</span>`:""}${x.sl?`<span class="eks">stop ${piyFiyat(x.sl)}</span>`:`<span class="uyr">stop yok</span>`}<i>düzenle</i>`
+          : `<span class="k">＋ TP / stop koy</span>`}</button></div>
       <div class="iprk" id="ipr-${ea(x.id)}">${parcaKzHtml(x, m)}</div>
       <button class="iprs" onclick="islParcaOnay('${ea(x.id)}')">${uz ? "Sat" : "Kapat"}</button></div>`; }).join("")}</div>`;
 }
@@ -1910,6 +1914,48 @@ function islParcaBoya(){   // her saniye: yalnız K/Z rakamları (düğmeye doku
     if (el.innerHTML !== h) el.innerHTML = h; const k = parcaKz(x, m), sat = el.parentElement; if (sat && k != null){ sat.classList.toggle("art", k >= 0); sat.classList.toggle("eks", k < 0); } }
 }
 setInterval(islParcaBoya, 1000);
+// MADDE 863: PARÇA BAŞINA TP / STOP — düzenleyici (yüzde kısayolları o alımın GİRİŞ fiyatına göre), sonra PIN + basılı tut
+function islParcaTpslAc(id){
+  const x = ISL && ISL.poz && (ISL.poz.parcalar||[]).find(p=>p.id == id); if (!x) return;
+  ISL.pd = {id, tp: x.tp || "", sl: x.sl || ""}; ISL.msj = null; islCiz();
+  const e = $("#ipd"); if (e) e.scrollIntoView({block: "start", behavior: "smooth"});
+}
+function islPdAyar(k, v){ if (!ISL || !ISL.pd) return; ISL.pd[k] = islSayi(v); const t = $("#ipdtah"); if (t) t.innerHTML = islPdTahmin(); }
+function islPdYuzde(k, y){
+  const x = islPdParca(); if (!x || !ISL.pd) return; const uz = x.adet > 0, yon = k=="tp" ? 1 : -1;
+  ISL.pd[k] = +(x.fiyat * (1 + yon * (uz?1:-1) * y / 100)).toPrecision(6); islCiz();
+}
+const islPdParca = () => ISL && ISL.pd && ISL.poz && (ISL.poz.parcalar||[]).find(p=>p.id == ISL.pd.id);
+function islPdTahmin(){
+  const x = islPdParca(); if (!x) return ""; const P = ISL.pd, tp = +P.tp, sl = +P.sl, m = parcaIsaret(ISL.s), uz = x.adet > 0, U = [];
+  if (tp > 0 && m && (uz ? tp <= m : tp >= m)) U.push(`TP şimdiki fiyatın ${uz?"üstünde":"altında"} olmalı (${piyFiyat(m)}).`);
+  if (sl > 0 && m && (uz ? sl >= m : sl <= m)) U.push(`Stop şimdiki fiyatın ${uz?"altında":"üstünde"} olmalı (${piyFiyat(m)}).`);
+  const k = v => x.adet * (v - x.fiyat), yz = v => ((v / x.fiyat - 1) * 100 * (uz?1:-1));
+  const sat = (a, v) => `<div><span>${a}</span><b class="${sinif(k(v))}">${k(v)>=0?"▲":"▼"} ${isaretli(k(v))} <small>${(yz(v)>=0?"+":"")}${yz(v).toFixed(1).replace(".",",")}%</small></b></div>`;
+  return `<div class="itg">${tp>0 ? sat("TP'de bu alım", tp) : ""}${sl>0 ? sat("Stop'ta bu alım", sl) : ""}${!(tp>0) && !(sl>0) ? `<div><span>TP ve stop boş</span><b class="k">kaydedersen bu alımınkiler kaldırılır</b></div>` : ""}</div>`
+    + U.map(u=>`<p class="iuyr" role="alert">⚠ ${u}</p>`).join("");
+}
+function islPdHtml(){
+  const x = islPdParca(); if (!x) { ISL.pd = null; return ""; }
+  const L = ISL.poz.parcalar, i = L.indexOf(x) + 1, uz = x.adet > 0, P = ISL.pd;
+  const hz = (k, Y) => `<div class="ichip">${Y.map(y=>`<button onclick="islPdYuzde('${k}',${y})">${(k=="tp") == uz ? "+" : "−"}${y}%</button>`).join("")}</div>`;
+  return `<div class="ipd" id="ipd"><div class="ipdh"><b>${i}. alım · TP / stop</b><button class="shx" onclick="ISL.pd=null;islCiz()" aria-label="Vazgeç">✕</button></div>
+    <div class="k2">${x.eski ? "önceki alımlar" : parcaZaman(x.t)} · ${elleAdet(x.adet)} adet @ <b>${piyFiyat(x.fiyat)}</b> · yüzdeler bu alımın girişine göre</div>
+    <label class="ibas" for="ipdtp">TP (kâr al)</label><input id="ipdtp" inputmode="decimal" value="${ea(P.tp)}" oninput="islPdAyar('tp',this.value)" placeholder="boş: TP yok">${hz("tp", [5,10,20,30])}
+    <label class="ibas" for="ipdsl">Stop</label><input id="ipdsl" inputmode="decimal" value="${ea(P.sl)}" oninput="islPdAyar('sl',this.value)" placeholder="boş: stop yok">${hz("sl", [3,5,10,20])}
+    <div id="ipdtah">${islPdTahmin()}</div>
+    <p class="ion k">Yalnız bu alımın adedi (${elleAdet(x.adet)}) için. Diğer alımların ve pozisyonun genel TP / stop'u değişmez.</p>
+    <button class="ibtn vurgu ipdb" onclick="islPdDevam()">Devam</button></div>`;
+}
+function islPdDevam(){
+  const x = islPdParca(); if (!x) return; const P = ISL.pd, i = ISL.poz.parcalar.indexOf(x) + 1, tp = +P.tp || null, sl = +P.sl || null;
+  const ad = v => v ? `${piyFiyat(v)} <span class="${sinif(x.adet * (v - x.fiyat))}">${isaretli(x.adet * (v - x.fiyat))}</span>` : "kaldırılır";
+  ISL.adim = {tur: "tpsl", baslik: `${ISL.s.replace(/USDT$/,"")} · ${i}. alımın TP / stop'u`,
+    satir: [["Alım", `${elleAdet(x.adet)} adet @ ${piyFiyat(x.fiyat)}`], ["TP", ad(tp)], ["Stop", ad(sl)], ["Kapsam", "yalnız bu alım"]],
+    not: ["Tetiklenince yalnız bu alımın adedi piyasa fiyatından kapanır."], dugme: "Kaydet", renk: "vurgu", yol: "tpsl",
+    govde: {sembol: ISL.s, parca: x.id, tp: P.tp, sl: P.sl}, pd: true};
+  ISL.msj = null; islCiz();
+}
 function islParcaOnay(id){
   const L = ISL && ISL.poz && ISL.poz.parcalar, x = L && L.find(p=>p.id == id); if (!x) return;
   const m = parcaIsaret(ISL.s), k = parcaKz(x, m), i = L.indexOf(x) + 1, uz = x.adet > 0;
@@ -1956,8 +2002,8 @@ async function islOnayla(){   // basılı tutma tamamlanınca
   const d = await islIstek(yol, {...A.govde, pin: ISL.pin});
   if (!ISL) return; ISL.mesgul = false;
   if (!d.ok){ ISL.msj = {hata: d.hata}; islCiz(); return; }
-  ISL.adim = null; ISL.oniz = null;
-  ISL.msj = {ok: yol=="emir" ? `${d.emir.durum=="FILLED" ? "Doldu" : d.emir.durum=="NEW" ? "Emir bekliyor" : "Gönderildi"}: ${d.emir.tip=="LIMIT"?"limit":"piyasa"} ${d.emir.adet.toLocaleString("tr-TR")} adet`
+  const pdIdi = A.pd; ISL.adim = null; ISL.oniz = null; if (pdIdi) ISL.pd = null;
+  ISL.msj = {ok: pdIdi ? "Bu alımın TP / stop'u kaydedildi" : yol=="emir" ? `${d.emir.durum=="FILLED" ? "Doldu" : d.emir.durum=="NEW" ? "Emir bekliyor" : "Gönderildi"}: ${d.emir.tip=="LIMIT"?"limit":"piyasa"} ${d.emir.adet.toLocaleString("tr-TR")} adet`
                  + (d.tpsl && d.tpsl.length ? `, ${d.tpsl.map(x=>(x.tur=="SL"?"stop":x.tur)+" "+piyFiyat(x.fiyat)).join(", ")}` : "") + (d.tpsl_hata ? `. ⚠️ ${d.tpsl_hata}` : "")
              : yol=="kapat" ? `Kapatıldı: ${d.kapat.adet.toLocaleString("tr-TR")} adet` : yol=="tpsl" ? "TP / stop kaydedildi" : `Silindi: ${d.iptal} emir`, durum: yol=="emir" ? d.emir.durum : ""};
   islCiz();
@@ -2024,7 +2070,7 @@ function islCiz(){
           ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) : "<span class='k'>yok</span>")}${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) : "<span class='uyr'>yok</span>")}
           ${kut("Likidasyon", pz.likidasyon>0 ? fg(pz.likidasyon) : "—")}</div>
         ${likU!=null ? `<div class="ilik"><div class="ilikb"><span style="width:${Math.max(4, Math.min(100, likU / 50 * 100)).toFixed(0)}%" class="${likU<10?"kr":likU<30?"tu":"ye"}"></span></div><span class="k">likidasyona %${likU.toFixed(0)} uzak</span></div>` : ""}</div>
-        ${islParcaHtml()}
+        ${ISL.pd ? islPdHtml() : islParcaHtml()}
         <div class="ibas">Kapat</div><div class="iseg kucuk"><button onclick="islKapatOnay(0.25)">%25</button><button onclick="islKapatOnay(0.5)">%50</button><button class="tehlike" onclick="islKapatOnay(1)">Tümü</button></div>
         <div class="ibas">TP / stop</div>
         <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>

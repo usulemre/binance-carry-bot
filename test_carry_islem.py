@@ -79,8 +79,12 @@ class SahteIc:
         self._oid += 1
         self.algolar.append(dict(kw))
         self.algo_acik.setdefault(kw["symbol"], []).append({"algoId": self._oid, "clientAlgoId": kw.get("clientAlgoId"),
-                                                            "orderType": kw["type"], "triggerPrice": kw["triggerPrice"]})
+                                                            "orderType": kw["type"], "triggerPrice": kw["triggerPrice"],
+                                                            "quantity": str(kw.get("quantity"))})
         return {"algoId": self._oid}
+
+    def futures_get_algo_order(self, algoId):
+        return getattr(self, "algo_sonuc", {}).get(algoId, {"algoStatus": "CANCELED"})
 
     def futures_get_open_algo_orders(self, symbol=None):
         if symbol is None:   # madde 856: toplu sorgu (her emirde symbol alanı, Binance gibi)
@@ -446,6 +450,41 @@ son = k62.parcalar("AKEUSDT")
 k62.kapat({"sembol": "AKEUSDT", "parca": son[0]["id"], "pin": "482913"}); k62.kapat({"sembol": "AKEUSDT", "parca": son[1]["id"], "pin": "482913"})
 kontrol("son parça satılınca pozisyon kapanır", not ic62.poz["AKEUSDT"])
 kontrol("ayrı hesap yokken parça yok", yeni()[0].parcalar("AKEUSDT") is None)
+
+print("17) madde 863: parça başına TP / stop")
+d63 = tempfile.mkdtemp()
+k63, ic63, _ = yeni(ayri=True, parca=os.path.join(d63, "parca.json"), defter=os.path.join(d63, "pi.jsonl"))
+for f_ in (1.0, 2.0, 4.0):
+    ic63.fiyat["AKEUSDT"] = f_
+    ic63.futures_create_order(symbol="AKEUSDT", side="BUY", type="MARKET", quantity=100, _fiyat=f_)
+P63 = k63.parcalar("AKEUSDT")
+k63.tpsl({"sembol": "AKEUSDT", "parca": P63[0]["id"], "tp": 6, "sl": 3, "pin": "482913"})
+A63 = ic63.algo_acik["AKEUSDT"]
+kontrol("1. alıma TP + stop: 2 emir, 100'er adet, panel_P önekli", len(A63) == 2 and all(float(o["quantity"]) == 100 and o["clientAlgoId"].startswith("panel_P" + P63[0]["id"] + "_") for o in A63), A63)
+k63.tpsl({"sembol": "AKEUSDT", "parca": P63[2]["id"], "sl": 3.5, "pin": "482913"})
+k63.tpsl({"sembol": "AKEUSDT", "tp": 8, "pin": "482913"})
+kontrol("genel TP parça emirlerine dokunmaz (3 parça + 1 genel)", len(ic63.algo_acik["AKEUSDT"]) == 4)
+pz63 = k63.pozisyon("AKEUSDT")
+kontrol("pozisyon: parçada tp/sl, genel listede yalnız genel TP", pz63["parcalar"][0]["tp"] == 6 and pz63["parcalar"][0]["sl"] == 3
+        and pz63["parcalar"][2]["sl"] == 3.5 and pz63["parcalar"][1]["tp"] is None and [x["tur"] for x in pz63["tpsl"]] == ["TP"], pz63)
+oz63 = k63.elle_ozet()["pozisyonlar"][0]
+kontrol("Pozisyonlarım: parça stop sayısı 2, genel TP 8", oz63["parca_sl"] == 2 and oz63["parca_tp"] == 1 and oz63["tp"] == 8, oz63)
+k63.tpsl({"sembol": "AKEUSDT", "parca": P63[0]["id"], "tp": 7, "pin": "482913"})
+p0 = [o for o in ic63.algo_acik["AKEUSDT"] if o["clientAlgoId"].startswith("panel_P" + P63[0]["id"] + "_")]
+kontrol("parça TP'sini değiştirmek eski ikisini siler, yalnız yeni TP kalır", len(p0) == 1 and float(p0[0]["triggerPrice"]) == 7, p0)
+k63.kapat({"sembol": "AKEUSDT", "oran": 0.25, "pin": "482913"})     # 75 adet en eskiden (1. alım)
+p0 = [o for o in ic63.algo_acik["AKEUSDT"] if o["clientAlgoId"].startswith("panel_P" + P63[0]["id"] + "_")]
+kontrol("FIFO azaltmada 1. alım 25'e indi, TP'si 25 adede düzeltildi", len(p0) == 1 and float(p0[0]["quantity"]) == 25, p0)
+# 3. alımın stop'u tetiklensin: emir doldu, algo kapandı, Binance actualOrderId verir
+sl3 = next(o for o in ic63.algo_acik["AKEUSDT"] if o["clientAlgoId"].startswith("panel_P" + P63[2]["id"] + "_"))
+e63 = ic63.futures_create_order(symbol="AKEUSDT", side="SELL", type="MARKET", quantity=100, reduceOnly="true")
+ic63.algo_acik["AKEUSDT"] = [o for o in ic63.algo_acik["AKEUSDT"] if o is not sl3]
+ic63.algo_sonuc = {sl3["algoId"]: {"algoStatus": "FINISHED", "actualOrderId": e63["orderId"]}}
+k63._parca_onbellek.clear()
+kontrol("tetiklenen parça stop'u o parçadan düşer (FIFO değil): 25 @ 1 + 100 @ 2 kalır",
+        [(x["adet"], x["fiyat"]) for x in k63.parcalar("AKEUSDT")] == [(25, 1.0), (100, 2.0)], k63.parcalar("AKEUSDT"))
+k63.kapat({"sembol": "AKEUSDT", "oran": 1, "pin": "482913"})
+kontrol("tam kapanışta parça TP/stop'ları da silinir", not ic63.algo_acik["AKEUSDT"], ic63.algo_acik["AKEUSDT"])
 
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")

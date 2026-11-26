@@ -32,6 +32,19 @@ import time
 logger = logging.getLogger("carry_islem")
 
 ONEK = "panel_"
+PARCA_ONEK = "panel_P"   # madde 863: alım parçasına bağlı TP / stop (clientAlgoId: panel_P<parça>_<T|S>_<rastgele>)
+
+
+def _parca_cid(pid: str, tur: str) -> str:
+    return f"{PARCA_ONEK}{pid}_{tur}_{secrets.token_hex(2)}"[:36]
+
+
+def _algo_parca(o: dict) -> str | None:
+    """Algo emri bir alım parçasına bağlıysa parça kimliği, değilse None."""
+    c = str(o.get("clientAlgoId") or "")
+    if not c.startswith(PARCA_ONEK):
+        return None
+    return c[len(PARCA_ONEK):].rsplit("_", 2)[0] or None
 SEMBOL_RE = re.compile(r"^[A-Z0-9]{2,20}USDT$")
 MIN_USD = 5.0
 LIMIT_BANT = 0.20
@@ -280,15 +293,20 @@ class Kapi:
             except Exception:
                 pass
 
-    def _panel_tpsl_iptal(self, sem: str) -> int:
-        n = 0
+    def _acik_algolar(self, sem: str) -> list:
         f = getattr(self.ic, "futures_get_open_algo_orders", None)
         if f is None:
-            return 0
+            return []
         r = f(symbol=sem)
-        r = r.get("orders", r) if isinstance(r, dict) else r
-        for o in r or []:
-            if str(o.get("clientAlgoId") or "").startswith(ONEK):
+        return (r.get("orders", r) if isinstance(r, dict) else r) or []
+
+    def _panel_tpsl_iptal(self, sem: str, tum: bool = False, parca: str | None = None) -> int:
+        """Panel TP/SL'lerini iptal eder. Varsayılan: yalnız pozisyon geneli. tum=True: parçalarınki de. parca=<id>: yalnız o parçanınki."""
+        n = 0
+        for o in self._acik_algolar(sem):
+            p = _algo_parca(o)
+            sec = (p == parca) if parca is not None else (tum or p is None)
+            if str(o.get("clientAlgoId") or "").startswith(ONEK) and sec:
                 try:
                     self.ic.futures_cancel_algo_order(symbol=sem, algoId=o["algoId"]); n += 1
                 except Exception as e:
@@ -363,6 +381,9 @@ class Kapi:
                            "kapatabilirsin.", 403)
             tp, sl = self._tpsl_denetle(y, self._isaret(sem), d.get("tp"), d.get("sl"))
             self._elle_isaret(sem)
+            pid = str(d.get("parca") or "").strip() or None
+            if pid:   # madde 863: yalnız bu alım parçasının adedi kadar TP / stop
+                return self._parca_tpsl_kur(sem, pid, poz, tp, sl, b)
             out = self._tpsl_kur(sem, poz["adet"], tp, sl, b)
             self._kaydet({"olay": "tpsl", "sembol": sem, "tp": tp, "sl": sl, "adet": poz["adet"]})
             self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} TP/SL güncellendi" + (f" · TP {tp:g}" if tp else "")
@@ -415,9 +436,13 @@ class Kapi:
             self._parca_onbellek.pop(sem, None)
             iptal = 0
             if oran >= 1:
-                iptal = self._panel_tpsl_iptal(sem) + self._panel_acik_iptal(sem)
+                iptal = self._panel_tpsl_iptal(sem, tum=True) + self._panel_acik_iptal(sem)
             else:      # kalan adede göre TP/SL adedi düzelir: mevcut panel TP/SL'leri aynı fiyatlarla yeniden kurulur
                 self._tpsl_yeniden(sem, b)
+                try:   # madde 863: satılan parçanın TP/stop'u silinir, adedi değişen parçalarınki düzeltilir
+                    self._parca_tpsl_esitle(sem, b)
+                except Exception as ex:
+                    logger.warning("parça TP/stop eşitlenemedi %s: %s", sem, ex)
             self._kaydet({"olay": "kapat", "sembol": sem, "oran": oran, "adet": q, "orderId": e.get("orderId"), **({"parca": pid} if pid else {})})
             ne = f"alım parçası ({q:g} adet)" if pid else ("TAMAMI" if oran >= 1 else f"%{oran * 100:.0f}")
             self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} {ne} kapatıldı (adet {q:g})")
@@ -431,7 +456,7 @@ class Kapi:
         r = r.get("orders", r) if isinstance(r, dict) else r
         tp = sl = None
         for o in r or []:
-            if str(o.get("clientAlgoId") or "").startswith(ONEK):
+            if str(o.get("clientAlgoId") or "").startswith(ONEK) and _algo_parca(o) is None:
                 t = str(o.get("orderType") or o.get("type") or "")
                 v = float(o.get("triggerPrice") or 0) or None
                 if t.startswith("TAKE_PROFIT"):
@@ -540,6 +565,116 @@ class Kapi:
             net = once
         return None
 
+    # ------------------------------------------------------------ MADDE 863: PARÇA BAŞINA TP / STOP
+    # Her parçanın TP / stop'u o parçanın adedi kadar ayrı bir koşullu emirdir (reduceOnly, işaret fiyatı). Tetiklenince oluşan emir
+    # o parçadan düşsün diye algoId -> parça kaydı tutulur; emir kapanınca Binance'ten gerçek emir numarası (actualOrderId) alınıp
+    # kapanış haritasına yazılır (parcalar() her hesapta önce bunu çözer).
+    def _parca_tpsl_kur(self, sem: str, pid: str, poz: dict, tp, sl, b: dict) -> dict:
+        self._parca_onbellek.pop(sem, None)
+        L = next((x for x in (self.parcalar(sem, poz) or []) if x["id"] == pid), None)
+        if L is None:
+            raise Hata("bu alım parçası artık açık değil (yenile)", 409)
+        self._panel_tpsl_iptal(sem, parca=pid)
+        out = self._parca_emir_kur(sem, pid, L["adet"], tp, sl, b)
+        self._kaydet({"olay": "tpsl", "sembol": sem, "parca": pid, "tp": tp, "sl": sl, "adet": L["adet"]})
+        self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} alım ({abs(L['adet']):g} adet @ {L['fiyat']:g}) TP/stop" + (f" · TP {tp:g}" if tp else "")
+                    + (f" · SL {sl:g}" if sl else "") + ("" if tp or sl else " kaldırıldı"))
+        return {"tpsl": out, "parca": pid}
+
+    def _parca_emir_kur(self, sem: str, pid: str, adet: float, tp, sl, b: dict) -> list:
+        from exchange_client import adet_yuvarla
+        q = adet_yuvarla(abs(adet), b, piyasa=True, asagi=True)
+        if q <= 0:
+            raise Hata("parça adedi en küçük adımın altında")
+        out, d = [], self._parca_harita()
+        for ad, tur, v in (("TP", "TAKE_PROFIT_MARKET", tp), ("SL", "STOP_MARKET", sl)):
+            if v is None:
+                continue
+            e = self.ic.futures_create_algo_order(algoType="CONDITIONAL", symbol=sem, side="SELL" if adet > 0 else "BUY", type=tur,
+                                                  triggerPrice=self._fiyat_yuvarla(v, b), quantity=q, reduceOnly="true",
+                                                  workingType="MARK_PRICE", clientAlgoId=_parca_cid(pid, ad[0]))
+            aid = (e or {}).get("algoId")
+            if aid is not None:
+                d.setdefault("algo", {})[str(aid)] = {"p": pid, "s": sem}
+            out.append({"tur": ad, "fiyat": v, "algoId": aid})
+        self._parca_harita_yaz(d)
+        return out
+
+    def _parca_harita_yaz(self, d: dict) -> None:
+        yol = self.ayar.get("parca") or os.path.join("defter", "alsat_parca.json")
+        try:
+            os.makedirs(os.path.dirname(yol) or ".", exist_ok=True)
+            with open(yol + ".tmp", "w", encoding="utf-8") as f:
+                json.dump(d, f)
+            os.replace(yol + ".tmp", yol)
+        except OSError as e:
+            logger.warning("parça haritası yazılamadı: %s", e)
+
+    def _parca_algo_coz(self, sem: str, acik: list | None = None) -> None:
+        """Artık açık olmayan parça TP/stop'ları: tetiklendiyse gerçek emir numarasını kapanış haritasına yaz, kaydı sil."""
+        d = self._parca_harita(); A = d.get("algo") or {}
+        bekleyen = {k: v for k, v in A.items() if v.get("s") == sem}
+        if not bekleyen:
+            return
+        acik_id = {str(o.get("algoId")) for o in (acik if acik is not None else self._acik_algolar(sem))}
+        degisti = False
+        for aid, v in bekleyen.items():
+            if aid in acik_id:
+                continue
+            oid = None
+            try:
+                g = getattr(self.ic, "futures_get_algo_order", None)
+                x = g(algoId=int(aid)) if g else {}
+                oid = (x or {}).get("actualOrderId") or None
+                durum = str((x or {}).get("algoStatus") or "")
+                if not oid and durum in ("NEW", "TRIGGERING"):
+                    continue
+            except Exception as e:
+                logger.info("parça algo sorgulanamadı %s: %s", aid, str(e)[:120])
+                continue
+            if oid and str(oid) not in ("0", "-1"):
+                d.setdefault("kapat", {})[str(oid)] = v["p"]
+            A.pop(aid, None); degisti = True
+        if degisti:
+            d["algo"] = A
+            self._parca_harita_yaz(d)
+            self._parca_onbellek.pop(sem, None)
+
+    def _parca_tpsl(self, sem: str, acik: list | None = None) -> dict:
+        """{parça: {"tp": fiyat, "sl": fiyat, "q": adet}} — açık parça TP/stop emirleri."""
+        P = {}
+        for o in (acik if acik is not None else self._acik_algolar(sem)):
+            p = _algo_parca(o)
+            if p is None:
+                continue
+            t = str(o.get("orderType") or o.get("type") or "")
+            k = P.setdefault(p, {})
+            k["tp" if t.startswith("TAKE_PROFIT") else "sl"] = float(o.get("triggerPrice") or 0) or None
+            k["q"] = float(o.get("quantity") or o.get("origQty") or 0) or k.get("q")
+        return P
+
+    def _parca_tpsl_esitle(self, sem: str, b: dict | None = None) -> int:
+        """Satılmış parçanın TP/stop'unu siler; adedi küçülen parçanınkini yeni adetle yeniden kurar. Yapılan değişiklik sayısı."""
+        from exchange_client import adet_yuvarla
+        acik = self._acik_algolar(sem)
+        T = self._parca_tpsl(sem, acik)
+        if not T:
+            return 0
+        self._parca_onbellek.pop(sem, None)
+        L = {x["id"]: x for x in (self.parcalar(sem) or [])}
+        b = b or self._sembol_bilgi(sem)
+        n = 0
+        for pid, k in T.items():
+            x = L.get(pid)
+            if x is None:
+                n += self._panel_tpsl_iptal(sem, parca=pid)
+                continue
+            q = adet_yuvarla(abs(x["adet"]), b, piyasa=True, asagi=True)
+            if k.get("q") and abs(k["q"] - q) > 1e-9:
+                self._panel_tpsl_iptal(sem, parca=pid)
+                self._parca_emir_kur(sem, pid, x["adet"], k.get("tp"), k.get("sl"), b); n += 1
+        return n
+
     def parcalar(self, sem: str, poz: dict | None = None) -> list | None:
         """Açık pozisyonun parçaları (eskiden yeniye): {id, t, adet (işaretli), fiyat, kom}. Ayrı hesap yoksa None."""
         if not self.ayar.get("ayri"):
@@ -551,6 +686,10 @@ class Kapi:
         k = self._parca_onbellek.get(sem)
         if k and k[0] == A and self.saat() - k[1] < 60:
             return k[2]
+        try:
+            self._parca_algo_coz(sem)
+        except Exception as e:
+            logger.info("parça TP/stop çözülemedi %s: %s", sem, str(e)[:120])
         E, ac = self._emirler(sem, A)
         harita = self._parca_harita().get("kapat", {})
         lots = []
@@ -600,6 +739,8 @@ class Kapi:
             r = f(symbol=sem) if f else []
             r = r.get("orders", r) if isinstance(r, dict) else r
             for o in r or []:
+                if _algo_parca(o) is not None:
+                    continue      # madde 863: parçanın kendi TP/stop'u parça satırında
                 t = str(o.get("orderType") or o.get("type") or "")
                 tpsl.append({"tur": "TP" if t.startswith("TAKE_PROFIT") else "SL" if t.startswith("STOP") else t,
                              "fiyat": float(o.get("triggerPrice") or 0), "panel": str(o.get("clientAlgoId") or "").startswith(ONEK)})
@@ -619,6 +760,15 @@ class Kapi:
         parca = None
         try:
             parca = self.parcalar(sem, poz) if poz.get("adet") else []
+            if parca and self.ayar.get("ayri"):
+                if self._kilit.acquire(blocking=False):   # adedi değişmiş parça TP/stop'larını düzelt (işlem sürüyorsa atla)
+                    try:
+                        if self._parca_tpsl_esitle(sem):
+                            parca = self.parcalar(sem, poz)
+                    finally:
+                        self._kilit.release()
+                T = self._parca_tpsl(sem)
+                parca = [{**x, "tp": T.get(x["id"], {}).get("tp"), "sl": T.get(x["id"], {}).get("sl")} for x in parca]
         except Exception as e:
             logger.warning("parçalar okunamadı %s: %s", sem, e)
         return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"], "parcalar": parca,
@@ -747,6 +897,7 @@ class Kapi:
             a = float(p.get("positionAmt") or 0)
             if (ayri or sem in elle) and a:
                 tp = sl = None
+                p_tp, p_sl = set(), set()
                 try:
                     if tum_algo is not None:
                         r = tum_algo.get(sem, [])
@@ -756,6 +907,9 @@ class Kapi:
                         r = r.get("orders", r) if isinstance(r, dict) else r
                     for o in r or []:
                         t = str(o.get("orderType") or o.get("type") or "")
+                        if _algo_parca(o) is not None:   # madde 863: parça TP/stop'u
+                            (p_tp if t.startswith("TAKE_PROFIT") else p_sl).add(_algo_parca(o))
+                            continue
                         if t.startswith("TAKE_PROFIT"):
                             tp = float(o.get("triggerPrice") or 0) or None
                         elif t.startswith("STOP"):
@@ -769,6 +923,7 @@ class Kapi:
                     except Exception as e:
                         logger.info("parçalar okunamadı %s: %s", sem, str(e)[:120])
                 pozlar.append({"sembol": sem, "adet": a, "giris": float(p.get("entryPrice") or 0), "parcalar": parca,
+                               "parca_tp": len(p_tp), "parca_sl": len(p_sl),
                                "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0),
                                "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl,
                                "pay": None if ayri else self._payim(sem, a, float(p.get("entryPrice") or 0))})   # madde 843
