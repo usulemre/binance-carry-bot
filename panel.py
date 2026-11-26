@@ -1120,7 +1120,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
 /* madde 872: bot özet / ayrıntı */
-.nrd{display:flex;flex-direction:column;gap:2px}.nrr{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1.1fr) auto;gap:10px;align-items:center;min-height:30px}
+.nrd{display:flex;flex-direction:column;gap:2px}.nrr{display:grid;grid-template-columns:72px minmax(0,1fr) auto;gap:10px;align-items:center;min-height:30px}
 .nrl{font-size:13px;color:var(--soluk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.nrr b{font-size:13.5px;font-variant-numeric:tabular-nums;text-align:right;min-width:86px}
 .nrb{position:relative;height:10px;border-radius:5px;background:var(--kart2)}.nrb::after{content:"";position:absolute;left:50%;top:-3px;bottom:-3px;width:1px;background:var(--soluk);opacity:.5}
 .nrb i{position:absolute;top:0;bottom:0;border-radius:5px}.nrb i.p{left:50%;background:var(--art)}.nrb i.n{right:50%;background:var(--eks)}
@@ -2622,7 +2622,7 @@ function nerdenHtml(k, poz, kar){   // madde 872: her kalem kendi satırında, s
   const D = k.dokum; if (!D || poz==null || kar==null) return "";
   const gz = FG && k.gercek && D.funding_gercek!=null, F = gz ? D.funding_gercek : D.funding, dg = D.diger_gelir||0;
   const fark = kar - poz - D.gerceklesen - F - D.komisyon - dg;
-  const K = [["Kapanan işlemler", D.gerceklesen], ["Funding", F], ["Açık pozisyonlar", poz], ["Komisyon", D.komisyon]];
+  const K = [["Kapanan", D.gerceklesen], ["Funding", F], ["Açık", poz], ["Komisyon", D.komisyon]];
   const mx = Math.max(...K.map(x=>Math.abs(x[1])), 1e-9);
   return `<div class="nrd">${K.map(([a,v])=>{ const w = Math.max(Math.abs(v) / mx * 50, Math.abs(v) >= 0.005 ? 1.5 : 0);
       return `<div class="nrr"><span class="nrl">${a}</span><span class="nrb"><i class="${v>=0?"p":"n"}" style="width:${w.toFixed(1)}%"></i></span><b class="${sinif(v)}">${isaretli(v)}</b></div>`; }).join("")}
