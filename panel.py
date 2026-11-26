@@ -1695,12 +1695,18 @@ function asGecmisSayfa(A){   // madde 868: bot Geçmiş'i gibi sade — özet + 
       <div class="k" style="margin-top:6px">Gün gece 03:00'te başlar · yeşil kazanç, kırmızı kayıp · ● bugün</div></div>
     <div class="kart"><h2>Son 1 yıl</h2>${yillik(asK(A || AS_GEC))}</div>`}`;
 }
+// madde 891: kalem çubukları (bot Özet "nereden geldi" ile aynı görünüm): sıfır ortada, kazanç sağa yeşil, kayıp sola kırmızı
+function kalemCubuk(K){
+  const mx = Math.max(...K.map(x=>Math.abs(x[1])), 1e-9);
+  return `<div class="nrd" style="margin-top:12px">${K.map(([a,v])=>{ const w = Math.max(Math.abs(v)/mx*50, Math.abs(v)>=0.005?1.5:0);
+    return `<div class="nrr"><span class="nrl">${a}</span><span class="nrb"><i class="${v>=0?"p":"n"}" style="width:${w.toFixed(1)}%"></i></span><b class="${sinif(v)}">${isaretli(v)}</b></div>`; }).join("")}</div>`;
+}
 function asGecmisParca(A){
   const O = A.ozet || {}, K = asK(A);
   const yzd = v => v==null ? "" : ` (${(v>=0?"+":"−")}%${Math.abs(v*100).toFixed(2).replace(".",",")})`;
   const oz = `<div class="kart"><div class="k">Başlangıçtan beri</div><div class="asb ${sinif(A.toplam)}">${A.toplam>=0?"▲":"▼"} ${isaretli(A.toplam)}<span class="k">${yzd(A.oran)}</span></div>
     <div class="k" style="margin-top:4px">${para(A.baslangic)} → <b style="color:var(--yazi)">${para(A.ozkaynak)}</b></div>
-    <div class="asdk">${[["Kapanan", O.gerceklesen||0], ["Açık", A.acik||0], ["Funding", O.funding||0], ["Komisyon", O.komisyon||0]].map(([a,v])=>`<div><span>${a}</span><b class="${sinif(v)}">${isaretli(v)}</b></div>`).join("")}</div>
+    ${kalemCubuk([["Kapanan", O.gerceklesen||0], ["Açık", A.acik||0], ["Funding", O.funding||0], ["Komisyon", O.komisyon||0]])}
     <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}</div>`;
   return {ust: gecmisSade(K), oz, tak: takvim(K), coin: asCoinListe(A.coin_ozet || [])};
 }
