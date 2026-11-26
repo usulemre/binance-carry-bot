@@ -235,7 +235,7 @@ open(os.path.join(kl, "carry_bot.log"), "a").write(
     "2026-11-06 20:50:18,347 [INFO] carry_bot başladı | mod=demo | 4+4 bacak | 15 dilim | gross 1.15x | akış 20%\n")
 _ay = panel.veri([kl], servis=False)["kurulumlar"][0]["ayar"]
 kontrol("ayarda koşullu stopun coin eşiği (.env)", _ay["coin_esik"] == 0.40 and _ay["stop"] == 0.03, _ay)
-kontrol("ayar kartı stopu açık yazar ('koşullu stop %3' değil)", "stop: coin −%" in _sy3 and "koşullu stop %${" not in _sy3)
+kontrol("ayar kartı stopu açık yazar ('koşullu stop %3' değil)", ("stop: coin −%" in _sy3 or "stop: coin −\\u2060%" in _sy3) and "koşullu stop %${" not in _sy3)
 
 # MADDE 743: haftalık log rotasyonu (copytruncate) sonrası ayar ve olaylar kaybolmaz
 import gzip

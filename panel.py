@@ -3235,7 +3235,7 @@ function donemKisa(s, f){
   if (!D || !D.s){ donemYukle(s); return "24 sa · 1 hafta · 1 ay"; }
   return [["24 sa", 24, "s"], ["1 hafta", 168, "s"], ["1 ay", 30, "g"]].map(([ad, n, tur]) => { const B = D[tur].slice(-n), acl = B.length ? B[0][0] : 0;
     const deg = acl > 0 && f > 0 ? (f / acl - 1) * 100 : null;
-    return `${ad} <b class="${sinif(deg)}">${deg == null ? "—" : (deg >= 0 ? "+" : "−") + "%" + Math.abs(deg).toFixed(1).replace(".", ",")}</b>`; }).join(" · ");
+    return `${ad} <b class="${sinif(deg)}">${deg == null ? "—" : (deg >= 0 ? "+" : "−") + "\u2060%" + Math.abs(deg).toFixed(1).replace(".", ",")}</b>`; }).join(" · ");
 }
 function donemHtml(s, f){
   f = f || (PIY[s]||{}).f; const D = DONEM[s];
@@ -3249,7 +3249,7 @@ function donemHtml(s, f){
     const C = B.map(x => x[3]); C[C.length-1] = son; const cl = Math.min(...C), ch = Math.max(...C);
     const yol = C.map((v, i) => `${i ? "L" : "M"}${(1 + i / Math.max(1, C.length - 1) * 58).toFixed(1)} ${(21 - (ch > cl ? (v - cl) / (ch - cl) : .5) * 18).toFixed(1)}`).join("");
     return `<div class="dnr"><span class="dna">${ad}${kisa}</span>
-      <b class="${sinif(deg)}">${deg == null ? "—" : (deg >= 0 ? "+" : "−") + "%" + Math.abs(deg).toFixed(1).replace(".", ",")}</b>
+      <b class="${sinif(deg)}">${deg == null ? "—" : (deg >= 0 ? "+" : "−") + "\u2060%" + Math.abs(deg).toFixed(1).replace(".", ",")}</b>
       <span class="dnz"><span class="dnb"><i style="left:${yer.toFixed(0)}%"></i></span><span class="dnu"><span>${piyFiyat(lo)}</span><span>${piyFiyat(hi)}</span></span></span>
       <svg viewBox="0 0 60 24" class="dns" aria-hidden="true"><path d="${yol}" fill="none" stroke="${css(deg >= 0 ? "--art" : "--eks")}" stroke-width="1.6" stroke-linecap="round" stroke-linejoin="round"/></svg></div>`; };
   return `<div class="dnm" id="dnm-${s}"><div class="dnh"><span>Dönem</span><span>değişim</span><span>en düşük · <b>şimdi</b> · en yüksek</span><span></span></div>${DONEM_L.map(satir).join("")}</div>`;
@@ -3565,7 +3565,7 @@ function olaySayfa(k){
   const dun = new Date(bugun); dun.setDate(dun.getDate()-1);
   const ad = g => g==t(bugun) ? "BUGÜN" : g==t(dun) ? "DÜN" : `${+g.slice(8,10)} ${AYAD[+g.slice(5,7)-1].toLocaleUpperCase("tr-TR")} ${g.slice(0,4)}`;
   const esc = x => (x||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")
-    .replace(/(\d) (\$|%|adet|USDT)/g, "$1\u00a0$2").replace(/(^|[\s(\/])([-−+])(?=[\d%])/g, "$1$2\u2060");   // madde 907: sayılar satır sonunda bölünmesin
+    .replace(/(\d) (\$|%|adet|USDT)/g, "$1\u00a0$2").replace(/(^|[\s(\/=:])([-−+])(?=[\d%])/g, "$1$2\u2060");   // madde 907: sayılar satır sonunda bölünmesin
   const T = olayIslem(k), say = {tum: T.length}; for (const o of T){ const g = OLAY_GRUP[o.tur]; if (g) say[g] = (say[g]||0) + 1; }
   // madde 882: "Tümü"de bir günün funding ödemeleri TEK satır (gün toplamı; dokununca saat saat). Funding filtresinde tek tek.
   const demo = k.mod=="demo", fTut = o => o.fon ? (demo && o.fon.gercek!=null ? o.fon.gercek : o.fon.demo) : null;
