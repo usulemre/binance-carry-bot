@@ -1159,6 +1159,9 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .icd{margin-top:8px}.icd>div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--cizgi);font-size:13px}.icd>div>span{color:var(--soluk);flex:0 1 45%}.icd>div b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}.icd p{margin:8px 0 0;line-height:1.45}
 .cxo{margin-top:12px;background:var(--kart);border-radius:12px;padding:2px 12px}.cxo>div{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"a b" "a c";align-items:center;column-gap:10px;padding:8px 0;border-top:1px solid var(--cizgi)}.cxo>div:first-child{border-top:0}
 .cxo span{grid-area:a;font-size:13px;color:var(--soluk)}.cxo b{grid-area:b;text-align:right;font-size:14px}.cxo i{grid-area:c;text-align:right;font-style:normal;font-size:11.5px;color:var(--soluk)}.shdk{margin-top:10px}.shdk .idonb{flex-wrap:wrap;row-gap:2px;padding:8px 2px}.shdk .idonb>span:first-child{white-space:nowrap}.shdk .idonb .k{white-space:normal;overflow:visible;text-align:left;flex:1 1 220px}.shdk .idonb .k b{font-weight:650}
+.opz{display:block;color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}.opzh{display:flex;justify-content:space-between;align-items:center;gap:8px}.opzh b{font-size:15px}.opzh .k b{font-size:13.5px}
+.opzb{display:flex;height:12px;border-radius:7px;overflow:hidden;gap:2px;margin-top:12px;background:var(--kart2)}.opzb i,.opzl i{background:var(--vurgu)}.opz i.s{background:#f59e0b}
+.opzl{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:12.5px;color:var(--soluk)}.opzl b{color:var(--yazi);font-variant-numeric:tabular-nums}.opzl>span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.opzl i{width:8px;height:8px;border-radius:2px;display:inline-block}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
@@ -1213,7 +1216,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyl .pyr>span:nth-child(2)>a{padding:8px 0;margin:-8px 0}.ipr .iprtp{min-height:32px}
 #piyelle.as-sayfa{border:0;padding:0;margin:0}
 .asbak.kart{margin:0 0 12px}
-.apk{padding:14px}.apkh{display:flex;justify-content:space-between;align-items:center;font-size:16px}.apkh>div{display:flex;align-items:center;gap:8px}.apkh .say{font-size:12px;font-weight:700;color:var(--soluk);background:var(--kart2);border-radius:999px;padding:1px 8px}.apkh .art{color:var(--art)}.apkh .eks{color:var(--eks)}
+.apk{padding:14px}.apkh{display:flex;justify-content:space-between;align-items:center;font-size:16px}.apkh>div{display:flex;align-items:center;gap:8px}.apkh .say,.opzh .say{margin-left:6px;font-size:12px;font-weight:700;color:var(--soluk);background:var(--kart2);border-radius:999px;padding:1px 8px}.apkh .art{color:var(--art)}.apkh .eks{color:var(--eks)}
 .apko{display:flex;flex-wrap:wrap;gap:4px 12px;font-size:12.5px;color:var(--soluk);margin:6px 0 10px}.apko .art{color:var(--art);font-weight:600}.apko .eks{color:var(--eks);font-weight:600}.apko b.art,.apko b.eks{font-weight:700}
 .apuy{display:flex;gap:8px;align-items:flex-start;padding:10px 12px;border-radius:12px;margin-bottom:10px;font-size:12.5px;line-height:1.45;color:var(--uyari);background:color-mix(in srgb,var(--uyari) 11%,transparent)}.apuy span{color:var(--yazi)}
 .apl{display:flex;flex-direction:column;gap:6px}
@@ -2696,7 +2699,7 @@ function fundMetin(k){
 }
 function ozetSayfa(k, svc, sv){   // madde 758: sade — kahraman alan kartsız, bölümler ayrı kartlarda, tekrar yok
   const kitap = k.kitap_canli!=null ? k.kitap_canli : k.kitap; AKIS.kitapd = AKIS.kitapd || {v: kitap};
-  const A = k.ayar, ayar = A ? `${A.profil||k.profil||"—"} · ${A.gross.toFixed(2).replace(".",",")}x` : (k.profil||"");
+  const A = k.ayar, ayar = A ? `profil ${A.profil||k.profil||"—"} · ${A.gross.toFixed(2).replace(".",",")}x brüt` : (k.profil||"");
   const ch = (m, ad) => `<button data-m="${m}" class="${egriMod==m?"on":""}" onclick="egriSec('${m}')">${ad}</button>`;
   return `<div class="dhero">
     <div class="dcumle" id="dcumle">${durumCumle(k)}</div>
@@ -2706,8 +2709,21 @@ function ozetSayfa(k, svc, sv){   // madde 758: sade — kahraman alan kartsız,
   </div>
   <div id="dikkat">${dikkatHtml(k)}</div>
   ${k.dokum&&k.gerceklesmemis!=null?`<div class="kart dnerden"><div class="dnh"><span class="dnk">Başlangıçtan beri nereden geldi</span>${fgKucuk(k)}</div><div id="nerden">${nerdenHtml(k, k.gerceklesmemis, k.kar_usd)}</div></div>`:""}
+  ${ozetPoz(k)}
   <div class="dikili"><div class="kart"><div class="k">Sıradaki dilim</div><div class="dkv" id="dilimd">${dilimMetin(k.dilim)}</div><div class="k">${ayar}</div></div>
     <div class="kart"><div class="k">Sıradaki funding</div><div class="dkv" id="fundd">${fundMetin(k)}</div><div class="k">canlı oranla</div></div></div>`;
+}
+// madde 881: Özet'te pozisyon dengesi — long / short büyüklüğü tek çubukta, sayılar, net ve açık K/Z; dokununca Pozisyonlar
+function ozetPoz(k){
+  const P = Object.entries(k.pozisyonlar||{}); if (!P.length) return "";
+  let L = 0, S = 0, nl = 0, ns = 0, g = 0;
+  for (const [s, p] of P){ const d = pozDeger(s, p); if (p.miktar > 0){ L += d.usd||0; nl++; } else { S += d.usd||0; ns++; } g += d.g||0; }
+  const T = L + S || 1, kit = k.kitap_canli!=null ? k.kitap_canli : k.kitap;
+  return `<a class="kart opz" href="#poz" onclick="sayfaSec('poz');return false">
+    <div class="opzh"><span><b>Pozisyonlar</b><span class="say">${P.length}</span></span><span class="k">açık <b class="${sinif(g)}">${isaretli(g)}</b> ›</span></div>
+    <div class="opzb"><i class="l" style="flex:${L.toFixed(2)}"></i><i class="s" style="flex:${S.toFixed(2)}"></i></div>
+    <div class="opzl"><span><i class="l"></i>Long ${nl} · <b>${para(L)}</b></span><span>Short ${ns} · <b>${para(S)}</b><i class="s"></i></span></div>
+    <div class="k" style="margin-top:6px">net ${L>=S?"long":"short"} ${para(Math.abs(L - S))} (%${Math.round(Math.abs(L - S) / T * 100)})${kit > 0 ? ` · toplam ${((L + S) / kit).toFixed(2).replace(".",",")}x kitap` : ""}</div></a>`;
 }
 // MADDE 757: D TASARIMI — POZİSYONLAR. Filtre (Tümü / Long / Short) + sıralama, long ve short ayrı bölüm, satırda büyüklük,
 // mini grafik ve ▲▼ kâr / zarar; dokununca alttan açılan sayfada ayrıntı (grafik, giriş, funding, hedef, stop).
