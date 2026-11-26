@@ -1136,6 +1136,9 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .tema{width:36px!important;height:36px!important;flex:none}.hmb{flex:none}
 .gdon button,.mod button{min-height:34px}.aygez button{min-width:40px;min-height:36px}.dgr .mod button,.dozet .mod button{padding:6px 12px!important}
 .abh2{font-size:10.5px!important}
+.nw{white-space:nowrap}h1{white-space:nowrap}
+@media (max-width:400px){.apr .k2{white-space:normal!important;text-overflow:clip!important}header.kucuk h1 img{display:none}header.kucuk #ustkitap{font-size:13px;padding:3px 8px}
+  .abc span{font-size:11px;padding:2px 8px}.abc{gap:4px}.dpb .gb{font-size:19px}}
 .pyl .pyr>span:nth-child(2)>a{padding:8px 0;margin:-8px 0}.ipr .iprtp{min-height:32px}
 #piyelle.as-sayfa{border:0;padding:0;margin:0}
 .asbak.kart{margin:0 0 12px}
@@ -1550,7 +1553,7 @@ function asK(A){
   for (const g of G){ seri.push({tarih: g.t, kitap: g.oz, gun: onc > 0 ? g.kz / onc : null, canli: g.t === bugun}); onc = g.oz; }
   for (let i = 1; i < seri.length; i++){ const a = seri[i].tarih.slice(0,7), bas = seri.slice(0, i).reverse().find(x=>x.tarih.slice(0,7) < a);
     const b0 = bas ? bas.kitap : seri[0].kitap; if (b0 > 0) aylik[a] = seri[i].kitap / b0 - 1; }
-  return {seri, kitap_canli: null, aylik, coin_ozet: A.coin_ozet || [], mod: (ISL_DURUM||{}).mod, _baslik: "Al-Sat geçmişi",
+  return {seri, kitap_canli: null, aylik, coin_ozet: A.coin_ozet || [], mod: (ISL_DURUM||{}).mod, _baslik: "Geçmiş",
           _canliNot: "canlı · gece 03:00'te kesinleşir", _bosMetin: "Al-sat hesabında henüz gün yok."};
 }
 function asGecmisSayfa(A){
@@ -1718,7 +1721,7 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
     return `<a class="apr" href="#piyasa" onclick="islAc('${x.sembol}');return false"><i class="ass ${sinif(x.kz)}" id="ass-${x.sembol}"></i>
       <span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
       <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
-        <span class="k2">${para(deger)} · ${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}</span>
+        <span class="k2"><span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span></span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}</span>
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
   return `${asBakiye(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
     ${P.length ? `<div class="apko"><span class="art">${kar} kârda</span><span class="eks">${P.length - kar} zararda</span><span>${sonuc}</span></div>` : `<div class="apko"><span>${sonuc}</span></div>`}
