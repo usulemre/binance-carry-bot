@@ -1346,6 +1346,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 /* iOS Safari 16 px altı kutuya dokununca sayfayı büyütür ve geri küçültmez: tüm form öğeleri en az 16 px */
 input,select,textarea{font-size:max(16px,1em)}.tsor input,.ruv input,.pkara input,.isl .inot textarea,.isl .ionay textarea,.assr select,.pkhac select{font-size:16px}.assr select{min-width:0;max-width:100%;text-overflow:ellipsis}.assr label{flex:none}
 .ofil{flex-wrap:wrap!important;overflow:visible;margin-left:0!important;margin-right:0!important;padding:0;-webkit-mask-image:none;mask-image:none}.gdon{overflow:visible}.gdon button{flex:1 1 auto}@media (max-width:340px){.gdon button{padding:0 8px}}
+/* çok dar ekran: pozisyon satırında K/Z alt satıra iner, orta sütun ezilmez */
+@media (max-width:340px){.apr{grid-template-columns:30px minmax(0,1fr)!important;row-gap:4px!important}.apik,.apik .pkav{width:30px;height:30px}.aprk{grid-column:2;display:flex;align-items:baseline;gap:8px;text-align:left}.aprk b{display:inline}.apr .pyn{white-space:nowrap}}
 /* Piyasa: sekmeler yana kaymasın, alt satıra geçsin; dönem + hacim satırı dar ekranda kırılsın */
 .pksek{flex-wrap:wrap;overflow:visible;margin:12px 0 0;padding:0;-webkit-mask-image:none;mask-image:none}.pksek button{flex:1 1 auto;padding:0 12px}.pkay{flex-wrap:wrap;row-gap:8px}.pkdon{flex:1 1 auto;min-width:0;max-width:100%}.pkdon button{flex:1 1 0;min-width:0;padding:0 4px}.pkhac{margin-left:auto}
 @media (max-width:340px){.pk2{padding:12px 10px}.pkr{grid-template-columns:minmax(0,1fr) auto 28px;gap:6px;padding-left:10px}.pkr>.pkav{display:none}.pkd{min-width:0;font-size:12.5px;padding:6px 5px}.pky{width:28px}.pks{font-size:11.5px}}
