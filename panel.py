@@ -1122,7 +1122,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 /* madde 870: coin logoları */
 .pkav{position:relative;overflow:hidden;flex:none}.pkav img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;opacity:0;transition:opacity .2s}
 .pkav.ik{color:transparent!important;background:#fff!important}.pkav.ik img{opacity:1}
-.pkav.kucuk{width:22px;height:22px;font-size:9px}.iad{display:flex;align-items:center;gap:8px}.pkav.ihik{width:30px;height:30px;font-size:11px}
+.pkav.kucuk{width:22px;height:22px;font-size:9px}.pkav.dik{width:32px;height:32px;font-size:11px}.ctad{display:inline-flex;align-items:center;gap:6px;vertical-align:middle}.iad{display:flex;align-items:center;gap:8px}.pkav.ihik{width:30px;height:30px;font-size:11px}
 .apr{grid-template-columns:36px minmax(0,1fr) auto!important}.apik{position:relative;width:36px;height:36px}.apik .pkav{width:36px;height:36px;font-size:12px}
 .apik .iyon2{position:absolute;right:-4px;bottom:-3px;width:17px!important;height:17px!important;border-radius:6px!important;font-size:9.5px!important;border:2px solid var(--kart2)}
 /* madde 869: işlem penceresi */
@@ -2709,7 +2709,7 @@ function elleKutu(s, p, f){   // madde 846: tek cümle + tek düğme
 function satirD(s, p, k){
   const {f, ky, g, usd} = pozDeger(s, p), renk = css((g||0) >= 0 ? "--art" : "--eks"), sv = stopYakin(k, s, p), ec = (k.stop_durum||{}).esik_coin;
   const pc = v => (v>=0?"+":"−") + Math.abs(v).toFixed(1).replace(".",",") + "%";
-  return `<div class="dc"><div class="da"><b>${s.replace(/USDT$/,"")}</b>${elleMi(k, s)?`<span class="dst" title="elle yönetiyorsun — bot dokunmuyor">✋ elle</span>`:""}${sv!=null && !elleMi(k, s)?`<span class="dst ${sv<=-ec?"e":""}">stop ${(sv*100).toFixed(1).replace(".",",")} / −${Math.round(ec*100)}</span>`:""}</div><div class="du">${para(usd)}</div></div>
+  return `${coinIkon(s.replace(/USDT$/,""), "dik")}<div class="dc"><div class="da"><b>${s.replace(/USDT$/,"")}</b>${elleMi(k, s)?`<span class="dst" title="elle yönetiyorsun — bot dokunmuyor">✋ elle</span>`:""}${sv!=null && !elleMi(k, s)?`<span class="dst ${sv<=-ec?"e":""}">stop ${(sv*100).toFixed(1).replace(".",",")} / −${Math.round(ec*100)}</span>`:""}</div><div class="du">${para(usd)}</div></div>
     ${minik(s, p, f, renk)}<div class="dv"><b class="${sinif(g)}">${g==null?"—":(g>=0?"▲ ":"▼ ")+isaretli(g)}</b><span class="${sinif(ky)}">${ky==null?"":pc(ky)}</span></div>`;
 }
 function pozSayfa(k){
@@ -2751,7 +2751,7 @@ function sheetIc(s, p, k){
       <div class="shc"><span style="width:${Math.min(100, Math.max(0, -sv/ec*100)).toFixed(0)}%;background:${css(sv<=-ec?"--eks":sv<=-ec*0.5?"--uyari":"--soluk")}"></span></div>
       <div class="shr" style="margin-top:10px"><span class="k">Piyasa medyanı 24 sa</span><span class="${D.piyasa_sart?"uyr":""}">${pyz(D.medyan)} / −%${Math.round(D.esik_piyasa*100)} · ${D.piyasa_sart?"şart var":"şart yok"}</span></div></div>`;
   const neden = sv!=null && !elle && sv <= -ec*0.5 ? `<p class="shn"><b>Neden hâlâ açık?</b> Stop iki şart birden sağlanınca çalışır: coin 24 saatte −%${Math.round(ec*100)} ve piyasa medyanı −%${Math.round(D.esik_piyasa*100)}. ${D.piyasa_sart ? `Piyasa şartı var, ama ${s.replace(/USDT$/,"")}'nin düşüşü henüz −%${Math.round(ec*100)}'e ulaşmadı.` : "Şu an piyasa şartı yok (tek coin düşüşü; araştırmada bu durumda tutmak daha iyi çıktı, madde 621)."} İkisi birlikte gerçekleşirse bot sıradaki dilim turunda kapatır.</p>` : "";
-  return `<div class="shu"><div><div style="display:flex;align-items:center;gap:8px"><span class="gb">${s.replace(/USDT$/,"")}</span><span class="dst ${uzun?"l":"s"}">${uzun?"LONG":"SHORT"}</span></div>
+  return `<div class="shu"><div><div style="display:flex;align-items:center;gap:8px">${coinIkon(s.replace(/USDT$/,""), "ihik")}<span class="gb">${s.replace(/USDT$/,"")}</span><span class="dst ${uzun?"l":"s"}">${uzun?"LONG":"SHORT"}</span></div>
       <div class="shf">${fiyatYaz(f)}</div><div class="${sinif(g)}" style="font-weight:600;font-size:13.5px">${g>=0?"▲":"▼"} ${ky==null?"":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"} · ${isaretli(g)}${bg!=null?` <span class="k">· bugün ${yz(bg)}</span>`:""}</div></div>
       <button class="shx" onclick="sheetKapat()" aria-label="Kapat">✕</button></div>
     <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>${donemHtml(s, f)}
@@ -2871,7 +2871,7 @@ function coinTablo(k){
   const C = k.coin_ozet; if (!C || !C.length) return "";
   const id = "coinler", ac = ACIK.has(id), L = ac ? C : [...C.slice(0,5), ...C.slice(-5).filter(x=>!C.slice(0,5).includes(x))];
   const h = v => Math.abs(v) < 0.005 ? `<span class="k">0</span>` : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
-  const sat = L.map(x=>`<tr><td class="l"><b>${x.s}</b>${x.elle?`<span class="yon" title="elle yönetiyorsun — bot dokunmuyor">✋ elle</span>`:""}${x.yon?`<span class="yon">${MOBIL() ? x.yon : (x.yon=="L"?"long açık":"short açık")}</span>`:""}</td><td>${h(x.kapanan)}</td><td>${h(x.funding)}</td><td>${h(x.komisyon)}</td><td>${h(x.acik)}</td><td><b>${h(x.toplam)}</b></td></tr>`).join("");
+  const sat = L.map(x=>`<tr><td class="l"><span class="ctad">${coinIkon(String(x.s).replace(/USDT$/,""), "kucuk")}<b>${x.s}</b></span>${x.elle?`<span class="yon" title="elle yönetiyorsun — bot dokunmuyor">✋ elle</span>`:""}${x.yon?`<span class="yon">${MOBIL() ? x.yon : (x.yon=="L"?"long açık":"short açık")}</span>`:""}</td><td>${h(x.kapanan)}</td><td>${h(x.funding)}</td><td>${h(x.komisyon)}</td><td>${h(x.acik)}</td><td><b>${h(x.toplam)}</b></td></tr>`).join("");
   const T = C.reduce((a,x)=>({kp:a.kp+x.kapanan, f:a.f+x.funding, km:a.km+x.komisyon, a:a.a+x.acik, t:a.t+x.toplam}), {kp:0,f:0,km:0,a:0,t:0});
   return `<div class="kart"><h2>Coin bazında kâr / zarar <span class="k">· başlangıçtan beri, en kötüden en iyiye</span></h2>
     <div class="tablo yatay"><table class="coin"><tr class="k"><td class="l">coin</td><td>kapanan</td><td>funding</td><td>komisyon</td><td>açık</td><td>toplam</td></tr>${sat}
@@ -2964,7 +2964,7 @@ function islemTablo(o){
               : (x.ort_sonra && t.ne=="açıldı" ? "" : (x.ort_sonra ? ` · ort. ${fiyatYaz(x.ort_sonra)}` : ""));
     return `<div style="padding:9px 0;border-top:1px solid var(--cizgi)">
       <div style="display:flex;justify-content:space-between;align-items:baseline;gap:8px">
-        <span><b>${x.sembol}</b> <span style="font-size:12px;font-weight:650;color:${L?'var(--vurgu)':'#f59e0b'}">${t.etiket || (t.yon + " " + t.ne)}</span></span>
+        <span class="ctad">${coinIkon(String(x.sembol).replace(/USDT$/,""), "kucuk")}<b>${x.sembol}</b> <span style="font-size:12px;font-weight:650;color:${L?'var(--vurgu)':'#f59e0b'}">${t.etiket || (t.yon + " " + t.ne)}</span></span>
         <span style="font-weight:650">${t.ekle?"+":"−"}${para(x.usd)}</span></div>
       <div class="s">${x.adet.toLocaleString("tr-TR",{maximumFractionDigits:4})} adet × ${fiyatYaz(x.fiyat)} · ${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div>
       <div style="font-size:12.5px;margin-top:2px">${x.kayit_yok && x.poz_sonra==null ? `<span class="s">pozisyon kaydı yok</span>` : (once!=null ? `pozisyon ${once} → <b>${sonra}</b>` : `pozisyon şimdi <b>${sonra}</b>`) + ort}${x.kapanis_kar!=null ? ` · kâr <b class="${sinif(x.kapanis_kar)}">${isaretli(x.kapanis_kar)}</b>` : ""}</div></div>`; }).join("");
@@ -2974,7 +2974,7 @@ function fonTablo(o){
   const f = o.fon; if (!f || !f.coin || !f.coin.length) return "";
   const id = "fon" + o.zaman, ac = ACIK.has(id), demo = VERI.kurulumlar[secili].mod=="demo";
   const h = v => v==null ? `<span class="s">—</span>` : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
-  const sat = f.coin.map(c=>`<tr><td><b>${c.s}</b></td><td class="r">${h(c.demo)}</td>${demo?`<td class="r">${h(c.gercek)}</td>`:""}</tr>`).join("");
+  const sat = f.coin.map(c=>`<tr><td><span class="ctad">${coinIkon(String(c.s).replace(/USDT$/,""), "kucuk")}<b>${c.s}</b></span></td><td class="r">${h(c.demo)}</td>${demo?`<td class="r">${h(c.gercek)}</td>`:""}</tr>`).join("");
   return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} coinler (${f.coin.length})</span>${ac ? `<table><tr class="s"><td>coin</td><td class="r">${demo?"demo hesap":"ödeme"}</td>${demo?`<td class="r">gerçek oranla</td>`:""}</tr>${sat}</table>` : ""}</div>`;
 }
 function olayAc(id){ ACIK.has(id) ? ACIK.delete(id) : ACIK.add(id); ciz(); }
