@@ -1153,6 +1153,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .icy{margin-top:12px}.icyb{display:flex;height:10px;border-radius:6px;overflow:hidden;gap:2px}.icyb i,.icyl i{background:var(--soluk)}.icy .ia{background:var(--art)}.icy .ib{background:var(--vurgu)}.icy .ic{background:var(--eks)}
 .icyl{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px}.icyl>span{white-space:nowrap;display:inline-flex;align-items:center;gap:5px}.icyl>span>i{width:8px;height:8px;border-radius:2px;display:inline-block}
 .icd{margin-top:8px}.icd>div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--cizgi);font-size:13px}.icd>div>span{color:var(--soluk);flex:0 1 45%}.icd>div b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}.icd p{margin:8px 0 0;line-height:1.45}
+.cxo{margin-top:12px;background:var(--kart);border-radius:12px;padding:2px 12px}.cxo>div{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"a b" "a c";align-items:center;column-gap:10px;padding:8px 0;border-top:1px solid var(--cizgi)}.cxo>div:first-child{border-top:0}
+.cxo span{grid-area:a;font-size:13px;color:var(--soluk)}.cxo b{grid-area:b;text-align:right;font-size:14px}.cxo i{grid-area:c;text-align:right;font-style:normal;font-size:11.5px;color:var(--soluk)}.shdk{margin-top:10px}.shdk .idonb .k b{font-weight:650}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
@@ -2723,7 +2725,19 @@ async function donemYukle(s){
   } catch(_){ DONEM[s] = {t: Date.now() - 240e3, hata: true}; }
   donemBoya(s);
 }
-function donemBoya(s){ const el = document.getElementById("dnm-" + s); if (el) el.outerHTML = donemHtml(s); }
+function donemBoya(s){ const el = document.getElementById("dnm-" + s); if (el) el.outerHTML = donemHtml(s);
+  const kk = document.getElementById("dnk-" + s); if (kk) kk.innerHTML = donemKisa(s); }
+// madde 878: bot pozisyon penceresinde dönem tablosu katlı; kapalıyken tek satır özet (24 sa · 1 hafta · 1 ay)
+let SH_DON = (()=>{ try { return localStorage.getItem("carry_sh_don") == "1"; } catch(_){ return false; } })();
+function shDon(){ SH_DON = !SH_DON; try { localStorage.setItem("carry_sh_don", SH_DON ? "1" : "0"); } catch(_){}
+  if (SHEET){ const k = VERI.kurulumlar[secili], el = $("#sheetic"); if (el && k.pozisyonlar[SHEET]) el.innerHTML = sheetIc(SHEET, k.pozisyonlar[SHEET], k); } }
+function donemKisa(s, f){
+  f = f || (PIY[s]||{}).f || FIYAT[s]; const D = DONEM[s];
+  if (!D || !D.s){ donemYukle(s); return "24 sa · 1 hafta · 1 ay"; }
+  return [["24 sa", 24, "s"], ["1 hafta", 168, "s"], ["1 ay", 30, "g"]].map(([ad, n, tur]) => { const B = D[tur].slice(-n), acl = B.length ? B[0][0] : 0;
+    const deg = acl > 0 && f > 0 ? (f / acl - 1) * 100 : null;
+    return `${ad} <b class="${sinif(deg)}">${deg == null ? "—" : (deg >= 0 ? "+" : "−") + "%" + Math.abs(deg).toFixed(1).replace(".", ",")}</b>`; }).join(" · ");
+}
 function donemHtml(s, f){
   f = f || (PIY[s]||{}).f; const D = DONEM[s];
   if (!D || !D.s){ donemYukle(s); return `<div class="dnm k" id="dnm-${s}">${D && D.hata ? "dönem verisi alınamadı" : "günlük · haftalık · aylık yükleniyor…"}</div>`; }
@@ -2793,9 +2807,10 @@ function sheetIc(s, p, k){
       <div class="shr" style="margin-top:10px"><span class="k">Piyasa medyanı 24 sa</span><span class="${D.piyasa_sart?"uyr":""}">${pyz(D.medyan)} / −%${Math.round(D.esik_piyasa*100)} · ${D.piyasa_sart?"şart var":"şart yok"}</span></div></div>`;
   const neden = sv!=null && !elle && sv <= -ec*0.5 ? `<p class="shn"><b>Neden hâlâ açık?</b> Stop iki şart birden sağlanınca çalışır: coin 24 saatte −%${Math.round(ec*100)} ve piyasa medyanı −%${Math.round(D.esik_piyasa*100)}. ${D.piyasa_sart ? `Piyasa şartı var, ama ${s.replace(/USDT$/,"")}'nin düşüşü henüz −%${Math.round(ec*100)}'e ulaşmadı.` : "Şu an piyasa şartı yok (tek coin düşüşü; araştırmada bu durumda tutmak daha iyi çıktı, madde 621)."} İkisi birlikte gerçekleşirse bot sıradaki dilim turunda kapatır.</p>` : "";
   return `<div class="shu"><div><div style="display:flex;align-items:center;gap:8px">${coinIkon(s.replace(/USDT$/,""), "ihik")}<span class="gb">${s.replace(/USDT$/,"")}</span><span class="dst ${uzun?"l":"s"}">${uzun?"LONG":"SHORT"}</span></div>
-      <div class="shf">${fiyatYaz(f)}</div><div class="${sinif(g)}" style="font-weight:600;font-size:13.5px">${g>=0?"▲":"▼"} ${ky==null?"":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"} · ${isaretli(g)}${bg!=null?` <span class="k">· bugün ${yz(bg)}</span>`:""}</div></div>
+      <div class="shf">${fiyatYaz(f)}</div><div style="font-weight:600;font-size:13.5px"><span class="k" style="font-weight:500">pozisyon</span> <span class="${sinif(g)}">${g>=0?"▲":"▼"} ${ky==null?"":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"} · ${isaretli(g)}</span>${bg!=null?` <span class="k" style="font-weight:500">· coin bugün</span> <span class="${sinif(bg)}">${yz(bg)}</span>`:""}</div></div>
       <button class="shx" onclick="sheetKapat()" aria-label="Kapat">✕</button></div>
-    <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>${donemHtml(s, f)}
+    <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>
+    <div class="idonk shdk"><button class="idonb" onclick="shDon()" aria-expanded="${SH_DON}"><span>${SH_DON?"▾":"▸"} Fiyat değişimi</span><span class="k" id="dnk-${s}">${SH_DON ? "gizle" : donemKisa(s, f)}</span></button>${SH_DON ? donemHtml(s, f) : ""}</div>
     <div class="shkg">${kutu("Giriş", fiyatYaz(p.giris))}${kutu("Büyüklük", para(usd))}${kutu("Funding", F ? `%${(F.r*100).toFixed(4).replace(".",",")} · <span class="${sinif(fr)}">${fr>=0?"alıyor":"ödüyor"}</span>` : "—")}${elle ? kutu("Yöneten", "✋ sen") : kutu(h1 ? "Kademe · kâr al" : "Kâr al hedefi", h0 ? `${fiyatYaz(h0)} <span class="k">${uzun?"+":"−"}%${Math.round(H[0]*100)}</span>${h1 ? `<br>${fiyatYaz(h1)} <span class="k">${uzun?"+":"−"}%${Math.round(H[1]*100)}</span>` : ""}` : "—")}</div>
     ${stop}${neden}${elle ? elleKutu(s, p, f) : cikisIc(s, usd, k)}`;
 }
@@ -2823,7 +2838,6 @@ function cikisIc(s, usd, k){
   });
   const ilk = turlar[0], son = turlar[turlar.length-1], g24 = turlar.filter(t=>t.zaman && ilk.zaman && t.zaman - ilk.zaman < 86400);
   const kapanis = uzun ? "satılır" : "geri alınır (short kapanır)";
-  const kut = (e, d, a) => `<div class="shk"><div class="k">${e}</div><div style="font-weight:700;font-size:14px">${d}</div><div class="k">${a}</div></div>`;
   const satir = (t, i) => `<div style="display:flex;justify-content:space-between;gap:10px;background:var(--kart);border-radius:12px;padding:10px 12px;${i?"":"outline:1.5px solid color-mix(in srgb,var(--vurgu) 45%,transparent)"}">
       <div style="display:flex;flex-direction:column;gap:3px;min-width:0"><span style="font-size:14px;font-weight:700">${t.zaman ? `${gunAd(turT(t.zaman))} ${saat(t.zaman)} turu` : "Tur saati bilinmiyor"}</span>
         <span class="k">${t.n > 1 ? `1 emir, ${t.n} dilime bölündü` : "1 emir"}${t.alis ? ` · açılış ${gunAd(turT(t.alis)).toLowerCase()} ${saat(t.alis)}` : ""}${t.giris ? ` · giriş ${fiyatYaz(t.giris)}` : ""}</span></div>
@@ -2839,7 +2853,10 @@ function cikisIc(s, usd, k){
       <div class="shk"><div style="font-weight:700;font-size:13px;color:var(--art)">${ad} yine seçilirse</div><div class="k" style="margin-top:3px">alım <b>kalır</b>, hiçbir işlem olmaz, olaylarda görünmez</div></div>
       <div class="shk"><div style="font-weight:700;font-size:13px;color:var(--uyari)">seçilmezse</div><div class="k" style="margin-top:3px">o alım ${kapanis}; olaylarda "${uzun?"long":"short"} azaltıldı" yazar</div></div></div>
       <p class="shn" style="background:var(--kart);border-radius:12px;padding:10px 12px">Fiyat kademe ya da kâr al seviyesine gelirse borsadaki emir turu beklemeden, o an dolar (yukarıdaki kutu).</p>` : `<div class="k" style="margin-top:4px">${turlar.length} alım · her biri kendi turunda yeniden seçilmezse kapanır</div>`}
-    <div style="display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin-top:12px">${kut("Sıradaki tur", ilk.zaman ? gunAd(turT(ilk.zaman)).toLowerCase()+" "+saat(ilk.zaman) : "—", `1 alım · ${para(ilk.deg)}`)}${kut("24 saatte", g24.length+" alım", para(g24.reduce((a,t)=>a+t.deg,0)))}${kut("Hiç seçilmezse biter", son.zaman ? gunAd(turT(son.zaman)) : "—", son.zaman ? saat(son.zaman) : "")}</div>
+    <div class="cxo">
+      <div><span>Sıradaki tur</span><b>${ilk.zaman ? gunAd(turT(ilk.zaman)) + " " + saat(ilk.zaman) : "—"}</b><i>1 alım · ${para(ilk.deg)}</i></div>
+      <div><span>24 saat içinde</span><b>${g24.length} alım</b><i>${para(g24.reduce((a,t)=>a+t.deg,0))}</i></div>
+      <div><span>Hiç seçilmezse biter</span><b>${son.zaman ? gunAd(turT(son.zaman)) + " " + saat(son.zaman) : "—"}</b><i>tüm pozisyon</i></div></div>
     <div style="height:1px;background:var(--cizgi);margin:14px 0 2px"></div>
     <div style="display:flex;justify-content:space-between;font-size:11px;font-weight:600;color:var(--soluk)"><span>SÜRESİ DOLAN ALIM</span><span>DEĞER · K/Z</span></div>
     <div style="display:flex;flex-direction:column;gap:8px;margin-top:8px">${gor.map(satir).join("")}</div>
