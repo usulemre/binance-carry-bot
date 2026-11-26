@@ -1147,6 +1147,12 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .acn{grid-area:n;display:flex;align-items:center;gap:6px;font-size:14.5px}.aca{grid-area:a;font-size:11.5px;color:var(--soluk);font-variant-numeric:tabular-nums}.aca .nw{white-space:nowrap}.aca .art{color:var(--art)}.aca .eks{color:var(--eks)}
 .act{grid-area:t;font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.act.art{color:var(--art)}.act.eks{color:var(--eks)}
 .acay{text-align:center;color:var(--soluk);font-size:12px;padding:4px 0 0;letter-spacing:3px}
+.icg{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:8px}.ick{background:var(--kart2);border-radius:12px;padding:10px 12px;display:flex;flex-direction:column;gap:2px;border-left:3px solid transparent}
+.ick span{font-size:12px;color:var(--soluk)}.ick b{font-size:19px;font-variant-numeric:tabular-nums}.ick i{font-style:normal;font-size:11.5px;color:var(--soluk)}
+.ick.iyi{border-left-color:var(--art)}.ick.iyi b{color:var(--art)}.ick.kotu{border-left-color:var(--eks)}.ick.kotu b{color:var(--eks)}.ick.orta{border-left-color:var(--uyari)}
+.icy{margin-top:12px}.icyb{display:flex;height:10px;border-radius:6px;overflow:hidden;gap:2px}.icyb i,.icyl i{background:var(--soluk)}.icy .ia{background:var(--art)}.icy .ib{background:var(--vurgu)}.icy .ic{background:var(--eks)}
+.icyl{display:flex;flex-wrap:wrap;gap:4px 14px;margin-top:6px;font-size:12px}.icyl>span{white-space:nowrap;display:inline-flex;align-items:center;gap:5px}.icyl>span>i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.icd{margin-top:8px}.icd>div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--cizgi);font-size:13px}.icd>div span{color:var(--soluk)}.icd>div b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}.icd p{margin:8px 0 0;line-height:1.45}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
@@ -2585,26 +2591,35 @@ function dilimKart(D){
   const sure = kalan <= 0 ? (kalan > -1800 ? "şimdi" : "gecikti") : (kalan >= 3600 ? `${Math.floor(kalan/3600)} sa ${Math.floor(kalan%3600/60)} dk` : `${Math.ceil(kalan/60)} dk`);
   return `<div class="halkali">${halka(D.dolu, D.n)}<div style="min-width:0"><div class="d ${kalan<=-1800?'eks':''}">${sure}</div><span class="k">saat ${D.saat}</span></div></div>`;
 }
+// madde 877: icra kartı — 4 ana gösterge kutucuk (durum rengiyle), giriş yolu tek çubuk, ayrıntı ve referans katlı
 function icraKart(k){
   const I = k.icra;
   if (!I) return `<div class="k">Henüz emir kaydı yok. Bot emir gönderdikçe dolar.</div>`;
-  const T = I.tp || {}, G = I.giris || {};
-  const yzd = v => v==null ? "—" : (v*100).toFixed(0) + "%";
-  const bp = v => v==null ? "—" : (v>=0?"+":"") + v.toFixed(1).replace(".",",") + " bp";
-  const dr = T.dolum_orani, drc = dr==null ? "" : (dr>=0.9 ? "art" : dr<=0.8 ? "eks" : "");
-  const satir = (a, b, c="") => `<tr><td class="l">${a}</td><td class="${c}">${b}</td></tr>`;
-  return `<div class="tablo"><table>
-    ${satir("TP dolum oranı (fiyat değince dolan)", `${yzd(dr)} <span class="k">(${T.dokunan||0} dokunan / ${T.olculen||0} ölçülen)</span>`, drc)}
-    ${satir("TP / kademe emri", `${T.konan||0} konan · ${T.tam||0} tam · ${T.kismi||0} kısmi`)}
-    ${satir("Kısmi dolum payı", yzd(T.kismi_pay))}
-    ${satir("Giriş: maker payı", yzd(G.maker_pay))}
-    ${satir("Giriş: kayma (gönderim fiyatına göre)", bp(G.kayma_bp), G.kayma_bp==null?"":(G.kayma_bp>5?"eks":""))}
-    ${I.karar ? satir("Giriş: TOPLAM kayma (karar fiyatına göre)", `${bp(I.karar.bp)} <span class="k">(ilk deneme ${bp(I.karar.giris)} · kovala ${bp(I.karar.kovala)} · piyasa ${bp(I.karar.piyasa)} · ${I.karar.n} dolum)</span>`, I.karar.bp>5?"eks":"") : ""}
-    ${satir("Gerçek komisyon (model 5 bp)", bp(G.komisyon_bp), G.komisyon_bp==null?"":(G.komisyon_bp>6?"eks":""))}
-    ${satir("GTX ilk deneme · kovalama · piyasaya düşen", `${G.gtx_ilk||0} · ${G.kovala||0} · ${G.piyasa_yedek||0}`, (G.piyasa_yedek||0)>0?"eks":"")}
-  </table></div><div class="k" style="margin-top:6px">Referans (madde 695): TP dolum ≥ %90 güvenli, ≤ %80 alarm; dolum %70'te yıllık −29 puan.
-  Kayma eksi = daha iyi doldu. "Gönderim fiyatına göre" her emri kendi gönderildiği anla kıyaslar; "karar fiyatına göre" turun ilk emrindeki
-  fiyatla — beklerken fiyatın kaçması ve piyasa emrine düşme dahil, asıl maliyet bu (backtest girişe +5 bp varsayar). Yalnız kayıt; bot kararlarını etkilemez.</div>`;
+  const T = I.tp || {}, G = I.giris || {}, K = I.karar;
+  const yzd = v => v==null ? "—" : "%" + (v*100).toFixed(0);
+  const bp = v => v==null ? "—" : (v>=0?"+":"−") + Math.abs(v).toFixed(1).replace(".",",") + " bp";
+  const dr = T.dolum_orani, kay = K ? K.bp : G.kayma_bp;
+  const kutu = (ad, v, durum, alt) => `<div class="ick ${durum}"><span>${ad}</span><b>${v}</b><i>${alt}</i></div>`;
+  const yol = [["ilk deneme", G.gtx_ilk||0, "ia"], ["kovalama", G.kovala||0, "ib"], ["piyasaya düştü", G.piyasa_yedek||0, "ic"]], top = yol.reduce((a,x)=>a+x[1], 0);
+  const ac = ACIK.has("icra");
+  return `<div class="icg">
+      ${kutu("TP dolumu", yzd(dr), dr==null ? "" : dr>=0.9 ? "iyi" : dr<=0.8 ? "kotu" : "orta", dr==null ? "ölçüm yok" : dr>=0.9 ? "güvenli (≥ %90)" : dr<=0.8 ? "alarm (≤ %80)" : "izle")}
+      ${kutu("Maker payı", yzd(G.maker_pay), "", "girişlerin limitte dolanı")}
+      ${kutu("Toplam kayma", bp(kay), kay==null ? "" : kay>5 ? "kotu" : kay<=0 ? "iyi" : "orta", "karar fiyatına göre · eksi iyi")}
+      ${kutu("Komisyon", bp(G.komisyon_bp), G.komisyon_bp==null ? "" : G.komisyon_bp>6 ? "kotu" : "iyi", "model 5 bp")}
+    </div>
+    ${top ? `<div class="icy"><div class="icyb">${yol.map(([a,n,c])=>n ? `<i class="${c}" style="flex:${n}" title="${a} ${n}"></i>` : "").join("")}</div>
+      <div class="icyl">${yol.map(([a,n,c])=>`<span><i class="${c}"></i>${a} <b>${n}</b> <span class="k">${yzd(n/top)}</span></span>`).join("")}</div></div>` : ""}
+    <button class="nsor" style="margin-top:12px" onclick="olayAc('icra')" aria-expanded="${ac}">${ac ? "▾ ayrıntıyı gizle" : "▸ ayrıntı · nasıl okunur? ⓘ"}</button>
+    ${ac ? `<div class="icd">
+      <div><span>TP / kademe emri</span><b>${T.konan||0} konan · ${T.tam||0} tam · ${T.kismi||0} kısmi</b></div>
+      <div><span>TP dolumu ölçümü</span><b>${T.dokunan||0} dokunan / ${T.olculen||0} ölçülen</b></div>
+      <div><span>Kısmi dolum payı</span><b>${yzd(T.kismi_pay)}</b></div>
+      <div><span>Kayma (gönderim fiyatına göre)</span><b>${bp(G.kayma_bp)}</b></div>
+      ${K ? `<div><span>TOPLAM kayma kırılımı</span><b>ilk ${bp(K.giris)} · kovala ${bp(K.kovala)} · piyasa ${bp(K.piyasa)} <span class="k">(${K.n} dolum)</span></b></div>` : ""}
+      <p class="k">TP dolumu ≥ %90 güvenli, ≤ %80 alarm (dolum %70'te yıllık −29 puan). Kayma eksi = daha iyi doldu. "Gönderim fiyatına göre" her emri
+      gönderildiği anla, "karar fiyatına göre" turun ilk emrindeki fiyatla kıyaslar: beklerken fiyatın kaçması ve piyasa emrine düşme dahil, asıl maliyet bu
+      (backtest girişe +5 bp varsayar). Yalnız kayıt; bot kararlarını etkilemez.</p></div>` : ""}`;
 }
 // MADDE 757: D TASARIMI — ÖZET. Üstte tek cümlelik durum, büyük kitap, zaman seçici grafiğin yanında, yalnız dikkat isteyen
 // şey renkli kartla (varsayılan nötr), "nereden geldi" tek çubuk + 4 kalem, sıradaki dilim / funding tek satır.
