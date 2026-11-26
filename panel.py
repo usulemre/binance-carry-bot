@@ -1310,7 +1310,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl input{width:100%;height:46px;border:1px solid var(--cizgi);border-radius:12px;background:var(--kart);color:var(--yazi);padding:0 12px;font:inherit;font-size:16px;font-variant-numeric:tabular-nums;margin-top:8px}
 .isl input:focus{outline:none;border-color:var(--vurgu);box-shadow:0 0 0 3px color-mix(in srgb,var(--vurgu) 18%,transparent)}
 .isl .ipara{position:relative}.isl .ipara input{font-size:20px;font-weight:650;height:52px}.isl .ipara span{position:absolute;right:14px;top:calc(50% + 4px);transform:translateY(-50%);color:var(--soluk);font-weight:600}
-.isl .iki{display:grid;grid-template-columns:1fr 1fr;gap:10px}
+.isl .iki{display:grid;grid-template-columns:minmax(0,1fr) minmax(0,1fr);gap:10px}.isl .iki input{min-width:0}.isl .ichip button{padding:0 2px}
 .isl .iacil{display:flex;justify-content:space-between;align-items:center;width:100%;height:44px;margin-top:14px;border:1px solid var(--cizgi);border-radius:12px;background:var(--kart);color:var(--yazi);font:inherit;font-weight:600;padding:0 14px;cursor:pointer}
 .isl .iacil i{font-style:normal;font-size:12px;color:var(--soluk)}.isl .iacil.on i{color:var(--vurgu)}.isl .iacil i.oner{color:var(--uyari)}.isl .iacil:disabled{cursor:default;opacity:.8}
 .isl #isltah{margin-top:12px}.isl .itg{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;background:var(--kart2);border-radius:12px;padding:10px 12px;font-size:13px;font-variant-numeric:tabular-nums}
@@ -1954,7 +1954,7 @@ function asRisk(E, P){
     <div class="tsor asrc" role="group" aria-label="Hareket büyüklüğü">${[10,25,50,100].map(v=>`<button class="${AS_SEN==v?"on":""}" aria-pressed="${AS_SEN==v}" onclick="asSen(${v})">%${v}</button>`).join("")}</div>
     ${sat("yükselirse", kYuk, X)}${sat("düşerse", kDus, -X)}
     <div class="asfl">${liste}</div>
-    <p class="k" style="margin:10px 2px 0;line-height:1.45">Tahmin: tüm coinler aynı oranda hareket eder varsayılır; bakım teminatı borsanın likidasyon fiyatlarından çıkarıldı (≈ ${para(R.MM)}). Funding, komisyon ve kayma dahil değil. Coin satırındaki likidasyon fiyatı diğer coinler yerinde kalırsa geçerlidir.</p></div>`;
+    <p class="k" style="margin:10px 2px 0;line-height:1.45">Tahmin: tüm coinler aynı oranda hareket eder varsayılır; bakım teminatı borsanın likidasyon fiyatlarından çıkarıldı (≈\u00a0${para(R.MM)}). Funding, komisyon ve kayma dahil değil. Coin satırındaki likidasyon fiyatı diğer coinler yerinde kalırsa geçerlidir.</p></div>`;
 }
 // madde 883: Al-Sat long / short dengesi (Bot Özet'teki çubuğun aynısı) — bakiye kartının altında
 function asDenge(P){
@@ -2374,7 +2374,7 @@ function islTahminMetin(){
   const sat = (a, b, cls="") => `<div><span>${a}</span><b class="${cls}">${b}</b></div>`;
   return `<div class="itg">${sat("Pozisyon", para(u) + (I.boyut=="risk" && u >= ((ISL_DURUM||{}).max_usd||200) ? " <span class='uyr'>(sınır)</span>" : ""))}${sat("Adet", "≈ " + (q >= 100 ? Math.round(q).toLocaleString("tr-TR") : (+q.toPrecision(4)).toLocaleString("tr-TR")))}
     ${kTP!=null ? sat("TP'de", "▲ " + isaretli(kTP), "art") : ""}${kSL!=null ? sat("Stop'ta", "▼ " + isaretli(kSL), "eks") : ""}
-    ${kTP>0 && kSL<0 ? sat("Risk / ödül", "1 : " + (kTP / -kSL).toFixed(1).replace(".",",")) : ""}${sat("Komisyon", "≈ " + para(kom))}</div>`;
+    ${kTP>0 && kSL<0 ? sat("Risk / ödül", "1 : " + (kTP / -kSL).toFixed(1).replace(".",",")) : ""}${sat("Komisyon", "≈\u00a0" + para(kom))}</div>`;
 }
 function islUyari(){   // sunucuya gitmeden önce yazarken uyar (sunucu yine de denetler)
   const I = ISL, P = I.poz && I.poz.pozisyon, uzun = I.gor=="poz" && islPozVar() ? P.adet > 0 : I.yon=="L", ref = I.gor=="poz" ? (I.poz && I.poz.isaret) : islRef(), m = (I.poz && I.poz.isaret) || ref;
@@ -2396,7 +2396,7 @@ function islEkEtki(O){
   const a0 = var0 ? P0.adet : 0, a1 = a0 + sg * O.adet, ayni = var0 && (a0 > 0) == (sg > 0);
   const g1 = !a1 ? 0 : ayni ? (a0 * P0.giris + sg * O.adet * O.fiyat) / a1 : var0 && (a0 > 0) == (a1 > 0) ? P0.giris : O.fiyat;
   if (ayni){
-    satir.push(["Ortalama giriş", `${piyFiyat(P0.giris)} → <b>${piyFiyat(g1)}</b>`], ["Toplam", `${elleAdet(a0)} → <b>${elleAdet(a1)}</b> adet <span class="k">≈ ${para(Math.abs(a1) * O.isaret)}</span>`]);
+    satir.push(["Ortalama giriş", `${piyFiyat(P0.giris)} → <b>${piyFiyat(g1)}</b>`], ["Toplam", `${elleAdet(a0)} → <b>${elleAdet(a1)}</b> adet <span class="k">≈\u00a0${para(Math.abs(a1) * O.isaret)}</span>`]);
     const kz0 = a0 * (O.isaret - P0.giris), n = (ISL.poz.parcalar || []).length || 1;
     if (kz0 < 0 && P0.giris > 0) not.push(`Zarardaki pozisyona ekliyorsun: şu an ${isaretli(kz0)} (%${(Math.abs(kz0) / (Math.abs(a0) * P0.giris) * 100).toFixed(1).replace(".",",")}). Bu ${n + 1}. alım olur; fiyat aynı yöne gitmeye devam ederse zarar daha büyük adetle büyür.`);
   }
@@ -2426,7 +2426,7 @@ async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
              [O.tip=="LIMIT"?"Limit fiyatı":"Hesap fiyatı", piyFiyat(O.fiyat)]];
   if (O.tp) S.push(["TP", `${piyFiyat(O.tp)} <span class="art">▲ ${isaretli(O.adet*(O.tp-O.fiyat)*sg)}</span>`]);
   if (O.sl) S.push(["Stop", `${piyFiyat(O.sl)} <span class="eks">▼ ${isaretli(O.adet*(O.sl-O.fiyat)*sg)}</span>`]);
-  S.push(["Komisyon", "≈ " + para(O.usd * 0.0005)]);
+  S.push(["Komisyon", "≈\u00a0" + para(O.usd * 0.0005)]);
   const not = [], Ek = islEkEtki(O);   // madde 899
   if (Ek){ S.push(...Ek.satir); not.push(...Ek.not); }
   if (f && Math.abs(O.isaret/f-1) > 0.005) not.push(`Hesabın fiyatı piyasadaki gerçek fiyattan %${(Math.abs(O.isaret/f-1)*100).toFixed(1).replace(".",",")} farklı${O.mod=="live"?"":" (demo hesap)"}.`);
@@ -2519,7 +2519,7 @@ function islParcaOnay(id){
   const m = parcaIsaret(ISL.s), k = parcaKz(x, m), i = L.indexOf(x) + 1, uz = x.adet > 0;
   ISL.adim = {tur: "kapat", baslik: `${ISL.s.replace(/USDT$/,"")} · ${i}. alımı ${uz ? "sat" : "kapat"}`,
     satir: [["Alım", x.eski ? "önceki alımlar" : parcaZaman(x.t)], ["Adet", elleAdet(x.adet)], ["Giriş", piyFiyat(x.fiyat)], ["Şimdi", m ? piyFiyat(m) : "—"],
-            ["Bu alımın K/Z'si", k == null ? "—" : `<span class="${sinif(k)}">≈ ${isaretli(k)}</span>`], ["Fiyat", "piyasa fiyatından"]],
+            ["Bu alımın K/Z'si", k == null ? "—" : `<span class="${sinif(k)}">≈\u00a0${isaretli(k)}</span>`], ["Fiyat", "piyasa fiyatından"]],
     not: [L.length > 1 ? "Diğer alımların açık kalır; TP / stop kalan adede göre yeniden kurulur." : "Bu son parça: pozisyon tamamen kapanır.",
           "Binance gerçekleşen K/Z'yi ortalama girişten yazar; rakam burada gördüğünden farklı görünebilir, toplam aynıdır."],
     dugme: uz ? "Bu alımı sat" : "Bu alımı kapat", renk: "tehlike", yol: "kapat", govde: {sembol: ISL.s, oran: 1, parca: x.id}};
@@ -2528,7 +2528,7 @@ function islParcaOnay(id){
 function islKapatOnay(oran){
   if (!ISL || !islPozVar()) return; const P = ISL.poz.pozisyon, f = ISL.poz.isaret || P.giris, q = Math.abs(P.adet) * oran;
   ISL.adim = {tur: "kapat", baslik: `${ISL.s.replace(/USDT$/,"")} ${oran>=1 ? "pozisyonu kapat" : "%" + oran*100 + " kapat"}`,
-    satir: [["Kapanacak", `≈ ${(+q.toPrecision(5)).toLocaleString("tr-TR")} adet`], ["Değer", "≈ " + para(q * f)], ["Gerçekleşecek K/Z", `<span class="${sinif(P.kz)}">≈ ${isaretli(P.kz * oran)}</span>`],
+    satir: [["Kapanacak", `≈ ${(+q.toPrecision(5)).toLocaleString("tr-TR")} adet`], ["Değer", "≈\u00a0" + para(q * f)], ["Gerçekleşecek K/Z", `<span class="${sinif(P.kz)}">≈\u00a0${isaretli(P.kz * oran)}</span>`],
             ["Fiyat", "piyasa fiyatından"]], not: oran>=1 ? ["Bu coinde panelden konan TP / stop / limit emirleri de silinir."] : ["Kalan adet için TP / stop aynı fiyatlarla yeniden kurulur."],
     dugme: oran>=1 ? "Tümünü kapat" : "Kapat", renk: "tehlike", yol: "kapat", govde: {sembol: ISL.s, oran}};
   ISL.msj = null; islCiz();
@@ -2542,7 +2542,7 @@ function islGelirHtml(PR, pz){
   const net = pz.kz + G.fon + G.kom + G.gercek, gun = Math.max(1 / 24, (Date.now() - G.t) / 864e5);
   const sat = (a, v, alt) => `<div><span>${a}${alt ? ` <span class="k">${alt}</span>` : ""}</span><b class="${sinif(v)}">${isaretli(v)}</b></div>`;
   return `<div class="igel"><div class="igelb"><span>Bu pozisyonun gerçek sonucu</span><span class="k">${gun < 1 ? Math.round(gun * 24) + " saattir" : gun.toFixed(1).replace(".",",") + " gündür"} açık</span></div>
-    ${sat("Fiyat K/Z", pz.kz, "açık")}${sat("Funding", G.fon, Math.abs(G.fon) >= 0.01 ? `günde ≈ ${isaretli(G.fon / gun)}` : "")}${sat("Komisyon", G.kom)}${Math.abs(G.gercek) >= 0.01 ? sat("Kısmi kapanışlar", G.gercek, "gerçekleşen") : ""}
+    ${sat("Fiyat K/Z", pz.kz, "açık")}${sat("Funding", G.fon, Math.abs(G.fon) >= 0.01 ? `günde ≈\u00a0${isaretli(G.fon / gun)}` : "")}${sat("Komisyon", G.kom)}${Math.abs(G.gercek) >= 0.01 ? sat("Kısmi kapanışlar", G.gercek, "gerçekleşen") : ""}
     <div class="igelt"><span>Net</span><b class="${sinif(net)}">${isaretli(net)}</b></div></div>`;
 }
 // MADDE 904: İŞLEM GÜNLÜĞÜ — pozisyona not ("neden girdim, planım ne"). Sunucuda saklanır (her cihazda aynı); kapanınca Geçmiş'te sonucun yanında.
