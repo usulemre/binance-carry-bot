@@ -1119,6 +1119,17 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+/* madde 868: diğer sayfalar */
+.asdk{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 4px}.asdk>div{padding:8px 10px;border-radius:10px;background:var(--kart2);display:flex;flex-direction:column;gap:1px}.asdk span{font-size:11.5px;color:var(--soluk)}.asdk b{font-size:14px;font-variant-numeric:tabular-nums}.asdk .art{color:var(--art)}.asdk .eks{color:var(--eks)}
+.ofil{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;margin-left:-18px!important;margin-right:-18px!important;padding:0 18px}.ofil::-webkit-scrollbar{display:none}.ofil button{flex:none;height:36px!important;white-space:nowrap}
+.ob>span:first-child{overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
+.oa{overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.orow{cursor:pointer}
+.orow.oacik .oa,.orow.oacik .ob>span:first-child{-webkit-line-clamp:unset;display:block}
+.dfil{flex-wrap:nowrap}.dfil .gdon{min-width:0}.dsir{flex:none;white-space:nowrap}
+.acl{padding:14px}.acr{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"n t" "a t";gap:2px 10px;align-items:center;padding:9px 12px;border-radius:12px;background:var(--kart2);margin-top:5px}
+.acn{grid-area:n;display:flex;align-items:center;gap:6px;font-size:14.5px}.aca{grid-area:a;font-size:11.5px;color:var(--soluk);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.aca .art{color:var(--art)}.aca .eks{color:var(--eks)}
+.act{grid-area:t;font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.act.art{color:var(--art)}.act.eks{color:var(--eks)}
+.acay{text-align:center;color:var(--soluk);font-size:12px;padding:4px 0 0;letter-spacing:3px}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
 .pkara{display:flex;align-items:center;gap:8px;padding:0 12px;height:46px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.pkara>span:first-child{font-size:18px;color:var(--soluk)}
@@ -1263,7 +1274,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .ibtn.L{background:var(--fa)}.isl .ibtn.S{background:var(--fe)}.isl .ibtn.tehlike{background:var(--fe)}.isl .ibtn.vurgu{background:var(--vurgu)}.isl .ibtn:disabled{opacity:.5;cursor:default}
 .isl .ibtn.geri{flex:0 0 108px;background:var(--kart2);color:var(--yazi)}
 .isl .ibtn.tut::before{content:"";position:absolute;inset:0;width:0;background:rgba(255,255,255,.28);transition:width 0s}.isl .ibtn.tut.dolu::before{width:100%;transition:width .7s linear}
-.dnm{margin-top:12px;padding:6px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.dnh,.dnr{display:grid;grid-template-columns:62px 58px minmax(0,1fr) 54px;gap:8px;align-items:center}.dnh{font-size:11px;color:var(--soluk);padding:4px 0}.dnr{padding:7px 0;border-top:1px solid var(--cizgi)}.dna{font-weight:600;line-height:1.2}.dnz{min-width:0}.dnb{position:relative;display:block;height:6px;border-radius:3px;background:var(--cizgi)}.dnb i{position:absolute;top:-3px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--vurgu);border:2px solid var(--kart2)}.dnu{display:flex;justify-content:space-between;font-size:11px;color:var(--soluk);margin-top:3px;gap:4px}.dns{width:54px;height:22px}
+.dnm{margin-top:12px;padding:6px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.dnm .dnh,.dnm .dnr{display:grid;grid-template-columns:62px 58px minmax(0,1fr) 54px;gap:8px;align-items:center}.dnm .dnh{font-size:11px;color:var(--soluk);padding:4px 0;margin:0}.dnr{padding:7px 0;border-top:1px solid var(--cizgi)}.dna{font-weight:600;line-height:1.2}.dnz{min-width:0}.dnb{position:relative;display:block;height:6px;border-radius:3px;background:var(--cizgi)}.dnb i{position:absolute;top:-3px;width:12px;height:12px;margin-left:-6px;border-radius:50%;background:var(--vurgu);border:2px solid var(--kart2)}.dnu{display:flex;justify-content:space-between;font-size:11px;color:var(--soluk);margin-top:3px;gap:4px}.dns{width:54px;height:22px}
 .asg{width:100%;height:auto;display:block;margin:4px 0 6px}.asgt{font-size:11px;fill:var(--soluk)}.ash{font-size:12.5px;font-weight:600;color:var(--soluk);margin-top:12px}
 .asoz{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:8px}.asb{font-size:20px;font-weight:700;margin-top:2px}.asb .k{font-size:12px;font-weight:500}
 .elp{margin-top:12px;padding:12px 14px;border-radius:12px;background:var(--kart2);font-size:13.5px}.elh{font-weight:700;margin-bottom:6px}.elr{display:flex;justify-content:space-between;gap:10px;padding:5px 0;line-height:1.4}.elr .r{text-align:right}.eld{margin-top:8px}.eld summary{cursor:pointer;color:var(--soluk);font-size:13px;padding:4px 0}
@@ -1601,26 +1612,42 @@ function asK(A){
   return {seri, kitap_canli: null, aylik, coin_ozet: A.coin_ozet || [], mod: (ISL_DURUM||{}).mod, _baslik: "Geçmiş",
           _canliNot: "canlı · gece 03:00'te kesinleşir", _bosMetin: "Al-sat hesabında henüz gün yok."};
 }
-function asGecmisSayfa(A){
+function asGecmisSayfa(A){   // madde 868: bot Geçmiş'i gibi sade — özet + başlangıçtan beri; takvim / yıl / coinler katlı
   const D = ISL_DURUM;
   if (D && !D.ayri) return `<div class="kart bos">Geçmiş, al-sat ayrı hesabı bağlıyken görünür.</div>`;
   if (!AS_GEC || Date.now() - (AS_GEC._t||0) > 60e3) asGecmisYukle();
   if (!AS_GEC) return `<div class="kart"><div class="iskelet" style="height:34px;width:60%"></div><div class="iskelet" style="height:150px;margin-top:14px"></div></div>`;
   if (AS_GEC.hata) return `<div class="kart bos">${ea(AS_GEC.hata)}</div>`;
-  const P = asGecmisParca(A || asGecmisCanliVeri());
+  const P = asGecmisParca(A || asGecmisCanliVeri()), ac = ACIK.has("asay"), n = (AS_GEC.coin_ozet||[]).length;
   return `<div id="as-ust">${P.ust}</div><div id="as-oz">${P.oz}</div>
-    <div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2><div id="as-tak">${P.tak}</div>
-      <div class="k" style="margin-top:4px">Gün, gece 03:00 – ertesi gece 03:00 (Türkiye saati). ● işaretli gün bugün (canlı).</div></div>
-    <div class="kart"><h2>Son 1 yıl</h2>${yillik(asK(A || AS_GEC))}</div>
-    <div id="as-coin">${P.coin}</div>`;
+    <div id="as-coin">${P.coin}</div>
+    <div class="kart" style="padding:0"><button class="gayr" onclick="olayAc('asay')">${ac?"▾":"▸"} Ayrıntılar <span class="k">takvim · son 1 yıl</span></button></div>
+    ${!ac ? "" : `<div class="kart"><h2>Günlük takvim</h2><div id="as-tak">${P.tak}</div>
+      <div class="k" style="margin-top:6px">Gün gece 03:00'te başlar · yeşil kazanç, kırmızı kayıp · ● bugün</div></div>
+    <div class="kart"><h2>Son 1 yıl</h2>${yillik(asK(A || AS_GEC))}</div>`}`;
 }
 function asGecmisParca(A){
   const O = A.ozet || {}, K = asK(A);
   const yzd = v => v==null ? "" : ` (${(v>=0?"+":"−")}%${Math.abs(v*100).toFixed(2).replace(".",",")})`;
   const oz = `<div class="kart"><div class="k">Başlangıçtan beri</div><div class="asb ${sinif(A.toplam)}">${A.toplam>=0?"▲":"▼"} ${isaretli(A.toplam)}<span class="k">${yzd(A.oran)}</span></div>
-    <div class="k" style="margin-top:6px">${para(A.baslangic)} → ${para(A.ozkaynak)} · kapanan ${isaretli(O.gerceklesen||0)} · funding ${isaretli(O.funding||0)} · komisyon ${isaretli(O.komisyon||0)} · açık ${isaretli(A.acik||0)}</div>
+    <div class="k" style="margin-top:4px">${para(A.baslangic)} → <b style="color:var(--yazi)">${para(A.ozkaynak)}</b></div>
+    <div class="asdk">${[["Kapanan", O.gerceklesen||0], ["Açık", A.acik||0], ["Funding", O.funding||0], ["Komisyon", O.komisyon||0]].map(([a,v])=>`<div><span>${a}</span><b class="${sinif(v)}">${isaretli(v)}</b></div>`).join("")}</div>
     <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}</div>`;
-  return {ust: gecmisSade(K), oz, tak: takvim(K), coin: coinTablo(K)};
+  return {ust: gecmisSade(K), oz, tak: takvim(K), coin: asCoinListe(A.coin_ozet || [])};
+}
+// madde 868: coin bazında sonuç — tablo yerine kart satırlar (telefonda 5 sütun sığmıyordu); en kötü / en iyi 4, gerisi dokununca
+function asCoinListe(C){
+  if (!C.length) return "";
+  const ac = ACIK.has("ascoin"), S = C.slice().sort((a,b)=>a.toplam-b.toplam), L = ac || S.length <= 8 ? S : [...S.slice(0,4), ...S.slice(-4)];
+  const T = S.reduce((a,x)=>a + x.toplam, 0), kaz = S.filter(x=>x.toplam > 0.005).length;
+  const k = v => Math.abs(v) < 0.005 ? "" : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
+  const sat = x => { const p = [["kapanan", x.kapanan], ["funding", x.funding], ["komisyon", x.komisyon], ["açık", x.acik]].filter(([,v])=>Math.abs(v) >= 0.005);
+    return `<div class="acr"><span class="acn"><b>${ea(x.s)}</b>${x.yon ? `<span class="pkz sen ${x.yon}">${x.yon}</span>` : ""}</span>
+      <span class="aca">${p.map(([a,v])=>`${a} ${k(v)}`).join(" · ") || "—"}</span><b class="act ${sinif(x.toplam)}">${isaretli(x.toplam)}</b></div>`; };
+  return `<div class="kart acl"><div class="apkh"><div><b>Coinler</b><span class="say">${S.length}</span></div><b class="${sinif(T)}">${isaretli(T)}</b></div>
+    <div class="apko"><span class="art">${kaz} kârda</span><span class="eks">${S.length - kaz} zararda</span><span>başlangıçtan beri, açık pozisyon dahil</span></div>
+    ${L.map((x,i)=>(!ac && S.length > 8 && i==4 ? `<div class="acay">· · ·</div>` : "") + sat(x)).join("")}
+    ${S.length > 8 ? `<button class="pkdaha" onclick="olayAc('ascoin')">${ac ? "Yalnız en kötü / en iyi 4" : `Tüm coinler (${S.length})`}</button>` : ""}</div>`;
 }
 // madde 857: Geçmiş CANLI — açık K/Z'yi Pozisyonlarım'ın işaret fiyatı akışıyla yeniden hesaplar (özkaynak = cüzdan + canlı açık K/Z)
 function asGecmisCanliVeri(){
@@ -2676,7 +2703,7 @@ function pozSayfa(k){
   return `<div class="kart dpoz">
     <div class="dpb"><span class="gb">Pozisyonlar</span>${k.gerceklesmemis!=null?`<b id="gerc" class="${sinif(tum)}">${tum>=0?"▲":"▼"} ${isaretli(tum)}</b>`:""}</div>
     ${P.length?`<div class="denge" id="denge">${dengeIc({L:[top(L,0),0], S:[top(S,0),0]})}</div>`:""}
-    <div class="dfil"><div class="gdon">${fb("tum",`Tümü ${P.length}`)}${fb("L","Long")}${fb("S","Short")}</div><button class="dsir" onclick="pozSira()">Sırala: ${POZ_S=="kz"?"K/Z":"büyüklük"}</button></div>
+    <div class="dfil"><div class="gdon">${fb("tum",`Tümü ${P.length}`)}${fb("L","Long")}${fb("S","Short")}</div><button class="dsir" onclick="pozSira()" aria-label="sıralama: ${POZ_S=="kz"?"kâr / zarar":"büyüklük"}">↕ ${POZ_S=="kz"?"K/Z":"büyüklük"}</button></div>
     ${bolum(L,"L","LONG") + bolum(S,"S","SHORT") || "<div class='bos'>açık pozisyon yok</div>"}
     <div class="k" style="margin-top:10px">${k.poz_kaynak=="canlı"?"liste "+k.poz_zaman:"günlük defter "+(k.poz_zaman||"")} · satıra dokun: grafik, giriş, funding, hedef, stop</div></div>`;
 }
@@ -2948,7 +2975,7 @@ function olaySayfa(k){
     const g = (o.zaman||"").slice(0,10);
     if (g!==onc){ if (acik) h += "</div>"; h += `<div class="ogun">${g?ad(g):"—"}</div><div class="okart">`; onc = g; acik = true; }
     const par = (o.metin||"").split(/\s*\|\s*/), bas = par[0], alt = par.slice(1).join(" · ");
-    h += `<div class="orow"><span class="onk" style="background:${css(OLAY_RENK[o.tur]||"--soluk")}"></span><div class="om">
+    h += `<div class="orow" onclick="if(!event.target.closest('a,button,.ac,table'))this.classList.toggle('oacik')"><span class="onk" style="background:${css(OLAY_RENK[o.tur]||"--soluk")}"></span><div class="om">
       <div class="ob"><span>${esc(bas)}</span><span class="oz">${(o.zaman||"").slice(11)}</span></div>
       ${alt?`<div class="oa">${esc(alt)}</div>`:""}${islemTablo(o)}${fonTablo(o)}</div></div>`;
   }
