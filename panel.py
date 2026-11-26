@@ -1897,7 +1897,11 @@ function islGTur(t){ if (!ISL) return; ISL.gtur = t; try { localStorage.setItem(
 function islGrafik(W, H){
   const I = ISL, M = MUMI[I.s + "|" + I.aralik]; if (!M || !M.d.length) return `<div class="igbos">grafik yükleniyor…</div>`;
   const D = M.d.map(x=>x.slice()), f = (PIY[I.s]||{}).f;
-  if (f > 0){ const z = D[D.length-1]; if (Date.now() < z[5]){ z[4] = f; z[2] = Math.max(z[2], f); z[3] = Math.min(z[3], f); } }
+  if (f > 0){ let z = D[D.length-1];
+    if (Date.now() > z[5] && D.length > 1){   // madde 874: son mum kapandı, yenisi henüz indirilmedi -> canlı fiyatla yeni mum aç (grafik donmasın)
+      const adim = z[0] - D[D.length-2][0]; z = [z[0] + adim, z[4], z[4], z[4], z[4], z[5] + adim]; D.push(z); D.shift();
+      if (Date.now() - (M.yeni||0) > 5e3){ M.yeni = Date.now(); setTimeout(()=>islMumYukle(true), 1500); } }
+    if (Date.now() <= z[5]){ z[4] = f; z[2] = Math.max(z[2], f); z[3] = Math.min(z[3], f); } }
   const P = I.poz && I.poz.pozisyon, T = (I.poz && I.poz.tpsl) || [], cizgi = [];
   const ekle = (v, ad, cls, kesik) => { v = +v; if (v > 0) cizgi.push({v, ad, cls, kesik}); };
   if (P && P.adet){ ekle(P.giris, "Giriş", "gir"); if (P.likidasyon > 0) ekle(P.likidasyon, "Likidasyon", "lik", true); }
@@ -1913,7 +1917,8 @@ function islGrafik(W, H){
   const Y = v => h - (v - lo) / (hi - lo) * h, X = t => (t - t0) / (t1 - t0) * w, bw = Math.max(1, w / n * 0.66);
   let g = "";
   for (let i = 0; i <= 4; i++){ const v = lo + (hi - lo) * i / 4, y = Y(v); g += `<line x1="0" x2="${w}" y1="${y}" y2="${y}" class="igiz"/>`; }
-  const TZ = a => { const d = new Date(a); return I.aralik=="1d" || I.aralik=="4h" ? `${d.getDate()}.${d.getMonth()+1}` : `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`; };
+  const TZ = a => { const d = new Date(a), sa = `${String(d.getHours()).padStart(2,"0")}:${String(d.getMinutes()).padStart(2,"0")}`;   // madde 874: 1 sa (5 gün) tarihle
+    return I.aralik=="1d" || I.aralik=="4h" ? `${d.getDate()}.${d.getMonth()+1}` : I.aralik=="1h" ? `${d.getDate()}.${d.getMonth()+1} ${sa}` : sa; };
   for (let i = 1; i <= 3; i++){ const t = t0 + (t1 - t0) * i / 4; g += `<text x="${X(t)}" y="${H - 4}" class="igt" text-anchor="middle">${TZ(t)}</text>`; }
   if (I.gtur=="cizgi"){   // çizgi + alan: uzun vadeli bakışta sade
     const pts = D.map(x=>`${(X(x[0]) + (w / n) / 2).toFixed(1)},${Y(x[4]).toFixed(1)}`), yuk = D[n-1][4] >= D[0][1];
