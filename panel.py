@@ -916,6 +916,10 @@ header.kucuk>div:first-child{display:flex;align-items:center;gap:12px;min-width:
 #menu .mh{font-size:12px;color:var(--soluk);margin:4px 4px 2px}
 #menu .ms{display:flex;align-items:center;gap:12px;width:100%;min-height:64px;padding:12px 14px;border-radius:14px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;text-align:left;cursor:pointer}
 #menu .ms.on{border-color:var(--vurgu);background:color-mix(in srgb,var(--vurgu) 14%,var(--kart2))}#menu .ms b{display:block;font-size:16px}#menu .ms span.k{font-size:12.5px}#menu .ms i{font-style:normal;font-size:24px}
+#menu .mp{overflow-y:auto;padding-top:max(18px,env(safe-area-inset-top))}#menu .mtp{display:flex;justify-content:space-between;align-items:center;margin:0 2px 4px}#menu .mtp b{font-size:20px}
+#menu .mh{margin-top:8px;text-transform:uppercase;letter-spacing:.5px;font-weight:600;font-size:11px}#menu .mz{display:block;margin-top:4px;font-size:13px;color:var(--soluk);font-variant-numeric:tabular-nums}#menu .mz b{display:inline;font-size:14px;color:var(--yazi)}
+#menu .mtm{display:grid;grid-template-columns:repeat(3,1fr);gap:4px;background:var(--kart2);border-radius:12px;padding:3px}#menu .mtm button{height:44px;border:0;border-radius:9px;background:none;color:var(--soluk);font:inherit;font-size:13px;font-weight:600;cursor:pointer;display:flex;align-items:center;justify-content:center;gap:6px}#menu .mtm button.on{background:var(--kart);color:var(--yazi);box-shadow:0 1px 3px rgba(0,0,0,.2)}#menu .mtm i{font-style:normal}
+#menu .mal{margin-top:auto;padding:12px 4px 4px;border-top:1px solid var(--cizgi);display:flex;flex-direction:column;gap:4px;font-size:12px}
 .tema{border:1px solid var(--cizgi);background:var(--kart);color:var(--soluk);border-radius:999px;width:30px;height:30px;font-size:14px;cursor:pointer;display:grid;place-items:center;padding:0}
 .canli{font-size:12px;color:var(--soluk);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .canli i{width:8px;height:8px;border-radius:50%;background:var(--soluk);display:inline-block}
@@ -1350,11 +1354,23 @@ let ALAN = (()=>{ const h = (location.hash||"").slice(1); if (SAYFA_AS.some(x=>x
 let SAYFALAR = ALAN == "alsat" ? SAYFA_AS : SAYFA_BOT;
 function alanSec(a){ ALAN = a; SAYFALAR = a == "alsat" ? SAYFA_AS : SAYFA_BOT; try { localStorage.setItem("carry_alan", a); } catch(_){}
   menuKapat(); if (ISL) islKapat(); if (SHEET) sheetKapat(); sayfa = SAYFALAR[0][0]; history.replaceState(null, "", "#"+sayfa); if (VERI) ciz(); scrollTo(0,0); }
+// madde 879: menü — alan kartlarında canlı özet (bot kitabı / al-sat özkaynağı, pozisyon sayısı), tema seçimi, bağlantı durumu
 function menuAc(){ const m = $("#menu"); m.hidden = false;
-  const b = (a, i, ad, alt) => `<button class="ms ${ALAN==a?"on":""}" onclick="alanSec('${a}')"><i aria-hidden="true">${i}</i><span><b>${ad}</b><span class="k">${alt}</span></span></button>`;
-  m.innerHTML = `<div class="mb" onclick="menuKapat()"></div><div class="mp" role="dialog" aria-label="Alan seç"><div class="mh">Alan seç</div>
-    ${b("bot", "🤖", "Bot", "carry botu: kitap, pozisyonlar, geçmiş")}${b("alsat", "💱", "Al-Sat", "kendi alım satımın — bottan ayrı")}</div>`;
+  const k = VERI && VERI.kurulumlar && VERI.kurulumlar[secili], E = ELLE_OZ && !ELLE_OZ.hata ? ELLE_OZ : null;
+  const botOz = k ? `<span class="mz"><b>${para(k.kitap_canli!=null ? k.kitap_canli : k.kitap)}</b> <span class="${sinif(k.kar_oran)}">${yz(k.kar_oran)}</span> · ${Object.keys(k.pozisyonlar||{}).length} pozisyon</span>` : "";
+  const asOz = E && E.hesap && E.hesap.ozkaynak!=null ? `<span class="mz"><b>${para(E.hesap.ozkaynak)}</b> · ${(E.pozisyonlar||[]).length} pozisyon</span>` : "";
+  const b = (a, i, ad, alt, oz) => `<button class="ms ${ALAN==a?"on":""}" onclick="alanSec('${a}')" aria-current="${ALAN==a}"><i aria-hidden="true">${i}</i><span><b>${ad}</b><span class="k">${alt}</span>${oz}</span></button>`;
+  const T = [["oto","◐","Otomatik"],["koyu","☾","Koyu"],["acik","☀","Açık"]];
+  const cn = $("#canliust");
+  m.innerHTML = `<div class="mb" onclick="menuKapat()"></div><div class="mp" role="dialog" aria-label="Menü">
+    <div class="mtp"><b>Carry</b><button class="shx" onclick="menuKapat()" aria-label="Menüyü kapat">✕</button></div>
+    <div class="mh">Alan</div>
+    ${b("bot", "🤖", "Bot", "carry botu" + (k ? ` · ${k.mod=="live"?"canlı":"demo"}` : ""), botOz)}${b("alsat", "💱", "Al-Sat", "kendi alım satımın — bottan ayrı", asOz)}
+    <div class="mh">Görünüm</div>
+    <div class="mtm" role="radiogroup" aria-label="Tema">${T.map(([t,i,ad])=>`<button role="radio" aria-checked="${tema==t}" class="${tema==t?"on":""}" onclick="temaSec('${t}')"><i aria-hidden="true">${i}</i>${ad}</button>`).join("")}</div>
+    <div class="mal">${cn ? cn.outerHTML.replace('id="canliust"', "") : ""}<span class="k">Fiyatlar Binance'ten canlı · tema bu cihazda saklanır</span></div></div>`;
   const on = m.querySelector(".ms.on"); if (on) on.focus(); }
+function temaSec(t){ tema = t; try { localStorage.setItem("carry_tema", t); } catch(_){} temaUygula(); if (VERI) ciz(); if (!$("#menu").hidden) menuAc(); }
 function menuKapat(){ const m = $("#menu"); if (m){ m.hidden = true; m.innerHTML = ""; } }
 addEventListener("keydown", e=>{ if (e.key === "Escape" && !$("#menu").hidden) menuKapat(); });
 // MADDE 757: D tasarımı — alt menü simgeleri
@@ -2811,7 +2827,7 @@ function sheetIc(s, p, k){
       <button class="shx" onclick="sheetKapat()" aria-label="Kapat">✕</button></div>
     <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>
     <div class="idonk shdk"><button class="idonb" onclick="shDon()" aria-expanded="${SH_DON}"><span>${SH_DON?"▾":"▸"} Fiyat değişimi</span><span class="k" id="dnk-${s}">${SH_DON ? "" : donemKisa(s, f)}</span></button>${SH_DON ? donemHtml(s, f) : ""}</div>
-    <div class="shkg">${kutu("Giriş", fiyatYaz(p.giris))}${kutu("Büyüklük", para(usd))}${kutu("Funding", F ? `%${(F.r*100).toFixed(4).replace(".",",")} · <span class="${sinif(fr)}">${fr>=0?"alıyor":"ödüyor"}</span>` : "—")}${elle ? kutu("Yöneten", "✋ sen") : kutu(h1 ? "Kademe · kâr al" : "Kâr al hedefi", h0 ? `${fiyatYaz(h0)} <span class="k">${uzun?"+":"−"}%${Math.round(H[0]*100)}</span>${h1 ? `<br>${fiyatYaz(h1)} <span class="k">${uzun?"+":"−"}%${Math.round(H[1]*100)}</span>` : ""}` : "—")}</div>
+    <div class="shkg">${kutu("Giriş", fiyatYaz(p.giris))}${kutu("Büyüklük", para(usd))}${kutu("Funding", F ? `%${(F.r*100).toFixed(4).replace(".",",")}<br><span class="${sinif(fr)}" style="font-size:12.5px">${fr>=0?"alıyor":"ödüyor"}${fr!=null ? ` · ${isaretli(fr)}` : ""}</span>` : "—")}${elle ? kutu("Yöneten", "✋ sen") : kutu(h1 ? "Kademe · kâr al" : "Kâr al hedefi", h0 ? `${fiyatYaz(h0)} <span class="k">${uzun?"+":"−"}%${Math.round(H[0]*100)}</span>${h1 ? `<br>${fiyatYaz(h1)} <span class="k">${uzun?"+":"−"}%${Math.round(H[1]*100)}</span>` : ""}` : "—")}</div>
     ${stop}${neden}${elle ? elleKutu(s, p, f) : cikisIc(s, usd, k)}`;
 }
 // MADDE 787: çıkış takvimi (A tasarımı) — parça parça: ne zaman alındı → ne zaman satılacak, şu anki değer ve kâr/zarar
