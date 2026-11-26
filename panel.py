@@ -1138,7 +1138,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .abh2{font-size:10.5px!important}
 .nw{white-space:nowrap}h1{white-space:nowrap}
 @media (max-width:400px){.apr .k2{white-space:normal!important;text-overflow:clip!important}header.kucuk h1 img{display:none}header.kucuk #ustkitap{font-size:13px;padding:3px 8px}
-  .abc span{font-size:11px;padding:2px 8px}.abc{gap:4px}.dpb .gb{font-size:19px}}
+  .abc span{font-size:11px;padding:2px 8px;white-space:nowrap;flex:none}.abc{gap:4px;flex-wrap:nowrap;overflow-x:auto;scrollbar-width:none}.dpb .gb{font-size:19px}}
 .pyl .pyr>span:nth-child(2)>a{padding:8px 0;margin:-8px 0}.ipr .iprtp{min-height:32px}
 #piyelle.as-sayfa{border:0;padding:0;margin:0}
 .asbak.kart{margin:0 0 12px}
