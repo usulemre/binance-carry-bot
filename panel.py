@@ -3114,7 +3114,7 @@ function olaySayfa(k){
       h += `<div class="orow"><span class="onk" style="--r:${css("--art")}">$</span><div class="om">
         <div class="ob"><span>Funding · ${o.alt.length} ödeme</span><span class="oz">${tutar(o.top)}</span></div>
         <div class="oa">${demo ? "gerçek Binance oranlarıyla · " : ""}son ${(o.zaman||"").slice(11)}</div>
-        <div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} ödemeler (${o.alt.length})</span>${ac ? `<div class="ofs">${o.alt.map(x=>`<div><span class="oz">${(x.zaman||"").slice(11)}</span><span>${x.fon && x.fon.saat ? `saatlik · ${x.fon.n} ödeme` : `${Math.max((x.fon||{}).gercek_n||0, (x.fon||{}).demo_n||0)} pozisyon`}</span>${tutar(fTut(x))}</div>`).join("")}</div>` : ""}</div></div></div>`;
+        <div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} ödemeler (${o.alt.length})</span>${ac ? `<div class="ofs">${o.alt.map(x=>`<div><span class="oz">${(x.zaman||"").slice(11)}</span><span>${x.fon && x.fon.saat ? `saatlik ×${x.fon.n}` : `${Math.max((x.fon||{}).gercek_n||0, (x.fon||{}).demo_n||0)} pozisyon`}</span>${tutar(fTut(x))}</div>`).join("")}</div>` : ""}</div></div></div>`;
       continue; }
     const par = (o.metin||"").split(/\s*\|\s*/), bas = par[0], alt = par.slice(1).join(" · ");
     h += `<div class="orow" onclick="if(!event.target.closest('a,button,.ac,table'))this.classList.toggle('oacik')"><span class="onk" style="--r:${rk}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="om">
