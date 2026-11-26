@@ -9649,3 +9649,10 @@ Dürüstlük notu: ≤ 16 Kas sonuçları 813 / 821'den BİLİNİYOR (eşit risk
 **Ölçüt (iki kol için aynı, ×1,15):** (1) uzun dönem bozulmuyor: eşit risk (Z.esit) ≥ taban − 8 VE Sharpe ≤ 2024 ve 2025+ tabandan en çok 0,1 düşük VE maks düşüş tabandan derin değil;
 (2) bu dönem: 2026-10-01 → 11-25 kaybı tabandan EN AZ 5 puan küçük. İkisi de → "AYRI DEMO ADAYI" (ayrı alt hesap, kullanıcı onayı; carry botu DEĞİŞMEZ, 2 Aralık
 değerlendirmesinde (797) raporlanır). Aksi RED. Ek rapor: kolların 17-25 Kas tek başına, yıllık tablo, Ekim / Kasım ayrı.
+**859 SAPMA KAYDI (analizden ÖNCE yazıldı, 2026-11-26):** Veri 24 Kas 20:00 bara kadar (25 Kas günlük dosyaları yayınlanmadı) → "25 Kas" pencereleri fiilen 24 Kas sonu.
+İlk yeniden kurmada `python-binance` eksikti → tradfi_liste okunamadı, TradFi ELENMEDİ; hat durduruldu, paket kuruldu, yeniden kuruldu (150 TradFi elendi).
+Parite kapısı TUTMADI: Kasım 1-24 −10,04 (beklenen −9,50), en büyük günlük fark 0,17. Teşhis: 1-13 Kas ve 15 Kas günlükleri 783 SONUÇ / uzatma 2 ile BİREBİR;
+ayrışma 16 Kas'ta başlıyor ve yeni listelenen BLESS / MMT'den: 18 Kas long −0,16 (eski −0,17, aynı), short +0,26 (eski +1,21) — fark BLESS short −0,79 ve MMT short −0,77.
+BLESS 16 Kas'ta ~2 kat, MMT 17-18 Kas'ta ~2,2 kat sıçradı; demo bot o günlerde gerçekten BLESS short tutuyordu (madde 850). Okuma: eski artımlı veride (günlük ekleme,
+"yalnız son tarihten sonrası") bu yeni coinlerin satırları eksikti; tam yeniden indirme daha DOĞRU. Ön kayıt kuralı gereği bu SAPMA açıkça yazılarak devam:
+ana okuma Eki-15 Kas (parite tam), Eki-24 Kas ek; ölçüt 2 artık İKİ pencerede de ≥ 5 puan ister (daha sıkı). Uzun dönem ölçütü (1) bu 9 günden etkilenmez.

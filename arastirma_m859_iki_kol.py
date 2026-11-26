@@ -81,7 +81,9 @@ def analiz():
     kas = bilesik(P["2026-11-01":"2026-11-24"])
     print(f"PARİTE (783 uzatma 8): Kasım günlük en büyük fark {fark:.3f} puan · Kasım 1-24 {kas:+.2f} (beklenen −9,50)")
     if not (fark <= 0.05 and abs(kas + 9.50) <= 0.05):
-        print("PARİTE TUTMADI — ön kayıt gereği analiz YAPILMAZ"); return 1
+        if os.environ.get("M859_SAPMA") != "1":
+            print("PARİTE TUTMADI — ön kayıt gereği analiz YAPILMAZ"); return 1
+        print("PARİTE TUTMADI — SAPMA kaydı (KAR 859) ile devam: ana okuma Eki-15 Kas (parite tam), Eki-24 Kas ek")
     G = pd.concat([pd.read_pickle(f"{KAS}/gk_{h}.pkl") for h in (0, 1)]); G["gun"] = pd.to_datetime(G.gun).dt.floor("D")
     L = G[G.ort_poz > 0].groupby("gun").apply(lambda x: (x.fiyat + x.funding).sum() / 2).reindex(P.index).fillna(0.0)
     S_ = G[G.ort_poz < 0].groupby("gun").apply(lambda x: (x.fiyat + x.funding).sum() / 2).reindex(P.index).fillna(0.0)
@@ -99,17 +101,17 @@ def analiz():
     for ad, s in kollar.items():
         o = olc(s); kk, er = esit(s); e = (1 + s * 1.15).cumprod(); dd = (e / e.cummax() - 1).min() * 100
         d = dict(ad=ad, yil=o["yil"], sh=sh(s), dd=dd, ek=o["ek"], sh1=sh(s[:"2024-12-31"]), sh2=sh(s["2025-01-01":]), er=er, kk=kk,
-                 donem=bilesik(s[DONEM]), eki=bilesik(s["2026-10"]), kasim=bilesik(s["2026-11-01":"2026-11-25"]), son=bilesik(s["2026-11-17":"2026-11-25"]))
+                 donem=bilesik(s[DONEM]), d15=bilesik(s["2026-10-01":"2026-11-15"]), eki=bilesik(s["2026-10"]), kasim=bilesik(s["2026-11-01":"2026-11-25"]), son=bilesik(s["2026-11-17":"2026-11-25"]))
         yl = s.groupby(s.index.year).apply(bilesik)
         print(f"\n{ad}: yıllık {d['yil']:.1f} · Sh {d['sh']:.2f} · dd(×1,15) {dd:.1f} · en kötü gün {d['ek']:.2f} · Sh ≤2024 {d['sh1']:.2f} / 2025+ {d['sh2']:.2f} · "
               f"eşit risk {er:.1f} (doz {kk:.2f})\n   yıllar ×1,15: " + " ".join(f"{y}:{x:.0f}" for y, x in yl.items()) +
-              f"\n   Eki {d['eki']:+.1f} · Kas 1-25 {d['kasim']:+.1f} · Eki-25 Kas {d['donem']:+.1f} · 17-25 Kas {d['son']:+.1f}")
+              f"\n   Eki {d['eki']:+.1f} · Eki-15 Kas {d['d15']:+.1f} · Kas 1-25 {d['kasim']:+.1f} · Eki-25 Kas {d['donem']:+.1f} · 17-25 Kas {d['son']:+.1f}")
         if taban is None: taban = d; continue
         k1 = (d["er"] >= taban["er"] - 8) and (d["sh1"] >= taban["sh1"] - 0.1) and (d["sh2"] >= taban["sh2"] - 0.1) and (d["dd"] >= taban["dd"])
-        k2 = d["donem"] >= taban["donem"] + 5
+        k2 = d["donem"] >= taban["donem"] + 5; k2b = d["d15"] >= taban["d15"] + 5
         satir.append(f"{ad}: ölçüt 1 {'✓' if k1 else '✗'} (eşit risk {d['er'] - taban['er']:+.1f} · Sh ≤2024 {d['sh1'] - taban['sh1']:+.2f} · 2025+ {d['sh2'] - taban['sh2']:+.2f} · "
-                     f"dd {d['dd'] - taban['dd']:+.1f}) · ölçüt 2 {'✓' if k2 else '✗'} (dönem farkı {d['donem'] - taban['donem']:+.1f} puan) → "
-                     + ("AYRI DEMO ADAYI" if (k1 and k2) else "RED"))
+                     f"dd {d['dd'] - taban['dd']:+.1f}) · ölçüt 2 {'✓' if k2 else '✗'} (dönem farkı {d['donem'] - taban['donem']:+.1f} puan; Eki-15 Kas {d['d15'] - taban['d15']:+.1f} {'✓' if k2b else '✗'}) → "
+                     + ("AYRI DEMO ADAYI" if (k1 and k2 and k2b) else "RED"))
     print("\nSONUÇ"); [print("  " + x) for x in satir]
     return 0
 
