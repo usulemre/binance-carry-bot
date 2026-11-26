@@ -1119,6 +1119,35 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+/* madde 866: sade piyasa */
+.pk2{padding:14px}
+.pkara{display:flex;align-items:center;gap:8px;padding:0 12px;height:46px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.pkara>span:first-child{font-size:18px;color:var(--soluk)}
+.pkara input{flex:1;min-width:0;border:0!important;background:none!important;outline:none;font:inherit;font-size:15px;color:var(--yazi);padding:0!important;height:44px;box-shadow:none!important}.pkara #piyd{white-space:nowrap;font-size:11.5px}
+.pksek{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:12px -14px 0;padding:0 14px}.pksek::-webkit-scrollbar{display:none}
+.pksek button{flex:none;height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--cizgi);background:none;color:var(--soluk);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap}
+.pksek button.on{background:var(--yazi);border-color:var(--yazi);color:var(--bg)}
+.pkay{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
+.pkdon{display:flex;background:var(--kart2);border-radius:10px;padding:2px}.pkdon button{height:32px;min-width:42px;padding:0 10px;border:0;border-radius:8px;background:none;color:var(--soluk);font:inherit;font-size:13px;font-weight:600;cursor:pointer}.pkdon button.on{background:var(--kart);color:var(--yazi);box-shadow:0 1px 3px rgba(0,0,0,.2)}
+.pkhac{font-size:12.5px;color:var(--soluk);display:flex;align-items:center;gap:6px;white-space:nowrap}.pkhac select{height:34px;border-radius:10px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:13px;font-weight:600;padding:0 8px}
+.pkb{display:flex;justify-content:space-between;gap:8px;font-size:12px;color:var(--soluk);margin:14px 2px 8px}
+.pkl{display:flex;flex-direction:column;gap:4px}
+.pkr{display:grid;grid-template-columns:36px minmax(0,1fr) auto 36px;gap:10px;align-items:center;padding:8px 4px 8px 10px;border-radius:12px;background:var(--kart2);cursor:pointer;-webkit-tap-highlight-color:transparent;transition:background .5s}
+.pkr:active{filter:brightness(1.08);transform:scale(.995)}.pkr:focus-visible{outline:2px solid var(--vurgu);outline-offset:1px}
+.pkr.fl-a{background:color-mix(in srgb,var(--art) 12%,var(--kart2))}.pkr.fl-e{background:color-mix(in srgb,var(--eks) 12%,var(--kart2))}
+.pkr.pyok{opacity:.55}
+.pkav{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;letter-spacing:-.3px;color:hsl(var(--h) 70% 35%);background:hsl(var(--h) 80% 90%)}
+:root[data-theme="dark"] .pkav{color:hsl(var(--h) 80% 75%);background:hsl(var(--h) 45% 20%)}
+@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pkav{color:hsl(var(--h) 80% 75%);background:hsl(var(--h) 45% 20%)}}
+.pkm{min-width:0;display:flex;flex-direction:column;gap:2px}.pkt{display:flex;align-items:center;gap:5px;min-width:0}.pkt b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pks{font-size:12px;color:var(--soluk);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pks i{font-style:normal;opacity:.5}.pks .art{color:var(--art)}.pks .eks{color:var(--eks)}
+.pkz{flex:none;font-size:10.5px;font-weight:650;padding:1px 6px;border-radius:999px;background:var(--kart);color:var(--soluk);white-space:nowrap}.pkz.sen{color:#fff}.pkz.sen.L{background:#0a7d45}.pkz.sen.S{background:#c42b20}.pkz.yok{background:none;border:1px dashed var(--cizgi)}
+.pkd{min-width:76px;text-align:center;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;padding:7px 8px;border-radius:10px;background:var(--kart);white-space:nowrap}
+.pkd.art{color:#fff;background:#0a7d45}.pkd.eks{color:#fff;background:#c42b20}
+.pky{width:36px;height:40px;border:0;background:none;color:var(--soluk);font-size:19px;cursor:pointer;padding:0}.pky.on{color:#f5a524}
+.pkdaha{width:100%;margin-top:8px;height:42px;border-radius:12px;border:1px dashed var(--cizgi);background:none;color:var(--vurgu);font:inherit;font-weight:600;cursor:pointer}
+.pkbos{padding:22px 14px;text-align:center;border-radius:12px;background:var(--kart2);color:var(--soluk);font-size:13.5px;line-height:1.5}
+.pknot{margin-top:12px;font-size:11.5px;color:var(--soluk);line-height:1.5}
+@media (max-width:360px){.pkr{grid-template-columns:30px minmax(0,1fr) auto 32px;gap:8px;padding-left:8px}.pkav{width:30px;height:30px;font-size:11px}.pkd{min-width:66px;font-size:13px;padding:6px}.pky{width:32px}}
 /* madde 865: mobil ekran testleri (320–430 px) düzeltmeleri */
 .pfa{display:none}
 .pyr .rz{white-space:nowrap;flex:none}
@@ -1410,6 +1439,7 @@ let PIY_DOKUN = 0; addEventListener("pointerdown", e=>{ if (e.target.closest && 
 let PIY = {}, PIY_WS = null, PIY_ACIK = false, PIY_EVREN = null, PIY_ZAMAN = 0, PIY_ONCEKI = {}, PIY_HATA = "", PIY_SON_CIZ = 0;
 const PIY_DEP = (a, v) => { try { return v===undefined ? JSON.parse(localStorage.getItem(a)) : localStorage.setItem(a, JSON.stringify(v)); } catch(_){ return null; } };
 let PIY_IZLE = new Set(PIY_DEP("carry_izle") || []), PIY_HACIM = PIY_DEP("carry_piy_hacim") ?? 10e6, PIY_MOD = PIY_DEP("carry_piy_mod") || "deg", PIY_ARA = "";
+let PIY_SEKME = PIY_DEP("carry_piy_sekme") || (PIY_MOD=="fund" ? "fund" : "yuk"), PIY_N = 25;
 // madde 833: dönem (1 / 3 / 7 / 30 gün). 1 gün = Binance'in kayan 24 sa değişimi; diğerleri günlük mumlardan (son 31 gün, coin başına
 // bir istek, 30 dk önbellek): şimdiki fiyat / N gün önceki günlük kapanış - 1. Yalnız listede görünecek coinler için (hacim süzgeci +
 // izleme listesi + arama) indirilir; 6 paralel istek. Coin N günden yeniyse "—" (sıralamaya girmez).
@@ -1435,7 +1465,7 @@ async function piyGecmisYukle(){
   await Promise.all([1,2,3,4,5,6].map(isci));
   PIY_GYUK.calis = false; piyasaBoya(true);
 }
-function piyDonem(d){ PIY_DONEM = d; PIY_MOD = "deg"; PIY_DEP("carry_piy_donem", d); PIY_DEP("carry_piy_mod", "deg"); ciz(); piyGecmisYukle(); }
+function piyDonem(d){ PIY_DONEM = d; PIY_N = 25; PIY_DEP("carry_piy_donem", d); ciz(); piyGecmisYukle(); }
 async function piyasaIlk(){
   try {
     const [t, m, e] = await Promise.all(["ticker/24hr", "premiumIndex", PIY_EVREN ? null : "exchangeInfo"].map(u => u ? fetch("https://fapi.binance.com/fapi/v1/"+u, {cache:"no-store"}).then(r=>r.json()) : null));
@@ -1475,42 +1505,56 @@ function piyRozet(k){   // botun / senin bu coindeki durumun
   if (!(ISL_DURUM||{}).ayri) for (const c of (k && k.coin_ozet) || []) if (c.elle) R[c.s.endsWith("USDT") ? c.s : c.s+"USDT"] = "✋ elle";
   return R;
 }
-function piySatir(o, R){
-  const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, "");
-  return `<div class="pyr ${fl>0?"fl-a":fl<0?"fl-e":""}"><button class="yd ${yd?"on":""}" title="${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" aria-label="${ad} ${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" aria-pressed="${yd}" onclick="piyIzle('${o.s}')">${yd?"★":"☆"}</button>
-    <span style="min-width:0;display:flex;align-items:center">${ISL_DURUM && ISL_DURUM.acik ? `<a href="#piyasa" onclick="islAc('${o.s}');return false" title="al / sat">${ad}</a>` : `<a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>`}${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}${ISL_DURUM && ISL_DURUM.acik && islYok(o.s) ? `<span class="rz yok" title="${ISL_DURUM.mod=="live"?"bu hesapta":"demo hesapta"} işlem görmüyor">yok</span>` : ""}<span class="pfa">${piyFiyat(o.f)}</span></span>
-    <span class="r pfc">${piyFiyat(o.f)}</span><span class="r ${o.d>0?"art":o.d<0?"eks":""}"><b>${piyYz(o.d)}</b></span>
-    <span class="r k2 hc">${piyHac(o.q)}</span><span class="r k2 ${o.r>0?"":o.r<0?"eks":""}" title="son funding oranı (8 sa)">${o.r==null?"—":piyYz(o.r*100, 3)}</span></div>`;
+function piySatir(o, R){   // madde 866: kart satır — tamamına dokun = al / sat; ☆ sağda
+  const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, ""), isl = ISL_DURUM && ISL_DURUM.acik, yok = isl && islYok(o.s);
+  const benim = ((ELLE_OZ && ELLE_OZ.pozisyonlar) || []).find(x=>x.sembol == o.s);
+  let h = 0; for (const c of ad) h = (h * 31 + c.charCodeAt(0)) % 360;
+  const fon = PIY_SEKME == "fund", ana = fon ? (o.r==null ? null : o.r*100) : o.d, anaM = ana==null ? "—" : fon ? piyYz(ana, 3) : piyYz(ana);
+  const rz = (benim ? `<span class="pkz sen ${benim.adet>0?"L":"S"}">pozisyonun · ${benim.adet>0?"L":"S"}</span>` : "") + (R[o.s] ? `<span class="pkz">${R[o.s]}</span>` : "") + (yok ? `<span class="pkz yok" title="${ISL_DURUM.mod=="live"?"bu hesapta":"demo hesapta"} işlem görmüyor">${ISL_DURUM.mod=="live"?"hesapta yok":"demoda yok"}</span>` : "");
+  const alt = `${piyFiyat(o.f)} <i>·</i> ${piyHac(o.q)}$` + (fon ? ` <i>·</i> <span class="${sinif(o.d)}">${piyYz(o.d)}</span>` : (o.r!=null && Math.abs(o.r) >= 0.0003 ? ` <i>·</i> <span class="${o.r<0?"eks":""}" title="funding (8 sa)">fon ${piyYz(o.r*100, 3)}</span>` : ""));
+  const ac = isl ? `islAc('${o.s}')` : `window.open('https://www.binance.com/tr/futures/${o.s}','_blank','noopener')`;
+  return `<div class="pkr ${fl>0?"fl-a":fl<0?"fl-e":""} ${yok?"pyok":""}" role="button" tabindex="0" onclick="${ac}" onkeydown="if(event.key=='Enter')${ac}" aria-label="${ad} ${isl?"al / sat":"Binance'te aç"}">
+    <span class="pkav" style="--h:${h}" aria-hidden="true">${ea(ad.slice(0,2))}</span>
+    <span class="pkm"><span class="pkt"><b>${ea(ad)}</b>${rz}</span><span class="pks">${alt}</span></span>
+    <span class="pkd ${ana==null?"":ana>0?"art":ana<0?"eks":""}">${anaM}</span>
+    <button class="pky ${yd?"on":""}" onclick="event.stopPropagation();piyIzle('${o.s}')" aria-pressed="${yd}" aria-label="${ad} ${yd?"izleme listesinden çıkar":"izleme listesine ekle"}">${yd?"★":"☆"}</button></div>`;
 }
-function piyListe(k){
+function piyListe(k){   // madde 866: tek liste — seçili sekme (yükselen / düşen / işlem / funding / izlediklerim) ya da arama
   const A = Object.values(PIY).filter(o => o.f>0 && o.p!=null && (!PIY_EVREN || PIY_EVREN.has(o.s)) && o.s.endsWith("USDT"));
   for (const o of A) o.d = piyDeg(o);
-  const DA = PIY_DAD[PIY_DONEM];
-  const R = piyRozet(k), ust = `<div class="pyr ust"><span></span><span>coin</span><span class="r pfc">fiyat</span><span class="r">${DA}</span><span class="r hc">hacim</span><span class="r">funding</span></div>`;
-  const blok = (bas, L, not) => `<div class="pyb"><span>${bas}</span><span>${not||""}</span></div><div class="pyl">${L.length ? ust + L.map(o=>piySatir(o, R)).join("") : `<div class="pybos">${Object.keys(PIY).length ? "Bu süzgeçte coin yok. Hacim sınırını düşürmeyi dene." : "Piyasa verisi yükleniyor…"}</div>`}</div>`;
-  if (PIY_ARA){
-    const L = A.filter(o => o.s.includes(PIY_ARA)).sort((a,b)=>(b.q||0)-(a.q||0)).slice(0, 40);
-    return blok(`Arama: ${PIY_ARA}`, L, `${L.length} coin`);
-  }
-  const izl = A.filter(o => PIY_IZLE.has(o.s)).sort((a,b)=>(b.d??-1e9)-(a.d??-1e9));
-  const H = A.filter(o => (o.q||0) >= PIY_HACIM), n = 15;
-  const ana = PIY_MOD=="fund"
-    ? blok("En yüksek funding (short'a ödeniyor)", H.filter(o=>o.r>0).sort((a,b)=>b.r-a.r).slice(0,n)) + blok("En negatif funding (long'a ödeniyor)", H.filter(o=>o.r<0).sort((a,b)=>a.r-b.r).slice(0,n))
-    : blok(`En çok yükselen (${DA})`, H.filter(o=>o.d>0).sort((a,b)=>b.d-a.d).slice(0,n), piyYukNot()) + blok(`En çok düşen (${DA})`, H.filter(o=>o.d<0).sort((a,b)=>a.d-b.d).slice(0,n));
-  return (izl.length ? blok("★ İzleme listem", izl, `${izl.length} coin`) : "") + ana;
+  const R = piyRozet(k), H = A.filter(o => (o.q||0) >= PIY_HACIM);
+  const bos = m => `<div class="pkbos">${Object.keys(PIY).length ? m : "Piyasa verisi yükleniyor…"}</div>`;
+  let L, bas, m;
+  if (PIY_ARA){ L = A.filter(o => o.s.includes(PIY_ARA)).sort((a,b)=>(b.q||0)-(a.q||0)); bas = `“${PIY_ARA}” için ${L.length} sonuç`; m = "Bu adla coin yok."; }
+  else if (PIY_SEKME == "izle"){ L = A.filter(o => PIY_IZLE.has(o.s)).sort((a,b)=>(b.d??-1e9)-(a.d??-1e9)); bas = `${L.length} coin · ${PIY_DAD[PIY_DONEM]} değişim`; m = "Henüz izlediğin coin yok. Listelerde coinin yanındaki ☆ işaretine dokun."; }
+  else if (PIY_SEKME == "dus"){ L = H.filter(o=>o.d<0).sort((a,b)=>a.d-b.d); bas = `${PIY_DAD[PIY_DONEM]} içinde en çok düşenler`; m = "Bu süzgeçte düşen coin yok."; }
+  else if (PIY_SEKME == "hac"){ L = H.slice().sort((a,b)=>(b.q||0)-(a.q||0)); bas = "24 saatte en çok işlem gören"; m = "Bu süzgeçte coin yok."; }
+  else if (PIY_SEKME == "fund"){ L = H.filter(o=>o.r!=null && o.r!=0).sort((a,b)=>Math.abs(b.r)-Math.abs(a.r)); bas = "Funding en uç olanlar · artı: short'a ödenir, eksi: long'a"; m = "Bu süzgeçte coin yok."; }
+  else { L = H.filter(o=>o.d>0).sort((a,b)=>b.d-a.d); bas = `${PIY_DAD[PIY_DONEM]} içinde en çok yükselenler`; m = "Bu süzgeçte yükselen coin yok."; }
+  const n = L.length, G = L.slice(0, PIY_N), yuk = piyYukNot();
+  return `<div class="pkb"><span>${bas}</span>${yuk ? `<span>${yuk}</span>` : ""}</div>
+    <div class="pkl">${n ? G.map(o=>piySatir(o, R)).join("") : bos(m + (PIY_SEKME!="izle" && !PIY_ARA && PIY_HACIM > 1e6 ? " Hacim sınırını düşürmeyi dene." : ""))}</div>
+    ${n > G.length ? `<button class="pkdaha" onclick="PIY_N+=25;piyasaBoya(true)">Daha fazla göster (${n - G.length})</button>` : ""}`;
 }
 function piyYukNot(){ return PIY_DONEM > 1 && PIY_GYUK.calis ? `geçmiş yükleniyor ${PIY_GYUK.bit}/${PIY_GYUK.bek}` : ""; }
-function piyasaSayfa(k){
-  const hb = (v, ad) => `<button class="${PIY_HACIM==v?"on":""}" onclick="piyHacim(${v})">${ad}</button>`, mb = (v, ad) => `<button class="${PIY_MOD==v?"on":""}" onclick="piyMod('${v}')">${ad}</button>`;
-  return `<div class="kart pyk">
-    <div class="dpb"><span class="gb">Piyasa</span><span class="k" id="piyd" role="status"></span></div>
-    <div class="pya"><input id="piyara" type="search" aria-label="Coin ara" placeholder="Coin ara, örn. AKE" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value)">
-      <div class="gdon">${[1,3,7,30].map(d=>`<button class="${PIY_MOD=="deg"&&PIY_DONEM==d?"on":""}" onclick="piyDonem(${d})">${PIY_DAD[d]}</button>`).join("")}${mb("fund","Funding")}</div></div>
-    <div class="pya"><span class="k">hacim ≥</span><div class="gdon">${hb(1e6,"1 M$")}${hb(10e6,"10 M$")}${hb(50e6,"50 M$")}${hb(200e6,"200 M$")}</div></div>
+function piyasaSayfa(k){   // madde 866: sade — arama, tek sekme satırı, tek ayar satırı, tek liste
+  const SK = [["yuk","Yükselenler"],["dus","Düşenler"],["hac","En çok işlem"],["fund","Funding"],["izle",`★ İzlediklerim${PIY_IZLE.size ? ` ${PIY_IZLE.size}` : ""}`]];
+  const donemli = PIY_SEKME=="yuk" || PIY_SEKME=="dus" || PIY_SEKME=="izle";
+  const D = ISL_DURUM;
+  return `<div class="kart pyk pk2">
+    <div class="pkara"><span aria-hidden="true">⌕</span><input id="piyara" type="search" aria-label="Coin ara" placeholder="Coin ara (örn. BTC)" autocomplete="off" autocapitalize="characters" value="${PIY_ARA}" oninput="piyAra(this.value);piySekmeGoster()">
+      <span class="k" id="piyd" role="status"></span></div>
+    <div id="piysk" ${PIY_ARA ? "hidden" : ""}>
+    <div class="pksek" role="tablist">${SK.map(([v,ad])=>`<button role="tab" aria-selected="${PIY_SEKME==v}" class="${PIY_SEKME==v?"on":""}" onclick="piySekme('${v}')">${ad}</button>`).join("")}</div>
+    <div class="pkay">${donemli ? `<div class="pkdon">${[1,3,7,30].map(d=>`<button class="${PIY_DONEM==d?"on":""}" onclick="piyDonem(${d})">${{1:"24s",3:"3g",7:"1h",30:"1a"}[d]}</button>`).join("")}</div>` : `<span></span>`}
+      ${PIY_SEKME!="izle" ? `<label class="pkhac">hacim ≥ <select onchange="piyHacim(+this.value)" aria-label="en düşük 24 sa hacim">${[[1e6,"1 M$"],[10e6,"10 M$"],[50e6,"50 M$"],[200e6,"200 M$"]].map(([v,a])=>`<option value="${v}" ${PIY_HACIM==v?"selected":""}>${a}</option>`).join("")}</select></label>` : ""}</div>
+    </div>
     <div id="piyic">${piyListe(k)}</div>
-    <div class="k" style="margin-top:10px">Gerçek Binance piyasası, saniyede bir güncellenir. ☆ ile izleme listene ekle (yalnız bu cihazda saklanır). ${ISL_DURUM && ISL_DURUM.acik ? `Coin adına dokununca <b>al / sat</b> penceresi açılır (${ISL_DURUM.mod=="live"?"CANLI hesap":"demo hesap"}, tek emir en fazla ${ISL_DURUM.max_usd} $, her emirde PIN).` : `Coin adına dokununca Binance'te açılır.${ISL_DURUM && ISL_DURUM.neden ? ` <span title="${ea(ISL_DURUM.neden)}">Panelden işlem kapalı.</span>` : ""}`}</div>
+    <div class="pknot">Gerçek Binance fiyatları, canlı. ${D && D.acik ? `Coine dokun → <b>al / sat</b> (${D.mod=="live"?"canlı":"demo"} hesap).` : "Coine dokununca Binance'te açılır."} ☆ listesi bu cihazda saklanır.</div>
   </div>`;
 }
+function piySekme(v){ PIY_SEKME = v; PIY_N = 25; PIY_DEP("carry_piy_sekme", v); if (v=="fund") PIY_MOD = "fund"; else PIY_MOD = "deg"; PIY_DEP("carry_piy_mod", PIY_MOD); ciz(); piyGecmisYukle(); }
+function piySekmeGoster(){ const e = $("#piysk"); if (e) e.hidden = !!PIY_ARA; }
 // MADDE 851: AL-SAT alanı — Pozisyonlarım (bottan ayrı hesap). Hesap bağlanana kadar (geçiş) bot hesabındaki elle pozisyonlar burada.
 function alsatSayfa(k){   // madde 864: tek başlık (üst çubukta Al-Sat); bakiye kartı + pozisyonlar kartı
   const D = ISL_DURUM;
