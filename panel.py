@@ -923,7 +923,7 @@ header.kucuk>div:first-child{display:flex;align-items:center;gap:12px;min-width:
 .tema{border:1px solid var(--cizgi);background:var(--kart);color:var(--soluk);border-radius:999px;width:30px;height:30px;font-size:14px;cursor:pointer;display:grid;place-items:center;padding:0}
 .canli{font-size:12px;color:var(--soluk);display:inline-flex;align-items:center;gap:6px;white-space:nowrap}
 .canli i{width:8px;height:8px;border-radius:50%;background:var(--soluk);display:inline-block}
-.canli.on{color:var(--art)}.canli.on i{background:var(--art);animation:nabiz 1.6s infinite}
+.canli.on{color:var(--art)}.canli.gec{color:var(--uyari)}.canli.gec i{background:var(--uyari)}.canli.yok{color:var(--eks)}.canli.yok i{background:var(--eks)}.canli.on i{background:var(--art);animation:nabiz 1.6s infinite}
 @keyframes nabiz{0%{box-shadow:0 0 0 0 color-mix(in srgb,var(--art) 60%,transparent)}70%{box-shadow:0 0 0 7px transparent}100%{box-shadow:0 0 0 0 transparent}}
 .sekme{display:flex;gap:6px;flex-wrap:wrap;margin-bottom:12px}.sekme:empty{display:none}.sekme button{border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);
 padding:5px 12px;border-radius:999px;cursor:pointer;font:inherit;font-size:13px}.sekme button.on{border-color:var(--vurgu);color:var(--vurgu);font-weight:600}
@@ -1801,7 +1801,7 @@ function ellePayHtml(s, p, f){   // madde 846: sade özet — ne aldın, kaçtan
   return `<div class="elp">${govde}${koruma}${D ? `<details class="eld"><summary>İşlem geçmişi (${P.dolum.length})</summary>${D}</details>` : ""}</div>`;
 }
 // MADDE 856: Al-Sat pozisyonları CANLI — kendi işaret fiyatı akışı (saniyede bir); K/Z = adet × (işaret − giriş) (Binance açık K/Z tanımı)
-let AS_WS = null, AS_WSK = "", AS_F = {};
+let AS_WS = null, AS_WSK = "", AS_F = {}, AS_ZAMAN = 0;
 function asAkisBagla(){
   const S = ALAN == "alsat" && !VERI_GOMULU && window.WebSocket ? ((ELLE_OZ && ELLE_OZ.pozisyonlar) || []).map(x=>x.sembol).sort() : [];
   const k = S.join(",");
@@ -1809,7 +1809,7 @@ function asAkisBagla(){
   if (k === AS_WSK && AS_WS && AS_WS.readyState <= 1) return;
   if (AS_WS){ AS_WS.onclose = null; AS_WS.close(); }
   AS_WSK = k; const ws = new WebSocket("wss://fstream.binance.com/market/stream?streams=" + S.map(s=>s.toLowerCase()+"@markPrice@1s").join("/")); AS_WS = ws;
-  ws.onmessage = e => { try { const d = JSON.parse(e.data).data; if (d && d.s && +d.p > 0) AS_F[d.s] = +d.p; } catch(_){} };
+  ws.onmessage = e => { try { const d = JSON.parse(e.data).data; if (d && d.s && +d.p > 0){ AS_F[d.s] = +d.p; AS_ZAMAN = Date.now(); } } catch(_){} };
   ws.onclose = () => { if (AS_WS === ws){ AS_WS = null; AS_WSK = ""; setTimeout(asAkisBagla, 4000); } };
 }
 const asKz = x => { const f = AS_F[x.sembol]; return f > 0 && x.adet && x.giris > 0 ? x.adet * (f - x.giris) : x.kz; };
@@ -2565,9 +2565,19 @@ function egriIc(k){
   return `<div class="bl"><span>${egriMod=="hafta" ? "son 7 gün" : `başlangıçtan (${(k.seri||[]).length} gün)`}</span><b class="${sinif(d)}">${isaretli(d)}</b></div>${cizgi(kit, EGRI_W(), 70, css(d>=0?"--art":"--eks"), kit[0], "kitap")}`;
 }
 function egriSec(m){ egriMod = m; const k = VERI.kurulumlar[secili]; document.querySelectorAll(".mod button").forEach(b=>b.classList.toggle("on", b.dataset.m==m)); const e = $("#egri"); if (e) e.innerHTML = egriIc(k); }
+// madde 888: "canlı" göstergesi o an EKRANDAKİ verinin kaynağına bakar (eskiden Al-Sat'ta da botun akışına bakıyordu):
+// bot -> bot akışı; Al-Sat Piyasa -> piyasa akışı; Pozisyonlarım/Geçmiş -> al-sat fiyat akışı (pozisyon yoksa kapı yanıtı).
+// Akış 5 sn'den fazla susarsa sarı "N sn önce", 60 sn'yi geçerse kırmızı "bağlantı yok".
+function canliKaynak(){
+  if (ALAN != "alsat") return [wsZaman, 5000];
+  if (sayfa == "piyasa") return [PIY_ZAMAN, 10000];
+  if (AS_WSK) return [AS_ZAMAN || 0, 5000];
+  return [ELLE_OZ && !ELLE_OZ.hata && !ELLE_OZ.baglanti ? (elleYukle.t || 0) : 0, 40000];
+}
 function canliDurum(){
-  const on = !VERI_GOMULU && Date.now() - wsZaman < 5000, e = $("#canliust");
-  if (e){ e.className = "canli" + (on ? " on" : ""); e.lastElementChild.textContent = on ? "canlı" : (VERI ? VERI.uretim.slice(11) : "bağlanıyor"); }
+  const [z, esik] = canliKaynak(), g = Date.now() - z, on = !VERI_GOMULU && z > 0 && g < esik, e = $("#canliust");
+  const metin = on ? "canlı" : VERI_GOMULU ? (VERI ? VERI.uretim.slice(11) : "") : !z ? "bağlanıyor" : g < 60e3 ? `${Math.round(g/1000)} sn önce` : "bağlantı yok";
+  if (e){ e.className = "canli" + (on ? " on" : z && g >= 60e3 ? " yok" : z ? " gec" : ""); e.lastElementChild.textContent = metin; }
   return on;
 }
 function halka(dolu, n){
