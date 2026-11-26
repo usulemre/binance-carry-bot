@@ -1022,7 +1022,7 @@ nav.alt .nok{position:absolute;top:6px;right:calc(50% - 22px);width:8px;height:8
 .dst{font-size:10.5px;font-weight:650;color:var(--uyari);background:color-mix(in srgb,var(--uyari) 14%,transparent);border-radius:6px;padding:1px 6px;white-space:nowrap}
 .dst.e{color:var(--eks);background:color-mix(in srgb,var(--eks) 14%,transparent)}.dst.l{color:var(--vurgu);background:none;border:1px solid color-mix(in srgb,var(--vurgu) 40%,transparent)}.dst.s{color:var(--uyari);background:none;border:1px solid color-mix(in srgb,var(--uyari) 40%,transparent)}
 #sheet{position:fixed;inset:0;z-index:20}.shb{position:absolute;inset:0;background:rgba(0,0,0,.5)}
-.shp{position:absolute;left:0;right:0;bottom:0;max-height:88vh;overflow:auto;background:var(--kart);border-radius:24px 24px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(0,0,0,.4);max-width:600px;margin:0 auto;animation:shy .22s ease-out}
+.shp{position:absolute;left:0;right:0;bottom:0;max-height:88vh;max-height:calc(100% - max(16px, env(safe-area-inset-top) + 8px));overflow:auto;background:var(--kart);border-radius:24px 24px 0 0;padding:10px 20px calc(20px + env(safe-area-inset-bottom));box-shadow:0 -12px 40px rgba(0,0,0,.4);max-width:600px;margin:0 auto;animation:shy .22s ease-out}
 @keyframes shy{from{transform:translateY(40px);opacity:.4}to{transform:none;opacity:1}}
 .shh{width:40px;height:5px;border-radius:99px;background:var(--cizgi);margin:0 auto 14px}.shu{display:flex;justify-content:space-between;align-items:flex-start}
 .shf{font-size:30px;font-weight:700;letter-spacing:-.5px;margin-top:4px;font-variant-numeric:tabular-nums}
