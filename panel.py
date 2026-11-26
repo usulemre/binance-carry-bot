@@ -1177,6 +1177,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .igl.alm{stroke:var(--mor)}.isl .ige.alm rect{fill:var(--mor)}.isl .igad.alm rect{stroke:var(--mor)}.isl .igad.alm text{fill:var(--mor)}
 .apfn{display:block;font-size:11.5px;color:var(--soluk);margin-top:1px}.apfn b{font-weight:600;font-variant-numeric:tabular-nums}.apfn b.art{color:var(--art)}.apfn b.eks{color:var(--eks)}
 .igel{margin-top:12px;padding-top:10px;border-top:1px solid var(--cizgi);font-size:13px}.igel>div{display:flex;justify-content:space-between;gap:8px;padding:3px 0}.igel b{font-variant-numeric:tabular-nums}.igel b.art{color:var(--art)}.igel b.eks{color:var(--eks)}.igelb{font-weight:650}.igelt{border-top:1px dashed var(--cizgi);margin-top:4px;padding-top:6px!important;font-weight:700;font-size:14px}
+.assr{display:flex;align-items:center;justify-content:flex-end;gap:8px;margin:8px 0 2px}.assr select{height:36px;padding:0 30px 0 12px;border-radius:10px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:13.5px;-webkit-appearance:none;appearance:none;background-image:linear-gradient(45deg,transparent 50%,var(--soluk) 50%),linear-gradient(135deg,var(--soluk) 50%,transparent 50%);background-position:calc(100% - 15px) 15px,calc(100% - 10px) 15px;background-size:5px 5px;background-repeat:no-repeat}
 .inot{margin-top:12px;padding:12px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.inoth{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:650;font-size:14px}.inoth button{background:none;border:0;color:var(--vurgu);font:inherit;font-size:13px;padding:6px 2px;cursor:pointer}.inotm{margin-top:6px;font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.isl .inot textarea,.isl .ionay textarea{width:100%;box-sizing:border-box;margin-top:8px;padding:10px 12px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);font:inherit;font-size:15px;line-height:1.4;resize:vertical}.isl .ionay textarea{background:var(--kart2)}.inot .iseg{margin-top:8px}
 .apn{font-size:12px;line-height:1}.acnt{grid-column:1/-1;font-size:12.5px;color:var(--soluk);margin-top:3px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer}.acnt.acik{-webkit-line-clamp:unset;display:block}
 .iiz{margin-top:12px;padding:12px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.iiz .iseg{margin-top:10px}.iiz .ichip button,.isl .iiz input,.iiz .iacil{background:var(--kart)}
@@ -2026,6 +2027,20 @@ async function tsGonder(){
 addEventListener("keydown", e=>{ if (e.key === "Escape" && TS && !TS.mesgul) tsKapat(); });
 // MADDE 902: pozisyonun gerçek sonucu = fiyat K/Z (canlı) + açıldığından beri funding + komisyon + kısmi kapanışlarda gerçekleşen
 const asNet = x => x.kz + (x.gelir ? x.gelir.fon + x.gelir.kom + x.gelir.gercek : 0);
+// MADDE 905: Pozisyonlarım sıralaması (bu tarayıcıda hatırlanır). Canlı rakamlar yerinde güncellenir; sıra liste yeniden çizilince (≈15 sn) yenilenir.
+const AS_SIRALAR = [["zarar", "En çok zarar"], ["kar", "En çok kâr"], ["buyuk", "En büyük"], ["lik", "Likidasyona yakın"], ["fon", "En çok funding ödeyen"], ["yeni", "En yeni"], ["ad", "Ada göre"]];
+let AS_SIRA = (()=>{ try { const v = localStorage.getItem("carry_as_sira"); return AS_SIRALAR.some(x=>x[0]==v) ? v : "zarar"; } catch(_){ return "zarar"; } })();
+function asSiraSec(v){ AS_SIRA = v; try { localStorage.setItem("carry_as_sira", v); } catch(_){} ciz(); }
+function asSirala(P){
+  const f = x => AS_F[x.sembol] > 0 ? AS_F[x.sembol] : x.giris + (x.adet ? x.kz / x.adet : 0);
+  const lik = x => x.likidasyon > 0 && f(x) > 0 ? Math.abs(x.likidasyon / f(x) - 1) : 9e9;
+  const yeni = x => Math.max(0, ...(x.parcalar||[]).map(p=>p.t||0), (x.gelir||{}).t || 0);
+  const K = {zarar: x => x.kz, kar: x => -x.kz, buyuk: x => -Math.abs(x.adet) * f(x), lik, fon: x => (x.gelir||{}).fon ?? 0, yeni: x => -yeni(x)}[AS_SIRA];
+  return P.slice().sort(K ? (a,b)=>K(a) - K(b) || a.sembol.localeCompare(b.sembol) : (a,b)=>a.sembol.localeCompare(b.sembol));
+}
+function asSiraHtml(){
+  return `<div class="assr"><label for="assira" class="k">Sırala</label><select id="assira" onchange="asSiraSec(this.value)">${AS_SIRALAR.map(([k,a])=>`<option value="${k}" ${AS_SIRA==k?"selected":""}>${a}</option>`).join("")}</select></div>`;
+}
 function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop uyarısı, iki satırlı pozisyon kartları
   const E = ELLE_OZ, yuk = `<div class="kart apk"><div class="apkh"><b>Açık pozisyonlar</b></div>`;
   if (!E) return yuk + `<div class="iskelet" style="height:56px;margin-top:10px"></div><div class="iskelet" style="height:56px;margin-top:8px"></div></div>`;
@@ -2045,7 +2060,8 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
   return `${E.baglanti ? `<div class="imsj hata" role="status" style="margin:8px 0">⚠ Bağlantı yok — gösterilenler son alınan veriler. ${ea(E.baglanti.split(".")[0])}.</div>` : ""}${asBakiye(E, P)}${asRisk(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
     ${P.length ? `<div class="apko"><span class="art">${kar} kârda</span><span class="eks">${P.length - kar} zararda</span><span>${sonuc}</span></div>` : `<div class="apko"><span>${sonuc}</span></div>`}
     ${stopsuz ? `<div class="apuy">⚠ <span><b>${stopsuz === P.length ? `Hiçbir pozisyonda` : `${stopsuz} pozisyonda`} stop yok.</b> Coine dokunup tek tek ya da hepsine birden koyabilirsin.</span><button class="apub" onclick="tsAc()">Toplu stop koy</button></div>` : ""}
-    <div class="apl">${P.length ? P.map(satir).join("") : `<div class="pybos">Açık pozisyonun yok. Piyasadan bir coin seçip işlem açabilirsin.</div>`}</div>
+    ${P.length > 2 ? asSiraHtml() : ""}
+    <div class="apl">${P.length ? asSirala(P).map(satir).join("") : `<div class="pybos">Açık pozisyonun yok. Piyasadan bir coin seçip işlem açabilirsin.</div>`}</div>
     ${ISL_DURUM && ISL_DURUM.acik && !ISL_DURUM.gecis ? `<button class="elkb" onclick="sayfaSec('piyasa')">＋ Piyasadan coin seç · al / sat</button>` : ""}</div>${asAlarmHtml()}`;
 }
 function piyasaBoya(zorla){
