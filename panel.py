@@ -885,7 +885,7 @@ def veri(klasorler: list[str], servis: bool = True) -> dict:
     return {"kurulumlar": out, "paketler": paketler(), "uretim": _yerel().strftime("%Y-%m-%d %H:%M")}
 
 
-SAYFA = r"""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+SAYFA = r"""<!doctype html><html lang="tr"><head><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1"><script>/* iOS: kutuya odaklanınca otomatik yakınlaştırmayı kapat (iOS elle iki parmak yakınlaştırmaya yine izin verir) */if(/iP(hone|ad|od)/.test(navigator.userAgent)||navigator.platform=="MacIntel"&&navigator.maxTouchPoints>1)document.querySelector("meta[name=viewport]").content="width=device-width,initial-scale=1,maximum-scale=1"</script>
 <title>Carry Panel</title>
 <link rel="manifest" href="manifest.webmanifest"><meta name="theme-color" content="#000000"><meta name="apple-mobile-web-app-status-bar-style" content="black">
 <link rel="icon" href="ikon-192.png"><link rel="apple-touch-icon" href="ikon-192.png">
@@ -1343,6 +1343,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .igl3{display:flex;gap:14px;font-size:11.5px;color:var(--soluk);padding:2px 8px 6px}.isl .ibtn:focus-visible,.isl button:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px}
 @media (prefers-reduced-motion:reduce){.isl .ibtn.tut.dolu::before{transition:none}}
 @media (max-width:420px){.isl .ikg{grid-template-columns:repeat(2,minmax(0,1fr))}.isl .ichip.kisa{flex-basis:150px}}
+/* iOS Safari 16 px altı kutuya dokununca sayfayı büyütür ve geri küçültmez: tüm form öğeleri en az 16 px */
+input,select,textarea{font-size:max(16px,1em)}.tsor input,.ruv input,.pkara input,.isl .inot textarea,.isl .ionay textarea,.assr select,.pkhac select{font-size:16px}.assr select{min-width:0;max-width:100%;text-overflow:ellipsis}.assr label{flex:none}
 </style></head><body><div class="kap">
 <header id="ust"><div><h1><button class="hmb" id="hmb" onclick="menuAc()" aria-label="Menü: Bot / Al-Sat" aria-haspopup="true">☰</button><img src="ikon-192.png" alt=""><span id="baslik">Carry</span></h1><div class="k" id="alt"></div><div id="ustkitap"></div></div>
   <div class="sag"><span class="canli" id="canliust"><i></i><span>bağlanıyor</span></span><button class="tema" id="tema" onclick="temaDegis()" aria-label="tema">◐</button></div></header>
