@@ -1119,6 +1119,23 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+/* madde 865: mobil ekran testleri (320–430 px) düzeltmeleri */
+.pfa{display:none}
+.pyr .rz{white-space:nowrap;flex:none}
+.gdon{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.gdon::-webkit-scrollbar{display:none}.gdon button{white-space:nowrap;flex:none}
+@media (max-width:400px){.pyr{grid-template-columns:22px minmax(0,1fr) 66px 58px;gap:6px;padding:4px 6px}.pyr .pfc{display:none}.pfa{display:block;font-size:11.5px;color:var(--soluk);font-weight:500;font-variant-numeric:tabular-nums}
+  .pyr>span:nth-child(2){flex-direction:column;align-items:flex-start!important;justify-content:center}.pyr>span:nth-child(2)>a{max-width:100%}.pyr .rz{margin-left:0!important;margin-top:1px}
+  .pyr>span:nth-child(2){display:grid!important;grid-template-columns:auto auto;justify-content:start;column-gap:5px}.pyr>span:nth-child(2) .pfa{grid-column:1/-1}
+  .pya .gdon{max-width:100%}.pyk .gdon button{padding:0 11px}}
+.abr{grid-column:2;min-width:0}.abh{grid-row:span 2}
+@media (max-width:380px){.asbak{grid-template-columns:84px minmax(0,1fr)!important;gap:4px 12px!important;padding:12px!important}.abh{width:84px!important;height:84px!important;grid-row:auto}.abt{font-size:22px!important}
+  .abr{grid-column:1/-1;margin-top:4px}.abkz span{display:block}}
+.ipr{grid-template-columns:26px minmax(0,1fr) auto!important;grid-template-areas:"n m k" "n t s";row-gap:4px!important}
+.ipr .iprn{grid-area:n}.ipr .iprm{grid-area:m}.ipr .iprk{grid-area:k;align-self:start}.ipr .iprtp{grid-area:t;margin-top:0!important}.ipr .iprs{grid-area:s;justify-self:end;padding:6px 14px!important}
+@media (max-width:360px){.ipr{grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"m k" "t s"}.ipr .iprn{display:none}}
+.tema{width:36px!important;height:36px!important;flex:none}.hmb{flex:none}
+.gdon button,.mod button{min-height:34px}.aygez button{min-width:40px;min-height:36px}.dgr .mod button,.dozet .mod button{padding:6px 12px!important}
+.abh2{font-size:10.5px!important}
 #piyelle.as-sayfa{border:0;padding:0;margin:0}
 .asbak.kart{margin:0 0 12px}
 .apk{padding:14px}.apkh{display:flex;justify-content:space-between;align-items:center;font-size:16px}.apkh>div{display:flex;align-items:center;gap:8px}.apkh .say{font-size:12px;font-weight:700;color:var(--soluk);background:var(--kart2);border-radius:999px;padding:1px 8px}.apkh .art{color:var(--art)}.apkh .eks{color:var(--eks)}
@@ -1457,15 +1474,15 @@ function piyRozet(k){   // botun / senin bu coindeki durumun
 function piySatir(o, R){
   const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, "");
   return `<div class="pyr ${fl>0?"fl-a":fl<0?"fl-e":""}"><button class="yd ${yd?"on":""}" title="${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" aria-label="${ad} ${yd?"izleme listesinden çıkar":"izleme listesine ekle"}" aria-pressed="${yd}" onclick="piyIzle('${o.s}')">${yd?"★":"☆"}</button>
-    <span style="min-width:0;display:flex;align-items:center">${ISL_DURUM && ISL_DURUM.acik ? `<a href="#piyasa" onclick="islAc('${o.s}');return false" title="al / sat">${ad}</a>` : `<a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>`}${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}${ISL_DURUM && ISL_DURUM.acik && islYok(o.s) ? `<span class="rz yok" title="${ISL_DURUM.mod=="live"?"bu hesapta":"demo hesapta"} işlem görmüyor">yok</span>` : ""}</span>
-    <span class="r">${piyFiyat(o.f)}</span><span class="r ${o.d>0?"art":o.d<0?"eks":""}"><b>${piyYz(o.d)}</b></span>
+    <span style="min-width:0;display:flex;align-items:center">${ISL_DURUM && ISL_DURUM.acik ? `<a href="#piyasa" onclick="islAc('${o.s}');return false" title="al / sat">${ad}</a>` : `<a href="https://www.binance.com/tr/futures/${o.s}" target="_blank" rel="noopener noreferrer" title="Binance'te aç">${ad}</a>`}${R[o.s]?`<span class="rz">${R[o.s]}</span>`:""}${ISL_DURUM && ISL_DURUM.acik && islYok(o.s) ? `<span class="rz yok" title="${ISL_DURUM.mod=="live"?"bu hesapta":"demo hesapta"} işlem görmüyor">yok</span>` : ""}<span class="pfa">${piyFiyat(o.f)}</span></span>
+    <span class="r pfc">${piyFiyat(o.f)}</span><span class="r ${o.d>0?"art":o.d<0?"eks":""}"><b>${piyYz(o.d)}</b></span>
     <span class="r k2 hc">${piyHac(o.q)}</span><span class="r k2 ${o.r>0?"":o.r<0?"eks":""}" title="son funding oranı (8 sa)">${o.r==null?"—":piyYz(o.r*100, 3)}</span></div>`;
 }
 function piyListe(k){
   const A = Object.values(PIY).filter(o => o.f>0 && o.p!=null && (!PIY_EVREN || PIY_EVREN.has(o.s)) && o.s.endsWith("USDT"));
   for (const o of A) o.d = piyDeg(o);
   const DA = PIY_DAD[PIY_DONEM];
-  const R = piyRozet(k), ust = `<div class="pyr ust"><span></span><span>coin</span><span class="r">fiyat</span><span class="r">${DA}</span><span class="r hc">hacim</span><span class="r">funding</span></div>`;
+  const R = piyRozet(k), ust = `<div class="pyr ust"><span></span><span>coin</span><span class="r pfc">fiyat</span><span class="r">${DA}</span><span class="r hc">hacim</span><span class="r">funding</span></div>`;
   const blok = (bas, L, not) => `<div class="pyb"><span>${bas}</span><span>${not||""}</span></div><div class="pyl">${L.length ? ust + L.map(o=>piySatir(o, R)).join("") : `<div class="pybos">${Object.keys(PIY).length ? "Bu süzgeçte coin yok. Hacim sınırını düşürmeyi dene." : "Piyasa verisi yükleniyor…"}</div>`}</div>`;
   if (PIY_ARA){
     const L = A.filter(o => o.s.includes(PIY_ARA)).sort((a,b)=>(b.q||0)-(a.q||0)).slice(0, 40);
@@ -1675,11 +1692,12 @@ function asBakiye(E, P){   // madde 861: görsel — halka (pozisyonlarda / boş
   const halka = `<svg viewBox="0 0 100 100" class="abh" role="img" aria-label="Bakiyenin ${yz(pay)} pozisyonlarda">
     <circle cx="50" cy="50" r="${R}" fill="none" stroke="var(--art)" stroke-opacity=".85" stroke-width="11"/>
     ${pay > 0 ? `<circle cx="50" cy="50" r="${R}" fill="none" stroke="${renkT}" stroke-width="11" stroke-dasharray="${d.toFixed(2)} ${(C - d).toFixed(2)}" transform="rotate(-90 50 50)" stroke-linecap="${pay < 0.995 ? "butt" : "round"}"/>` : ""}
-    <text x="50" y="49" text-anchor="middle" class="abh1">${yz(pay)}</text><text x="50" y="63" text-anchor="middle" class="abh2">kullanımda</text></svg>`;
+    <text x="50" y="49" text-anchor="middle" class="abh1">${yz(pay)}</text><text x="50" y="64" text-anchor="middle" class="abh2">kullanımda</text></svg>`;
   const satir = (renk, ad, v, alt) => `<div class="abs"><i style="background:${renk}"></i><span>${ad}<small>${alt}</small></span><b>${para(v)}</b></div>`;
   return `<div class="asbak kart" id="asbak">${halka}<div class="abk">
       <div class="abu">Toplam bakiye</div><div class="abt">${para(oz)}</div>
       <div class="abkz ${sinif(acik)}">${acik>=0?"▲":"▼"} ${isaretli(acik)} <span>açık K/Z${H.cuzdan != null ? ` · cüzdan ${para(H.cuzdan)}` : ""}</span></div>
+    </div><div class="abr">
       ${satir(renkT, "Pozisyonlarda", tem, yz(pay) + " · teminat")}
       ${satir("var(--art)", "Boşta", bos, yz(1 - pay) + " · yeni işleme hazır")}
     </div>
@@ -1922,10 +1940,10 @@ function islParcaHtml(){
     const k = parcaKz(x, m), uz = x.adet > 0, w = Math.max(3, Math.abs(x.adet) / top * 100);
     return `<div class="ipr ${k==null?"":sinif(k)}"><div class="iprn">${i+1}</div>
       <div class="iprm"><div class="iprt">${x.eski ? "önceki alımlar" : parcaZaman(x.t)}${k!=null && k === enIyi && L.length > 2 ? ` <span class="iprr">en kârlı</span>` : ""}</div>
-        <div class="k2">${elleAdet(x.adet)} adet @ <b>${piyFiyat(x.fiyat)}</b></div><div class="iprb"><span style="width:${w.toFixed(0)}%"></span></div>
+        <div class="k2">${elleAdet(x.adet)} adet @ <b>${piyFiyat(x.fiyat)}</b></div><div class="iprb"><span style="width:${w.toFixed(0)}%"></span></div></div>
         <button class="iprtp" onclick="islParcaTpslAc('${ea(x.id)}')" aria-label="${i+1}. alımın TP ve stop'u">${x.tp||x.sl
           ? `${x.tp?`<span class="art">TP ${piyFiyat(x.tp)}</span>`:""}${x.sl?`<span class="eks">stop ${piyFiyat(x.sl)}</span>`:`<span class="uyr">stop yok</span>`}<i>düzenle</i>`
-          : `<span class="k">＋ TP / stop koy</span>`}</button></div>
+          : `<span class="k">＋ TP / stop koy</span>`}</button>
       <div class="iprk" id="ipr-${ea(x.id)}">${parcaKzHtml(x, m)}</div>
       <button class="iprs" onclick="islParcaOnay('${ea(x.id)}')">${uz ? "Sat" : "Kapat"}</button></div>`; }).join("")}</div>`;
 }
