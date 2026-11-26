@@ -75,7 +75,7 @@ class SahteIc:
 
     def futures_create_algo_order(self, **kw):
         if self.algo_patlat:
-            raise RuntimeError("APIError(code=-2021): Order would immediately trigger. signature=abc123")
+            raise RuntimeError(getattr(self, "algo_mesaj", None) or "APIError(code=-2021): Order would immediately trigger. signature=abc123")
         self._oid += 1
         self.algolar.append(dict(kw))
         self.algo_acik.setdefault(kw["symbol"], []).append({"algoId": self._oid, "clientAlgoId": kw.get("clientAlgoId"),
@@ -343,6 +343,10 @@ app7 = ci.uygulama(lambda: k7).test_client()
 r7 = app7.post("/tpsl", json={"sembol": "AKEUSDT", "tp": 0.6, "pin": "482913"})
 kontrol("Binance hatası 502, imza gizlenir", r7.status_code == 502 and "abc123" not in r7.get_data(as_text=True)
         and "(Binance -2021)" in r7.get_json()["hata"], r7.get_data(as_text=True))   # madde 889: tanınan kod Türkçe, ham mesaj (imzayla) hiç gösterilmez
+k7b, ic7b, _ = yeni(); ic7b.algo_patlat = True; ic7b.algo_mesaj = "APIError(code=-9999): bilinmeyen. signature=abc123"; ic7b.poz["AKEUSDT"] = 10
+r7b = ci.uygulama(lambda: k7b).test_client().post("/tpsl", json={"sembol": "AKEUSDT", "tp": 0.6, "pin": "482913"})
+kontrol("tanınmayan Binance kodu: ham mesaj, imza [gizli]", r7b.status_code == 502 and "abc123" not in r7b.get_data(as_text=True)
+        and "[gizli]" in r7b.get_json()["hata"], r7b.get_data(as_text=True))
 r8 = app.post("/emir", json={**o, "pin": "482913"})
 kontrol("doğru PIN ile emir", r8.status_code == 200 and r8.get_json()["ok"] is True)
 
