@@ -1104,7 +1104,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .takvim .bas{font-size:11px;color:var(--soluk);text-align:center;padding-bottom:2px}
 .takvim .g{border-radius:9px;padding:5px 4px 6px;min-height:50px;border:1px solid var(--cizgi);font-variant-numeric:tabular-nums;text-align:center;overflow:hidden}
 .takvim .g .n{font-size:11px;color:var(--soluk);text-align:left;line-height:1}
-.takvim .g .v{font-size:12.5px;font-weight:700;margin-top:4px;white-space:nowrap}
+.takvim .g .v{font-size:12.5px;font-weight:700;margin-top:4px;white-space:nowrap}.takvim .g .vk{display:none}@media (max-width:440px){.takvim .g .vt{display:none}.takvim .g .vk{display:inline}}
 .takvim .g.bosg{border:none}.takvim .g.yok{opacity:.3}.takvim .g.yok .v{visibility:hidden}
 .takvim .g.hp,.yil i.hp{background:color-mix(in srgb,var(--art) var(--p),transparent);border-color:transparent}
 .takvim .g.hn,.yil i.hn{background:color-mix(in srgb,var(--eks) var(--p),transparent);border-color:transparent}
@@ -1413,7 +1413,7 @@ function takvim(k){
     if (!s){ h += `<div class="g yok"><div class="n">${d}</div><div class="v">·</div></div>`; continue; }
     const onc = s.j>0 ? S[s.j-1].kitap : null, usd = onc!=null ? onc * s.gun : null;
     const ipucu = `${s.tarih}  ${yz(s.gun)}` + (usd!=null ? `  (${isaretli(usd)})` : "") + (s.canli ? "  · bugün, canlı (gün sonunda kesinleşir)" : "");
-    h += `<div ${isi(s.gun,0.03,"g"+(s.canli?" canlig":""))} title="${ipucu}"><div class="n">${d}${s.canli?" ●":""}</div><div class="v">${yz(s.gun)}</div></div>`;
+    h += `<div ${isi(s.gun,0.03,"g"+(s.canli?" canlig":""))} title="${ipucu}"><div class="n">${d}${s.canli?" ●":""}</div><div class="v"><span class="vt">${yz(s.gun)}</span><span class="vk">${(s.gun>=0?"+":"−") + Math.abs(s.gun*100).toFixed(1).replace(".",",")}</span></div></div>`;   // madde 876: dar ekranda kısa (−4,3)
   }
   const g = M.map(s=>s.gun), art_ = g.filter(v=>v>0).length, eks_ = g.filter(v=>v<0).length;
   const eniyi = M.reduce((p,c)=>c.gun>p.gun?c:p), enkotu = M.reduce((p,c)=>c.gun<p.gun?c:p);
@@ -2884,7 +2884,7 @@ function gecmisSade(k){
 function gecmisSayfa(k){
   const grafikVar = (k.seri||[]).length >= 3;   // madde 734/737: 1-2 noktalık grafik bilgi vermez, yalnız yer kaplar
   const ac = ACIK.has("gecay");   // madde 756: eski ayrıntılar (takvim, yıllık, grafikler, coinler, icra) kapalı bölümde
-  return `<div id="gsade">${gecmisSade(k)}</div>` + `<div class="kart" style="padding:0"><button class="gayr" onclick="olayAc('gecay')">${ac?"▾":"▸"} Ayrıntılar <span class="k">takvim · coinler · icra</span></button></div>` + (!ac ? "" : `<div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2>${takvim(k)}
+  return `<div id="gsade">${gecmisSade(k)}</div>` + `<div class="kart" style="padding:0"><button class="gayr" onclick="olayAc('gecay')">${ac?"▾":"▸"} Ayrıntılar <span class="k">takvim · coinler · icra</span></button></div>` + (!ac ? "" : `<div class="kart"><h2>Günlük takvim <span class="k">· % getiri, koyu = büyük</span></h2>${takvim(k)}
       ${k.dokum?`<div class="k" style="margin-top:6px">Başlangıçtan beri: funding ${k.dokum.funding_gercek!=null?`${isaretli(k.dokum.funding_gercek)} <span class="k">(canlı · demo hesaba yatan ${isaretli(k.dokum.funding)})</span>`:isaretli(k.dokum.funding)} · komisyon ${isaretli(k.dokum.komisyon)}</div>`
         :(k.funding_top||k.komisyon_top)?`<div class="k" style="margin-top:6px">Defter toplamı (yaklaşık): funding ${isaretli(k.funding_top)} · komisyon ${isaretli(k.komisyon_top)}</div>`:""}
       <div class="k" style="margin-top:4px">Her gün, Binance gününe (03:00 – 03:00) göre. ● işaretli gün bugün: canlı, gün sonunda (03:05) kesinleşir.</div></div>
@@ -3088,7 +3088,8 @@ function ciz(){
   const SC = seriCanli(k), x = SC.map(s=>s.canli ? s.tarih + " (canlı)" : s.tarih), izg = css("--cizgi"), sol = css("--soluk");
   Chart.defaults.font.family = "Inter, system-ui, sans-serif";
   const ortak = {responsive:true,maintainAspectRatio:false,animation:false,plugins:{legend:{display:false}},
-    scales:{x:{ticks:{color:sol,maxTicksLimit:innerWidth<600?4:8,maxRotation:0,autoSkip:true},grid:{display:false}},y:{ticks:{color:sol},grid:{color:izg}}}};
+    scales:{x:{ticks:{color:sol,maxTicksLimit:innerWidth<600?4:8,maxRotation:0,autoSkip:true,callback(v){ const l = String(this.getLabelForValue(v)||"");   // madde 876: "6 Kas"
+      return /^\d{4}-\d\d-\d\d/.test(l) ? `${+l.slice(8,10)} ${AYAD[+l.slice(5,7)-1].slice(0,3)}` : l; }},grid:{display:false}},y:{ticks:{color:sol},grid:{color:izg}}}};
   grafikler.push(new Chart($("#g1"),{type:"line",data:{labels:x,datasets:[{data:SC.map(s=>s.kitap),borderColor:css("--vurgu"),borderWidth:2,pointRadius:0,fill:false,tension:.15}]},
     options:{...ortak,plugins:{legend:{display:false},tooltip:{callbacks:{label:c=>para(c.parsed.y)}}}}}));
   grafikler.push(new Chart($("#g2"),{type:"bar",data:{labels:x,datasets:[{data:SC.map(s=>s.gun==null?null:s.gun*100),
