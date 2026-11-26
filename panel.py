@@ -2238,7 +2238,12 @@ function asAlarmHtml(){   // Al-Sat ana sayfasında tüm alarmlar + son çalanla
     ${ALM.length ? L.map(sat).join("") : `<div class="k" style="padding:6px 0">Bekleyen alarm yok. Coin penceresinden kurabilirsin.</div>`}
     ${ALM_CAL.length ? `<button class="gayr" onclick="olayAc('asalm')">${ac?"▾":"▸"} Son çalanlar <span class="k">${ALM_CAL.length}</span></button>${!ac ? "" : ALM_CAL.map(a=>`<div class="ialr cal">${coinIkon(a.s.replace(/USDT$/,""), "kucuk")}<span><b>${ea(a.s.replace(/USDT$/,""))} ${a.yon>0?"▲":"▼"} ${piyFiyat(a.f)}</b><span class="k">${new Date(a.tc).toLocaleString("tr-TR",{day:"numeric",month:"short",hour:"2-digit",minute:"2-digit"})} · ${piyFiyat(a.p)}</span></span></div>`).join("")}` : ""}</div>`;
 }
-function almCanliBoya(){ almBagla(); for (const a of ALM) for (const id of ["alu-" + a.id, "asalu-" + a.id]){ const e = document.getElementById(id); if (e){ const t = almUzakMetin(a); if (e.textContent !== t) e.textContent = t; } } }
+function almCanliBoya(){ almBagla();
+  const k = ALM.map(a=>a.id).join(",") + "|" + ALM_CAL.length + "|" + ACIK.has("asalm");   // alarm kur / çal / sil sonrası Al-Sat kartı yerinde yenilenir
+  if (sayfa == "alsat" && k !== almCanliBoya.k){ const el = $("#asalm"), h = asAlarmHtml(), apk = document.querySelector("#piyelle .apk");
+    if (el) el.outerHTML = h; else if (h && apk) apk.insertAdjacentHTML("afterend", h);
+    if (el || !h || apk) almCanliBoya.k = k; }
+  for (const a of ALM) for (const id of ["alu-" + a.id, "asalu-" + a.id]){ const e = document.getElementById(id); if (e){ const t = almUzakMetin(a); if (e.textContent !== t) e.textContent = t; } } }
 function islAkisBagla(s){
   islAkisKapat(); if (VERI_GOMULU || !window.WebSocket || !s) return;
   const ws = new WebSocket(`wss://fstream.binance.com/market/stream?streams=${s.toLowerCase()}@ticker`); ISL_WS = ws;   // madde 832: /market adresi
