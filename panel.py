@@ -2473,13 +2473,14 @@ function islGelirHtml(PR, pz){
 // MADDE 904: İŞLEM GÜNLÜĞÜ — pozisyona not ("neden girdim, planım ne"). Sunucuda saklanır (her cihazda aynı); kapanınca Geçmiş'te sonucun yanında.
 function islNotHtml(){
   if (!(ISL_DURUM||{}).ayri) return "";
-  const N = ISL.poz.not, duz = ISL.notDuz || !N;
+  const N = ISL.poz.not, duz = ISL.notDuz;
+  if (!N && !duz) return `<button class="iacil kucuk2" onclick="ISL.notDuz=true;islCiz();setTimeout(()=>{ const t = $('#islnot'); if (t) t.focus(); }, 0)"><span>📝 Not ekle</span><i>neden girdin, planın ne?</i></button>`;
   if (!duz) return `<div class="inot"><div class="inoth"><span>📝 Notun</span><button onclick="ISL.notDuz=true;ISL.notMetin=ISL.poz.not;islCiz()">düzenle</button></div><div class="inotm">${ea(N)}</div></div>`;
   const v = ISL.notMetin ?? N ?? "";
   return `<div class="inot"><div class="inoth"><span>📝 Not <span class="k">· isteğe bağlı, sadece sen görürsün</span></span></div>
     <textarea id="islnot" rows="3" maxlength="1000" placeholder="Neden girdin? Planın ne? (hedef, stop, ne olursa çıkarsın…)" oninput="ISL.notMetin=this.value">${ea(v)}</textarea>
     ${ISL.notMsj ? `<div class="imsj ${ISL.notMsj.ok?"ok":"hata"}" role="status">${ea(ISL.notMsj.ok||ISL.notMsj.hata)}</div>` : ""}
-    <div class="iseg kucuk"><button class="birincil" onclick="islNotKaydet()" ${ISL.notMesgul?"disabled":""}>${ISL.notMesgul ? "Kaydediliyor…" : "Notu kaydet"}</button>${N ? `<button onclick="ISL.notDuz=false;ISL.notMetin=null;ISL.notMsj=null;islCiz()">Vazgeç</button>` : ""}</div></div>`;
+    <div class="iseg kucuk"><button class="birincil" onclick="islNotKaydet()" ${ISL.notMesgul?"disabled":""}>${ISL.notMesgul ? "Kaydediliyor…" : "Notu kaydet"}</button><button onclick="ISL.notDuz=false;ISL.notMetin=null;ISL.notMsj=null;islCiz()">Vazgeç</button></div></div>`;
 }
 async function islNotKaydet(){
   if (!ISL || ISL.notMesgul) return; const s = ISL.s, m = String(ISL.notMetin ?? ISL.poz.not ?? "").trim();
