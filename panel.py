@@ -2810,7 +2810,7 @@ function sheetIc(s, p, k){
       <div class="shf">${fiyatYaz(f)}</div><div style="font-weight:600;font-size:13.5px"><span class="k" style="font-weight:500">pozisyon</span> <span class="nw ${sinif(g)}">${g>=0?"▲":"▼"} ${ky==null?"":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"} · ${isaretli(g)}</span>${bg!=null?` <span class="nw"><span class="k" style="font-weight:500">· coin bugün</span> <span class="${sinif(bg)}">${yz(bg)}</span></span>`:""}</div></div>
       <button class="shx" onclick="sheetKapat()" aria-label="Kapat">✕</button></div>
     <div class="shg">${kivilcim(s, p, f, renk, W, 110)}</div>
-    <div class="idonk shdk"><button class="idonb" onclick="shDon()" aria-expanded="${SH_DON}"><span>${SH_DON?"▾":"▸"} Fiyat değişimi</span><span class="k" id="dnk-${s}">${SH_DON ? "gizle" : donemKisa(s, f)}</span></button>${SH_DON ? donemHtml(s, f) : ""}</div>
+    <div class="idonk shdk"><button class="idonb" onclick="shDon()" aria-expanded="${SH_DON}"><span>${SH_DON?"▾":"▸"} Fiyat değişimi</span><span class="k" id="dnk-${s}">${SH_DON ? "" : donemKisa(s, f)}</span></button>${SH_DON ? donemHtml(s, f) : ""}</div>
     <div class="shkg">${kutu("Giriş", fiyatYaz(p.giris))}${kutu("Büyüklük", para(usd))}${kutu("Funding", F ? `%${(F.r*100).toFixed(4).replace(".",",")} · <span class="${sinif(fr)}">${fr>=0?"alıyor":"ödüyor"}</span>` : "—")}${elle ? kutu("Yöneten", "✋ sen") : kutu(h1 ? "Kademe · kâr al" : "Kâr al hedefi", h0 ? `${fiyatYaz(h0)} <span class="k">${uzun?"+":"−"}%${Math.round(H[0]*100)}</span>${h1 ? `<br>${fiyatYaz(h1)} <span class="k">${uzun?"+":"−"}%${Math.round(H[1]*100)}</span>` : ""}` : "—")}</div>
     ${stop}${neden}${elle ? elleKutu(s, p, f) : cikisIc(s, usd, k)}`;
 }
