@@ -3130,7 +3130,7 @@ function olaySayfa(k){
     // madde 883: kapanışlı satırda tutar başlıkta (saatin yanında), kapanış ayrıntısı alt satırın başında
     const par = (o.metin||"").split(/\s*\|\s*/), bas = par[0], ap = par.slice(1), alt = [...ap.filter(x=>/kapanış/.test(x)), ...ap.filter(x=>!/kapanış/.test(x))].join(" · ");
     h += `<div class="orow" onclick="if(!event.target.closest('a,button,.ac,table'))this.classList.toggle('oacik')"><span class="onk" style="--r:${rk}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="om">
-      <div class="ob"><span>${esc(bas)}</span><span class="oz">${o.kapanis!=null ? tutar(o.kapanis) + " · " : ""}${(o.zaman||"").slice(11)}</span></div>
+      <div class="ob"><span>${esc(o.tur==="tur" ? bas.replace(/ yenilendi$/, " turu") : bas)}</span><span class="oz">${o.kapanis!=null ? tutar(o.kapanis) + " · " : ""}${(o.zaman||"").slice(11)}</span></div>
       ${alt?`<div class="oa">${esc(alt)}</div>`:""}${islemTablo(o)}${fonTablo(o)}</div></div>`;
   }
   if (acik) h += "</div>";
