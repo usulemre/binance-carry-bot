@@ -79,7 +79,8 @@ class SahteIc:
         self._oid += 1
         self.algolar.append(dict(kw))
         self.algo_acik.setdefault(kw["symbol"], []).append({"algoId": self._oid, "clientAlgoId": kw.get("clientAlgoId"),
-                                                            "orderType": kw["type"], "triggerPrice": kw["triggerPrice"],
+                                                            "orderType": kw["type"], "triggerPrice": kw.get("triggerPrice", ""),
+                                                            "callbackRate": kw.get("callbackRate", ""), "activatePrice": kw.get("activatePrice", ""),
                                                             "quantity": str(kw.get("quantity"))})
         return {"algoId": self._oid}
 
@@ -507,6 +508,40 @@ _G95 = [{"incomeType": "REALIZED_PNL", "symbol": "AUSDT", "income": "3", "time":
 _k95 = _ci89._kapanislar(_G95)
 kontrol("kapanışlar: 3 satır, yeniden eskiye", [(x["s"], x["n"]) for x in _k95] == [("A", 1), ("B", 1), ("A", 2)], _k95)
 kontrol("kapanış neti = gerçekleşen + aynı işlemlerin komisyonu", abs(_k95[2]["kz"] - 5) < 1e-9 and abs(_k95[2]["net"] - 4.8) < 1e-9, _k95[2])
+
+# 20. madde 901: iz süren stop
+k01, ic01, b01 = yeni(ayri=True)
+ic01.fiyat["AKEUSDT"] = 1.0
+k01.emir({"sembol": "AKEUSDT", "yon": "S", "usd": 100, "pin": "482913"})
+kontrol("iz: PIN ister", hata_mi(lambda: k01.iz({"sembol": "AKEUSDT", "oran": 2, "pin": "000000"})))
+kontrol("iz: oran sınırı (%0,1–10)", hata_mi(lambda: k01.iz({"sembol": "AKEUSDT", "oran": 15, "pin": "482913"}))
+        and hata_mi(lambda: k01.iz({"sembol": "AKEUSDT", "oran": 0.05, "pin": "482913"})))
+kontrol("iz: short'ta başlama fiyatı şimdikinin ÜSTÜNDE reddedilir", hata_mi(lambda: k01.iz({"sembol": "AKEUSDT", "oran": 2, "aktif": 1.1, "pin": "482913"})))
+r01 = k01.iz({"sembol": "AKEUSDT", "oran": "2,5", "aktif": "0,9", "pin": "482913"})
+a01 = ic01.algolar[-1]
+kontrol("iz: TRAILING_STOP_MARKET, BUY (short kapatır), reduceOnly, işaret fiyatı, tüm adet, callbackRate/activatePrice",
+        a01["type"] == "TRAILING_STOP_MARKET" and a01["side"] == "BUY" and a01["reduceOnly"] == "true" and a01["workingType"] == "MARK_PRICE"
+        and a01["callbackRate"] == "2.5" and float(a01["activatePrice"]) == 0.9 and float(a01["quantity"]) == 100 and a01["clientAlgoId"].startswith("panel_")
+        and "triggerPrice" not in a01, a01)
+kontrol("iz: yanıt tür IZ", r01["iz"]["tur"] == "IZ" and r01["iz"]["oran"] == 2.5, r01)
+p01 = k01.pozisyon("AKEUSDT")
+kontrol("iz: pozisyon() iz'i ayrı tür (IZ) olarak verir, stop sayılmaz",
+        [x["tur"] for x in p01["tpsl"]] == ["IZ"] and p01["tpsl"][0]["oran"] == 2.5, p01["tpsl"])
+k01.tpsl({"sembol": "AKEUSDT", "tp": 0.8, "sl": 1.2, "pin": "482913"})
+kontrol("iz: TP / stop kaydetmek iz süreni silmez", sorted(o["orderType"] for o in ic01.algo_acik["AKEUSDT"]) == ["STOP_MARKET", "TAKE_PROFIT_MARKET", "TRAILING_STOP_MARKET"],
+        ic01.algo_acik["AKEUSDT"])
+e01 = k01.elle_ozet()
+kontrol("iz: elle özetinde iz oranı", e01["pozisyonlar"][0].get("iz") == 2.5, e01["pozisyonlar"][0])
+k01.emir({"sembol": "AKEUSDT", "yon": "S", "usd": 50, "pin": "482913"})
+izler = [o for o in ic01.algo_acik["AKEUSDT"] if o["orderType"] == "TRAILING_STOP_MARKET"]
+kontrol("iz: eklemede iz süren yeni toplam adetle (150) tek emir olarak yeniden kurulur",
+        len(izler) == 1 and float(izler[0]["quantity"]) == 150 and izler[0]["callbackRate"] == "2.5", izler)
+k01.iz({"sembol": "AKEUSDT", "oran": "", "pin": "482913"})
+kontrol("iz: boş oran kaldırır, TP / stop yerinde", sorted(o["orderType"] for o in ic01.algo_acik["AKEUSDT"]) == ["STOP_MARKET", "TAKE_PROFIT_MARKET"], ic01.algo_acik["AKEUSDT"])
+k01.iz({"sembol": "AKEUSDT", "oran": 3, "pin": "482913"})
+kontrol("iz: başlama fiyatsız -> activatePrice gönderilmez", "activatePrice" not in ic01.algolar[-1], ic01.algolar[-1])
+k01.kapat({"sembol": "AKEUSDT", "oran": 1, "pin": "482913"})
+kontrol("iz: tam kapanışta iz süren de silinir", not ic01.algo_acik["AKEUSDT"], ic01.algo_acik["AKEUSDT"])
 
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")

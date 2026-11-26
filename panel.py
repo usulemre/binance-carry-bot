@@ -1175,6 +1175,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0 4px}.kpi>div{background:var(--kart2);border-radius:10px;padding:7px 8px;display:flex;flex-direction:column;gap:1px;min-width:0}.kpi span{font-size:11px;color:var(--soluk)}.kpi b{font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.kpi b.art{color:var(--art)}.kpi b.eks{color:var(--eks)}.kpi i{font-style:normal;font-size:11px;color:var(--soluk);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}@media (max-width:380px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .asfn{cursor:pointer;grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.asfn>b{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}.asfn b.art{color:var(--art)}.asfn b.eks{color:var(--eks)}
 .isl .igl.alm{stroke:var(--mor)}.isl .ige.alm rect{fill:var(--mor)}.isl .igad.alm rect{stroke:var(--mor)}.isl .igad.alm text{fill:var(--mor)}
+.iiz{margin-top:12px;padding:12px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.iiz .iseg{margin-top:10px}
 .ialm{margin-top:12px}.ialr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--cizgi)}.ialr>span:nth-child(2){display:flex;flex-direction:column;min-width:0;cursor:pointer}.ialr .k{font-size:11.5px}.ialr .art{color:var(--art)}.ialr .eks{color:var(--eks)}.ialr button{width:36px;height:36px;border-radius:10px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--soluk);font:inherit}.ialr.cal{opacity:.8}.ialm .ichip{margin-top:8px}.ialf{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:8px}.isl .ialf input{margin:0;width:100%}.isl .ialf .ibtn{flex:none;height:44px;padding:0 16px;width:auto;font-size:15px}.ialm .say{margin-left:6px;font-size:12px;font-weight:700;color:var(--soluk);background:var(--kart2);border-radius:999px;padding:1px 8px}
 .asalm{padding:12px 14px}.asalm .gayr{margin-top:6px}
 #almtoast{position:fixed;left:50%;transform:translateX(-50%);top:calc(10px + env(safe-area-inset-top));z-index:1000;display:flex;flex-direction:column;gap:8px;width:min(440px,calc(100vw - 24px))}.almt{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:10px;align-items:center;padding:12px 12px 12px 14px;border-radius:14px;background:var(--kart);border:1px solid var(--cizgi);border-left:4px solid var(--mor);box-shadow:0 8px 30px rgba(0,0,0,.35);cursor:pointer;font-size:14px}.almt>span:nth-child(2){display:flex;flex-direction:column}.almt.yuk{border-left-color:var(--art)}.almt.dus{border-left-color:var(--eks)}.almt button{width:34px;height:34px;border-radius:10px;border:0;background:var(--kart2);color:var(--soluk);font:inherit}
@@ -1964,7 +1965,7 @@ let TS = null;
 function tsAc(){
   const E = ELLE_OZ; if (!E || E.hata) return;
   const P = (E.pozisyonlar||[]).filter(x=>x.adet);
-  const stopVar = x => !!x.sl || (x.parca_sl && x.parca_sl >= (x.parcalar||[]).length);
+  const stopVar = x => !!x.sl || !!x.iz || (x.parca_sl && x.parca_sl >= (x.parcalar||[]).length);
   TS = {oran: 10, pin: "", sec: new Set(P.filter(x=>!stopVar(x)).map(x=>x.sembol)), P, stopVar, sonuc: {}, mesgul: false, bitti: false};
   const el = $("#sheet"); el.hidden = false;
   el.innerHTML = `<div class="shb" onclick="tsKapat()"></div><div class="shp isl" role="dialog" aria-modal="true" tabindex="-1" aria-label="Toplu stop"><div class="shh"></div><div id="tsic"></div></div>`;
@@ -2024,12 +2025,12 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
   if (!E) return yuk + `<div class="iskelet" style="height:56px;margin-top:10px"></div><div class="iskelet" style="height:56px;margin-top:8px"></div></div>`;
   if (E.hata) return yuk + `<div class="imsj hata" style="margin-top:10px">${ea(E.hata)}</div></div>`;
   const S = E.sonuc || {}, P = (E.pozisyonlar || []).map(x=>({...x, kz: asKz(x)})), top = P.reduce((a,x)=>a + x.kz, 0);   // madde 856: canlı
-  const kar = P.filter(x=>x.kz >= 0).length, stopsuz = P.filter(x=>!x.sl && !(x.parca_sl >= (x.parcalar||[]).length && x.parca_sl)).length;
+  const kar = P.filter(x=>x.kz >= 0).length, stopsuz = P.filter(x=>!x.sl && !x.iz && !(x.parca_sl >= (x.parcalar||[]).length && x.parca_sl)).length;
   const stopsuzHepsi = stopsuz === P.length;   // hepsinde yoksa satır rozeti tekrar etmesin, tek uyarı yeter
   const sonuc = S.kapanis ? `son 30 gün <b class="${sinif(S.net)}">${isaretli(S.net)}</b> · ${S.kapanis} kapanış · %${Math.round(S.kazanan / S.kapanis * 100)} kârlı` : "son 30 günde kapanan işlem yok";
   const satir = x => { const ad = x.sembol.replace(/USDT$/,""), uz = x.adet > 0, f = AS_F[x.sembol] > 0 ? AS_F[x.sembol] : x.giris + (x.adet ? x.kz / x.adet : 0);
     const deger = Math.abs(x.adet) * (f || x.giris), kp = x.giris > 0 ? x.kz / (Math.abs(x.adet) * x.giris) * 100 : 0, n = (x.parcalar||[]).length;
-    const stopVar = x.sl || x.parca_sl, tpsl = [x.tp ? `TP ${piyFiyat(x.tp)}` : x.parca_tp ? `TP ${x.parca_tp}/${n} alım` : "", x.sl ? `stop ${piyFiyat(x.sl)}` : x.parca_sl ? `stop ${x.parca_sl}/${n} alım` : ""].filter(Boolean);
+    const stopVar = x.sl || x.parca_sl || x.iz, tpsl = [x.tp ? `TP ${piyFiyat(x.tp)}` : x.parca_tp ? `TP ${x.parca_tp}/${n} alım` : "", x.sl ? `stop ${piyFiyat(x.sl)}` : x.parca_sl ? `stop ${x.parca_sl}/${n} alım` : "", x.iz ? `iz süren %${islGos(x.iz)}` : ""].filter(Boolean);
     return `<a class="apr" href="#piyasa" onclick="islAc('${x.sembol}');return false"><i class="ass ${sinif(x.kz)}" id="ass-${x.sembol}"></i>
       <span class="apik">${coinIkon(ad)}<span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span></span>
       <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
@@ -2120,7 +2121,7 @@ function islGrafik(W, H){
   const P = I.poz && I.poz.pozisyon, T = (I.poz && I.poz.tpsl) || [], cizgi = [];
   const ekle = (v, ad, cls, kesik) => { v = +v; if (v > 0) cizgi.push({v, ad, cls, kesik}); };
   if (P && P.adet){ ekle(P.giris, "Giriş", "gir"); if (P.likidasyon > 0) ekle(P.likidasyon, "Likidasyon", "lik", true); }
-  for (const t of T) ekle(t.fiyat, t.tur=="TP" ? "TP" : "Stop", t.tur=="TP" ? "tp" : "sl", true);
+  for (const t of T) if (t.tur == "IZ"){ if (t.aktif) ekle(t.aktif, "İz başlar", "alm", true); } else ekle(t.fiyat, t.tur=="TP" ? "TP" : "Stop", t.tur=="TP" ? "tp" : "sl", true);
   const varTP = T.some(t=>t.tur=="TP" && Math.abs(t.fiyat - I.tp) < 1e-12), varSL = T.some(t=>t.tur=="SL" && Math.abs(t.fiyat - I.sl) < 1e-12);
   if (+I.tp > 0 && !varTP) ekle(I.tp, "plan TP", "tp plan", true);
   if (+I.sl > 0 && !varSL) ekle(I.sl, "plan stop", "sl plan", true);
@@ -2352,7 +2353,7 @@ async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
   const P0 = ISL.poz && ISL.poz.pozisyon, ters = islPozVar() && ((P0.adet > 0) != (O.yon=="L"));
   if (ters) not.push(`Hesap tek yönlü çalışır: bu emir önce mevcut ${P0.adet > 0 ? "long" : "short"} pozisyonu (${Math.abs(P0.adet).toLocaleString("tr-TR")} adet) azaltır; adet daha büyükse fazlası ters yönde pozisyon açar.`);
   else if (islPozVar() && (ISL.poz.tpsl||[]).length) not.push("Mevcut TP / stop toplam adede göre kendiliğinden güncellenir.");
-  if (!ters && !O.sl && !(islPozVar() && ((ISL.poz.tpsl||[]).some(x=>x.tur=="SL")))) not.push("Bu emirde stop yok: fiyat ters giderse zarar kendiliğinden sınırlanmaz. Düzenle'ye dönüp \"TP / stop ekle\"den koyabilirsin.");   // madde 885
+  if (!ters && !O.sl && !(islPozVar() && ((ISL.poz.tpsl||[]).some(x=>x.tur=="SL" || x.tur=="IZ")))) not.push("Bu emirde stop yok: fiyat ters giderse zarar kendiliğinden sınırlanmaz. Düzenle'ye dönüp \"TP / stop ekle\"den koyabilirsin.");   // madde 885
   if (ISL.poz && ISL.poz.bot_tutuyor && !ISL.poz.elle) not.push("Bu coin şu an botun: emir gidince coin sana geçer, bot bu coindeki kendi emirlerini iptal eder ve coini bırakır.");
   ISL.adim = {tur: "emir", baslik: `${ISL.s.replace(/USDT$/,"")} ${ters ? (P0.adet > 0 ? "long'u azalt / çevir" : "short'u azalt / çevir") : O.yon=="L" ? "long aç" : "short aç"}`, satir: S, not, dugme: O.yon=="L" ? "Long aç" : "Short aç", renk: O.yon,
               govde: {sembol: ISL.s, yon: O.yon, usd: u, tip: ISL.tip, fiyat: ISL.fiyat, ...islTPSL()}};
@@ -2451,6 +2452,47 @@ function islKapatOnay(oran){
     dugme: oran>=1 ? "Tümünü kapat" : "Kapat", renk: "tehlike", yol: "kapat", govde: {sembol: ISL.s, oran}};
   ISL.msj = null; islCiz();
 }
+// MADDE 901: İZ SÜREN STOP — fiyat kâr yönünde gittikçe stop arkasından gelir; gördüğü en iyi fiyattan %oran geri dönünce pozisyonun
+// tamamı piyasadan kapanır (Binance TRAILING_STOP_MARKET, işaret fiyatı, reduceOnly). İsteğe bağlı başlama fiyatı: iz ancak fiyat oraya
+// gelince başlar (long'da üstte, short'ta altta). Eklemede / kısmi kapanışta yeni adetle yeniden kurulur (iz sıfırdan başlar).
+function islIzHtml(){
+  const PR = ISL.poz, pz = PR.pozisyon, uz = pz.adet > 0, Z = PR.tpsl.find(x=>x.tur=="IZ"), ac = ISL.izAc || false;
+  const ref = PR.isaret || pz.giris, gecerli = v => v > 0 && (uz ? v > ref : v < ref);
+  const ust = Z ? `<span class="art">%${islGos(Z.oran)}</span> geri dönüşte kapanır${Z.aktif ? ` · ${piyFiyat(Z.aktif)}'den başlar` : ""}` : `<span class="k">yok · kâr ${uz ? "yükseldikçe" : "düştükçe"} stop arkandan gelir</span>`;
+  if (!ac) return `<button class="iacil kucuk2" onclick="ISL.izAc=true;ISL.iz=ISL.iz||${Z ? Z.oran : 3};ISL.izA=ISL.izA??${Z && Z.aktif ? Z.aktif : '""'};islCiz()"><span>İz süren stop</span><i>${ust}</i></button>`;
+  const o = +ISL.iz || 0, a = +ISL.izA || 0;
+  const tet = o > 0 ? (a && gecerli(a) ? a : ref) * (uz ? 1 - o / 100 : 1 + o / 100) : null, kz = tet ? pz.adet * (tet - pz.giris) : null;
+  return `<div class="iiz"><div class="ibas" style="margin-top:0">İz süren stop ${Z ? `<span class="k">· şu an ${ust}</span>` : ""}</div>
+    <div class="k" style="font-size:12px;margin:2px 0 6px">${uz ? "Fiyatın gördüğü en yüksekten" : "Fiyatın gördüğü en düşükten"} bu kadar ${uz ? "düşünce" : "yükselince"} pozisyonun tamamı kapanır.</div>
+    <div class="ichip">${[1,2,3,5,8].map(v=>`<button class="${o==v?"on":""}" onclick="ISL.iz=${v};islCiz()">%${v}</button>`).join("")}</div>
+    <div class="iki" style="margin-top:8px"><div><input inputmode="decimal" placeholder="oran % (0,1–10)" aria-label="geri dönüş oranı yüzde" value="${islGos(ISL.iz)}" oninput="ISL.iz=islSayi(this.value);islIzTahmin()"></div>
+      <div><input inputmode="decimal" placeholder="başlama fiyatı (boş: hemen)" aria-label="başlama fiyatı" value="${islGos(ISL.izA)}" oninput="ISL.izA=islSayi(this.value);islIzTahmin()"></div></div>
+    ${(uz ? pz.giris > ref : pz.giris < ref) ? `<button class="iacil kucuk2" onclick="ISL.izA=${pz.giris};islCiz()"><span>Kâra geçince başlasın</span><i>başlama = giriş ${piyFiyat(pz.giris)}</i></button>` : ""}
+    <div class="k" id="iztah" style="font-size:12.5px;margin-top:6px">${islIzTahminMetin()}</div>
+    <div class="iseg kucuk"><button class="birincil" onclick="islIzOnay()">${Z ? "İz süreni güncelle" : "İz süren stop koy"}</button>${Z ? `<button onclick="islIzOnay(true)">Kaldır</button>` : ""}<button onclick="ISL.izAc=false;islCiz()">Vazgeç</button></div></div>`;
+}
+function islIzTahminMetin(){
+  if (!ISL || !islPozVar()) return ""; const PR = ISL.poz, pz = PR.pozisyon, uz = pz.adet > 0, ref = PR.isaret || pz.giris, o = +ISL.iz || 0, a = +ISL.izA || 0;
+  if (!(o >= 0.1 && o <= 10)) return `<span class="uyr">Oran %0,1 ile %10 arasında olmalı.</span>`;
+  if (a && !(uz ? a > ref : a < ref)) return `<span class="uyr">Başlama fiyatı ${uz ? "şimdiki fiyatın üstünde" : "şimdiki fiyatın altında"} olmalı (kâr yönünde); boş bırakırsan hemen başlar.</span>`;
+  const tet = (a || ref) * (uz ? 1 - o / 100 : 1 + o / 100), kz = pz.adet * (tet - pz.giris);
+  return `${a ? `Fiyat ${piyFiyat(a)}'e gelince başlar; o an` : "Şimdi başlasa"} tetik ≈ <b>${piyFiyat(tet)}</b> → K/Z ≈ <b class="${sinif(kz)}">${isaretli(kz)}</b>. Fiyat lehine gittikçe tetik de kayar.`;
+}
+function islIzTahmin(){ const e = $("#iztah"); if (e) e.innerHTML = islIzTahminMetin(); }
+function islIzOnay(kaldir){
+  if (!ISL || !islPozVar()) return; const PR = ISL.poz, pz = PR.pozisyon, o = +ISL.iz || 0, a = +ISL.izA || 0, uz = pz.adet > 0, ref = PR.isaret || pz.giris;
+  if (!kaldir && (!(o >= 0.1 && o <= 10) || (a && !(uz ? a > ref : a < ref)))){ islIzTahmin(); return; }
+  const tet = (a || ref) * (uz ? 1 - o / 100 : 1 + o / 100);
+  ISL.adim = kaldir ? {tur: "iz", baslik: `${ISL.s.replace(/USDT$/,"")} iz süren stop'u kaldır`, satir: [["İz süren stop", "kaldırılır"], ["Dokunulmayan", "TP / stop ve alımların TP / stop'u"]], not: [],
+      dugme: "Kaldır", renk: "tehlike", yol: "iz", govde: {sembol: ISL.s, oran: ""}}
+    : {tur: "iz", baslik: `${ISL.s.replace(/USDT$/,"")} iz süren stop`, satir: [["Geri dönüş", `%${islGos(o)}`], ["Başlama", a ? piyFiyat(a) : "hemen (şimdiki fiyattan)"],
+        [a ? "Başlayınca tetik" : "Şimdiki tetik", `≈ ${piyFiyat(tet)} <span class="${sinif(pz.adet * (tet - pz.giris))}">${isaretli(pz.adet * (tet - pz.giris))}</span>`],
+        ["Kapsam", `pozisyonun tamamı, ${Math.abs(pz.adet).toLocaleString("tr-TR")} adet`]],
+      not: [`${uz ? "Long: fiyatın en yükseğinden" : "Short: fiyatın en düşüğünden"} %${islGos(o)} geri dönünce piyasadan kapanır (işaret fiyatı). Normal TP / stop'un varsa onlar da yerinde kalır; hangisi önce tetiklenirse.`,
+            "Pozisyona ekleme yaparsan ya da bir kısmını kapatırsan iz süren stop yeni adetle yeniden kurulur; iz o andan başlar."],
+      dugme: "Kaydet", renk: "vurgu", yol: "iz", govde: {sembol: ISL.s, oran: o, aktif: a || ""}};
+  ISL.msj = null; islCiz();
+}
 function islTPSLOnay(){
   if (!ISL || !islPozVar()) return; const tp = +ISL.tp || null, sl = +ISL.sl || null, P = ISL.poz.pozisyon, ref = ISL.poz.isaret;
   const ad = v => v ? `${piyFiyat(v)} <span class="k">${((v/ref-1)*100>=0?"+":"")}${((v/ref-1)*100).toFixed(1).replace(".",",")}%</span>` : "kaldırılır";
@@ -2478,10 +2520,10 @@ async function islOnayla(){   // basılı tutma tamamlanınca
   const d = await islIstek(yol, {...A.govde, pin: ISL.pin});
   if (!ISL) return; ISL.mesgul = false;
   if (!d.ok){ ISL.msj = {hata: d.hata}; islCiz(); return; }
-  const pdIdi = A.pd; ISL.adim = null; ISL.oniz = null; if (pdIdi) ISL.pd = null;
+  const pdIdi = A.pd; ISL.adim = null; ISL.oniz = null; if (pdIdi) ISL.pd = null; if (yol == "iz") ISL.izAc = false;
   ISL.msj = {ok: pdIdi ? "Bu alımın TP / stop'u kaydedildi" : yol=="emir" ? `${d.emir.durum=="FILLED" ? "Doldu" : d.emir.durum=="NEW" ? "Emir bekliyor" : "Gönderildi"}: ${d.emir.tip=="LIMIT"?"limit":"piyasa"} ${d.emir.adet.toLocaleString("tr-TR")} adet`
                  + (d.tpsl && d.tpsl.length ? `, ${d.tpsl.map(x=>(x.tur=="SL"?"stop":x.tur)+" "+piyFiyat(x.fiyat)).join(", ")}` : "") + (d.tpsl_hata ? `. ⚠️ ${d.tpsl_hata}` : "")
-             : yol=="kapat" ? `Kapatıldı: ${d.kapat.adet.toLocaleString("tr-TR")} adet` : yol=="tpsl" ? "TP / stop kaydedildi" : `Silindi: ${d.iptal} emir`, durum: yol=="emir" ? d.emir.durum : ""};
+             : yol=="kapat" ? `Kapatıldı: ${d.kapat.adet.toLocaleString("tr-TR")} adet` : yol=="tpsl" ? "TP / stop kaydedildi" : yol=="iz" ? (d.iz ? `İz süren stop kuruldu: %${islGos(d.iz.oran)}` : "İz süren stop kaldırıldı") : `Silindi: ${d.iptal} emir`, durum: yol=="emir" ? d.emir.durum : ""};
   islCiz();
   setTimeout(async ()=>{ if (!ISL) return; await islPozYukle(); if (ISL && yol=="emir" && islPozVar()){ ISL.gor = "poz"; islCiz(); } }, 1200);
 }
@@ -2547,7 +2589,7 @@ function islCiz(){
       h += `<div class="ipoz"><div class="iph"><div><span class="iyon ${uzun?"L":"S"}">${uzun?"Long":"Short"}</span><span class="iadet">${Math.abs(pz.adet).toLocaleString("tr-TR")} adet</span></div>
           <div class="ikz ${sinif(pz.kz)}">${pz.kz>=0?"▲":"▼"} ${isaretli(pz.kz)}<small>${kzp==null?"":(kzp>=0?"+":"")+kzp.toFixed(2).replace(".",",")+"%"}</small></div></div>
         <div class="ikg">${kut("Giriş", fg(pz.giris))}${kut("Şimdi", fg(PR.isaret) + uzak(PR.isaret, pz.giris))}${kut("Değer", para(deger))}
-          ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) : "<span class='k'>yok</span>")}${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) : "<span class='uyr'>yok</span>")}
+          ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) : "<span class='k'>yok</span>")}${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) : PR.tpsl.some(x=>x.tur=="IZ") ? `<span class="k">iz süren %${islGos(PR.tpsl.find(x=>x.tur=="IZ").oran)}</span>` : "<span class='uyr'>yok</span>")}
           ${kut("Likidasyon", pz.likidasyon>0 ? fg(pz.likidasyon) : "—")}</div>
         ${likU!=null ? `<div class="ilik"><div class="ilikb"><span style="width:${Math.max(4, Math.min(100, likU / 50 * 100)).toFixed(0)}%" class="${likU<10?"kr":likU<30?"tu":"ye"}"></span></div><span class="k">likidasyona %${likU.toFixed(0)} uzak</span></div>` : ""}</div>
         <div class="ibas">Kapat</div><div class="iseg kucuk"><button onclick="islKapatOnay(0.25)">%25</button><button onclick="islKapatOnay(0.5)">%50</button><button class="tehlike" onclick="islKapatOnay(1)">Tümü</button></div>
@@ -2556,6 +2598,7 @@ function islCiz(){
           <div><input inputmode="decimal" placeholder="Stop fiyatı" aria-label="Stop fiyatı" value="${islGos(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>
         ${(uzun ? PR.isaret > pz.giris : PR.isaret < pz.giris) ? `<button class="iacil kucuk2" onclick="islBasaBas()"><span>Stop'u girişe çek</span><i>kârdayken zararsız çıkış · ${fg(pz.giris)}</i></button>` : ""}
         <div id="isluyr">${islUyari()}</div>
+        ${islIzHtml()}
         <div class="iseg kucuk"><button class="birincil" onclick="islTPSLOnay()">TP / stop kaydet</button>${PR.bekleyen.some(x=>x.panel)||PR.tpsl.some(x=>x.panel)?`<button onclick="islSilOnay()">Panel emirlerini sil</button>`:""}</div>
         ${PR.bekleyen.length ? `<div class="ibas">Bekleyen emirler</div>${PR.bekleyen.map(x=>`<div class="ibek"><span>${x.tip=="LIMIT"?"Limit":x.tip} ${x.yon=="BUY"?"alış":"satış"}, ${x.adet} @ ${fg(x.fiyat)}</span>${x.panel ? `<button class="ibx" onclick="islEmirIptalOnay('${x.orderId}','${x.yon}',${x.adet},${x.fiyat})">İptal</button>` : "<span class='k'>bot / uygulama</span>"}</div>`).join("")}` : ""}
         ${ISL.pd ? islPdHtml() : islParcaHtml()}`;
@@ -3661,7 +3704,7 @@ def uygulama(klasorler: list[str]):
 
     @app.post("/api/islem/<yol>")
     def islem_post(yol):
-        if yol not in ("onizle", "emir", "tpsl", "kapat", "iptal"):
+        if yol not in ("onizle", "emir", "tpsl", "iz", "kapat", "iptal"):
             return jsonify({"ok": False, "hata": "bilinmeyen işlem"}), 404
         if request.headers.get("X-Carry-Islem") != "1" or not request.is_json:
             return jsonify({"ok": False, "hata": "geçersiz istek"}), 403

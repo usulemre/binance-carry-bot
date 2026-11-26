@@ -45,6 +45,14 @@ def _algo_parca(o: dict) -> str | None:
     if not c.startswith(PARCA_ONEK):
         return None
     return c[len(PARCA_ONEK):].rsplit("_", 2)[0] or None
+IZ_MIN, IZ_MAX = 0.1, 10.0   # madde 901: iz süren stop geri dönüş oranı (%); Binance 0,1–20 kabul eder, panel 10 ile sınırlar
+
+
+def _iz_mi(o: dict) -> bool:
+    """Algo emri iz süren stop (TRAILING_STOP_MARKET) mu?"""
+    return str(o.get("orderType") or o.get("type") or "").startswith("TRAILING")
+
+
 SEMBOL_RE = re.compile(r"^[A-Z0-9]{2,20}USDT$")
 MIN_USD = 5.0
 LIMIT_BANT = 0.20
@@ -330,12 +338,16 @@ class Kapi:
         r = f(symbol=sem)
         return (r.get("orders", r) if isinstance(r, dict) else r) or []
 
-    def _panel_tpsl_iptal(self, sem: str, tum: bool = False, parca: str | None = None) -> int:
-        """Panel TP/SL'lerini iptal eder. Varsayılan: yalnız pozisyon geneli. tum=True: parçalarınki de. parca=<id>: yalnız o parçanınki."""
+    def _panel_tpsl_iptal(self, sem: str, tum: bool = False, parca: str | None = None, iz: bool = False) -> int:
+        """Panel TP/SL'lerini iptal eder. Varsayılan: yalnız pozisyon geneli TP / stop (iz süren stop'a dokunmaz). tum=True: parçalar ve
+        iz süren dahil hepsi. parca=<id>: yalnız o parçanınki. iz=True: yalnız iz süren stop (madde 901)."""
         n = 0
         for o in self._acik_algolar(sem):
             p = _algo_parca(o)
-            sec = (p == parca) if parca is not None else (tum or p is None)
+            if iz:
+                sec = p is None and _iz_mi(o)
+            else:
+                sec = (p == parca) if parca is not None else (tum or (p is None and not _iz_mi(o)))
             if str(o.get("clientAlgoId") or "").startswith(ONEK) and sec:
                 try:
                     self.ic.futures_cancel_algo_order(symbol=sem, algoId=o["algoId"]); n += 1
@@ -394,6 +406,71 @@ class Kapi:
                         + (f" · TP {o['tp']:g}" if o["tp"] else "") + (f" · SL {o['sl']:g}" if o["sl"] else "")
                         + (f" · ⚠️ {sonuc['tpsl_hata']}" if sonuc.get("tpsl_hata") else ""))
             return sonuc
+
+    def _iz_kur(self, sem: str, adet_poz: float, oran: float, aktif, b: dict) -> dict | None:
+        """MADDE 901: pozisyonun tamamı için iz süren stop (TRAILING_STOP_MARKET, reduceOnly, işaret fiyatı). Mevcut panel iz süreni silinir.
+        aktif (activatePrice) geçerli değilse (fiyat çoktan geçtiyse) gönderilmez: iz hemen başlar."""
+        from exchange_client import adet_yuvarla
+        self._panel_tpsl_iptal(sem, iz=True)
+        if not adet_poz or not oran:
+            return None
+        uzun = adet_poz > 0
+        q = adet_yuvarla(abs(adet_poz), b, piyasa=True, asagi=True)
+        kw = dict(algoType="CONDITIONAL", symbol=sem, side="SELL" if uzun else "BUY", type="TRAILING_STOP_MARKET", quantity=q,
+                  callbackRate=f"{oran:.1f}", reduceOnly="true", workingType="MARK_PRICE", clientAlgoId=_cid())
+        if aktif:
+            isr = self._isaret(sem)
+            if (uzun and aktif > isr) or (not uzun and aktif < isr):
+                kw["activatePrice"] = self._fiyat_yuvarla(aktif, b)
+            else:
+                aktif = None
+        e = self.ic.futures_create_algo_order(**kw)
+        return {"tur": "IZ", "oran": round(oran, 1), "aktif": aktif, "algoId": (e or {}).get("algoId")}
+
+    def iz(self, d: dict) -> dict:
+        """MADDE 901: iz süren stop koy / değiştir / kaldır. d: sembol, oran (%, boş = kaldır), aktif (isteğe bağlı başlama fiyatı), pin."""
+        with self._kilit:
+            self._pin(d.get("pin"))
+            sem = str(d.get("sembol") or "").upper()
+            b = self._sembol_bilgi(sem)
+            poz = self._pozisyon(sem)
+            if not poz["adet"]:
+                raise Hata(f"{sem} için açık pozisyon yok")
+            self._gecis_denetle(sem)
+            m = None if self.ayar.get("ayri") else self._muhasebe(sem)
+            if m and float(m.get("q_bot") or 0):
+                raise Hata("Bu coinde botun da payı var; iz süren stop taşımadan sonra (al-sat hesabında) konabilir.", 403)
+            ham = d.get("oran")
+            oran = None
+            if ham not in (None, ""):
+                try:
+                    oran = float(str(ham).replace(",", "."))
+                except ValueError:
+                    raise Hata("geri dönüş oranı geçersiz")
+                if not IZ_MIN - 1e-9 <= oran <= IZ_MAX + 1e-9:
+                    raise Hata(f"geri dönüş oranı %{IZ_MIN:g} ile %{IZ_MAX:g} arasında olmalı")
+            aktif = None
+            if oran and d.get("aktif") not in (None, ""):
+                try:
+                    aktif = float(str(d.get("aktif")).replace(",", "."))
+                except ValueError:
+                    raise Hata("başlama fiyatı geçersiz")
+                isr = self._isaret(sem)
+                if not aktif > 0 or abs(aktif / isr - 1) > 0.5:
+                    raise Hata(f"başlama fiyatı işaret fiyatının ±%50'si içinde olmalı (işaret {isr:g})")
+                if (poz["adet"] > 0 and aktif <= isr) or (poz["adet"] < 0 and aktif >= isr):
+                    raise Hata("başlama fiyatı long'da şimdiki fiyatın üstünde, short'ta altında olmalı (kâr yönünde)")
+            if oran:
+                oran = round(oran, 1)   # Binance callbackRate 0,1 adımlı
+            self._elle_isaret(sem)
+            if oran:
+                out = self._iz_kur(sem, poz["adet"], oran, aktif, b)
+            else:
+                self._panel_tpsl_iptal(sem, iz=True)
+                out = None
+            self._kaydet({"olay": "iz", "sembol": sem, "oran": oran, "aktif": aktif, "adet": poz["adet"]})
+            self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} iz süren stop " + (f"%{oran:g}" + (f" · başlama {aktif:g}" if aktif else "") if oran else "kaldırıldı"))
+            return {"iz": out}
 
     def tpsl(self, d: dict) -> dict:
         with self._kilit:
@@ -485,8 +562,14 @@ class Kapi:
         r = f(symbol=sem)
         r = r.get("orders", r) if isinstance(r, dict) else r
         tp = sl = None
+        izo = next((o for o in r or [] if str(o.get("clientAlgoId") or "").startswith(ONEK) and _algo_parca(o) is None and _iz_mi(o)), None)
+        if izo is not None:   # madde 901: adet değişti -> iz süren stop yeni adetle (tepe / dip izi borsada sıfırdan başlar)
+            try:
+                self._iz_kur(sem, self._pozisyon(sem)["adet"], float(izo.get("callbackRate") or 0), float(izo.get("activatePrice") or 0) or None, b)
+            except Exception as e:
+                logger.warning("iz süren stop yeniden kurulamadı %s: %s", sem, e)
         for o in r or []:
-            if str(o.get("clientAlgoId") or "").startswith(ONEK) and _algo_parca(o) is None:
+            if str(o.get("clientAlgoId") or "").startswith(ONEK) and _algo_parca(o) is None and not _iz_mi(o):
                 t = str(o.get("orderType") or o.get("type") or "")
                 v = float(o.get("triggerPrice") or 0) or None
                 if t.startswith("TAKE_PROFIT"):
@@ -772,6 +855,10 @@ class Kapi:
                 if _algo_parca(o) is not None:
                     continue      # madde 863: parçanın kendi TP/stop'u parça satırında
                 t = str(o.get("orderType") or o.get("type") or "")
+                if _iz_mi(o):   # madde 901
+                    tpsl.append({"tur": "IZ", "oran": float(o.get("callbackRate") or 0), "aktif": float(o.get("activatePrice") or 0) or None,
+                                 "fiyat": float(o.get("activatePrice") or 0), "panel": str(o.get("clientAlgoId") or "").startswith(ONEK)})
+                    continue
                 tpsl.append({"tur": "TP" if t.startswith("TAKE_PROFIT") else "SL" if t.startswith("STOP") else t,
                              "fiyat": float(o.get("triggerPrice") or 0), "panel": str(o.get("clientAlgoId") or "").startswith(ONEK)})
             for o in self.ic.futures_get_open_orders(symbol=sem) or []:
@@ -926,7 +1013,7 @@ class Kapi:
             sem = p.get("symbol")
             a = float(p.get("positionAmt") or 0)
             if (ayri or sem in elle) and a:
-                tp = sl = None
+                tp = sl = iz = None
                 p_tp, p_sl = set(), set()
                 try:
                     if tum_algo is not None:
@@ -944,6 +1031,8 @@ class Kapi:
                             tp = float(o.get("triggerPrice") or 0) or None
                         elif t.startswith("STOP"):
                             sl = float(o.get("triggerPrice") or 0) or None
+                        elif _iz_mi(o):   # madde 901
+                            iz = float(o.get("callbackRate") or 0) or None
                 except Exception:
                     pass
                 parca = None
@@ -955,7 +1044,7 @@ class Kapi:
                 pozlar.append({"sembol": sem, "adet": a, "giris": float(p.get("entryPrice") or 0), "parcalar": parca,
                                "parca_tp": len(p_tp), "parca_sl": len(p_sl),
                                "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0),
-                               "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl,
+                               "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl, "iz": iz,
                                "pay": None if ayri else self._payim(sem, a, float(p.get("entryPrice") or 0))})   # madde 843
                 m = self._muhasebe(sem)
                 if m and not self.ayar.get("ayri") and m.get("q_k") is not None:   # madde 851: geçişte yalnız kullanıcının payı
@@ -1267,6 +1356,10 @@ def uygulama(kapi_fabrika=None):
     @app.post("/kapat")
     def r_kapat():
         return calistir(lambda: kapi().kapat(govde()))
+
+    @app.post("/iz")
+    def r_iz():
+        return calistir(lambda: kapi().iz(govde()))
 
     @app.post("/iptal")
     def r_iptal():
