@@ -1123,7 +1123,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pfa{display:none}
 .pyr .rz{white-space:nowrap;flex:none}
 .gdon{overflow-x:auto;scrollbar-width:none;-webkit-overflow-scrolling:touch}.gdon::-webkit-scrollbar{display:none}.gdon button{white-space:nowrap;flex:none}
-@media (max-width:400px){.pyr{grid-template-columns:22px minmax(0,1fr) 66px 58px;gap:6px;padding:4px 6px}.pyr .pfc{display:none}.pfa{display:block;font-size:11.5px;color:var(--soluk);font-weight:500;font-variant-numeric:tabular-nums}
+@media (max-width:400px){.pyl .pyr,.pyr.ust{grid-template-columns:22px minmax(0,1fr) 68px 60px!important;gap:6px;padding:4px 6px}.pyr .pfc{display:none}.pfa{display:block;font-size:11.5px;color:var(--soluk);font-weight:500;font-variant-numeric:tabular-nums}
   .pyr>span:nth-child(2){flex-direction:column;align-items:flex-start!important;justify-content:center}.pyr>span:nth-child(2)>a{max-width:100%}.pyr .rz{margin-left:0!important;margin-top:1px}
   .pyr>span:nth-child(2){display:grid!important;grid-template-columns:auto auto;justify-content:start;column-gap:5px}.pyr>span:nth-child(2) .pfa{grid-column:1/-1}
   .pya .gdon{max-width:100%}.pyk .gdon button{padding:0 11px}}
@@ -1132,7 +1132,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
   .abr{grid-column:1/-1;margin-top:4px}.abkz span{display:block}}
 .ipr{grid-template-columns:26px minmax(0,1fr) auto!important;grid-template-areas:"n m k" "n t s";row-gap:4px!important}
 .ipr .iprn{grid-area:n}.ipr .iprm{grid-area:m}.ipr .iprk{grid-area:k;align-self:start}.ipr .iprtp{grid-area:t;margin-top:0!important}.ipr .iprs{grid-area:s;justify-self:end;padding:6px 14px!important}
-@media (max-width:360px){.ipr{grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"m k" "t s"}.ipr .iprn{display:none}}
+@media (max-width:360px){.apr .k2{white-space:normal}.ipr{grid-template-columns:minmax(0,1fr) auto!important;grid-template-areas:"m k" "t s"}.ipr .iprn{display:none}}
 .tema{width:36px!important;height:36px!important;flex:none}.hmb{flex:none}
 .gdon button,.mod button{min-height:34px}.aygez button{min-width:40px;min-height:36px}.dgr .mod button,.dozet .mod button{padding:6px 12px!important}
 .abh2{font-size:10.5px!important}
