@@ -1294,7 +1294,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .ipara{position:relative}.isl .ipara input{font-size:20px;font-weight:650;height:52px}.isl .ipara span{position:absolute;right:14px;top:calc(50% + 4px);transform:translateY(-50%);color:var(--soluk);font-weight:600}
 .isl .iki{display:grid;grid-template-columns:1fr 1fr;gap:10px}
 .isl .iacil{display:flex;justify-content:space-between;align-items:center;width:100%;height:44px;margin-top:14px;border:1px solid var(--cizgi);border-radius:12px;background:var(--kart);color:var(--yazi);font:inherit;font-weight:600;padding:0 14px;cursor:pointer}
-.isl .iacil i{font-style:normal;font-size:12px;color:var(--soluk)}.isl .iacil.on i{color:var(--vurgu)}.isl .iacil:disabled{cursor:default;opacity:.8}
+.isl .iacil i{font-style:normal;font-size:12px;color:var(--soluk)}.isl .iacil.on i{color:var(--vurgu)}.isl .iacil i.oner{color:var(--uyari)}.isl .iacil:disabled{cursor:default;opacity:.8}
 .isl #isltah{margin-top:12px}.isl .itg{display:grid;grid-template-columns:1fr 1fr;gap:6px 16px;background:var(--kart2);border-radius:12px;padding:10px 12px;font-size:13px;font-variant-numeric:tabular-nums}
 .isl .itg div{display:flex;justify-content:space-between;gap:8px}.isl .itg span{color:var(--soluk)}
 .isl .ion{font-size:12.5px;margin:8px 0 0;line-height:1.45}
@@ -2141,6 +2141,7 @@ async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
   const P0 = ISL.poz && ISL.poz.pozisyon, ters = islPozVar() && ((P0.adet > 0) != (O.yon=="L"));
   if (ters) not.push(`Hesap tek yönlü çalışır: bu emir önce mevcut ${P0.adet > 0 ? "long" : "short"} pozisyonu (${Math.abs(P0.adet).toLocaleString("tr-TR")} adet) azaltır; adet daha büyükse fazlası ters yönde pozisyon açar.`);
   else if (islPozVar()) not.push("Mevcut TP / stop toplam adede göre kendiliğinden güncellenir.");
+  if (!ters && !O.sl && !(islPozVar() && ((ISL.poz.tpsl||[]).some(x=>x.tur=="SL")))) not.push("Bu emirde stop yok: fiyat ters giderse zarar kendiliğinden sınırlanmaz. Düzenle'ye dönüp \"TP / stop ekle\"den koyabilirsin.");   // madde 885
   if (ISL.poz && ISL.poz.bot_tutuyor && !ISL.poz.elle) not.push("Bu coin şu an botun: emir gidince coin sana geçer, bot bu coindeki kendi emirlerini iptal eder ve coini bırakır.");
   ISL.adim = {tur: "emir", baslik: `${ISL.s.replace(/USDT$/,"")} ${ters ? (P0.adet > 0 ? "long'u azalt / çevir" : "short'u azalt / çevir") : O.yon=="L" ? "long aç" : "short aç"}`, satir: S, not, dugme: O.yon=="L" ? "Long aç" : "Short aç", renk: O.yon,
               govde: {sembol: ISL.s, yon: O.yon, usd: u, tip: ISL.tip, fiyat: ISL.fiyat, ...islTPSL()}};
@@ -2352,7 +2353,7 @@ function islCiz(){
       h += `<div class="iseg yon">${seg("yon","L","Long","L")}${seg("yon","S","Short","S")}</div>
         <div class="isat"><span class="ibas">Emir tipi</span><div class="ichip kisa">${seg("tip","MARKET","Piyasa")}${seg("tip","LIMIT","Limit")}</div></div>
         ${I.tip=="LIMIT" ? `<input inputmode="decimal" placeholder="Limit fiyatı (şimdi ${fg(PR.isaret)})" aria-label="Limit fiyatı" value="${islGos(I.fiyat)}" oninput="islAyar('fiyat',this.value)">` : ""}
-        <div class="isat"><span class="ibas">Boyut</span><div class="ichip kisa">${seg("boyut","usd","Tutar")}${seg("boyut","risk","Risk")}</div></div>
+        <div class="isat"><span class="ibas">Boyut${(ELLE_OZ && ELLE_OZ.hesap && ELLE_OZ.hesap.bosta!=null) ? ` <span class="k" style="font-weight:500">· boşta ${para(ELLE_OZ.hesap.bosta)}</span>` : ""}</span><div class="ichip kisa">${seg("boyut","usd","Tutar")}${seg("boyut","risk","Risk")}</div></div>
         ${riskMod ? `<div class="ipara"><input inputmode="decimal" aria-label="Risk tutarı" value="${islGos(I.risk)}" oninput="islAyar('risk',this.value)"><span>$ risk</span></div>
             <div class="ichip">${[2,5,10,20].map(v=>`<button class="${+I.risk==v?"on":""}" onclick="islAyar('risk',${v});islCiz()">${v} $</button>`).join("")}</div>
             <p class="ion k">Stop'a kadar en fazla bu kadar kaybedersin; pozisyon büyüklüğü buna göre hesaplanır.</p>`
@@ -2360,7 +2361,7 @@ function islCiz(){
             <div class="ichip">${[25,50,100,200].filter(v=>v<=(D.max_usd||200)).map(v=>`<button class="${+I.usd==v?"on":""}" onclick="islAyar('usd',${v});islCiz()">${v} $</button>`).join("")}</div>`}
         ${varPoz ? (riskMod ? `<input inputmode="decimal" placeholder="Stop fiyatı (risk buna göre)" aria-label="Stop fiyatı" value="${islGos(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}` : "")
             + `<p class="ion k">Ekleme sonrası mevcut TP / stop toplam adede göre güncellenir; fiyatlarını Pozisyon'dan değiştirirsin.</p>`
-          : `<button class="iacil ${tpslAcik?"on":""}" onclick="ISL.tpsl=!ISL.tpsl;ISL.oniz=null;islCiz()" ${riskMod?"disabled":""}><span>TP / stop ekle</span><i>${tpslAcik?"açık":"kapalı"}</i></button>
+          : `<button class="iacil ${tpslAcik?"on":""}" onclick="ISL.tpsl=!ISL.tpsl;ISL.oniz=null;islCiz()" ${riskMod?"disabled":""}><span>TP / stop ekle</span><i class="${tpslAcik?"":"oner"}">${tpslAcik?"açık":"kapalı · stop önerilir"}</i></button>
             ${tpslAcik ? `<div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
               <div><input inputmode="decimal" placeholder="Stop fiyatı" aria-label="Stop fiyatı" value="${islGos(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>` : ""}`}
         <div id="isluyr">${islUyari()}</div><div id="isltah">${islTahminMetin()}</div>`;
