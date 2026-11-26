@@ -2270,7 +2270,7 @@ async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
   if (O.not) not.push(O.not);
   const P0 = ISL.poz && ISL.poz.pozisyon, ters = islPozVar() && ((P0.adet > 0) != (O.yon=="L"));
   if (ters) not.push(`Hesap tek yönlü çalışır: bu emir önce mevcut ${P0.adet > 0 ? "long" : "short"} pozisyonu (${Math.abs(P0.adet).toLocaleString("tr-TR")} adet) azaltır; adet daha büyükse fazlası ters yönde pozisyon açar.`);
-  else if (islPozVar()) not.push("Mevcut TP / stop toplam adede göre kendiliğinden güncellenir.");
+  else if (islPozVar() && (ISL.poz.tpsl||[]).length) not.push("Mevcut TP / stop toplam adede göre kendiliğinden güncellenir.");
   if (!ters && !O.sl && !(islPozVar() && ((ISL.poz.tpsl||[]).some(x=>x.tur=="SL")))) not.push("Bu emirde stop yok: fiyat ters giderse zarar kendiliğinden sınırlanmaz. Düzenle'ye dönüp \"TP / stop ekle\"den koyabilirsin.");   // madde 885
   if (ISL.poz && ISL.poz.bot_tutuyor && !ISL.poz.elle) not.push("Bu coin şu an botun: emir gidince coin sana geçer, bot bu coindeki kendi emirlerini iptal eder ve coini bırakır.");
   ISL.adim = {tur: "emir", baslik: `${ISL.s.replace(/USDT$/,"")} ${ters ? (P0.adet > 0 ? "long'u azalt / çevir" : "short'u azalt / çevir") : O.yon=="L" ? "long aç" : "short aç"}`, satir: S, not, dugme: O.yon=="L" ? "Long aç" : "Short aç", renk: O.yon,
