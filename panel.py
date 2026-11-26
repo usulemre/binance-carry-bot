@@ -1152,8 +1152,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pkav{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;letter-spacing:-.3px;color:hsl(var(--h) 70% 35%);background:hsl(var(--h) 80% 90%)}
 :root[data-theme="dark"] .pkav{color:hsl(var(--h) 80% 75%);background:hsl(var(--h) 45% 20%)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pkav{color:hsl(var(--h) 80% 75%);background:hsl(var(--h) 45% 20%)}}
-.pkm{min-width:0;display:flex;flex-direction:column;gap:2px}.pkt{display:flex;align-items:center;gap:5px;min-width:0}.pkt b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
-.pks{font-size:12px;color:var(--soluk);font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.pks i{font-style:normal;opacity:.5}.pks .art{color:var(--art)}.pks .eks{color:var(--eks)}
+.pkm{min-width:0;display:flex;flex-direction:column;gap:2px}.pkt{display:flex;align-items:center;flex-wrap:wrap;gap:3px 5px;min-width:0}.pkt b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.pks{font-size:12px;color:var(--soluk);font-variant-numeric:tabular-nums;line-height:1.35}.pks i{font-style:normal;opacity:.5}.pks .art{color:var(--art)}.pks .eks{color:var(--eks)}
 .pkz{flex:none;font-size:10.5px;font-weight:650;padding:1px 6px;border-radius:999px;background:var(--kart);color:var(--soluk);white-space:nowrap}.pkz.sen{color:#fff;min-width:16px;text-align:center;padding:1px 5px}.pkz.sen.L{background:#0a7d45}.pkz.sen.S{background:#c42b20}.pkz.yok{background:none;border:1px dashed var(--cizgi)}
 .pkd{min-width:76px;text-align:center;font-size:14px;font-weight:700;font-variant-numeric:tabular-nums;padding:7px 8px;border-radius:10px;background:var(--kart);white-space:nowrap}
 .pk2 .pkd.art{color:#fff!important;background:#0a7d45}.pk2 .pkd.eks{color:#fff!important;background:#c42b20}
@@ -1526,7 +1526,7 @@ function piySatir(o, R){   // madde 866: kart satır — tamamına dokun = al / 
   let h = 0; for (const c of ad) h = (h * 31 + c.charCodeAt(0)) % 360;
   const fon = PIY_SEKME == "fund", ana = fon ? (o.r==null ? null : o.r*100) : o.d, anaM = ana==null ? "—" : fon ? piyYz(ana, 3) : piyYz(ana);
   const rz = (benim ? `<span class="pkz sen ${benim.adet>0?"L":"S"}" title="bu coinde ${benim.adet>0?"long":"short"} pozisyonun var">${benim.adet>0?"L":"S"}</span>` : "") + (R[o.s] && !(ISL_DURUM||{}).ayri ? `<span class="pkz">${R[o.s]}</span>` : "") + (yok ? `<span class="pkz yok" title="${ISL_DURUM.mod=="live"?"bu hesapta":"demo hesapta"} işlem görmüyor">yok</span>` : "");
-  const alt = `${piyFiyat(o.f)} <i>·</i> ${piyHac(o.q)}$` + (fon ? ` <i>·</i> <span class="${sinif(o.d)}">${piyYz(o.d)}</span>` : (o.r!=null && Math.abs(o.r) >= 0.0003 ? ` <i>·</i> <span class="${o.r<0?"eks":""}" title="funding (8 sa)">fon ${piyYz(o.r*100, 3)}</span>` : ""));
+  const alt = `<span class="nw">${piyFiyat(o.f)}</span> <i>·</i> <span class="nw">${piyHac(o.q)}$</span>` + (fon ? ` <i>·</i> <span class="nw ${sinif(o.d)}">${piyYz(o.d)}</span>` : (o.r!=null && Math.abs(o.r) >= 0.0003 ? ` <i>·</i> <span class="nw ${o.r<0?"eks":""}" title="funding (8 sa)">fon ${piyYz(o.r*100, 3)}</span>` : ""));
   const ac = isl ? `islAc('${o.s}')` : `window.open('https://www.binance.com/tr/futures/${o.s}','_blank','noopener')`;
   return `<div class="pkr ${yok?"pyok":""}" role="button" tabindex="0" onclick="${ac}" onkeydown="if(event.key=='Enter')${ac}" aria-label="${ad} ${isl?"al / sat":"Binance'te aç"}">
     <span class="pkav" style="--h:${h}" aria-hidden="true">${ea(ad.slice(0,2))}</span>
