@@ -1119,6 +1119,12 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+/* madde 870: coin logoları */
+.pkav{position:relative;overflow:hidden;flex:none}.pkav img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;opacity:0;transition:opacity .2s}
+.pkav.ik{color:transparent!important;background:#fff!important}.pkav.ik img{opacity:1}
+.pkav.kucuk{width:22px;height:22px;font-size:9px}.iad{display:flex;align-items:center;gap:8px}.pkav.ihik{width:30px;height:30px;font-size:11px}
+.apr{grid-template-columns:36px minmax(0,1fr) auto!important}.apik{position:relative;width:36px;height:36px}.apik .pkav{width:36px;height:36px;font-size:12px}
+.apik .iyon2{position:absolute;right:-4px;bottom:-3px;width:17px!important;height:17px!important;border-radius:6px!important;font-size:9.5px!important;border:2px solid var(--kart2)}
 /* madde 869: işlem penceresi */
 .idonk{margin-top:16px;border-top:1px solid var(--cizgi);padding-top:4px}.idonb{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;border:0;background:none;color:var(--yazi);font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:0 2px}.idonb .k{font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 .isl .imsj{margin-top:12px}
@@ -1520,16 +1526,23 @@ function piyRozet(k){   // botun / senin bu coindeki durumun
   if (!(ISL_DURUM||{}).ayri) for (const c of (k && k.coin_ozet) || []) if (c.elle) R[c.s.endsWith("USDT") ? c.s : c.s+"USDT"] = "✋ elle";
   return R;
 }
+// MADDE 870: coin logosu — sunucudan (ikon/<COIN>.png); yüklenemezse harfli yuvarlak. Yüklenen / bulunamayan bellekte tutulur ki
+// saniyede bir yeniden çizilen listelerde harf ↔ logo yanıp sönmesin.
+const IKON_OK = new Set(), IKON_YOK = new Set();
+function coinIkon(ad, cls = ""){
+  let h = 0; for (const c of ad) h = (h * 31 + c.charCodeAt(0)) % 360;
+  const ok = IKON_OK.has(ad), img = IKON_YOK.has(ad) ? "" : `<img src="ikon/${encodeURIComponent(ad)}.png" alt="" loading="lazy" decoding="async" onload="IKON_OK.add('${ad}');this.parentNode.classList.add('ik')" onerror="IKON_YOK.add('${ad}');this.remove()">`;
+  return `<span class="pkav ${ok ? "ik" : ""} ${cls}" style="--h:${h}" aria-hidden="true">${ea(ad.slice(0,2))}${img}</span>`;
+}
 function piySatir(o, R){   // madde 866: kart satır — tamamına dokun = al / sat; ☆ sağda
   const yd = PIY_IZLE.has(o.s), fl = PIY_ONCEKI[o.s], ad = o.s.replace(/USDT$/, ""), isl = ISL_DURUM && ISL_DURUM.acik, yok = isl && islYok(o.s);
   const benim = ((ELLE_OZ && ELLE_OZ.pozisyonlar) || []).find(x=>x.sembol == o.s);
-  let h = 0; for (const c of ad) h = (h * 31 + c.charCodeAt(0)) % 360;
   const fon = PIY_SEKME == "fund", ana = fon ? (o.r==null ? null : o.r*100) : o.d, anaM = ana==null ? "—" : fon ? piyYz(ana, 3) : piyYz(ana);
   const rz = (benim ? `<span class="pkz sen ${benim.adet>0?"L":"S"}" title="bu coinde ${benim.adet>0?"long":"short"} pozisyonun var">${benim.adet>0?"L":"S"}</span>` : "") + (R[o.s] && !(ISL_DURUM||{}).ayri ? `<span class="pkz">${R[o.s]}</span>` : "") + (yok ? `<span class="pkz yok" title="${ISL_DURUM.mod=="live"?"bu hesapta":"demo hesapta"} işlem görmüyor">yok</span>` : "");
   const alt = `<span class="nw">${piyFiyat(o.f)}</span> <i>·</i> <span class="nw">${piyHac(o.q)}$</span>` + (fon ? ` <i>·</i> <span class="nw ${sinif(o.d)}">${piyYz(o.d)}</span>` : (o.r!=null && Math.abs(o.r) >= 0.0003 ? ` <i>·</i> <span class="nw ${o.r<0?"eks":""}" title="funding (8 sa)">fon ${piyYz(o.r*100, 3)}</span>` : ""));
   const ac = isl ? `islAc('${o.s}')` : `window.open('https://www.binance.com/tr/futures/${o.s}','_blank','noopener')`;
   return `<div class="pkr ${yok?"pyok":""}" role="button" tabindex="0" onclick="${ac}" onkeydown="if(event.key=='Enter')${ac}" aria-label="${ad} ${isl?"al / sat":"Binance'te aç"}">
-    <span class="pkav" style="--h:${h}" aria-hidden="true">${ea(ad.slice(0,2))}</span>
+    ${coinIkon(ad)}
     <span class="pkm"><span class="pkt"><b>${ea(ad)}</b>${rz}</span><span class="pks">${alt}</span></span>
     <span class="pkd ${ana==null?"":ana>0?"art":ana<0?"eks":""} ${fl>0?"fy":fl<0?"fa":""}">${anaM}</span>
     <button class="pky ${yd?"on":""}" onclick="event.stopPropagation();piyIzle('${o.s}')" aria-pressed="${yd}" aria-label="${ad} ${yd?"izleme listesinden çıkar":"izleme listesine ekle"}">${yd?"★":"☆"}</button></div>`;
@@ -1645,7 +1658,7 @@ function asCoinListe(C){
   const T = S.reduce((a,x)=>a + x.toplam, 0), kaz = S.filter(x=>x.toplam > 0.005).length;
   const k = v => Math.abs(v) < 0.005 ? "" : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
   const sat = x => { const p = [["kapanan", x.kapanan], ["funding", x.funding], ["komisyon", x.komisyon], ["açık", x.acik]].filter(([,v])=>Math.abs(v) >= 0.005);
-    return `<div class="acr"><span class="acn"><b>${ea(x.s)}</b>${x.yon ? `<span class="pkz sen ${x.yon}">${x.yon}</span>` : ""}</span>
+    return `<div class="acr"><span class="acn">${coinIkon(x.s, "kucuk")}<b>${ea(x.s)}</b>${x.yon ? `<span class="pkz sen ${x.yon}">${x.yon}</span>` : ""}</span>
       <span class="aca">${p.map(([a,v])=>`${a} ${k(v)}`).join(" · ") || "—"}</span><b class="act ${sinif(x.toplam)}">${isaretli(x.toplam)}</b></div>`; };
   return `<div class="kart acl"><div class="apkh"><div><b>Coinler</b><span class="say">${S.length}</span></div><b class="${sinif(T)}">${isaretli(T)}</b></div>
     <div class="apko"><span class="art">${kaz} kârda</span><span class="eks">${S.length - kaz} zararda</span><span>başlangıçtan beri, açık pozisyon dahil</span></div>
@@ -1794,7 +1807,7 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
     const deger = Math.abs(x.adet) * (f || x.giris), kp = x.giris > 0 ? x.kz / (Math.abs(x.adet) * x.giris) * 100 : 0, n = (x.parcalar||[]).length;
     const stopVar = x.sl || x.parca_sl, tpsl = [x.tp ? `TP ${piyFiyat(x.tp)}` : x.parca_tp ? `TP ${x.parca_tp}/${n} alım` : "", x.sl ? `stop ${piyFiyat(x.sl)}` : x.parca_sl ? `stop ${x.parca_sl}/${n} alım` : ""].filter(Boolean);
     return `<a class="apr" href="#piyasa" onclick="islAc('${x.sembol}');return false"><i class="ass ${sinif(x.kz)}" id="ass-${x.sembol}"></i>
-      <span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
+      <span class="apik">${coinIkon(ad)}<span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span></span>
       <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
         <span class="k2">${x.pay && x.pay.devralinan ? `${elleKisa(x)}` : `<span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>`}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}</span>
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
@@ -2156,7 +2169,7 @@ function islCiz(){
   const hz = (alan, L) => `<div class="ichip">${L.map(y=>`<button onclick="islYuzde('${alan}',${y})">${(alan=="tp") == _uz ? "+" : "−"}${y}%</button>`).join("")}</div>`;
   const uzak = (v, ref) => v>0 && ref>0 ? ` <span class="k">${((v/ref-1)*100>=0?"+":"")}${((v/ref-1)*100).toFixed(1).replace(".",",")}%</span>` : "";
   const varPoz = islPozVar(), uzun = varPoz && pz.adet > 0;
-  let h = `<div class="ihd"><div><div class="iad"><b>${ad}</b><span class="irz">${D.mod=="live"?"Canlı":"Demo"}</span></div>
+  let h = `<div class="ihd"><div><div class="iad">${coinIkon(ad, "ihik")}<b>${ad}</b><span class="irz">${D.mod=="live"?"Canlı":"Demo"}</span></div>
       <div class="ifr"><span id="islfiy">${f>0 ? fg(f) : `<span class="k" style="font-size:16px">fiyat geliyor…</span>`}</span><span id="islyz" class="${sinif(o.p)}">${o.p!=null ? `${o.p>0?"▲":o.p<0?"▼":""} ${piyYz(o.p)}` : ""}</span><span class="k">24 sa</span></div></div>
       <button class="shx" onclick="islKapat()" aria-label="Kapat">✕</button></div>`;
   // grafik
@@ -3152,6 +3165,16 @@ def uygulama(klasorler: list[str]):
              "icons": [{"src": "ikon-192.png", "sizes": "192x192", "type": "image/png"},
                        {"src": "ikon-512.png", "sizes": "512x512", "type": "image/png", "purpose": "any maskable"}]}
         return Response(json.dumps(m), mimetype="application/manifest+json")
+
+    @app.get("/ikon/<ad>.png")      # madde 870: coin logosu (sunucu indirir, diskte saklar; CSP dış resme izin vermez)
+    def coin_logo(ad):
+        from flask import abort, send_file
+        import coin_ikon
+        v = coin_ikon.ikon(ad)
+        if not v:
+            abort(404)
+        r = send_file(v[0], mimetype=v[1], max_age=7 * 86400)
+        return r
 
     @app.get("/ikon-<int:n>.png")
     def ikon(n):
