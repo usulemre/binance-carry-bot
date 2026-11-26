@@ -1143,7 +1143,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .imsj{margin-top:12px}
 /* madde 868: diğer sayfalar */
 .asdk{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 4px}.asdk>div{padding:8px 10px;border-radius:10px;background:var(--kart2);display:flex;flex-direction:column;gap:1px}.asdk span{font-size:11.5px;color:var(--soluk)}.asdk b{font-size:14px;font-variant-numeric:tabular-nums}.asdk .art{color:var(--art)}.asdk .eks{color:var(--eks)}
-.ofil{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;margin-left:-18px!important;margin-right:-18px!important;padding:0 18px}.ofil::-webkit-scrollbar{display:none}.ofil button{flex:none;height:36px!important;white-space:nowrap}
+.ofil{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:var(--kay-mask,none);mask-image:var(--kay-mask,none);margin-left:-18px!important;margin-right:-18px!important;padding:0 18px}.ofil::-webkit-scrollbar{display:none}.ofil button{flex:none;height:36px!important;white-space:nowrap}
 .ob>span:first-child{overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;overflow:hidden}
 .oa{overflow-wrap:anywhere;display:-webkit-box;-webkit-line-clamp:3;-webkit-box-orient:vertical;overflow:hidden}.orow{cursor:pointer}
 .orow.oacik .oa,.orow.oacik .ob>span:first-child{-webkit-line-clamp:unset;display:block}
@@ -1170,12 +1170,13 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .tsr.on{border-color:color-mix(in srgb,var(--vurgu) 55%,transparent);background:color-mix(in srgb,var(--vurgu) 7%,var(--kart))}.tsr:disabled{cursor:default}.tsc{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--cizgi);display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff}.tsr.on .tsc{background:var(--vurgu);border-color:var(--vurgu)}
 .tsm{display:flex;flex-direction:column;gap:2px;min-width:0}.tsm>b{font-size:14.5px;display:flex;align-items:center;gap:6px}.tsm .k{font-size:12px}.tsk{font-weight:650;font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.tsk.art{color:var(--art)}.tsk.eks{color:var(--eks)}.tsok{font-size:12px;color:var(--art);font-weight:650}.tshat{font-size:12px;color:var(--eks)}
 #tspin{width:100%;height:46px;margin-top:6px;padding:0 12px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:16px}
+.kaydevam{--kay-mask:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
 .pkara{display:flex;align-items:center;gap:8px;padding:0 12px;height:46px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.pkara>span:first-child{font-size:18px;color:var(--soluk)}
 .pkara input{flex:1;min-width:0;border:0!important;background:none!important;outline:none;font:inherit;font-size:15px;color:var(--yazi);padding:0!important;height:44px;box-shadow:none!important}.pkara #piyd{white-space:nowrap;font-size:11.5px}
-.pksek{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;margin:12px -14px 0;padding:0 14px}.pksek::-webkit-scrollbar{display:none}
+.pksek{display:flex;gap:6px;overflow-x:auto;scrollbar-width:none;-webkit-mask-image:var(--kay-mask,none);mask-image:var(--kay-mask,none);margin:12px -14px 0;padding:0 14px}.pksek::-webkit-scrollbar{display:none}
 .pksek button{flex:none;height:36px;padding:0 14px;border-radius:999px;border:1px solid var(--cizgi);background:none;color:var(--soluk);font:inherit;font-size:13.5px;font-weight:600;cursor:pointer;white-space:nowrap}
 .pksek button.on{background:var(--yazi);border-color:var(--yazi);color:var(--bg)}
 .pkay{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-top:10px}
@@ -1220,7 +1221,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .abh2{font-size:10.5px!important}
 .nw{white-space:nowrap}h1{white-space:nowrap}
 @media (max-width:400px){.apr .k2{white-space:normal!important;text-overflow:clip!important}header.kucuk h1 img{display:none}header.kucuk #ustkitap{font-size:13px;padding:3px 8px}header.kucuk .canli>span{display:none}
-  .abc span{font-size:11px;padding:2px 8px;white-space:nowrap;flex:none}.abc{gap:4px!important;flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none}.dpb .gb{font-size:19px}}
+  .abc span{font-size:11px;padding:2px 8px;white-space:nowrap;flex:none}.abc{gap:4px!important;flex-wrap:wrap!important}.dpb .gb{font-size:19px}}
 .pyl .pyr>span:nth-child(2)>a{padding:8px 0;margin:-8px 0}.ipr .iprtp{min-height:32px}
 #piyelle.as-sayfa{border:0;padding:0;margin:0}
 .asbak.kart{margin:0 0 12px}
@@ -1848,7 +1849,7 @@ function asBakiye(E, P){   // madde 861: görsel — halka (pozisyonlarda / boş
       ${satir("var(--art)", "Boşta", bos, yz(1 - pay) + " · yeni işleme hazır")}
     </div>
     ${asDenge(P)}
-    <div class="abc">${P.length ? `<span>${P.length} pozisyon</span>` : ""}${H.buyukluk ? `<span>büyüklük ${para(H.buyukluk)}</span>` : ""}${kal != null ? `<span>kaldıraç ${kal.toFixed(2).replace(".",",")}x</span>` : ""}</div></div>`;
+    <div class="abc">${H.buyukluk ? `<span>büyüklük ${para(H.buyukluk)}</span>` : ""}${kal != null ? `<span>kaldıraç ${kal.toFixed(2).replace(".",",")}x</span>` : ""}</div></div>`;
 }
 // madde 883: Al-Sat long / short dengesi (Bot Özet'teki çubuğun aynısı) — bakiye kartının altında
 function asDenge(P){
@@ -2618,6 +2619,7 @@ function fundTakip(){
   FUND_T = T;
 }
 function canliBoya(){
+  kayIsaret();   // madde 890 (yeniden çizimden sonra da doğru kalsın; iki öğe, ucuz)
   if (ISL && Date.now() - (islGrafikCiz.t||0) > 2000){ islGrafikCiz.t = Date.now(); islGrafikCiz(); if (Date.now() - ((MUMI[ISL.s+"|"+ISL.aralik]||{}).t||0) > 60e3) islMumYukle(); }   // madde 835
   if (ISL && !ISL.adim && Date.now() - (donemBoya.t||0) > 5000){ donemBoya.t = Date.now(); donemBoya(ISL.s); }   // madde 848
   asCanliBoya();   // madde 856
@@ -3177,6 +3179,10 @@ function fonTablo(o){
   const sat = f.coin.map(c=>`<tr><td><span class="ctad">${coinIkon(String(c.s).replace(/USDT$/,""), "kucuk")}<b>${c.s}</b></span></td><td class="r">${h(c.demo)}</td>${demo?`<td class="r">${h(c.gercek)}</td>`:""}</tr>`).join("");
   return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} coinler (${f.coin.length})</span>${ac ? `<table><tr class="s"><td>coin</td><td class="r">${demo?"demo hesap":"ödeme"}</td>${demo?`<td class="r">gerçek oranla</td>`:""}</tr>${sat}</table>` : ""}</div>`;
 }
+// madde 890: yana kayan çip satırlarında (Olaylar filtreleri, Piyasa sekmeleri) sağda devamı varsa kenar solar
+function kayIsaret(){ for (const el of document.querySelectorAll(".ofil,.pksek")) el.classList.toggle("kaydevam", el.scrollWidth - el.clientWidth - el.scrollLeft > 4); }
+addEventListener("scroll", e=>{ const t = e.target; if (t && t.classList && (t.classList.contains("ofil") || t.classList.contains("pksek"))) kayIsaret(); }, true);
+addEventListener("resize", ()=>kayIsaret());
 function olayAc(id){ ACIK.has(id) ? ACIK.delete(id) : ACIK.add(id); ciz(); }
 // MADDE 757: D TASARIMI — OLAYLAR. Filtre (Tümü / Dikkat / Dilimler / Kapanışlar / Funding), her gün tek kart, nokta rengi
 // önem derecesine göre (kırmızı stop/hata, turuncu dikkat, mavi dilim, yeşil kapanış, gri funding / bilgi).
