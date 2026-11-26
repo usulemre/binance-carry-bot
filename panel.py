@@ -1118,6 +1118,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+.iprl{display:flex;flex-direction:column;gap:6px;margin:4px 0 12px}.ipr{display:grid;grid-template-columns:26px minmax(0,1fr) auto auto;gap:10px;align-items:center;padding:10px;border-radius:12px;background:var(--kart2);border-left:3px solid var(--cizgi)}.ipr.art{border-left-color:var(--art)}.ipr.eks{border-left-color:var(--eks)}.iprn{width:26px;height:26px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:700;background:var(--kart);color:var(--soluk)}.iprm{min-width:0}.iprt{font-size:13.5px;font-weight:600;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.iprr{font-size:10.5px;font-weight:600;color:var(--art);background:color-mix(in srgb,var(--art) 14%,transparent);border-radius:999px;padding:1px 6px;margin-left:4px}.ipr .k2{color:var(--soluk);font-size:12px;font-variant-numeric:tabular-nums}.ipr .k2 b{color:var(--yazi);font-weight:600}.iprb{height:3px;border-radius:2px;background:var(--cizgi);margin-top:5px;overflow:hidden}.iprb span{display:block;height:100%;background:var(--soluk);opacity:.6}.iprk{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.iprk b{display:block;font-size:14px}.iprk span{font-size:11.5px;opacity:.85}.ipr.art .iprk{color:var(--art)}.ipr.eks .iprk{color:var(--eks)}.iprs{border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);border-radius:10px;padding:8px 12px;font:inherit;font-size:13px;font-weight:600;cursor:pointer;min-height:36px}.iprs:active{transform:scale(.97)}.pyn{display:inline-block;font-size:10.5px;font-weight:600;color:var(--vurgu);background:color-mix(in srgb,var(--vurgu) 12%,transparent);border-radius:999px;padding:0 6px;margin-left:4px}
 .asbak{display:grid;grid-template-columns:118px minmax(0,1fr);gap:6px 16px;align-items:center;margin:8px 0 6px;padding:14px;border-radius:16px;background:linear-gradient(135deg,var(--kart2),var(--kart));border:1px solid var(--cizgi)}.abh{width:118px;height:118px}.abh1{font-size:20px;font-weight:700;fill:var(--yazi);font-variant-numeric:tabular-nums}.abh2{font-size:9px;fill:var(--soluk)}.abk{min-width:0}.abu{font-size:12px;color:var(--soluk);text-transform:uppercase;letter-spacing:.06em}.abt{font-size:26px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}.abkz{font-size:13px;font-weight:600;margin:2px 0 8px;font-variant-numeric:tabular-nums}.abkz span{color:var(--soluk);font-weight:400}.abkz.art{color:var(--art)}.abkz.eks{color:var(--eks)}.abs{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--cizgi)}.abs i{width:10px;height:10px;border-radius:3px;flex:none}.abs span{flex:1;min-width:0;font-size:13.5px;display:flex;flex-direction:column}.abs small{color:var(--soluk);font-size:11px}.abs b{font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.abc{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.abc span{font-size:11.5px;color:var(--soluk);background:var(--bg);border:1px solid var(--cizgi);border-radius:999px;padding:3px 9px;font-variant-numeric:tabular-nums}
 @media (max-width:380px){.asbak{grid-template-columns:92px minmax(0,1fr);gap:6px 12px;padding:12px}.abh{width:92px;height:92px}.abt{font-size:22px}}
 #piyelle{border-bottom:1px solid var(--cizgi);padding-bottom:12px;margin-bottom:10px}#piyelle .pyeb{margin-top:4px}
@@ -1592,7 +1593,8 @@ const elleZaman = t => { const d = new Date(t), b = new Date(); const g = d.toDa
 const elleAdet = q => Math.abs(q).toLocaleString("tr-TR", {maximumFractionDigits: 4});
 function elleBul(s){ return ((ELLE_OZ && ELLE_OZ.pozisyonlar) || []).find(x => x.sembol === s); }
 function elleKisa(x){   // Pozisyonlarım satırı: "senin 5.963 @ 0,01677 · bottan 8.331 @ 0,01332"
-  const P = x.pay; if (!P || !P.devralinan) return `${elleAdet(x.adet)} adet @ ${piyFiyat(x.giris)}`;
+  const P = x.pay, n = (x.parcalar||[]).length;
+  if (!P || !P.devralinan) return `${elleAdet(x.adet)} adet @ ${piyFiyat(x.giris)}${n > 1 ? ` <span class="pyn">${n} alım</span>` : ""}`;
   return `senin ${elleAdet(P.benim_adet)}${P.benim_giris?` @ ${piyFiyat(P.benim_giris)}`:""} · bottan ${elleAdet(P.devralinan)}${P.devralinan_giris?` @ ${piyFiyat(P.devralinan_giris)}`:""}`;
 }
 function ellePayHtml(s, p, f){   // madde 846: sade özet — ne aldın, kaçtan, şu an ne durumda; dolumlar katlanır
@@ -1879,6 +1881,46 @@ async function islDevam(){   // 1. adım -> onay ekranı (sunucu önizlemesi)
               govde: {sembol: ISL.s, yon: O.yon, usd: u, tip: ISL.tip, fiyat: ISL.fiyat, ...islTPSL()}};
   islCiz();
 }
+// MADDE 862: ALIM PARÇALARI — aynı coine farklı fiyatlardan yapılan her alım ayrı satır: kendi girişi, adedi, canlı K/Z'si, kendi Sat düğmesi.
+// Binance coin başına tek pozisyon tutar; parçaları kapı dolum geçmişinden kurar (azaltmalar: panelden seçilen parça, yoksa en eski).
+const parcaIsaret = s => (AS_F[s] > 0) ? AS_F[s] : (ISL && ISL.poz && ISL.poz.isaret) || null;
+const parcaKz = (x, m) => m > 0 && x.fiyat > 0 ? x.adet * (m - x.fiyat) : null;
+const parcaZaman = t => t ? new Date(t).toLocaleString("tr-TR", {day:"numeric", month:"short", hour:"2-digit", minute:"2-digit"}) : "eski";
+function parcaKzHtml(x, m){
+  const k = parcaKz(x, m); if (k == null) return "—";
+  const yz = k / (Math.abs(x.adet) * x.fiyat) * 100;
+  return `<b>${k>=0?"▲":"▼"} ${isaretli(k)}</b><span>${(yz>=0?"+":"")}${yz.toFixed(1).replace(".",",")}%</span>`;
+}
+function islParcaHtml(){
+  const L = ISL && ISL.poz && ISL.poz.parcalar; if (!L || L.length < 2) return "";
+  const m = parcaIsaret(ISL.s), top = Math.abs(L.reduce((a,x)=>a + x.adet, 0)) || 1;
+  const enIyi = Math.max(...L.map(x=>parcaKz(x, m) ?? -Infinity));
+  return `<div class="ibas">Alımların <span class="k">· ${L.length} parça, her biri ayrı satılabilir</span></div><div class="iprl">${L.map((x,i)=>{
+    const k = parcaKz(x, m), uz = x.adet > 0, w = Math.max(3, Math.abs(x.adet) / top * 100);
+    return `<div class="ipr ${k==null?"":sinif(k)}"><div class="iprn">${i+1}</div>
+      <div class="iprm"><div class="iprt">${x.eski ? "önceki alımlar" : parcaZaman(x.t)}${k!=null && k === enIyi && L.length > 2 ? ` <span class="iprr">en kârlı</span>` : ""}</div>
+        <div class="k2">${elleAdet(x.adet)} adet @ <b>${piyFiyat(x.fiyat)}</b></div><div class="iprb"><span style="width:${w.toFixed(0)}%"></span></div></div>
+      <div class="iprk" id="ipr-${ea(x.id)}">${parcaKzHtml(x, m)}</div>
+      <button class="iprs" onclick="islParcaOnay('${ea(x.id)}')">${uz ? "Sat" : "Kapat"}</button></div>`; }).join("")}</div>`;
+}
+function islParcaBoya(){   // her saniye: yalnız K/Z rakamları (düğmeye dokunuş kaybolmasın)
+  const L = ISL && !ISL.adim && ISL.gor=="poz" && ISL.poz && ISL.poz.parcalar; if (!L || L.length < 2) return;
+  const m = parcaIsaret(ISL.s);
+  for (const x of L){ const el = document.getElementById("ipr-" + x.id); if (!el) continue; const h = parcaKzHtml(x, m);
+    if (el.innerHTML !== h) el.innerHTML = h; const k = parcaKz(x, m), sat = el.parentElement; if (sat && k != null){ sat.classList.toggle("art", k >= 0); sat.classList.toggle("eks", k < 0); } }
+}
+setInterval(islParcaBoya, 1000);
+function islParcaOnay(id){
+  const L = ISL && ISL.poz && ISL.poz.parcalar, x = L && L.find(p=>p.id == id); if (!x) return;
+  const m = parcaIsaret(ISL.s), k = parcaKz(x, m), i = L.indexOf(x) + 1, uz = x.adet > 0;
+  ISL.adim = {tur: "kapat", baslik: `${ISL.s.replace(/USDT$/,"")} · ${i}. alımı ${uz ? "sat" : "kapat"}`,
+    satir: [["Alım", x.eski ? "önceki alımlar" : parcaZaman(x.t)], ["Adet", elleAdet(x.adet)], ["Giriş", piyFiyat(x.fiyat)], ["Şimdi", m ? piyFiyat(m) : "—"],
+            ["Bu alımın K/Z'si", k == null ? "—" : `<span class="${sinif(k)}">≈ ${isaretli(k)}</span>`], ["Fiyat", "piyasa fiyatından"]],
+    not: [L.length > 1 ? "Diğer alımların açık kalır; TP / stop kalan adede göre yeniden kurulur." : "Bu son parça: pozisyon tamamen kapanır.",
+          "Binance gerçekleşen K/Z'yi ortalama girişten yazar; rakam burada gördüğünden farklı görünebilir, toplam aynıdır."],
+    dugme: uz ? "Bu alımı sat" : "Bu alımı kapat", renk: "tehlike", yol: "kapat", govde: {sembol: ISL.s, oran: 1, parca: x.id}};
+  ISL.msj = null; islCiz();
+}
 function islKapatOnay(oran){
   if (!ISL || !islPozVar()) return; const P = ISL.poz.pozisyon, f = ISL.poz.isaret || P.giris, q = Math.abs(P.adet) * oran;
   ISL.adim = {tur: "kapat", baslik: `${ISL.s.replace(/USDT$/,"")} ${oran>=1 ? "pozisyonu kapat" : "%" + oran*100 + " kapat"}`,
@@ -1982,6 +2024,7 @@ function islCiz(){
           ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) : "<span class='k'>yok</span>")}${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) : "<span class='uyr'>yok</span>")}
           ${kut("Likidasyon", pz.likidasyon>0 ? fg(pz.likidasyon) : "—")}</div>
         ${likU!=null ? `<div class="ilik"><div class="ilikb"><span style="width:${Math.max(4, Math.min(100, likU / 50 * 100)).toFixed(0)}%" class="${likU<10?"kr":likU<30?"tu":"ye"}"></span></div><span class="k">likidasyona %${likU.toFixed(0)} uzak</span></div>` : ""}</div>
+        ${islParcaHtml()}
         <div class="ibas">Kapat</div><div class="iseg kucuk"><button onclick="islKapatOnay(0.25)">%25</button><button onclick="islKapatOnay(0.5)">%50</button><button class="tehlike" onclick="islKapatOnay(1)">Tümü</button></div>
         <div class="ibas">TP / stop</div>
         <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>

@@ -56,6 +56,7 @@ def ayarlar() -> dict:
             "ayri": bool(os.getenv("ALSAT_API_KEY", "").strip() and os.getenv("ALSAT_API_SECRET", "").strip()),
             "alsat_mod": os.getenv("ALSAT_MODE", "").strip() or os.getenv("BINANCE_MODE", "demo"),
             "anlik": os.getenv("CARRY_ALSAT_ANLIK", os.path.join("defter", "alsat_anlik.jsonl")),
+            "parca": os.getenv("CARRY_ALSAT_PARCA", os.path.join("defter", "alsat_parca.json")),   # madde 862
             "gecis_kisit": os.getenv("CARRY_ALSAT_GECIS", "1").strip() not in ("0", "false", "False"),
             "ayni_anahtar": bool(os.getenv("ALSAT_API_KEY", "").strip()) and os.getenv("ALSAT_API_KEY", "").strip() == os.getenv("BINANCE_API_KEY", "").strip()}
 
@@ -80,6 +81,7 @@ class Kapi:
         self._bilgi, self._bilgi_t = None, 0.0
         self._yanlis: list[float] = []
         self._kilit = threading.Lock()
+        self._parca_onbellek: dict = {}
 
     # ------------------------------------------------------------ denetimler
     def durum(self) -> dict:
@@ -386,7 +388,20 @@ class Kapi:
             hedef = poz["adet"] if self.ayar.get("ayri") else self._kullanici_adet(sem)   # madde 851: geçişte botun payına dokunulmaz
             if not hedef:
                 raise Hata(f"{sem.replace('USDT', '')} coininde senin payın yok (kalan adet botun)")
-            q = abs(hedef) if oran >= 1 else adet_yuvarla(abs(hedef) * oran, b, piyasa=True, asagi=True)
+            pid = str(d.get("parca") or "").strip() or None   # madde 862: yalnız bu alım parçası
+            if pid:
+                self._parca_onbellek.pop(sem, None)
+                L = next((x for x in (self.parcalar(sem, poz) or []) if x["id"] == pid), None)
+                if L is None:
+                    raise Hata("bu alım parçası artık açık değil (yenile)", 409)
+                pa = min(abs(L["adet"]), abs(poz["adet"]))
+                q = round(pa, int(b.get("quantity_precision", 8))) if oran >= 1 else adet_yuvarla(pa * oran, b, piyasa=True, asagi=True)
+                if q >= abs(poz["adet"]) - 1e-12:
+                    q, oran = abs(poz["adet"]), 1.0      # tek parça kaldıysa tam kapanış (TP/stop da silinir)
+                else:
+                    oran = min(0.999999, q / abs(poz["adet"]))
+            else:
+                q = abs(hedef) if oran >= 1 else adet_yuvarla(abs(hedef) * oran, b, piyasa=True, asagi=True)
             if q <= 0:
                 raise Hata("bu oran en küçük adımın altında")
             self._elle_isaret(sem)
@@ -395,13 +410,17 @@ class Kapi:
             if ro:
                 kw["reduceOnly"] = "true"
             e = self.ic.futures_create_order(**kw)
+            if pid and e.get("orderId") is not None:
+                self._parca_yaz(e["orderId"], pid)
+            self._parca_onbellek.pop(sem, None)
             iptal = 0
             if oran >= 1:
                 iptal = self._panel_tpsl_iptal(sem) + self._panel_acik_iptal(sem)
             else:      # kalan adede göre TP/SL adedi düzelir: mevcut panel TP/SL'leri aynı fiyatlarla yeniden kurulur
                 self._tpsl_yeniden(sem, b)
-            self._kaydet({"olay": "kapat", "sembol": sem, "oran": oran, "adet": q, "orderId": e.get("orderId")})
-            self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} {'TAMAMI' if oran >= 1 else f'%{oran * 100:.0f}'} kapatıldı (adet {q:g})")
+            self._kaydet({"olay": "kapat", "sembol": sem, "oran": oran, "adet": q, "orderId": e.get("orderId"), **({"parca": pid} if pid else {})})
+            ne = f"alım parçası ({q:g} adet)" if pid else ("TAMAMI" if oran >= 1 else f"%{oran * 100:.0f}")
+            self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} {ne} kapatıldı (adet {q:g})")
             return {"kapat": {"orderId": e.get("orderId"), "adet": q, "durum": e.get("status")}, "iptal": iptal}
 
     def _tpsl_yeniden(self, sem: str, b: dict) -> None:
@@ -453,6 +472,115 @@ class Kapi:
             self._haber(f"🖐 PANEL: {sem.replace('USDT', '')} panel emirleri iptal edildi ({n})")
             return {"iptal": n}
 
+    # ------------------------------------------------------------ MADDE 862: ALIM PARÇALARI
+    # Binance tek yönlü modda bir coinde TEK pozisyon tutar (ortalama giriş). Panel, pozisyonu oluşturan her emri ayrı bir "parça"
+    # olarak gösterir: kendi giriş fiyatı, adedi, K/Z'si. Pozisyonu azaltan emir hangi parçadan düşer? Panelden "bu parçayı sat"
+    # dendiyse o parçadan (defter/alsat_parca.json: kapanış emri -> parça); başka her azaltma (TP, stop, %25 kapat, Binance
+    # uygulaması) en eski parçadan (FIFO). Parçaların toplam adedi borsadaki pozisyona eşittir; toplam K/Z Binance'in açık K/Z'sinden
+    # farklı olabilir (Binance azaltmada ortalamayı değiştirmez, kâr/zararı ortalamadan gerçekleştirir).
+    def _parca_harita(self) -> dict:
+        try:
+            with open(self.ayar.get("parca") or os.path.join("defter", "alsat_parca.json"), encoding="utf-8") as f:
+                d = json.load(f)
+            return d if isinstance(d, dict) else {}
+        except (OSError, ValueError):
+            return {}
+
+    def _parca_yaz(self, order_id, parca_id: str) -> None:
+        yol = self.ayar.get("parca") or os.path.join("defter", "alsat_parca.json")
+        d = self._parca_harita(); d.setdefault("kapat", {})[str(order_id)] = str(parca_id)
+        try:
+            os.makedirs(os.path.dirname(yol) or ".", exist_ok=True)
+            with open(yol + ".tmp", "w", encoding="utf-8") as f:
+                json.dump(d, f)
+            os.replace(yol + ".tmp", yol)
+        except OSError as e:
+            logger.warning("parça haritası yazılamadı: %s", e)
+
+    def _emirler(self, sem: str, poz_adet: float, gun: int = 90) -> tuple:
+        """Pozisyonu oluşturan dolumlar, emir başına toplanmış (eskiden yeniye) ve pozisyonun açıldığı yer.
+        Binance userTrades en çok 7 günlük pencere verir: geriye doğru pencere pencere okunur, geriye yürüyüş sıfıra inince durulur."""
+        simdi = int(self.saat() * 1000); H = 7 * 86400 * 1000
+        T, bit = {}, simdi
+        bulundu = False
+        for _ in range(max(1, gun // 7 + 1)):
+            bas = bit - H + 1
+            r = self.ic.futures_account_trades(symbol=sem, startTime=bas, endTime=bit, limit=1000) or []
+            if len(r) >= 1000:      # yoğun pencere: son dolumdan geriye ikinci istek
+                r += self.ic.futures_account_trades(symbol=sem, startTime=bas, endTime=int(min(int(x.get("time") or bit) for x in r)) - 1, limit=1000) or []
+            for t in r:
+                T[(t.get("id"), t.get("orderId"))] = t
+            E = self._emir_topla(T.values())
+            if self._acilis(E, poz_adet) is not None:
+                bulundu = True; break
+            bit = bas - 1
+        E = self._emir_topla(T.values())
+        return E, self._acilis(E, poz_adet) if bulundu else None
+
+    @staticmethod
+    def _emir_topla(T) -> list:
+        E = {}
+        for t in T:
+            o = E.setdefault(t.get("orderId"), {"id": str(t.get("orderId")), "t": int(t.get("time") or 0), "q": 0.0, "tut": 0.0, "kom": 0.0})
+            q = float(t.get("qty") or 0) * (1 if t.get("side") == "BUY" else -1)
+            o["q"] += q; o["tut"] += abs(q) * float(t.get("price") or 0); o["kom"] += float(t.get("commission") or 0)
+            o["t"] = min(o["t"], int(t.get("time") or 0))
+        L = [dict(o, q=round(o["q"], 10), fiyat=o["tut"] / abs(o["q"]) if o["q"] else 0.0) for o in E.values() if abs(o["q"]) > 1e-12]
+        return sorted(L, key=lambda x: (x["t"], x["id"]))
+
+    @staticmethod
+    def _acilis(E: list, poz_adet: float):
+        """(indeks, o emirden sonra kalan adet): pozisyonun sıfırdan (ya da ters yönden) açıldığı emir; bulunamazsa None."""
+        net = float(poz_adet)
+        eps = max(1e-9, abs(poz_adet) * 1e-7)
+        for i in range(len(E) - 1, -1, -1):
+            once = net - E[i]["q"]
+            if abs(once) <= eps or (once > 0) != (net > 0):
+                return i, net
+            net = once
+        return None
+
+    def parcalar(self, sem: str, poz: dict | None = None) -> list | None:
+        """Açık pozisyonun parçaları (eskiden yeniye): {id, t, adet (işaretli), fiyat, kom}. Ayrı hesap yoksa None."""
+        if not self.ayar.get("ayri"):
+            return None
+        poz = poz or self._pozisyon(sem)
+        A = float(poz.get("adet") or 0)
+        if not A:
+            return []
+        k = self._parca_onbellek.get(sem)
+        if k and k[0] == A and self.saat() - k[1] < 60:
+            return k[2]
+        E, ac = self._emirler(sem, A)
+        harita = self._parca_harita().get("kapat", {})
+        lots = []
+        if ac is None:      # 90 günden eski: tek parça, borsa ortalamasıyla
+            lots = [{"id": "eski", "t": 0, "adet": A, "fiyat": float(poz.get("giris") or 0), "kom": 0.0, "eski": True}]
+        else:
+            i, ilk = ac; o = E[i]
+            lots = [{"id": o["id"], "t": o["t"], "adet": round(ilk, 10), "fiyat": o["fiyat"], "kom": o["kom"] * abs(ilk / o["q"])}]
+            for o in E[i + 1:]:
+                q = o["q"]
+                hedef = harita.get(o["id"])
+                while abs(q) > 1e-12 and lots and (lots[0]["adet"] > 0) != (q > 0):
+                    L = next((x for x in lots if x["id"] == hedef), None) or lots[0]
+                    al = min(abs(q), abs(L["adet"]))
+                    L["adet"] = round(L["adet"] - al * (1 if L["adet"] > 0 else -1), 10)
+                    q = round(q - al * (1 if q > 0 else -1), 10)
+                    if abs(L["adet"]) <= max(1e-12, abs(A) * 1e-9):
+                        lots.remove(L)
+                if abs(q) > 1e-12:
+                    lots.append({"id": o["id"], "t": o["t"], "adet": q, "fiyat": o["fiyat"], "kom": o["kom"] * abs(q / o["q"])})
+            fark = round(A - sum(x["adet"] for x in lots), 10)
+            if abs(fark) > max(1e-9, abs(A) * 1e-6):   # okunamayan dolum: farkı borsa ortalamasıyla ayrı parça yap
+                logger.warning("parça toplamı pozisyonla uyuşmuyor %s: fark %s", sem, fark)
+                if (fark > 0) == (A > 0):
+                    lots.append({"id": "fark", "t": 0, "adet": fark, "fiyat": float(poz.get("giris") or 0), "kom": 0.0, "eski": True})
+        for x in lots:
+            x["kom"] = round(x["kom"], 6)
+        self._parca_onbellek[sem] = (A, self.saat(), lots)
+        return lots
+
     def pozisyon(self, sem: str) -> dict:
         sem = str(sem or "").upper()
         self._sembol_bilgi(sem)
@@ -488,7 +616,12 @@ class Kapi:
                                  "kz": float(t.get("realizedPnl") or 0)})
         except Exception as e:
             logger.warning("işlem geçmişi okunamadı %s: %s", sem, e)
-        return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"],
+        parca = None
+        try:
+            parca = self.parcalar(sem, poz) if poz.get("adet") else []
+        except Exception as e:
+            logger.warning("parçalar okunamadı %s: %s", sem, e)
+        return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"], "parcalar": parca,
                 "islemler": islemler, "elle": bool(self.ayar.get("ayri")) or sem in self._elle_kumesi(),
                 "bot_tutuyor": False if self.ayar.get("ayri") else self._bot_tutuyor(sem), "bot_pay": bot_pay}
 
@@ -629,7 +762,13 @@ class Kapi:
                             sl = float(o.get("triggerPrice") or 0) or None
                 except Exception:
                     pass
-                pozlar.append({"sembol": sem, "adet": a, "giris": float(p.get("entryPrice") or 0),
+                parca = None
+                if ayri:
+                    try:
+                        parca = self.parcalar(sem, {"adet": a, "giris": float(p.get("entryPrice") or 0)})
+                    except Exception as e:
+                        logger.info("parçalar okunamadı %s: %s", sem, str(e)[:120])
+                pozlar.append({"sembol": sem, "adet": a, "giris": float(p.get("entryPrice") or 0), "parcalar": parca,
                                "kz": float(p.get("unRealizedProfit") or p.get("unrealizedProfit") or 0),
                                "likidasyon": float(p.get("liquidationPrice") or 0), "tp": tp, "sl": sl,
                                "pay": None if ayri else self._payim(sem, a, float(p.get("entryPrice") or 0))})   # madde 843

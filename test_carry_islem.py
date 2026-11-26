@@ -47,11 +47,12 @@ class SahteIc:
                             s("ONDOUSDT", "0.0001", "0.1", "0.1"), s("ESKIUSDT", "0.01", "1", "1", st="SETTLING"),
                             s("BTCUSDT_261225", "0.1", "0.001", "0.001", tur="CURRENT_QUARTER"), s("XUSDC", "0.01", "1", "1", q="USDC")]}
 
-    def futures_account_trades(self, symbol, startTime=None, limit=100):
+    def futures_account_trades(self, symbol, startTime=None, endTime=None, limit=100):
         import time as _t
         return [{"time": e["_t"], "side": e["side"], "price": str(e.get("_fiyat", self.fiyat[symbol])), "qty": str(e["quantity"]),
-                 "realizedPnl": str(e.get("_kz", 0)), "commission": "0.02", "orderId": e["orderId"]}
-                for i, e in enumerate(self.emirler) if e["symbol"] == symbol and e["type"] == "MARKET" and (startTime is None or e["_t"] >= startTime)]
+                 "realizedPnl": str(e.get("_kz", 0)), "commission": "0.02", "orderId": e["orderId"], "id": e["orderId"] * 10}
+                for i, e in enumerate(self.emirler) if e["symbol"] == symbol and e["type"] == "MARKET" and (startTime is None or e["_t"] >= startTime)
+                and (endTime is None or e["_t"] <= endTime)]
 
     def futures_mark_price(self, symbol):
         return {"markPrice": str(self.fiyat[symbol])}
@@ -419,6 +420,32 @@ o52 = ci.gecmis(k52)["onceki"]
 kontrol("madde 855: coin bazında döküm", isinstance(ci.gecmis(k52).get("coin_ozet"), list))
 kontrol("madde 854: taşıma öncesi kesinleşen elle K/Z", o52 and o52["toplam"] == 14.29 and o52["sembol"] == {"BUSDT": 37.2, "XUSDT": -22.91}, o52)
 kontrol("ayrı hesap yoksa geçmiş yok", hata_mi(lambda: ci.gecmis(yeni()[0]), "ayrı hesabı", 409))
+
+print("16) madde 862: alım parçaları")
+import time as _z
+SAAT[0] = _z.time() + 5
+d62 = tempfile.mkdtemp()
+k62, ic62, _ = yeni(ayri=True, parca=os.path.join(d62, "parca.json"), defter=os.path.join(d62, "pi.jsonl"))
+for f_ in (1.0, 2.0, 4.0):        # aynı coine üç ayrı fiyattan 100'er adet
+    ic62.fiyat["AKEUSDT"] = f_
+    ic62.futures_create_order(symbol="AKEUSDT", side="BUY", type="MARKET", quantity=100, _fiyat=f_)
+P62 = k62.parcalar("AKEUSDT")
+kontrol("üç alım üç parça: 100 @ 1 / 2 / 4", [(x["adet"], x["fiyat"]) for x in P62] == [(100, 1.0), (100, 2.0), (100, 4.0)], P62)
+id2 = P62[1]["id"]
+r62 = k62.kapat({"sembol": "AKEUSDT", "oran": 1, "parca": id2, "pin": "482913"})
+kontrol("2. parçayı sat: 100 adet reduceOnly SELL", r62["kapat"]["adet"] == 100 and ic62.emirler[-1]["side"] == "SELL"
+        and ic62.emirler[-1].get("reduceOnly") == "true" and ic62.poz["AKEUSDT"] == 200, ic62.emirler[-1])
+P62b = k62.parcalar("AKEUSDT")
+kontrol("kalan parçalar 1 ve 3 (2 düştü)", [x["fiyat"] for x in P62b] == [1.0, 4.0], P62b)
+ic62.futures_create_order(symbol="AKEUSDT", side="SELL", type="MARKET", quantity=50, reduceOnly="true")
+k62._parca_onbellek.clear()
+kontrol("seçilmeyen azaltma en eskiden (FIFO): 50 @ 1 + 100 @ 4", [(x["adet"], x["fiyat"]) for x in k62.parcalar("AKEUSDT")] == [(50, 1.0), (100, 4.0)])
+kontrol("pozisyon cevabında parçalar", len(k62.pozisyon("AKEUSDT")["parcalar"]) == 2)
+kontrol("olmayan parça reddedilir", hata_mi(lambda: k62.kapat({"sembol": "AKEUSDT", "parca": "999", "pin": "482913"}), "artık açık değil", 409))
+son = k62.parcalar("AKEUSDT")
+k62.kapat({"sembol": "AKEUSDT", "parca": son[0]["id"], "pin": "482913"}); k62.kapat({"sembol": "AKEUSDT", "parca": son[1]["id"], "pin": "482913"})
+kontrol("son parça satılınca pozisyon kapanır", not ic62.poz["AKEUSDT"])
+kontrol("ayrı hesap yokken parça yok", yeni()[0].parcalar("AKEUSDT") is None)
 
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
