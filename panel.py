@@ -1037,9 +1037,10 @@ nav.alt .nok{position:absolute;top:6px;right:calc(50% - 22px);width:8px;height:8
 .dolay{padding:18px}.ofil{display:flex;gap:6px;flex-wrap:wrap;margin-top:12px}
 .ofil button{height:32px;padding:0 12px;border-radius:99px;border:1px solid var(--cizgi);background:none;color:var(--yazi);font:inherit;font-size:12.5px;font-weight:600;cursor:pointer;opacity:.85}
 .ofil button.on{background:var(--yazi);color:var(--bg);border-color:var(--yazi);opacity:1}
-.ogun{font-size:11.5px;font-weight:650;color:var(--soluk);letter-spacing:.5px;margin:20px 0 6px}
+.ogun{font-size:11.5px;font-weight:650;color:var(--soluk);letter-spacing:.5px;margin:20px 0 6px;display:flex;justify-content:space-between;align-items:baseline;gap:8px;flex-wrap:wrap}.ogt{letter-spacing:0;font-weight:500;font-size:12px}.otut{font-weight:650;font-variant-numeric:tabular-nums}.otut.art{color:var(--art)}.otut.eks{color:var(--eks)}
+.ofs{margin-top:6px}.ofs>div{display:grid;grid-template-columns:42px minmax(0,1fr) auto;gap:8px;align-items:baseline;padding:6px 0;border-top:1px solid var(--cizgi);font-size:12.5px}.ofs>div>span:nth-child(2){color:var(--soluk);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
 .okart{background:var(--kart2);border-radius:16px;overflow:hidden}.orow{display:flex;gap:12px;padding:11px 14px;border-top:1px solid var(--cizgi)}.okart .orow:first-child{border-top:0}
-.onk{width:8px;height:8px;border-radius:50%;margin-top:6px;flex:none}.om{flex:1;min-width:0}
+.onk{--r:var(--soluk);width:26px;height:26px;border-radius:50%;flex:none;display:grid;place-items:center;font-size:12.5px;font-weight:700;color:var(--r);background:color-mix(in srgb,var(--r) 16%,transparent)}.om{flex:1;min-width:0}
 .ob{display:flex;justify-content:space-between;gap:8px;font-size:14px;font-weight:600}.oz{font-size:12px;color:var(--soluk);font-weight:500;flex:none;font-variant-numeric:tabular-nums}
 .oa{font-size:12.5px;color:var(--soluk);margin-top:2px;line-height:1.4;font-variant-numeric:tabular-nums}
 /* MADDE 756: sade geçmiş */
@@ -3090,13 +3091,33 @@ function olaySayfa(k){
   const ad = g => g==t(bugun) ? "BUGÜN" : g==t(dun) ? "DÜN" : `${+g.slice(8,10)} ${AYAD[+g.slice(5,7)-1].toLocaleUpperCase("tr-TR")} ${g.slice(0,4)}`;
   const esc = x => (x||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
   const T = olayIslem(k), say = {tum: T.length}; for (const o of T){ const g = OLAY_GRUP[o.tur]; if (g) say[g] = (say[g]||0) + 1; }
-  const L = OLAY_F=="tum" ? T : T.filter(o=>OLAY_GRUP[o.tur]===OLAY_F);
+  // madde 882: "Tümü"de bir günün funding ödemeleri TEK satır (gün toplamı; dokununca saat saat). Funding filtresinde tek tek.
+  const demo = k.mod=="demo", fTut = o => o.fon ? (demo && o.fon.gercek!=null ? o.fon.gercek : o.fon.demo) : null;
+  let L = OLAY_F=="tum" ? [] : T.filter(o=>OLAY_GRUP[o.tur]===OLAY_F);
+  if (OLAY_F=="tum"){ const FG_ = {};
+    for (const o of T){ if (o.tur!=="funding"){ L.push(o); continue; }
+      const g = (o.zaman||"").slice(0,10); let x = FG_[g];
+      if (!x){ x = FG_[g] = {tur: "fgrup", zaman: o.zaman, alt: []}; L.push(x); }
+      x.alt.push(o); }
+    for (const x of Object.values(FG_)){ x.top = x.alt.reduce((a,o)=>a+(fTut(o)||0), 0); }
+  }
+  const gunTop = {}; for (const o of T){ const g = (o.zaman||"").slice(0,10), G = gunTop[g] || (gunTop[g] = {f: 0, k: 0, fv: false, kv: false});
+    if (o.tur==="funding"){ G.f += fTut(o)||0; G.fv = true; } if (o.kapanis!=null){ G.k += o.kapanis; G.kv = true; } }
+  const tutar = v => v==null ? "" : `<span class="otut ${sinif(v)}">${isaretli(v)}</span>`;
   let h = "", onc = null, acik = false;
   for (const o of L){
     const g = (o.zaman||"").slice(0,10);
-    if (g!==onc){ if (acik) h += "</div>"; h += `<div class="ogun">${g?ad(g):"—"}</div><div class="okart">`; onc = g; acik = true; }
+    if (g!==onc){ if (acik) h += "</div>"; const G = gunTop[g] || {};
+      h += `<div class="ogun"><span>${g?ad(g):"—"}</span><span class="ogt">${[G.fv ? `funding ${tutar(G.f)}` : "", G.kv ? `kapanış ${tutar(G.k)}` : ""].filter(Boolean).join(" · ")}</span></div><div class="okart">`; onc = g; acik = true; }
+    const rk = css(OLAY_RENK[o.tur]||"--soluk");
+    if (o.tur==="fgrup"){ const id = "fg" + g, ac = ACIK.has(id);
+      h += `<div class="orow"><span class="onk" style="--r:${css("--art")}">$</span><div class="om">
+        <div class="ob"><span>Funding · ${o.alt.length} ödeme</span><span class="oz">${tutar(o.top)}</span></div>
+        <div class="oa">${demo ? "gerçek Binance oranlarıyla · " : ""}son ${(o.zaman||"").slice(11)}</div>
+        <div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} ödemeler (${o.alt.length})</span>${ac ? `<div class="ofs">${o.alt.map(x=>`<div><span class="oz">${(x.zaman||"").slice(11)}</span><span>${esc((x.metin||"").split(/\s*\|\s*/)[0].replace(/\s[+−-][\d.,]+\s\$$/, ""))}</span>${tutar(fTut(x))}</div>`).join("")}</div>` : ""}</div></div></div>`;
+      continue; }
     const par = (o.metin||"").split(/\s*\|\s*/), bas = par[0], alt = par.slice(1).join(" · ");
-    h += `<div class="orow" onclick="if(!event.target.closest('a,button,.ac,table'))this.classList.toggle('oacik')"><span class="onk" style="background:${css(OLAY_RENK[o.tur]||"--soluk")}"></span><div class="om">
+    h += `<div class="orow" onclick="if(!event.target.closest('a,button,.ac,table'))this.classList.toggle('oacik')"><span class="onk" style="--r:${rk}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="om">
       <div class="ob"><span>${esc(bas)}</span><span class="oz">${(o.zaman||"").slice(11)}</span></div>
       ${alt?`<div class="oa">${esc(alt)}</div>`:""}${islemTablo(o)}${fonTablo(o)}</div></div>`;
   }
