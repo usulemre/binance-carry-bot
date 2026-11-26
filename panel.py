@@ -1147,6 +1147,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .acn{grid-area:n;display:flex;align-items:center;gap:6px;font-size:14.5px}.aca{grid-area:a;font-size:11.5px;color:var(--soluk);font-variant-numeric:tabular-nums;overflow-wrap:anywhere}.aca .art{color:var(--art)}.aca .eks{color:var(--eks)}
 .act{grid-area:t;font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.act.art{color:var(--art)}.act.eks{color:var(--eks)}
 .acay{text-align:center;color:var(--soluk);font-size:12px;padding:4px 0 0;letter-spacing:3px}
+.actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
 .pkara{display:flex;align-items:center;gap:8px;padding:0 12px;height:46px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.pkara>span:first-child{font-size:18px;color:var(--soluk)}
@@ -2895,17 +2896,24 @@ function gecmisSayfa(k){
     <div class="kart"><h2>İcra · son 30 gün <span class="k">(emir defteri)</span></h2>${icraKart(k)}</div>`);
 }
 // MADDE 753: coin bazında başlangıçtan beri kâr / zarar (borsa gelir kayıtları + açık pozisyon)
+// madde 875: tablo yerine kart liste (Al-Sat Geçmiş'teki gibi) — telefonda yana kaydırma ve gizli sütun yok; her coin tek satır:
+// logo + ad + yön, altında sıfır olmayan kalemler, sağda toplam. Varsayılan en kötü / en iyi 5.
 function coinTablo(k){
   const C = k.coin_ozet; if (!C || !C.length) return "";
-  const id = "coinler", ac = ACIK.has(id), L = ac ? C : [...C.slice(0,5), ...C.slice(-5).filter(x=>!C.slice(0,5).includes(x))];
-  const h = v => Math.abs(v) < 0.005 ? `<span class="k">0</span>` : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
-  const sat = L.map(x=>`<tr><td class="l"><span class="ctad">${coinIkon(String(x.s).replace(/USDT$/,""), "kucuk")}<b>${x.s}</b></span>${x.elle?`<span class="yon" title="elle yönetiyorsun — bot dokunmuyor">✋ elle</span>`:""}${x.yon?`<span class="yon">${MOBIL() ? x.yon : (x.yon=="L"?"long açık":"short açık")}</span>`:""}</td><td>${h(x.kapanan)}</td><td>${h(x.funding)}</td><td>${h(x.komisyon)}</td><td>${h(x.acik)}</td><td><b>${h(x.toplam)}</b></td></tr>`).join("");
-  const T = C.reduce((a,x)=>({kp:a.kp+x.kapanan, f:a.f+x.funding, km:a.km+x.komisyon, a:a.a+x.acik, t:a.t+x.toplam}), {kp:0,f:0,km:0,a:0,t:0});
-  return `<div class="kart"><h2>Coin bazında kâr / zarar <span class="k">· başlangıçtan beri, en kötüden en iyiye</span></h2>
-    <div class="tablo yatay"><table class="coin"><tr class="k"><td class="l">coin</td><td>kapanan</td><td>funding</td><td>komisyon</td><td>açık</td><td>toplam</td></tr>${sat}
-    <tr><td class="l"><b>Toplam (${C.length} coin)</b></td><td>${h(T.kp)}</td><td>${h(T.f)}</td><td>${h(T.km)}</td><td>${h(T.a)}</td><td><b>${h(T.t)}</b></td></tr></table></div>
-    ${C.length>10?`<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾ en kötü / en iyi 5'e dön":`▸ tüm coinler (${C.length})`}</span></div>`:""}
-    <div class="k" style="margin-top:6px">Kapanan, funding ve komisyon borsanın gelir kayıtlarından${k.mod=="demo"?(C.some(x=>x.funding_demo!=null)?" (funding: canlı / gerçek Binance oranlarıyla)":" (funding: demo hesabın aldığı)"):""}; açık = şu anki gerçekleşmemiş kâr / zarar.${MOBIL()?" Telefonda komisyon sütunu gizli (toplama dahil).":""}</div></div>`;
+  const id = "coinler", ac = ACIK.has(id), S = C.slice().sort((a,b)=>a.toplam-b.toplam), uzun = S.length > 10, L = ac || !uzun ? S : [...S.slice(0,5), ...S.slice(-5)];
+  const T = S.reduce((a,x)=>({kp:a.kp+x.kapanan, f:a.f+x.funding, km:a.km+x.komisyon, a:a.a+x.acik, t:a.t+x.toplam}), {kp:0,f:0,km:0,a:0,t:0});
+  const kaz = S.filter(x=>x.toplam > 0.005).length;
+  const h = v => `<span class="${sinif(v)}">${isaretli(v)}</span>`;
+  const kal = x => [["kapanan", x.kapanan], ["funding", x.funding], ["komisyon", x.komisyon], ["açık", x.acik]].filter(([,v])=>Math.abs(v) >= 0.005);
+  const sat = x => { const ad = String(x.s).replace(/USDT$/,"");
+    return `<div class="acr"><span class="acn">${coinIkon(ad, "kucuk")}<b>${ea(ad)}</b>${x.yon ? `<span class="pkz sen ${x.yon}" title="${x.yon=="L"?"long":"short"} açık">${x.yon}</span>` : ""}${x.elle ? `<span class="pkz" title="elle yönetiyorsun — bot dokunmuyor">✋ elle</span>` : ""}</span>
+      <span class="aca">${kal(x).map(([a,v])=>`${a} ${h(v)}`).join(" · ") || "—"}</span><b class="act ${sinif(x.toplam)}">${isaretli(x.toplam)}</b></div>`; };
+  return `<div class="kart acl"><div class="apkh"><div><b>Coinler</b><span class="say">${S.length}</span></div><b class="${sinif(T.t)}">${isaretli(T.t)}</b></div>
+    <div class="apko"><span class="art">${kaz} kârda</span><span class="eks">${S.length - kaz} zararda</span><span>başlangıçtan beri, açık pozisyon dahil</span></div>
+    ${L.map((x,i)=>(!ac && uzun && i==5 ? `<div class="acay">· · ·</div>` : "") + sat(x)).join("")}
+    <div class="actop"><span>Toplam</span><span class="aca">${kal({kapanan:T.kp, funding:T.f, komisyon:T.km, acik:T.a}).map(([a,v])=>`${a} ${h(v)}`).join(" · ")}</span></div>
+    ${uzun ? `<button class="pkdaha" onclick="olayAc('${id}')">${ac ? "Yalnız en kötü / en iyi 5" : `Tüm coinler (${S.length})`}</button>` : ""}
+    <div class="k" style="margin-top:8px">Kapanan, funding ve komisyon borsanın gelir kayıtlarından${k.mod=="demo"?(C.some(x=>x.funding_demo!=null)?" (funding: canlı / gerçek Binance oranlarıyla)":" (funding: demo hesabın aldığı)"):""}; açık = şu anki gerçekleşmemiş kâr / zarar.</div></div>`;
 }
 // MADDE 740: olaylar zaman çizelgesi — gün gün (Bugün / Dün / tarih), türe göre simge
 const OLAY_SIMGE = {basla:"▶", ayar:"⚙", stop:"■", stop_tut:"□", delist:"!", saglik:"♥", hata:"✕", tp:"✓", uyari:"⚠", tur:"↻", islem:"⇄", funding:"$", postonly:"↺"};
