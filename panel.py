@@ -1171,6 +1171,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .tsm{display:flex;flex-direction:column;gap:2px;min-width:0}.tsm>b{font-size:14.5px;display:flex;align-items:center;gap:6px}.tsm .k{font-size:12px}.tsk{font-weight:650;font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.tsk.art{color:var(--art)}.tsk.eks{color:var(--eks)}.tsok{font-size:12px;color:var(--art);font-weight:650}.tshat{font-size:12px;color:var(--eks)}
 #tspin{width:100%;height:46px;margin-top:6px;padding:0 12px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:16px}
 .kaydevam{--kay-mask:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
+[role=button][tabindex]:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px;border-radius:8px}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
@@ -2769,7 +2770,7 @@ function dikkatler(k){
   return out;
 }
 function dikkatHtml(k){
-  return dikkatler(k).map(d=>`<div class="ddk ${d.sev}"${d.sem?` onclick="sheetAc('${d.sem}')" role="button"`:""}><div class="ddb"><b>${d.baslik}</b>${d.sem?'<span class="k">ayrıntı ›</span>':""}</div><div class="ddm">${d.metin}</div></div>`).join("");
+  return dikkatler(k).map(d=>`<div class="ddk ${d.sev}"${d.sem?` onclick="sheetAc('${d.sem}')" role="button" tabindex="0"`:""}><div class="ddb"><b>${d.baslik}</b>${d.sem?'<span class="k">ayrıntı ›</span>':""}</div><div class="ddm">${d.metin}</div></div>`).join("");
 }
 function durumCumle(k){   // madde 758: kısa — bugünkü tutar hemen altta, tekrar etmez
   const sv = k.servis, ok = !sv || sv==="active" || sv==="—" || sv==="?", n = dikkatler(k).length;
@@ -2914,7 +2915,7 @@ function pozSayfa(k){
   const L = sira(P.filter(x=>x[1].yon=="L")), S = sira(P.filter(x=>x[1].yon=="S")), E = sira(PE);
   const top = (A, i) => A.reduce((a,x)=>a+(i ? (x[2].g||0) : (x[2].usd||0)), 0), tum = top(P,1);
   const bolum = (A, y, ad) => !A.length || (POZ_F!="tum" && POZ_F!=y) ? "" : `<div class="dbol"><span>${ad} · ${A.length} · <span id="taraf-${y}">${para(top(A,0))} · <span class="${sinif(top(A,1))}">${top(A,1)>=0?"▲":"▼"} ${isaretli(top(A,1))}</span></span></span></div>
-    <div class="dlis">${A.map(x=>`<div class="drow ${y}" id="t-${x[0]}" onclick="sheetAc('${x[0]}')" role="button">${satirD(x[0], x[1], k)}</div>`).join("")}</div>`;
+    <div class="dlis">${A.map(x=>`<div class="drow ${y}" id="t-${x[0]}" onclick="sheetAc('${x[0]}')" role="button" tabindex="0">${satirD(x[0], x[1], k)}</div>`).join("")}</div>`;
   const fb = (f, ad) => `<button class="${POZ_F==f?"on":""}" onclick="pozFiltre('${f}')">${ad}</button>`;
   return `<div class="kart dpoz">
     <div class="dpb"><span class="gb">Pozisyonlar</span>${k.gerceklesmemis!=null?`<b id="gerc" class="${sinif(tum)}">${tum>=0?"▲":"▼"} ${isaretli(tum)}</b>`:""}</div>
@@ -3176,19 +3177,24 @@ function islemTablo(o){
         <span style="font-weight:650">${t.ekle?"+":"−"}${para(x.usd)}</span></div>
       <div class="s">${x.adet.toLocaleString("tr-TR",{maximumFractionDigits:4})} adet × ${fiyatYaz(x.fiyat)} · ${x.tur}${x.maker===true?" · maker":x.maker===false?" · taker":""}</div>
       <div style="font-size:12.5px;margin-top:2px">${x.kayit_yok && x.poz_sonra==null ? `<span class="s">pozisyon kaydı yok</span>` : (once!=null ? `pozisyon ${once} → <b>${sonra}</b>` : `pozisyon şimdi <b>${sonra}</b>`) + ort}${x.kapanis_kar!=null ? ` · kâr <b class="${sinif(x.kapanis_kar)}">${isaretli(x.kapanis_kar)}</b>` : ""}</div></div>`; }).join("");
-  return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} işlemler (${o.islem.length})</span>${ac ? `<div style="margin-top:4px">${sat}</div>` : ""}</div>`;
+  return `<div class="isl"><span class="ac" role="button" tabindex="0" aria-expanded="${ac}" onclick="olayAc('${id}')">${ac?"▾":"▸"} işlemler (${o.islem.length})</span>${ac ? `<div style="margin-top:4px">${sat}</div>` : ""}</div>`;
 }
 function fonTablo(o){
   const f = o.fon; if (!f || !f.coin || !f.coin.length) return "";
   const id = "fon" + o.zaman, ac = ACIK.has(id), demo = VERI.kurulumlar[secili].mod=="demo";
   const h = v => v==null ? `<span class="s">—</span>` : `<span class="${sinif(v)}">${isaretli(v)}</span>`;
   const sat = f.coin.map(c=>`<tr><td><span class="ctad">${coinIkon(String(c.s).replace(/USDT$/,""), "kucuk")}<b>${c.s}</b></span></td><td class="r">${h(c.demo)}</td>${demo?`<td class="r">${h(c.gercek)}</td>`:""}</tr>`).join("");
-  return `<div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} coinler (${f.coin.length})</span>${ac ? `<table><tr class="s"><td>coin</td><td class="r">${demo?"demo hesap":"ödeme"}</td>${demo?`<td class="r">gerçek oranla</td>`:""}</tr>${sat}</table>` : ""}</div>`;
+  return `<div class="isl"><span class="ac" role="button" tabindex="0" aria-expanded="${ac}" onclick="olayAc('${id}')">${ac?"▾":"▸"} coinler (${f.coin.length})</span>${ac ? `<table><tr class="s"><td>coin</td><td class="r">${demo?"demo hesap":"ödeme"}</td>${demo?`<td class="r">gerçek oranla</td>`:""}</tr>${sat}</table>` : ""}</div>`;
 }
 // madde 890: yana kayan çip satırlarında (Olaylar filtreleri, Piyasa sekmeleri) sağda devamı varsa kenar solar
 function kayIsaret(){ for (const el of document.querySelectorAll(".ofil,.pksek")) el.classList.toggle("kaydevam", el.scrollWidth - el.clientWidth - el.scrollLeft > 4); }
 addEventListener("scroll", e=>{ const t = e.target; if (t && t.classList && (t.classList.contains("ofil") || t.classList.contains("pksek"))) kayIsaret(); }, true);
 addEventListener("resize", ()=>kayIsaret());
+// madde 894: klavye — role=button olan div / span'lar Enter ya da Boşluk ile tıklanır (gerçek <button> değiller)
+addEventListener("keydown", e=>{ if (e.key !== "Enter" && e.key !== " ") return; const t = e.target;
+  if (!t || !t.getAttribute || t.getAttribute("role") !== "button" || /^(BUTTON|A|INPUT|SELECT|TEXTAREA)$/.test(t.tagName)) return;
+  if (t.onkeydown) return;   // kendi klavye işleyicisi olanlar (pkr satırı vb.)
+  e.preventDefault(); t.click(); });
 function olayAc(id){ ACIK.has(id) ? ACIK.delete(id) : ACIK.add(id); ciz(); }
 // MADDE 757: D TASARIMI — OLAYLAR. Filtre (Tümü / Dikkat / Dilimler / Kapanışlar / Funding), her gün tek kart, nokta rengi
 // önem derecesine göre (kırmızı stop/hata, turuncu dikkat, mavi dilim, yeşil kapanış, gri funding / bilgi).
@@ -3225,11 +3231,11 @@ function olaySayfa(k){
       h += `<div class="orow"><span class="onk" style="--r:${css("--art")}">$</span><div class="om">
         <div class="ob"><span>Funding · ${o.alt.length} ödeme</span><span class="oz">${tutar(o.top)}</span></div>
         <div class="oa">${demo ? "gerçek Binance oranlarıyla · " : ""}son ${(o.zaman||"").slice(11)}</div>
-        <div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} ödemeler (${o.alt.length})</span>${ac ? `<div class="ofs">${o.alt.map(x=>`<div><span class="oz">${(x.zaman||"").slice(11)}</span><span>${x.fon && x.fon.saat ? `saatlik ×${x.fon.n}` : `${Math.max((x.fon||{}).gercek_n||0, (x.fon||{}).demo_n||0)} pozisyon`}</span>${tutar(fTut(x))}</div>`).join("")}</div>` : ""}</div></div></div>`;
+        <div class="isl"><span class="ac" role="button" tabindex="0" aria-expanded="${ac}" onclick="olayAc('${id}')">${ac?"▾":"▸"} ödemeler (${o.alt.length})</span>${ac ? `<div class="ofs">${o.alt.map(x=>`<div><span class="oz">${(x.zaman||"").slice(11)}</span><span>${x.fon && x.fon.saat ? `saatlik ×${x.fon.n}` : `${Math.max((x.fon||{}).gercek_n||0, (x.fon||{}).demo_n||0)} pozisyon`}</span>${tutar(fTut(x))}</div>`).join("")}</div>` : ""}</div></div></div>`;
       continue; }
     // madde 883: kapanışlı satırda tutar başlıkta (saatin yanında), kapanış ayrıntısı alt satırın başında
     const par = (o.metin||"").split(/\s*\|\s*/), bas = par[0], ap = par.slice(1), alt = [...ap.filter(x=>/kapanış/.test(x)), ...ap.filter(x=>!/kapanış/.test(x))].join(" · ");
-    h += `<div class="orow" onclick="if(!event.target.closest('a,button,.ac,table'))this.classList.toggle('oacik')"><span class="onk" style="--r:${rk}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="om">
+    h += `<div class="orow" role="button" tabindex="0" onclick="if(!event.target.closest('a,button,.ac,table'))this.classList.toggle('oacik')"><span class="onk" style="--r:${rk}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="om">
       <div class="ob"><span>${esc(o.tur==="tur" ? bas.replace(/ yenilendi$/, " turu") : bas)}</span><span class="oz">${o.kapanis!=null ? tutar(o.kapanis) + " · " : ""}${(o.zaman||"").slice(11)}</span></div>
       ${alt?`<div class="oa">${esc(alt)}</div>`:""}${islemTablo(o)}${fonTablo(o)}</div></div>`;
   }
