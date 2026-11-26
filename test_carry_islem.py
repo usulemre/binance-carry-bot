@@ -543,6 +543,33 @@ kontrol("iz: başlama fiyatsız -> activatePrice gönderilmez", "activatePrice" 
 k01.kapat({"sembol": "AKEUSDT", "oran": 1, "pin": "482913"})
 kontrol("iz: tam kapanışta iz süren de silinir", not ic01.algo_acik["AKEUSDT"], ic01.algo_acik["AKEUSDT"])
 
+# 21. madde 902: açık pozisyonun açıldığından beri funding / komisyon / kısmi kapanış
+import time as _z02
+d02 = tempfile.mkdtemp()
+SAAT[0] = _z02.time() + 5
+k02, ic02, _ = yeni(ayri=True, parca=os.path.join(d02, "parca.json"), defter=os.path.join(d02, "pi.jsonl"))
+ic02.fiyat["AKEUSDT"] = 1.0
+k02.emir({"sembol": "AKEUSDT", "yon": "S", "usd": 100, "pin": "482913"})
+t02 = ic02.emirler[-1]["_t"]
+SAAT[0] = _z02.time() + 10
+G02 = [{"incomeType": "FUNDING_FEE", "symbol": "AKEUSDT", "income": "-5", "time": t02 - 1000},       # açılıştan önce: sayılmaz
+       {"incomeType": "FUNDING_FEE", "symbol": "AKEUSDT", "income": "-1.5", "time": t02 + 1000},
+       {"incomeType": "FUNDING_FEE", "symbol": "AKEUSDT", "income": "0.25", "time": t02 + 2000},
+       {"incomeType": "COMMISSION", "symbol": "AKEUSDT", "income": "-0.05", "time": t02},
+       {"incomeType": "REALIZED_PNL", "symbol": "AKEUSDT", "income": "2", "time": t02 + 3000},
+       {"incomeType": "FUNDING_FEE", "symbol": "BUSDT", "income": "-9", "time": t02 + 1000}]               # başka coin
+ic02.futures_income_history = lambda **kw: [g for g in G02 if kw.get("startTime", 0) <= g["time"] <= kw.get("endTime", 1e18)]
+e02 = k02.elle_ozet()
+g02 = e02["pozisyonlar"][0].get("gelir")
+kontrol("902: gelir açılıştan beri — funding −1,25, komisyon −0,05, gerçekleşen +2, açılış zamanı", g02 and g02["fon"] == -1.25 and g02["kom"] == -0.05
+        and g02["gercek"] == 2.0 and g02["t"] == t02, g02)
+p02 = k02.pozisyon("AKEUSDT")
+kontrol("902: coin penceresinde de aynı gelir", p02.get("gelir") == g02, p02.get("gelir"))
+k_b, ic_b, _ = yeni()
+ic_b.fiyat["AKEUSDT"] = 1.0
+k_b.emir({"sembol": "AKEUSDT", "yon": "S", "usd": 50, "pin": "482913"})
+kontrol("902: ayrı hesap değilken gelir alanı yok", "gelir" not in (k_b.elle_ozet().get("pozisyonlar") or [{}])[0])
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:

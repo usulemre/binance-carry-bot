@@ -1175,6 +1175,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0 4px}.kpi>div{background:var(--kart2);border-radius:10px;padding:7px 8px;display:flex;flex-direction:column;gap:1px;min-width:0}.kpi span{font-size:11px;color:var(--soluk)}.kpi b{font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.kpi b.art{color:var(--art)}.kpi b.eks{color:var(--eks)}.kpi i{font-style:normal;font-size:11px;color:var(--soluk);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}@media (max-width:380px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .asfn{cursor:pointer;grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.asfn>b{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}.asfn b.art{color:var(--art)}.asfn b.eks{color:var(--eks)}
 .isl .igl.alm{stroke:var(--mor)}.isl .ige.alm rect{fill:var(--mor)}.isl .igad.alm rect{stroke:var(--mor)}.isl .igad.alm text{fill:var(--mor)}
+.apfn{display:block;font-size:11.5px;color:var(--soluk);margin-top:1px}.apfn b{font-weight:600;font-variant-numeric:tabular-nums}.apfn b.art{color:var(--art)}.apfn b.eks{color:var(--eks)}
+.igel{margin-top:12px;padding-top:10px;border-top:1px solid var(--cizgi);font-size:13px}.igel>div{display:flex;justify-content:space-between;gap:8px;padding:3px 0}.igel b{font-variant-numeric:tabular-nums}.igel b.art{color:var(--art)}.igel b.eks{color:var(--eks)}.igelb{font-weight:650}.igelt{border-top:1px dashed var(--cizgi);margin-top:4px;padding-top:6px!important;font-weight:700;font-size:14px}
 .iiz{margin-top:12px;padding:12px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.iiz .iseg{margin-top:10px}.iiz .ichip button,.isl .iiz input,.iiz .iacil{background:var(--kart)}.iiz .ichip button.on{background:color-mix(in srgb,var(--vurgu) 16%,var(--kart));color:var(--vurgu);border-color:var(--vurgu)}
 .ialm{margin-top:12px}.ialr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--cizgi)}.ialr>span:nth-child(2){display:flex;flex-direction:column;min-width:0;cursor:pointer}.ialr .k{font-size:11.5px}.ialr .art{color:var(--art)}.ialr .eks{color:var(--eks)}.ialr button{width:36px;height:36px;border-radius:10px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--soluk);font:inherit}.ialr.cal{opacity:.8}.ialm .ichip{margin-top:8px}.ialf{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:8px}.isl .ialf input{margin:0;width:100%}.isl .ialf .ibtn{flex:none;height:44px;padding:0 16px;width:auto;font-size:15px}.ialm .say{margin-left:6px;font-size:12px;font-weight:700;color:var(--soluk);background:var(--kart2);border-radius:999px;padding:1px 8px}
 .asalm{padding:12px 14px}.asalm .gayr{margin-top:6px}
@@ -1852,7 +1854,7 @@ function asCanliBoya(){   // canliBoya her saniye: Pozisyonlarım satırları + 
   asAkisBagla();
   if (sayfa == "alsat"){   // yalnız rakamlar yerinde (her saniye listeyi baştan çizmek dokunuşu kaçırtırdı)
     const tmp = document.createElement("div"); tmp.innerHTML = elleHtml();
-    for (const id of ["astop", "asbak", ...(Date.now() - AS_RK_T > 1500 ? ["asrk"] : []), ...ELLE_OZ.pozisyonlar.flatMap(x=>["askz-" + x.sembol, "ass-" + x.sembol])]){
+    for (const id of ["astop", "asbak", ...(Date.now() - AS_RK_T > 1500 ? ["asrk"] : []), ...ELLE_OZ.pozisyonlar.flatMap(x=>["askz-" + x.sembol, "ass-" + x.sembol, "asnet-" + x.sembol])]){
       const a = document.getElementById(id), b = tmp.querySelector("#" + CSS.escape(id));
       if (a && b && a.innerHTML !== b.innerHTML){ a.innerHTML = b.innerHTML; a.className = b.className; } } }
   const H = ELLE_OZ.hesap, u = $("#ustkitap");
@@ -2020,6 +2022,8 @@ async function tsGonder(){
   tsCiz();
 }
 addEventListener("keydown", e=>{ if (e.key === "Escape" && TS && !TS.mesgul) tsKapat(); });
+// MADDE 902: pozisyonun gerçek sonucu = fiyat K/Z (canlı) + açıldığından beri funding + komisyon + kısmi kapanışlarda gerçekleşen
+const asNet = x => x.kz + (x.gelir ? x.gelir.fon + x.gelir.kom + x.gelir.gercek : 0);
 function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop uyarısı, iki satırlı pozisyon kartları
   const E = ELLE_OZ, yuk = `<div class="kart apk"><div class="apkh"><b>Açık pozisyonlar</b></div>`;
   if (!E) return yuk + `<div class="iskelet" style="height:56px;margin-top:10px"></div><div class="iskelet" style="height:56px;margin-top:8px"></div></div>`;
@@ -2034,7 +2038,7 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
     return `<a class="apr" href="#piyasa" onclick="islAc('${x.sembol}');return false"><i class="ass ${sinif(x.kz)}" id="ass-${x.sembol}"></i>
       <span class="apik">${coinIkon(ad)}<span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span></span>
       <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
-        <span class="k2">${x.pay && x.pay.devralinan ? `${elleKisa(x)}` : `<span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>`}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}</span>
+        <span class="k2">${x.pay && x.pay.devralinan ? `${elleKisa(x)}` : `<span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>`}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}${x.gelir && Math.abs(x.gelir.fon) >= 0.01 ? `<span class="apfn">funding <b class="${sinif(x.gelir.fon)}">${isaretli(x.gelir.fon)}</b> · net <b class="${sinif(asNet(x))}" id="asnet-${x.sembol}">${isaretli(asNet(x))}</b></span>` : ""}</span>
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
   return `${E.baglanti ? `<div class="imsj hata" role="status" style="margin:8px 0">⚠ Bağlantı yok — gösterilenler son alınan veriler. ${ea(E.baglanti.split(".")[0])}.</div>` : ""}${asBakiye(E, P)}${asRisk(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
     ${P.length ? `<div class="apko"><span class="art">${kar} kârda</span><span class="eks">${P.length - kar} zararda</span><span>${sonuc}</span></div>` : `<div class="apko"><span>${sonuc}</span></div>`}
@@ -2455,6 +2459,15 @@ function islKapatOnay(oran){
 // MADDE 901: İZ SÜREN STOP — fiyat kâr yönünde gittikçe stop arkasından gelir; gördüğü en iyi fiyattan %oran geri dönünce pozisyonun
 // tamamı piyasadan kapanır (Binance TRAILING_STOP_MARKET, işaret fiyatı, reduceOnly). İsteğe bağlı başlama fiyatı: iz ancak fiyat oraya
 // gelince başlar (long'da üstte, short'ta altta). Eklemede / kısmi kapanışta yeni adetle yeniden kurulur (iz sıfırdan başlar).
+// MADDE 902: coin penceresinde pozisyonun gerçek sonucu (açıldığından beri): fiyat + funding + komisyon + kısmi kapanış = net
+function islGelirHtml(PR, pz){
+  const G = PR.gelir; if (!G) return "";
+  const net = pz.kz + G.fon + G.kom + G.gercek, gun = Math.max(1 / 24, (Date.now() - G.t) / 864e5);
+  const sat = (a, v, alt) => `<div><span>${a}${alt ? ` <span class="k">${alt}</span>` : ""}</span><b class="${sinif(v)}">${isaretli(v)}</b></div>`;
+  return `<div class="igel"><div class="igelb"><span>Bu pozisyonun gerçek sonucu</span><span class="k">${gun < 1 ? Math.round(gun * 24) + " saattir" : gun.toFixed(1).replace(".",",") + " gündür"} açık</span></div>
+    ${sat("Fiyat K/Z", pz.kz, "açık")}${sat("Funding", G.fon, Math.abs(G.fon) >= 0.01 ? `günde ≈ ${isaretli(G.fon / gun)}` : "")}${sat("Komisyon", G.kom)}${Math.abs(G.gercek) >= 0.01 ? sat("Kısmi kapanışlar", G.gercek, "gerçekleşen") : ""}
+    <div class="igelt"><span>Net</span><b class="${sinif(net)}">${isaretli(net)}</b></div></div>`;
+}
 function islIzHtml(){
   const PR = ISL.poz, pz = PR.pozisyon, uz = pz.adet > 0, Z = PR.tpsl.find(x=>x.tur=="IZ"), ac = ISL.izAc || false;
   const ref = PR.isaret || pz.giris, gecerli = v => v > 0 && (uz ? v > ref : v < ref);
@@ -2591,7 +2604,7 @@ function islCiz(){
         <div class="ikg">${kut("Giriş", fg(pz.giris))}${kut("Şimdi", fg(PR.isaret) + uzak(PR.isaret, pz.giris))}${kut("Değer", para(deger))}
           ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) : "<span class='k'>yok</span>")}${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) : PR.tpsl.some(x=>x.tur=="IZ") ? `<span class="k">iz süren %${islGos(PR.tpsl.find(x=>x.tur=="IZ").oran)}</span>` : "<span class='uyr'>yok</span>")}
           ${kut("Likidasyon", pz.likidasyon>0 ? fg(pz.likidasyon) : "—")}</div>
-        ${likU!=null ? `<div class="ilik"><div class="ilikb"><span style="width:${Math.max(4, Math.min(100, likU / 50 * 100)).toFixed(0)}%" class="${likU<10?"kr":likU<30?"tu":"ye"}"></span></div><span class="k">likidasyona %${likU.toFixed(0)} uzak</span></div>` : ""}</div>
+        ${likU!=null ? `<div class="ilik"><div class="ilikb"><span style="width:${Math.max(4, Math.min(100, likU / 50 * 100)).toFixed(0)}%" class="${likU<10?"kr":likU<30?"tu":"ye"}"></span></div><span class="k">likidasyona %${likU.toFixed(0)} uzak</span></div>` : ""}${islGelirHtml(PR, pz)}</div>
         <div class="ibas">Kapat</div><div class="iseg kucuk"><button onclick="islKapatOnay(0.25)">%25</button><button onclick="islKapatOnay(0.5)">%50</button><button class="tehlike" onclick="islKapatOnay(1)">Tümü</button></div>
         <div class="ibas">${(PR.parcalar||[]).length > 1 ? "Pozisyonun tamamı için TP / stop" : "TP / stop"}</div>
         <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>

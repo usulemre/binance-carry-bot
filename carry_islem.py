@@ -133,6 +133,7 @@ class Kapi:
         self._yanlis: list[float] = []
         self._kilit = threading.Lock()
         self._parca_onbellek: dict = {}
+        self._acilis_t: dict = {}; self._poz_gelir_onb = None   # madde 902
 
     # ------------------------------------------------------------ denetimler
     def durum(self) -> dict:
@@ -804,6 +805,7 @@ class Kapi:
         except Exception as e:
             logger.info("parça TP/stop çözülemedi %s: %s", sem, str(e)[:120])
         E, ac = self._emirler(sem, A)
+        self._acilis_t[sem] = E[ac[0]]["t"] if ac is not None else None   # madde 902: pozisyonun açıldığı an
         harita = self._parca_harita().get("kapat", {})
         lots = []
         if ac is None:      # 90 günden eski: tek parça, borsa ortalamasıyla
@@ -888,7 +890,13 @@ class Kapi:
                 parca = [{**x, "tp": T.get(x["id"], {}).get("tp"), "sl": T.get(x["id"], {}).get("sl")} for x in parca]
         except Exception as e:
             logger.warning("parçalar okunamadı %s: %s", sem, e)
-        return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"], "parcalar": parca,
+        gelir = None
+        if self.ayar.get("ayri") and poz.get("adet"):   # madde 902
+            try:
+                gelir = self._poz_gelirleri({sem: self._acilis_t.get(sem)}).get(sem)
+            except Exception as e:
+                logger.info("pozisyon gelirleri okunamadı %s: %s", sem, str(e)[:120])
+        return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"], "parcalar": parca, "gelir": gelir,
                 "islemler": islemler, "elle": bool(self.ayar.get("ayri")) or sem in self._elle_kumesi(),
                 "bot_tutuyor": False if self.ayar.get("ayri") else self._bot_tutuyor(sem), "bot_pay": bot_pay}
 
@@ -992,6 +1000,30 @@ class Kapi:
         return {"bas": int(bas + 60_000), "dolum": dolum[-20:], "benim_adet": round(net, 10), "benim_giris": benim_giris,
                 "devralinan": devr if abs(devr) > 1e-12 else 0.0, "devralinan_giris": devr_giris}
 
+    def _poz_gelirleri(self, acilis: dict) -> dict:
+        """MADDE 902: açık pozisyon başına, açıldığı andan bu yana gelir kayıtları: funding, komisyon, gerçekleşen (kısmi kapanışlar).
+        Tek gelir sorgusu (en eski açılıştan, en çok 90 gün), 120 sn önbellek. {sembol: {fon, kom, gercek, t}}"""
+        A = {s: t for s, t in acilis.items() if t}
+        if not A:
+            return {}
+        simdi = int(self.saat() * 1000)
+        bas = max(min(A.values()), simdi - 90 * 86400 * 1000)
+        o = self._poz_gelir_onb
+        if o and o[0] <= bas and self.saat() - o[1] < 120:
+            G = o[2]
+        else:
+            G = _gelirler(self.ic, bas, simdi)
+            self._poz_gelir_onb = (bas, self.saat(), G)
+        out = {s: {"fon": 0.0, "kom": 0.0, "gercek": 0.0, "t": t} for s, t in A.items()}
+        for g in G:
+            s, t = g.get("symbol"), int(g.get("time") or 0)
+            if s not in out or t < A[s]:
+                continue
+            k = {"FUNDING_FEE": "fon", "COMMISSION": "kom", "REALIZED_PNL": "gercek"}.get(str(g.get("incomeType") or ""))
+            if k:
+                out[s][k] += float(g.get("income") or 0)
+        return {s: {k: (round(v, 4) if k != "t" else v) for k, v in d.items()} for s, d in out.items()}
+
     def elle_ozet(self) -> dict:
         """Elle pozisyonların (açık) ve son 30 gün elle sonucunun (gerçekleşen K/Z + komisyon, yalnız elle aralıklarındaki dolumlar)."""
         ayri = bool(self.ayar.get("ayri"))   # madde 851: ayrı hesapta bütün pozisyonlar kullanıcının
@@ -1064,6 +1096,14 @@ class Kapi:
                                               "devr_adet": float(m.get("devr_adet") or 0), "ilk_fiyat": float(m.get("ilk_fiyat") or 0),
                                               "funding": round(float(m.get("F") or 0), 4), "komisyon": round(float(m.get("C") or 0), 4),
                                               "bas": int(m.get("bas") or 0)}
+        if ayri:   # madde 902: pozisyonun kendi funding / komisyon / kısmi kapanış toplamı (açıldığından beri)
+            try:
+                PG = self._poz_gelirleri({x["sembol"]: self._acilis_t.get(x["sembol"]) for x in pozlar})
+                for x in pozlar:
+                    if x["sembol"] in PG:
+                        x["gelir"] = PG[x["sembol"]]
+            except Exception as e:
+                logger.info("pozisyon gelirleri okunamadı: %s", str(e)[:120])
         kz = kom = 0.0; kapanis = kazanan = 0
         if ayri:   # ayrı hesap: son 30 günün bütün gelir kayıtları
             hesap = {}
