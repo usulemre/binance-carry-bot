@@ -1118,7 +1118,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
-.asbak{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 2px 4px}.asbak>div{background:var(--kart2);border-radius:10px;padding:8px 10px;min-width:0}.asbak b{display:block;font-size:15px;margin:2px 0;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.asbak .k2{color:var(--soluk);font-size:11.5px}
+.asbak{display:grid;grid-template-columns:118px minmax(0,1fr);gap:6px 16px;align-items:center;margin:8px 0 6px;padding:14px;border-radius:16px;background:linear-gradient(135deg,var(--kart2),var(--kart));border:1px solid var(--cizgi)}.abh{width:118px;height:118px}.abh1{font-size:20px;font-weight:700;fill:var(--yazi);font-variant-numeric:tabular-nums}.abh2{font-size:9px;fill:var(--soluk)}.abk{min-width:0}.abu{font-size:12px;color:var(--soluk);text-transform:uppercase;letter-spacing:.06em}.abt{font-size:26px;font-weight:700;line-height:1.15;font-variant-numeric:tabular-nums;white-space:nowrap}.abkz{font-size:13px;font-weight:600;margin:2px 0 8px;font-variant-numeric:tabular-nums}.abkz span{color:var(--soluk);font-weight:400}.abkz.art{color:var(--art)}.abkz.eks{color:var(--eks)}.abs{display:flex;align-items:center;gap:8px;padding:5px 0;border-top:1px solid var(--cizgi)}.abs i{width:10px;height:10px;border-radius:3px;flex:none}.abs span{flex:1;min-width:0;font-size:13.5px;display:flex;flex-direction:column}.abs small{color:var(--soluk);font-size:11px}.abs b{font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.abc{grid-column:1/-1;display:flex;flex-wrap:wrap;gap:6px;margin-top:6px}.abc span{font-size:11.5px;color:var(--soluk);background:var(--bg);border:1px solid var(--cizgi);border-radius:999px;padding:3px 9px;font-variant-numeric:tabular-nums}
+@media (max-width:380px){.asbak{grid-template-columns:92px minmax(0,1fr);gap:6px 12px;padding:12px}.abh{width:92px;height:92px}.abt{font-size:22px}}
 #piyelle{border-bottom:1px solid var(--cizgi);padding-bottom:12px;margin-bottom:10px}#piyelle .pyeb{margin-top:4px}
 .pybos{padding:14px 12px;border-radius:10px;background:var(--kart2);color:var(--soluk);font-size:13px}
 .pyk{--fa:#0a7d45;--fe:#c42b20}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pyk{--fa:var(--art);--fe:var(--eks)}}:root[data-theme="dark"] .pyk{--fa:var(--art);--fe:var(--eks)}
@@ -1647,14 +1648,26 @@ function asCanliBoya(){   // canliBoya her saniye: Pozisyonlarım satırları + 
 }
 // MADDE 860: Al-Sat bakiye özeti — toplam bakiye (özkaynak), pozisyonlara bağlı teminat (+ toplam pozisyon büyüklüğü), boşta bakiye.
 // Açık K/Z işaret fiyatı akışıyla canlı: özkaynak ve boşta bakiye canlı K/Z farkı kadar kayar (Binance'te kullanılabilir bakiye de açık K/Z'yi içerir).
-function asBakiye(E, P){
+function asBakiye(E, P){   // madde 861: görsel — halka (pozisyonlarda / boşta) + büyük bakiye + açıklamalı satırlar
   const H = E && E.hesap; if (!H || H.ozkaynak == null) return "";
   const fark = P.reduce((a,x)=>a + x.kz, 0) - (E.pozisyonlar||[]).reduce((a,x)=>a + x.kz, 0);
-  const kutu = (b, v, alt) => `<div><div class="k2">${b}</div><b>${v}</b>${alt ? `<div class="k2">${alt}</div>` : ""}</div>`;
-  const bos = H.bosta != null ? Math.max(0, H.bosta + fark) : null, tem = (H.teminat||0) + (H.emir_teminat||0);
-  return `<div class="asbak" id="asbak">${kutu("Toplam bakiye", para(H.ozkaynak + fark), H.cuzdan != null ? `cüzdan ${para(H.cuzdan)}` : "")}
-    ${kutu("Pozisyonlarda", H.teminat != null ? para(tem) : "—", H.buyukluk ? `teminat · büyüklük ${para(H.buyukluk)}` : "teminat")}
-    ${kutu("Boşta", bos != null ? para(bos) : "—", "yeni işleme kullanılabilir")}</div>`;
+  const oz = H.ozkaynak + fark, acik = (H.acik||0) + fark, tem = (H.teminat||0) + (H.emir_teminat||0);
+  const bos = H.bosta != null ? Math.max(0, H.bosta + fark) : Math.max(0, oz - tem);
+  const pay = tem + bos > 0 ? tem / (tem + bos) : 0, yz = v => "%" + Math.round(v * 100);
+  const R = 42, C = 2 * Math.PI * R, d = pay * C, kal = oz > 0 && H.buyukluk ? H.buyukluk / oz : null;
+  const renkT = pay > 0.8 ? "var(--eks)" : pay > 0.6 ? "var(--uyari)" : "var(--vurgu)";
+  const halka = `<svg viewBox="0 0 100 100" class="abh" role="img" aria-label="Bakiyenin ${yz(pay)} pozisyonlarda">
+    <circle cx="50" cy="50" r="${R}" fill="none" stroke="var(--art)" stroke-opacity=".85" stroke-width="11"/>
+    ${pay > 0 ? `<circle cx="50" cy="50" r="${R}" fill="none" stroke="${renkT}" stroke-width="11" stroke-dasharray="${d.toFixed(2)} ${(C - d).toFixed(2)}" transform="rotate(-90 50 50)" stroke-linecap="${pay < 0.995 ? "butt" : "round"}"/>` : ""}
+    <text x="50" y="49" text-anchor="middle" class="abh1">${yz(pay)}</text><text x="50" y="63" text-anchor="middle" class="abh2">kullanımda</text></svg>`;
+  const satir = (renk, ad, v, alt) => `<div class="abs"><i style="background:${renk}"></i><span>${ad}<small>${alt}</small></span><b>${para(v)}</b></div>`;
+  return `<div class="asbak" id="asbak">${halka}<div class="abk">
+      <div class="abu">Toplam bakiye</div><div class="abt">${para(oz)}</div>
+      <div class="abkz ${sinif(acik)}">${acik>=0?"▲":"▼"} ${isaretli(acik)} <span>açık K/Z</span></div>
+      ${satir(renkT, "Pozisyonlarda", tem, yz(pay) + " · teminat")}
+      ${satir("var(--art)", "Boşta", bos, yz(1 - pay) + " · yeni işleme hazır")}
+    </div>
+    <div class="abc">${P.length ? `<span>${P.length} pozisyon</span>` : ""}${H.buyukluk ? `<span>büyüklük ${para(H.buyukluk)}</span>` : ""}${kal != null ? `<span>kaldıraç ${kal.toFixed(2).replace(".",",")}x</span>` : ""}${H.cuzdan != null ? `<span>cüzdan ${para(H.cuzdan)}</span>` : ""}</div></div>`;
 }
 function elleHtml(){
   const E = ELLE_OZ; if (!E) return `<div class="pyb"><span>Pozisyonlarım</span><span>yükleniyor…</span></div>`;
