@@ -490,7 +490,7 @@ kontrol("devir: veri() dökümde Kapanan'dan düşer", "devir_uygula(kl, an)" in
 
 _s48 = open(panel.__file__, encoding="utf-8").read()
 kontrol("madde 848: coin penceresi ve pozisyon ayrıntısında 24 sa / 3 gün / hafta / ay / 3 ay özeti",
-        all(x in _s48 for x in ("function donemHtml", '["3 gün", 72, "s"]', '["1 ay", 30, "g"]', "h += donemHtml(I.s, f)", "${donemHtml(s, f)}", "donemBoya(ISL.s)")))
+        all(x in _s48 for x in ("function donemHtml", '["3 gün", 72, "s"]', '["1 ay", 30, "g"]', "ISL.donAc ? donemHtml(I.s, f)", "${donemHtml(s, f)}", "donemBoya(ISL.s)")))   # madde 869: pencerede katlı
 
 _s49 = open(panel.__file__, encoding="utf-8").read()
 kontrol("madde 849: elle pozisyon botun toplamlarına girmez, ayrı bölüm ve özet satırı",
