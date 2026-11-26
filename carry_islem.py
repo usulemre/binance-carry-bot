@@ -1086,6 +1086,27 @@ def onceki_elle(kapi: "Kapi") -> dict | None:
     return {"toplam": round(float(st.get("toplam") or 0), 2), "sembol": S, "t": int(st["donduruldu"])}
 
 
+def _kapanislar(islem: list, en_cok: int = 200) -> list:
+    """MADDE 895: kapanan işlemler — REALIZED_PNL kayıtları coin başına 60 sn içinde birleştirilir (bir emrin parça dolumları tek
+    kapanış); net = gerçekleşen + aynı işlemlerin (tradeId) komisyonu. Yeniden eskiye."""
+    kom = {}
+    for g in islem:
+        if str(g.get("incomeType")) == "COMMISSION" and g.get("tradeId") not in (None, ""):
+            k = (g.get("symbol"), str(g.get("tradeId")))
+            kom[k] = kom.get(k, 0.0) + float(g.get("income") or 0)
+    R = sorted((g for g in islem if str(g.get("incomeType")) == "REALIZED_PNL" and g.get("symbol")), key=lambda g: int(g.get("time") or 0))
+    son, out = {}, []
+    for g in R:
+        t, s_ = int(g.get("time") or 0), g["symbol"]
+        x = son.get(s_)
+        if not x or t - x["_son"] > 60000:
+            x = {"t": t, "s": s_.removesuffix("USDT"), "kz": 0.0, "kom": 0.0, "n": 0, "_son": t}
+            son[s_] = x; out.append(x)
+        x["kz"] += float(g.get("income") or 0); x["n"] += 1; x["_son"] = t
+        x["kom"] += kom.pop((s_, str(g.get("tradeId"))), 0.0)
+    return [{"t": x["t"], "s": x["s"], "kz": round(x["kz"], 4), "net": round(x["kz"] + x["kom"], 4), "n": x["n"]} for x in reversed(out)][:en_cok]
+
+
 def gecmis(kapi: "Kapi", gun: int = 90) -> dict:
     """MADDE 852: al-sat hesabının günlük kazanç / kayıp ve hesap eğrisi.
     Başlangıç sermayesi = cüzdan − bütün işlem gelirleri (gerçekleşen + funding + komisyon; transfer hariç).
@@ -1163,7 +1184,7 @@ def gecmis(kapi: "Kapi", gun: int = 90) -> dict:
         coin_ozet.append({"s": s.removesuffix("USDT"), **{k: round(v, 4) for k, v in cc.items()}, "acik": round(u, 4),
                           "toplam": round(sum(cc.values()) + u, 4), "yon": ("L" if a_ > 0 else "S") if a_ else None})
     coin_ozet.sort(key=lambda x: x["toplam"])
-    return {"onceki": onceki_elle(kapi), "coin_ozet": coin_ozet,
+    return {"onceki": onceki_elle(kapi), "coin_ozet": coin_ozet, "kapanislar": _kapanislar(islem),
             "baslangic": round(bas, 2), "ozkaynak": round(h["ozkaynak"], 2), "acik": round(h["acik"], 2), "toplam": round(toplam, 2),
             "oran": round(toplam / bas, 6) if bas > 0 else None, "ozet": {k: round(v, 2) for k, v in top.items()},
             "gunler": gunler[-gun:], "egri": egri}

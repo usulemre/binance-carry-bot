@@ -496,6 +496,18 @@ _m89 = _ci89.binance_turkce("APIError(code=-2019): Margin is insufficient.")
 kontrol("Binance -2019 Türkçe (teminat yetersiz) + kod parantezde", _m89.startswith("Teminat yetersiz") and "(Binance -2019)" in _m89, _m89)
 kontrol("tanınmayan kod ham kalır", _ci89.binance_turkce("APIError(code=-9999): x") == "Binance: APIError(code=-9999): x")
 
+# 19. madde 895: kapanan işlemler — parça dolumlar birleşir, komisyon tradeId ile eşlenir
+_G95 = [{"incomeType": "REALIZED_PNL", "symbol": "AUSDT", "income": "3", "time": 1000, "tradeId": 1},
+        {"incomeType": "COMMISSION", "symbol": "AUSDT", "income": "-0.1", "time": 1000, "tradeId": 1},
+        {"incomeType": "REALIZED_PNL", "symbol": "AUSDT", "income": "2", "time": 20000, "tradeId": 2},
+        {"incomeType": "COMMISSION", "symbol": "AUSDT", "income": "-0.1", "time": 20000, "tradeId": 2},
+        {"incomeType": "COMMISSION", "symbol": "AUSDT", "income": "-0.5", "time": 500, "tradeId": 9},     # açılış komisyonu: kapanışa katılmaz
+        {"incomeType": "REALIZED_PNL", "symbol": "AUSDT", "income": "-4", "time": 500000, "tradeId": 3},
+        {"incomeType": "REALIZED_PNL", "symbol": "BUSDT", "income": "1", "time": 30000, "tradeId": 4}]
+_k95 = _ci89._kapanislar(_G95)
+kontrol("kapanışlar: 3 satır, yeniden eskiye", [(x["s"], x["n"]) for x in _k95] == [("A", 1), ("B", 1), ("A", 2)], _k95)
+kontrol("kapanış neti = gerçekleşen + aynı işlemlerin komisyonu", abs(_k95[2]["kz"] - 5) < 1e-9 and abs(_k95[2]["net"] - 4.8) < 1e-9, _k95[2])
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:

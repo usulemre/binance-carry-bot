@@ -1172,6 +1172,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 #tspin{width:100%;height:46px;margin-top:6px;padding:0 12px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:16px}
 .kaydevam{--kay-mask:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
 [role=button][tabindex]:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px;border-radius:8px}
+.kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0 4px}.kpi>div{background:var(--kart2);border-radius:10px;padding:7px 8px;display:flex;flex-direction:column;gap:1px;min-width:0}.kpi span{font-size:11px;color:var(--soluk)}.kpi b{font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.kpi b.art{color:var(--art)}.kpi b.eks{color:var(--eks)}.kpi i{font-style:normal;font-size:11px;color:var(--soluk);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}@media (max-width:380px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
@@ -1690,11 +1691,28 @@ function asGecmisSayfa(A){   // madde 868: bot Geçmiş'i gibi sade — özet + 
   if (AS_GEC.hata) return `<div class="kart bos">${ea(AS_GEC.hata)}</div>`;
   const P = asGecmisParca(A || asGecmisCanliVeri()), ac = ACIK.has("asay"), n = (AS_GEC.coin_ozet||[]).length;
   return `<div id="as-ust">${P.ust}</div><div id="as-oz">${P.oz}</div>
-    <div id="as-coin">${P.coin}</div>
+    <div id="as-coin">${P.coin}</div>${P.kap}
     <div class="kart" style="padding:0"><button class="gayr" onclick="olayAc('asay')">${ac?"▾":"▸"} Ayrıntılar <span class="k">takvim · son 1 yıl</span></button></div>
     ${!ac ? "" : `<div class="kart"><h2>Günlük takvim</h2><div id="as-tak">${P.tak}</div>
       <div class="k" style="margin-top:6px">Gün gece 03:00'te başlar · yeşil kazanç, kırmızı kayıp · ● bugün</div></div>
     <div class="kart"><h2>Son 1 yıl</h2>${yillik(asK(A || AS_GEC))}</div>`}`;
+}
+// MADDE 895: kapanan işlemler — özet (adet, kârlı oranı, ortalama kazanç / kayıp, en iyi / en kötü) + son 8, gerisi dokununca.
+// Tutar NET (komisyon dahil); bir emrin parça dolumları tek satır.
+function asKapanis(L){
+  if (!L.length) return "";
+  const ac = ACIK.has("askap"), G = ac ? L : L.slice(0, 8), kaz = L.filter(x=>x.net > 0), kay = L.filter(x=>x.net <= 0);
+  const ort = a => a.length ? a.reduce((t,x)=>t+x.net, 0) / a.length : null, T = L.reduce((t,x)=>t+x.net, 0);
+  const iyi = L.reduce((p,x)=>x.net>p.net?x:p), kot = L.reduce((p,x)=>x.net<p.net?x:p);
+  const tarih = t => { const d = new Date(t), b = new Date(); const g = Math.round((new Date(b.toDateString()) - new Date(d.toDateString()))/864e5);
+    return (g==0 ? "bugün" : g==1 ? "dün" : `${d.getDate()} ${AYAD[d.getMonth()].slice(0,3)}`) + " " + d.toLocaleTimeString("tr-TR", {hour:"2-digit", minute:"2-digit"}); };
+  const sat = x => `<div class="acr"><span class="acn">${coinIkon(x.s, "kucuk")}<b>${ea(x.s)}</b></span><span class="aca">${tarih(x.t)}${x.n > 1 ? ` · ${x.n} dolum` : ""}${Math.abs(x.net - x.kz) >= 0.005 ? ` · komisyon ${isaretli(x.net - x.kz)}` : ""}</span><b class="act ${sinif(x.net)}">${isaretli(x.net)}</b></div>`;
+  return `<div class="kart acl"><div class="apkh"><div><b>Kapanan işlemler</b><span class="say">${L.length}</span></div><b class="${sinif(T)}">${isaretli(T)}</b></div>
+    <div class="apko"><span class="art">${kaz.length} kârlı</span><span class="eks">${kay.length} zararlı</span><span>%${Math.round(kaz.length / L.length * 100)} isabet · son 90 gün, komisyon dahil</span></div>
+    <div class="kpi"><div><span>ort. kazanç</span><b class="art">${ort(kaz)==null ? "—" : isaretli(ort(kaz))}</b></div><div><span>ort. kayıp</span><b class="eks">${ort(kay)==null ? "—" : isaretli(ort(kay))}</b></div>
+      <div><span>en iyi</span><b class="${sinif(iyi.net)}">${isaretli(iyi.net)}</b><i>${ea(iyi.s)}</i></div><div><span>en kötü</span><b class="${sinif(kot.net)}">${isaretli(kot.net)}</b><i>${ea(kot.s)}</i></div></div>
+    ${G.map(sat).join("")}
+    ${L.length > 8 ? `<button class="pkdaha" onclick="olayAc('askap')">${ac ? "Yalnız son 8" : `Tümü (${L.length})`}</button>` : ""}</div>`;
 }
 // madde 891: kalem çubukları (bot Özet "nereden geldi" ile aynı görünüm): sıfır ortada, kazanç sağa yeşil, kayıp sola kırmızı
 function kalemCubuk(K){
@@ -1709,7 +1727,7 @@ function asGecmisParca(A){
     <div class="k" style="margin-top:4px">${para(A.baslangic)} → <b style="color:var(--yazi)">${para(A.ozkaynak)}</b></div>
     ${kalemCubuk([["Kapanan", O.gerceklesen||0], ["Açık", A.acik||0], ["Funding", O.funding||0], ["Komisyon", O.komisyon||0]])}
     <div class="ash">Hesap eğrisi</div>${asEgri(A.egri)}</div>`;
-  return {ust: gecmisSade(K), oz, tak: takvim(K), coin: asCoinListe(A.coin_ozet || [])};
+  return {ust: gecmisSade(K), oz, tak: takvim(K), coin: asCoinListe(A.coin_ozet || []), kap: asKapanis(A.kapanislar || [])};
 }
 // madde 868: coin bazında sonuç — tablo yerine kart satırlar (telefonda 5 sütun sığmıyordu); en kötü / en iyi 4, gerisi dokununca
 function asCoinListe(C){
