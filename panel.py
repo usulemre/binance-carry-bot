@@ -3015,7 +3015,15 @@ function ciz(){
 // MADDE 740: kaydırınca küçülen başlık; sağa / sola kaydırarak sekme; en üstte aşağı çekince yenile
 addEventListener("scroll", ()=>{ const u = $("#ust"); if (u) u.classList.toggle("kucuk", scrollY > 90); }, {passive:true});
 let dokB = null;
-addEventListener("touchstart", e=>{ const t = e.touches[0]; dokB = {x:t.clientX, y:t.clientY, ust: scrollY<=0, yatay: !!e.target.closest(".yatay,.tablo")}; }, {passive:true});
+// madde 867: yana kayan bir alanın (sekme satırı, süzgeç düğmeleri, etiketler, tablo, grafik) içinde başlayan kaydırma sayfa DEĞİŞTİRMEZ
+function yanaKayanIcinde(el){
+  if (!el || !el.closest) return false;
+  if (el.closest(".yatay,.tablo,.pksek,.pkdon,.gdon,.abc,.ichip,.iseg,#sheet,svg,canvas,input,select,textarea")) return true;
+  for (let p = el; p && p !== document.body; p = p.parentElement){
+    if (p.scrollWidth > p.clientWidth + 2){ const o = getComputedStyle(p).overflowX; if (o == "auto" || o == "scroll") return true; } }
+  return false;
+}
+addEventListener("touchstart", e=>{ const t = e.touches[0]; dokB = {x:t.clientX, y:t.clientY, ust: scrollY<=0, yatay: !!ISL || yanaKayanIcinde(e.target)}; }, {passive:true});
 addEventListener("touchmove", e=>{ if (!dokB || !dokB.ust) return; const dy = e.touches[0].clientY - dokB.y, dx = Math.abs(e.touches[0].clientX - dokB.x);
   const c = $("#cek"); if (c && dy > 0 && dy > dx){ c.style.height = Math.min(48, dy/2.2) + "px"; c.textContent = dy > 110 ? "↻ bırakınca yenilenir" : "↓ yenilemek için çek"; } }, {passive:true});
 addEventListener("touchend", e=>{ if (!dokB) return; const t = e.changedTouches[0], dx = t.clientX - dokB.x, dy = t.clientY - dokB.y, c = $("#cek");
