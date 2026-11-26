@@ -78,6 +78,7 @@ def ayarlar() -> dict:
             "alsat_mod": os.getenv("ALSAT_MODE", "").strip() or os.getenv("BINANCE_MODE", "demo"),
             "anlik": os.getenv("CARRY_ALSAT_ANLIK", os.path.join("defter", "alsat_anlik.jsonl")),
             "parca": os.getenv("CARRY_ALSAT_PARCA", os.path.join("defter", "alsat_parca.json")),   # madde 862
+            "not": os.getenv("CARRY_ALSAT_NOT", os.path.join("defter", "alsat_not.json")),   # madde 904
             "gecis_kisit": os.getenv("CARRY_ALSAT_GECIS", "1").strip() not in ("0", "false", "False"),
             "ayni_anahtar": bool(os.getenv("ALSAT_API_KEY", "").strip()) and os.getenv("ALSAT_API_KEY", "").strip() == os.getenv("BINANCE_API_KEY", "").strip()}
 
@@ -896,7 +897,11 @@ class Kapi:
                 gelir = self._poz_gelirleri({sem: self._acilis_t.get(sem)}).get(sem)
             except Exception as e:
                 logger.info("pozisyon gelirleri okunamadı %s: %s", sem, str(e)[:120])
-        return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"], "parcalar": parca, "gelir": gelir,
+        notu = None
+        if self.ayar.get("ayri") and poz.get("adet"):   # madde 904
+            n_ = self._not_bul(self._notlar(), sem, acilis=int(self._acilis_t.get(sem) or 0))
+            notu = n_ and n_["metin"]
+        return {"sembol": sem, "pozisyon": poz, "isaret": self._isaret(sem), "tpsl": tpsl, "bekleyen": bekleyen, "mod": self.ayar["mod"], "parcalar": parca, "gelir": gelir, "not": notu,
                 "islemler": islemler, "elle": bool(self.ayar.get("ayri")) or sem in self._elle_kumesi(),
                 "bot_tutuyor": False if self.ayar.get("ayri") else self._bot_tutuyor(sem), "bot_pay": bot_pay}
 
@@ -1000,6 +1005,60 @@ class Kapi:
         return {"bas": int(bas + 60_000), "dolum": dolum[-20:], "benim_adet": round(net, 10), "benim_giris": benim_giris,
                 "devralinan": devr if abs(devr) > 1e-12 else 0.0, "devralinan_giris": devr_giris}
 
+    # ------------------------------------------------------------ MADDE 904: İŞLEM GÜNLÜĞÜ
+    # Pozisyon başına serbest not ("neden girdim, planım ne"). Anahtar = (sembol, pozisyonun açıldığı an): aynı coinde yeni pozisyon
+    # yeni not alır. Kapanışlar (Geçmiş) notu sembol + "kapanıştan önce açılmış en son pozisyon" ile bulur. Emir değildir: PIN istemez.
+    NOT_EN_UZUN, NOT_EN_COK = 1000, 1000
+
+    def _notlar(self) -> list:
+        try:
+            with open(self.ayar.get("not") or os.path.join("defter", "alsat_not.json"), encoding="utf-8") as f:
+                d = json.load(f)
+            return d if isinstance(d, list) else []
+        except (OSError, ValueError):
+            return []
+
+    def _notlar_yaz(self, L: list) -> None:
+        yol = self.ayar.get("not") or os.path.join("defter", "alsat_not.json")
+        os.makedirs(os.path.dirname(yol) or ".", exist_ok=True)
+        gec = yol + ".gecici"
+        with open(gec, "w", encoding="utf-8") as f:
+            json.dump(L[-self.NOT_EN_COK:], f, ensure_ascii=False)
+        os.replace(gec, yol)
+
+    @staticmethod
+    def _not_bul(L: list, sem: str, acilis=None, once=None) -> dict | None:
+        """acilis verilirse o pozisyonun notu; once (ms) verilirse o andan önce açılmış en son pozisyonun notu."""
+        A = [x for x in L if x.get("s") == sem]
+        if acilis is not None:
+            return next((x for x in A if int(x.get("acilis") or 0) == int(acilis or 0)), None)
+        A = [x for x in A if int(x.get("acilis") or 0) <= int(once or 0)]
+        return max(A, key=lambda x: int(x.get("acilis") or 0)) if A else None
+
+    def not_kaydet(self, d: dict) -> dict:
+        if not self.ayar.get("ayri"):
+            raise Hata("not yalnız al-sat ayrı hesabında tutulur", 409)
+        sem = str(d.get("sembol") or "").upper()
+        if not SEMBOL_RE.match(sem):
+            raise Hata("geçersiz sembol")
+        metin = str(d.get("metin") or "").replace("\r", "").strip()
+        if len(metin) > self.NOT_EN_UZUN:
+            raise Hata(f"not en çok {self.NOT_EN_UZUN} karakter")
+        with self._kilit:
+            poz = self._pozisyon(sem)
+            if not poz["adet"]:
+                raise Hata(f"{sem.replace('USDT', '')} için açık pozisyon yok", 404)
+            self._parca_onbellek.pop(sem, None)
+            self.parcalar(sem, poz)
+            ac = int(self._acilis_t.get(sem) or 0)
+            L = [x for x in self._notlar() if not (x.get("s") == sem and int(x.get("acilis") or 0) == ac)]
+            yeni = None
+            if metin:
+                yeni = {"s": sem, "acilis": ac, "metin": metin, "t": int(self.saat() * 1000)}
+                L.append(yeni)
+            self._notlar_yaz(L)
+        return {"not": yeni}
+
     def _poz_gelirleri(self, acilis: dict) -> dict:
         """MADDE 902: açık pozisyon başına, açıldığı andan bu yana gelir kayıtları: funding, komisyon, gerçekleşen (kısmi kapanışlar).
         Tek gelir sorgusu (en eski açılıştan, en çok 90 gün), 120 sn önbellek. {sembol: {fon, kom, gercek, t}}"""
@@ -1102,6 +1161,11 @@ class Kapi:
                 for x in pozlar:
                     if x["sembol"] in PG:
                         x["gelir"] = PG[x["sembol"]]
+                NL = self._notlar()   # madde 904
+                for x in pozlar:
+                    n_ = self._not_bul(NL, x["sembol"], acilis=int(self._acilis_t.get(x["sembol"]) or 0))
+                    if n_:
+                        x["not"] = n_["metin"]
             except Exception as e:
                 logger.info("pozisyon gelirleri okunamadı: %s", str(e)[:120])
         kz = kom = 0.0; kapanis = kazanan = 0
@@ -1313,7 +1377,13 @@ def gecmis(kapi: "Kapi", gun: int = 90) -> dict:
         coin_ozet.append({"s": s.removesuffix("USDT"), **{k: round(v, 4) for k, v in cc.items()}, "acik": round(u, 4),
                           "toplam": round(sum(cc.values()) + u, 4), "yon": ("L" if a_ > 0 else "S") if a_ else None})
     coin_ozet.sort(key=lambda x: x["toplam"])
-    return {"onceki": onceki_elle(kapi), "coin_ozet": coin_ozet, "kapanislar": _kapanislar(islem),
+    kap = _kapanislar(islem)
+    NL = kapi._notlar()   # madde 904: kapanışa, ondan önce açılmış en son pozisyonun notu
+    for x in kap:
+        n_ = kapi._not_bul(NL, x["s"] + "USDT", once=x["t"])
+        if n_:
+            x["not"] = n_["metin"]
+    return {"onceki": onceki_elle(kapi), "coin_ozet": coin_ozet, "kapanislar": kap,
             "baslangic": round(bas, 2), "ozkaynak": round(h["ozkaynak"], 2), "acik": round(h["acik"], 2), "toplam": round(toplam, 2),
             "oran": round(toplam / bas, 6) if bas > 0 else None, "ozet": {k: round(v, 2) for k, v in top.items()},
             "gunler": gunler[-gun:], "egri": egri}
@@ -1396,6 +1466,10 @@ def uygulama(kapi_fabrika=None):
     @app.post("/kapat")
     def r_kapat():
         return calistir(lambda: kapi().kapat(govde()))
+
+    @app.post("/not")
+    def r_not():
+        return calistir(lambda: kapi().not_kaydet(govde()))
 
     @app.post("/iz")
     def r_iz():

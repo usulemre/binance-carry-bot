@@ -1177,6 +1177,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .isl .igl.alm{stroke:var(--mor)}.isl .ige.alm rect{fill:var(--mor)}.isl .igad.alm rect{stroke:var(--mor)}.isl .igad.alm text{fill:var(--mor)}
 .apfn{display:block;font-size:11.5px;color:var(--soluk);margin-top:1px}.apfn b{font-weight:600;font-variant-numeric:tabular-nums}.apfn b.art{color:var(--art)}.apfn b.eks{color:var(--eks)}
 .igel{margin-top:12px;padding-top:10px;border-top:1px solid var(--cizgi);font-size:13px}.igel>div{display:flex;justify-content:space-between;gap:8px;padding:3px 0}.igel b{font-variant-numeric:tabular-nums}.igel b.art{color:var(--art)}.igel b.eks{color:var(--eks)}.igelb{font-weight:650}.igelt{border-top:1px dashed var(--cizgi);margin-top:4px;padding-top:6px!important;font-weight:700;font-size:14px}
+.inot{margin-top:12px;padding:12px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.inoth{display:flex;justify-content:space-between;align-items:center;gap:8px;font-weight:650;font-size:14px}.inoth button{background:none;border:0;color:var(--vurgu);font:inherit;font-size:13px;padding:6px 2px;cursor:pointer}.inotm{margin-top:6px;font-size:14px;line-height:1.45;white-space:pre-wrap;overflow-wrap:anywhere}.isl .inot textarea,.isl .ionay textarea{width:100%;box-sizing:border-box;margin-top:8px;padding:10px 12px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);font:inherit;font-size:15px;line-height:1.4;resize:vertical}.isl .ionay textarea{background:var(--kart2)}.inot .iseg{margin-top:8px}
+.apn{font-size:12px;line-height:1}.acnt{grid-column:1/-1;font-size:12.5px;color:var(--soluk);margin-top:3px;line-height:1.4;overflow:hidden;display:-webkit-box;-webkit-line-clamp:2;-webkit-box-orient:vertical;white-space:pre-wrap;overflow-wrap:anywhere;cursor:pointer}.acnt.acik{-webkit-line-clamp:unset;display:block}
 .iiz{margin-top:12px;padding:12px;border-radius:14px;background:var(--kart2);border:1px solid var(--cizgi)}.iiz .iseg{margin-top:10px}.iiz .ichip button,.isl .iiz input,.iiz .iacil{background:var(--kart)}
 .ialm{margin-top:12px}.ialr{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--cizgi)}.ialr>span:nth-child(2){display:flex;flex-direction:column;min-width:0;cursor:pointer}.ialr .k{font-size:11.5px}.ialr .art{color:var(--art)}.ialr .eks{color:var(--eks)}.ialr button{width:36px;height:36px;border-radius:10px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--soluk);font:inherit}.ialr.cal{opacity:.8}.ialm .ichip{margin-top:8px}.ialf{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:8px;margin-top:8px}.isl .ialf input{margin:0;width:100%}.isl .ialf .ibtn{flex:none;height:44px;padding:0 16px;width:auto;font-size:15px}.ialm .say{margin-left:6px;font-size:12px;font-weight:700;color:var(--soluk);background:var(--kart2);border-radius:999px;padding:1px 8px}
 .asalm{padding:12px 14px}.asalm .gayr{margin-top:6px}
@@ -1716,7 +1718,7 @@ function asKapanis(L){
   const iyi = L.reduce((p,x)=>x.net>p.net?x:p), kot = L.reduce((p,x)=>x.net<p.net?x:p);
   const tarih = t => { const d = new Date(t), b = new Date(); const g = Math.round((new Date(b.toDateString()) - new Date(d.toDateString()))/864e5);
     return (g==0 ? "bugün" : g==1 ? "dün" : `${d.getDate()} ${AYAD[d.getMonth()].slice(0,3)}`) + " " + d.toLocaleTimeString("tr-TR", {hour:"2-digit", minute:"2-digit"}); };
-  const sat = x => `<div class="acr"><span class="acn">${coinIkon(x.s, "kucuk")}<b>${ea(x.s)}</b></span><span class="aca">${tarih(x.t)}${x.n > 1 ? ` · ${x.n} dolum` : ""}${Math.abs(x.net - x.kz) >= 0.005 ? ` · komisyon ${isaretli(x.net - x.kz)}` : ""}</span><b class="act ${sinif(x.net)}">${isaretli(x.net)}</b></div>`;
+  const sat = x => `<div class="acr"><span class="acn">${coinIkon(x.s, "kucuk")}<b>${ea(x.s)}</b></span><span class="aca">${tarih(x.t)}${x.n > 1 ? ` · ${x.n} dolum` : ""}${Math.abs(x.net - x.kz) >= 0.005 ? ` · komisyon ${isaretli(x.net - x.kz)}` : ""}</span><b class="act ${sinif(x.net)}">${isaretli(x.net)}</b>${x.not ? `<span class="acnt" role="button" tabindex="0" onclick="this.classList.toggle('acik')">📝 ${ea(x.not)}</span>` : ""}</div>`;
   return `<div class="kart acl"><div class="apkh"><div><b>Kapanan işlemler</b><span class="say">${L.length}</span></div><b class="${sinif(T)}">${isaretli(T)}</b></div>
     <div class="apko"><span class="art">${kaz.length} kârlı</span><span class="eks">${kay.length} zararlı</span><span>%${Math.round(kaz.length / L.length * 100)} isabet · son 90 gün, komisyon dahil</span></div>
     <div class="kpi"><div><span>ort. kazanç</span><b class="art">${ort(kaz)==null ? "—" : isaretli(ort(kaz))}</b></div><div><span>ort. kayıp</span><b class="eks">${ort(kay)==null ? "—" : isaretli(ort(kay))}</b></div>
@@ -2037,7 +2039,7 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
     const stopVar = x.sl || x.parca_sl || x.iz, tpsl = [x.tp ? `TP ${piyFiyat(x.tp)}` : x.parca_tp ? `TP ${x.parca_tp}/${n} alım` : "", x.sl ? `stop ${piyFiyat(x.sl)}` : x.parca_sl ? `stop ${x.parca_sl}/${n} alım` : "", x.iz ? `iz süren %${islGos(x.iz)}` : ""].filter(Boolean);
     return `<a class="apr" href="#piyasa" onclick="islAc('${x.sembol}');return false"><i class="ass ${sinif(x.kz)}" id="ass-${x.sembol}"></i>
       <span class="apik">${coinIkon(ad)}<span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span></span>
-      <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
+      <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${x.not ? `<span class="apn" title="${ea(x.not)}" aria-label="not var">📝</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
         <span class="k2">${x.pay && x.pay.devralinan ? `${elleKisa(x)}` : `<span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>`}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}${x.gelir && Math.abs(x.gelir.fon) >= 0.01 ? `<span class="apfn"><span class="nw">funding <b class="${sinif(x.gelir.fon)}">${isaretli(x.gelir.fon)}</b></span> · <span class="nw">net <b class="${sinif(asNet(x))}" id="asnet-${x.sembol}">${isaretli(asNet(x))}</b></span></span>` : ""}</span>
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
   return `${E.baglanti ? `<div class="imsj hata" role="status" style="margin:8px 0">⚠ Bağlantı yok — gösterilenler son alınan veriler. ${ea(E.baglanti.split(".")[0])}.</div>` : ""}${asBakiye(E, P)}${asRisk(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
@@ -2468,6 +2470,27 @@ function islGelirHtml(PR, pz){
     ${sat("Fiyat K/Z", pz.kz, "açık")}${sat("Funding", G.fon, Math.abs(G.fon) >= 0.01 ? `günde ≈ ${isaretli(G.fon / gun)}` : "")}${sat("Komisyon", G.kom)}${Math.abs(G.gercek) >= 0.01 ? sat("Kısmi kapanışlar", G.gercek, "gerçekleşen") : ""}
     <div class="igelt"><span>Net</span><b class="${sinif(net)}">${isaretli(net)}</b></div></div>`;
 }
+// MADDE 904: İŞLEM GÜNLÜĞÜ — pozisyona not ("neden girdim, planım ne"). Sunucuda saklanır (her cihazda aynı); kapanınca Geçmiş'te sonucun yanında.
+function islNotHtml(){
+  if (!(ISL_DURUM||{}).ayri) return "";
+  const N = ISL.poz.not, duz = ISL.notDuz || !N;
+  if (!duz) return `<div class="inot"><div class="inoth"><span>📝 Notun</span><button onclick="ISL.notDuz=true;ISL.notMetin=ISL.poz.not;islCiz()">düzenle</button></div><div class="inotm">${ea(N)}</div></div>`;
+  const v = ISL.notMetin ?? N ?? "";
+  return `<div class="inot"><div class="inoth"><span>📝 Not <span class="k">· isteğe bağlı, sadece sen görürsün</span></span></div>
+    <textarea id="islnot" rows="3" maxlength="1000" placeholder="Neden girdin? Planın ne? (hedef, stop, ne olursa çıkarsın…)" oninput="ISL.notMetin=this.value">${ea(v)}</textarea>
+    ${ISL.notMsj ? `<div class="imsj ${ISL.notMsj.ok?"ok":"hata"}" role="status">${ea(ISL.notMsj.ok||ISL.notMsj.hata)}</div>` : ""}
+    <div class="iseg kucuk"><button class="birincil" onclick="islNotKaydet()" ${ISL.notMesgul?"disabled":""}>${ISL.notMesgul ? "Kaydediliyor…" : "Notu kaydet"}</button>${N ? `<button onclick="ISL.notDuz=false;ISL.notMetin=null;ISL.notMsj=null;islCiz()">Vazgeç</button>` : ""}</div></div>`;
+}
+async function islNotKaydet(){
+  if (!ISL || ISL.notMesgul) return; const s = ISL.s, m = String(ISL.notMetin ?? ISL.poz.not ?? "").trim();
+  if (!m && !ISL.poz.not){ ISL.notMsj = {hata: "Bir şey yaz."}; islCiz(); return; }
+  ISL.notMesgul = true; ISL.notMsj = null; islCiz();
+  const d = await islIstek("not", {sembol: s, metin: m});
+  if (!ISL || ISL.s != s) return; ISL.notMesgul = false;
+  if (!d.ok){ ISL.notMsj = {hata: d.hata}; islCiz(); return; }
+  ISL.poz.not = d.not ? d.not.metin : null; ISL.notDuz = false; ISL.notMetin = null; ISL.notMsj = null; islCiz();
+  const P = ELLE_OZ && (ELLE_OZ.pozisyonlar||[]).find(x=>x.sembol == s); if (P) P.not = ISL.poz.not || undefined;
+}
 function islIzHtml(){
   const PR = ISL.poz, pz = PR.pozisyon, uz = pz.adet > 0, Z = PR.tpsl.find(x=>x.tur=="IZ"), ac = ISL.izAc || false;
   const ref = PR.isaret || pz.giris, gecerli = v => v > 0 && (uz ? v > ref : v < ref);
@@ -2538,7 +2561,10 @@ async function islOnayla(){   // basılı tutma tamamlanınca
                  + (d.tpsl && d.tpsl.length ? `, ${d.tpsl.map(x=>(x.tur=="SL"?"stop":x.tur)+" "+piyFiyat(x.fiyat)).join(", ")}` : "") + (d.tpsl_hata ? `. ⚠️ ${d.tpsl_hata}` : "")
              : yol=="kapat" ? `Kapatıldı: ${d.kapat.adet.toLocaleString("tr-TR")} adet` : yol=="tpsl" ? "TP / stop kaydedildi" : yol=="iz" ? (d.iz ? `İz süren stop kuruldu: %${islGos(d.iz.oran)}` : "İz süren stop kaldırıldı") : `Silindi: ${d.iptal} emir`, durum: yol=="emir" ? d.emir.durum : ""};
   islCiz();
-  setTimeout(async ()=>{ if (!ISL) return; await islPozYukle(); if (ISL && yol=="emir" && islPozVar()){ ISL.gor = "poz"; islCiz(); } }, 1200);
+  const yNot = yol=="emir" && String(ISL.yeniNot||"").trim(), yS = ISL.s; if (yol=="emir") ISL.yeniNot = "";
+  setTimeout(async ()=>{ if (!ISL) return;
+    if (yNot && d.emir.durum=="FILLED"){ const n = await islIstek("not", {sembol: yS, metin: yNot}); if (ISL && !n.ok) ISL.msj = {...ISL.msj, ok: (ISL.msj||{}).ok + ` · not kaydedilemedi: ${n.hata}`}; }   // madde 904
+    await islPozYukle(); if (ISL && yol=="emir" && islPozVar()){ ISL.gor = "poz"; islCiz(); } }, 1200);
 }
 // basılı tut: 0,7 sn (fare / dokunuş / klavye: Boşluk-Enter basılı)
 let ISL_TUT = null;
@@ -2586,6 +2612,7 @@ function islCiz(){
   if (I.adim){ const A = I.adim;
     h += `<div class="ionay"><div class="iob">${A.baslik}</div><div class="iozt">${A.satir.map(([a,b])=>`<div><span class="k">${a}</span><b>${b}</b></div>`).join("")}</div>
       ${A.not.map(n=>`<p class="ion">${ea(n)}</p>`).join("")}
+      ${A.tur=="emir" && !islPozVar() && (ISL_DURUM||{}).ayri ? `<label class="ibas" for="islynot">📝 Not <span class="k">· isteğe bağlı: neden giriyorsun, planın ne?</span></label><textarea id="islynot" rows="2" maxlength="1000" oninput="ISL.yeniNot=this.value">${ea(ISL.yeniNot||"")}</textarea>` : ""}
       <label class="ibas" for="islpin">İşlem PIN'i</label><input id="islpin" type="password" inputmode="numeric" autocomplete="off" value="${ea(I.pin)}" oninput="islAyar('pin',this.value)" placeholder="sunucuda belirlediğin PIN">
       <p class="ion k">Göndermek için alttaki düğmeyi basılı tut.</p></div>`;
   } else {
@@ -2605,6 +2632,7 @@ function islCiz(){
           ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) : "<span class='k'>yok</span>")}${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) : PR.tpsl.some(x=>x.tur=="IZ") ? `<span class="k">iz süren %${islGos(PR.tpsl.find(x=>x.tur=="IZ").oran)}</span>` : "<span class='uyr'>yok</span>")}
           ${kut("Likidasyon", pz.likidasyon>0 ? fg(pz.likidasyon) : "—")}</div>
         ${likU!=null ? `<div class="ilik"><div class="ilikb"><span style="width:${Math.max(4, Math.min(100, likU / 50 * 100)).toFixed(0)}%" class="${likU<10?"kr":likU<30?"tu":"ye"}"></span></div><span class="k">likidasyona %${likU.toFixed(0)} uzak</span></div>` : ""}${islGelirHtml(PR, pz)}</div>
+        ${islNotHtml()}
         <div class="ibas">Kapat</div><div class="iseg kucuk"><button onclick="islKapatOnay(0.25)">%25</button><button onclick="islKapatOnay(0.5)">%50</button><button class="tehlike" onclick="islKapatOnay(1)">Tümü</button></div>
         <div class="ibas">${(PR.parcalar||[]).length > 1 ? "Pozisyonun tamamı için TP / stop" : "TP / stop"}</div>
         <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
@@ -3717,7 +3745,7 @@ def uygulama(klasorler: list[str]):
 
     @app.post("/api/islem/<yol>")
     def islem_post(yol):
-        if yol not in ("onizle", "emir", "tpsl", "iz", "kapat", "iptal"):
+        if yol not in ("onizle", "emir", "tpsl", "iz", "not", "kapat", "iptal"):
             return jsonify({"ok": False, "hata": "bilinmeyen işlem"}), 404
         if request.headers.get("X-Carry-Islem") != "1" or not request.is_json:
             return jsonify({"ok": False, "hata": "geçersiz istek"}), 403

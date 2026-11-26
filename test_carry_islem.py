@@ -570,6 +570,30 @@ ic_b.fiyat["AKEUSDT"] = 1.0
 k_b.emir({"sembol": "AKEUSDT", "yon": "S", "usd": 50, "pin": "482913"})
 kontrol("902: ayrı hesap değilken gelir alanı yok", "gelir" not in (k_b.elle_ozet().get("pozisyonlar") or [{}])[0])
 
+# 22. madde 904: işlem günlüğü (pozisyon notu)
+d04 = tempfile.mkdtemp()
+SAAT[0] = _z02.time() + 20
+k04, ic04, _ = yeni(ayri=True, parca=os.path.join(d04, "parca.json"), defter=os.path.join(d04, "pi.jsonl"), **{"not": os.path.join(d04, "not.json")})
+ic04.fiyat["AKEUSDT"] = 1.0
+ic04.futures_income_history = lambda **kw: []
+kontrol("904: pozisyon yokken not reddedilir", hata_mi(lambda: k04.not_kaydet({"sembol": "AKEUSDT", "metin": "x"}), kod=404))
+k04.emir({"sembol": "AKEUSDT", "yon": "S", "usd": 100, "pin": "482913"})
+t04 = ic04.emirler[-1]["_t"]
+SAAT[0] = _z02.time() + 25
+r04 = k04.not_kaydet({"sembol": "AKEUSDT", "metin": "  pompa sonrası short, hedef 0,8  "})
+kontrol("904: not kaydedilir (kırpılır), anahtar = açılış zamanı, PIN istemez", r04["not"]["metin"] == "pompa sonrası short, hedef 0,8" and r04["not"]["acilis"] == t04, r04)
+kontrol("904: elle özetinde ve coin penceresinde not", k04.elle_ozet()["pozisyonlar"][0].get("not") == r04["not"]["metin"]
+        and k04.pozisyon("AKEUSDT")["not"] == r04["not"]["metin"])
+k04.not_kaydet({"sembol": "AKEUSDT", "metin": "güncel plan"})
+kontrol("904: aynı pozisyonda güncelleme tek kayıt", [x["metin"] for x in k04._notlar()] == ["güncel plan"], k04._notlar())
+kontrol("904: 1000 karakter sınırı", hata_mi(lambda: k04.not_kaydet({"sembol": "AKEUSDT", "metin": "a" * 1001})))
+kontrol("904: kapanış notu bulur (o andan önce açılmış en son pozisyon)", k04._not_bul(k04._notlar(), "AKEUSDT", once=t04 + 5000)["metin"] == "güncel plan"
+        and k04._not_bul(k04._notlar(), "AKEUSDT", once=t04 - 1) is None)
+k04.not_kaydet({"sembol": "AKEUSDT", "metin": ""})
+kontrol("904: boş metin notu siler", k04._notlar() == [], k04._notlar())
+k_n, _, _ = yeni()
+kontrol("904: ayrı hesap değilken not yok", hata_mi(lambda: k_n.not_kaydet({"sembol": "AKEUSDT", "metin": "x"}), kod=409))
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:
