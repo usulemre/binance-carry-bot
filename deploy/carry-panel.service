@@ -19,6 +19,8 @@ ProtectKernelTunables=true
 ProtectControlGroups=true
 RestrictSUIDSGID=true
 ReadOnlyPaths=/opt
+# madde 870: coin logoları önbelleği (yalnız bu klasör yazılabilir; /var/cache/carry-ikon, $CACHE_DIRECTORY)
+CacheDirectory=carry-ikon
 
 [Install]
 WantedBy=multi-user.target

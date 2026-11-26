@@ -4,7 +4,7 @@ Panelin CSP'si dış resimlere izin vermez (img-src 'self'); logolar sunucuda in
 Kaynak sırası: Binance'in resmi varlık logoları (spot listesi + piyasa listesi), yoksa CoinGecko piyasa listesi (piyasa değerine
 göre sıralı; aynı sembolde en büyük coin). Hiçbirinde yoksa panel harfli yuvarlağı gösterir.
 
-Harita (sembol -> logo adresi) günde bir arka planda yenilenir: defter/ikon/harita.json. İndirilen logolar defter/ikon/<COIN>.<uzantı>;
+Harita (sembol -> logo adresi) günde bir arka planda yenilenir: <DIZIN>/harita.json. İndirilen logolar <DIZIN>/<COIN>.<uzantı>;
 bulunamayanlar <COIN>.yok (7 gün sonra yeniden denenir). Yalnız PNG / JPEG / WEBP / GIF kabul edilir (SVG betik taşıyabilir).
 """
 from __future__ import annotations
@@ -18,7 +18,8 @@ import time
 
 logger = logging.getLogger("coin_ikon")
 
-DIZIN = os.path.join(os.path.dirname(os.path.abspath(__file__)), "defter", "ikon")
+# panel servisi salt okunur (/opt): systemd CacheDirectory=carry-ikon -> $CACHE_DIRECTORY (/var/cache/carry-ikon)
+DIZIN = os.environ.get("CACHE_DIRECTORY") or os.path.join(os.path.dirname(os.path.abspath(__file__)), "defter", "ikon")
 HARITA = os.path.join(DIZIN, "harita.json")
 TAZE_SN = 86400
 YOK_SN = 7 * 86400
