@@ -1160,7 +1160,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .icd{margin-top:8px}.icd>div{display:flex;justify-content:space-between;gap:12px;padding:8px 0;border-top:1px solid var(--cizgi);font-size:13px}.icd>div>span{color:var(--soluk);flex:0 1 45%}.icd>div b{text-align:right;font-weight:600;font-variant-numeric:tabular-nums}.icd p{margin:8px 0 0;line-height:1.45}
 .cxo{margin-top:12px;background:var(--kart);border-radius:12px;padding:2px 12px}.cxo>div{display:grid;grid-template-columns:minmax(0,1fr) auto;grid-template-areas:"a b" "a c";align-items:center;column-gap:10px;padding:8px 0;border-top:1px solid var(--cizgi)}.cxo>div:first-child{border-top:0}
 .cxo span{grid-area:a;font-size:13px;color:var(--soluk)}.cxo b{grid-area:b;text-align:right;font-size:14px}.cxo i{grid-area:c;text-align:right;font-style:normal;font-size:11.5px;color:var(--soluk)}.shdk{margin-top:10px}.shdk .idonb{flex-wrap:wrap;row-gap:2px;padding:8px 2px}.shdk .idonb>span:first-child{white-space:nowrap}.shdk .idonb .k{white-space:normal;overflow:visible;text-align:left;flex:1 1 220px}.shdk .idonb .k b{font-weight:650}
-.opz{display:block;color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}.opzh{display:flex;justify-content:space-between;align-items:center;gap:8px}.opzh b{font-size:15px}.opzh .k b{font-size:13.5px}
+.asdg{grid-column:1/-1;margin-top:12px;padding-top:12px;border-top:1px solid var(--cizgi)}.asdg .opzb{margin-top:0}.opz{display:block;color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}.opzh{display:flex;justify-content:space-between;align-items:center;gap:8px}.opzh b{font-size:15px}.opzh .k b{font-size:13.5px}
 .opzb{display:flex;height:12px;border-radius:7px;overflow:hidden;gap:2px;margin-top:12px;background:var(--kart2)}.opzb i,.opzl i{background:var(--vurgu)}.opz i.s{background:#f59e0b}
 .opzl{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:12.5px;color:var(--soluk)}.opzl b{color:var(--yazi);font-variant-numeric:tabular-nums}.opzl>span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.opzl i{width:8px;height:8px;border-radius:2px;display:inline-block}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
@@ -1838,7 +1838,18 @@ function asBakiye(E, P){   // madde 861: görsel — halka (pozisyonlarda / boş
       ${satir(renkT, "Pozisyonlarda", tem, yz(pay) + " · teminat")}
       ${satir("var(--art)", "Boşta", bos, yz(1 - pay) + " · yeni işleme hazır")}
     </div>
+    ${asDenge(P)}
     <div class="abc">${P.length ? `<span>${P.length} pozisyon</span>` : ""}${H.buyukluk ? `<span>büyüklük ${para(H.buyukluk)}</span>` : ""}${kal != null ? `<span>kaldıraç ${kal.toFixed(2).replace(".",",")}x</span>` : ""}</div></div>`;
+}
+// madde 883: Al-Sat long / short dengesi (Bot Özet'teki çubuğun aynısı) — bakiye kartının altında
+function asDenge(P){
+  if (!P || !P.length) return "";
+  let L = 0, S = 0, nl = 0, ns = 0;
+  for (const x of P){ const f = AS_F[x.sembol] > 0 ? AS_F[x.sembol] : x.giris + (x.adet ? x.kz / x.adet : 0), v = Math.abs(x.adet) * (f || 0); if (x.adet > 0){ L += v; nl++; } else { S += v; ns++; } }
+  const T = L + S || 1;
+  return `<div class="opz asdg" id="asdg"><div class="opzb"><i class="l" style="flex:${L.toFixed(2)}"></i><i class="s" style="flex:${S.toFixed(2)}"></i></div>
+    <div class="opzl"><span><i class="l"></i>Long ${nl} · <b>${para(L)}</b></span><span>Short ${ns} · <b>${para(S)}</b><i class="s"></i></span></div>
+    <div class="k" style="margin-top:4px;font-size:12px">net ${L>=S?"long":"short"} ${para(Math.abs(L - S))} (%${Math.round(Math.abs(L - S) / T * 100)})</div></div>`;
 }
 function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop uyarısı, iki satırlı pozisyon kartları
   const E = ELLE_OZ, yuk = `<div class="kart apk"><div class="apkh"><b>Açık pozisyonlar</b></div>`;
@@ -3116,9 +3127,10 @@ function olaySayfa(k){
         <div class="oa">${demo ? "gerçek Binance oranlarıyla · " : ""}son ${(o.zaman||"").slice(11)}</div>
         <div class="isl"><span class="ac" onclick="olayAc('${id}')">${ac?"▾":"▸"} ödemeler (${o.alt.length})</span>${ac ? `<div class="ofs">${o.alt.map(x=>`<div><span class="oz">${(x.zaman||"").slice(11)}</span><span>${x.fon && x.fon.saat ? `saatlik ×${x.fon.n}` : `${Math.max((x.fon||{}).gercek_n||0, (x.fon||{}).demo_n||0)} pozisyon`}</span>${tutar(fTut(x))}</div>`).join("")}</div>` : ""}</div></div></div>`;
       continue; }
-    const par = (o.metin||"").split(/\s*\|\s*/), bas = par[0], alt = par.slice(1).join(" · ");
+    // madde 883: kapanışlı satırda tutar başlıkta (saatin yanında), kapanış ayrıntısı alt satırın başında
+    const par = (o.metin||"").split(/\s*\|\s*/), bas = par[0], ap = par.slice(1), alt = [...ap.filter(x=>/kapanış/.test(x)), ...ap.filter(x=>!/kapanış/.test(x))].join(" · ");
     h += `<div class="orow" onclick="if(!event.target.closest('a,button,.ac,table'))this.classList.toggle('oacik')"><span class="onk" style="--r:${rk}">${OLAY_SIMGE[o.tur]||"•"}</span><div class="om">
-      <div class="ob"><span>${esc(bas)}</span><span class="oz">${(o.zaman||"").slice(11)}</span></div>
+      <div class="ob"><span>${esc(bas)}</span><span class="oz">${o.kapanis!=null ? tutar(o.kapanis) + " · " : ""}${(o.zaman||"").slice(11)}</span></div>
       ${alt?`<div class="oa">${esc(alt)}</div>`:""}${islemTablo(o)}${fonTablo(o)}</div></div>`;
   }
   if (acik) h += "</div>";
