@@ -1173,7 +1173,8 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .kaydevam{--kay-mask:linear-gradient(90deg,#000 calc(100% - 36px),transparent)}
 [role=button][tabindex]:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px;border-radius:8px}
 .kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0 4px}.kpi>div{background:var(--kart2);border-radius:10px;padding:7px 8px;display:flex;flex-direction:column;gap:1px;min-width:0}.kpi span{font-size:11px;color:var(--soluk)}.kpi b{font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.kpi b.art{color:var(--art)}.kpi b.eks{color:var(--eks)}.kpi i{font-style:normal;font-size:11px;color:var(--soluk);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}@media (max-width:380px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
-.asfn{grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.asfn>b{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}.asfn b.art{color:var(--art)}.asfn b.eks{color:var(--eks)}
+.asfn{cursor:pointer;grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.asfn>b{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}.asfn b.art{color:var(--art)}.asfn b.eks{color:var(--eks)}
+.asfl{grid-column:1/-1;margin-top:8px;display:flex;flex-direction:column}.asfl>div{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--cizgi)}.asfl>div>span:nth-child(2){display:flex;flex-direction:column;min-width:0}.asfl .k{font-size:11.5px}.asfr{display:flex;flex-direction:column;align-items:flex-end}.asfr b{font-size:13px;font-variant-numeric:tabular-nums}.asfl b.art{color:var(--art)}.asfl b.eks{color:var(--eks)}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
@@ -1888,8 +1889,11 @@ function asFunding(P){
   const kal = Math.max(0, T0 - Date.now()), sa = Math.floor(kal / 3600e3), dk = Math.floor(kal % 3600e3 / 60e3);
   if (!FON_ARA) fonAraYukle();
   const gun = L.reduce((a,o)=>a + tut(o) * 24 / ((FON_ARA||{})[o.x.sembol] || 8), 0);
-  return `<div class="asfn"><span>Sıradaki funding <span class="k">· ${sa ? sa + " sa " : ""}${dk} dk sonra · ${S.length} coin</span></span><b class="${sinif(sira)}">${sira>=0?"alırsın":"ödersin"} ${isaretli(sira)}</b>
-    <span class="k" style="grid-column:1/-1">gerçek piyasanın şu anki oranlarıyla 24 saatte ≈ <b class="${sinif(gun)}">${isaretli(gun)}</b>${FON_ARA ? "" : " (ödeme aralıkları yükleniyor)"}</span></div>`;
+  const ac = ACIK.has("asfn"), gunT = o => tut(o) * 24 / ((FON_ARA||{})[o.x.sembol] || 8);
+  const liste = !ac ? "" : `<div class="asfl">${L.slice().sort((a,b)=>gunT(a)-gunT(b)).map(o=>{ const ad = o.x.sembol.replace(/USDT$/,""), ara = (FON_ARA||{})[o.x.sembol] || 8;
+      return `<div>${coinIkon(ad, "kucuk")}<span><b>${ea(ad)}</b><span class="k">%${(o.F.r*100).toFixed(4).replace(".",",")} · ${ara} sa'de bir · ${new Date(o.F.T).toLocaleTimeString("tr-TR",{hour:"2-digit",minute:"2-digit"})}</span></span><span class="asfr"><b class="${sinif(tut(o))}">${isaretli(tut(o))}</b><span class="k">günde ${isaretli(gunT(o))}</span></span></div>`; }).join("")}</div>`;
+  return `<div class="asfn" role="button" tabindex="0" aria-expanded="${ac}" onclick="olayAc('asfn')"><span>Sıradaki funding <span class="k">· ${sa ? sa + " sa " : ""}${dk} dk sonra · ${S.length} coin</span></span><b class="${sinif(sira)}">${sira>=0?"alırsın":"ödersin"} ${isaretli(sira)}</b>
+    <span class="k" style="grid-column:1/-1">gerçek piyasanın şu anki oranlarıyla 24 saatte ≈ <b class="${sinif(gun)}">${isaretli(gun)}</b>${FON_ARA ? "" : " (ödeme aralıkları yükleniyor)"} · <span style="color:var(--vurgu)">${ac ? "▾ gizle" : "▸ coin coin"}</span></span>${liste}</div>`;
 }
 // ödeme aralığı: /fapi/v1/fundingInfo yalnız 8 saatten farklı olanları listeler (1 / 4 sa); günde bir kez
 let FON_ARA = null;
