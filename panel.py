@@ -996,7 +996,7 @@ nav.alt .nok{position:absolute;top:6px;right:calc(50% - 22px);width:8px;height:8
 .dnh{display:flex;justify-content:space-between;align-items:center;gap:8px;margin-bottom:10px;flex-wrap:wrap}.dnh .dnk{margin:0}
 .fgk{display:inline-flex;align-items:center;background:var(--kart2);border-radius:8px;padding:2px;gap:1px}
 .fgk button{border:0;background:none;color:var(--soluk);font:inherit;font-size:11px;font-weight:600;padding:3px 8px;border-radius:6px;cursor:pointer}.fgk button.on{background:var(--kart);color:var(--yazi)}
-.fgk .fgi{padding:3px 6px}.fgacik{flex-basis:100%;font-size:12px;color:var(--soluk);line-height:1.45;margin:-4px 0 10px}
+.fgk .fgi{padding:3px 6px;min-height:32px}.fgacik{flex-basis:100%;font-size:12px;color:var(--soluk);line-height:1.45;margin:-4px 0 10px}
 .dikili{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:12px}.dikili .kart{margin-bottom:12px;padding:12px 14px}.dkv{font-size:17px;font-weight:650;margin:3px 0 2px;font-variant-numeric:tabular-nums}.dkv .k{font-weight:500;margin-left:4px}
 .dbuyuk{margin-top:10px;font-size:44px;font-weight:700;letter-spacing:-1.6px;line-height:1.05;margin-top:2px;font-variant-numeric:tabular-nums}
 .dalt{display:flex;gap:14px;flex-wrap:wrap;margin-top:8px;font-size:13px;font-weight:600;font-variant-numeric:tabular-nums}
@@ -1130,7 +1130,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .nrb i{position:absolute;top:0;bottom:0;border-radius:5px}.nrb i.p{left:50%;background:var(--art)}.nrb i.n{right:50%;background:var(--eks)}
 .nrt{display:flex;justify-content:space-between;align-items:center;border-top:1px solid var(--cizgi);margin-top:6px;padding-top:8px;font-size:13.5px;font-weight:600}.nrt b{font-size:15px;font-variant-numeric:tabular-nums}
 .nrr b.art,.nrt b.art{color:var(--art)}.nrr b.eks,.nrt b.eks{color:var(--eks)}
-.nsor{flex:none;height:30px;padding:0 10px;border-radius:999px;border:1px solid var(--cizgi);background:var(--kart);color:var(--vurgu);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
+.nsor{flex:none;height:36px;padding:0 10px;border-radius:999px;border:1px solid var(--cizgi);background:var(--kart);color:var(--vurgu);font:inherit;font-size:12px;font-weight:600;cursor:pointer}
 /* madde 870: coin logoları */
 .pkav{position:relative;overflow:hidden;flex:none}.pkav img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;border-radius:50%;opacity:0;transition:opacity .2s}
 .pkav.ik{color:transparent!important;background:#fff!important}.pkav.ik img{opacity:1}
@@ -1220,7 +1220,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .apr{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px 11px 14px;border-radius:12px;background:var(--kart2);color:inherit;text-decoration:none;overflow:hidden;-webkit-tap-highlight-color:transparent}.apr:active{transform:scale(.99);filter:brightness(1.06)}
 .apr .ass{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cizgi)}.apr .ass.art{background:var(--art)}.apr .ass.eks{background:var(--eks)}
 .apr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.apr .iyon2.L{background:#0a7d45}.apr .iyon2.S{background:#c42b20}
-.aprm{min-width:0;display:flex;flex-direction:column;gap:2px}.aprt{display:flex;align-items:center;gap:2px;font-size:15px;min-width:0}.aprt b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.apr .k2{font-size:12px;color:var(--soluk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
+.aprm{min-width:0;display:flex;flex-direction:column;gap:2px}.aprt{display:flex;align-items:center;gap:2px;font-size:15px;min-width:0}.aprt b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}@media (max-width:350px){.aprt{flex-wrap:wrap;row-gap:2px}.aprt b{flex:none;overflow:visible;text-overflow:clip}}.apr .k2{font-size:12px;color:var(--soluk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .aps{font-size:10.5px;font-weight:600;color:var(--uyari);border:1px solid color-mix(in srgb,var(--uyari) 45%,transparent);border-radius:999px;padding:0 6px;margin-left:6px;white-space:nowrap}
 .aptp{font-size:11.5px;color:var(--soluk);font-variant-numeric:tabular-nums}
 .aprk{text-align:right;font-variant-numeric:tabular-nums;white-space:nowrap}.aprk b{display:block;font-size:15px}.aprk span{font-size:12px;opacity:.85}.aprk.art{color:var(--art)}.aprk.eks{color:var(--eks)}
