@@ -74,6 +74,36 @@ def ayarlar() -> dict:
             "ayni_anahtar": bool(os.getenv("ALSAT_API_KEY", "").strip()) and os.getenv("ALSAT_API_KEY", "").strip() == os.getenv("BINANCE_API_KEY", "").strip()}
 
 
+# madde 889: sık Binance vadeli hata kodları -> Türkçe, ne yapılacağını söyleyen mesaj (kod parantezde kalır)
+BINANCE_TR = {
+    -2019: "Teminat yetersiz: boştaki bakiye bu büyüklüğe yetmiyor. Tutarı düşür ya da başka pozisyonu küçült.",
+    -4164: "Emir tutarı Binance'in bu coin için en düşük sınırının altında. Tutarı artır.",
+    -2022: "Azaltma emri reddedildi: pozisyon zaten kapanmış ya da adet pozisyondan büyük olabilir. Pozisyonu yenileyip kontrol et.",
+    -2021: "TP / stop fiyatı şimdiki fiyatı çoktan geçmiş; emir hemen tetiklenirdi. Fiyatı güncelleyip tekrar dene.",
+    -4131: "Fiyat Binance'in izin verdiği bandın dışında (piyasa çok hızlı ya da derinlik az). Limit fiyatını şimdiki fiyata yaklaştır ya da tutarı küçült.",
+    -1111: "Adet ya da fiyat bu coinin hassasiyetine uymuyor. Değeri biraz değiştirip tekrar dene.",
+    -4005: "Adet bu coin için izin verilen en yüksek değeri aşıyor. Tutarı küçült.",
+    -4003: "Adet sıfırdan büyük olmalı.",
+    -1021: "Sunucu saati Binance ile uyuşmadı. Birkaç saniye sonra tekrar dene.",
+    -1003: "Binance istek sınırı aşıldı. Bir dakika bekleyip tekrar dene.",
+    -4045: "Bu coinde açık koşullu emir (TP / stop) sayısı sınıra ulaştı. Eski emirleri silip tekrar dene.",
+    -2011: "Emir bulunamadı: dolmuş ya da iptal edilmiş olabilir. Listeyi yenile.",
+    -2013: "Emir bulunamadı: dolmuş ya da iptal edilmiş olabilir. Listeyi yenile.",
+    -4061: "Pozisyon yönü ayarı uyumsuz (hesapta hedge modu açık olabilir; panel tek yönlü mod bekler).",
+    -5022: "Post-only emir hemen dolacağı için reddedildi. Fiyatı değiştir ya da piyasa emri kullan.",
+    -4140: "Bu coin şu an işleme kapalı.",
+    -1013: "Emir Binance'in sınır kurallarına uymuyor (adet / fiyat / tutar). Değerleri kontrol et.",
+}
+
+
+def binance_turkce(m: str) -> str:
+    """'APIError(code=-2019): Margin is insufficient.' -> Türkçe açıklama + (Binance -2019). Tanınmayan kod: ham mesaj."""
+    k = re.search(r"code=(-?\d+)", m or "")
+    if k and int(k.group(1)) in BINANCE_TR:
+        return f"{BINANCE_TR[int(k.group(1))]} (Binance {k.group(1)})"
+    return f"Binance: {m}"
+
+
 class Hata(Exception):
     def __init__(self, mesaj: str, kod: int = 400):
         super().__init__(mesaj); self.mesaj, self.kod = mesaj, kod
@@ -351,12 +381,12 @@ class Kapi:
                 try:
                     sonuc["tpsl"] = self._tpsl_kur(sem, poz["adet"], o["tp"], o["sl"], b)
                 except Exception as ex:
-                    sonuc["tpsl_hata"] = f"emir doldu ama TP/SL konamadı: {ex}"
+                    sonuc["tpsl_hata"] = f"emir doldu ama TP/SL konamadı: {binance_turkce(str(ex)).removeprefix('Binance: ')}"
             elif o["tip"] == "MARKET":   # madde 835: eklemede mevcut panel TP / stop'u TOPLAM adede göre aynı fiyatlarla yeniden kur
                 try:
                     self._tpsl_yeniden(sem, b)
                 except Exception as ex:
-                    sonuc["tpsl_hata"] = f"emir doldu ama mevcut TP/SL yeni adede göre güncellenemedi: {ex}"
+                    sonuc["tpsl_hata"] = f"emir doldu ama mevcut TP/SL yeni adede göre güncellenemedi: {binance_turkce(str(ex)).removeprefix('Binance: ')}"
             self._kaydet({"olay": "emir", **{k: o[k] for k in ("sembol", "yon", "tip", "adet", "fiyat", "usd", "tp", "sl")},
                           "orderId": e.get("orderId"), "durum": e.get("status"), "tpsl_hata": sonuc.get("tpsl_hata")})
             ad = sem.replace("USDT", "")
@@ -1177,7 +1207,7 @@ def uygulama(kapi_fabrika=None):
         except Exception as e:           # Binance hatası vb. — mesaj kullanıcıya (anahtar içermez)
             m = re.sub(r"(signature|apiKey|api_key|X-MBX-APIKEY)=?\S*", "[gizli]", str(e))[:300]
             logger.error("panel işlem hatası: %s", m)
-            return jsonify({"ok": False, "hata": f"Binance: {m}"}), 502
+            return jsonify({"ok": False, "hata": binance_turkce(m)}), 502
 
     def govde() -> dict:
         d = request.get_json(silent=True)

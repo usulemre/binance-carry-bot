@@ -486,6 +486,12 @@ kontrol("tetiklenen parça stop'u o parçadan düşer (FIFO değil): 25 @ 1 + 10
 k63.kapat({"sembol": "AKEUSDT", "oran": 1, "pin": "482913"})
 kontrol("tam kapanışta parça TP/stop'ları da silinir", not ic63.algo_acik["AKEUSDT"], ic63.algo_acik["AKEUSDT"])
 
+# 18. madde 889: Binance hata kodları Türkçe
+import carry_islem as _ci89
+_m89 = _ci89.binance_turkce("APIError(code=-2019): Margin is insufficient.")
+kontrol("Binance -2019 Türkçe (teminat yetersiz) + kod parantezde", _m89.startswith("Teminat yetersiz") and "(Binance -2019)" in _m89, _m89)
+kontrol("tanınmayan kod ham kalır", _ci89.binance_turkce("APIError(code=-9999): x") == "Binance: APIError(code=-9999): x")
+
 if basarisiz:
     print(f"BASARISIZ: {len(basarisiz)}")
     for t in basarisiz:
