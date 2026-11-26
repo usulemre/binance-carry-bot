@@ -382,6 +382,12 @@ kontrol("ayrı hesap: elle=True, bot_tutuyor=False", pa["elle"] is True and pa["
 ica.poz["ONDOUSDT"] = -10.0
 oza = ka.elle_ozet()
 kontrol("ayrı hesap: Pozisyonlarım hesabın bütün pozisyonları", {x["sembol"] for x in oza["pozisyonlar"]} == {"AKEUSDT", "ONDOUSDT"} and oza.get("ayri") is True, oza)
+ica.futures_account = lambda: {"totalMarginBalance": "1003", "totalWalletBalance": "1000", "totalUnrealizedProfit": "3",
+                               "totalPositionInitialMargin": "40", "totalOpenOrderInitialMargin": "2", "availableBalance": "961"}
+H60 = ka.elle_ozet()["hesap"]
+kontrol("madde 860: hesap özeti — bakiye / pozisyon teminatı / boşta / büyüklük", H60.get("ozkaynak") == 1003 and H60.get("teminat") == 40
+        and H60.get("emir_teminat") == 2 and H60.get("bosta") == 961 and H60.get("buyukluk", 0) > 0, H60)
+kontrol("madde 860: gün sınırı 00:00 UTC (= 03:00 TR)", ci._gun(int(1_700_006_400_000 - 1000)) == "2023-11-14" and ci._gun(1_700_006_400_000) == "2023-11-15")
 os.environ.update({"ALSAT_API_KEY": "k1", "ALSAT_API_SECRET": "s1", "BINANCE_API_KEY": "k1"})
 kontrol("ayrı hesap anahtarı botunkiyle aynıysa kapı KAPALI", "AYNI" in (ci.Kapi(SahteClient(), {**ci.ayarlar(), "acik": True, "pin": "482913"})._kapali_neden() or ""))
 os.environ["BINANCE_API_KEY"] = "k0"

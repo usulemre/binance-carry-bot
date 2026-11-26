@@ -654,8 +654,10 @@ class Kapi:
         kz = kom = 0.0; kapanis = kazanan = 0
         if ayri:   # ayrı hesap: son 30 günün bütün gelir kayıtları
             hesap = {}
-            try:
-                hesap = {"ozkaynak": round(float(self.c.get_account_equity_usd()), 2)}
+            try:   # madde 860: toplam bakiye + pozisyonlara bağlı teminat + boşta (kullanılabilir) bakiye
+                h = _hesap_ozet(self.ic, ayrinti=True)
+                hesap = {k: round(v, 2) for k, v in h.items()}
+                hesap["buyukluk"] = round(sum(abs(x["adet"]) * (x["giris"] + (x["kz"] / x["adet"] if x["adet"] else 0)) for x in pozlar), 2)
             except Exception as e:
                 logger.warning("al-sat hesap özkaynağı okunamadı: %s", e)
             try:
@@ -692,7 +694,7 @@ class Kapi:
 
 
 # ------------------------------------------------------------------ madde 852: AL-SAT GEÇMİŞİ (ayrı hesap)
-TR_SAAT = 3 * 3600          # gün sınırı Türkiye saatiyle
+TR_SAAT = 0                 # madde 860: gün sınırı 00:00 UTC = gece 03:00 TR (Binance günü; botla aynı). Eskiden 00:00 TR idi.
 ANLIK_ARA_SN = 300
 
 
@@ -700,10 +702,14 @@ def _gun(ms: int) -> str:
     return time.strftime("%Y-%m-%d", time.gmtime(ms / 1000 + TR_SAAT))
 
 
-def _hesap_ozet(ic) -> dict:
+def _hesap_ozet(ic, ayrinti: bool = False) -> dict:
     h = ic.futures_account()
-    return {"ozkaynak": float(h.get("totalMarginBalance") or 0), "cuzdan": float(h.get("totalWalletBalance") or 0),
-            "acik": float(h.get("totalUnrealizedProfit") or 0)}
+    out = {"ozkaynak": float(h.get("totalMarginBalance") or 0), "cuzdan": float(h.get("totalWalletBalance") or 0),
+           "acik": float(h.get("totalUnrealizedProfit") or 0)}
+    if ayrinti:   # madde 860: pozisyon teminatı, açık emir teminatı, boşta (yeni işlemde kullanılabilir) bakiye
+        out.update(teminat=float(h.get("totalPositionInitialMargin") or 0), emir_teminat=float(h.get("totalOpenOrderInitialMargin") or 0),
+                   bosta=float(h.get("availableBalance") or 0))
+    return out
 
 
 def anlik_kaydet(kapi: "Kapi", simdi: float | None = None) -> dict | None:

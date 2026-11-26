@@ -1118,6 +1118,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+.asbak{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:8px;margin:10px 2px 4px}.asbak>div{background:var(--kart2);border-radius:10px;padding:8px 10px;min-width:0}.asbak b{display:block;font-size:15px;margin:2px 0;font-variant-numeric:tabular-nums;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.asbak .k2{color:var(--soluk);font-size:11.5px}
 #piyelle{border-bottom:1px solid var(--cizgi);padding-bottom:12px;margin-bottom:10px}#piyelle .pyeb{margin-top:4px}
 .pybos{padding:14px 12px;border-radius:10px;background:var(--kart2);color:var(--soluk);font-size:13px}
 .pyk{--fa:#0a7d45;--fe:#c42b20}@media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pyk{--fa:var(--art);--fe:var(--eks)}}:root[data-theme="dark"] .pyk{--fa:var(--art);--fe:var(--eks)}
@@ -1516,7 +1517,7 @@ function asK(A){
   for (let i = 1; i < seri.length; i++){ const a = seri[i].tarih.slice(0,7), bas = seri.slice(0, i).reverse().find(x=>x.tarih.slice(0,7) < a);
     const b0 = bas ? bas.kitap : seri[0].kitap; if (b0 > 0) aylik[a] = seri[i].kitap / b0 - 1; }
   return {seri, kitap_canli: null, aylik, coin_ozet: A.coin_ozet || [], mod: (ISL_DURUM||{}).mod, _baslik: "Al-Sat geçmişi",
-          _canliNot: "canlı · gece 00:00'da kesinleşir", _bosMetin: "Al-sat hesabında henüz gün yok."};
+          _canliNot: "canlı · gece 03:00'te kesinleşir", _bosMetin: "Al-sat hesabında henüz gün yok."};
 }
 function asGecmisSayfa(A){
   const D = ISL_DURUM;
@@ -1527,7 +1528,7 @@ function asGecmisSayfa(A){
   const P = asGecmisParca(A || asGecmisCanliVeri());
   return `<div id="as-ust">${P.ust}</div><div id="as-oz">${P.oz}</div>
     <div class="kart"><h2>Günlük takvim <span class="k">· kazanç yeşil, kayıp kırmızı (koyuluk = büyüklük)</span></h2><div id="as-tak">${P.tak}</div>
-      <div class="k" style="margin-top:4px">Gün, Türkiye saatiyle 00:00 – 00:00. ● işaretli gün bugün (canlı).</div></div>
+      <div class="k" style="margin-top:4px">Gün, gece 03:00 – ertesi gece 03:00 (Türkiye saati). ● işaretli gün bugün (canlı).</div></div>
     <div class="kart"><h2>Son 1 yıl</h2>${yillik(asK(A || AS_GEC))}</div>
     <div id="as-coin">${P.coin}</div>`;
 }
@@ -1637,12 +1638,23 @@ function asCanliBoya(){   // canliBoya her saniye: Pozisyonlarım satırları + 
   asAkisBagla();
   if (sayfa == "alsat"){   // yalnız rakamlar yerinde (her saniye listeyi baştan çizmek dokunuşu kaçırtırdı)
     const tmp = document.createElement("div"); tmp.innerHTML = elleHtml();
-    for (const id of ["astop", ...ELLE_OZ.pozisyonlar.map(x=>"askz-" + x.sembol)]){
+    for (const id of ["astop", "asbak", ...ELLE_OZ.pozisyonlar.map(x=>"askz-" + x.sembol)]){
       const a = document.getElementById(id), b = tmp.querySelector("#" + CSS.escape(id));
       if (a && b && a.innerHTML !== b.innerHTML){ a.innerHTML = b.innerHTML; a.className = b.className; } } }
   const H = ELLE_OZ.hesap, u = $("#ustkitap");
   asGecmisCanli();   // madde 857
   if (u && H && H.ozkaynak != null){ const fark = ELLE_OZ.pozisyonlar.reduce((a,x)=>a + asKz(x) - x.kz, 0); u.innerHTML = `<span>${para(H.ozkaynak + fark)}</span>`; }
+}
+// MADDE 860: Al-Sat bakiye özeti — toplam bakiye (özkaynak), pozisyonlara bağlı teminat (+ toplam pozisyon büyüklüğü), boşta bakiye.
+// Açık K/Z işaret fiyatı akışıyla canlı: özkaynak ve boşta bakiye canlı K/Z farkı kadar kayar (Binance'te kullanılabilir bakiye de açık K/Z'yi içerir).
+function asBakiye(E, P){
+  const H = E && E.hesap; if (!H || H.ozkaynak == null) return "";
+  const fark = P.reduce((a,x)=>a + x.kz, 0) - (E.pozisyonlar||[]).reduce((a,x)=>a + x.kz, 0);
+  const kutu = (b, v, alt) => `<div><div class="k2">${b}</div><b>${v}</b>${alt ? `<div class="k2">${alt}</div>` : ""}</div>`;
+  const bos = H.bosta != null ? Math.max(0, H.bosta + fark) : null, tem = (H.teminat||0) + (H.emir_teminat||0);
+  return `<div class="asbak" id="asbak">${kutu("Toplam bakiye", para(H.ozkaynak + fark), H.cuzdan != null ? `cüzdan ${para(H.cuzdan)}` : "")}
+    ${kutu("Pozisyonlarda", H.teminat != null ? para(tem) : "—", H.buyukluk ? `teminat · büyüklük ${para(H.buyukluk)}` : "teminat")}
+    ${kutu("Boşta", bos != null ? para(bos) : "—", "yeni işleme kullanılabilir")}</div>`;
 }
 function elleHtml(){
   const E = ELLE_OZ; if (!E) return `<div class="pyb"><span>Pozisyonlarım</span><span>yükleniyor…</span></div>`;
@@ -1654,7 +1666,7 @@ function elleHtml(){
       <span style="min-width:0;display:flex;flex-direction:column"><a href="#piyasa" onclick="islAc('${x.sembol}');return false">${ad}</a><span class="k2">${elleKisa(x)}</span></span>
       <span class="r k2">${x.tp?`TP ${piyFiyat(x.tp)}`:""}${x.tp&&x.sl?"<br>":""}${x.sl?`stop ${piyFiyat(x.sl)}`:`<span class="uyr">stop yok</span>`}</span>
       <span class="r ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><br><span class="k2">${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></div>`; };
-  return `<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div></div>
+  return `${asBakiye(E, P)}<div class="pyeb"><div class="pyet"><b>Pozisyonlarım</b>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div><div class="k2">${sonuc}</div></div>
     <div class="pyl">${P.length ? P.map(satir).join("") : `<div class="pybos">Elle açık pozisyonun yok. Aşağıdaki listeden bir coine dokunup işlem açabilirsin.</div>`}</div>`;
 }
 function piyasaBoya(zorla){
