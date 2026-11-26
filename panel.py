@@ -2702,7 +2702,7 @@ function islCiz(){
       const tTP = PR.tpsl.find(x=>x.tur=="TP"), tSL = PR.tpsl.find(x=>x.tur=="SL");
       const likU = pz.likidasyon>0 && PR.isaret ? Math.abs(PR.isaret / pz.likidasyon - 1) * 100 : null;
       const kut = (e, d) => `<div class="iku"><span class="k">${e}</span><b>${d}</b></div>`;
-      h += `<div class="ipoz"><div class="iph"><div><span class="iyon ${uzun?"L":"S"}">${uzun?"Long":"Short"}</span><span class="iadet">${Math.abs(pz.adet).toLocaleString("tr-TR")} adet</span></div>
+      h += `<div class="ipoz"><div class="iph"><div><span class="iyon ${uzun?"L":"S"}">${uzun?"Long":"Short"}</span><span class="iadet">${Math.abs(pz.adet).toLocaleString("tr-TR")}\u00a0adet</span></div>
           <div class="ikz ${sinif(pz.kz)}">${pz.kz>=0?"▲":"▼"}\u00a0${isaretli(pz.kz)}<small>${kzp==null?"":(kzp>=0?"+":"")+kzp.toFixed(2).replace(".",",")+"%"}</small></div></div>
         <div class="ikg">${kut("Giriş", fg(pz.giris))}${kut("Şimdi", fg(PR.isaret) + uzak(PR.isaret, pz.giris))}${kut("Değer", para(deger))}
           ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) : "<span class='k'>yok</span>")}${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) : PR.tpsl.some(x=>x.tur=="IZ") ? `<span class="k">iz süren %${islGos(PR.tpsl.find(x=>x.tur=="IZ").oran)}</span>` : "<span class='uyr'>yok</span>")}
@@ -2847,7 +2847,7 @@ function pozAc(s){ ACIK.has("p"+s) ? ACIK.delete("p"+s) : ACIK.add("p"+s); const
 function stopSatir(k, s, p){
   const D = k.stop_durum; if (!D || D.kapali || p.miktar<=0) return "";
   const v = (D.coin||{})[s.replace(/USDT$/,"")], ec = D.esik_coin; if (v==null || v > -ec*0.5) return "";
-  return `<div class="fund"><span class="${v<=-ec?'eks':'uyr'}">stop: 24 sa ${(v*100).toFixed(1).replace(".",",")}% / eşik −%${Math.round(ec*100)}</span> · piyasa ${D.piyasa_sart?'<b class="eks">şart var</b>':'şart yok'}</div>`;
+  return `<div class="fund"><span class="${v<=-ec?'eks':'uyr'}">stop: 24 sa ${(v*100).toFixed(1).replace(".",",")}% / eşik −\u2060%${Math.round(ec*100)}</span> · piyasa ${D.piyasa_sart?'<b class="eks">şart var</b>':'şart yok'}</div>`;
 }
 // MADDE 740: ısı haritası (kare boyu = pozisyon $, renk = kâr %); "squarified" yerleşim
 function kareler(A, W, H){
@@ -3057,21 +3057,21 @@ function ayarKart(k){
   const A = k.ayar;
   if (!A) return `<div class="d">${k.profil||"—"}${k.doz?" · "+k.doz+"x":""}</div>`;
   const ad = A.profil || k.profil || "—";
-  // madde 742: "koşullu stop %3" pozisyon %3 zararda kapanır sanılıyordu. Kural: coin 24 sa'te −%45 VE piyasa medyanı −%3.
+  // madde 742: "koşullu stop %3" pozisyon %3 zararda kapanır sanılıyordu. Kural: coin 24 sa'te −\u2060%45 VE piyasa medyanı −\u2060%3.
   const ce = A.coin_esik!=null ? A.coin_esik : 0.45;
-  const st = A.stop!=null ? `stop: coin −%${Math.round(ce*100)} ve piyasa −%${Math.round(A.stop*100)}` : "koşullu stop yok";
-  const ac = A.stop!=null ? `24 saatlik koşullu stop: long, coin 24 saatte −%${Math.round(ce*100)} düştüğünde VE piyasanın ortanca 24 sa getirisi −%${Math.round(A.stop*100)} ya da daha kötüyken kapanır. Tek coin çöküşünde (piyasa sakinken) kapanmaz.` : "";
+  const st = A.stop!=null ? `stop: coin −\u2060%${Math.round(ce*100)} ve piyasa −\u2060%${Math.round(A.stop*100)}` : "koşullu stop yok";
+  const ac = A.stop!=null ? `24 saatlik koşullu stop: long, coin 24 saatte −\u2060%${Math.round(ce*100)} düştüğünde VE piyasanın ortanca 24 sa getirisi −\u2060%${Math.round(A.stop*100)} ya da daha kötüyken kapanır. Tek coin çöküşünde (piyasa sakinken) kapanmaz.` : "";
   return `<div class="d">${ad} · ${A.gross.toFixed(2).replace(".",",")}x</div><span class="k" style="white-space:normal" title="${ac}">${st}</span>${stopDurum(k)}`;
 }
 // MADDE 753: koşullu stop şu an ne kadar yakın — piyasa medyanı (botun evreni, son kapanmış 4 sa mumu) ve eşiğe en yakın long'lar
 function stopDurum(k){
   const D = k.stop_durum; if (!D || D.kapali || !k.ayar || k.ayar.stop==null) return "";
   const ep = D.esik_piyasa, ec = D.esik_coin, med = D.medyan;
-  const pyz = v => v==null ? "—" : (v>=0?"+":"−") + "%" + Math.abs(v*100).toFixed(1).replace(".",",");
+  const pyz = v => v==null ? "—" : (v>=0?"+":"−") + "\u2060%" + Math.abs(v*100).toFixed(1).replace(".",",");
   const yakin = Object.entries(D.coin||{}).filter(([,v])=>v <= -ec*0.5).sort((a,b)=>a[1]-b[1]).slice(0,3);
   const ps = D.piyasa_sart ? `<b class="eks">şart var</b>` : `<span class="art">şart yok</span>`;
-  const cl2 = yakin.length ? yakin.map(([s,v])=>`<span class="${v<=-ec?'eks':'uyr'}">${s} ${pyz(v)}</span>`).join(", ") + ` / −%${Math.round(ec*100)}` : "eşiğe yakın long yok";
-  return `<div class="k" style="white-space:normal;margin-top:3px;line-height:1.45" title="Bot her dilim turunda bakar. Long, coin 24 sa ≤ −%${Math.round(ec*100)} VE piyasa medyanı ≤ −%${Math.round(ep*100)} ise kapanır. Ölçüm saatte bir (botla aynı yöntem: son kapanmış 4 sa mumu, ${D.n} coinlik evren).">piyasa ${pyz(med)} / −%${Math.round(ep*100)} · ${ps}<br>${cl2} <span style="opacity:.7">· ${D.saat_ad}${D.bayat?" ESKİ":""}</span></div>`;
+  const cl2 = yakin.length ? yakin.map(([s,v])=>`<span class="${v<=-ec?'eks':'uyr'}">${s} ${pyz(v)}</span>`).join(", ") + ` / −\u2060%${Math.round(ec*100)}` : "eşiğe yakın long yok";
+  return `<div class="k" style="white-space:normal;margin-top:3px;line-height:1.45" title="Bot her dilim turunda bakar. Long, coin 24 sa ≤ −\u2060%${Math.round(ec*100)} VE piyasa medyanı ≤ −\u2060%${Math.round(ep*100)} ise kapanır. Ölçüm saatte bir (botla aynı yöntem: son kapanmış 4 sa mumu, ${D.n} coinlik evren).">piyasa ${pyz(med)} / −\u2060%${Math.round(ep*100)} · ${ps}<br>${cl2} <span style="opacity:.7">· ${D.saat_ad}${D.bayat?" ESKİ":""}</span></div>`;
 }
 function dilimKart(D){
   if (!D) return `<div class="d">—</div>`;
@@ -3116,12 +3116,12 @@ function dikkatler(k){
   if (sv && sv!=="active" && sv!=="—" && sv!=="?") out.push({sev:"eks", baslik:"Bot çalışmıyor", metin:`Servis durumu: ${sv}. Sunucuyu kontrol et.`});
   const D = k.stop_durum, P = k.pozisyonlar || {};
   if (D && !D.kapali){
-    const ec = D.esik_coin, pyz = v => v==null ? "—" : (v>=0?"+":"−") + "%" + Math.abs(v*100).toFixed(1).replace(".",",");
+    const ec = D.esik_coin, pyz = v => v==null ? "—" : (v>=0?"+":"−") + "\u2060%" + Math.abs(v*100).toFixed(1).replace(".",",");
     for (const [s,p] of Object.entries(P)){
       const v = (D.coin||{})[s.replace(/USDT$/,"")]; if (p.miktar<=0 || v==null || v > -ec*0.8) continue;
       const c = s.replace(/USDT$/,"");
       out.push({sev: v <= -ec ? "eks" : "uyari", sem: s, baslik:`Stop şartına yakın: ${c}`,
-        metin:`Piyasa ${pyz(D.medyan)} (eşik −%${Math.round(D.esik_piyasa*100)}, ${D.piyasa_sart?"şart var":"şart yok"}). ${c} 24 saatte ${pyz(v)}; −%${Math.round(ec*100)} olursa${D.piyasa_sart?"":" ve piyasa da eşiği geçerse"} sıradaki turda kapanır.`});
+        metin:`Piyasa ${pyz(D.medyan)} (eşik −\u2060%${Math.round(D.esik_piyasa*100)}, ${D.piyasa_sart?"şart var":"şart yok"}). ${c} 24 saatte ${pyz(v)}; −\u2060%${Math.round(ec*100)} olursa${D.piyasa_sart?"":" ve piyasa da eşiği geçerse"} sıradaki turda kapanır.`});
     }
   }
   if (k.poz_kaynak && k.poz_kaynak!=="canlı") out.push({sev:"uyari", baslik:"Canlı pozisyon verisi yok", metin:"Pozisyonlar günlük defterden gösteriliyor (anlık görüntü servisi gecikmiş olabilir)."});
@@ -3296,15 +3296,15 @@ function sheetIc(s, p, k){
   const W = Math.max(240, Math.min(560, innerWidth) - 48);
   const F = FUND[s], fr = F && p.miktar ? -p.miktar * f * F.r : null;
   const D = k.stop_durum, sv = uzun && D && !D.kapali ? (D.coin||{})[s.replace(/USDT$/,"")] : null, ec = D ? D.esik_coin : 0.45;
-  const pyz = v => v==null ? "—" : (v>=0?"+":"−") + "%" + Math.abs(v*100).toFixed(1).replace(".",",");
+  const pyz = v => v==null ? "—" : (v>=0?"+":"−") + "\u2060%" + Math.abs(v*100).toFixed(1).replace(".",",");
   const kutu = (e, d) => `<div class="shk"><div class="k">${e}</div><div class="shd">${d}</div></div>`;
   const elle = elleMi(k, s);   // madde 842
   const tg = elle ? null : tpGiris(k, s, p), H = (k.hedef||{})[uzun ? "L" : "S"] || [], h0 = H.length && tg>0 ? tg * (1 + (uzun?1:-1) * H[0]) : null;
   const h1 = H.length > 1 && tg>0 ? tg * (1 + (uzun?1:-1) * H[1]) : null;   // madde 790: kademe VE kâr al ayrı
-  const stop = sv==null || elle ? "" : `<div class="shs"><div class="shr"><span class="k">Koşullu stop · coin 24 sa</span><span>${pyz(sv)} / <b>−%${Math.round(ec*100)}</b></span></div>
+  const stop = sv==null || elle ? "" : `<div class="shs"><div class="shr"><span class="k">Koşullu stop · coin 24 sa</span><span>${pyz(sv)} / <b>−\u2060%${Math.round(ec*100)}</b></span></div>
       <div class="shc"><span style="width:${Math.min(100, Math.max(0, -sv/ec*100)).toFixed(0)}%;background:${css(sv<=-ec?"--eks":sv<=-ec*0.5?"--uyari":"--soluk")}"></span></div>
-      <div class="shr" style="margin-top:10px"><span class="k">Piyasa medyanı 24 sa</span><span class="${D.piyasa_sart?"uyr":""}">${pyz(D.medyan)} / −%${Math.round(D.esik_piyasa*100)} · ${D.piyasa_sart?"şart var":"şart yok"}</span></div></div>`;
-  const neden = sv!=null && !elle && sv <= -ec*0.5 ? `<p class="shn"><b>Neden hâlâ açık?</b> Stop iki şart birden sağlanınca çalışır: coin 24 saatte −%${Math.round(ec*100)} ve piyasa medyanı −%${Math.round(D.esik_piyasa*100)}. ${D.piyasa_sart ? `Piyasa şartı var, ama ${s.replace(/USDT$/,"")}'nin düşüşü henüz −%${Math.round(ec*100)}'e ulaşmadı.` : "Şu an piyasa şartı yok (tek coin düşüşü; araştırmada bu durumda tutmak daha iyi çıktı, madde 621)."} İkisi birlikte gerçekleşirse bot sıradaki dilim turunda kapatır.</p>` : "";
+      <div class="shr" style="margin-top:10px"><span class="k">Piyasa medyanı 24 sa</span><span class="${D.piyasa_sart?"uyr":""}">${pyz(D.medyan)} / −\u2060%${Math.round(D.esik_piyasa*100)} · ${D.piyasa_sart?"şart var":"şart yok"}</span></div></div>`;
+  const neden = sv!=null && !elle && sv <= -ec*0.5 ? `<p class="shn"><b>Neden hâlâ açık?</b> Stop iki şart birden sağlanınca çalışır: coin 24 saatte −\u2060%${Math.round(ec*100)} ve piyasa medyanı −\u2060%${Math.round(D.esik_piyasa*100)}. ${D.piyasa_sart ? `Piyasa şartı var, ama ${s.replace(/USDT$/,"")}'nin düşüşü henüz −\u2060%${Math.round(ec*100)}'e ulaşmadı.` : "Şu an piyasa şartı yok (tek coin düşüşü; araştırmada bu durumda tutmak daha iyi çıktı, madde 621)."} İkisi birlikte gerçekleşirse bot sıradaki dilim turunda kapatır.</p>` : "";
   return `<div class="shu"><div><div style="display:flex;align-items:center;gap:8px">${coinIkon(s.replace(/USDT$/,""), "ihik")}<span class="gb">${s.replace(/USDT$/,"")}</span><span class="dst ${uzun?"l":"s"}">${uzun?"LONG":"SHORT"}</span></div>
       <div class="shf">${fiyatYaz(f)}</div><div style="font-weight:600;font-size:13.5px"><span class="k" style="font-weight:500">pozisyon</span> <span class="nw ${sinif(g)}">${g>=0?"▲":"▼"} ${ky==null?"":(ky>=0?"+":"−")+Math.abs(ky).toFixed(1).replace(".",",")+"%"} · ${isaretli(g)}</span>${bg!=null?` <span class="nw"><span class="k" style="font-weight:500">· coin bugün</span> <span class="${sinif(bg)}">${yz(bg)}</span></span>`:""}</div></div>
       <button class="shx" onclick="sheetKapat()" aria-label="Kapat">✕</button></div>
@@ -3407,7 +3407,7 @@ function gecmisSade(k){
   return `<div class="kart gsade">
     <div class="gust"><span class="gb">${k._baslik || "Geçmiş"}</span><div class="gdon">${dk("hafta")}${dk("ay")}${dk("tum")}</div></div>
     <div class="gk">${baslik} · toplam kâr / zarar</div>
-    <div class="gt n">${top<0?"−":"+"}${Math.abs(top).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})} <small>$</small></div>
+    <div class="gt n">${top<0?"−":"+"}${Math.abs(top).toLocaleString("tr-TR",{minimumFractionDigits:2,maximumFractionDigits:2})}\u00a0<small>$</small></div>
     <div class="go n ${sinif(top)}">${top>=0?"▲":"▼"}\u00a0%${Math.abs((oran||0)*100).toFixed(2).replace(".",",")} · ${D.length} ${birim}</div>
     <div class="gcub" style="height:${H}px"><b style="top:${sifir}px"></b>${cub}</div><div class="galt n">${alt}</div>
     <div class="gliste">${liste}</div></div>`;
@@ -3564,7 +3564,8 @@ function olaySayfa(k){
   const bugun = new Date(), t = d => `${d.getFullYear()}-${String(d.getMonth()+1).padStart(2,"0")}-${String(d.getDate()).padStart(2,"0")}`;
   const dun = new Date(bugun); dun.setDate(dun.getDate()-1);
   const ad = g => g==t(bugun) ? "BUGÜN" : g==t(dun) ? "DÜN" : `${+g.slice(8,10)} ${AYAD[+g.slice(5,7)-1].toLocaleUpperCase("tr-TR")} ${g.slice(0,4)}`;
-  const esc = x => (x||"").replace(/&/g,"&amp;").replace(/</g,"&lt;");
+  const esc = x => (x||"").replace(/&/g,"&amp;").replace(/</g,"&lt;")
+    .replace(/(\d) (\$|%|adet|USDT)/g, "$1\u00a0$2").replace(/(^|[\s(\/])([-−+])(?=[\d%])/g, "$1$2\u2060");   // madde 907: sayılar satır sonunda bölünmesin
   const T = olayIslem(k), say = {tum: T.length}; for (const o of T){ const g = OLAY_GRUP[o.tur]; if (g) say[g] = (say[g]||0) + 1; }
   // madde 882: "Tümü"de bir günün funding ödemeleri TEK satır (gün toplamı; dokununca saat saat). Funding filtresinde tek tek.
   const demo = k.mod=="demo", fTut = o => o.fon ? (demo && o.fon.gercek!=null ? o.fon.gercek : o.fon.demo) : null;
