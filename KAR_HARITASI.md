@@ -9656,3 +9656,17 @@ ayrışma 16 Kas'ta başlıyor ve yeni listelenen BLESS / MMT'den: 18 Kas long �
 BLESS 16 Kas'ta ~2 kat, MMT 17-18 Kas'ta ~2,2 kat sıçradı; demo bot o günlerde gerçekten BLESS short tutuyordu (madde 850). Okuma: eski artımlı veride (günlük ekleme,
 "yalnız son tarihten sonrası") bu yeni coinlerin satırları eksikti; tam yeniden indirme daha DOĞRU. Ön kayıt kuralı gereği bu SAPMA açıkça yazılarak devam:
 ana okuma Eki-15 Kas (parite tam), Eki-24 Kas ek; ölçüt 2 artık İKİ pencerede de ≥ 5 puan ister (daha sıkı). Uzun dönem ölçütü (1) bu 9 günden etkilenmez.
+**SONUÇ 859 (sapma kaydıyla; m783k iki hiza rc 0, T4 referansı iki hiza rc 0, GK defteri 2020-07 → 2026-11-24): İKİ KOL DA RED (strateji / canlı DEĞİŞMEDİ).**
+T4 referansı (bu veriyle): dd −26,9 · en kötü gün −13,32 · p1 −28,8 (taban eşit riski bu yüzden 363,5; önceki 315,2 eski referansla — kıyas göreli).
+| kol | yıllık | Sh | dd ×1,15 | Sh ≤2024 / 2025+ | eşit risk | 2022 / 2023 / 2025 / 2026 | Eki | Eki-15 Kas | Eki-24 Kas | 17-24 Kas |
+|---|---|---|---|---|---|---|---|---|---|---|
+| taban P3T2 | 230,2 | 3,96 | −20,5 | 4,03 / 3,86 | 363,5 (1,30) | 75 / 402 / 342 / 297 | −5,0 | −11,0 | −14,5 | −0,4 |
+| A hibrit (short carry + long momentum) | 119,3 | **1,40** | **−59,6** | 1,45 / 1,36 | yok (T4 riskine inemiyor) | −26 / 26 / 47 / 275 | **+33,3** | **+13,2** | **+5,0** | −4,4 |
+| B 80 / 20 iki hesap | 201,7 | 3,91 | −19,2 | 4,11 / 3,72 | 335,0 (−28,4) | 61 / 261 / 326 / 278 | +1,9 | −7,4 | −13,1 | −3,7 |
+A: bu dönemi KÂRA çeviriyor (+19,5 / +24,3 puan) ama long momentum bacağı korumasız piyasa yönü taşıyor (carry long'u short'u dengeliyordu): Sharpe 3,96 → 1,40,
+düşüş −20,5 → −59,6, 2022 −26, 2023 402 → 26. Bu, "bu ayı kurtaran kural her yılı bozar" deseninin (798 ayna) en açık örneği → RED.
+B: 813 / 821 ile aynı desen (eşit risk −28) ve YENİ bilgi aleyhte: momentum tek başına (iki bacak, ×1) Eki-24 Kas **−15,0 %**, 17-24 Kas **−14,6 %** — 821'de Eki-16 Kas +1,7 %'ydi;
+16-24 Kas'ta momentum sert döndü (BLESS / MMT tipi sıçramalarda alt dilimi short'luyordu). Momentum "bu rejimin sigortası" değil; ayrı demo gerekçesi zayıfladı.
+Long bacak kıyası (×1,15 toplamsal puan): carry long Eki-24 Kas −36,4 · momentum long −11,2; 2025 +75 / +4 · 2026 +47 / +91.
+Okuma: bu dönemde zararın kaynağı long tarafı (−36 puan) ve bunu düzelten her kural (566 / 773 / 801 / 859 A) uzun dönemde kitabı bozuyor. Aynı veriyle ölçülebilen
+kural / harman / ML aileleri tükendi (814 notu teyit). Karar 2 Aralık (797) değerlendirmesinde: long NET 3. eksi ay (819) ölçütü dahil.
