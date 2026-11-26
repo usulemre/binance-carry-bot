@@ -1536,7 +1536,7 @@ async function piyGecmisYukle(){
     try { const d = await (await fetch(`https://fapi.binance.com/fapi/v1/klines?symbol=${s}&interval=1d&limit=31`, {cache:"no-store"})).json();
       if (Array.isArray(d) && d.length){ PIY_GUN[s] = {t: Date.now(), c: d.map(x => +x[4])}; const z = d[d.length-1]; PIY_AC[s] = {ot: +z[0], o: +z[1]}; } } catch(_){}
     PIY_GYUK.bit++; if (PIY_GYUK.bit % 20 == 0) piyasaBoya(true); } };
-  await Promise.all([1,2,3,4,5,6].map(isci));
+  await Promise.all(Array.from({length: 10}, isci));   // madde 892: 10 paralel (≈110 coin ~2-3 sn; ağırlık 1/istek, sınırın çok altında)
   PIY_GYUK.calis = false; piyasaBoya(true);
 }
 function piyDonem(d){ PIY_DONEM = d; PIY_N = 25; PIY_DEP("carry_piy_donem2", d); ciz(); piyGecmisYukle(); }
