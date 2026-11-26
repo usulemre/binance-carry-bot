@@ -342,7 +342,7 @@ k7, ic7, _ = yeni(); ic7.algo_patlat = True; ic7.poz["AKEUSDT"] = 10
 app7 = ci.uygulama(lambda: k7).test_client()
 r7 = app7.post("/tpsl", json={"sembol": "AKEUSDT", "tp": 0.6, "pin": "482913"})
 kontrol("Binance hatası 502, imza gizlenir", r7.status_code == 502 and "abc123" not in r7.get_data(as_text=True)
-        and "[gizli]" in r7.get_json()["hata"], r7.get_data(as_text=True))
+        and "(Binance -2021)" in r7.get_json()["hata"], r7.get_data(as_text=True))   # madde 889: tanınan kod Türkçe, ham mesaj (imzayla) hiç gösterilmez
 r8 = app.post("/emir", json={**o, "pin": "482913"})
 kontrol("doğru PIN ile emir", r8.status_code == 200 and r8.get_json()["ok"] is True)
 
