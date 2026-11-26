@@ -1127,7 +1127,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .apl{display:flex;flex-direction:column;gap:6px}
 .apr{position:relative;display:grid;grid-template-columns:24px minmax(0,1fr) auto;gap:10px;align-items:center;padding:11px 12px 11px 14px;border-radius:12px;background:var(--kart2);color:inherit;text-decoration:none;overflow:hidden;-webkit-tap-highlight-color:transparent}.apr:active{transform:scale(.99);filter:brightness(1.06)}
 .apr .ass{position:absolute;left:0;top:0;bottom:0;width:3px;background:var(--cizgi)}.apr .ass.art{background:var(--art)}.apr .ass.eks{background:var(--eks)}
-.apr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.apr .iyon2.L{background:var(--fa)}.apr .iyon2.S{background:var(--fe)}
+.apr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.apr .iyon2.L{background:#0a7d45}.apr .iyon2.S{background:#c42b20}
 .aprm{min-width:0;display:flex;flex-direction:column;gap:2px}.aprt{display:flex;align-items:center;gap:2px;font-size:15px;min-width:0}.aprt b{white-space:nowrap;overflow:hidden;text-overflow:ellipsis}.apr .k2{font-size:12px;color:var(--soluk);white-space:nowrap;overflow:hidden;text-overflow:ellipsis;font-variant-numeric:tabular-nums}
 .aps{font-size:10.5px;font-weight:600;color:var(--uyari);border:1px solid color-mix(in srgb,var(--uyari) 45%,transparent);border-radius:999px;padding:0 6px;margin-left:6px;white-space:nowrap}
 .aptp{font-size:11.5px;color:var(--soluk);font-variant-numeric:tabular-nums}
@@ -1691,13 +1691,14 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
   if (E.hata) return yuk + `<div class="imsj hata" style="margin-top:10px">${ea(E.hata)}</div></div>`;
   const S = E.sonuc || {}, P = (E.pozisyonlar || []).map(x=>({...x, kz: asKz(x)})), top = P.reduce((a,x)=>a + x.kz, 0);   // madde 856: canlı
   const kar = P.filter(x=>x.kz >= 0).length, stopsuz = P.filter(x=>!x.sl && !(x.parca_sl >= (x.parcalar||[]).length && x.parca_sl)).length;
+  const stopsuzHepsi = stopsuz === P.length;   // hepsinde yoksa satır rozeti tekrar etmesin, tek uyarı yeter
   const sonuc = S.kapanis ? `son 30 gün <b class="${sinif(S.net)}">${isaretli(S.net)}</b> · ${S.kapanis} kapanış · %${Math.round(S.kazanan / S.kapanis * 100)} kârlı` : "son 30 günde kapanan işlem yok";
   const satir = x => { const ad = x.sembol.replace(/USDT$/,""), uz = x.adet > 0, f = AS_F[x.sembol] > 0 ? AS_F[x.sembol] : x.giris + (x.adet ? x.kz / x.adet : 0);
     const deger = Math.abs(x.adet) * (f || x.giris), kp = x.giris > 0 ? x.kz / (Math.abs(x.adet) * x.giris) * 100 : 0, n = (x.parcalar||[]).length;
     const stopVar = x.sl || x.parca_sl, tpsl = [x.tp ? `TP ${piyFiyat(x.tp)}` : x.parca_tp ? `TP ${x.parca_tp}/${n} alım` : "", x.sl ? `stop ${piyFiyat(x.sl)}` : x.parca_sl ? `stop ${x.parca_sl}/${n} alım` : ""].filter(Boolean);
     return `<a class="apr" href="#piyasa" onclick="islAc('${x.sembol}');return false"><i class="ass ${sinif(x.kz)}" id="ass-${x.sembol}"></i>
       <span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span>
-      <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
+      <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
         <span class="k2">${para(deger)} · ${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}</span>
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
   return `${asBakiye(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
