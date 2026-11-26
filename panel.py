@@ -1119,6 +1119,9 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pyk .gdon button{height:36px}
 .pyr.pye{grid-template-columns:30px minmax(0,1.4fr) minmax(0,1fr) minmax(0,1fr);min-height:56px}.pyr .iyon2{width:24px;height:24px;border-radius:7px;display:grid;place-items:center;font-size:11.5px;font-weight:700;color:#fff}.pyr .iyon2.L{background:var(--fa)}.pyr .iyon2.S{background:var(--fe)}
 .pyeb{margin:14px 2px 8px}.pyet{display:flex;justify-content:space-between;align-items:baseline;font-size:15px}.pyeb .k2{color:var(--soluk);font-size:12.5px;margin-top:2px}.pyeb .art{color:var(--fa)}.pyeb .eks{color:var(--fe)}
+/* madde 869: işlem penceresi */
+.idonk{margin-top:16px;border-top:1px solid var(--cizgi);padding-top:4px}.idonb{width:100%;display:flex;justify-content:space-between;align-items:center;gap:8px;min-height:44px;border:0;background:none;color:var(--yazi);font:inherit;font-size:14px;font-weight:600;cursor:pointer;padding:0 2px}.idonb .k{font-weight:400;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.isl .imsj{margin-top:12px}
 /* madde 868: diğer sayfalar */
 .asdk{display:grid;grid-template-columns:1fr 1fr;gap:6px;margin:10px 0 4px}.asdk>div{padding:8px 10px;border-radius:10px;background:var(--kart2);display:flex;flex-direction:column;gap:1px}.asdk span{font-size:11.5px;color:var(--soluk)}.asdk b{font-size:14px;font-variant-numeric:tabular-nums}.asdk .art{color:var(--art)}.asdk .eks{color:var(--eks)}
 .ofil{flex-wrap:nowrap!important;overflow-x:auto;scrollbar-width:none;margin-left:-18px!important;margin-right:-18px!important;padding:0 18px}.ofil::-webkit-scrollbar{display:none}.ofil button{flex:none;height:36px!important;white-space:nowrap}
@@ -2136,11 +2139,14 @@ function islAlt(){   // sabit alt çubuk: başparmak bölgesinde ana eylem
   if (I.adim) return `<div class="ialt" id="islalt"><button class="ibtn geri" onclick="ISL.adim=null;ISL.msj=null;islCiz()">Düzenle</button>
       <button id="isltut" class="ibtn tut ${I.adim.renk}" ${I.mesgul?"disabled":""} onpointerdown="islTutBasla(event)" onpointerup="islTutBirak()" onpointerleave="islTutBirak()" onpointercancel="islTutBirak()"
         onkeydown="if(event.key==' '||event.key=='Enter')islTutBasla(event)" onkeyup="islTutBirak()" oncontextmenu="return false"><span>${I.mesgul ? "Gönderiliyor…" : "Basılı tut: " + I.adim.dugme}</span></button></div>`;
-  if (I.gor=="poz" && islPozVar()) return `<div class="ialt" id="islalt"><button class="ibtn S" onclick="islYonSec('S')">Short</button><button class="ibtn L" onclick="islYonSec('L')">Long</button></div>`;
+  if (I.gor=="poz" && islPozVar()){ const uz = I.poz.pozisyon.adet > 0;   // madde 869: alt düğmeler pozisyona göre ne yaptığını söyler
+    return `<div class="ialt" id="islalt">${uz ? `<button class="ibtn S" onclick="islYonSec('S')">Azalt / çevir</button><button class="ibtn L" onclick="islYonSec('L')">＋ Long ekle</button>`
+      : `<button class="ibtn S" onclick="islYonSec('S')">＋ Short ekle</button><button class="ibtn L" onclick="islYonSec('L')">Azalt / çevir</button>`}</div>`; }
   if ((I.poz && I.poz.kod == 404) || (!islPozVar() && islYok(I.s))) return `<div class="ialt" id="islalt"><button class="ibtn ikinci" disabled>${(ISL_DURUM||{}).mod=="live"?"Bu hesapta işlem görmüyor":"Demo hesapta işlem görmüyor"}</button></div>`;
   const u = islBoyutUsd();
   return `<div class="ialt" id="islalt"><button id="isldevam" class="ibtn ${I.yon}" onclick="islDevam()" ${I.mesgul?"disabled":""}>${I.mesgul ? "Kontrol ediliyor…" : `${I.yon=="L"?"Long":"Short"} ${u>0 ? para(u) : ""}`}</button></div>`;
 }
+function islMsjHtml(){ const I = ISL; return !I || !I.msj ? "" : `<div class="imsj ${I.msj.ok?"ok":"hata"}" role="status">${I.msj.durum=="FILLED"?'<span class="idur ok">Doldu</span>':I.msj.durum=="NEW"?'<span class="idur bek">Bekliyor</span>':""}${ea(I.msj.ok||I.msj.hata)}</div>`; }
 function islCiz(){
   const el = $("#islic"); if (!el || !ISL) return;
   const I = ISL, ad = I.s.replace(/USDT$/,""), D = ISL_DURUM || {}, PR = I.poz, pz = PR && PR.pozisyon, o = PIY[I.s] || {}, f = o.f;
@@ -2157,7 +2163,7 @@ function islCiz(){
   h += `<div class="igk"><div class="igb"><div class="ichip ar">${Object.entries(ISL_AR).map(([a,[t]])=>`<button class="${I.aralik==a?"on":""}" onclick="islAralik('${a}')">${t}</button>`).join("")}</div>
       <div class="ichip gt"><button class="${I.gtur!="cizgi"?"on":""}" onclick="islGTur('mum')" aria-label="mum grafik" title="mum">▮▯</button><button class="${I.gtur=="cizgi"?"on":""}" onclick="islGTur('cizgi')" aria-label="çizgi grafik" title="çizgi">∿</button></div></div>
       <div id="islgraf" class="igr"></div>${(PR && PR.islemler && PR.islemler.length) ? `<div class="igl3"><span><b class="igal">▲</b> alışların</span><span><b class="igsat">▼</b> satışların</span><span>son 7 gün</span></div>` : ""}</div>`;
-  if (!I.adim) h += donemHtml(I.s, f);   // madde 848
+  // madde 869: dönem tablosu en altta katlı (pozisyon / emir formu grafiğin hemen altında)
   // madde 839: kimin coini? (bot / sen) — işlemden önce net
   if (PR && !PR.hata && !I.adim){
     if (PR.elle && !(ISL_DURUM||{}).ayri) h += PR.bot_pay ? `<div class="isah bot">Burada yalnız <b>senin payın</b> görünüyor. Borsadaki ${elleAdet(PR.bot_pay)} adet botun — kapat yalnız seninkini kapatır; taşımada botun payı ona geri döner.</div>`
@@ -2171,7 +2177,8 @@ function islCiz(){
       <label class="ibas" for="islpin">İşlem PIN'i</label><input id="islpin" type="password" inputmode="numeric" autocomplete="off" value="${ea(I.pin)}" oninput="islAyar('pin',this.value)" placeholder="sunucuda belirlediğin PIN">
       <p class="ion k">Göndermek için alttaki düğmeyi basılı tut.</p></div>`;
   } else {
-    if (varPoz) h += `<div class="iseg gor"><button class="${I.gor=="poz"?"on":""}" onclick="islGor('poz')">Pozisyon</button><button class="${I.gor=="emir"?"on":""}" onclick="islGor('emir')">Yeni emir</button></div>`;
+    if (varPoz) h += `<div class="iseg gor"><button class="${I.gor=="poz"?"on":""}" onclick="islGor('poz')">Pozisyon</button><button class="${I.gor=="emir"?"on":""}" onclick="islGor('emir')">Ekle / azalt</button></div>`;
+    if (I.msj) h += islMsjHtml();
     if (!PR) h += `<div class="k" style="padding:12px 2px">Pozisyon okunuyor…</div>`;
     else if (PR.hata && PR.kod == 404) h += `<div class="isah yok"><b>${ad} ${D.mod=="live"?"bu hesapta":"demo hesapta"} işlem görmüyor.</b><br>${D.mod=="live" ? "" : "Binance'in demo ortamında gerçek piyasadaki her coin yok, özellikle yeni listelenenler. "}Grafiği ve fiyatı izleyebilirsin; işlem açılamaz.</div>`;
     else if (PR.hata) h += `<div class="imsj hata">Pozisyon okunamadı: ${ea(PR.hata)}</div>`;
@@ -2186,15 +2193,15 @@ function islCiz(){
           ${kut("TP", tTP ? fg(tTP.fiyat) + uzak(tTP.fiyat, PR.isaret) : "<span class='k'>yok</span>")}${kut("Stop", tSL ? fg(tSL.fiyat) + uzak(tSL.fiyat, PR.isaret) : "<span class='uyr'>yok</span>")}
           ${kut("Likidasyon", pz.likidasyon>0 ? fg(pz.likidasyon) : "—")}</div>
         ${likU!=null ? `<div class="ilik"><div class="ilikb"><span style="width:${Math.max(4, Math.min(100, likU / 50 * 100)).toFixed(0)}%" class="${likU<10?"kr":likU<30?"tu":"ye"}"></span></div><span class="k">likidasyona %${likU.toFixed(0)} uzak</span></div>` : ""}</div>
-        ${ISL.pd ? islPdHtml() : islParcaHtml()}
         <div class="ibas">Kapat</div><div class="iseg kucuk"><button onclick="islKapatOnay(0.25)">%25</button><button onclick="islKapatOnay(0.5)">%50</button><button class="tehlike" onclick="islKapatOnay(1)">Tümü</button></div>
-        <div class="ibas">TP / stop</div>
+        <div class="ibas">${(PR.parcalar||[]).length > 1 ? "Pozisyonun tamamı için TP / stop" : "TP / stop"}</div>
         <div class="iki"><div><input inputmode="decimal" placeholder="TP fiyatı" aria-label="TP fiyatı" value="${islGos(I.tp)}" oninput="islAyar('tp',this.value)">${hz("tp",[3,5,10])}</div>
           <div><input inputmode="decimal" placeholder="Stop fiyatı" aria-label="Stop fiyatı" value="${islGos(I.sl)}" oninput="islAyar('sl',this.value)">${hz("sl",[3,5,10])}</div></div>
         ${(uzun ? PR.isaret > pz.giris : PR.isaret < pz.giris) ? `<button class="iacil kucuk2" onclick="islBasaBas()"><span>Stop'u girişe çek</span><i>kârdayken zararsız çıkış · ${fg(pz.giris)}</i></button>` : ""}
         <div id="isluyr">${islUyari()}</div>
         <div class="iseg kucuk"><button class="birincil" onclick="islTPSLOnay()">TP / stop kaydet</button>${PR.bekleyen.some(x=>x.panel)||PR.tpsl.some(x=>x.panel)?`<button onclick="islSilOnay()">Panel emirlerini sil</button>`:""}</div>
-        ${PR.bekleyen.length ? `<div class="ibas">Bekleyen emirler</div>${PR.bekleyen.map(x=>`<div class="ibek"><span>${x.tip=="LIMIT"?"Limit":x.tip} ${x.yon=="BUY"?"alış":"satış"}, ${x.adet} @ ${fg(x.fiyat)}</span>${x.panel ? `<button class="ibx" onclick="islEmirIptalOnay('${x.orderId}','${x.yon}',${x.adet},${x.fiyat})">İptal</button>` : "<span class='k'>bot / uygulama</span>"}</div>`).join("")}` : ""}`;
+        ${PR.bekleyen.length ? `<div class="ibas">Bekleyen emirler</div>${PR.bekleyen.map(x=>`<div class="ibek"><span>${x.tip=="LIMIT"?"Limit":x.tip} ${x.yon=="BUY"?"alış":"satış"}, ${x.adet} @ ${fg(x.fiyat)}</span>${x.panel ? `<button class="ibx" onclick="islEmirIptalOnay('${x.orderId}','${x.yon}',${x.adet},${x.fiyat})">İptal</button>` : "<span class='k'>bot / uygulama</span>"}</div>`).join("")}` : ""}
+        ${ISL.pd ? islPdHtml() : islParcaHtml()}`;
     } else if (PR && !PR.hata){
       const riskMod = I.boyut=="risk", tpslAcik = I.tpsl || riskMod;
       h += `<div class="iseg yon">${seg("yon","L","Long","L")}${seg("yon","S","Short","S")}</div>
@@ -2214,7 +2221,8 @@ function islCiz(){
         <div id="isluyr">${islUyari()}</div><div id="isltah">${islTahminMetin()}</div>`;
     }
   }
-  if (I.msj) h += `<div class="imsj ${I.msj.ok?"ok":"hata"}" role="status">${I.msj.durum=="FILLED"?'<span class="idur ok">Doldu</span>':I.msj.durum=="NEW"?'<span class="idur bek">Bekliyor</span>':""}${ea(I.msj.ok||I.msj.hata)}</div>`;
+  if (I.msj && I.adim) h += islMsjHtml();
+  if (!I.adim) h += `<div class="idonk"><button class="idonb" onclick="ISL.donAc=!ISL.donAc;islCiz()" aria-expanded="${!!ISL.donAc}"><span>${ISL.donAc?"▾":"▸"} Fiyat değişimleri</span><span class="k">24 sa · 3 gün · 1 hafta · 1 ay</span></button>${ISL.donAc ? donemHtml(I.s, f) : ""}</div>`;
   h += islAlt();
   el.innerHTML = h; islGrafikCiz();
 }
