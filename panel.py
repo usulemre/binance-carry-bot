@@ -1188,7 +1188,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .pkr:active{filter:brightness(1.08);transform:scale(.995)}.pkr:focus-visible{outline:2px solid var(--vurgu);outline-offset:1px}
 .pk2 .pkd.fy{box-shadow:0 0 0 2px color-mix(in srgb,var(--art) 55%,transparent)}.pk2 .pkd.fa{box-shadow:0 0 0 2px color-mix(in srgb,var(--eks) 55%,transparent)}
 .pkr.pyok{opacity:.55}
-.pkav{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;letter-spacing:-.3px;color:hsl(var(--h) 70% 35%);background:hsl(var(--h) 80% 90%)}
+.pkav{width:36px;height:36px;border-radius:50%;display:grid;place-items:center;font-size:12px;font-weight:800;letter-spacing:-.3px;color:hsl(var(--h) 75% 25%);background:hsl(var(--h) 80% 91%)}
 :root[data-theme="dark"] .pkav{color:hsl(var(--h) 80% 75%);background:hsl(var(--h) 45% 20%)}
 @media (prefers-color-scheme:dark){:root:not([data-theme="light"]) .pkav{color:hsl(var(--h) 80% 75%);background:hsl(var(--h) 45% 20%)}}
 .pkm{min-width:0;display:flex;flex-direction:column;gap:2px}.pkt{display:flex;align-items:center;flex-wrap:wrap;gap:3px 5px;min-width:0}.pkt b{font-size:15px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
