@@ -1163,6 +1163,13 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 .asdg{grid-column:1/-1;margin-top:12px;padding-top:12px;border-top:1px solid var(--cizgi)}.asdg .opzb{margin-top:0}.opz{display:block;color:inherit;text-decoration:none;-webkit-tap-highlight-color:transparent}.opzh{display:flex;justify-content:space-between;align-items:center;gap:8px}.opzh b{font-size:15px}.opzh .k b{font-size:13.5px}
 .opzb{display:flex;height:12px;border-radius:7px;overflow:hidden;gap:2px;margin-top:12px;background:var(--kart2)}.opzb i,.opzl i{background:var(--vurgu)}.opz i.s{background:#f59e0b}
 .opzl{display:flex;justify-content:space-between;gap:8px;margin-top:7px;font-size:12.5px;color:var(--soluk)}.opzl b{color:var(--yazi);font-variant-numeric:tabular-nums}.opzl>span{display:inline-flex;align-items:center;gap:5px;white-space:nowrap}.opzl i{width:8px;height:8px;border-radius:2px;display:inline-block}
+.apuy .apub{margin-left:auto;flex:none;height:36px;padding:0 12px;border-radius:10px;border:0;background:var(--uyari);color:#1a1300;font:inherit;font-size:13px;font-weight:700;cursor:pointer}
+.tsor{display:flex;gap:6px;flex-wrap:wrap;margin-top:6px}.tsor button,.tsor input{height:38px;min-width:48px;padding:0 10px;border-radius:10px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:14px;font-weight:600}.tsor button.on{border-color:var(--vurgu);background:color-mix(in srgb,var(--vurgu) 16%,var(--kart2));color:var(--vurgu)}.tsor input{width:64px;text-align:center}
+.tsoz{display:flex;justify-content:space-between;align-items:baseline;gap:10px;margin-top:12px;padding:10px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.tsoz b{font-size:16px;font-variant-numeric:tabular-nums}
+.tsl{display:flex;flex-direction:column;gap:6px;margin-top:10px}.tsr{display:grid;grid-template-columns:22px auto minmax(0,1fr) auto;gap:10px;align-items:center;width:100%;padding:10px 12px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart);color:var(--yazi);font:inherit;text-align:left;cursor:pointer}
+.tsr.on{border-color:color-mix(in srgb,var(--vurgu) 55%,transparent);background:color-mix(in srgb,var(--vurgu) 7%,var(--kart))}.tsr:disabled{cursor:default}.tsc{width:22px;height:22px;border-radius:7px;border:1.5px solid var(--cizgi);display:grid;place-items:center;font-size:13px;font-weight:800;color:#fff}.tsr.on .tsc{background:var(--vurgu);border-color:var(--vurgu)}
+.tsm{display:flex;flex-direction:column;gap:2px;min-width:0}.tsm>b{font-size:14.5px;display:flex;align-items:center;gap:6px}.tsm .k{font-size:12px}.tsk{font-weight:650;font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.tsk.art{color:var(--art)}.tsk.eks{color:var(--eks)}.tsok{font-size:12px;color:var(--art);font-weight:650}.tshat{font-size:12px;color:var(--eks)}
+#tspin{width:100%;height:46px;margin-top:6px;padding:0 12px;border-radius:12px;border:1px solid var(--cizgi);background:var(--kart2);color:var(--yazi);font:inherit;font-size:16px}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
 .pk2{padding:14px}
@@ -1851,6 +1858,67 @@ function asDenge(P){
     <div class="opzl"><span><i class="l"></i>Long ${nl} · <b>${para(L)}</b></span><span>Short ${ns} · <b>${para(S)}</b><i class="s"></i></span></div>
     <div class="k" style="margin-top:4px;font-size:12px">net ${L>=S?"long":"short"} ${para(Math.abs(L - S))} (%${Math.round(Math.abs(L - S) / T * 100)})</div></div>`;
 }
+// MADDE 884: TOPLU STOP — stopsuz pozisyonlara tek seferde stop. Oran şimdiki işaret fiyatından (short'ta üstüne, long'da altına);
+// mevcut TP korunur (tpsl ucuna TP de gönderilir). PIN + basılı tut; coin coin sırayla /tpsl, her satırda sonuç. Yeni uç yok.
+let TS = null;
+function tsAc(){
+  const E = ELLE_OZ; if (!E || E.hata) return;
+  const P = (E.pozisyonlar||[]).filter(x=>x.adet);
+  const stopVar = x => !!x.sl || (x.parca_sl && x.parca_sl >= (x.parcalar||[]).length);
+  TS = {oran: 10, pin: "", sec: new Set(P.filter(x=>!stopVar(x)).map(x=>x.sembol)), P, stopVar, sonuc: {}, mesgul: false, bitti: false};
+  const el = $("#sheet"); el.hidden = false;
+  el.innerHTML = `<div class="shb" onclick="tsKapat()"></div><div class="shp isl" role="dialog" aria-modal="true" tabindex="-1" aria-label="Toplu stop"><div class="shh"></div><div id="tsic"></div></div>`;
+  document.body.style.overflow = "hidden"; tsCiz();
+}
+function tsKapat(){ TS = null; const el = $("#sheet"); el.hidden = true; el.innerHTML = ""; document.body.style.overflow = ""; elleYukle(); }
+function tsFiyat(x){ return AS_F[x.sembol] > 0 ? AS_F[x.sembol] : x.giris + (x.adet ? x.kz / x.adet : 0); }
+function tsStop(x){ const f = tsFiyat(x), o = TS.oran / 100; return +(f * (x.adet > 0 ? 1 - o : 1 + o)).toPrecision(6); }
+function tsKayip(x){ return (tsStop(x) - x.giris) * x.adet; }   // girişe göre tetiklenince gerçekleşecek K/Z
+function tsOran(v){ v = parseFloat(String(v).replace(",", ".")); if (!(v > 0) || v > 50) return; TS.oran = v; tsCiz(); }
+function tsSec(s){ if (TS.mesgul || TS.bitti) return; TS.sec.has(s) ? TS.sec.delete(s) : TS.sec.add(s); tsCiz(); }
+function tsCiz(){
+  const el = $("#tsic"); if (!el || !TS) return;
+  const L = TS.P.slice().sort((a,b)=>(TS.sec.has(b.sembol)?1:0)-(TS.sec.has(a.sembol)?1:0) || Math.abs(b.adet*b.giris)-Math.abs(a.adet*a.giris));
+  const S = L.filter(x=>TS.sec.has(x.sembol)), top = S.reduce((a,x)=>a+tsKayip(x), 0);
+  const satir = x => { const s = x.sembol, ad = s.replace(/USDT$/,""), on = TS.sec.has(s), uz = x.adet > 0, R = TS.sonuc[s];
+    const durum = R ? (R.ok ? `<span class="tsok">✓ kuruldu</span>` : `<span class="tshat">${ea(R.hata||"hata")}</span>`) : TS.stopVar(x) ? `<span class="k">stop var${x.sl ? " " + piyFiyat(x.sl) : " (alımlarda)"}</span>` : "";
+    return `<button class="tsr ${on?"on":""}" onclick="tsSec('${s}')" aria-pressed="${on}" ${TS.mesgul||TS.bitti?"disabled":""}>
+      <span class="tsc">${on?"✓":""}</span>${coinIkon(ad, "kucuk")}
+      <span class="tsm"><b>${ea(ad)} <span class="pkz sen ${uz?"L":"S"}">${uz?"L":"S"}</span></b><span class="k">${piyFiyat(tsFiyat(x))} → <b>${on ? piyFiyat(tsStop(x)) : "—"}</b>${x.tp ? ` · TP ${piyFiyat(x.tp)} korunur` : ""}</span>${durum}</span>
+      <span class="tsk ${on ? sinif(tsKayip(x)) : ""}">${on ? isaretli(tsKayip(x)) : ""}</span></button>`; };
+  const n = S.length, gonder = TS.bitti ? "" : `<label class="ibas" for="tspin" style="margin-top:14px">İşlem PIN'i</label><input id="tspin" type="password" inputmode="numeric" autocomplete="off" value="${ea(TS.pin)}" oninput="TS.pin=this.value" placeholder="sunucuda belirlediğin PIN" ${TS.mesgul?"disabled":""}>`;
+  el.innerHTML = `<div class="ihd"><div><div style="font-size:19px;font-weight:750">Toplu stop</div><div class="k">${TS.P.length} pozisyon · ${n} seçili</div></div><button class="shx" onclick="tsKapat()" aria-label="Kapat">✕</button></div>
+    <div class="ibas" style="margin-top:14px">Stop mesafesi <span class="k">şimdiki fiyattan · short'ta üstüne, long'da altına</span></div>
+    <div class="tsor">${[3,5,8,10,15,20].map(v=>`<button class="${TS.oran==v?"on":""}" onclick="tsOran(${v})" ${TS.mesgul||TS.bitti?"disabled":""}>%${v}</button>`).join("")}<input aria-label="özel oran (%)" inputmode="decimal" placeholder="%" value="${[3,5,8,10,15,20].includes(TS.oran) ? "" : islGos(TS.oran)}" onchange="tsOran(this.value)" ${TS.mesgul||TS.bitti?"disabled":""}></div>
+    <div class="tsoz"><span>${n} stop tetiklenirse (girişe göre)</span><b class="${sinif(top)}">${n ? isaretli(top) : "—"}</b></div>
+    <div class="tsl">${L.map(satir).join("")}</div>
+    <p class="k" style="margin:10px 2px 0;line-height:1.45">Stop işaret fiyatına bağlı STOP_MARKET emridir; tetiklenince pozisyonun tamamı piyasadan kapanır. Varsa pozisyon TP'si yerinde kalır; alımlara ayrı koyduğun TP / stop'lara dokunulmaz.</p>
+    ${TS.msj ? `<div class="imsj ${TS.msj.ok?"ok":"hata"}" role="status">${ea(TS.msj.ok||TS.msj.hata)}</div>` : ""}
+    ${gonder}
+    <div class="ialt">${TS.bitti ? `<button class="ibtn" onclick="tsKapat()">Kapat</button>`
+      : `<button id="tstut" class="ibtn tut tehlike" ${TS.mesgul||!n?"disabled":""} onpointerdown="tsTutBasla(event)" onpointerup="tsTutBirak()" onpointerleave="tsTutBirak()" onpointercancel="tsTutBirak()" onkeydown="if(event.key==' '||event.key=='Enter')tsTutBasla(event)" onkeyup="tsTutBirak()" oncontextmenu="return false"><span>${TS.mesgul ? `Kuruluyor… ${Object.keys(TS.sonuc).length}/${n}` : n ? `Basılı tut: ${n} stop kur` : "Coin seç"}</span></button>`}</div>`;
+}
+let TS_TUT = null;
+function tsTutBasla(e){ if (!TS || TS.mesgul || TS_TUT || !TS.sec.size) return; if (e && e.type=="keydown" && e.repeat) return; if (e && e.cancelable) e.preventDefault();
+  const b = $("#tstut"); if (!b) return; b.classList.add("dolu");
+  TS_TUT = setTimeout(()=>{ TS_TUT = null; b.classList.remove("dolu"); try { navigator.vibrate && navigator.vibrate(18); } catch(_){} tsGonder(); }, 700); }
+function tsTutBirak(){ if (!TS_TUT) return; clearTimeout(TS_TUT); TS_TUT = null; const b = $("#tstut"); if (b) b.classList.remove("dolu"); }
+async function tsGonder(){
+  if (!TS || TS.mesgul) return;
+  if (String(TS.pin).length < 6){ TS.msj = {hata: "İşlem PIN'ini gir."}; tsCiz(); const p = $("#tspin"); if (p) p.focus(); return; }
+  TS.mesgul = true; TS.msj = null; TS.sonuc = {}; tsCiz();
+  const S = TS.P.filter(x=>TS.sec.has(x.sembol));
+  for (const x of S){ if (!TS) return;
+    const d = await islIstek("tpsl", {sembol: x.sembol, tp: x.tp || "", sl: tsStop(x), pin: TS.pin});
+    if (!TS) return; TS.sonuc[x.sembol] = d.ok ? {ok: true} : {hata: d.hata};
+    if (!d.ok && /PIN/i.test(d.hata||"")) break;   // yanlış PIN: kalanları deneme
+    tsCiz(); }
+  const ok = Object.values(TS.sonuc).filter(v=>v.ok).length, hat = Object.keys(TS.sonuc).length - ok;
+  TS.mesgul = false; TS.bitti = ok > 0;
+  TS.msj = hat ? {hata: `${ok} stop kuruldu, ${hat} coinde hata (satırlarda).`} : {ok: `${ok} stop kuruldu.`};
+  tsCiz();
+}
+addEventListener("keydown", e=>{ if (e.key === "Escape" && TS && !TS.mesgul) tsKapat(); });
 function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop uyarısı, iki satırlı pozisyon kartları
   const E = ELLE_OZ, yuk = `<div class="kart apk"><div class="apkh"><b>Açık pozisyonlar</b></div>`;
   if (!E) return yuk + `<div class="iskelet" style="height:56px;margin-top:10px"></div><div class="iskelet" style="height:56px;margin-top:8px"></div></div>`;
@@ -1869,7 +1937,7 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
   return `${asBakiye(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
     ${P.length ? `<div class="apko"><span class="art">${kar} kârda</span><span class="eks">${P.length - kar} zararda</span><span>${sonuc}</span></div>` : `<div class="apko"><span>${sonuc}</span></div>`}
-    ${stopsuz ? `<div class="apuy">⚠ <span><b>${stopsuz === P.length ? `Hiçbir pozisyonda` : `${stopsuz} pozisyonda`} stop yok.</b> Coine dokunup pozisyona ya da tek tek alımlara stop koyabilirsin.</span></div>` : ""}
+    ${stopsuz ? `<div class="apuy">⚠ <span><b>${stopsuz === P.length ? `Hiçbir pozisyonda` : `${stopsuz} pozisyonda`} stop yok.</b> Coine dokunup tek tek ya da hepsine birden koyabilirsin.</span><button class="apub" onclick="tsAc()">Toplu stop koy</button></div>` : ""}
     <div class="apl">${P.length ? P.map(satir).join("") : `<div class="pybos">Açık pozisyonun yok. Piyasadan bir coin seçip işlem açabilirsin.</div>`}</div>
     ${ISL_DURUM && ISL_DURUM.acik && !ISL_DURUM.gecis ? `<button class="elkb" onclick="sayfaSec('piyasa')">＋ Piyasadan coin seç · al / sat</button>` : ""}</div>`;
 }

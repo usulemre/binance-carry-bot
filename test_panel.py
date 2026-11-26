@@ -529,5 +529,9 @@ kontrol("madde 851: giriş düzeltmesi — botun kendi girişi (−100 @ 0,5 →
         abs(_an51["pozisyonlar"]["BUSDT"]["giris"] - 0.5) < 1e-12 and abs(_an51["pozisyonlar"]["BUSDT"]["gerceklesmemis"] + 20) < 1e-9
         and _o51 == {"BUSDT": -10.0} and _an51["pozisyonlar"]["CUSDT"]["giris"] == 0.9 and abs(_an51["gerceklesmemis_top"] + 25) < 1e-9)
 
+kontrol("madde 884: toplu stop — mevcut TP korunur (tp gönderilir), PIN + basılı tut, yanlış PIN'de durur, yeni uç yok",
+        all(x in _s49 for x in ("function tsAc()", 'islIstek("tpsl", {sembol: x.sembol, tp: x.tp || "", sl: tsStop(x), pin: TS.pin})',
+                                 "onpointerdown=\"tsTutBasla(event)\"", "/PIN/i.test(d.hata||\"\")", 'onclick="tsAc()"')))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)
