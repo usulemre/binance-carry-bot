@@ -533,5 +533,8 @@ kontrol("madde 884: toplu stop — mevcut TP korunur (tp gönderilir), PIN + bas
         all(x in _s49 for x in ("function tsAc()", 'islIstek("tpsl", {sembol: x.sembol, tp: x.tp || "", sl: tsStop(x), pin: TS.pin})',
                                  "onpointerdown=\"tsTutBasla(event)\"", "/PIN/i.test(d.hata||\"\")", 'onclick="tsAc()"')))
 
+kontrol("madde 887: ağ hatası yakalanır — islIstek fırlatmaz, emirde 'gitmiş olabilir' der, Al-Sat son veriyi tutar",
+        all(x in _s49 for x in ("return {ok:false, ag:true, hata:", "İşlem gitmiş olabilir", "ELLE_OZ.baglanti = d.hata", "ab.abort()")))
+
 print(f"\n{'HEPSİ GEÇTİ' if _h == 0 else f'{_h} HATA'}")
 sys.exit(1 if _h else 0)

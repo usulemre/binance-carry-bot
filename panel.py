@@ -1741,7 +1741,9 @@ let ELLE_OZ = null;
 async function elleYukle(){
   if (VERI_GOMULU || !ISL_DURUM || !ISL_DURUM.acik) return;   // madde 844: her sayfada (Pozisyonlar listesi de kullanır)
   elleYukle.t = Date.now(); const d = await islIstek("elle");
-  ELLE_OZ = d.ok ? d : {hata: d.hata}; const el = $("#piyelle"); if (el) el.innerHTML = elleHtml();
+  if (!d.ok && d.ag && ELLE_OZ && !ELLE_OZ.hata) ELLE_OZ.baglanti = d.hata;   // madde 887: ağ koptu -> son veriyi tut, üstte uyar
+  else ELLE_OZ = d.ok ? d : {hata: d.hata};
+  const el = $("#piyelle"); if (el) el.innerHTML = elleHtml();
   if (elleBirlestir() && VERI && sayfa != "piyasa" && !ISL) ciz();
 }
 // MADDE 844: elle pozisyonlar Pozisyonlar listesinde HEMEN görünsün. Liste 5 dk'lık anlık görüntüden (carry-anlik) gelir; kapının /elle
@@ -1911,7 +1913,7 @@ async function tsGonder(){
   for (const x of S){ if (!TS) return;
     const d = await islIstek("tpsl", {sembol: x.sembol, tp: x.tp || "", sl: tsStop(x), pin: TS.pin});
     if (!TS) return; TS.sonuc[x.sembol] = d.ok ? {ok: true} : {hata: d.hata};
-    if (!d.ok && /PIN/i.test(d.hata||"")) break;   // yanlış PIN: kalanları deneme
+    if (!d.ok && (d.ag || /PIN/i.test(d.hata||""))) break;   // yanlış PIN ya da bağlantı koptu: kalanları deneme
     tsCiz(); }
   const ok = Object.values(TS.sonuc).filter(v=>v.ok).length, hat = Object.keys(TS.sonuc).length - ok;
   TS.mesgul = false; TS.bitti = ok > 0;
@@ -1935,7 +1937,7 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
       <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
         <span class="k2">${x.pay && x.pay.devralinan ? `${elleKisa(x)}` : `<span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>`}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}</span>
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
-  return `${asBakiye(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
+  return `${E.baglanti ? `<div class="imsj hata" role="status" style="margin:8px 0">⚠ Bağlantı yok — gösterilenler son alınan veriler. ${ea(E.baglanti.split(".")[0])}.</div>` : ""}${asBakiye(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
     ${P.length ? `<div class="apko"><span class="art">${kar} kârda</span><span class="eks">${P.length - kar} zararda</span><span>${sonuc}</span></div>` : `<div class="apko"><span>${sonuc}</span></div>`}
     ${stopsuz ? `<div class="apuy">⚠ <span><b>${stopsuz === P.length ? `Hiçbir pozisyonda` : `${stopsuz} pozisyonda`} stop yok.</b> Coine dokunup tek tek ya da hepsine birden koyabilirsin.</span><button class="apub" onclick="tsAc()">Toplu stop koy</button></div>` : ""}
     <div class="apl">${P.length ? P.map(satir).join("") : `<div class="pybos">Açık pozisyonun yok. Piyasadan bir coin seçip işlem açabilirsin.</div>`}</div>
@@ -1967,7 +1969,14 @@ async function islDurum(){
   if ((sayfa=="piyasa" || sayfa=="alsat") && VERI && !ISL) ciz();   // alt not + coin bağlantıları işlem durumuna göre
 }
 async function islIstek(yol, govde){
-  const r = await fetch("api/islem/" + yol, govde ? {method:"POST", headers:{"Content-Type":"application/json","X-Carry-Islem":"1"}, body: JSON.stringify(govde), cache:"no-store"} : {cache:"no-store"});
+  // madde 887: ağ hatası / zaman aşımı yakalanır (eskiden fırlıyordu: ekran iskelette, emir düğmesi "Gönderiliyor…"da takılı kalıyordu).
+  // POST'ta istek sunucuya ulaşmış olabilir -> "durum bilinmiyor, kontrol et" denir; otomatik yeniden denenmez (çift emir olmasın).
+  const ab = typeof AbortController == "function" ? new AbortController() : null, zt = ab && setTimeout(()=>ab.abort(), govde ? 30e3 : 20e3);
+  let r;
+  try { r = await fetch("api/islem/" + yol, {...(govde ? {method:"POST", headers:{"Content-Type":"application/json","X-Carry-Islem":"1"}, body: JSON.stringify(govde)} : {}), cache:"no-store", signal: ab && ab.signal}); }
+  catch(e){ return {ok:false, ag:true, hata: govde && yol != "onizle" ? "Sunucuya ulaşılamadı ya da yanıt gelmedi. İşlem gitmiş olabilir: pozisyonu ve açık emirleri yenileyip kontrol et, sonra gerekirse tekrar dene."
+                                                       : `İşlem servisine ulaşılamadı${e && e.name=="AbortError" ? " (zaman aşımı)" : ""}. Bağlantını kontrol et; birkaç saniye sonra yeniden denenecek.`}; }
+  finally { if (zt) clearTimeout(zt); }
   let d = null; try { d = await r.json(); } catch(_){}
   if (!d) d = {ok:false, hata:`sunucu yanıtı okunamadı (${r.status})`};
   return d;
