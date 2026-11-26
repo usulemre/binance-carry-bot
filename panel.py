@@ -1174,6 +1174,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 [role=button][tabindex]:focus-visible{outline:2px solid var(--vurgu);outline-offset:2px;border-radius:8px}
 .kpi{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:10px 0 4px}.kpi>div{background:var(--kart2);border-radius:10px;padding:7px 8px;display:flex;flex-direction:column;gap:1px;min-width:0}.kpi span{font-size:11px;color:var(--soluk)}.kpi b{font-size:13.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.kpi b.art{color:var(--art)}.kpi b.eks{color:var(--eks)}.kpi i{font-style:normal;font-size:11px;color:var(--soluk);overflow:hidden;text-overflow:ellipsis;white-space:nowrap}@media (max-width:380px){.kpi{grid-template-columns:repeat(2,minmax(0,1fr))}}
 .asfn{cursor:pointer;grid-column:1/-1;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;margin-top:10px;padding:10px 12px;border-radius:12px;background:var(--kart2);font-size:13px}.asfn>b{font-size:14px;font-variant-numeric:tabular-nums;white-space:nowrap}.asfn b.art{color:var(--art)}.asfn b.eks{color:var(--eks)}
+.asrk{padding:12px 14px}.asrkh{cursor:pointer;display:grid;grid-template-columns:minmax(0,1fr) auto;gap:2px 10px;align-items:baseline;font-size:13px}.asrkh>b{font-size:14.5px;font-variant-numeric:tabular-nums;white-space:nowrap}.asrk b.art{color:var(--art)}.asrk b.eks{color:var(--eks)}.asrk b.uy{color:var(--uyari)}.asrc{grid-template-columns:repeat(4,minmax(0,1fr));margin-top:12px}.asrs{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:1px 10px;padding:9px 0;border-top:1px solid var(--cizgi);margin-top:10px;font-size:13.5px}.asrs+.asrs{margin-top:0}.asrs>b{font-variant-numeric:tabular-nums;white-space:nowrap}.asrs .k{grid-column:1/-1;font-size:12px}
 .asfl{grid-column:1/-1;margin-top:8px;display:flex;flex-direction:column}.asfl>div{display:grid;grid-template-columns:auto minmax(0,1fr) auto;gap:8px;align-items:center;padding:7px 0;border-top:1px solid var(--cizgi)}.asfl>div>span:nth-child(2){display:flex;flex-direction:column;min-width:0}.asfl .k{font-size:11.5px}.asfr{display:flex;flex-direction:column;align-items:flex-end}.asfr b{font-size:13px;font-variant-numeric:tabular-nums}.asfl b.art{color:var(--art)}.asfl b.eks{color:var(--eks)}
 .actop{display:flex;flex-wrap:wrap;align-items:baseline;gap:2px 10px;padding:10px 12px 2px;margin-top:6px;border-top:1px solid var(--cizgi);font-size:13px;font-weight:650}.actop .aca{font-weight:500}
 /* madde 866: sade piyasa */
@@ -1846,7 +1847,7 @@ function asCanliBoya(){   // canliBoya her saniye: Pozisyonlarım satırları + 
   asAkisBagla();
   if (sayfa == "alsat"){   // yalnız rakamlar yerinde (her saniye listeyi baştan çizmek dokunuşu kaçırtırdı)
     const tmp = document.createElement("div"); tmp.innerHTML = elleHtml();
-    for (const id of ["astop", "asbak", ...ELLE_OZ.pozisyonlar.flatMap(x=>["askz-" + x.sembol, "ass-" + x.sembol])]){
+    for (const id of ["astop", "asbak", ...(Date.now() - AS_RK_T > 1500 ? ["asrk"] : []), ...ELLE_OZ.pozisyonlar.flatMap(x=>["askz-" + x.sembol, "ass-" + x.sembol])]){
       const a = document.getElementById(id), b = tmp.querySelector("#" + CSS.escape(id));
       if (a && b && a.innerHTML !== b.innerHTML){ a.innerHTML = b.innerHTML; a.className = b.className; } } }
   const H = ELLE_OZ.hesap, u = $("#ustkitap");
@@ -1901,6 +1902,48 @@ async function fonAraYukle(){ if (fonAraYukle.y || VERI_GOMULU) return; fonAraYu
   try { const d = await (await fetch("https://fapi.binance.com/fapi/v1/fundingInfo", {cache:"no-store"})).json();
     const m = {}; if (Array.isArray(d)) for (const x of d) if (x.symbol && +x.fundingIntervalHours > 0) m[x.symbol] = +x.fundingIntervalHours; FON_ARA = m; }
   catch(_){ setTimeout(()=>{ fonAraYukle.y = false; }, 60e3); } }
+// MADDE 898: Al-Sat RİSK / SENARYO — "piyasa %X yükselirse / düşerse ne olur", hesabın kaç %'lik ortak harekette likide olacağı,
+// coin coin likidasyon uzaklığı ve o coin tek başına %X ters giderse kayıp. Bakım teminatı (MM) borsanın verdiği likidasyon fiyatlarından
+// tahmin edilir: çapraz teminatta her coinin likidasyon fiyatı "diğerleri sabitken özkaynak = MM" noktasıdır -> MM ≈ öz + adet × (lik − fiyat);
+// coinlerin medyanı alınır, harekette pozisyon büyüklüğüyle orantılı büyür. Tahmindir: funding, kademeli MM oranları ve demo/gerçek farkı yok sayılır.
+let AS_SEN = (()=>{ try { return +localStorage.getItem("carry_as_sen") || 25; } catch(_){ return 25; } })(), AS_RK_T = 0;
+function asSen(v){ AS_SEN = v; AS_RK_T = 0; try { localStorage.setItem("carry_as_sen", v); } catch(_){} ciz(); }
+function asRiskHesap(oz, P){
+  const L = P.filter(x=>x.adet).map(x=>({x, f: AS_F[x.sembol] > 0 ? AS_F[x.sembol] : x.giris + (x.adet ? x.kz / x.adet : 0)})).filter(o=>o.f > 0);
+  const A = L.reduce((a,o)=>a + o.x.adet * o.f, 0), N = L.reduce((a,o)=>a + Math.abs(o.x.adet) * o.f, 0);
+  const mmL = L.filter(o=>o.x.likidasyon > 0).map(o=>oz + o.x.adet * (o.x.likidasyon - o.f)).filter(v=>v >= 0 && v < oz).sort((a,b)=>a-b);
+  const MM = mmL.length ? mmL[Math.floor(mmL.length / 2)] : 0, m = N > 0 ? MM / N : 0;
+  const ozR = r => oz + A * r, mmR = r => m * L.reduce((a,o)=>a + Math.abs(o.x.adet) * o.f * Math.max(0, 1 + r), 0);
+  const esik = yon => {   // yon +1 yükseliş, -1 düşüş; ilk likide olunan oran (en çok %500 / %99)
+    const ust = yon > 0 ? 5 : 0.99, olur = r => ozR(yon * r) <= mmR(yon * r);
+    if (!olur(ust)) return null; let a = 0, b = ust;
+    for (let i = 0; i < 40; i++){ const c = (a + b) / 2; olur(c) ? b = c : a = c; } return b; };
+  return {L, A, N, MM, m, ozR, mmR, yuk: esik(1), dus: esik(-1)};
+}
+function asRisk(E, P){
+  const H = E && E.hesap; if (!H || H.ozkaynak == null || !P || !P.length) return "";
+  const fark = P.reduce((a,x)=>a + x.kz, 0) - (E.pozisyonlar||[]).reduce((a,x)=>a + x.kz, 0), oz = H.ozkaynak + fark;
+  const R = asRiskHesap(oz, P); if (!R.L.length) return "";
+  const X = AS_SEN / 100, kYuk = R.A * X, kDus = -R.A * X, ac = ACIK.has("asrk"), yz = v => "%" + Math.round(v * 100);
+  const tehlike = R.A < 0 ? {ad: "yükselirse", k: kYuk, e: R.yuk, r: X} : {ad: "düşerse", k: kDus, e: R.dus, r: -X};
+  const esikMetin = tehlike.e != null ? `hesap ≈ ${yz(tehlike.e)} ${R.A < 0 ? "yükselişte" : "düşüşte"} likide olur` : "ortak harekette likidasyon görünmüyor";
+  const lik = o => o.x.likidasyon > 0 ? Math.abs(o.x.likidasyon / o.f - 1) : null;
+  const yakin = R.L.filter(o=>lik(o) != null).sort((a,b)=>lik(a) - lik(b))[0];
+  const ozet = `<div class="asrkh" role="button" tabindex="0" aria-expanded="${ac}" onclick="olayAc('asrk')"><span><b>Ne olur?</b> <span class="k">· piyasa %${AS_SEN} ${tehlike.ad}</span></span><b class="${sinif(tehlike.k)}">${isaretli(tehlike.k)}</b>
+    <span class="k" style="grid-column:1/-1">${esikMetin}${yakin ? ` · likidasyona en yakın ${ea(yakin.x.sembol.replace(/USDT$/,""))} ${yz(lik(yakin))} uzak` : ""} · <span style="color:var(--vurgu)">${ac ? "▾ gizle" : "▸ ayrıntı"}</span></span></div>`;
+  if (!ac) return `<div class="kart asrk" id="asrk" onpointerdown="AS_RK_T=Date.now()">${ozet}</div>`;
+  const sat = (ad, k, r) => { const o2 = R.ozR(r), lk = o2 <= R.mmR(r);
+    return `<div class="asrs"><span>Piyasa %${AS_SEN} ${ad}</span><b class="${sinif(k)}">${isaretli(k)}</b><span class="k">bakiye ${para(oz)} → <b class="${lk ? "eks" : ""}">${lk ? "likide olur" : para(o2)}</b></span></div>`; };
+  const tek = o => -Math.abs(o.x.adet) * o.f * X;
+  const liste = R.L.slice().sort((a,b)=>(lik(a) ?? 9e9) - (lik(b) ?? 9e9)).map(o=>{ const ad = o.x.sembol.replace(/USDT$/,""), u = lik(o), uz = o.x.adet > 0;
+    return `<div>${coinIkon(ad, "kucuk")}<span><b>${ea(ad)} <span class="pkz sen ${uz?"L":"S"}">${uz?"L":"S"}</span></b><span class="k">${u != null ? `likidasyon ${piyFiyat(o.x.likidasyon)} · <b class="${u < 0.15 ? "eks" : u < 0.4 ? "uy" : ""}">${yz(u)} ${uz ? "aşağıda" : "yukarıda"}</b>` : "likidasyon yok"}</span></span>
+      <span class="asfr"><b class="eks">${isaretli(tek(o))}</b><span class="k">tek başına %${AS_SEN} ters</span></span></div>`; }).join("");
+  return `<div class="kart asrk" id="asrk" onpointerdown="AS_RK_T=Date.now()">${ozet}
+    <div class="tsor asrc" role="group" aria-label="Hareket büyüklüğü">${[10,25,50,100].map(v=>`<button class="${AS_SEN==v?"on":""}" aria-pressed="${AS_SEN==v}" onclick="asSen(${v})">%${v}</button>`).join("")}</div>
+    ${sat("yükselirse", kYuk, X)}${sat("düşerse", kDus, -X)}
+    <div class="asfl">${liste}</div>
+    <p class="k" style="margin:10px 2px 0;line-height:1.45">Tahmin: tüm coinler aynı oranda hareket eder varsayılır; bakım teminatı borsanın likidasyon fiyatlarından çıkarıldı (≈ ${para(R.MM)}). Funding, komisyon ve kayma dahil değil. Coin satırındaki likidasyon fiyatı diğer coinler yerinde kalırsa geçerlidir.</p></div>`;
+}
 // madde 883: Al-Sat long / short dengesi (Bot Özet'teki çubuğun aynısı) — bakiye kartının altında
 function asDenge(P){
   if (!P || !P.length) return "";
@@ -1988,7 +2031,7 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
       <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
         <span class="k2">${x.pay && x.pay.devralinan ? `${elleKisa(x)}` : `<span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>`}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}</span>
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"} ${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
-  return `${E.baglanti ? `<div class="imsj hata" role="status" style="margin:8px 0">⚠ Bağlantı yok — gösterilenler son alınan veriler. ${ea(E.baglanti.split(".")[0])}.</div>` : ""}${asBakiye(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
+  return `${E.baglanti ? `<div class="imsj hata" role="status" style="margin:8px 0">⚠ Bağlantı yok — gösterilenler son alınan veriler. ${ea(E.baglanti.split(".")[0])}.</div>` : ""}${asBakiye(E, P)}${asRisk(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"} ${isaretli(top)}</b>` : ""}</div>
     ${P.length ? `<div class="apko"><span class="art">${kar} kârda</span><span class="eks">${P.length - kar} zararda</span><span>${sonuc}</span></div>` : `<div class="apko"><span>${sonuc}</span></div>`}
     ${stopsuz ? `<div class="apuy">⚠ <span><b>${stopsuz === P.length ? `Hiçbir pozisyonda` : `${stopsuz} pozisyonda`} stop yok.</b> Coine dokunup tek tek ya da hepsine birden koyabilirsin.</span><button class="apub" onclick="tsAc()">Toplu stop koy</button></div>` : ""}
     <div class="apl">${P.length ? P.map(satir).join("") : `<div class="pybos">Açık pozisyonun yok. Piyasadan bir coin seçip işlem açabilirsin.</div>`}</div>
