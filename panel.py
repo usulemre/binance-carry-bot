@@ -1345,6 +1345,7 @@ th{color:var(--soluk);font-weight:500}td.l,th.l{text-align:left}.tablo{overflow-
 @media (max-width:420px){.isl .ikg{grid-template-columns:repeat(2,minmax(0,1fr))}.isl .ichip.kisa{flex-basis:150px}}
 /* iOS Safari 16 px altı kutuya dokununca sayfayı büyütür ve geri küçültmez: tüm form öğeleri en az 16 px */
 input,select,textarea{font-size:max(16px,1em)}.tsor input,.ruv input,.pkara input,.isl .inot textarea,.isl .ionay textarea,.assr select,.pkhac select{font-size:16px}.assr select{min-width:0;max-width:100%;text-overflow:ellipsis}.assr label{flex:none}
+.ofil{flex-wrap:wrap!important;overflow:visible;margin-left:0!important;margin-right:0!important;padding:0;-webkit-mask-image:none;mask-image:none}.gdon{overflow:visible}.gdon button{flex:1 1 auto}@media (max-width:340px){.gdon button{padding:0 8px}}
 /* Piyasa: sekmeler yana kaymasın, alt satıra geçsin; dönem + hacim satırı dar ekranda kırılsın */
 .pksek{flex-wrap:wrap;overflow:visible;margin:12px 0 0;padding:0;-webkit-mask-image:none;mask-image:none}.pksek button{flex:1 1 auto;padding:0 12px}.pkay{flex-wrap:wrap;row-gap:8px}.pkdon{flex:1 1 auto;min-width:0;max-width:100%}.pkdon button{flex:1 1 0;min-width:0;padding:0 4px}.pkhac{margin-left:auto}
 @media (max-width:340px){.pk2{padding:12px 10px}.pkr{grid-template-columns:minmax(0,1fr) auto 28px;gap:6px;padding-left:10px}.pkr>.pkav{display:none}.pkd{min-width:0;font-size:12.5px;padding:6px 5px}.pky{width:28px}.pks{font-size:11.5px}}
@@ -2062,7 +2063,7 @@ function elleHtml(){   // madde 864: yeniden tasarım — özet şerit, tek stop
     return `<a class="apr" href="#piyasa" onclick="islAc('${x.sembol}');return false"><i class="ass ${sinif(x.kz)}" id="ass-${x.sembol}"></i>
       <span class="apik">${coinIkon(ad)}<span class="iyon2 ${uz?"L":"S"}">${uz?"L":"S"}</span></span>
       <span class="aprm"><span class="aprt"><b>${ad}</b>${n > 1 ? `<span class="pyn">${n} alım</span>` : ""}${x.not ? `<span class="apn" title="${ea(x.not)}" aria-label="not var">📝</span>` : ""}${stopVar || stopsuzHepsi ? "" : `<span class="aps" title="stop yok">stop yok</span>`}</span>
-        <span class="k2">${x.pay && x.pay.devralinan ? `${elleKisa(x)}` : `<span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)} @ ${piyFiyat(x.giris)}</span>`}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}${x.gelir && Math.abs(x.gelir.fon) >= 0.01 ? `<span class="apfn"><span class="nw">funding <b class="${sinif(x.gelir.fon)}">${isaretli(x.gelir.fon)}</b></span> · <span class="nw">net <b class="${sinif(asNet(x))}" id="asnet-${x.sembol}">${isaretli(asNet(x))}</b></span></span>` : ""}</span>
+        <span class="k2">${x.pay && x.pay.devralinan ? `${elleKisa(x)}` : `<span class="nw">${para(deger)}</span> · <span class="nw">${elleAdet(x.adet)}</span> <span class="nw">@ ${piyFiyat(x.giris)}</span>`}</span>${tpsl.length ? `<span class="aptp">${tpsl.join(" · ")}</span>` : ""}${x.gelir && Math.abs(x.gelir.fon) >= 0.01 ? `<span class="apfn"><span class="nw">funding <b class="${sinif(x.gelir.fon)}">${isaretli(x.gelir.fon)}</b></span> · <span class="nw">net <b class="${sinif(asNet(x))}" id="asnet-${x.sembol}">${isaretli(asNet(x))}</b></span></span>` : ""}</span>
       <span class="aprk ${sinif(x.kz)}" id="askz-${x.sembol}"><b>${x.kz>=0?"▲":"▼"}\u00a0${isaretli(x.kz)}</b><span>${(kp>=0?"+":"")+kp.toFixed(1).replace(".",",")+"%"}</span></span></a>`; };
   return `${E.baglanti ? `<div class="imsj hata" role="status" style="margin:8px 0">⚠ Bağlantı yok — gösterilenler son alınan veriler. ${ea(E.baglanti.split(".")[0])}.</div>` : ""}${asBakiye(E, P)}${asRisk(E, P)}<div class="kart apk"><div class="apkh"><div><b>Açık pozisyonlar</b>${P.length ? `<span class="say">${P.length}</span>` : ""}</div>${P.length ? `<b id="astop" class="${sinif(top)}">${top>=0?"▲":"▼"}\u00a0${isaretli(top)}</b>` : ""}</div>
     ${P.length ? `<div class="apko"><span class="art">${kar} kârda</span><span class="eks">${P.length - kar} zararda</span><span>${sonuc}</span></div>` : `<div class="apko"><span>${sonuc}</span></div>`}
@@ -2293,7 +2294,7 @@ function riskDenetle(){
   const P = E.pozisyonlar.filter(x=>x.adet), simdi = Date.now(); let deg = false;
   for (const x of P){
     const s = x.sembol, ad = s.replace(/USDT$/,""), f = AS_F[s] > 0 ? AS_F[s] : null, kz = asKz(x), sh = x.adet < 0;
-    if (RU.kz > 0) deg = ruKademe("kz:" + s, kz < 0 ? Math.floor(-kz / RU.kz) : 0, () => ruCal(s, `${ad} zararı ${isaretli(kz)}`, `${sh ? "short" : "long"} · eşik her ${para(RU.kz)} · ${f ? "fiyat " + piyFiyat(f) : ""}`, "kz")) || deg;
+    if (RU.kz > 0) deg = ruKademe("kz:" + s, kz < 0 ? Math.floor(-kz / RU.kz) : 0, () => ruCal(s, `${ad} zararı ${isaretli(kz)}`, `${sh ? "short" : "long"} · eşik her ${para(RU.kz)}${f ? " · fiyat " + piyFiyat(f) : ""}`, "kz")) || deg;
     if (f){
       const L = RU_IZ[s] = (RU_IZ[s] || []).filter(o=>simdi - o[0] < 15 * 60e3); if (!L.length || simdi - L[L.length-1][0] > 5e3) L.push([simdi, f]);
       const uc = sh ? Math.min(...L.map(o=>o[1])) : Math.max(...L.map(o=>o[1])), ters = sh ? f / uc - 1 : 1 - f / uc;
